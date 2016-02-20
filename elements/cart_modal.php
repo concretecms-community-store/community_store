@@ -6,7 +6,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
-    <a href="#nolink" class="store-modal-exit">x</a>
+    <a href="#" class="store-modal-exit">x</a>
     <div class="store-cart-page-cart">
         <?php if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add') { ?>
@@ -105,7 +105,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php } ?>
                             </td>
                             <td>
-                                <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#nolink"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
+                                <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
                             </td>
 
                         </tr>
@@ -123,7 +123,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                     <td></td>
                     <td colspan="2">
                         <?php if ($allowUpdate) { ?>
-                            <p class="text-right"><a class="store-btn-cart-modal-update btn btn-default" data-modal="true" href="#nolink"><?= t("Update")?></a></p>
+                            <p class="text-right"><a class="store-btn-cart-modal-update btn btn-default" data-modal="true" href="#"><?= t("Update")?></a></p>
                         <?php } ?>
 
                     </td>
@@ -164,9 +164,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
 
         <div class="store-cart-page-cart-links">
-            <a class="store-btn-cart-modal-continue btn btn-default" href="#nolink"><?= t("Continue Shopping")?></a>
+            <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
             <?php if ($cart  && !empty($cart)) { ?>
-            <a class="store-btn-cart-modal-clear btn btn-default" href="#nolink"><?= t('Clear Cart')?></a>
+            <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
             <a class="store-btn-cart-modal-checkout btn btn-primary pull-right" href="<?= View::url('/checkout')?>"><?= t('Checkout')?></a>
             <?php } ?>
         </div>

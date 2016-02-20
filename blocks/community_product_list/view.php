@@ -55,7 +55,7 @@ if($products){
                         $thumb = $ih->getThumbnail($imgObj,400,280,true);?>
                         <p class="store-product-list-thumbnail">
                             <?php if($showQuickViewLink){ ?>
-                            <a class="store-product-quick-view" data-product-id="<?= $product->getProductID()?>" href="#nolink">
+                            <a class="store-product-quick-view" data-product-id="<?= $product->getProductID()?>" href="#">
                                 <img src="<?= $thumb->src?>" class="img-responsive">
                             </a>
                             <?php } else { ?>
@@ -112,7 +112,7 @@ if($products){
 
                 <input type="hidden" name="pID" value="<?= $product->getProductID()?>">
                 <input type="hidden" name="quantity" class="store-product-qty" value="1">
-                <p><a href="#none" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
+                <p><a href="#" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
                 <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
                 <?php } ?>

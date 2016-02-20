@@ -30,11 +30,10 @@
         <?php } ?>
     </p>
 
-
     <?php if (!$inCart) { ?>
         <p>
             <?php if ($popUpCart && !$inCheckout) { ?>
-                <a href="#nolink" class="store-cart-link store-cart-link-modal"><?= $cartLabel ?></a>
+                <a href="#" class="store-cart-link store-cart-link-modal"><?= $cartLabel ?></a>
             <?php } else { ?>
                 <a href="<?= View::url('/cart') ?>" class="store-cart-link"><?= $cartLabel ?></a>
             <?php } ?>

@@ -229,7 +229,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#nolink" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
+                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-default" value="<?= t("Next") ?>">
                             </div>
                         </div>
@@ -272,7 +272,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
 
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#nolink" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
+                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-default" value="<?= t("Next") ?>">
                             </div>
 
@@ -337,7 +337,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         <?php } ?>
 
                         <div class="store-checkout-form-group-buttons">
-                            <a href="#nolink" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
+                            <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
 
                             <?php if ($enabledPaymentMethods) { ?>
                                 <input type="submit" class="store-btn-complete-order btn btn-default"

@@ -5,7 +5,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 
     <div class="store-product-modal-info-shell">
 
-        <a href="#nolink" class="store-modal-exit">x</a>
+        <a href="#" class="store-modal-exit">x</a>
         <h4 class="store-product-modal-title"><?= $product->getProductName()?></h4>
 
         <p class="store-product-modal-thumb">
@@ -48,7 +48,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
         </div>
         <input type="hidden" name="pID" value="<?= $product->getProductID()?>">
         <div class="store-product-modal-buttons">
-            <p><a href="#none" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
+            <p><a href="#" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
             <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
         </div>
