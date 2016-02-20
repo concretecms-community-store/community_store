@@ -1,3 +1,12 @@
+*This repository (and those for the addtional gateways) has been initially been made private not to exclude others, but to simply give those involved a chance to collectively refine and test the add-on without the broader community being tempted to use it in production environments. 
+
+If you are reading this now, it's because you're a collaborator. You have almost full control of the github account, so please be mindful of your commits and issue management. Please create branches and pull requests for anything but obvious/trivial changes.
+
+If you know of others that would like to work on this project, please let @mesuva know. 
+
+Down the track it will/can be opened up publically, perhaps under an organisation account* 
+
+
 # Community Store add-on for concrete5
 
 An online shop add-on for concrete5.7.
