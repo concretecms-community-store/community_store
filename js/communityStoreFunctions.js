@@ -1,13 +1,15 @@
 $(function(){
     
     var url = window.location.pathname.toString();
+
     $('#group-filters li a').each(function(){
         var href = $(this).attr('href');
         if(url == href) {
            $(this).parent().addClass("active");
         }
     });
-            
+   
+    
     $("a[data-pane-toggle]").click(function(e){
         e.preventDefault();
         var paneTarget = $(this).attr('href');
@@ -16,6 +18,8 @@ $(function(){
         $('a[data-pane-toggle]').parent().removeClass('active');
         $('#'+paneTarget).addClass("active");
         $(this).parent().addClass("active");
+        localStorage.setItem("selectedTab", paneTarget);
+        localStorage.setItem("selectedTabIndex",  $(this).parent().index());
     });
     $(".btn-delete-group").click(function(){
         var groupID = $(this).parent().attr("data-group-id");
@@ -79,7 +83,19 @@ $(function(){
     });
 
 });
-
+var url = window.location.pathname.toString();
+var urlArray = url.split('/');
+var saveSuccess = urlArray[urlArray.length - 1];
+if(saveSuccess != "success"){
+    localStorage.removeItem("selectedTab");
+}else{
+    $(".store-pane").removeClass('active'); 
+     $('a[data-pane-toggle]').parent().removeClass('active');
+     var paneTarget = localStorage.getItem("selectedTab");
+     var paneTargetIndex = parseInt(localStorage.getItem("selectedTabIndex"));
+     $('#'+paneTarget).addClass("active");
+     $('a[data-pane-toggle]:eq('+paneTargetIndex+')').parent().addClass("active");
+}
 
 function updateTaxStates(){
     var countryCode = $("#taxCountry").val();
