@@ -74,8 +74,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <?php if ($customer->isGuest()) { ?>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email"><?= t("Email") ?></label>
-                                        <?= $form->email('email', $customer->getEmail(), array("required" => "required")); ?>
+                                        <label for="store-email"><?= t("Email") ?></label>
+                                        <?= $form->email('store-email', $customer->getEmail(), array("required" => "required")); ?>
                                     </div>
                                 </div>
                             <?php } ?>
