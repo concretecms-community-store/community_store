@@ -86,12 +86,18 @@ class Settings extends DashboardPageController
 
                 //save payment methods
                 if($args['paymentMethodHandle']){
-                    
+
+                    // TODO - refactor how this is saved
                     foreach($args['paymentMethodEnabled'] as $pmID=>$value){
                         $pm = StorePaymentMethod::getByID($pmID);
                         $pm->setEnabled($value);
                         $controller = $pm->getMethodController();
                         $controller->save($args);
+                    }
+
+                    foreach($args['paymentMethodDisplayName'] as $pmID=>$value){
+                        $pm = StorePaymentMethod::getByID($pmID);
+                        $pm->setDisplayName($value);
                     }
 
                     foreach($args['paymentMethodSortOrder'] as $pmID=>$value){
