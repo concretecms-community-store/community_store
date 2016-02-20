@@ -11,6 +11,7 @@ The add-on will work directly with a Bootstrap based theme, primarily Elemental,
 
 ## Setup
 This project uses [Composer](https://getcomposer.org/) to install third-party librares. Run composer at the root of the add-on folder before installing:
+
         composer install
 
 ## Payment gateways
@@ -30,7 +31,9 @@ The use of the Ominpay library is encouraged to developed further payment add-on
 ## Conventions
 ### Use Statements
 Use statements that include Community Store classes should be aliased with the word 'Store'.
-i.e. use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+i.e. 
+        
+        use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 ### Class/ID Naming
 All classes and IDs that relate to functionality/processing should be prefixed with 'store-' and appear first in class lists.
