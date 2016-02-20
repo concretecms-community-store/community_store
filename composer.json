@@ -1,5 +1,5 @@
 {
-  "name": "communityweb/community_store",
+  "name": "mesuva/community_store",
   "type": "concrete5-package",
   "require": {
     "php": ">=5.4",
@@ -7,7 +7,7 @@
   },
   "minimum-stability": "dev",
   "support": {
-    "source": "https://github.com/CommunityWeb/community_store/src"
+    "source": "https://github.com/mesuva/community_store/src"
   },
   "require": {
     "dvdoug/boxpacker": "~1.5"
