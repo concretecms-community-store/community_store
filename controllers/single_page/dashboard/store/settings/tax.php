@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Settings;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
@@ -106,8 +105,8 @@ class Tax extends DashboardPageController
     public function add_class()
     {
         $this->set('task',t("Add"));
-        $this->set('tc',new TaxClass());
-        $this->set('taxRates',StoreTaxRate::getTaxRates());
+        $this->set('tc',new StoreTaxClass());
+        $this->set('taxRates',StoreTax::getTaxRates());
     }
     public function edit_class($tcID)
     {
@@ -158,7 +157,7 @@ class Tax extends DashboardPageController
     }
     public function delete_class($tcID)
     {
-        TaxClass::getByID($tcID)->delete();
+        StoreTaxClass::getByID($tcID)->delete();
         $this->redirect("/dashboard/store/settings/tax/class_deleted");   
     }
     public function class_deleted()
