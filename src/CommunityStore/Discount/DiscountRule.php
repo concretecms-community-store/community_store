@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Src\Communitystore\Discount;
+namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Database;
 use Doctrine\ORM\Mapping\OneToMany;

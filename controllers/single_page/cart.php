@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use DoctrineProxies\__CG__\Concrete\Package\CommunityStore\Src\Communitystore\Discount\DiscountCode;
 use PageController;
 use View;
 

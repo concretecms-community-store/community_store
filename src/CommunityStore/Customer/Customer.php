@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Src\Communitystore\Customer;
+namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 
 use Session;
 use User;

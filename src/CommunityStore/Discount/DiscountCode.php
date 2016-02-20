@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Package\CommunityStore\Src\Communitystore\Discount;
+namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Doctrine\ORM\Mapping\Column;

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Src\Communitystore\Discount;
+namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\ItemList;
