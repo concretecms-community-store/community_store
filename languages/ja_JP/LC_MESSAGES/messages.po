@@ -1,0 +1,1442 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-05-01 03:15+0900\n"
+"PO-Revision-Date: 2015-05-01 05:03+0900\n"
+"Last-Translator: Tao Sasaki <tao@xross-cube.com>\n"
+"Language-Team: \n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-KeywordsList: t\n"
+"X-Poedit-SearchPath-0: community_store\n"
+
+#: community_store/blocks/community_product/controller.php:22
+msgid "Add a Product to the Page"
+msgstr "商品をこのページに追加"
+
+#: community_store/blocks/community_product/controller.php:27
+msgid "Product"
+msgstr "商品"
+
+#: community_store/blocks/community_product/controller.php:50
+#: community_store/blocks/community_product_list/controller.php:72
+#: community_store/blocks/community_utility_links/controller.php:42
+msgid "Quantity must be greater than zero"
+msgstr "1以上の数量を入力してください"
+
+#: community_store/blocks/community_product/form.php:51
+msgid "Product to include"
+msgstr "商品に含む"
+
+#: community_store/blocks/community_product/form.php:54
+msgid "Choose a Product to show"
+msgstr "商品の表示先を選択"
+
+#: community_store/blocks/community_product/form.php:68
+msgid "Selected Product:"
+msgstr "商品を選択:"
+
+#: community_store/blocks/community_product/form.php:74
+msgid "What would you like to show"
+msgstr "何を表示したいですか？"
+
+#: community_store/blocks/community_product/form.php:81
+msgid "Show Product Name"
+msgstr "商品名を表示"
+
+#: community_store/blocks/community_product/form.php:87
+msgid "Show Short Description"
+msgstr "短い概要を表示"
+
+#: community_store/blocks/community_product/form.php:93
+msgid "Show Product Details"
+msgstr "商品詳細を表示"
+
+#: community_store/blocks/community_product/form.php:99
+msgid "Show Price"
+msgstr "価格を表示"
+
+#: community_store/blocks/community_product/form.php:105
+msgid "Show Weight"
+msgstr "重さを表示"
+
+#: community_store/blocks/community_product/form.php:113
+msgid "Show Product Image"
+msgstr "商品画像を表示"
+
+#: community_store/blocks/community_product/form.php:119
+msgid "Show \"Add to Cart\" Button"
+msgstr "「カートへ追加」ボタンを表示"
+
+#: community_store/blocks/community_product/form.php:125
+msgid "Show if it's featured"
+msgstr "「特集」だったら表示"
+
+#: community_store/blocks/community_product/form.php:131
+msgid "Show Group Product is in"
+msgstr "このグループの商品を表示"
+
+#: community_store/blocks/community_product/form.php:137
+msgid "Show Dimensions"
+msgstr "サイズを表示"
+
+#: community_store/blocks/community_product/form.php:145
+msgid "Add to Cart Button Text"
+msgstr "カートへ追加ボタンのテキスト"
+
+#: community_store/blocks/community_product/view.php:2
+#: community_store/blocks/community_product_list/view.php:2
+#: community_store/controller.php:30
+#: community_store/controllers/single_page/cart.php:15
+#: community_store/controllers/single_page/checkout.php:17
+#: community_store/controllers/single_page/checkout/complete.php:13
+#: community_store/elements/auth_net/checkout_form.php:1
+#: community_store/elements/auth_net/dashboard_form.php:2
+#: community_store/elements/invoice/checkout_form.php:1
+#: community_store/elements/invoice/dashboard_form.php:2
+#: community_store/elements/product_modal.php:1
+#: community_store/single_pages/cart.php:2 community_store/single_pages/checkout.php:1
+#: community_store/single_pages/checkout/complete.php:1
+#: community_store/single_pages/dashboard/store/products/attributes.php:2
+#: community_store/src/Attribute/Key/StoreOrderKey.php:10
+#: community_store/src/Attribute/Key/StoreProductKey.php:10
+#: community_store/src/Attribute/Value/StoreOrderValue.php:5
+#: community_store/src/Attribute/Value/StoreProductValue.php:5
+#: community_store/src/CommunityStore/Cart/Cart.php:12
+#: community_store/src/CommunityStore/Cart/CartTotal.php:7
+#: community_store/src/CommunityStore/Groups/GroupList.php:5
+#: community_store/src/CommunityStore/Groups/Group.php:5
+#: community_store/src/CommunityStore/Orders/Item.php:10
+#: community_store/src/CommunityStore/Orders/Order.php:26
+#: community_store/src/CommunityStore/Orders/OrderList.php:12
+#: community_store/src/CommunityStore/Payment/Method.php:12
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/AuthorizeNet.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetAIM.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetARB.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetCIM.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetCP.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetDPM.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetSIM.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetSOAP.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/AuthorizeNetTD.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/shared/AuthorizeNetRequest.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/shared/AuthorizeNetResponse.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/shared/AuthorizeNetTypes.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/anet_php_sdk/lib/shared/AuthorizeNetXMLResponse.php:2
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/controller.php:10
+#: community_store/src/CommunityStore/Payment/Methods/invoice/controller.php:9
+#: community_store/src/CommunityStore/Product/Product.php:18
+#: community_store/src/CommunityStore/Product/ProductList.php:10
+#: community_store/src/CommunityStore/Product/ProductModal.php:11
+#: community_store/src/CommunityStore/Utilities/Checkout.php:11
+#: community_store/src/CommunityStore/Utilities/Price.php:4
+#: community_store/src/CommunityStore/Utilities/ProductFinder.php:9
+#: community_store/src/CommunityStore/Utilities/States.php:7
+msgid "Access Denied."
+msgstr "アクセスできません。"
+
+#: community_store/blocks/community_product/view.php:30
+msgid "Featured Item"
+msgstr "特集商品"
+
+#: community_store/blocks/community_product/view.php:50
+msgid "Dimensions"
+msgstr "大きさ"
+
+#: community_store/blocks/community_product/view.php:58
+#: community_store/single_pages/dashboard/store/products.php:522
+msgid "Weight"
+msgstr "重さ"
+
+#: community_store/blocks/community_product/view.php:66
+#: community_store/elements/product_modal.php:20
+#: community_store/single_pages/dashboard/store/orders.php:43
+#: community_store/single_pages/dashboard/store/products.php:261
+#: community_store/single_pages/dashboard/store/products.php:633
+msgid "Quantity"
+msgstr "数量"
+
+#: community_store/blocks/community_product/view.php:92
+#: community_store/blocks/community_product_list/view.php:44
+#: community_store/elements/product_modal.php:44
+msgid "Add to Cart"
+msgstr "カートへ追加"
+
+#: community_store/blocks/community_product/view.php:99
+msgid "Product Details"
+msgstr "商品詳細"
+
+#: community_store/blocks/community_product/view.php:107
+msgid "We can't seem to find this product at the moment"
+msgstr "現在この製品を見つけることができません"
+
+#: community_store/blocks/community_product_list/controller.php:22
+msgid "Add a Product List for Community Store"
+msgstr "Community Storeの商品一覧を追加"
+
+#: community_store/blocks/community_product_list/controller.php:27
+msgid "Product List"
+msgstr "商品一覧"
+
+#: community_store/blocks/community_product_list/controller.php:94
+msgid "Max Products must be at least 1"
+msgstr "最大値は1以上の必要があります"
+
+#: community_store/blocks/community_product_list/controller.php:97
+msgid "Max Product must be a whole number"
+msgstr "最大値は整数である必要があります"
+
+#: community_store/blocks/community_product_list/form.php:3
+msgid "Product Arrangement"
+msgstr "商品表示設定"
+
+#: community_store/blocks/community_product_list/form.php:5
+#: community_store/controllers/single_page/dashboard/store/products.php:67
+#: community_store/controllers/single_page/dashboard/store/products.php:101
+#: community_store/single_pages/dashboard/store/products.php:663
+msgid "None"
+msgstr "無し"
+
+#: community_store/blocks/community_product_list/form.php:13
+msgid "Sort Order"
+msgstr "並び順"
+
+#: community_store/blocks/community_product_list/form.php:14
+msgid "Alphabetical"
+msgstr "アルファベット順"
+
+#: community_store/blocks/community_product_list/form.php:14
+msgid "Recently Added"
+msgstr "最近追加されました"
+
+#: community_store/blocks/community_product_list/form.php:20
+msgid "Filter by Group"
+msgstr "商品グループで絞り込み"
+
+#: community_store/blocks/community_product_list/form.php:26
+msgid "Pagination"
+msgstr "ページネーション"
+
+#: community_store/blocks/community_product_list/form.php:30
+msgid "Products per Row"
+msgstr "1行づつ"
+
+#: community_store/blocks/community_product_list/form.php:36
+msgid "Max Number of Products"
+msgstr "商品の最大値"
+
+#: community_store/blocks/community_product_list/form.php:44
+msgid "Show Pagination"
+msgstr "ページネーションを表示"
+
+#: community_store/blocks/community_product_list/form.php:48
+msgid "Display Options"
+msgstr "表示オプション"
+
+#: community_store/blocks/community_product_list/form.php:50
+msgid "Show Featured"
+msgstr "特集を表示"
+
+#: community_store/blocks/community_product_list/form.php:55
+msgid "Show Both Featured &amp; Non-featured"
+msgstr "特集商品と標準商品両方を表示"
+
+#: community_store/blocks/community_product_list/form.php:61
+msgid "Featured Only"
+msgstr "特集のみ"
+
+#: community_store/blocks/community_product_list/form.php:67
+msgid "Non-Featured Only"
+msgstr "特集以外"
+
+#: community_store/blocks/community_product_list/form.php:71
+msgid "Show:"
+msgstr "表示："
+
+#: community_store/blocks/community_product_list/form.php:78
+msgid "Quickview Link (Modal Window)"
+msgstr "クイックビューリンク（モーダル）"
+
+#: community_store/blocks/community_product_list/form.php:84
+msgid "Page Link"
+msgstr "ページリンク"
+
+#: community_store/blocks/community_product_list/form.php:90
+msgid "Add to Cart Button"
+msgstr "カートへ追加ボタン"
+
+#: community_store/blocks/community_product_list/view.php:22
+msgid "Quick View"
+msgstr "クイックビュー"
+
+#: community_store/blocks/community_product_list/view.php:33
+msgid "More Details"
+msgstr "さらに詳しく"
+
+#: community_store/blocks/community_product_list/view.php:71
+msgid "No Products Available"
+msgstr "在庫切れ"
+
+#: community_store/blocks/community_utility_links/controller.php:23
+msgid "Add your cart links for Community Store"
+msgstr "Community Storeのカートリンクを追加"
+
+#: community_store/blocks/community_utility_links/controller.php:28
+msgid "Utility Links"
+msgstr "ユーティリティーリンク"
+
+#: community_store/blocks/community_utility_links/controller.php:56
+msgid "Cart Label must be set"
+msgstr "カートラベルは必須です"
+
+#: community_store/blocks/community_utility_links/controller.php:59
+msgid "Cart Link Label exceeds 255 characters"
+msgstr "カートリンクラベルは255文字以内に収めてください"
+
+#: community_store/blocks/community_utility_links/controller.php:62
+msgid "Cart Items Label exceeds 255 characters"
+msgstr "カートアイテムラベルラベルは255文字以内に収めてください"
+
+#: community_store/blocks/community_utility_links/form.php:6
+msgid "Show Amount of Items in Cart"
+msgstr "カート内の商品点数を表示"
+
+#: community_store/blocks/community_utility_links/form.php:13
+msgid "Show Sign-in Link"
+msgstr "ログインリンクを表示"
+
+#: community_store/blocks/community_utility_links/form.php:17
+#: community_store/blocks/community_utility_links/form.php:21
+msgid "Cart Link Label"
+msgstr "カートリンクラベル"
+
+#: community_store/blocks/community_utility_links/form.php:18
+msgid "View Cart"
+msgstr "カートを表示"
+
+#: community_store/blocks/community_utility_links/form.php:22
+msgid "Items in Cart"
+msgstr "カート内の商品"
+
+#: community_store/blocks/community_utility_links/view.php:6
+msgid "Welcome back"
+msgstr "おかえりなさい"
+
+#: community_store/blocks/community_utility_links/view.php:9
+msgid "Welcome back,"
+msgstr "おかえりなさい、"
+
+#: community_store/blocks/community_utility_links/view.php:13
+msgid "Sign In"
+msgstr "ログイン"
+
+#: community_store/controller.php:43
+msgid "Add a Store to your Site"
+msgstr "店舗をサイトに追加"
+
+#: community_store/controller.php:48
+msgid "Community Store"
+msgstr "Community Store"
+
+#: community_store/controller.php:76 community_store/controller.php:399
+msgid "Product Detail"
+msgstr "商品詳細"
+
+#: community_store/controller.php:130 community_store/controller.php:264
+msgid "Store Customer Info"
+msgstr "カスタム店舗情報"
+
+#: community_store/controller.php:139 community_store/controller.php:271
+msgid "Billing First Name"
+msgstr "購入者（名）"
+
+#: community_store/controller.php:155 community_store/controller.php:278
+msgid "Billing Last Name"
+msgstr "購入者（姓）"
+
+#: community_store/controller.php:171 community_store/controller.php:285
+#: community_store/single_pages/checkout.php:28
+#: community_store/single_pages/dashboard/store/settings.php:78
+msgid "Billing Address"
+msgstr "購入者住所"
+
+#: community_store/controller.php:187 community_store/controller.php:292
+msgid "Billing Phone"
+msgstr "購入者電話番号"
+
+#: community_store/controller.php:203 community_store/controller.php:299
+msgid "Shipping First Name"
+msgstr "配送先（名）"
+
+#: community_store/controller.php:219 community_store/controller.php:306
+msgid "Shipping Last Name"
+msgstr "配送先（姓）"
+
+#: community_store/controller.php:235 community_store/controller.php:313
+#: community_store/single_pages/checkout.php:102
+#: community_store/single_pages/dashboard/store/settings.php:78
+msgid "Shipping Address"
+msgstr "配送先住所"
+
+#: community_store/controller.php:249
+msgid "Registered Customer in your store"
+msgstr "顧客をサイトに登録"
+
+#: community_store/controller.php:501
+msgid "Pending"
+msgstr "保留"
+
+#: community_store/controller.php:502
+msgid "Processing"
+msgstr "処理中"
+
+#: community_store/controller.php:503
+msgid "shipped"
+msgstr "配送済"
+
+#: community_store/controller.php:504
+msgid "Complete"
+msgstr "完了"
+
+#: community_store/controllers/single_page/dashboard/store/orders.php:38
+msgid "Order Removed"
+msgstr "注文は削除されました"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:47
+msgid "Product Added"
+msgstr "商品を追加しました"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:53
+msgid "Product Updated"
+msgstr "商品を更新しました"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:57
+msgid "Product Removed"
+msgstr "商品削除済"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:63
+#: community_store/single_pages/dashboard/store/products/attributes.php:36
+msgid "Add"
+msgstr "追加"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:84
+#: community_store/single_pages/dashboard/store/products.php:616
+msgid "Add Product"
+msgstr "商品を追加"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:90
+#: community_store/single_pages/cart.php:40
+#: community_store/single_pages/dashboard/store/orders.php:102
+msgid "Update"
+msgstr "更新"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:118
+msgid "Edit Product"
+msgstr "商品を編集"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:193
+msgid "You must have a Product Name"
+msgstr "商品名は必須です"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:196
+msgid "Keep the Product name under 255 Characters"
+msgstr "商品名は255文字以内に収めてください"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:199
+msgid "The Price must be set, and numeric"
+msgstr "価格は半角数値で入力してください。（必須）"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:202
+msgid "The Quantity must be set, and numeric"
+msgstr "数量は半角数値で入力してください。（必須）"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:205
+msgid "The Product Width must be a number"
+msgstr "横幅は半角数値で入力してください。"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:208
+msgid "The Product Height must be a number"
+msgstr "高さは半角数値で入力してください。"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:211
+msgid "The Product Length must be a number"
+msgstr "長さは半角数値で入力してください。"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:214
+msgid "The Product Weight must be a number"
+msgstr "重さは半角数値で入力してください。"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:258
+msgid "You did not enter anything for the Group Name"
+msgstr "グループ名が入力されていません"
+
+#: community_store/controllers/single_page/dashboard/store/products.php:261
+msgid "Keep the Group Name under 100 Characters"
+msgstr "グループ名は100文字以内に収めてください"
+
+#: community_store/controllers/single_page/dashboard/store/products/attributes.php:46
+msgid "Attribute Deleted."
+msgstr "属性を削除"
+
+#: community_store/controllers/single_page/dashboard/store/products/attributes.php:51
+msgid "Attribute Created."
+msgstr "属性を作成"
+
+#: community_store/controllers/single_page/dashboard/store/products/attributes.php:56
+msgid "Attribute Updated."
+msgstr "属性を更新"
+
+#: community_store/controllers/single_page/dashboard/store/products/attributes.php:65
+msgid "Invalid attribute ID."
+msgstr "無効な属性ID"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:46
+msgid "Settings Saved!"
+msgstr "設定を保存しました。"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:136
+msgid "You must set a currency symbol"
+msgstr "通貨記号は必須です"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:140
+msgid "Tax Rate must be set, and a number"
+msgstr "税率は半角数字で入力してください（必須）"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:143
+msgid "Tax State must be set"
+msgstr "都道府県は必須です"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:146
+msgid "Tax City must be set"
+msgstr "市町村区は必須です"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:151
+msgid "Shipping Base Rate must be set, and a number"
+msgstr "基本送料は半角数字で入力してください（必須）"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:154
+msgid "Shipping Base Rate must be set, and a number (even if just zero)"
+msgstr "税率は半角数字で入力してください（0でも必須）"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:164
+msgid "At least one payment method must be enabled"
+msgstr "ひとつ以上の支払い方法を有効にしてください。"
+
+#: community_store/controllers/single_page/dashboard/store/settings.php:173
+msgid "You must have at least one Order Status."
+msgstr "ひとつ以上の受注ステータスを設定してください"
+
+#: community_store/elements/auth_net/checkout_form.php:7
+msgid "Credit Card Number"
+msgstr "クレジットカード番号"
+
+#: community_store/elements/auth_net/checkout_form.php:16
+msgid "Month"
+msgstr "月"
+
+#: community_store/elements/auth_net/checkout_form.php:18
+msgid "Jan"
+msgstr "01"
+
+#: community_store/elements/auth_net/checkout_form.php:19
+msgid "Feb"
+msgstr "02"
+
+#: community_store/elements/auth_net/checkout_form.php:20
+msgid "Mar"
+msgstr "03"
+
+#: community_store/elements/auth_net/checkout_form.php:21
+msgid "Apr"
+msgstr "04"
+
+#: community_store/elements/auth_net/checkout_form.php:22
+msgid "May"
+msgstr "05"
+
+#: community_store/elements/auth_net/checkout_form.php:23
+msgid "Jun"
+msgstr "06"
+
+#: community_store/elements/auth_net/checkout_form.php:24
+msgid "Jul"
+msgstr "07"
+
+#: community_store/elements/auth_net/checkout_form.php:25
+msgid "Aug"
+msgstr "08"
+
+#: community_store/elements/auth_net/checkout_form.php:26
+msgid "Sep"
+msgstr "09"
+
+#: community_store/elements/auth_net/checkout_form.php:27
+msgid "Oct"
+msgstr "10"
+
+#: community_store/elements/auth_net/checkout_form.php:28
+msgid "Nov"
+msgstr "11"
+
+#: community_store/elements/auth_net/checkout_form.php:29
+msgid "Dec"
+msgstr "12"
+
+#: community_store/elements/auth_net/checkout_form.php:33
+msgid "Year"
+msgstr "年"
+
+#: community_store/elements/auth_net/dashboard_form.php:6
+msgid "Test Mode"
+msgstr "テストモード"
+
+#: community_store/elements/auth_net/dashboard_form.php:11
+msgid "Auth.net Login ID"
+msgstr "Auth.net ログイン ID"
+
+#: community_store/elements/auth_net/dashboard_form.php:16
+msgid "Auth.net Transaction Key"
+msgstr "Auth.net トランザクションキー"
+
+#: community_store/mail/new_order_notification.php:4
+msgid "New Order Notification"
+msgstr "新規受注通知"
+
+#: community_store/mail/new_order_notification.php:19
+msgid "An order has been placed!"
+msgstr "注文が入りました！"
+
+#: community_store/mail/new_order_notification.php:21
+#: community_store/mail/order_receipt.php:21
+msgid "Order"
+msgstr "受注"
+
+#: community_store/mail/new_order_notification.php:22
+msgid "An order has been placed on your website."
+msgstr "あなたのWebサイトに注文がはいっています"
+
+#: community_store/mail/new_order_notification.php:26
+#: community_store/mail/order_receipt.php:26
+#: community_store/single_pages/dashboard/store/orders.php:11
+msgid "Billing Information"
+msgstr "購入者情報"
+
+#: community_store/mail/new_order_notification.php:38
+#: community_store/mail/order_receipt.php:38
+#: community_store/single_pages/dashboard/store/orders.php:23
+msgid "Shipping Information"
+msgstr "配送情報"
+
+#: community_store/mail/new_order_notification.php:52
+#: community_store/mail/order_receipt.php:52
+msgid "Order Details"
+msgstr "受注詳細"
+
+#: community_store/mail/new_order_notification.php:56
+#: community_store/mail/order_receipt.php:56
+#: community_store/single_pages/dashboard/store/orders.php:40
+#: community_store/single_pages/dashboard/store/products.php:49
+#: community_store/single_pages/dashboard/store/products.php:632
+msgid "Product Name"
+msgstr "商品名"
+
+#: community_store/mail/new_order_notification.php:57
+#: community_store/mail/order_receipt.php:57
+#: community_store/single_pages/dashboard/store/products.php:36
+#: community_store/single_pages/dashboard/store/products.php:302
+msgid "Options"
+msgstr "オプション"
+
+#: community_store/mail/new_order_notification.php:58
+#: community_store/mail/order_receipt.php:58
+msgid "Qty"
+msgstr "数量"
+
+#: community_store/mail/new_order_notification.php:59
+#: community_store/mail/order_receipt.php:59
+#: community_store/single_pages/dashboard/store/orders.php:42
+#: community_store/single_pages/dashboard/store/products.php:254
+#: community_store/single_pages/dashboard/store/products.php:634
+msgid "Price"
+msgstr "価格"
+
+#: community_store/mail/new_order_notification.php:60
+#: community_store/mail/order_receipt.php:60
+#: community_store/single_pages/dashboard/store/orders.php:44
+msgid "Subtotal"
+msgstr "小計"
+
+#: community_store/mail/new_order_notification.php:98
+#: community_store/mail/order_receipt.php:125
+#: community_store/mail/order_receipt.php:177
+#: community_store/single_pages/checkout.php:243
+#: community_store/single_pages/dashboard/store/orders.php:82
+#: community_store/single_pages/dashboard/store/settings.php:12
+msgid "Tax"
+msgstr "消費税"
+
+#: community_store/mail/new_order_notification.php:99
+#: community_store/mail/order_receipt.php:126
+#: community_store/mail/order_receipt.php:178
+#: community_store/single_pages/checkout.php:244
+#: community_store/single_pages/dashboard/store/orders.php:83
+#: community_store/single_pages/dashboard/store/products.php:37
+#: community_store/single_pages/dashboard/store/settings.php:13
+msgid "Shipping"
+msgstr "配送"
+
+#: community_store/mail/new_order_notification.php:100
+#: community_store/mail/order_receipt.php:127
+#: community_store/mail/order_receipt.php:179
+#: community_store/single_pages/dashboard/store/orders.php:84
+#: community_store/single_pages/dashboard/store/orders.php:162
+msgid "Total"
+msgstr "合計"
+
+#: community_store/mail/new_order_notification.php:122
+msgid "Order #:"
+msgstr "受注 #:"
+
+#: community_store/mail/new_order_notification.php:124
+msgid "A new order has been placed on your website"
+msgstr "新しい注文があります。"
+
+#: community_store/mail/order_receipt.php:4
+msgid "Order Receipt"
+msgstr "発注書"
+
+#: community_store/mail/order_receipt.php:19
+msgid "Your Order"
+msgstr "お買い物履歴"
+
+#: community_store/mail/order_receipt.php:22
+msgid "Thanks for your order! Below are the details of your order."
+msgstr "お買い上げありがとうございます！以下にご注文の詳細を記します。"
+
+#: community_store/mail/order_receipt.php:111
+#: community_store/single_pages/checkout/complete.php:19
+msgid "Your Downloads"
+msgstr "ダウンロード"
+
+#: community_store/mail/order_receipt.php:112
+msgid "Note: You must be logged in to download files"
+msgstr "注意: ダウンロードするにはログインする必要があります"
+
+#: community_store/mail/order_receipt.php:149
+#, php-format
+msgid "Order #%s has been received"
+msgstr "受注番号 #%s は受信されました"
+
+#: community_store/mail/order_receipt.php:151
+msgid "BILLING INFORMATION"
+msgstr "購入情報"
+
+#: community_store/mail/order_receipt.php:159
+msgid "SHIPPING INFORMATION"
+msgstr "配送情報"
+
+#: community_store/mail/order_receipt.php:167
+msgid "ORDER ITEMS"
+msgstr "注文商品"
+
+#: community_store/single_pages/cart.php:8
+msgid "Shopping Cart"
+msgstr "ショッピングカート"
+
+#: community_store/single_pages/cart.php:36
+msgid "Quantity:"
+msgstr "数量"
+
+#: community_store/single_pages/cart.php:41
+msgid "Remove"
+msgstr "削除"
+
+#: community_store/single_pages/cart.php:68
+msgid "Sub Total"
+msgstr "小計"
+
+#: community_store/single_pages/cart.php:73
+msgid "Clear Cart"
+msgstr "カートをクリア"
+
+#: community_store/single_pages/cart.php:74
+#: community_store/single_pages/checkout.php:8
+msgid "Checkout"
+msgstr "購入"
+
+#: community_store/single_pages/checkout.php:16
+msgid "Sign in or Register"
+msgstr "ログイン or 会員登録"
+
+#: community_store/single_pages/checkout.php:17
+msgid ""
+"In order to proceed, you'll need to either register, or login with your "
+"existing account."
+msgstr ""
+"お買い物を続ける為には会員登録する必要があります、または既存のアカウントでロ"
+"グインしてください。"
+
+#: community_store/single_pages/checkout.php:18
+msgid "Login"
+msgstr "ログイン"
+
+#: community_store/single_pages/checkout.php:19
+msgid "Register"
+msgstr "新規登録"
+
+#: community_store/single_pages/checkout.php:33
+#: community_store/single_pages/checkout.php:116
+msgid "First Name"
+msgstr "名"
+
+#: community_store/single_pages/checkout.php:39
+#: community_store/single_pages/checkout.php:122
+msgid "Last Name"
+msgstr "姓"
+
+#: community_store/single_pages/checkout.php:47
+msgid "Phone"
+msgstr "電話"
+
+#: community_store/single_pages/checkout.php:54
+#: community_store/single_pages/checkout.php:128
+msgid "Address 1"
+msgstr "町名番地"
+
+#: community_store/single_pages/checkout.php:60
+#: community_store/single_pages/checkout.php:134
+msgid "Address 2"
+msgstr "建物名 部屋番号"
+
+#: community_store/single_pages/checkout.php:66
+#: community_store/single_pages/checkout.php:140
+#: community_store/single_pages/dashboard/store/settings.php:53
+#: community_store/single_pages/dashboard/store/settings.php:82
+msgid "Country"
+msgstr "国"
+
+#: community_store/single_pages/checkout.php:73
+#: community_store/single_pages/checkout.php:147
+#: community_store/single_pages/dashboard/store/settings.php:68
+#: community_store/single_pages/dashboard/store/settings.php:82
+msgid "City"
+msgstr "市町村区"
+
+#: community_store/single_pages/checkout.php:79
+#: community_store/single_pages/checkout.php:153
+msgid "State"
+msgstr "都道府県"
+
+#: community_store/single_pages/checkout.php:87
+#: community_store/single_pages/checkout.php:161
+msgid "Postal Code"
+msgstr "郵便番号"
+
+#: community_store/single_pages/checkout.php:93
+#: community_store/single_pages/checkout.php:168
+msgid "Next"
+msgstr "次へ"
+
+#: community_store/single_pages/checkout.php:109
+msgid "Same as Billing Address"
+msgstr "購入者と同じ"
+
+#: community_store/single_pages/checkout.php:167
+#: community_store/single_pages/checkout.php:226
+msgid "Previous"
+msgstr "前へ"
+
+#: community_store/single_pages/checkout.php:178
+msgid "Shipping Method"
+msgstr "配送方法"
+
+#: community_store/single_pages/checkout.php:185
+msgid "Payment"
+msgstr "支払"
+
+#: community_store/single_pages/checkout.php:227
+msgid "Complete Order"
+msgstr "注文完了"
+
+#: community_store/single_pages/checkout.php:240
+msgid "Cart Total"
+msgstr "カート計"
+
+#: community_store/single_pages/checkout.php:242
+msgid "Items Subtotal"
+msgstr "商品小計"
+
+#: community_store/single_pages/checkout.php:246
+msgid "Grand Total"
+msgstr "総計"
+
+#: community_store/single_pages/checkout/complete.php:2
+#, php-format
+msgid "Order #%s is Complete"
+msgstr "受注番号 #%s は完了しました"
+
+#: community_store/single_pages/checkout/complete.php:4
+msgid "Thank you for your order. A receipt should be emailed to you shortly."
+msgstr ""
+"ご注文をいただき、ありがとうございます。ご注文内容はすぐにあなたにeメールで送"
+"信されます。"
+
+#: community_store/single_pages/dashboard/store.php:3
+#: community_store/single_pages/dashboard/store.php:9
+msgid "Add Location"
+msgstr "場所を追加"
+
+#: community_store/single_pages/dashboard/store.php:8
+#: community_store/single_pages/dashboard/store/products.php:602
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: community_store/single_pages/dashboard/store/orders.php:7
+msgid "Customer Overview"
+msgstr "カスタム概要"
+
+#: community_store/single_pages/dashboard/store/orders.php:35
+msgid "Items Orders"
+msgstr "商品の注文"
+
+#: community_store/single_pages/dashboard/store/orders.php:41
+msgid "Product Options"
+msgstr "商品オプション"
+
+#: community_store/single_pages/dashboard/store/orders.php:85
+msgid "Payment Method"
+msgstr "支払い方法"
+
+#: community_store/single_pages/dashboard/store/orders.php:88
+msgid "Order Status History"
+msgstr "受注ステータス履歴"
+
+#: community_store/single_pages/dashboard/store/orders.php:94
+msgid "Update Status"
+msgstr "ステータスを更新"
+
+#: community_store/single_pages/dashboard/store/orders.php:112
+#: community_store/single_pages/dashboard/store/orders.php:163
+msgid "Status"
+msgstr "ステータス"
+
+#: community_store/single_pages/dashboard/store/orders.php:113
+msgid "Date"
+msgstr "日付"
+
+#: community_store/single_pages/dashboard/store/orders.php:114
+msgid "User"
+msgstr "ユーザー"
+
+#: community_store/single_pages/dashboard/store/orders.php:138
+msgid "Manage Order"
+msgstr "受注管理"
+
+#: community_store/single_pages/dashboard/store/orders.php:144
+msgid "Order Options"
+msgstr "受注オプション"
+
+#: community_store/single_pages/dashboard/store/orders.php:148
+msgid "Delete Order"
+msgstr "受注削除"
+
+#: community_store/single_pages/dashboard/store/orders.php:159
+#, php-format
+msgid "Order %s"
+msgstr "受注 %s"
+
+#: community_store/single_pages/dashboard/store/orders.php:160
+msgid "Customer Name"
+msgstr "カスタム名"
+
+#: community_store/single_pages/dashboard/store/orders.php:161
+msgid "Order Date"
+msgstr "受注日"
+
+#: community_store/single_pages/dashboard/store/orders.php:164
+#: community_store/single_pages/dashboard/store/orders.php:176
+msgid "View"
+msgstr "表示"
+
+#: community_store/single_pages/dashboard/store/products.php:32
+msgid "Overview"
+msgstr "概要"
+
+#: community_store/single_pages/dashboard/store/products.php:33
+msgid "Downloads and User Groups"
+msgstr "ダウンロードとユーザーグループ"
+
+#: community_store/single_pages/dashboard/store/products.php:34
+msgid "Images"
+msgstr "画像"
+
+#: community_store/single_pages/dashboard/store/products.php:35
+msgid "Details"
+msgstr "詳細"
+
+#: community_store/single_pages/dashboard/store/products.php:38
+msgid "Attributes"
+msgstr "属性"
+
+#: community_store/single_pages/dashboard/store/products.php:39
+msgid "Detail Page"
+msgstr "詳細ページ"
+
+#: community_store/single_pages/dashboard/store/products.php:53
+msgid "Short Description"
+msgstr "短い商品説明"
+
+#: community_store/single_pages/dashboard/store/products.php:69
+msgid "Product Details (Long Description)"
+msgstr "商品詳細 (長い商品説明)"
+
+#: community_store/single_pages/dashboard/store/products.php:97
+msgid "File to download on purchase"
+msgstr "購入時にダウンロードするファイル"
+
+#: community_store/single_pages/dashboard/store/products.php:98
+msgid "Choose File"
+msgstr "ファイルを選択"
+
+#: community_store/single_pages/dashboard/store/products.php:106
+#, php-format
+msgid ""
+"In order to have digital downloads, you need to %sturn on advanced "
+"permissions%s."
+msgstr ""
+"ダウンロード商品を利用するためには、%s を有効にする必要があります。（ 上級権"
+"限モード %s ）"
+
+#: community_store/single_pages/dashboard/store/products.php:112
+msgid "On purchase add user to user groups"
+msgstr "購入時にユーザーグループにユーザーを追加"
+
+#: community_store/single_pages/dashboard/store/products.php:114
+msgid "Select user groups"
+msgstr "ユーザーグループを選択"
+
+#: community_store/single_pages/dashboard/store/products.php:136
+msgid "Primary Product Image"
+msgstr "主要な商品画像"
+
+#: community_store/single_pages/dashboard/store/products.php:138
+#: community_store/single_pages/dashboard/store/products.php:164
+msgid "Choose Image"
+msgstr "画像を選択"
+
+#: community_store/single_pages/dashboard/store/products.php:142
+msgid "Additional Images"
+msgstr "追加画像"
+
+#: community_store/single_pages/dashboard/store/products.php:147
+msgid "Add Image"
+msgstr "画像を追加"
+
+#: community_store/single_pages/dashboard/store/products.php:270
+msgid "Taxable"
+msgstr "課税"
+
+#: community_store/single_pages/dashboard/store/products.php:271
+#: community_store/single_pages/dashboard/store/products.php:293
+#: community_store/single_pages/dashboard/store/products.php:516
+#: community_store/single_pages/dashboard/store/settings.php:48
+#: community_store/single_pages/dashboard/store/settings.php:121
+msgid "No"
+msgstr "いいえ"
+
+#: community_store/single_pages/dashboard/store/products.php:271
+#: community_store/single_pages/dashboard/store/products.php:293
+#: community_store/single_pages/dashboard/store/products.php:516
+#: community_store/single_pages/dashboard/store/settings.php:48
+#: community_store/single_pages/dashboard/store/settings.php:121
+msgid "Yes"
+msgstr "はい"
+
+#: community_store/single_pages/dashboard/store/products.php:276
+#: community_store/single_pages/dashboard/store/products.php:277
+msgid "Active"
+msgstr "有効"
+
+#: community_store/single_pages/dashboard/store/products.php:277
+msgid "Inactive"
+msgstr "無効"
+
+#: community_store/single_pages/dashboard/store/products.php:285
+#: community_store/single_pages/dashboard/store/products.php:636
+msgid "Group"
+msgstr "グループ"
+
+#: community_store/single_pages/dashboard/store/products.php:292
+msgid "Featured Product"
+msgstr "特集商品"
+
+#: community_store/single_pages/dashboard/store/products.php:306
+msgid "Add Option Group"
+msgstr "オプショングループを追加"
+
+#: community_store/single_pages/dashboard/store/products.php:314
+msgid "Group Name:"
+msgstr "グループ名:"
+
+#: community_store/single_pages/dashboard/store/products.php:320
+msgid "Add Option to the Group"
+msgstr "グループにオプションを追加"
+
+#: community_store/single_pages/dashboard/store/products.php:321
+msgid "Delete the Option Group"
+msgstr "オプショングループを削除"
+
+#: community_store/single_pages/dashboard/store/products.php:396
+msgid "Option"
+msgstr "オプション"
+
+#: community_store/single_pages/dashboard/store/products.php:487
+msgid ""
+"While you can set and assign attributes, they're are currently only able to "
+"be accessed programmatically"
+msgstr ""
+"あなたが設定した属性を割り当てることができますが、それらは現在プログラムから"
+"アクセスすることしかできません。"
+
+#: community_store/single_pages/dashboard/store/products.php:506
+msgid "You have't created product attributes"
+msgstr "商品属性を作成する必要があります"
+
+#: community_store/single_pages/dashboard/store/products.php:515
+msgid "Product is Shippable"
+msgstr "商品は配送可能です"
+
+#: community_store/single_pages/dashboard/store/products.php:533
+msgid "Length"
+msgstr "長さ"
+
+#: community_store/single_pages/dashboard/store/products.php:541
+msgid "Width"
+msgstr "横幅"
+
+#: community_store/single_pages/dashboard/store/products.php:549
+msgid "Height"
+msgstr "高さ"
+
+#: community_store/single_pages/dashboard/store/products.php:570
+msgid "Detail Page is set to: "
+msgstr "商品詳細ページをここに設定: "
+
+#: community_store/single_pages/dashboard/store/products.php:575
+msgid ""
+"We're not sure why, but this product doesn't seem to have a Page that "
+"correlates to it."
+msgstr ""
+"なんだかよくわかりませんが、この製品は詳細ページを持っていないようです。"
+
+#: community_store/single_pages/dashboard/store/products.php:579
+msgid "Page Template"
+msgstr "ページテンプレート"
+
+#: community_store/single_pages/dashboard/store/products.php:583
+msgid "Generate a Product Page"
+msgstr "商品ページを生成"
+
+#: community_store/single_pages/dashboard/store/products.php:591
+msgid ""
+"When you create a product, we'll make a page for that product. For now "
+"though, there's nothing to see here."
+msgstr ""
+"商品を作成するときその製品のページを作成します。現在はここには何もありませ"
+"ん。"
+
+#: community_store/single_pages/dashboard/store/products.php:603
+#, php-format
+msgid "%s Product"
+msgstr "%s 商品"
+
+#: community_store/single_pages/dashboard/store/products.php:614
+msgid "Manage Attributes"
+msgstr "属性管理"
+
+#: community_store/single_pages/dashboard/store/products.php:615
+msgid "Manage Groups"
+msgstr "グループ管理"
+
+#: community_store/single_pages/dashboard/store/products.php:620
+msgid "All Groups"
+msgstr "全てのグループ"
+
+#: community_store/single_pages/dashboard/store/products.php:631
+msgid "Primary Image"
+msgstr "メイン画像"
+
+#: community_store/single_pages/dashboard/store/products.php:635
+#: community_store/single_pages/dashboard/store/products.php:651
+msgid "Featured"
+msgstr "特集"
+
+#: community_store/single_pages/dashboard/store/products.php:637
+msgid "Actions"
+msgstr "活動"
+
+#: community_store/single_pages/dashboard/store/products.php:654
+msgid "Not Featured"
+msgstr "特集ではない"
+
+#: community_store/single_pages/dashboard/store/products.php:680
+msgid "No Products to See, Yet."
+msgstr "まだ商品は公開されていません"
+
+#: community_store/single_pages/dashboard/store/products.php:685
+msgid "Groups"
+msgstr "グループ"
+
+#: community_store/single_pages/dashboard/store/products.php:705
+msgid "You have not added a group yet"
+msgstr "まだグループを追加していません"
+
+#: community_store/single_pages/dashboard/store/products.php:709
+msgid "Add a Group"
+msgstr "グループを追加しました"
+
+#: community_store/single_pages/dashboard/store/products.php:712
+msgid "Group Name"
+msgstr "グループ名"
+
+#: community_store/single_pages/dashboard/store/products.php:715
+msgid "Add Group"
+msgstr "グループを追加"
+
+#: community_store/single_pages/dashboard/store/products/attributes.php:29
+msgid "Add Attribute"
+msgstr "属性を追加"
+
+#: community_store/single_pages/dashboard/store/settings.php:11
+msgid "Currency"
+msgstr "通貨"
+
+#: community_store/single_pages/dashboard/store/settings.php:14
+msgid "Payments"
+msgstr "支払い"
+
+#: community_store/single_pages/dashboard/store/settings.php:15
+msgid "Order Statuses"
+msgstr "受注ステータス"
+
+#: community_store/single_pages/dashboard/store/settings.php:16
+msgid "Notifications"
+msgstr "通知"
+
+#: community_store/single_pages/dashboard/store/settings.php:17
+msgid "Products"
+msgstr "商品"
+
+#: community_store/single_pages/dashboard/store/settings.php:27
+msgid "Currency Symbol"
+msgstr "通貨記号"
+
+#: community_store/single_pages/dashboard/store/settings.php:31
+#, php-format
+msgid "Thousands Separator %se.g. , or a space%s"
+msgstr "桁区切り記号「%s」 .か,スペース %s"
+
+#: community_store/single_pages/dashboard/store/settings.php:35
+#, php-format
+msgid "Whole Number Separator %se.g. period or a comma%s"
+msgstr "少数点記号 %s ピリオドかカンマ %s"
+
+#: community_store/single_pages/dashboard/store/settings.php:43
+msgid "Your Store Location"
+msgstr "店舗所在地"
+
+#: community_store/single_pages/dashboard/store/settings.php:47
+msgid "Enable Tax"
+msgstr "消費税を有効"
+
+#: community_store/single_pages/dashboard/store/settings.php:60
+#: community_store/single_pages/dashboard/store/settings.php:82
+msgid "State/Region"
+msgstr "都道府県"
+
+#: community_store/single_pages/dashboard/store/settings.php:74
+msgid "Tax Rules"
+msgstr "課税ルール"
+
+#: community_store/single_pages/dashboard/store/settings.php:77
+msgid "I charge sales tax if the"
+msgstr "消費税を追加"
+
+#: community_store/single_pages/dashboard/store/settings.php:81
+msgid "matches our"
+msgstr "これらに一致"
+
+#: community_store/single_pages/dashboard/store/settings.php:85
+msgid "based on the"
+msgstr "に基づき"
+
+#: community_store/single_pages/dashboard/store/settings.php:86
+msgid "Product Total"
+msgstr "商品合計"
+
+#: community_store/single_pages/dashboard/store/settings.php:86
+msgid "Product Total + Shipping"
+msgstr "商品合計 + 送料"
+
+#: community_store/single_pages/dashboard/store/settings.php:90
+msgid "Tax Rate %"
+msgstr "税率 %"
+
+#: community_store/single_pages/dashboard/store/settings.php:101
+msgid "Terminology"
+msgstr "専門用語"
+
+#: community_store/single_pages/dashboard/store/settings.php:105
+msgid "Units for Weight"
+msgstr "ユニット毎の重さ"
+
+#: community_store/single_pages/dashboard/store/settings.php:106
+msgid "lb"
+msgstr ""
+
+#: community_store/single_pages/dashboard/store/settings.php:106
+msgid "kg"
+msgstr ""
+
+#: community_store/single_pages/dashboard/store/settings.php:111
+msgid "Units for Size"
+msgstr "ユニットのサイズ"
+
+#: community_store/single_pages/dashboard/store/settings.php:112
+msgid "in"
+msgstr ""
+
+#: community_store/single_pages/dashboard/store/settings.php:112
+msgid "cm"
+msgstr ""
+
+#: community_store/single_pages/dashboard/store/settings.php:117
+msgid "Settings"
+msgstr "設定"
+
+#: community_store/single_pages/dashboard/store/settings.php:120
+#: community_store/single_pages/dashboard/store/settings.php:147
+msgid "Enabled"
+msgstr "有効"
+
+#: community_store/single_pages/dashboard/store/settings.php:124
+msgid "Base Price"
+msgstr "基本料金"
+
+#: community_store/single_pages/dashboard/store/settings.php:128
+msgid "Additional Price Per Item"
+msgstr "数量毎の追加料金"
+
+#: community_store/single_pages/dashboard/store/settings.php:153
+msgid "Display Name (on checkout)"
+msgstr "購入時の表示名"
+
+#: community_store/single_pages/dashboard/store/settings.php:166
+msgid "No Payment Methods are Installed"
+msgstr "決済モジュールがインストールされていません"
+
+#: community_store/single_pages/dashboard/store/settings.php:183
+msgid "Display Name"
+msgstr "表示名"
+
+#: community_store/single_pages/dashboard/store/settings.php:184
+msgid "Default Status"
+msgstr "標準ステータス"
+
+#: community_store/single_pages/dashboard/store/settings.php:185
+msgid "Send Change Notifications to..."
+msgstr "ここに変更通知を送信..."
+
+#: community_store/single_pages/dashboard/store/settings.php:188
+msgid "Site"
+msgstr "サイト"
+
+#: community_store/single_pages/dashboard/store/settings.php:189
+msgid "Customer"
+msgstr "顧客"
+
+#: community_store/single_pages/dashboard/store/settings.php:220
+msgid "No Order Statuses are available"
+msgstr "受注ステータスを有効にしない"
+
+#: community_store/single_pages/dashboard/store/settings.php:230
+#, php-format
+msgid ""
+"Enter Emails to Notify of New Orders %sseparate multiple emails with commas%s"
+msgstr ""
+"新規受注通知メールの送信先をメールアドレスを入力してください。%s複数のアドレ"
+"スを指定する場合は、カンマ「%s」で区切ってください。"
+
+#: community_store/single_pages/dashboard/store/settings.php:235
+msgid "Email address to send alerts from"
+msgstr "アラートメール送信元"
+
+#: community_store/single_pages/dashboard/store/settings.php:244
+msgid "Page to Publish Product Pages Under"
+msgstr "商品ページをこのページの下層に生成"
+
+#: community_store/single_pages/dashboard/store/settings.php:254
+msgid "Save Settings"
+msgstr "設定を保存"
+
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/controller.php:42
+msgid "Transaction Key must be set"
+msgstr "トランザクションキーは必須です"
+
+#: community_store/src/CommunityStore/Payment/Methods/auth_net/controller.php:45
+msgid "Login ID must be set"
+msgstr "ログインIDは必須です"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:91
+msgid "You must enter a first name"
+msgstr "（名）を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:94
+msgid "Your First Name is quite long. Please keep it under 30 characters"
+msgstr "（名）は30文字以内で入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:97
+msgid "You must enter a Last Name"
+msgstr "（姓）を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:100
+msgid "That is a long Last Name. Please keep it under 30 characters"
+msgstr "（姓）は30文字以内で入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:103
+msgid "You must enter an address"
+msgstr "住所を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:106
+msgid "That is a long street name. Please keep it under 50 characters"
+msgstr "50文字以内で入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:109
+msgid "You must enter a Country"
+msgstr "国を選択してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:112
+msgid "You did not select a Country from the list."
+msgstr "国をリストから選択してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:115
+msgid "You must enter a City"
+msgstr "市町村区を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:118
+msgid "You must enter a valid City"
+msgstr "有効な市町村区を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/Checkout.php:121
+#: community_store/src/CommunityStore/Utilities/Checkout.php:124
+msgid "You must enter a valid Zip"
+msgstr "郵便番号を入力してください"
+
+#: community_store/src/CommunityStore/Utilities/ProductFinder.php:36
+msgid "I can't find a product by that name"
+msgstr "その名前の商品がみつかりませんでした。"

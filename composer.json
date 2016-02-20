@@ -1,0 +1,16 @@
+{
+  "name": "communityweb/community_store",
+  "type": "concrete5-package",
+  "require": {
+    "php": ">=5.4",
+    "composer/installers": ">=1.0.7"
+  },
+  "minimum-stability": "dev",
+  "support": {
+    "source": "https://github.com/CommunityWeb/community_store/src"
+  },
+  "require": {
+    "dvdoug/boxpacker": "~1.5"
+  }
+
+}

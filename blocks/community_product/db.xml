@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btCommunityStoreProduct">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="productLocation" type="C" size="10"></field>
+		<field name="pID" type="I"></field>
+		<field name="showProductName" type="I"></field>
+		<field name="showProductDescription" type="I"></field>
+		<field name="showProductDetails" type="I"></field>
+		<field name="showProductPrice" type="I"></field>
+		<field name="showWeight" type="I"></field>
+		<field name="showImage" type="I"></field>
+		<field name="showCartButton" type="I"></field>
+		<field name="showIsFeatured" type="I"></field>
+		<field name="showGroups" type="I"></field>
+		<field name="showDimensions" type="I"></field>
+		<field name="btnText" type="C" size="255"></field>
+	</table>
+</schema>
