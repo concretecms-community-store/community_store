@@ -427,8 +427,8 @@ $(document).ready(function () {
                         }
                     });
                 } else {
-                    $("#store-checkout-form-group-billing .store-checkout-form-group-body").prepend('<div class="community-store-col-1 checkout-errors"><div class="alert alert-danger"></div></div>');
-                    $("#store-checkout-form-group-billing .alert").html(response.errors.join('<br>'));
+                    $("#store-checkout-form-group-billing .store-checkout-form-group-body ").prepend('<div class="store-checkout-errors"><div class="store-checkout-error alert alert-danger"></div></div>');
+                    $("#store-checkout-form-group-billing .store-checkout-error").html(response.errors.join('<br>'));
                     $('.store-whiteout').remove();
                 }
             },
