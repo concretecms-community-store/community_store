@@ -516,7 +516,7 @@ $(document).ready(function () {
         } else {
             var smID = $("#store-checkout-shipping-method-options input[type='radio']:checked").val();
             var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().text());
-            obj.find('.store-summary-shipping-method').html(methodText);
+            obj.find('.summary-shipping-method').html(methodText);
 
             $.ajax({
                 type: 'post',
