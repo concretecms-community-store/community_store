@@ -440,14 +440,14 @@ $(document).ready(function () {
     });
     $("#store-checkout-form-group-shipping").submit(function (e) {
         e.preventDefault();
-        var sfName = $("#checkout-shipping-first-name").val();
-        var slName = $("#checkout-shipping-last-name").val();
-        var sAddress1 = $("#checkout-shipping-address-1").val();
-        var sAddress2 = $("#checkout-shipping-address-2").val();
-        var sCountry = $("#checkout-shipping-country").val();
-        var sCity = $("#checkout-shipping-city").val();
-        var sState = $("#checkout-shipping-state").val();
-        var sPostal = $("#checkout-shipping-zip").val();
+        var sfName = $("#store-checkout-shipping-first-name").val();
+        var slName = $("#store-checkout-shipping-last-name").val();
+        var sAddress1 = $("#store-checkout-shipping-address-1").val();
+        var sAddress2 = $("#store-checkout-shipping-address-2").val();
+        var sCountry = $("#store-checkout-shipping-country").val();
+        var sCity = $("#store-checkout-shipping-city").val();
+        var sState = $("#store-checkout-shipping-state").val();
+        var sPostal = $("#store-checkout-shipping-zip").val();
         $("#store-checkout-form-group-shipping .store-checkout-form-group-body .store-checkout-errors").remove();
 
         communityStore.waiting();
@@ -564,17 +564,17 @@ $(document).ready(function () {
     });
     $("#ckbx-copy-billing").change(function () {
         if ($(this).is(":checked")) {
-            $("#checkout-shipping-first-name").val($("#checkout-billing-first-name").val());
-            $("#checkout-shipping-last-name").val($("#checkout-billing-last-name").val());
-            $("#checkout-shipping-email").val($("#checkout-billing-email").val());
-            $("#checkout-shipping-phone").val($("#checkout-billing-phone").val());
-            $("#checkout-shipping-address-1").val($("#checkout-billing-address-1").val());
-            $("#checkout-shipping-address-2").val($("#checkout-billing-address-2").val());
-            $("#checkout-shipping-country").val($("#checkout-billing-country").val());
-            $("#checkout-shipping-city").val($("#checkout-billing-city").val());
-            var billingstate = $("#checkout-billing-state").clone().val($("#checkout-billing-state").val()).attr("name", "checkout-shipping-state").attr("id", "checkout-shipping-state");
-            $("#checkout-shipping-state").replaceWith(billingstate);
-            $("#checkout-shipping-zip").val($("#checkout-billing-zip").val());
+            $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
+            $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
+            $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
+            $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
+            $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
+            $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
+            $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
+            $("#store-checkout-shipping-city").val($("#store-checkout-billing-city").val());
+            var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
+            $("#store-checkout-shipping-state").replaceWith(billingstate);
+            $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
         }
     });
     $("#store-checkout-payment-method-options input[type='radio']").change(function () {
