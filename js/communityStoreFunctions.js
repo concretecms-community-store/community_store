@@ -86,7 +86,7 @@ $(function(){
 var url = window.location.pathname.toString();
 var urlArray = url.split('/');
 var saveSuccess = urlArray[urlArray.length - 1];
-if(saveSuccess != "success"){
+if(saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added"){
     localStorage.removeItem("selectedTab");
 }else{
     $(".store-pane").removeClass('active'); 
