@@ -89,7 +89,7 @@ var communityStore = {
                     $.ajax({
                         url: CARTURL + '/getTotalItems',
                         success: function (itemCount) {
-                            $(".community-store-utility-links .items-counter").text(itemCount);
+                            $(".store-utility-links .items-counter").text(itemCount);
                             if (itemCount > 0) {
                                 $(".store-utility-links").removeClass('store-cart-empty');
                             }
@@ -98,7 +98,7 @@ var communityStore = {
                     $.ajax({
                         url: CARTURL + '/getTotal',
                         success: function (subTotal) {
-                            $(".community-store-utility-links .total-cart-amount").text(subTotal);
+                            $(".store-utility-links .total-cart-amount").text(subTotal);
                         }
                     });
                 }
@@ -125,7 +125,7 @@ var communityStore = {
                 $.ajax({
                     url: CARTURL + '/getTotalItems',
                     success: function (itemCount) {
-                        $(".community-store-utility-links .items-counter").text(itemCount);
+                        $(".store-utility-links .items-counter").text(itemCount);
 
                         if (itemCount == 0) {
                             $(".store-utility-links .store-items-counter").text(0);
@@ -142,7 +142,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".community-store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .total-cart-amount").text(subTotal);
                                 }
                             });
                         }
@@ -187,7 +187,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".community-store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .total-cart-amount").text(subTotal);
                                 }
                             });
                         }
@@ -214,7 +214,7 @@ var communityStore = {
                 $.ajax({
                     url: CARTURL + '/getTotalItems',
                     success: function (itemCount) {
-                        $(".community-store-utility-links .items-counter").text(itemCount);
+                        $(".store-utility-links .items-counter").text(itemCount);
 
                         if (itemCount == 0) {
                             $(".store-utility-links .store-items-counter").text(0);
@@ -231,7 +231,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".community-store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .total-cart-amount").text(subTotal);
                                 }
                             });
                         }
