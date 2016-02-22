@@ -1,24 +1,20 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use \Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Foundation\Object as Object;
 use Database;
 use Events;
 use User;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusH;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 
 /**
  * @Entity
  * @Table(name="CommunityStoreOrderStatusHistories")
  */
-
 class OrderStatusHistory extends Object
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -40,30 +36,35 @@ class OrderStatusHistory extends Object
     /** @Column(type="integer") */
     protected $uID;
 
-
     public static $table = 'CommunityStoreOrderStatusHistories';
 
-    public function setOrder($order) {
-       $this->order = $order;
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
-    public function getOrder() {
+    public function getOrder()
+    {
         return StoreOrder::getByID($this->getOrderID());
     }
 
-    public function getOrderStatusHandle() {
+    public function getOrderStatusHandle()
+    {
         return $this->oshStatus;
     }
 
-    public function setOrderStatusHandle($oshStatus) {
+    public function setOrderStatusHandle($oshStatus)
+    {
         $this->oshStatus = $oshStatus;
     }
 
-    public function getOrderStatus() {
+    public function getOrderStatus()
+    {
         return StoreOrderStatus::getByHandle($this->getOrderStatusHandle());
     }
 
-    public function getOrderStatusName() {
+    public function getOrderStatusName()
+    {
         $os = $this->getOrderStatus();
 
         if ($os) {
@@ -71,37 +72,40 @@ class OrderStatusHistory extends Object
         } else {
             return null;
         }
-
     }
 
-    public function getDate($format = 'm/d/Y H:i:s') {
+    public function getDate($format = 'm/d/Y H:i:s')
+    {
         return date($format, strtotime($this->oshDate));
     }
 
-    public function setDate($date) {
+    public function setDate($date)
+    {
         $this->oshDate = $date;
     }
 
-    public function getUserID() {
+    public function getUserID()
+    {
         return $this->uID;
     }
 
-    public function setUserID($uID) {
+    public function setUserID($uID)
+    {
         $this->uID = $uID;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return User::getByUserID($this->getUserID());
     }
 
-    public function getUserName() {
+    public function getUserName()
+    {
         $u = $this->getUser();
-        if($u){
+        if ($u) {
             return $u->getUserName();
         }
     }
-
-
 
     private static function getTableName()
     {
@@ -114,10 +118,11 @@ class OrderStatusHistory extends Object
         $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE oshID=?", $oshID);
         $history = null;
         if (!empty($data)) {
-            $history = new OrderStatusHistory();
+            $history = new self();
             $history->setPropertiesFromArray($data);
         }
-        return ($history instanceof OrderStatusHistory) ? $history : false;
+
+        return ($history instanceof self) ? $history : false;
     }
 
     public static function getForOrder(StoreOrder $order)
@@ -133,6 +138,7 @@ class OrderStatusHistory extends Object
                 $history[] = self::getByID($row['oshID']);
             }
         }
+
         return $history;
     }
 
@@ -140,7 +146,7 @@ class OrderStatusHistory extends Object
     {
         $history = self::getForOrder($order);
 
-        if (empty($history) || $history[0]->getOrderStatusHandle() !=$statusHandle) {
+        if (empty($history) || $history[0]->getOrderStatusHandle() != $statusHandle) {
             $updatedOrder = clone $order;
             $updatedOrder->updateStatus(self::recordStatusChange($order, $statusHandle));
             $event = new StoreOrderEvent($updatedOrder, $order);
@@ -157,6 +163,7 @@ class OrderStatusHistory extends Object
         $orderStatusHistory->setDate(new \DateTime());
         $orderStatusHistory->setOrder($order);
         $orderStatusHistory->save();
+
         return $orderStatusHistory->getOrderStatusHandle();
     }
 

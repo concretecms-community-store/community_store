@@ -9,7 +9,6 @@ use Database;
  */
 class ProductVariationOptionItem
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -28,8 +27,8 @@ class ProductVariationOptionItem
      */
     protected $option;
 
-
-    public function getID() {
+    public function getID()
+    {
         return $this->pvoiID;
     }
 
@@ -59,5 +58,4 @@ class ProductVariationOptionItem
         $em->persist($this);
         $em->flush();
     }
-
 }

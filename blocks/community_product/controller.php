@@ -1,15 +1,12 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 
-use \Concrete\Core\Block\BlockController;
-use Package;
+use Concrete\Core\Block\BlockController;
 use Core;
 use View;
 use Page;
-use URL;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends BlockController
@@ -31,8 +28,7 @@ class Controller extends BlockController
     }
     public function view()
     {
-            
-        if($this->productLocation == 'page'){
+        if ($this->productLocation == 'page') {
             $cID = Page::getCurrentPage()->getCollectionID();
             $product = StoreProduct::getByCollectionID($cID);
         } else {
@@ -40,8 +36,6 @@ class Controller extends BlockController
         }
 
         if ($product) {
-
-
             if ($product->hasVariations()) {
                 $variations = StoreProductVariation::getVariationsForProduct($product);
 
@@ -59,9 +53,9 @@ class Controller extends BlockController
                 $this->set('variationLookup', $variationLookup);
             }
 
-            $this->set('product',$product);
+            $this->set('product', $product);
             $this->set('optionGroups', $product->getProductOptionGroups());
-            $this->set('optionItems',$product->getProductOptionItems(true));
+            $this->set('optionItems', $product->getProductOptionItems(true));
         }
     }
     public function registerViewAssets($outputContent = '')
@@ -85,8 +79,8 @@ class Controller extends BlockController
         $args['showIsFeatured'] = isset($args['showIsFeatured']) ? 1 : 0;
         $args['showGroups'] = isset($args['showGroups']) ? 1 : 0;
         $args['showDimensions'] = isset($args['showDimensions']) ? 1 : 0;
-        if($args['productLocation']=='search'){
-            if(!is_numeric($args['pID']) || $args['pID']<1){
+        if ($args['productLocation'] == 'search') {
+            if (!is_numeric($args['pID']) || $args['pID'] < 1) {
                 $args['productLocation'] = "page";
             }
         }

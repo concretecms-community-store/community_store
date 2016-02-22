@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use \Concrete\Core\Foundation\Object as Object;
-use \Concrete\Core\Utility\Service\Text as TextHelper;
+use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Utility\Service\Text as TextHelper;
 use Database;
 
 /**
@@ -11,7 +11,6 @@ use Database;
  */
 class OrderStatus extends Object
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -36,9 +35,9 @@ class OrderStatus extends Object
     /** @Column(type="integer") */
     protected $osSortOrder;
 
-    static protected $table = "CommunityStoreOrderStatuses";
+    protected static $table = "CommunityStoreOrderStatuses";
 
-    static public function getTableName()
+    public static function getTableName()
     {
         return self::$table;
     }
@@ -49,42 +48,46 @@ class OrderStatus extends Object
         $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE osID=?", $osID);
         $orderStatus = null;
         if (!empty($data)) {
-            $orderStatus = new OrderStatus();
+            $orderStatus = new self();
             $orderStatus->setPropertiesFromArray($data);
         }
-        return ($orderStatus instanceof OrderStatus) ? $orderStatus : false;
+
+        return ($orderStatus instanceof self) ? $orderStatus : false;
     }
 
-    static public function getByHandle($osHandle)
+    public static function getByHandle($osHandle)
     {
         $db = Database::connection();
         $data = $db->GetRow("SELECT osID FROM " . self::getTableName() . " WHERE osHandle=?", $osHandle);
-        return OrderStatus::getByID($data['osID']);
 
+        return self::getByID($data['osID']);
     }
 
-    static public function getAll() {
+    public static function getAll()
+    {
         $db = Database::connection();
         $rows = $db->GetAll("SELECT osID FROM " . self::getTableName() . " ORDER BY osSortOrder ASC, osID ASC");
         $statuses = array();
-        if (count($rows)>0) {
+        if (count($rows) > 0) {
             foreach ($rows as $row) {
                 $statuses[] = self::getByID($row['osID']);
             }
         }
+
         return $statuses;
     }
 
-    static public function getList()
+    public static function getList()
     {
         $statuses = array();
         foreach (self::getAll() as $status) {
             $statuses[$status->getHandle()] = $status->getName();
         }
+
         return $statuses;
     }
 
-    static public function add($osHandle, $osName = null, $osInformSite = 1, $osInformCustomer = 1, $osIsStartingStatus=0)
+    public static function add($osHandle, $osName = null, $osInformSite = 1, $osInformCustomer = 1, $osIsStartingStatus = 0)
     {
         if (is_null($osName)) {
             $textHelper = new TextHelper();
@@ -96,7 +99,7 @@ class OrderStatus extends Object
             $osHandle,
             $osName,
             $osInformSite ? 1 : 0,
-            $osInformCustomer ? 1 : 0
+            $osInformCustomer ? 1 : 0,
         );
         $db->Execute($sql, $values);
 
@@ -118,6 +121,7 @@ class OrderStatus extends Object
     public function getReadableHandle()
     {
         $textHelper = new TextHelper();
+
         return $textHelper->unhandle($this->osHandle);
     }
     public function getName()
@@ -129,8 +133,10 @@ class OrderStatus extends Object
     {
         if ($value) {
             $this->setColumn('osName', $value);
+
             return $value;
         }
+
         return null;
     }
 
@@ -142,6 +148,7 @@ class OrderStatus extends Object
     public function setInformSite($value = true)
     {
         $this->setColumn('osInformSite', $value ? 1 : 0);
+
         return $value ? true : false;
     }
 
@@ -153,6 +160,7 @@ class OrderStatus extends Object
     public function setInformCustomer($value = true)
     {
         $this->setColumn('osInformCustomer', $value ? 1 : 0);
+
         return $value ? true : false;
     }
 
@@ -161,7 +169,8 @@ class OrderStatus extends Object
         return $this->osIsStartingStatus ? true : false;
     }
 
-    public static function getStartingStatus() {
+    public static function getStartingStatus()
+    {
         $statuses = self::getAll();
         $startingStatus = $statuses[0];
         foreach ($statuses as $status) {
@@ -170,6 +179,7 @@ class OrderStatus extends Object
                 break;
             }
         }
+
         return $startingStatus;
     }
 
@@ -179,7 +189,8 @@ class OrderStatus extends Object
         Database::connection()->Execute($sql, array($column, $value));
     }
 
-    public static function setNewStartingStatus($osHandle=null) {
+    public static function setNewStartingStatus($osHandle = null)
+    {
         if ($osHandle) {
             $currentStartingStatus = self::getByHandle($osHandle);
             if ($currentStartingStatus) {
@@ -192,11 +203,11 @@ class OrderStatus extends Object
     public function update($data = array(), $ignoreFilledColumns = false)
     {
         $orderStatusArray = array(
-            'osHandle'=>$this->osHandle,
-            'osName'=>$this->osName,
-            'osInformSite'=>$this->osInformSite,
-            'osInformCustomer'=>$this->osInformCustomer,
-            'osSortOrder'=>$this->osSortOrder
+            'osHandle' => $this->osHandle,
+            'osName' => $this->osName,
+            'osInformSite' => $this->osInformSite,
+            'osInformCustomer' => $this->osInformCustomer,
+            'osSortOrder' => $this->osSortOrder,
         );
         $startingStatusHandle = null;
         if (isset($data['osIsStartingStatus'])) {
@@ -210,10 +221,12 @@ class OrderStatus extends Object
             $values[] = $this->osID;
             Database::connection()->Execute("UPDATE " . self::getTableName() . " SET " . $columnPhrase . " WHERE osID=?", $values);
             if ($startingStatusHandle) {
-                OrderStatus::setNewStartingStatus($startingStatusHandle);
+                self::setNewStartingStatus($startingStatusHandle);
             }
+
             return true;
         }
+
         return false;
     }
 }

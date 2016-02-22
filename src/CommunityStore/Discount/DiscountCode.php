@@ -1,8 +1,7 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Doctrine\ORM\Mapping\Column;
 use Loader;
 use Database;
@@ -81,7 +80,6 @@ class DiscountCode
         $this->discountRule = $discountRule;
     }
 
-
     /**
      * @return mixed
      */
@@ -106,8 +104,9 @@ class DiscountCode
         return $this->dcDateAdded;
     }
 
-    public function isUsed() {
-        return ($this->oID > 0);
+    public function isUsed()
+    {
+        return $this->oID > 0;
     }
 
     /**
@@ -118,17 +117,20 @@ class DiscountCode
         $this->dcDateAdded = $dcDateAdded;
     }
 
-    public static function getByID($dcID) {
+    public static function getByID($dcID)
+    {
         $db = Database::connection();
         $em = $db->getEntityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode', $dcID);
     }
 
-    static function getByCode($code) {
+    public static function getByCode($code)
+    {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode', array('dcCode'=>$code));
 
+        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode', array('dcCode' => $code));
     }
 
     public static function add($discountRule, $code)
@@ -138,6 +140,7 @@ class DiscountCode
         $discountCode->setDiscountCodeCode($code);
         $discountCode->setDiscountCodeDateAdded(new \DateTime());
         $discountCode->save();
+
         return $discountCode;
     }
 
@@ -155,35 +158,39 @@ class DiscountCode
         $em->flush();
     }
 
-    static function validate($args)
+    public static function validate($args)
     {
         $e = Loader::helper('validation/error');
-        return $e;
 
+        return $e;
     }
 
     //TODO: Move to Discounts
-    public static function storeCode($code) {
+    public static function storeCode($code)
+    {
         $rule = StoreDiscountRule::findDiscountRuleByCode($code);
 
         if (!empty($rule)) {
-            Session::set('communitystore.code',$code);
+            Session::set('communitystore.code', $code);
+
             return true;
         }
 
         return false;
     }
 
-    public static function hasCode() {
-        return (bool)Session::get('communitystore.code');
+    public static function hasCode()
+    {
+        return (bool) Session::get('communitystore.code');
     }
 
-    public static function getCode() {
+    public static function getCode()
+    {
         return Session::get('communitystore.code');
     }
 
-    public static function clearCode() {
+    public static function clearCode()
+    {
         Session::set('communitystore.code', '');
     }
-
 }

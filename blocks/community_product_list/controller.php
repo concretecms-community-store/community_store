@@ -1,15 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use Core;
 use View;
 use Page;
 use Database;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 
 class Controller extends BlockController
 {
@@ -43,31 +41,30 @@ class Controller extends BlockController
         $this->set('groupfilters', $this->getGroupFilters());
     }
 
-    public function getGroupFilters() {
+    public function getGroupFilters()
+    {
         $db = Database::connection();
         $vals = array($this->bID);
-        $result = $db->getAll("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?",$vals);
+        $result = $db->getAll("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
         $list = array();
 
         if ($result) {
-            foreach($result as $g) {
+            foreach ($result as $g) {
                 $list[] = $g['gID'];
             }
         }
 
         return $list;
-
     }
 
     public function getGroupList()
     {
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
+        $this->set("grouplist", $grouplist);
     }
     public function view()
     {
-
         $products = new StoreProductList();
         $products->setSortBy($this->sortOrder);
 
@@ -79,7 +76,6 @@ class Controller extends BlockController
                 $products->setCIDs($page->getCollectionChildrenArray());
             }
         }
-
 
         if ($this->filter == 'page' || $this->filter == 'page_children') {
             if ($this->filterCID) {
@@ -94,7 +90,6 @@ class Controller extends BlockController
             }
         }
 
-
         $products->setItemsPerPage($this->maxProducts);
         $products->setGroupIDs($this->getGroupFilters());
         $products->setFeatureType($this->showFeatured);
@@ -104,20 +99,19 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $product->setInitialVariation();
         }
 
         $this->set('products', $products);
-        $this->set('pagination',$pagination);
+        $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
 
         //load some helpers
-        $this->set('ih',Core::make('helper/image'));
-        $this->set('th',Core::make('helper/text'));
-        
-        $this->requireAsset("css","font-awesome");
-                
+        $this->set('ih', Core::make('helper/image'));
+        $this->set('th', Core::make('helper/text'));
+
+        $this->requireAsset("css", "font-awesome");
     }
     public function registerViewAssets($outputContent = '')
     {
@@ -144,14 +138,14 @@ class Controller extends BlockController
 
         $db = Database::connection();
         $vals = array($this->bID);
-        $db->Execute("DELETE FROM btCommunityStoreProductListGroups where bID = ?",$vals);
+        $db->Execute("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
         //insert  groups
         if (!empty($filtergroups)) {
-            foreach($filtergroups as $gID){
-                $vals = array($this->bID,(int)$gID);
+            foreach ($filtergroups as $gID) {
+                $vals = array($this->bID, (int) $gID);
                 //Log::addEntry($vals);
-                $db->Execute("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)",$vals);
+                $db->Execute("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
             }
         }
 
@@ -161,17 +155,18 @@ class Controller extends BlockController
     {
         $e = Core::make("helper/validation/error");
         $nh = Core::make("helper/number");
-        if($args['maxProducts'] < 1){
+        if ($args['maxProducts'] < 1) {
             $e->add(t('Max Products must be at least 1'));
         }
 
-        if(($args['filter'] == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0){
+        if (($args['filter'] == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));
         }
 
-        if(!$nh->isInteger($args['maxProducts'])){
+        if (!$nh->isInteger($args['maxProducts'])) {
             $e->add(t('Max Product must be a whole number'));
         }
+
         return $e;
     }
 }

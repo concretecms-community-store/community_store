@@ -4,7 +4,6 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 use Database;
 use User;
 use Core;
-use Package;
 use Concrete\Core\Mail\Service as MailService;
 use Group;
 use Events;
@@ -13,21 +12,20 @@ use Loader;
 use Page;
 use UserInfo;
 use Session;
-
-use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use \Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount as StoreOrderDiscount;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
+use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount as StoreOrderDiscount;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 
 /**
  * @Entity
@@ -165,7 +163,7 @@ class Order
             $taxAmountsIncluded = explode(",", $this->oTaxIncluded);
             $taxLabels = explode(",", $this->oTaxName);
             $taxes = array();
-            for ($i = 0; $i < count($taxLabels); $i++) {
+            for ($i = 0; $i < count($taxLabels); ++$i) {
                 $taxes[] = array(
                     'label' => $taxLabels[$i],
                     'amount' => $taxAmounts[$i],
@@ -173,6 +171,7 @@ class Order
                 );
             }
         }
+
         return $taxes;
     }
 
@@ -183,6 +182,7 @@ class Order
         foreach ($taxes as $tax) {
             $taxTotal = $taxTotal + $tax['amount'];
         }
+
         return $taxTotal;
     }
 
@@ -193,6 +193,7 @@ class Order
         foreach ($taxes as $tax) {
             $taxTotal = $taxTotal + $tax['amountIncluded'];
         }
+
         return $taxTotal;
     }
 
@@ -210,6 +211,7 @@ class Order
                 $subtotal = $subtotal + ($item->getOrderItemPricePaid() * $item->getOrderItemQty());
             }
         }
+
         return $subtotal;
     }
 
@@ -222,6 +224,7 @@ class Order
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order', $oID);
     }
 
@@ -229,21 +232,22 @@ class Order
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order')->findOneBy(array('cID' => $cID));
 
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order')->findOneBy(array('cID' => $cID));
     }
 
     /**
      * @param array $data
      * @param StorePaymentMethod $pm
      * @param string $transactionReference
-     * @param boolean $status
+     * @param bool $status
+     *
      * @return Order
      */
     public function add($data, $pm, $transactionReference = '', $status = null)
     {
         $customer = new StoreCustomer();
-        $now = new \DateTime;
+        $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingMethodName();
         $shippingTotal = StoreCalculator::getShippingTotal();
         $taxes = StoreTax::getConcatenatedTaxStrings();
@@ -251,7 +255,7 @@ class Order
         $total = $totals['total'];
         $pmName = $pm->getPaymentMethodName();
 
-        $order = new Order();
+        $order = new self();
         $order->setCustomerID($customer->getUserID());
         $order->setOrderDate($now);
         $order->setPaymentMethodName($pmName);
@@ -264,10 +268,10 @@ class Order
         $order->save();
 
         $discounts = StoreCart::getDiscounts();
-        foreach($discounts as $discount) {
+        foreach ($discounts as $discount) {
             $orderDiscount = new StoreOrderDiscount();
             $orderDiscount->setOrder($order);
-            if ($discount->getDiscountTrigger() =='code') {
+            if ($discount->getDiscountTrigger() == 'code') {
                 $orderDiscount->setOrderDiscountCode(Session::get('communitystore.code'));
             }
             $orderDiscount->setOrderDiscountDisplay($discount->getDiscountDisplay());
@@ -276,7 +280,6 @@ class Order
             $orderDiscount->setOrderDiscountPercentage($discount->getDiscountPercentage());
             $orderDiscount->setOrderDiscountValue($discount->getDiscountValue());
             $orderDiscount->save();
-
         }
 
         $customer->setLastOrderID($order->getOrderID());
@@ -286,9 +289,9 @@ class Order
         if (!$pm->external) {
             $order->completeOrder($transactionReference);
         }
+
         return $order;
     }
-
 
     /**
      * @param StoreCustomer $customer
@@ -342,7 +345,6 @@ class Order
             $taxProductLabels = implode(',', $taxProductLabels);
 
             StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
-
         }
     }
 
@@ -460,7 +462,6 @@ class Order
                 // earlier validation must have failed at this point, don't fetch the user
                 $user = null;
             }
-
         } elseif ($createlogin) {  // or if we found a user (because they are logged in) and need to use it to create logins
             $user = $customer->getUserInfo();
         }
@@ -484,7 +485,6 @@ class Order
             $customer->setValue('billing_last_name', $billing_last_name);
             $customer->setValue('billing_address', $billing_address);
             $customer->setValue('billing_phone', $billing_phone);
-
 
             if ($smID) {
                 $customer->setValue('shipping_first_name', $shipping_first_name);
@@ -562,7 +562,6 @@ class Order
         StoreCart::clear();
 
         return $this;
-
     }
 
     public function remove()
@@ -590,10 +589,9 @@ class Order
         return $items;
     }
 
-
     public function isShippable()
     {
-        return ($this->getShippingMethodName() != "");
+        return $this->getShippingMethodName() != "";
     }
 
     public function updateStatus($status = null)
@@ -616,6 +614,7 @@ class Order
 
         if (!empty($history)) {
             $laststatus = $history[0];
+
             return $laststatus->getOrderStatusName();
         } else {
             return '';
@@ -686,6 +685,7 @@ class Order
     {
         $db = Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderDiscounts WHERE oID=?", $this->oID);
+
         return $rows;
     }
 
@@ -693,7 +693,7 @@ class Order
     {
         $db = Database::connection();
         $rows = $db->Execute("Update CommunityStoreOrders set cID=? where oID = ?", array($uID, $this->oID));
+
         return $rows;
     }
-
 }

@@ -14,7 +14,6 @@ use View;
  */
 class Method extends Controller
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -87,20 +86,21 @@ class Method extends Controller
         $db = Database::connection();
         $data = $db->GetRow("SELECT * FROM CommunityStorePaymentMethods WHERE pmID=?", $pmID);
         if (!empty($data)) {
-            $method = new Method();
+            $method = new self();
             $method->setPropertiesFromArray($data);
             $method->setMethodController();
         }
-        return ($method instanceof Method) ? $method : false;
+
+        return ($method instanceof self) ? $method : false;
     }
 
     public static function getByHandle($pmHandle)
     {
         $db = Database::connection();
         $pm = $db->GetRow("SELECT pmID FROM CommunityStorePaymentMethods WHERE pmHandle=?", $pmHandle);
+
         return self::getByID($pm['pmID']);
     }
-
 
     public function setPropertiesFromArray($arr)
     {
@@ -115,6 +115,7 @@ class Method extends Controller
             $pkg = Package::getByID($this->pkgID);
             $dir = $pkg->getPackagePath() . "/src/CommunityStore/Payment/Methods/" . $this->pmHandle . "/";
         }
+
         return $dir;
     }
 
@@ -152,7 +153,7 @@ class Method extends Controller
         }
         //make sure this gateway isn't already installed
         $pm = self::getByHandle($pmHandle);
-        if (!($pm instanceof Method)) {
+        if (!($pm instanceof self)) {
             $vals = array($pmHandle, $pmName, $pmDisplayName, $pkgID);
             $db->Execute("INSERT INTO CommunityStorePaymentMethods (pmHandle,pmName,pmDisplayName,pkgID) VALUES (?,?,?,?)", $vals);
             $pm = self::getByHandle($pmHandle);
@@ -160,6 +161,7 @@ class Method extends Controller
                 $pm->setEnabled(1);
             }
         }
+
         return $pm;
     }
 
@@ -200,6 +202,7 @@ class Method extends Controller
             $method = self::getByID($result['pmID']);
             $methods[] = $method;
         }
+
         return $methods;
     }
 
@@ -236,6 +239,7 @@ class Method extends Controller
     {
         //load controller    
         $class = $this->getMethodController();
+
         return $class->submitPayment();
     }
 
@@ -248,5 +252,4 @@ class Method extends Controller
     {
         return 1000000000; // raises pinky
     }
-
 }
