@@ -1,16 +1,14 @@
-<?php 
+<?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
-use \Concrete\Core\Controller\Controller as RouteController;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Core\Controller\Controller as RouteController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 class CartTotal extends RouteController
 {
-        
     public function getSubTotal()
     {
         $totals = StoreCalculator::getTotals();
@@ -36,5 +34,4 @@ class CartTotal extends RouteController
     {
         echo StoreCart::getTotalItemsInCart();
     }
-    
 }

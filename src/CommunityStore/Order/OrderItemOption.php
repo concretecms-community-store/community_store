@@ -1,12 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Concrete\Core\Foundation\Object as Object;
 use Database;
-use User;
-use UserInfo;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
  * @Entity
@@ -92,9 +87,11 @@ class OrderItemOption
         $this->oioValue = $oioValue;
     }
 
-    public static function getByID($oioID) {
+    public static function getByID($oioID)
+    {
         $db = Database::connection();
         $em = $db->getEntityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption', $oioID);
     }
 
@@ -111,5 +108,4 @@ class OrderItemOption
         $em->remove($this);
         $em->flush();
     }
-
 }

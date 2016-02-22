@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
-* @Entity
-* @Table(name="CommunityStoreDiscountRules")
-*/
+ * @Entity
+ * @Table(name="CommunityStoreDiscountRules")
+ */
 class DiscountRule
 {
     /**
@@ -92,7 +92,6 @@ class DiscountRule
      */
     protected $drDeleted;
 
-
     /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
      */
@@ -106,7 +105,8 @@ class DiscountRule
         return $this->codes;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->codes = new ArrayCollection();
     }
 
@@ -117,7 +117,6 @@ class DiscountRule
     {
         return $this->drID;
     }
-
 
     /**
      * @return mixed
@@ -145,7 +144,7 @@ class DiscountRule
 
     public function isEnabled()
     {
-        return (bool)$this->drEnabled;
+        return (bool) $this->drEnabled;
     }
 
     /**
@@ -268,8 +267,9 @@ class DiscountRule
         $this->drTrigger = $drTrigger;
     }
 
-    public function requiresCode() {
-        return ($this->drTrigger == 'code');
+    public function requiresCode()
+    {
+        return $this->drTrigger == 'code';
     }
 
     /**
@@ -280,10 +280,10 @@ class DiscountRule
         return $this->drSingleUseCodes;
     }
 
-    public function isSingleUse() {
-        return (bool)$this->drSingleUseCodes;
+    public function isSingleUse()
+    {
+        return (bool) $this->drSingleUseCodes;
     }
-
 
     /**
      * @param mixed $drSingleUseCodes
@@ -373,7 +373,8 @@ class DiscountRule
         $this->drDeleted = $drDeleted;
     }
 
-    public function getDisplay() {
+    public function getDisplay()
+    {
         $display = trim($this->drDisplay);
 
         if ($display) {
@@ -389,21 +390,24 @@ class DiscountRule
         }
     }
 
-
-    public static function getByID($drID) {
+    public static function getByID($drID)
+    {
         $db = Database::connection();
         $em = $db->getEntityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule', $drID);
     }
 
-    public static function discountsWithCodesExist() {
+    public static function discountsWithCodesExist()
+    {
         $db = Database::connection();
         $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 "); // TODO
 
-        return ($data['codecount'] > 0);
+        return $data['codecount'] > 0;
     }
 
-    public static function findAutomaticDiscounts($user = null, $productlist = array()) {
+    public static function findAutomaticDiscounts($user = null, $productlist = array())
+    {
         $db = Database::connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
               WHERE drEnabled = 1
@@ -416,21 +420,25 @@ class DiscountRule
 
         $discounts = array();
         while ($row = $result->fetchRow()) {
-            $discounts[] =  self::getByID($row['drID']);
+            $discounts[] = self::getByID($row['drID']);
         }
+
         return $discounts;
     }
 
-    public function retrieveStatistics() {
+    public function retrieveStatistics()
+    {
         $db = Database::connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", array($this->drID));
         $r = $r->fetchRow();
         $this->totalCodes = $r['total'];
         $this->availableCodes = $r['available'];
+
         return $r;
     }
 
-    public static function findDiscountRuleByCode($code, $user = null) {
+    public static function findDiscountRuleByCode($code, $user = null)
+    {
         $db = Database::connection();
 
         $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
@@ -446,7 +454,7 @@ class DiscountRule
         $discounts = array();
 
         while ($row = $result->fetchRow()) {
-            $discounts[] =  self::getByID($row['drID']);
+            $discounts[] = self::getByID($row['drID']);
         }
 
         return $discounts;
@@ -457,6 +465,7 @@ class DiscountRule
         $discountRule = new self();
         self::loadData($discountRule, $data);
         $discountRule->save();
+
         return $discountRule;
     }
 
@@ -469,7 +478,7 @@ class DiscountRule
         $discountRule->setDiscountDeductFrom($data['drDeductFrom']);
         $discountRule->setDiscountPercentage($data['drPercentage']);
         $discountRule->setDiscountValue($data['drValue']);
-        $discountRule->setDiscountSingleUseCodes($data['drPercentage'] ? true : false );
+        $discountRule->setDiscountSingleUseCodes($data['drPercentage'] ? true : false);
         $discountRule->setDiscountTrigger($data['drTrigger']);
         $discountRule->setDiscountDescription($data['drDescription']);
         $discountRule->setDiscountDateAdded(new \DateTime());
@@ -482,6 +491,7 @@ class DiscountRule
         if ($discountRule) {
             self::loadData($discountRule, $data);
             $discountRule->save();
+
             return $discountRule;
         } else {
             return false;
@@ -501,9 +511,4 @@ class DiscountRule
         $em->remove($this);
         $em->flush();
     }
-
 }
-
-
-
-?>

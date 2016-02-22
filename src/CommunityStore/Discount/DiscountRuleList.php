@@ -4,12 +4,10 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\ItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class DiscountRuleList extends ItemList
 {
-
     protected $sortBy = "alpha";
 
     public function setGroupID($gID)
@@ -22,15 +20,15 @@ class DiscountRuleList extends ItemList
         $this->sortBy = $sort;
     }
 
-
     public function createQuery()
     {
         $this->query
             ->select('r.drID')
-            ->from('CommunityStoreDiscountRules','r');
+            ->from('CommunityStoreDiscountRules', 'r');
     }
 
-    public function setSearch($search) {
+    public function setSearch($search)
+    {
         $this->search = $search;
     }
 
@@ -38,17 +36,17 @@ class DiscountRuleList extends ItemList
     {
         $paramcount = 0;
 
-        if(isset($this->gID) && ($this->gID > 0)){
-            $query->where('gID = ?')->setParameter($paramcount++,$this->gID);
+        if (isset($this->gID) && ($this->gID > 0)) {
+            $query->where('gID = ?')->setParameter($paramcount++, $this->gID);
         }
-        switch ($this->sortBy){
+        switch ($this->sortBy) {
             case "alpha":
-                $query->orderBy('drName','ASC');
+                $query->orderBy('drName', 'ASC');
                 break;
         }
 
         if ($this->search) {
-            $query->andWhere('drName like ?')->setParameter($paramcount++,'%'. $this->search. '%');
+            $query->andWhere('drName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
         }
 
         $query->andWhere('drDeleted is NULL');
@@ -73,13 +71,14 @@ class DiscountRuleList extends ItemList
             $query->select('count(distinct r.drID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
+
         return $pagination;
     }
 
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
+
         return $query->select('count(distinct r.drID)')->setMaxResults(1)->execute()->fetchColumn();
     }
-
 }

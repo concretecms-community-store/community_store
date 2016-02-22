@@ -51,7 +51,6 @@ class OrderItemDiscount
      */
     protected $oidCode;
 
-
     public function save()
     {
         $em = Database::connection()->getEntityManager();
@@ -65,5 +64,4 @@ class OrderItemDiscount
         $em->remove($this);
         $em->flush();
     }
-
 }

@@ -1,22 +1,25 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use \Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
-class OrderEvent extends GenericEvent {
-
+class OrderEvent extends GenericEvent
+{
     protected $event;
 
-    public function __construct($currentOrder, $previousOrder = null) {
+    public function __construct($currentOrder, $previousOrder = null)
+    {
         $this->currentOrder = $currentOrder;
         $this->previousOrder = $previousOrder;
     }
 
-    public function getCurrentOrder() {
+    public function getCurrentOrder()
+    {
         return $this->currentOrder;
     }
 
-    public function getOrderBeforeChange() {
-       return $this->previousOrder;
+    public function getOrderBeforeChange()
+    {
+        return $this->previousOrder;
     }
 }

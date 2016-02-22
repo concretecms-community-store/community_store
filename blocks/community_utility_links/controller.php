@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use Core;
 use View;
 use Page;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 class Controller extends BlockController
 {
@@ -28,10 +28,10 @@ class Controller extends BlockController
     }
     public function view()
     {
-        $this->set("itemCount",StoreCart::getTotalItemsInCart());
+        $this->set("itemCount", StoreCart::getTotalItemsInCart());
 
         $totals = StoreCalculator::getTotals();
-        $this->set('total',StorePrice::format($totals['total']));
+        $this->set('total', StorePrice::format($totals['total']));
 
         $c = Page::getCurrentPage();
         $path = $c->getCollectionPath();
@@ -49,7 +49,6 @@ class Controller extends BlockController
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
-
     }
     public function registerViewAssets($outputContent = '')
     {
@@ -72,15 +71,16 @@ class Controller extends BlockController
     public function validate($args)
     {
         $e = Core::make("helper/validation/error");
-        if($args['cartLabel']==""){
+        if ($args['cartLabel'] == "") {
             $e->add(t('Cart Label must be set'));
         }
-        if(strlen($args['cartLabel']) > 255){
+        if (strlen($args['cartLabel']) > 255) {
             $e->add(t('Cart Link Label exceeds 255 characters'));
         }
-        if(strlen($args['itemsLabel']) > 255){
+        if (strlen($args['itemsLabel']) > 255) {
             $e->add(t('Cart Items Label exceeds 255 characters'));
         }
+
         return $e;
     }
 }

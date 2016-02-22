@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Config;
@@ -12,12 +12,14 @@ class Price
         $wholeSep = Config::get('communitystore.whole');
         $thousandSep = Config::get('communitystore.thousand');
         $price = $symbol . number_format($price, 2, $wholeSep, $thousandSep);
+
         return $price;
     }
     public static function formatFloat($price)
     {
         $price = floatval($price);
-        $price = number_format($price, 2, ".","");
+        $price = number_format($price, 2, ".", "");
+
         return $price;
     }
     public function getFloat($price)
@@ -32,5 +34,4 @@ class Price
 
         return $price;
     }
-    
 }

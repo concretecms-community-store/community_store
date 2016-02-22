@@ -170,8 +170,6 @@ class OrderDiscount
     {
         $this->odCode = $odCode;
     }
-    
-    
 
     public function save()
     {
@@ -186,5 +184,4 @@ class OrderDiscount
         $em->remove($this);
         $em->flush();
     }
-
 }
