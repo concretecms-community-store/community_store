@@ -119,6 +119,18 @@
     <label><?= t('Show:')?></label>
     <div class="checkbox">
         <label>
+            <?= $form->checkbox('showAddToCart',1,$showAddToCart);?>
+            <?= t('Add to Cart Button')?>
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
+            <?= $form->checkbox('showPageLink',1,$showPageLink);?>
+            <?= t('Page Link')?>
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
             <?= $form->checkbox('showDescription',1,$showDescription);?>
             <?= t('Description')?>
         </label>
@@ -132,19 +144,6 @@
             <?= t('Quickview Link (Modal Window)')?>
         </label>
     </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showPageLink',1,$showPageLink);?>
-            <?= t('Page Link')?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showAddToCart',1,$showAddToCart);?>
-            <?= t('Add to Cart Button')?>
-        </label>
-    </div>
-    
 </fieldset>
 
 
