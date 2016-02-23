@@ -8,7 +8,6 @@ use View;
 use FilePermissions;
 use TaskPermission;
 use File;
-use Loader;
 use PageType;
 use GroupList;
 
@@ -258,7 +257,7 @@ class Products extends DashboardPageController
         } else{
             $this->add();
         }
-        if ($this->isPost()) {
+        if ($this->post()) {
             $errors = $this->validate($data);
             $this->error = null; //clear errors
             $this->error = $errors;
@@ -303,7 +302,7 @@ class Products extends DashboardPageController
     }
     public function validate($args)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         
         if($args['pName']==""){
             $e->add(t('You must have a Product Name'));
@@ -364,7 +363,7 @@ class Products extends DashboardPageController
     }
     public function validateGroup($args)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         
         if($args['groupName']==""){
             $e->add(t('You did not enter anything for the Group Name'));

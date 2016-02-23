@@ -3,7 +3,6 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use View;
-use Loader;
 use Core;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
@@ -86,7 +85,7 @@ class Tax extends DashboardPageController
     public function validate($data)
     {
         $this->error = null;
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         
         if($data['taxLabel']==""){
             $e->add(t("You need a label for this Tax Rate"));
@@ -141,7 +140,7 @@ class Tax extends DashboardPageController
     public function validateClass($data)
     {
         $this->error = null;
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         
         if($data['taxClassName']==""){
             $e->add(t("You need a name for this Tax Class"));

@@ -3,8 +3,8 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Doctrine\ORM\Mapping\Column;
-use Loader;
 use Database;
+use Core;
 use Session;
 
 /**
@@ -160,7 +160,7 @@ class DiscountCode
 
     public static function validate($args)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
 
         return $e;
     }

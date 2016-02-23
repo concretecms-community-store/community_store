@@ -19,7 +19,7 @@ class Cart extends PageController
         $codeerror = false;
         $codesuccess = false;
 
-        if ($this->isPost()) {
+        if ($this->post()) {
             if ($this->post('action') == 'code' && $this->post('code')) {
                 $codesuccess = StoreDiscountCode::storeCode($this->post('code'));
                 $codeerror = !$codesuccess;

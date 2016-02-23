@@ -4,10 +4,9 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 use PageController;
 use Core;
 use View;
-use Package;
 use Session;
 use Config;
-use Loader;
+use Database;
 use UserAttributeKey;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
@@ -35,7 +34,7 @@ class Checkout extends PageController
 
         $allcountries = Core::make('helper/lists/countries')->getCountries();
 
-        $db = Loader::db();
+        $db = Database::connection();
 
         $ak = UserAttributeKey::getByHandle('billing_address');
         $row = $db->GetRow(

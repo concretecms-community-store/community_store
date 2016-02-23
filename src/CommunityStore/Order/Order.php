@@ -8,7 +8,6 @@ use Concrete\Core\Mail\Service as MailService;
 use Group;
 use Events;
 use Config;
-use Loader;
 use Page;
 use UserInfo;
 use Session;
@@ -402,7 +401,8 @@ class Order
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
 
-                $mh = Loader::helper('mail');
+                $mh = Core::make('helper/mail');
+
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
                 $navhelper = Core::make('helper/navigation');
@@ -418,7 +418,8 @@ class Order
                     $mh->addParameter('link', '');
                 }
 
-                $valc = Loader::helper('concrete/validation');
+                $valc = Core::make('helper/concrete/validation');
+
 
                 $min = Config::get('concrete.user.username.minimum');
                 $max = Config::get('concrete.user.username.maximum');

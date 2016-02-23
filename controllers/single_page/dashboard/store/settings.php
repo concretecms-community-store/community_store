@@ -5,7 +5,6 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Package;
 use Core;
-use Loader;
 use Config;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
@@ -15,7 +14,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StoreP
 class Settings extends DashboardPageController
 {
 
-//    public $error = Loader::helper("validation/error");
     public function on_start()
     {
         
@@ -54,7 +52,7 @@ class Settings extends DashboardPageController
         $this->view();
         $args = $this->post();
         
-        if ($this->isPost()) {
+        if ($args) {
             $errors = $this->validate($args);
             $this->error = $errors;
             
@@ -139,8 +137,8 @@ class Settings extends DashboardPageController
     }
     public function validate($args)
     {
-        $e = Loader::helper('validation/error');
-        
+        $e = Core::make('helper/validation/error');
+
         if($args['symbol']==""){
             $e->add(t('You must set a currency symbol'));
         }

@@ -71,7 +71,7 @@ class Discounts extends DashboardPageController
     }
 
     public function deletecode() {
-        if ($this->isPost()) {
+        if ($this->post()) {
             $data = $this->post();
             $dc = StoreDiscountCode::getByID($data['dcID']);
 
@@ -86,7 +86,7 @@ class Discounts extends DashboardPageController
     }
 
     public function addcodes($drID) {
-        if ($this->isPost()) {
+        if ($this->post()) {
             $data = $this->post();
 
             $codes = trim($data['codes']);

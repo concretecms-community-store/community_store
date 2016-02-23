@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use View;
-use Loader;
+use Core;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
@@ -88,7 +88,7 @@ class Shipping extends DashboardPageController
     public function validate($data)
     {
         $this->error = null;
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         
         //check our manditory fields
         if($data['methodName']==""){

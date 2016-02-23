@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use View;
-use Loader;
+use Core;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Attribute\Type as AttributeType;
 
@@ -53,8 +53,9 @@ class Attributes extends DashboardPageController
             if(!($ak instanceof StoreProductKey)) {
                 throw new Exception(t('Invalid attribute ID.'));
             }
-    
-            $valt = Loader::helper('validation/token');
+
+            $valt = Core::make('helper/validation/token');
+
             if (!$valt->validate('delete_attribute', $token)) {
                 throw new Exception($valt->getErrorMessage());
             }
@@ -98,7 +99,7 @@ class Attributes extends DashboardPageController
         $this->set('type', $type);
         $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
         
-        if ($this->isPost()) {
+        if ($this->post()) {
             $cnt = $type->getController();
             $cnt->setAttributeKey($key);
             $e = $cnt->validateKey($this->post());
