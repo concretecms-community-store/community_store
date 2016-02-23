@@ -33,7 +33,7 @@ class OrderStatusHistory extends Object
     /** @Column(type="datetime") */
     protected $oshDate;
 
-    /** @Column(type="integer") */
+    /** @Column(type="integer", nullable=true) */
     protected $uID;
 
     public static $table = 'CommunityStoreOrderStatusHistories';
