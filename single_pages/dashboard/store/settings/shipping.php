@@ -55,7 +55,7 @@ if(in_array($controller->getTask(),$addViews)){
         <ul class="dropdown-menu" role="menu">
             <?php foreach($methodTypes as $smt){?>
                 <?php if(!$smt->isHiddenFromAddMenu()){?>
-                    <li><a href="<?=URL::to('/dashboard/store/settings/shipping/add',$smt->getShippingMethodTypeID())?>"><?= $smt->getShippingMethodTypeName()?></a></li>
+                    <li><a href="<?=URL::to('/dashboard/store/settings/shipping/add',$smt->getShippingMethodTypeID())?>"><?= $smt->getMethodTypeController()->getShippingMethodTypeName()?></a></li>
                 <?php } ?>
             <?php } ?>
         </ul>

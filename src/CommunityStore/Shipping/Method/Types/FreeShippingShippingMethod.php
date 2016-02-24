@@ -225,4 +225,8 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         return 0;
     }
+
+    public function getShippingMethodTypeName() {
+        return t('Free Shipping');
+    }
 }

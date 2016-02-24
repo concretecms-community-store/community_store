@@ -320,6 +320,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
         return $shippingTotal;
     }
+
     public function getQuantityBasedRate($shippableItems)
     {
         $baserate = $this->getBaseRate();
@@ -340,5 +341,9 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         }
 
         return $shippingTotal;
+    }
+
+    public function getShippingMethodTypeName() {
+        return t('Flat Rate');
     }
 }

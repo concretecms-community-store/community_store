@@ -155,7 +155,14 @@ class ShippingMethodType
         $em = Database::connection()->getEntityManager();
         $methodTypes = $em->createQuery('select smt from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType smt')->getResult();
 
-        return $methodTypes;
+        $methodsWithControllers = array();
+
+        foreach($methodTypes as $mt) {
+            $mt->setMethodTypeController();
+            $methodsWithControllers[] = $mt;
+        }
+
+        return $methodsWithControllers;
     }
     public function renderDashboardForm($sm)
     {
