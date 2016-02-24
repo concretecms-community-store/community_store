@@ -71,7 +71,7 @@ if(in_array($controller->getTask(),$addViews)){
 		<?php foreach($methodTypes as $methodType){?>
 			<table class="table table-striped">
 				<thead>
-					<th><?= $methodType->getMethodTypeController()->getShippingMethodTypeName() . ' ' . t("Methods")?></th>
+					<th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName())?></th>
 					<th class="text-right"><?= t("Actions")?></th>
 				</thead>
 				<tbody>
