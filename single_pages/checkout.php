@@ -408,7 +408,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                     <li class="list-group-item"><a href="<?= View::url('/cart'); ?>"><?= t('Enter discount code'); ?></a></li>
                 <?php } ?>
                 <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
-                        class="total-amount"><?= StorePrice::format($total) ?></span></li>
+                        class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
             </ul>
 
         </div>

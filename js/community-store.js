@@ -424,6 +424,7 @@ $(document).ready(function () {
                         url: CARTURL + "/getTotal",
                         success: function (total) {
                             $(".store-total-amount").text(total);
+                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
                         }
                     });
                 } else {
@@ -492,6 +493,7 @@ $(document).ready(function () {
                         url: CARTURL + "/getTotal",
                         success: function (total) {
                             $(".store-total-amount").text(total);
+                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
                         }
                     });
                 } else {
@@ -540,6 +542,7 @@ $(document).ready(function () {
                         url: CARTURL + "/getTotal",
                         success: function (total) {
                             $(".store-total-amount").text(total);
+                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
                             communityStore.nextPane(obj);
                             $('.store-whiteout').remove();
                         }

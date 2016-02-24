@@ -22,6 +22,13 @@ class Price
 
         return $price;
     }
+
+    public static function formatInNumberOfCents($price)
+    {
+        $price = number_format($price * 100, 0, "", "");
+        return $price;
+    }
+
     public function getFloat($price)
     {
         $symbol = Config::get('communitystore.symbol');
