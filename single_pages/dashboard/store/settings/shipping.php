@@ -15,7 +15,7 @@ if(in_array($controller->getTask(),$addViews)){
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
         <?php //echo var_dump($smt); ?>
-            <h2><?= $smt->getShippingMethodTypeName(); ?></h2>
+            <h2><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h2>
             <?= $form->hidden('shippingMethodTypeID',$smt->getShippingMethodTypeID()); ?>
             <?php if(is_object($sm)){ ?>
             <?= $form->hidden('shippingMethodID',$sm->getShippingMethodID()); ?>
@@ -71,7 +71,7 @@ if(in_array($controller->getTask(),$addViews)){
 		<?php foreach($methodTypes as $methodType){?>
 			<table class="table table-striped">
 				<thead>
-					<th><?= $methodType->getShippingMethodTypeName().t(" Methods")?></th>
+					<th><?= $methodType->getMethodTypeController()->getShippingMethodTypeName() . ' ' . t("Methods")?></th>
 					<th class="text-right"><?= t("Actions")?></th>
 				</thead>
 				<tbody>
