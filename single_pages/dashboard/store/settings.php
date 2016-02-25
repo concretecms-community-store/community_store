@@ -24,18 +24,28 @@
                 
                 <div class="col-sm-9 store-pane active" id="settings-currency">
                     <h3><?= t('Currency Settings');?></h3>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <?= $form->label('symbol',t('Currency Symbol')); ?>
+                            <?= $form->text('symbol',Config::get('communitystore.symbol'));?>
+                        </div>
 
-                    <div class="form-group">
-                        <?= $form->label('symbol',t('Currency Symbol')); ?>
-                        <?= $form->text('symbol',Config::get('communitystore.symbol'),array("style"=>"width:80px;"));?>
+                        <div class="form-group col-md-6">
+                            <?= $form->label('currency',t('Currency Code')); ?>
+                            <?= $form->text('currency',Config::get('communitystore.currency'));?>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <?= $form->label('thousand',t('Thousands Separator %se.g. , or a space%s', "<small>", "</small>")); ?>
-                        <?= $form->text('thousand',Config::get('communitystore.thousand'),array("style"=>"width:60px;"));?>
-                    </div>
-                    <div class="form-group">
-                        <?= $form->label('whole',t('Whole Number Separator %se.g. period or a comma%s', "<small>", "</small>")); ?>
-                        <?= $form->text('whole',Config::get('communitystore.whole'),array("style"=>"width:60px;")); ?>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <?= $form->label('thousand',t('Thousands Separator')); ?>
+                            <?= $form->text('thousand',Config::get('communitystore.thousand'));?>
+                            <span class="help-block"><?= t('e.g. , or a space'); ?></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <?= $form->label('whole',t('Whole Number Separator')); ?>
+                            <?= $form->text('whole',Config::get('communitystore.whole')); ?>
+                            <span class="help-block"><?= t('e.g. period or a comma'); ?></span>
+                        </div>
                     </div>
             
                 </div><!-- #settings-currency -->

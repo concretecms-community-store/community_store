@@ -58,6 +58,7 @@ class Settings extends DashboardPageController
             if (!$errors->has()) {
                 
                 Config::save('communitystore.symbol',$args['symbol']);
+                Config::save('communitystore.currency',$args['currency']);
                 Config::save('communitystore.whole',$args['whole']);
                 Config::save('communitystore.thousand',$args['thousand']);
                 Config::save('communitystore.taxenabled',$args['taxEnabled']);
