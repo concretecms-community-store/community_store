@@ -98,7 +98,7 @@ var communityStore = {
                     $.ajax({
                         url: CARTURL + '/getTotal',
                         success: function (subTotal) {
-                            $(".store-utility-links .total-cart-amount").text(subTotal);
+                            $(".store-utility-links .store-total-cart-amount").text(subTotal);
                         }
                     });
                 }
@@ -142,7 +142,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
                                 }
                             });
                         }
@@ -187,7 +187,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
                                 }
                             });
                         }
@@ -231,7 +231,7 @@ var communityStore = {
                             $.ajax({
                                 url: CARTURL + '/getTotal',
                                 success: function (subTotal) {
-                                    $(".store-utility-links .total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
                                 }
                             });
                         }
