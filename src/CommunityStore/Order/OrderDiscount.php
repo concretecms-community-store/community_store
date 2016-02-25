@@ -52,13 +52,13 @@ class OrderDiscount
     protected $odCode;
 
     /**
-     * @return mixed
+     * @return integer
      */
-    public function getOrderDiscountID()
+    public function getID()
     {
         return $this->odID;
     }
-
+    
     /**
      * @return mixed
      */
@@ -78,7 +78,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountName()
+    public function getName()
     {
         return $this->odName;
     }
@@ -86,7 +86,7 @@ class OrderDiscount
     /**
      * @param mixed $odName
      */
-    public function setOrderDiscountName($odName)
+    public function setName($odName)
     {
         $this->odName = $odName;
     }
@@ -94,7 +94,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountDisplay()
+    public function getDisplay()
     {
         return $this->odDisplay;
     }
@@ -102,7 +102,7 @@ class OrderDiscount
     /**
      * @param mixed $odDisplay
      */
-    public function setOrderDiscountDisplay($odDisplay)
+    public function setDisplay($odDisplay)
     {
         $this->odDisplay = $odDisplay;
     }
@@ -110,7 +110,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountValue()
+    public function getValue()
     {
         return $this->odValue;
     }
@@ -118,7 +118,7 @@ class OrderDiscount
     /**
      * @param mixed $odValue
      */
-    public function setOrderDiscountValue($odValue)
+    public function setValue($odValue)
     {
         $this->odValue = $odValue;
     }
@@ -126,7 +126,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountPercentage()
+    public function getPercentage()
     {
         return $this->odPercentage;
     }
@@ -134,7 +134,7 @@ class OrderDiscount
     /**
      * @param mixed $odPercentage
      */
-    public function setOrderDiscountPercentage($odPercentage)
+    public function setPercentage($odPercentage)
     {
         $this->odPercentage = $odPercentage;
     }
@@ -142,7 +142,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountDeductFrom()
+    public function getDeductFrom()
     {
         return $this->odDeductFrom;
     }
@@ -150,7 +150,7 @@ class OrderDiscount
     /**
      * @param mixed $odDeductFrom
      */
-    public function setOrderDiscountDeductFrom($odDeductFrom)
+    public function setDeductFrom($odDeductFrom)
     {
         $this->odDeductFrom = $odDeductFrom;
     }
@@ -158,7 +158,7 @@ class OrderDiscount
     /**
      * @return mixed
      */
-    public function getOrderDiscountCode()
+    public function getCode()
     {
         return $this->odCode;
     }
@@ -166,7 +166,7 @@ class OrderDiscount
     /**
      * @param mixed $odCode
      */
-    public function setOrderDiscountCode($odCode)
+    public function setCode($odCode)
     {
         $this->odCode = $odCode;
     }

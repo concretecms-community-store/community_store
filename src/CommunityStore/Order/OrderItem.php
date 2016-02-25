@@ -70,7 +70,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemID()
+    public function getID()
     {
         return $this->oiID;
     }

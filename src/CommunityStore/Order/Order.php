@@ -271,13 +271,13 @@ class Order
             $orderDiscount = new StoreOrderDiscount();
             $orderDiscount->setOrder($order);
             if ($discount->getTrigger() == 'code') {
-                $orderDiscount->setOrderDiscountCode(Session::get('communitystore.code'));
+                $orderDiscount->setCode(Session::get('communitystore.code'));
             }
-            $orderDiscount->setOrderDiscountDisplay($discount->getDisplay());
-            $orderDiscount->setOrderDiscountName($discount->getName());
-            $orderDiscount->setOrderDiscountDeductFrom($discount->getDeductFrom());
-            $orderDiscount->setOrderDiscountPercentage($discount->getPercentage());
-            $orderDiscount->setOrderDiscountValue($discount->getValue());
+            $orderDiscount->setDisplay($discount->getDisplay());
+            $orderDiscount->setName($discount->getName());
+            $orderDiscount->setDeductFrom($discount->getDeductFrom());
+            $orderDiscount->setPercentage($discount->getPercentage());
+            $orderDiscount->setValue($discount->getValue());
             $orderDiscount->save();
         }
 
