@@ -53,7 +53,7 @@ class ShippingMethod
         $this->smEnabled = $status;
     }
 
-    public function getShippingMethodID()
+    public function getID()
     {
         return $this->smID;
     }
@@ -113,7 +113,7 @@ class ShippingMethod
         $sm->setName($smName);
         $sm->setEnabled($smEnabled);
         $sm->save();
-        $smtm->setShippingMethodID($sm->getShippingMethodID());
+        $smtm->setShippingMethodID($sm->getID());
         $smtm->save();
 
         return $sm;

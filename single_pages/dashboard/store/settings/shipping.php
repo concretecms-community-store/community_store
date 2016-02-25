@@ -18,7 +18,7 @@ if(in_array($controller->getTask(),$addViews)){
             <h2><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h2>
             <?= $form->hidden('shippingMethodTypeID',$smt->getShippingMethodTypeID()); ?>
             <?php if(is_object($sm)){ ?>
-            <?= $form->hidden('shippingMethodID',$sm->getShippingMethodID()); ?>
+            <?= $form->hidden('shippingMethodID',$sm->getID()); ?>
             <?php } ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -79,11 +79,11 @@ if(in_array($controller->getTask(),$addViews)){
 					<tr>
 						<td><?= $method->getName()?></td>
 						<td class="text-right">
-							<a href="<?=URL::to('/dashboard/store/settings/shipping/edit',$method->getShippingMethodID())?>" class="btn btn-default"><?= t("Edit")?></a>
+							<a href="<?=URL::to('/dashboard/store/settings/shipping/edit',$method->getID())?>" class="btn btn-default"><?= t("Edit")?></a>
 							<?php if($method->getShippingMethodTypeMethod()->disableEnabled()){?>
 							    <a href="" class="btn btn-default"><?= t("Disable")?></a>
 							<?php } else { ?>
-							<a href="<?=URL::to('/dashboard/store/settings/shipping/delete',$method->getShippingMethodID())?>" class="btn btn-danger"><?= t("Delete")?></a>
+							<a href="<?=URL::to('/dashboard/store/settings/shipping/delete',$method->getID())?>" class="btn btn-danger"><?= t("Delete")?></a>
 						    <?php } ?>
 						</td>
 					</tr>

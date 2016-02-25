@@ -6,14 +6,14 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 ?>
 
 <?php if ($controller->getTask() == 'order'){ ?>
-    
+
     <div class="ccm-dashboard-header-buttons">
         <form action="<?=URL::to('/dashboard/store/orders/details/slip')?>" method="post" target="_blank">
             <input type="hidden" name="oID" value="<?= $order->getOrderID()?>">
             <button class="btn btn-primary"><?= t("Print Order Slip")?></button>
         </form>
     </div>
-    
+
     <h3><?= t("Customer Overview")?></h3>
     <hr>
     <div class="row">
@@ -74,7 +74,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </tr>
         </thead>
         <tbody>
-            <?php 
+            <?php
                 $items = $order->getOrderItems();
 
                 if($items){
@@ -120,7 +120,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
 
      <?php if ($order->isShippable()) { ?>
-     <p class="text-right">
+     <p>
         <strong><?= t("Shipping")?>: </strong><?=Price::format($order->getShippingTotal())?>
      </p>
         <?php } ?>
@@ -161,26 +161,31 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     <?php $taxes = $order->getTaxes();
 
     if (!empty($taxes)) { ?>
-     <p>
-        <?php foreach($order->getTaxes() as $tax){?>
-            <strong><?= $tax['label']?>:</strong> <?=Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded'])?><br>
-        <?php } ?>
-     </p>
-        <?php } ?>
+        <p>
+            <?php foreach ($order->getTaxes() as $tax) { ?>
+                <strong><?= $tax['label'] ?>
+                    :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
+            <?php } ?>
+        </p>
+    <?php } ?>
 
-      <p>
-        <strong><?= t("Grand Total")?>: </strong><?=Price::format($order->getTotal())?>
-      </p>
     <p>
-        <strong><?= t("Payment Method")?>: </strong><?= $order->getPaymentMethodName()?><br>
+        <strong><?= t("Grand Total") ?>: </strong><?= Price::format($order->getTotal()) ?>
+    </p>
+    <p>
+        <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
         <?php $transactionReference = $order->getTransactionReference();
         if ($transactionReference) { ?>
-             <strong><?= t("Transaction Reference")?>: </strong><?= $transactionReference?><br>
-        <?php } ?>
-        <?php if ($order->isShippable()) { ?>
-        <br /><strong><?= t("Shipping Method")?>: </strong><?= $order->getShippingMethodName()?>
+            <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
         <?php } ?>
     </p>
+
+    <?php if ($order->isShippable()) { ?>
+        <p>
+            <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+        </p>
+    <?php } ?>
+
     <br />
     <h3><?= t("Order Status History")?></h3>
     <hr>
@@ -241,15 +246,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <h4 class="panel-title"><?= t("Order Options")?></h4>
                 </div>
                 <div class="panel-body">
-                    
+
                     <a id="btn-delete-order" href="<?=View::url("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
-                    
+
                 </div>
             </div>
         </div>
     </div>
-    
-    
+
+
 <?php } else { ?>
 
     <div class="ccm-dashboard-header-buttons">
