@@ -78,9 +78,9 @@ class StoreProductKey extends Key
         $av = $product->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
         $db = Database::connection();
-        $v = array($product->getID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
+        $v = array($product->getProductID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CommunityStoreProductAttributeValues', array(
-            'pID' => $product->getID(),
+            'pID' => $product->getProductID(),
             'akID' => $this->getAttributeKeyID(),
             'avID' => $av->getAttributeValueID(),
         ), array('pID', 'akID'));

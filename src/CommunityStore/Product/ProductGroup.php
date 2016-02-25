@@ -57,10 +57,10 @@ class ProductGroup
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        $groups = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup')->findBy(array('pID' => $product->getID()));
+        $groups = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup')->findBy(array('pID' => $product->getProductID()));
         foreach ($groups as $key => $value) {
             $group = new StoreGroup\Group();
-            $groups[$key]->gName = $group->getByID($groups[$key]->gID)->getGroupName();
+            $groups[$key]->gName = $group->getByID($groups[$key]->gID)->getName();
         }
 
         return $groups;
@@ -83,7 +83,7 @@ class ProductGroup
         //add new ones.
         if (!empty($data['pProductGroups'])) {
             foreach ($data['pProductGroups'] as $gID) {
-                self::add($product->getID(), $gID);
+                self::add($product->getProductID(), $gID);
             }
         }
     }

@@ -75,7 +75,7 @@ class Products extends DashboardPageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist",$grouplist);
         foreach($grouplist as $productgroup){
-            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getName();
         }
         $this->set("productgroups",$productgroups);
 
@@ -120,7 +120,7 @@ class Products extends DashboardPageController
 
         $this->set('product',$product);
         $this->set('images',$product->getImages());
-        $this->set('groups',$groups);
+        $this->set('optGroups',$groups);
         $this->set('optItems',$optItems);
         $this->set('locationPages', $product->getLocationPages());
         $this->set('pgroups', $product->getGroupIDs());
@@ -139,7 +139,7 @@ class Products extends DashboardPageController
         $groupLookup = array();
 
         foreach($groups as $group) {
-            $groupLookup[$group->getID()] = $group;
+            $groupLookup[$group->getGroupID()] = $group;
         }
 
         $this->set('groupLookup', $groupLookup);
@@ -184,7 +184,7 @@ class Products extends DashboardPageController
         //populate "Groups" select box options
         $grouplist = StoreGroupList::getGroupList();
         foreach($grouplist as $productgroup){
-            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getName();
         }
         $this->set("productgroups",$productgroups);
 
@@ -293,9 +293,9 @@ class Products extends DashboardPageController
 
 
                 if($data['pID']){
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getProductID(), 'updated');
                 } else {
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'added');
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getProductID(), 'added');
                 }
             }//if no errors
         }//if post

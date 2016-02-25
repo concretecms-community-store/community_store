@@ -397,7 +397,7 @@ class ProductVariation
 
                 if (!$variation) {
                     $variation = self::add(
-                        $product->getID(),
+                        $product->getProductID(),
                         array(
                         'pvSKU' => '',
                         'pvPrice' => '',
@@ -447,9 +447,9 @@ class ProductVariation
 
         if (!empty($variationIDs)) {
             $options = implode(',', $variationIDs);
-            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ($options)", array($product->getID()));
+            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ($options)", array($product->getProductID()));
         } else {
-            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", array($product->getID()));
+            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", array($product->getProductID()));
         }
 
         if (!empty($pvIDstoDelete)) {
@@ -517,7 +517,7 @@ class ProductVariation
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation')->findBy(array('pID' => $product->getID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation')->findBy(array('pID' => $product->getProductID()));
     }
 
     public function delete()
