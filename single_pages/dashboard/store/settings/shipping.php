@@ -13,9 +13,9 @@ if(in_array($controller->getTask(),$addViews)){
 <form action="<?=URL::to('/dashboard/store/settings/shipping','add_method')?>" method="post">
 
     <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <div class="col-xs-12 col-md-12">
         <?php //echo var_dump($smt); ?>
-            <h2><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h2>
+            <h3><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h3>
             <?= $form->hidden('shippingMethodTypeID',$smt->getShippingMethodTypeID()); ?>
             <?php if(is_object($sm)){ ?>
             <?= $form->hidden('shippingMethodID',$sm->getID()); ?>
@@ -26,6 +26,8 @@ if(in_array($controller->getTask(),$addViews)){
                         <?= $form->label('methodName',t("Method Name")); ?>
                         <?= $form->text('methodName',is_object($sm)?$sm->getName():''); ?>
                     </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                         <?= $form->label('methodEnabled',t("Enabled")); ?>
                         <?= $form->select('methodEnabled',array(true=>"Enabled",false=>"Disabled"),is_object($sm)?$sm->isEnabled():''); ?>

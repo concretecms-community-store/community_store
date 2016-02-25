@@ -12,7 +12,7 @@ if(in_array($controller->getTask(),$addViews)){
 <form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','add_rate')?>" method="post" data-states-utility="<?=View::url('/checkout/getstates')?>">
 
     <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <div class="col-xs-12 col-md-12">
             <input type="hidden" name="taxRateID" value="<?= $taxRate->getTaxRateID()?>">
             <div class="row">
                         <div class="col-xs-12 col-sm-4">
@@ -169,7 +169,7 @@ if(in_array($controller->getTask(),$addViews)){
 <form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','save_class')?>" method="post" data-states-utility="<?=View::url('/checkout/getstates')?>">
 
     <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <div class="col-xs-12 col-md-12">
             <input type="hidden" name="taxClassID" value="<?= $tc->getID()?>">
             <div class="form-group">
                 <?= $form->label('taxClassName',t("Tax Class Name")); ?>
@@ -182,7 +182,8 @@ if(in_array($controller->getTask(),$addViews)){
             <?php } ?>
             <div class="form-group">
                 <?= $form->label('taxClassRates[]',t("Select Tax Class Rates")); ?>
-                <select name="taxClassRates[]" class="form-control" multiple="multiple">
+                <div class="ccm-search-field-content ccm-search-field-content-select2">
+                <select name="taxClassRates[]" class="taxclassRates select2-select" multiple="multiple" style="width: 100%;">
                     <?php 
                         $selectedTaxRates = $tc->getTaxClassRateIDs();
                         if(count($taxRates)){
@@ -193,6 +194,14 @@ if(in_array($controller->getTask(),$addViews)){
                         } 
                     ?>
                 </select>
+                </div>
+
+                <script>
+                    $(document).ready(function() {
+                        $('.taxclassRates').select2();
+                    });
+                </script>
+
             </div>          
         </div>
     </div>

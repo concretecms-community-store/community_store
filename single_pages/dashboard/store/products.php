@@ -90,7 +90,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="form-group">
                             <?= $form->label("pPrice", t("Price"));?>
                             <div class="input-group">
-                                <div class="input-group-addon">
+                                <div class="input-group-group">
                                     <?=  Config::get('communitystore.symbol');?>
                                 </div>
                                 <?php $price = $product->getPrice(); ?>
