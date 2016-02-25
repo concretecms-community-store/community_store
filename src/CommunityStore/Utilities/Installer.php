@@ -154,7 +154,7 @@ class Installer
     {
         $blockType = BlockType::getByHandle($handle);
         if (!is_object($blockType)) {
-            BlockType::installBlockTypeFromPackage($handle, $pkg);
+            BlockType::installBlockType($handle, $pkg);
         }
     }
     public static function setPageTypeDefaults(Package $pkg)
