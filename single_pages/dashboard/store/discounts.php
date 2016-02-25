@@ -35,7 +35,7 @@ $currencySymbol = Config::get('communitystore.symbol');
             <tbody>
 
                 <?php if(count($discounts)>0) {
-                    foreach ($discounts as $d) {
+                    foreach ($discounts as $discountRule) {
                         ?>
                         <tr>
                             <td><strong><a href="<?= View::url('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong></td>
