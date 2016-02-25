@@ -51,7 +51,7 @@ class DiscountCode
     /**
      * @return mixed
      */
-    public function getDiscountCodeCode()
+    public function getCode()
     {
         return $this->dcCode;
     }
@@ -59,7 +59,7 @@ class DiscountCode
     /**
      * @param mixed $dcCode
      */
-    public function setDiscountCodeCode($dcCode)
+    public function setCode($dcCode)
     {
         $this->dcCode = $dcCode;
     }
@@ -99,7 +99,7 @@ class DiscountCode
     /**
      * @return mixed
      */
-    public function getDiscountCodeDateAdded()
+    public function getDateAdded()
     {
         return $this->dcDateAdded;
     }
@@ -112,7 +112,7 @@ class DiscountCode
     /**
      * @param mixed $dcDateAdded
      */
-    public function setDiscountCodeDateAdded($dcDateAdded)
+    public function setDateAdded($dcDateAdded)
     {
         $this->dcDateAdded = $dcDateAdded;
     }
@@ -137,8 +137,8 @@ class DiscountCode
     {
         $discountCode = new self();
         $discountCode->setDiscountRule($discountRule);
-        $discountCode->setDiscountCodeCode($code);
-        $discountCode->setDiscountCodeDateAdded(new \DateTime());
+        $discountCode->setCode($code);
+        $discountCode->setDateAdded(new \DateTime());
         $discountCode->save();
 
         return $discountCode;
@@ -165,8 +165,7 @@ class DiscountCode
         return $e;
     }
 
-    //TODO: Move to Discounts
-    public static function storeCode($code)
+    public static function storeCartCode($code)
     {
         $rule = StoreDiscountRule::findDiscountRuleByCode($code);
 
@@ -179,17 +178,17 @@ class DiscountCode
         return false;
     }
 
-    public static function hasCode()
+    public static function hasCartCode()
     {
         return (bool) Session::get('communitystore.code');
     }
 
-    public static function getCode()
+    public static function getCartCode()
     {
         return Session::get('communitystore.code');
     }
 
-    public static function clearCode()
+    public static function clearCartCode()
     {
         Session::set('communitystore.code', '');
     }

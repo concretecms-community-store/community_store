@@ -38,27 +38,27 @@ $currencySymbol = Config::get('communitystore.symbol');
                     foreach ($discounts as $d) {
                         ?>
                         <tr>
-                            <td><strong><a href="<?= View::url('/dashboard/store/discounts/edit/', $d->getID())?>"><?= h($d->getDiscountName()); ?></a></strong></td>
-                            <td><?= h($d->getDiscountDisplay()); ?></td>
+                            <td><strong><a href="<?= View::url('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong></td>
+                            <td><?= h($discountRule->getDisplay()); ?></td>
                             <td>
-                                <?php if ($d->getDiscountDeductType() == 'percentage') {
-                                   echo  h($d->getDiscountPercentage()) . '% ' . t('from') . ' ' . h($d->getDiscountDeductFrom());
+                                <?php if ($discountRule->getDeductType() == 'percentage') {
+                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . h($discountRule->getDeductFrom());
                                 } else {
-                                    echo $currencySymbol .  h($d->getDiscountValue()) . ' ' . t('from') . ' ' . h($d->getDiscountDeductFrom());
+                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . h($discountRule->getDeductFrom());
                                 }
                                 ?>
                             </td>
                             <td><?php
 
-                                if ($d->getDiscountTrigger() == 'auto') {
+                                if ($discountRule->getTrigger() == 'auto') {
                                     echo '<span class="label label-warning">' . t('automatically') . '</span><br />';
                                 } else {
-                                    if ($d->isSingleUse()) {
+                                    if ($discountRule->isSingleUse()) {
                                         echo '<span class="label label-primary">' . t('when single use code entered'). '</span><br />';
-                                        echo '<span class="label ' .  ($d->availableCodes <= 0 ? 'label-danger' : 'label-primary'). '">' . $d->availableCodes . ' ' . t('of') . ' ' . $d->totalCodes . ' ' . t('codes available') . '</span><br />';
+                                        echo '<span class="label ' .  ($discountRule->availableCodes <= 0 ? 'label-danger' : 'label-primary'). '">' . $discountRule->availableCodes . ' ' . t('of') . ' ' . $discountRule->totalCodes . ' ' . t('codes available') . '</span><br />';
                                     } else {
                                         echo '<span class="label label-primary">' . t('when code entered'). '</span><br />';
-                                        echo '<span class="label ' .  ($d->availableCodes <= 0 ? 'label-danger' : 'label-primary') . '">' . $d->availableCodes . ' ' . ($d->availableCodes == 1 ? t('code') : t('codes')) .' '.  t('configured') . '</span><br />';
+                                        echo '<span class="label ' .  ($discountRule->availableCodes <= 0 ? 'label-danger' : 'label-primary') . '">' . $discountRule->availableCodes . ' ' . ($discountRule->availableCodes == 1 ? t('code') : t('codes')) .' '.  t('configured') . '</span><br />';
                                     }
 
                                 }
@@ -67,12 +67,12 @@ $currencySymbol = Config::get('communitystore.symbol');
                                 <?php
                                 $restrictions = '';
 
-                                if ($d->getDiscountValidFrom() > 0) {
-                                    $restrictions .= ' ' . t('starts') . ' ' . $dfh->formatDateTime($d->getDiscountValidFrom());
+                                if ($discountRule->getValidFrom() > 0) {
+                                    $restrictions .= ' ' . t('starts') . ' ' . $dfh->formatDateTime($discountRule->getValidFrom());
                                 }
 
-                                if ($d->getDiscountValidTo() > 0) {
-                                    $restrictions .= ' '. t('expires') . ' ' . $dfh->formatDateTime($d->getDiscountValidTo());
+                                if ($discountRule->getValidTo() > 0) {
+                                    $restrictions .= ' '. t('expires') . ' ' . $dfh->formatDateTime($discountRule->getValidTo());
                                 }
 
                                 if (!$restrictions) {
@@ -87,17 +87,17 @@ $currencySymbol = Config::get('communitystore.symbol');
 
                             </td>
                             <td>
-                                <?php if(!$d->isEnabled()){ ?>
+                                <?php if(!$discountRule->isEnabled()){ ?>
                                     <span class="label label-danger"><?= t('Disabled')?></span>
                                 <?php } else { ?>
                                     <span class="label label-success"><?= t('Enabled')?></span>
                                 <?php } ?>
                             </td>
                             <td>
-                                <p><a class="btn btn-default" href="<?= View::url('/dashboard/store/discounts/edit/', $d->getID())?>"><i class="fa fa-pencil"></i></a></p>
+                                <p><a class="btn btn-default" href="<?= View::url('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
                                 <?php
-                                if ($d->getDiscountTrigger() == 'code') {
-                                    echo '<p>' . '<a class="btn btn-default btn-sm" href="'.View::url('/dashboard/store/discounts/codes/', $d->getID()).'">'.t('Manage Codes').'</a></p>';
+                                if ($discountRule->getTrigger() == 'code') {
+                                    echo '<p>' . '<a class="btn btn-default btn-sm" href="'.View::url('/dashboard/store/discounts/codes/', $discountRule->getID()).'">'.t('Manage Codes').'</a></p>';
                                 } ?>
 
                             </td>
@@ -131,7 +131,7 @@ $currencySymbol = Config::get('communitystore.symbol');
     <?php if ($controller->getTask() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
             <form method="post" id="deleterule" action="<?= View::url('/dashboard/store/discounts/delete/')?>">
-                <input type="hidden" name="drID" value="<?= $d->getID(); ?>" />
+                <input type="hidden" name="drID" value="<?= $discountRule->getID(); ?>" />
                 <button class="btn btn-danger" ><?= t('Delete'); ?></button>
             </form>
         </div>
@@ -143,28 +143,28 @@ $currencySymbol = Config::get('communitystore.symbol');
 
     <div class="ccm-pane-body">
 
-        <?php if(!is_object($d)){
-            $d = new DiscountRule(); //does nothing other than shutup errors.
-            $d->setDiscountTrigger('auto');
-            $d->setDiscountDeductType('percentage');
+        <?php if(!is_object($discountRule)){
+            $discountRule = new DiscountRule(); //does nothing other than shutup errors.
+            $discountRule->setDiscountTrigger('auto');
+            $discountRule->setDiscountDeductType('percentage');
         }
         ?>
 
-        <input type="hidden" name="drID" value="<?= $d->getID()?>"/>
+        <input type="hidden" name="drID" value="<?= $discountRule->getID()?>"/>
 
         <div class="form-group">
             <?= $form->label('drName', t('Name'))?>
-            <?= $form->text('drName', $d->getDiscountName(), array('class' => '', 'required'=>'required'))?>
+            <?= $form->text('drName', $discountRule->getName(), array('class' => '', 'required'=>'required'))?>
         </div>
 
         <div class="form-group">
             <?= $form->label('drEnabled', t('Enabled'))?>
-            <?= $form->select('drEnabled', array('1'=>t('Enabled'), '0'=>t('Disabled')), $d->isEnabled(), array('class' => ''))?>
+            <?= $form->select('drEnabled', array('1'=>t('Enabled'), '0'=>t('Disabled')), $discountRule->isEnabled(), array('class' => ''))?>
         </div>
 
         <div class="form-group">
             <?= $form->label('drDisplay', t('Display Text'))?>
-            <?= $form->text('drDisplay', $d->getDiscountDisplay(), array('class' => '', 'required'=>'required'))?>
+            <?= $form->text('drDisplay', $discountRule->getDisplay(), array('class' => '', 'required'=>'required'))?>
         </div>
 
 
@@ -173,23 +173,23 @@ $currencySymbol = Config::get('communitystore.symbol');
             <div class="row">
                 <div class="col-md-3">
                     <?= $form->label('drDeductType', t('Deduction Type'))?>
-                    <div class="radio"><label><?= $form->radio('drDeductType', 'percentage', ($d->getDiscountDeductType() == 'percentage'))?> <?= t('Percentage'); ?></label></div>
-                    <div class="radio"><label><?= $form->radio('drDeductType', 'value', ($d->getDiscountDeductType() == 'value'))?> <?= t('Value'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('drDeductType', 'percentage', ($discountRule->getDeductType() == 'percentage'))?> <?= t('Percentage'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('drDeductType', 'value', ($discountRule->getDeductType() == 'value'))?> <?= t('Value'); ?></label></div>
                 </div>
                 <div class="col-md-9 row">
-                    <div class="form-group col-md-4"  id="percentageinput"  <?= ($d->getDiscountDeductType() == 'value' ? 'style="display: none;"' : ''); ?>>
+                    <div class="form-group col-md-4"  id="percentageinput"  <?= ($discountRule->getDeductType() == 'value' ? 'style="display: none;"' : ''); ?>>
                         <?= $form->label('drPercentage', t('Percentage Discount'))?>
                         <div class="input-group">
-                            <?= $form->text('drPercentage', $d->getDiscountPercentage(), array('class' => ''))?>
+                            <?= $form->text('drPercentage', $discountRule->getPercentage(), array('class' => ''))?>
                             <div class="input-group-addon">%</div>
                         </div>
                     </div>
 
-                    <div class="form-group col-md-4" id="valueinput" <?= ($d->getDiscountDeductType() == 'percentage' ? 'style="display: none;"' : ''); ?>>
+                    <div class="form-group col-md-4" id="valueinput" <?= ($discountRule->getDeductType() == 'percentage' ? 'style="display: none;"' : ''); ?>>
                         <?= $form->label('drValue', t('Value Discount'))?>
                         <div class="input-group">
                             <div class="input-group-addon"><?= $currencySymbol; ?></div>
-                            <?= $form->text('drValue', $d->getDiscountValue(), array('class' => ''))?>
+                            <?= $form->text('drValue', $discountRule->getValue(), array('class' => ''))?>
                         </div>
                     </div>
 
@@ -201,21 +201,21 @@ $currencySymbol = Config::get('communitystore.symbol');
             <?= $form->label('drDeductFrom', t('Deduct From'))?>
             <?php
             // commenting out following until product and product group matching is implemented
-            //echo $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping'), 'product'=> t('Specific Product'), 'group'=> t('Products in Product Group')), $d->drDeductFrom, array('class' => ''))?>
-            <?= $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping')), $d->getDiscountDeductFrom(), array('class' => ''))?>
+            //echo $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping'), 'product'=> t('Specific Product'), 'group'=> t('Products in Product Group')), $discountRule->drDeductFrom, array('class' => ''))?>
+            <?= $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
         </div>
 
         <div class="form-group">
             <?= $form->label('drTrigger', t('Apply'))?>
-            <div class="radio"><label><?= $form->radio('drTrigger', 'auto', ($d->getDiscountTrigger() == 'auto'))?> <?= t('Automatically, (when matching all restrictions)'); ?></label></div>
-            <div class="radio"><label><?= $form->radio('drTrigger', 'code', ($d->getDiscountTrigger() == 'code'))?> <?= t('When valid code entered'); ?></label></div>
+            <div class="radio"><label><?= $form->radio('drTrigger', 'auto', ($discountRule->getTrigger() == 'auto'))?> <?= t('Automatically, (when matching all restrictions)'); ?></label></div>
+            <div class="radio"><label><?= $form->radio('drTrigger', 'code', ($discountRule->getTrigger() == 'code'))?> <?= t('When valid code entered'); ?></label></div>
         </div>
 
-        <div id="codefields" <?= ($d->getDiscountTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
+        <div id="codefields" <?= ($discountRule->getTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
             <div class="form-group">
-                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$d->isSingleUse())?> <?= t('Single use codes'); ?></label>
+                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single use codes'); ?></label>
             </div>
-            <?php if (!$d->getID()) { ?>
+            <?php if (!$discountRule->getID()) { ?>
             <p class="alert alert-info"><?= t('Codes can be entered after creating rule');?></p>
             <?php } ?>
         </div>
@@ -229,10 +229,10 @@ $currencySymbol = Config::get('communitystore.symbol');
             <?= $form->label('drValidFrom', t('Starts'))?>
             <div class="row">
                 <div class="col-md-4">
-                    <?= $form->select('validFrom', array('0'=>t('Immedately'), '1'=>t('From a specified date')), ($d->getDiscountValidFrom() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
+                    <?= $form->select('validFrom', array('0'=>t('Immedately'), '1'=>t('From a specified date')), ($discountRule->getValidFrom() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
                 </div>
-                <div class="col-md-8" id="fromdate" <?= ($d->getDiscountValidFrom() ? '' : 'style="display: none;"'); ?>>
-                    <?= $date->datetime('drValidFrom', $d->getDiscountValidFrom());?>
+                <div class="col-md-8" id="fromdate" <?= ($discountRule->getValidFrom() ? '' : 'style="display: none;"'); ?>>
+                    <?= $date->datetime('drValidFrom', $discountRule->getValidFrom());?>
                 </div>
             </div>
 
@@ -242,10 +242,10 @@ $currencySymbol = Config::get('communitystore.symbol');
             <?= $form->label('drValidTo', t('Ends'))?>
             <div class="row">
                 <div class="col-md-4">
-                    <?= $form->select('validTo', array('0'=>t('Never'), '1'=>t('At a specified date')),  ($d->getDiscountValidTo() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
+                    <?= $form->select('validTo', array('0'=>t('Never'), '1'=>t('At a specified date')),  ($discountRule->getValidTo() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
                 </div>
-                <div class="col-md-8" id="todate" <?= ($d->getDiscountValidTo() ? '' : 'style="display: none;"'); ?>>
-                     <?= $date->datetime('drValidTo', $d->getDiscountValidTo())?>
+                <div class="col-md-8" id="todate" <?= ($discountRule->getValidTo() ? '' : 'style="display: none;"'); ?>>
+                     <?= $date->datetime('drValidTo', $discountRule->getValidTo())?>
                 </div>
             </div>
         </div>
@@ -257,7 +257,7 @@ $currencySymbol = Config::get('communitystore.symbol');
 
         <div class="form-group">
             <?= $form->label('drDescription', t('Description / Notes'))?>
-            <?= $form->textarea('drDescription', $d->getDiscountDescription(), array('class' => 'span5'))?>
+            <?= $form->textarea('drDescription', $discountRule->getDescription(), array('class' => 'span5'))?>
         </div>
 
 
@@ -267,7 +267,7 @@ $currencySymbol = Config::get('communitystore.symbol');
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= URL::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit"><?= ($d->getID() > 0 ? t('Update') : t('Add'))?></button>
+            <button class="pull-right btn btn-primary" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
 
@@ -330,7 +330,7 @@ $currencySymbol = Config::get('communitystore.symbol');
 
 <?php if (in_array($controller->getTask(), $codeViews)){ ?>
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= View::url('/dashboard/store/discounts/edit', $d->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
+    <a href="<?= View::url('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
 </div>
 
 
@@ -349,7 +349,7 @@ $currencySymbol = Config::get('communitystore.symbol');
 <fieldset><legend><?= t('Current Codes'); ?></legend></fieldset>
 
 <p class="alert alert-info">
-    <?php if ($d->isSingleUse()) { ?>
+    <?php if ($discountRule->isSingleUse()) { ?>
         <?= t('Single Use Codes'); ?></p>
     <?php } else { ?>
         <?= t('Codes can be repeatedly used'); ?>
@@ -360,24 +360,24 @@ $currencySymbol = Config::get('communitystore.symbol');
         <table class="table table-bordered">
             <tr><th><?= t('Code'); ?></th>
 
-                <?php if ($d->isSingleUse()) { ?>
+                <?php if ($discountRule->isSingleUse()) { ?>
                 <th><?=  t('Used'); ?></th>
                 <?php } ?>
 
                 <th></th></tr>
 
             <?php foreach($codes as $code) { ?>
-                    <?php if ($d->isSingleUse()) { ?>
+                    <?php if ($discountRule->isSingleUse()) { ?>
 
                         <?php if ($code->isUsed()) { ?>
                             <tr>
-                                <td><strike><?= $code->getDiscountCodeCode(); ?></strike></td>
+                                <td><strike><?= $code->getCode(); ?></strike></td>
                                 <td><a class="btn btn-default btn-xs" href="<?= View::url('/dashboard/store/orders/order/', $code['oID']); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>
                         <?php } else { ?>
                             <tr>
-                                <td><?= $code->getDiscountCodeCode(); ?></td>
+                                <td><?= $code->getCode(); ?></td>
                                 <td><span class="label label-success"><?= t('Available'); ?></span></td>
                             <td>
                                 <form method="post" action="<?= View::url('/dashboard/store/discounts/deletecode/')?>">
@@ -409,7 +409,7 @@ $currencySymbol = Config::get('communitystore.symbol');
 
     <?php } ?>
 <br />
-<form method="post" action="<?= View::url('/dashboard/store/discounts/addcodes', $d->getID())?>" id="codes-add">
+<form method="post" action="<?= View::url('/dashboard/store/discounts/addcodes', $discountRule->getID())?>" id="codes-add">
 <fieldset><legend><?= t('Add Codes'); ?></legend>
 
     <div class="form-group">

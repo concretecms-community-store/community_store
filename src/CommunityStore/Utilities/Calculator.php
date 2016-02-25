@@ -70,13 +70,13 @@ class Calculator
 
         $discounts = StoreCart::getDiscounts();
         foreach ($discounts as $discount) {
-            if ($discount->getDiscountDeductFrom() == 'total') {
-                if ($discount->getDiscountDeductType()  == 'value') {
-                    $grandTotal -= $discount->getDiscountValue();
+            if ($discount->getDeductFrom() == 'total') {
+                if ($discount->getDeductType()  == 'value') {
+                    $grandTotal -= $discount->getValue();
                 }
 
-                if ($discount->getDiscountDeductType()  == 'percentage') {
-                    $grandTotal -= ($discount->getDiscountPercentage() / 100 * $grandTotal);
+                if ($discount->getDeductType()  == 'percentage') {
+                    $grandTotal -= ($discount->getPercentage() / 100 * $grandTotal);
                 }
             }
         }
@@ -107,13 +107,13 @@ class Calculator
         $discountedSubtotal = $subTotal;
         $discounts = StoreCart::getDiscounts();
         foreach ($discounts as $discount) {
-            if ($discount->getDiscountDeductFrom() == 'subtotal') {
-                if ($discount->getDiscountDeductType()  == 'value') {
-                    $discountedSubtotal -= $discount->getDiscountValue();
+            if ($discount->getDeductFrom() == 'subtotal') {
+                if ($discount->getDeductType()  == 'value') {
+                    $discountedSubtotal -= $discount->getValue();
                 }
 
-                if ($discount->getDiscountDeductType()  == 'percentage') {
-                    $discountedSubtotal -= ($discount->getDiscountPercentage() / 100 * $discountedSubtotal);
+                if ($discount->getDeductType()  == 'percentage') {
+                    $discountedSubtotal -= ($discount->getPercentage() / 100 * $discountedSubtotal);
                 }
             }
         }
@@ -121,13 +121,13 @@ class Calculator
         $total = ($discountedSubtotal + $addedTaxTotal + $shippingTotal);
 
         foreach ($discounts as $discount) {
-            if ($discount->getDiscountDeductFrom() == 'total') {
-                if ($discount->getDiscountDeductType()  == 'value') {
-                    $total -= $discount->getDiscountValue();
+            if ($discount->getDeductFrom() == 'total') {
+                if ($discount->getDeductType()  == 'value') {
+                    $total -= $discount->getValue();
                 }
 
-                if ($discount->getDiscountDeductType()  == 'percentage') {
-                    $total -= ($discount->getDiscountPercentage() / 100 * $total);
+                if ($discount->getDeductType()  == 'percentage') {
+                    $total -= ($discount->getPercentage() / 100 * $total);
                 }
             }
         }

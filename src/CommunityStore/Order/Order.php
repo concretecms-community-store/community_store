@@ -270,14 +270,14 @@ class Order
         foreach ($discounts as $discount) {
             $orderDiscount = new StoreOrderDiscount();
             $orderDiscount->setOrder($order);
-            if ($discount->getDiscountTrigger() == 'code') {
+            if ($discount->getTrigger() == 'code') {
                 $orderDiscount->setOrderDiscountCode(Session::get('communitystore.code'));
             }
-            $orderDiscount->setOrderDiscountDisplay($discount->getDiscountDisplay());
-            $orderDiscount->setOrderDiscountName($discount->getDiscountName());
-            $orderDiscount->setOrderDiscountDeductFrom($discount->getDiscountDeductFrom());
-            $orderDiscount->setOrderDiscountPercentage($discount->getDiscountPercentage());
-            $orderDiscount->setOrderDiscountValue($discount->getDiscountValue());
+            $orderDiscount->setOrderDiscountDisplay($discount->getDisplay());
+            $orderDiscount->setOrderDiscountName($discount->getName());
+            $orderDiscount->setOrderDiscountDeductFrom($discount->getDeductFrom());
+            $orderDiscount->setOrderDiscountPercentage($discount->getPercentage());
+            $orderDiscount->setOrderDiscountValue($discount->getValue());
             $orderDiscount->save();
         }
 
@@ -510,7 +510,7 @@ class Order
             $u->refreshUserGroups();
         }
 
-        StoreDiscountCode::clearCode();
+        StoreDiscountCode::clearCartCode();
 
         // create order event and dispatch
         $event = new StoreOrderEvent($this);

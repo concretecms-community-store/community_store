@@ -86,7 +86,7 @@ class Checkout extends PageController
 
         $this->set('cart', StoreCart::getCart());
         $this->set('discounts', StoreCart::getDiscounts());
-        $this->set('hasCode', StoreDiscountCode::hasCode());
+        $this->set('hasCode', StoreDiscountCode::hasCartCode());
 
         $this->set("billingCountries",$billingCountries);
         $this->set("shippingCountries",$shippingCountries);

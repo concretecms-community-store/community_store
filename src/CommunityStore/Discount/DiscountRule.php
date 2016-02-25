@@ -121,7 +121,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountName()
+    public function getName()
     {
         return $this->drName;
     }
@@ -129,7 +129,7 @@ class DiscountRule
     /**
      * @param mixed $drName
      */
-    public function setDiscountName($drName)
+    public function setName($drName)
     {
         $this->drName = $drName;
     }
@@ -158,7 +158,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDisplay()
+    public function getDisplay()
     {
         return $this->drDisplay;
     }
@@ -166,7 +166,7 @@ class DiscountRule
     /**
      * @param mixed $drDisplay
      */
-    public function setDiscountDisplay($drDisplay)
+    public function setDisplay($drDisplay)
     {
         $this->drDisplay = $drDisplay;
     }
@@ -174,7 +174,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDescription()
+    public function getDescription()
     {
         return $this->drDescription;
     }
@@ -182,7 +182,7 @@ class DiscountRule
     /**
      * @param mixed $drDescription
      */
-    public function setDiscountDescription($drDescription)
+    public function setDescription($drDescription)
     {
         $this->drDescription = $drDescription;
     }
@@ -190,7 +190,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDeductType()
+    public function getDeductType()
     {
         return $this->drDeductType;
     }
@@ -198,7 +198,7 @@ class DiscountRule
     /**
      * @param mixed $drDeductType
      */
-    public function setDiscountDeductType($drDeductType)
+    public function setDeductType($drDeductType)
     {
         $this->drDeductType = $drDeductType;
     }
@@ -206,7 +206,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountValue()
+    public function getValue()
     {
         return $this->drValue;
     }
@@ -214,7 +214,7 @@ class DiscountRule
     /**
      * @param mixed $drValue
      */
-    public function setDiscountValue($drValue)
+    public function setValue($drValue)
     {
         $this->drValue = $drValue;
     }
@@ -222,7 +222,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountPercentage()
+    public function getPercentage()
     {
         return $this->drPercentage;
     }
@@ -230,7 +230,7 @@ class DiscountRule
     /**
      * @param mixed $drPercentage
      */
-    public function setDiscountPercentage($drPercentage)
+    public function setPercentage($drPercentage)
     {
         $this->drPercentage = $drPercentage;
     }
@@ -238,7 +238,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDeductFrom()
+    public function getDeductFrom()
     {
         return $this->drDeductFrom;
     }
@@ -246,7 +246,7 @@ class DiscountRule
     /**
      * @param mixed $drDeductFrom
      */
-    public function setDiscountDeductFrom($drDeductFrom)
+    public function setDeductFrom($drDeductFrom)
     {
         $this->drDeductFrom = $drDeductFrom;
     }
@@ -254,7 +254,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountTrigger()
+    public function getTrigger()
     {
         return $this->drTrigger;
     }
@@ -262,7 +262,7 @@ class DiscountRule
     /**
      * @param mixed $drTrigger
      */
-    public function setDiscountTrigger($drTrigger)
+    public function setTrigger($drTrigger)
     {
         $this->drTrigger = $drTrigger;
     }
@@ -275,7 +275,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountSingleUseCodes()
+    public function getSingleUseCodes()
     {
         return $this->drSingleUseCodes;
     }
@@ -288,7 +288,7 @@ class DiscountRule
     /**
      * @param mixed $drSingleUseCodes
      */
-    public function setDiscountSingleUseCodes($drSingleUseCodes)
+    public function setSingleUseCodes($drSingleUseCodes)
     {
         $this->drSingleUseCodes = $drSingleUseCodes;
     }
@@ -296,7 +296,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountCurrency()
+    public function getCurrency()
     {
         return $this->drCurrency;
     }
@@ -304,7 +304,7 @@ class DiscountRule
     /**
      * @param mixed $drCurrency
      */
-    public function setDiscountCurrency($drCurrency)
+    public function setCurrency($drCurrency)
     {
         $this->drCurrency = $drCurrency;
     }
@@ -312,7 +312,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountValidFrom()
+    public function getValidFrom()
     {
         return $this->drValidFrom;
     }
@@ -320,7 +320,7 @@ class DiscountRule
     /**
      * @param mixed $drValidFrom
      */
-    public function setDiscountValidFrom($drValidFrom)
+    public function setValidFrom($drValidFrom)
     {
         $this->drValidFrom = $drValidFrom;
     }
@@ -328,7 +328,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountValidTo()
+    public function getValidTo()
     {
         return $this->drValidTo;
     }
@@ -336,7 +336,7 @@ class DiscountRule
     /**
      * @param mixed $drValidTo
      */
-    public function setDiscountValidTo($drValidTo)
+    public function setValidTo($drValidTo)
     {
         $this->drValidTo = $drValidTo;
     }
@@ -344,7 +344,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDateAdded()
+    public function getDateAdded()
     {
         return $this->drDateAdded;
     }
@@ -352,7 +352,7 @@ class DiscountRule
     /**
      * @param mixed $drDateAdded
      */
-    public function setDiscountDateAdded($drDateAdded)
+    public function setDateAdded($drDateAdded)
     {
         $this->drDateAdded = $drDateAdded;
     }
@@ -360,7 +360,7 @@ class DiscountRule
     /**
      * @return mixed
      */
-    public function getDiscountDeleted()
+    public function getDeleted()
     {
         return $this->drDeleted;
     }
@@ -368,12 +368,12 @@ class DiscountRule
     /**
      * @param mixed $drDeleted
      */
-    public function setDiscountDeleted($drDeleted)
+    public function setDeleted($drDeleted)
     {
         $this->drDeleted = $drDeleted;
     }
 
-    public function getDisplay()
+    public function getFullDisplay()
     {
         $display = trim($this->drDisplay);
 
@@ -472,16 +472,16 @@ class DiscountRule
     public static function loadData($discountRule, $data)
     {
         $discountRule->setEnabled($data['drEnabled'] ? true : false);
-        $discountRule->setDiscountName($data['drName']);
-        $discountRule->setDiscountDisplay($data['drDisplay']);
-        $discountRule->setDiscountDeductType($data['drDeductType']);
-        $discountRule->setDiscountDeductFrom($data['drDeductFrom']);
-        $discountRule->setDiscountPercentage($data['drPercentage']);
-        $discountRule->setDiscountValue($data['drValue']);
-        $discountRule->setDiscountSingleUseCodes($data['drPercentage'] ? true : false);
-        $discountRule->setDiscountTrigger($data['drTrigger']);
-        $discountRule->setDiscountDescription($data['drDescription']);
-        $discountRule->setDiscountDateAdded(new \DateTime());
+        $discountRule->setName($data['drName']);
+        $discountRule->setDisplay($data['drDisplay']);
+        $discountRule->setDeductType($data['drDeductType']);
+        $discountRule->setDeductFrom($data['drDeductFrom']);
+        $discountRule->setPercentage($data['drPercentage']);
+        $discountRule->setValue($data['drValue']);
+        $discountRule->setSingleUseCodes($data['drPercentage'] ? true : false);
+        $discountRule->setTrigger($data['drTrigger']);
+        $discountRule->setDescription($data['drDescription']);
+        $discountRule->setDateAdded(new \DateTime());
     }
 
     public static function edit($drID, $data)
