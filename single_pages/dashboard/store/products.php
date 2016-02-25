@@ -1045,7 +1045,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <tbody>
 
             <?php if(count($products)>0) {
-                foreach ($products as $p) {
+                foreach ($products as $product) {
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb();?></td>
