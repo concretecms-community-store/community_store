@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '0.9.4';
+    protected $pkgVersion = '0.9.5';
 
     public function getPackageDescription()
     {

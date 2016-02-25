@@ -50,12 +50,12 @@ class OrderItem
     /**
      * @Column(type="decimal", precision=10, scale=4)
      */
-    protected $oitax;
+    protected $oiTax;
 
     /**
      * @Column(type="decimal", precision=10, scale=4)
      */
-    protected $oitaxIncluded;
+    protected $oiTaxIncluded;
 
     /**
      * @Column(type="string")
@@ -78,7 +78,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemProductName()
+    public function getProductName()
     {
         return $this->oiProductName;
     }
@@ -86,7 +86,7 @@ class OrderItem
     /**
      * @param mixed $oiProductName
      */
-    public function setOrderItemProductName($oiProductName)
+    public function setProductName($oiProductName)
     {
         $this->oiProductName = $oiProductName;
     }
@@ -94,7 +94,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemSKU()
+    public function getSKU()
     {
         return $this->oiSKU;
     }
@@ -102,7 +102,7 @@ class OrderItem
     /**
      * @param mixed $oiSKU
      */
-    public function setOrderItemSKU($oiSKU)
+    public function setSKU($oiSKU)
     {
         $this->oiSKU = $oiSKU;
     }
@@ -110,7 +110,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemPricePaid()
+    public function getPricePaid()
     {
         return $this->oiPricePaid;
     }
@@ -118,7 +118,7 @@ class OrderItem
     /**
      * @param mixed $oiPricePaid
      */
-    public function setOrderItemPricePaid($oiPricePaid)
+    public function setPricePaid($oiPricePaid)
     {
         $this->oiPricePaid = $oiPricePaid;
     }
@@ -126,39 +126,39 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemTax()
+    public function getTax()
     {
-        return $this->oitax;
+        return $this->oiTax;
     }
 
     /**
-     * @param mixed $oitax
+     * @param mixed $oiTax
      */
-    public function setOrderItemTax($oitax)
+    public function setTax($oitax)
     {
-        $this->oitax = $oitax;
+        $this->oiTax = $oitax;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderItemtaxIncluded()
+    public function gettaxIncluded()
     {
-        return $this->oitaxIncluded;
+        return $this->oiTaxIncluded;
     }
 
     /**
      * @param mixed $oitaxIncluded
      */
-    public function setOrderItemTaxIncluded($oitaxIncluded)
+    public function setTaxIncluded($oiTaxIncluded)
     {
-        $this->oitaxIncluded = $oitaxIncluded;
+        $this->oiTaxIncluded = $oiTaxIncluded;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderItemTaxName()
+    public function getTaxName()
     {
         return $this->oiTaxName;
     }
@@ -166,7 +166,7 @@ class OrderItem
     /**
      * @param mixed $oiTaxName
      */
-    public function setOrderItemTaxName($oiTaxName)
+    public function setTaxName($oiTaxName)
     {
         $this->oiTaxName = $oiTaxName;
     }
@@ -174,7 +174,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function getOrderItemQty()
+    public function getQty()
     {
         return $this->oiQty;
     }
@@ -182,7 +182,7 @@ class OrderItem
     /**
      * @param mixed $oiQty
      */
-    public function setOrderItemQty($oiQty)
+    public function setQty($oiQty)
     {
         $this->oiQty = $oiQty;
     }
@@ -252,13 +252,13 @@ class OrderItem
         $order = StoreOrder::getByID($oID);
 
         $orderItem = new self();
-        $orderItem->setOrderItemProductName($productName);
-        $orderItem->setOrderItemSKU($sku);
-        $orderItem->setOrderItemPricePaid($productPrice);
-        $orderItem->setOrderItemTax($tax);
-        $orderItem->setOrderItemTaxIncluded($taxIncluded);
-        $orderItem->setOrderItemTaxName($taxName);
-        $orderItem->setOrderItemQty($qty);
+        $orderItem->setProductName($productName);
+        $orderItem->setSKU($sku);
+        $orderItem->setPricePaid($productPrice);
+        $orderItem->setTax($tax);
+        $orderItem->setTaxIncluded($taxIncluded);
+        $orderItem->setTaxName($taxName);
+        $orderItem->setQty($qty);
         $orderItem->setOrder($order);
 
         if ($product) {
@@ -301,22 +301,7 @@ class OrderItem
     {
         return $this->pID;
     }
-    public function getProductName()
-    {
-        return $this->oiProductName;
-    }
-    public function getSKU()
-    {
-        return $this->oiSKU;
-    }
-    public function getPricePaid()
-    {
-        return $this->oiPricePaid;
-    }
-    public function getQty()
-    {
-        return $this->oiQty;
-    }
+
     public function getSubTotal()
     {
         $price = $this->getPricePaid();

@@ -73,7 +73,7 @@ class Order
         $this->cID = $cID;
     }
 
-    public function setOrderDate($oDate)
+    public function setDate($oDate)
     {
         $this->oDate = $oDate;
     }
@@ -108,7 +108,7 @@ class Order
         $this->oTaxName = $taxLabels;
     }
 
-    public function setOrderTotal($total)
+    public function setTotal($total)
     {
         $this->oTotal = $total;
     }
@@ -207,7 +207,7 @@ class Order
         $subtotal = 0;
         if ($items) {
             foreach ($items as $item) {
-                $subtotal = $subtotal + ($item->getOrderItemPricePaid() * $item->getOrderItemQty());
+                $subtotal = $subtotal + ($item->getPricePaid() * $item->getQty());
             }
         }
 
@@ -256,14 +256,14 @@ class Order
 
         $order = new self();
         $order->setCustomerID($customer->getUserID());
-        $order->setOrderDate($now);
+        $order->setDate($now);
         $order->setPaymentMethodName($pmName);
         $order->setShippingMethodName($smName);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotals($taxes['taxTotals']);
         $order->setTaxIncluded($taxes['taxIncludedTotal']);
         $order->setTaxLabels($taxes['taxLabels']);
-        $order->setOrderTotal($total);
+        $order->setTotal($total);
         $order->save();
 
         $discounts = StoreCart::getDiscounts();
