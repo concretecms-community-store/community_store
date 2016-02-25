@@ -780,7 +780,7 @@ class Product
             $pageType,
             array(
                 'cName' => $this->getName(),
-                'pkgID' => $pkg->pkgID,
+                'pkgID' => $pkg->getPackageID(),
             ),
             $pageTemplate
         );
