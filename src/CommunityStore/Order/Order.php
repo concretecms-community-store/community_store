@@ -93,7 +93,7 @@ class Order
         $this->oShippingTotal = $shippingTotal;
     }
 
-    public function setTaxTotals($taxTotal)
+    public function setTaxTotal($taxTotal)
     {
         $this->oTax = $taxTotal;
     }
@@ -260,8 +260,8 @@ class Order
         $order->setPaymentMethodName($pmName);
         $order->setShippingMethodName($smName);
         $order->setShippingTotal($shippingTotal);
-        $order->setTaxTotals($taxes['taxTotals']);
-        $order->setTaxIncluded($taxes['taxIncludedTotal']);
+        $order->setTaxTotal($taxes['taxTotals']);
+        $order->setTaxIncluded($taxes['taxIncludedTotals']);
         $order->setTaxLabels($taxes['taxLabels']);
         $order->setTotal($total);
         $order->save();

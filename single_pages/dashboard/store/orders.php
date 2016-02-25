@@ -162,7 +162,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     if (!empty($taxes)) { ?>
      <p>
-        <?php foreach($order->getTaxes() as $tax){?>
+        <?php foreach($taxes as $tax){?>
             <strong><?= $tax['label']?>:</strong> <?=Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded'])?><br>
         <?php } ?>
      </p>

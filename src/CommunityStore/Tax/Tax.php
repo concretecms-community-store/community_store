@@ -89,8 +89,8 @@ class Tax
         $taxLabels = implode(',', $taxLabels);
 
         $taxStrings = array(
-            'taxTotal' => $taxTotal,
-            'taxIncludedTotal' => $taxIncludedTotal,
+            'taxTotals' => $taxTotal,
+            'taxIncludedTotals' => $taxIncludedTotal,
             'taxLabels' => $taxLabels,
         );
 

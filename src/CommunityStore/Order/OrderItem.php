@@ -142,7 +142,7 @@ class OrderItem
     /**
      * @return mixed
      */
-    public function gettaxIncluded()
+    public function getTaxIncluded()
     {
         return $this->oiTaxIncluded;
     }
