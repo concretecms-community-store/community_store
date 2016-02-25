@@ -34,7 +34,6 @@ class Settings extends DashboardPageController
         $pkg = Package::getByHandle('community_store');
         $pkgconfig = $pkg->getConfig();
         $this->set('pkgconfig',$pkgconfig);
-        $this->addHeaderItem('<style type="text/css">.redactor_editor{padding:20px}</style>');
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }

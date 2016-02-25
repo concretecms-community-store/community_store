@@ -221,15 +221,13 @@ class Products extends DashboardPageController
     }
     public function loadFormAssets()
     {
-        $this->requireAsset('redactor');
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
         
         $this->set('fp',FilePermissions::getGlobal());
         $this->set('tp', new TaskPermission());
         $this->set('al', Core::make('helper/concrete/asset_library'));
-                
-        $this->addHeaderItem('<style type="text/css">.redactor_editor{padding:20px}</style>');
+
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
         
