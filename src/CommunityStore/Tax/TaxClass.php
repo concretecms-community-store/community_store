@@ -57,7 +57,7 @@ class TaxClass
         $this->locked = $locked;
     }
 
-    public function getTaxClassID()
+    public function getID()
     {
         return $this->tcID;
     }
