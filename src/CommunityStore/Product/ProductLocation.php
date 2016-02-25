@@ -61,7 +61,7 @@ class ProductLocation
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation')->findBy(array('pID' => $product->getProductID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation')->findBy(array('pID' => $product->getID()));
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)
@@ -71,7 +71,7 @@ class ProductLocation
         //add new ones.
         if (!empty($locations['cID'])) {
             foreach ($locations['cID'] as $cID) {
-                self::add($product->getProductID(), $cID);
+                self::add($product->getID(), $cID);
             }
         }
     }

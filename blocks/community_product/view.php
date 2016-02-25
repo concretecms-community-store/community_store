@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (is_object($product)) {
     ?>
 
-    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getProductID() ?>">
+    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>">
 
         <div class="row">
             <?php if ($showImage){ ?>
@@ -108,9 +108,9 @@ if (is_object($product)) {
 
                     <?php if ($showCartButton) { ?>
                         <p class="store-product-button">
-                            <input type="hidden" name="pID" value="<?= $product->getProductID() ?>">
+                            <input type="hidden" name="pID" value="<?= $product->getID() ?>">
 
-                            <span><a href="#" data-add-type="none" data-product-id="<?= $product->getProductID() ?>"
+                            <span><a href="#" data-add-type="none" data-product-id="<?= $product->getID() ?>"
                                   class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></a>
                             </span>
                             <span

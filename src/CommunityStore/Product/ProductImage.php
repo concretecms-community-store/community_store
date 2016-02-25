@@ -75,7 +75,7 @@ class ProductImage
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage')->findBy(array('pID' => $product->getProductID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage')->findBy(array('pID' => $product->getID()));
     }
 
     public static function getImageObjectsForProduct(StoreProduct $product)
@@ -95,7 +95,7 @@ class ProductImage
 
         //add new ones.
         for ($i = 0;$i < count($images['pifID']);++$i) {
-            self::add($product->getProductID(), $images['pifID'][$i], $images['piSort'][$i]);
+            self::add($product->getID(), $images['pifID'][$i], $images['piSort'][$i]);
         }
     }
 

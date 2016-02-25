@@ -20,12 +20,12 @@ class Group
      */
     protected $groupName;
 
-    private function setName($groupName)
+    private function setGroupName($groupName)
     {
         $this->groupName = $groupName;
     }
 
-    public function getName()
+    public function getGroupName()
     {
         return $this->groupName;
     }
@@ -45,7 +45,7 @@ class Group
     public static function add($groupName)
     {
         $productGroup = new self();
-        $productGroup->setName($groupName);
+        $productGroup->setGroupName($groupName);
         $productGroup->save();
 
         return $productGroup;
@@ -53,7 +53,7 @@ class Group
 
     public function update($groupName)
     {
-        $this->setName($groupName);
+        $this->setGroupName($groupName);
         $this->save();
 
         return $this;

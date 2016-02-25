@@ -16,7 +16,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
         $product = new StoreProduct(); //does nothing other than shutup errors.}
     }
 
-    $pID = $product->getProductID()
+    $pID = $product->getID()
  ?>
 
     <?php if ($pID > 0) { ?>
@@ -36,7 +36,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php } ?>
 
     <form method="post" action="<?= $view->action('save')?>">
-        <input type="hidden" name="pID" value="<?= $product->getProductID()?>"/>
+        <input type="hidden" name="pID" value="<?= $product->getID()?>"/>
 
         <div class="row">
             <div class="col-sm-3">
@@ -496,13 +496,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         //load up existing option groups
                         <?php
-                        if($optGroups) {
-                            foreach ($optGroups as $optGroup) {
+                        if($groups) {
+                            foreach ($groups as $group) {
                         ?>
                         optionsContainer.append(optionsTemplate({
-                            pogName: '<?= $optGroup->getName() ?>',
-                            pogID: '<?= $optGroup->getID()?>',
-                            sort: '<?= $optGroup->getSort() ?>'
+                            pogName: '<?= $group->getName() ?>',
+                            pogID: '<?= $group->getID()?>',
+                            sort: '<?= $group->getSort() ?>'
                         }));
                         <?php
                             }
@@ -610,11 +610,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <?php
 
                         if($optItems) {
-                            $count = count($optGroups);
+                            $count = count($groups);
                             for($i=0;$i<$count;$i++){
                                 foreach($optItems as $option){
                                     //go through all options, see if it belongs in the group we're on in the for loop
-                                    if($option->getProductOptionGroupID() == $optGroups[$i]->getID()){
+                                    if($option->getProductOptionGroupID() == $groups[$i]->getID()){
 
                                     ?>
                         var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
@@ -932,7 +932,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-8 store-pane" id="product-page">
 
-                <?php if($product->getProductID()){ ?>
+                <?php if($product->getID()){ ?>
 
                     <?php
                     $page = Page::getByID($product->getPageID());
@@ -950,7 +950,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                         </div>
 
-                        <a href="<?= Url::to('/dashboard/store/products/generate/',$product->getProductID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
+                        <a href="<?= Url::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
 
 
                     <?php } ?>
@@ -1013,7 +1013,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <ul id="group-filters" class="nav nav-pills">
                         <li><a href="<?= View::url('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
                         <?php foreach($grouplist as $group){ ?>
-                            <li><a href="<?= View::url('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getName()?></a></li>
+                            <li><a href="<?= View::url('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
                         <?php } ?>
                     </ul>
                 <?php } ?>
@@ -1049,7 +1049,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb();?></td>
-                        <td><strong><a href="<?= View::url('/dashboard/store/products/edit/', $product->getProductID())?>"><?=  $product->getName();
+                        <td><strong><a href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><?=  $product->getName();
                                 $sku = $product->getSKU();
                                 if ($sku) {
                                     echo ' (' .$sku . ')';
@@ -1100,7 +1100,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </td>
                         <td>
                             <a class="btn btn-default"
-                               href="<?= View::url('/dashboard/store/products/edit/', $product->getProductID())?>"><i
+                               href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><i
                                     class="fa fa-pencil"></i></a>
                         </td>
                     </tr>
@@ -1124,8 +1124,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
         <ul class="list-unstyled group-list" data-delete-url="<?= View::url('/dashboard/store/products/deletegroup')?>" data-save-url="<?= View::url('/dashboard/store/products/editgroup')?>">
             <?php foreach($grouplist as $group){?>
                 <li data-group-id="<?= $group->getGroupID()?>">
-                    <span class="group-name"><?= $group->getName()?></span>
-                    <input class="hideme edit-group-name" type="text" value="<?= $group->getName()?>">
+                    <span class="group-name"><?= $group->getGroupName()?></span>
+                    <input class="hideme edit-group-name" type="text" value="<?= $group->getGroupName()?>">
                     <span class="btn btn-default btn-edit-group-name"><i class="fa fa-pencil"></i></span>
                     <span class="hideme btn btn-default btn-cancel-edit"><i class="fa fa-ban"></i></span>
                     <span class="hideme btn btn-warning btn-save-group-name"><i class="fa fa-save"></i></span>

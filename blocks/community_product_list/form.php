@@ -3,7 +3,7 @@
     <legend><?= t('Product Arrangement')?></legend>
     <?php
         foreach($grouplist as $productgroup){
-            $productgroups[$productgroup->getGroupID()] = $productgroup->getName();
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
     ?>
     <div class="row">

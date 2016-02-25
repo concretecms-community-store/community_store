@@ -402,7 +402,7 @@ class Product
         return $product;
     }
 
-    public function getProductID()
+    public function getID()
     {
         return $this->pID;
     }
