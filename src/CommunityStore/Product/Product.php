@@ -190,8 +190,8 @@ class Product
     public function setInitialVariation()
     {
         if ($this->hasVariations()) {
-            $optionGroups = $this->getProductOptionGroups();
-            $optionItems = $this->getProductOptionItems();
+            $optionGroups = $this->getOptionGroups();
+            $optionItems = $this->getOptionItems();
             $optionkeys = array();
 
             foreach ($optionGroups as $optionGroup) {
@@ -216,27 +216,27 @@ class Product
     {
         $this->cID = $cID;
     }
-    public function setProductName($name)
+    public function setName($name)
     {
         $this->pName = $name;
     }
-    public function setProductSKU($sku)
+    public function setSKU($sku)
     {
         $this->pSKU = $sku;
     }
-    public function setProductDescription($description)
+    public function setDescription($description)
     {
         $this->pDesc = $description;
     }
-    public function setProductDetail($detail)
+    public function setDetail($detail)
     {
         $this->pDetail = $detail;
     }
-    public function setProductPrice($price)
+    public function setPrice($price)
     {
         $this->pPrice = $price;
     }
-    public function setProductSalePrice($price)
+    public function setSalePrice($price)
     {
         $this->pSalePrice = ($price != '' ? $price : null);
     }
@@ -244,7 +244,7 @@ class Product
     {
         $this->pFeatured = (!is_null($bool) ? $bool : false);
     }
-    public function setProductQty($qty)
+    public function setQty($qty)
     {
         $this->pQty = ($qty ? $qty : 0);
     }
@@ -260,7 +260,7 @@ class Product
     {
         $this->pNoQty = $bool;
     }
-    public function setProductTaxClass($taxClass)
+    public function setTaxClass($taxClass)
     {
         $this->pTaxClass = $taxClass;
     }
@@ -268,7 +268,7 @@ class Product
     {
         $this->pTaxable = (!is_null($bool) ? $bool : false);
     }
-    public function setProductImageID($fID)
+    public function setImageID($fID)
     {
         $this->pfID = $fID;
     }
@@ -276,7 +276,7 @@ class Product
     {
         $this->pActive = $bool;
     }
-    public function setProductDateAdded($date)
+    public function setDateAdded($date)
     {
         $this->pDateAdded = $date;
     }
@@ -284,19 +284,19 @@ class Product
     {
         $this->pShippable = (!is_null($bool) ? $bool : false);
     }
-    public function setProductWidth($width)
+    public function setWidth($width)
     {
         $this->pWidth = $width;
     }
-    public function setProductHeight($height)
+    public function setHeight($height)
     {
         $this->pHeight = $height;
     }
-    public function setProductLength($length)
+    public function setLength($length)
     {
         $this->pLength = $length;
     }
-    public function setProductWeight($weight)
+    public function setWeight($weight)
     {
         $this->pWeight = $weight;
     }
@@ -329,7 +329,7 @@ class Product
                 $variation->save();
             }
         } else {
-            $this->setProductQty($qty);
+            $this->setQty($qty);
             $this->save();
         }
     }
@@ -355,34 +355,34 @@ class Product
         if ($data['pID']) {
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
-            $product->setProductPageDescription($data['pDesc']);
+            $product->setPageDescription($data['pDesc']);
         } else {
             //else, we don't know it and we're adding a new product
             $product = new self();
             $dt = Core::make('helper/date');
-            $product->setProductDateAdded(new \Datetime());
+            $product->setDateAdded(new \Datetime());
         }
-        $product->setProductName($data['pName']);
-        $product->setProductSKU($data['pSKU']);
-        $product->setProductDescription($data['pDesc']);
-        $product->setProductDetail($data['pDetail']);
-        $product->setProductPrice($data['pPrice']);
-        $product->setProductSalePrice($data['pSalePrice']);
+        $product->setName($data['pName']);
+        $product->setSKU($data['pSKU']);
+        $product->setDescription($data['pDesc']);
+        $product->setDetail($data['pDetail']);
+        $product->setPrice($data['pPrice']);
+        $product->setSalePrice($data['pSalePrice']);
         $product->setIsFeatured($data['pFeatured']);
-        $product->setProductQty($data['pQty']);
+        $product->setQty($data['pQty']);
         $product->setIsUnlimited($data['pQtyUnlim']);
         $product->setAllowBackOrder($data['pBackOrder']);
         $product->setNoQty($data['pNoQty']);
-        $product->setProductTaxClass($data['pTaxClass']);
+        $product->setTaxClass($data['pTaxClass']);
         $product->setIsTaxable($data['pTaxable']);
-        $product->setProductImageID($data['pfID']);
+        $product->setImageID($data['pfID']);
         $product->setIsActive($data['pActive']);
         $product->setCreatesUserAccount($data['pCreateUserAccount']);
         $product->setIsShippable($data['pShippable']);
-        $product->setProductWidth($data['pWidth']);
-        $product->setProductHeight($data['pHeight']);
-        $product->setProductLength($data['pLength']);
-        $product->setProductWeight($data['pWeight']);
+        $product->setWidth($data['pWidth']);
+        $product->setHeight($data['pHeight']);
+        $product->setLength($data['pLength']);
+        $product->setWeight($data['pWeight']);
         $product->setNumberItems($data['pNumberItems']);
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
@@ -402,15 +402,15 @@ class Product
         return $product;
     }
 
-    public function getProductID()
+    public function getID()
     {
         return $this->pID;
     }
-    public function getProductName()
+    public function getName()
     {
         return $this->pName;
     }
-    public function getProductSKU()
+    public function getSKU()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -426,19 +426,19 @@ class Product
             return $this->pSKU;
         }
     }
-    public function getProductPageID()
+    public function getPageID()
     {
         return $this->cID;
     }
-    public function getProductDesc()
+    public function getDesc()
     {
         return $this->pDesc;
     }
-    public function getProductDetail()
+    public function getDetail()
     {
         return $this->pDetail;
     }
-    public function getProductPrice()
+    public function getPrice()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -456,14 +456,14 @@ class Product
     }
     public function getFormattedOriginalPrice()
     {
-        return StorePrice::format($this->getProductPrice());
+        return StorePrice::format($this->getPrice());
     }
     public function getFormattedPrice()
     {
         return StorePrice::format($this->getActivePrice());
     }
 
-    public function getProductSalePrice()
+    public function getSalePrice()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -480,7 +480,7 @@ class Product
     }
     public function getFormattedSalePrice()
     {
-        $saleprice = $this->getProductSalePrice();
+        $saleprice = $this->getSalePrice();
 
         if ($saleprice != '') {
             return StorePrice::format($saleprice);
@@ -489,11 +489,11 @@ class Product
 
     public function getActivePrice()
     {
-        $salePrice = $this->getProductSalePrice();
+        $salePrice = $this->getSalePrice();
         if ($salePrice != "") {
             return $salePrice;
         } else {
-            return $this->getProductPrice();
+            return $this->getPrice();
         }
     }
     public function getFormattedActivePrice()
@@ -553,7 +553,7 @@ class Product
                 break;
         }
     }
-    public function getProductWeight()
+    public function getWeight()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationWeight();
@@ -561,7 +561,7 @@ class Product
             return $this->pWeight;
         }
     }
-    public function getProductNumberItems()
+    public function getNumberItems()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationNumberItems();
@@ -570,7 +570,7 @@ class Product
         }
     }
 
-    public function getProductImageID()
+    public function getImageID()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $id = $variation->getVariationImageID();
@@ -583,10 +583,10 @@ class Product
             return $this->pfID;
         }
     }
-    public function getProductImageObj()
+    public function getImageObj()
     {
-        if ($this->getProductImageID()) {
-            $fileObj = File::getByID($this->getProductImageID());
+        if ($this->getImageID()) {
+            $fileObj = File::getByID($this->getImageID());
 
             return $fileObj;
         }
@@ -608,13 +608,13 @@ class Product
 
     public function hasDigitalDownload()
     {
-        return count($this->getProductDownloadFiles()) > 0 ? true : false;
+        return count($this->getDownloadFiles()) > 0 ? true : false;
     }
-    public function getProductDownloadFiles()
+    public function getDownloadFiles()
     {
         return StoreProductFile::getFilesForProduct($this);
     }
-    public function getProductDownloadFileObjects()
+    public function getDownloadFileObjects()
     {
         return StoreProductFile::getFileObjectsForProduct($this);
     }
@@ -652,33 +652,33 @@ class Product
     }
     public function hasUserGroups()
     {
-        return count($this->getProductUserGroups()) > 0 ? true : false;
+        return count($this->getUserGroups()) > 0 ? true : false;
     }
-    public function getProductUserGroups()
+    public function getUserGroups()
     {
         return StoreProductUserGroup::getUserGroupsForProduct($this);
     }
-    public function getProductUserGroupIDs()
+    public function getUserGroupIDs()
     {
         return StoreProductUserGroup::getUserGroupIDsForProduct($this);
     }
 
-    public function getProductImage()
+    public function getImage()
     {
-        $fileObj = $this->getProductImageObj();
+        $fileObj = $this->getImageObj();
         if (is_object($fileObj)) {
             return "<img src='".$fileObj->getRelativePath()."'>";
         }
     }
-    public function getProductImageThumb()
+    public function getImageThumb()
     {
-        $fileObj = $this->getProductImageObj();
+        $fileObj = $this->getImageObj();
         if (is_object($fileObj)) {
             return "<img src='".$fileObj->getThumbnailURL('file_manager_listing')."'>";
         }
     }
 
-    public function getProductQty()
+    public function getQty()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationQty();
@@ -692,7 +692,7 @@ class Product
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isSellable();
         } else {
-            if ($this->getProductQty() > 0 || $this->isUnlimited()) {
+            if ($this->getQty() > 0 || $this->isUnlimited()) {
                 return true;
             } else {
                 if ($this->allowBackOrders()) {
@@ -704,35 +704,35 @@ class Product
         }
     }
 
-    public function getProductImages()
+    public function getImages()
     {
         return StoreProductImage::getImagesForProduct($this);
     }
-    public function getproductimagesobjects()
+    public function getimagesobjects()
     {
         return StoreProductImage::getImageObjectsForProduct($this);
     }
-    public function getProductLocationPages()
+    public function getLocationPages()
     {
         return StoreProductLocation::getLocationsForProduct($this);
     }
-    public function getProductOptionGroups()
+    public function getOptionGroups()
     {
         return StoreProductOptionGroup::getOptionGroupsForProduct($this);
     }
-    public function getProductOptionItems($onlyvisible = false)
+    public function getOptionItems($onlyvisible = false)
     {
         return StoreProductOptionItem::getOptionItemsForProduct($this, $onlyvisible);
     }
-    public function getProductGroupIDs()
+    public function getGroupIDs()
     {
         return StoreProductGroup::getGroupIDsForProduct($this);
     }
-    public function getProductGroups()
+    public function getGroups()
     {
         return StoreProductGroup::getGroupsForProduct($this);
     }
-    public function getProductVariations()
+    public function getVariations()
     {
         return StoreProductVariation::getVariationsForProduct($this);
     }
@@ -779,20 +779,20 @@ class Product
         $productParentPage = $parentPage->add(
             $pageType,
             array(
-                'cName' => $this->getProductName(),
+                'cName' => $this->getName(),
                 'pkgID' => $pkg->pkgID,
             ),
             $pageTemplate
         );
         $productParentPage->setAttribute('exclude_nav', 1);
 
-        $this->setProductPageID($productParentPage->getCollectionID());
-        $this->setProductPageDescription($this->getProductDesc());
+        $this->setPageID($productParentPage->getCollectionID());
+        $this->setPageDescription($this->getDesc());
     }
-    public function setProductPageDescription($newDescription)
+    public function setPageDescription($newDescription)
     {
-        $productDescription = strip_tags(trim($this->getProductDesc()));
-        $pageID = $this->getProductPageID();
+        $productDescription = strip_tags(trim($this->getDesc()));
+        $pageID = $this->getPageID();
         if ($pageID) {
             $productPage = Page::getByID($pageID);
             if (is_object($productPage) && $productPage->getCollectionID() > 0) {
@@ -804,7 +804,7 @@ class Product
             }
         }
     }
-    public function setProductPageID($cID)
+    public function setPageID($cID)
     {
         $this->setCollectionID($cID);
         $this->save();
@@ -845,7 +845,7 @@ class Product
     {
         $db = Database::connection();
         $av = false;
-        $v = array($this->getProductID(), $ak->getAttributeKeyID());
+        $v = array($this->getID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);
         if ($avID > 0) {
             $av = StoreProductValue::getByID($avID);

@@ -113,7 +113,7 @@ foreach ($orderItems as $item) {
     $pObj = $item->getProductObject();
     if (is_object($pObj)) {
         if ($pObj->hasDigitalDownload()) {
-            $fileObjs = $pObj->getProductDownloadFileObjects();
+            $fileObjs = $pObj->getDownloadFileObjects();
             $downloads[$item->getProductName()] = $fileObjs[0];
         }
     }

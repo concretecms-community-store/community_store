@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (is_object($product)) {
     ?>
 
-    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getProductID() ?>">
+    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>">
 
         <div class="row">
             <?php if ($showImage){ ?>
@@ -13,13 +13,13 @@ if (is_object($product)) {
                 <div class="col-md-12">
                     <?php } ?>
                     <?php if ($showProductName) { ?>
-                        <h1 class="store-product-name"><?= $product->getProductName() ?></h1>
+                        <h1 class="store-product-name"><?= $product->getName() ?></h1>
                     <?php } ?>
 
                     <?php if ($showProductPrice) { ?>
                         <p class="store-product-price">
                         <?php
-                        $salePrice = $product->getProductSalePrice();
+                        $salePrice = $product->getSalePrice();
                         if (isset($salePrice) && $salePrice != "") {
                             echo '<span class="sale-price">' . t("On Sale: ") . $product->getFormattedSalePrice() . '</span>';
                             echo '<span class="original-price">' . $product->getFormattedOriginalPrice() . '</span>';
@@ -32,7 +32,7 @@ if (is_object($product)) {
 
                     <?php if ($showProductDescription) { ?>
                         <div class="store-product-description">
-                            <?= $product->getProductDesc() ?>
+                            <?= $product->getDesc() ?>
                         </div>
                     <?php } ?>
 
@@ -47,7 +47,7 @@ if (is_object($product)) {
                     <?php if ($showWeight) { ?>
                         <div class="store-product-weight">
                             <strong><?= t("Weight") ?>:</strong>
-                            <?= $product->getProductWeight() ?>
+                            <?= $product->getWeight() ?>
                             <?= Config::get('communitystore.weightUnit'); ?>
                         </div>
                     <?php } ?>
@@ -55,7 +55,7 @@ if (is_object($product)) {
                     <?php if ($showGroups) { ?>
                         <ul>
                             <?php
-                            $productgroups = $product->getProductGroups();
+                            $productgroups = $product->getGroups();
                             foreach ($productgroups as $pg) { ?>
                                 <li class="store-product-group"><?= $pg->gName; ?> </li>
                             <?php } ?>
@@ -74,7 +74,7 @@ if (is_object($product)) {
                             <div class="store-product-modal-option-group form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
                                 <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1"
-                                       step="1" <?= ($product->allowBackOrders() ? '' : 'max="' . $product->getProductQty() . '"'); ?>>
+                                       step="1" <?= ($product->allowBackOrders() ? '' : 'max="' . $product->getQty() . '"'); ?>>
                             </div>
                         <?php } else { ?>
                             <input type="hidden" name="quantity" class="product-qty" value="1">
@@ -108,9 +108,9 @@ if (is_object($product)) {
 
                     <?php if ($showCartButton) { ?>
                         <p class="store-product-button">
-                            <input type="hidden" name="pID" value="<?= $product->getProductID() ?>">
+                            <input type="hidden" name="pID" value="<?= $product->getID() ?>">
 
-                            <span><a href="#" data-add-type="none" data-product-id="<?= $product->getProductID() ?>"
+                            <span><a href="#" data-add-type="none" data-product-id="<?= $product->getID() ?>"
                                   class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></a>
                             </span>
                             <span
@@ -123,20 +123,20 @@ if (is_object($product)) {
                 <?php if ($showImage) { ?>
                     <div class="product-image col-md-6">
                         <?php
-                        $imgObj = $product->getProductImageObj();
+                        $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
                             $thumb = Core::make('helper/image')->getThumbnail($imgObj, 600, 600, true);
                             ?>
                             <div class="store-product-primary-image">
                                 <a href="<?= $imgObj->getRelativePath() ?>"
-                                   title="<?= h($product->getProductName()); ?>" class="product-thumb">
+                                   title="<?= h($product->getName()); ?>" class="product-thumb">
                                     <img src="<?= $thumb->src ?>">
                                 </a>
                             </div>
                         <?php } ?>
 
                         <?php
-                        $images = $product->getProductImagesObjects();
+                        $images = $product->getImagesObjects();
                         if (count($images) > 0) {
                             echo '<div class="store-product-additional-images">';
                             foreach ($images as $secondaryimage) {
@@ -144,7 +144,7 @@ if (is_object($product)) {
                                     $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, 300, 300, true);
                                     ?>
                                     <a href="<?= $secondaryimage->getRelativePath() ?>"
-                                       title="<?= h($product->getProductName()); ?>" class="product-thumb"><img
+                                       title="<?= h($product->getName()); ?>" class="product-thumb"><img
                                             src="<?= $thumb->src ?>"></a>
 
                                 <?php }
@@ -159,7 +159,7 @@ if (is_object($product)) {
                 <?php if ($showProductDetails) { ?>
                     <div class="store-product-detailed-description col-md-12">
                         <h2><?= t("Product Details") ?></h2>
-                        <?= $product->getProductDetail() ?>
+                        <?= $product->getDetail() ?>
                     </div>
                 <?php } ?>
             </div>

@@ -7,8 +7,8 @@ if($products){
     $i=1;
     foreach($products as $product){
 
-        $optionGroups = $product->getProductOptionGroups();
-        $optionItems = $product->getProductOptionItems(true);
+        $optionGroups = $product->getOptionGroups();
+        $optionItems = $product->getOptionItems(true);
 
         if ($product->hasVariations()) {
             $variations = StoreProductVariation::getVariationsForProduct($product);
@@ -25,7 +25,7 @@ if($products){
         }
 
         //this is done so we can get a type of active class if there's a product list on the product page
-        if(Page::getCurrentPage()->getCollectionID()==$product->getProductPageID()){
+        if(Page::getCurrentPage()->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
         }
 
@@ -47,15 +47,15 @@ if($products){
     ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-            <form   id="store-form-add-to-cart-list-<?= $product->getProductID()?>">
-                <h2 class="store-product-list-name"><?= $product->getProductName()?></h2>
+            <form   id="store-form-add-to-cart-list-<?= $product->getID()?>">
+                <h2 class="store-product-list-name"><?= $product->getName()?></h2>
                 <?php 
-                    $imgObj = $product->getProductImageObj();
+                    $imgObj = $product->getImageObj();
                     if(is_object($imgObj)){
                         $thumb = $ih->getThumbnail($imgObj,400,280,true);?>
                         <p class="store-product-list-thumbnail">
                             <?php if($showQuickViewLink){ ?>
-                            <a class="store-product-quick-view" data-product-id="<?= $product->getProductID()?>" href="#">
+                            <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
                                 <img src="<?= $thumb->src?>" class="img-responsive">
                             </a>
                             <?php } else { ?>
@@ -69,7 +69,7 @@ if($products){
 
                 <p class="store-product-list-price">
                     <?php
-                        $salePrice = $product->getProductSalePrice();
+                        $salePrice = $product->getSalePrice();
                         if(isset($salePrice) && $salePrice != ""){
                             echo '<span class="sale-price">'.$product->getFormattedSalePrice().'</span>';
                             echo ' ' . t('was') . ' ' . '<span class="original-price">'.$product->getFormattedOriginalPrice().'</span>';
@@ -79,10 +79,10 @@ if($products){
                     ?>
                 </p>
                 <?php if($showDescription){ ?>
-                <div class="store-product-list-description"><?= $product->getProductDesc()?></div>
+                <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
                 <?php if($showPageLink){?>
-                <p><a href="<?= URL::page(Page::getByID($product->getProductPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
+                <p><a href="<?= URL::page(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){
 
@@ -110,9 +110,9 @@ if($products){
                     <?php }
                 }?>
 
-                <input type="hidden" name="pID" value="<?= $product->getProductID()?>">
+                <input type="hidden" name="pID" value="<?= $product->getID()?>">
                 <input type="hidden" name="quantity" class="store-product-qty" value="1">
-                <p><a href="#" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
+                <p><a href="#" data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
                 <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
                 <?php } ?>
@@ -129,7 +129,7 @@ if($products){
                     foreach($variationLookup as $key=>$variation) {
                         $product->setVariation($variation);
 
-                        $imgObj = $product->getProductImageObj();
+                        $imgObj = $product->getImageObj();
 
                         if ($imgObj) {
                             $thumb = Core::make('helper/image')->getThumbnail($imgObj,400,280,true);
@@ -145,11 +145,11 @@ if($products){
                     } ?>
 
 
-                    $('#store-form-add-to-cart-list-<?= $product->getProductID()?> select').change(function(){
+                    $('#store-form-add-to-cart-list-<?= $product->getID()?> select').change(function(){
                         var variationdata = <?= json_encode($varationData); ?>;
                         var ar = [];
 
-                        $('#store-form-add-to-cart-list-<?= $product->getProductID()?> select').each(function(){
+                        $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
                             ar.push($(this).val());
                         })
 

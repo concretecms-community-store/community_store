@@ -58,14 +58,14 @@ $i=1;
         <td data-th="Product">
             <div class="row">
                 <div class="col-sm-2 hidden-xs">
-                    <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                        <?= $product->getProductImageThumb()?>
+                    <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                        <?= $product->getImageThumb()?>
                     </a>
                 </div>
                 <div class="col-sm-10">
                     <h4 class="nomargin">
-                        <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                            <?= $product->getProductName()?>
+                        <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                            <?= $product->getName()?>
                         </a>
                     </h4>
 
@@ -90,12 +90,12 @@ $i=1;
         </td>
         <td data-th="Price">
             <?php
-            $salePrice = $product->getProductSalePrice();
+            $salePrice = $product->getSalePrice();
             if(isset($salePrice) && $salePrice != ""){
-                echo '<span class="original-price">'.StorePrice::format($product->getProductPrice()).'</span>';
+                echo '<span class="original-price">'.StorePrice::format($product->getPrice()).'</span>';
                 echo '<span class="sale-price">'.StorePrice::format($salePrice).'</span>';
             } else {
-                echo StorePrice::format($product->getProductPrice());
+                echo StorePrice::format($product->getPrice());
             }
             ?>
         </td>
@@ -104,7 +104,7 @@ $i=1;
 
                     <input type="hidden" name="instance[]" value="<?= $k?>" />
                     <span class="cart-item-label"><?= t("Quantity:")?></span>
-                    <input type="number" class="form-control" name="pQty[]" min="1" <?=($product->allowBackOrders() || $product->isUnlimited()  ? '' :'max="' . $product->getProductQty() . '"' );?> value="<?= $qty?>" style="width: 50px;">
+                    <input type="number" class="form-control" name="pQty[]" min="1" <?=($product->allowBackOrders() || $product->isUnlimited()  ? '' :'max="' . $product->getQty() . '"' );?> value="<?= $qty?>" style="width: 50px;">
             <?php } ?>
 
             <a name="action"  value="remove" data-instance="<?= $k?>" class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i class="fa fa-remove"></i><?php //echo t("Remove")?></a>

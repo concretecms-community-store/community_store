@@ -113,9 +113,9 @@ class ProductOptionItem
         $db = Database::connection();
         $em = $db->getEntityManager();
         if ($onlyvisible) {
-            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getProductID(), 'poiHidden' => '0'), array('poiSort' => 'asc'));
+            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getID(), 'poiHidden' => '0'), array('poiSort' => 'asc'));
         } else {
-            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getProductID()), array('poiSort' => 'asc'));
+            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getID()), array('poiSort' => 'asc'));
         }
     }
 
@@ -145,7 +145,7 @@ class ProductOptionItem
     public static function add(StoreProduct $product, $pogID, $name, $sort, $hidden = false)
     {
         $productOptionItem = new self();
-        $pID = $product->getProductID();
+        $pID = $product->getID();
         $productOptionItem->setProductID($pID);
         $productOptionItem->setProductOptionGroupID($pogID);
         $productOptionItem->setProductOptionItemName($name);
@@ -158,7 +158,7 @@ class ProductOptionItem
 
     public function update(StoreProduct $product, $name, $sort, $hidden = false)
     {
-        $pID = $product->getProductID();
+        $pID = $product->getID();
         $this->setProductID($pID);
         $this->setName($name);
         $this->setSort($sort);

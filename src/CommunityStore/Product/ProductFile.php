@@ -61,7 +61,7 @@ class ProductFile
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile')->findBy(array('pID' => $product->getProductID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile')->findBy(array('pID' => $product->getID()));
     }
 
     public static function getFileObjectsForProduct(StoreProduct $product)
@@ -82,7 +82,7 @@ class ProductFile
         if (!empty($files['ddfID'])) {
             foreach ($files['ddfID'] as $fileID) {
                 if ($fileID) {
-                    self::add($product->getProductID(), $fileID);
+                    self::add($product->getID(), $fileID);
                     $fileObj = \File::getByID($fileID);
                     $fs = \FileSet::getByName("Digital Downloads");
                     $fs->addFileToSet($fileObj);

@@ -1,16 +1,16 @@
 <?php defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 ?>
-<form class="store-product-modal" id="form-add-to-cart-modal-<?= $product->getProductID()?>">
+<form class="store-product-modal" id="form-add-to-cart-modal-<?= $product->getID()?>">
 
     <div class="store-product-modal-info-shell">
 
         <a href="#" class="store-modal-exit">x</a>
-        <h4 class="store-product-modal-title"><?= $product->getProductName()?></h4>
+        <h4 class="store-product-modal-title"><?= $product->getName()?></h4>
 
         <p class="store-product-modal-thumb">
             <?php
-            $imgObj = $product->getProductImageObj();
+            $imgObj = $product->getImageObj();
             $ih = Core::make("helper/image");
             $thumb = $ih->getThumbnail($imgObj,560,999,false);
             ?>
@@ -20,16 +20,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 
         <p class="store-product-modal-price"><?= $product->getFormattedPrice()?></p>
         <div class="store-product-modal-details">
-            <?= $product->getProductDesc()?>
+            <?= $product->getDesc()?>
         </div>
         <div class="store-product-modal-options">
             <div class="store-product-modal-option-group form-group">
                 <label class="store-option-group-label"><?= t('Quantity')?></label>
-                <input type="number" name="quantity" class="product-qty form-control" value="1" max="<?= $product->getProductQty()?>">
+                <input type="number" name="quantity" class="product-qty form-control" value="1" max="<?= $product->getQty()?>">
             </div>
             <?php
-            $optionGroups = $product->getProductOptionGroups();
-            $optionItems = $product->getProductOptionItems();
+            $optionGroups = $product->getOptionGroups();
+            $optionItems = $product->getOptionItems();
             foreach($optionGroups as $optionGroup){
                 ?>
                 <div class="store-product-option-group form-group">
@@ -46,9 +46,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
                 </div>
             <?php } ?>
         </div>
-        <input type="hidden" name="pID" value="<?= $product->getProductID()?>">
+        <input type="hidden" name="pID" value="<?= $product->getID()?>">
         <div class="store-product-modal-buttons">
-            <p><a href="#" data-add-type="list" data-product-id="<?= $product->getProductID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
+            <p><a href="#" data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
             <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
         </div>
@@ -79,7 +79,7 @@ if ($product->hasVariations()) {
             foreach($variationLookup as $key=>$variation) {
                 $product->setVariation($variation);
 
-                $imgObj = $product->getProductImageObj();
+                $imgObj = $product->getImageObj();
 
                 if ($imgObj) {
                     $thumb = Core::make('helper/image')->getThumbnail($imgObj,560,999,false);
@@ -95,12 +95,12 @@ if ($product->hasVariations()) {
             } ?>
 
 
-            $('#form-add-to-cart-modal-<?= $product->getProductID()?> select').change(function(){
+            $('#form-add-to-cart-modal-<?= $product->getID()?> select').change(function(){
 
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#form-add-to-cart-modal-<?= $product->getProductID()?> select').each(function(){
+                $('#form-add-to-cart-modal-<?= $product->getID()?> select').each(function(){
                     ar.push($(this).val());
                 })
 

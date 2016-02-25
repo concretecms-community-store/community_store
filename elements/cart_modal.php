@@ -68,13 +68,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
                             <td class="store-cart-list-thumb col-xs-2">
-                                <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                                    <?= $product->getProductImageThumb()?>
+                                <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                                    <?= $product->getImageThumb()?>
                                 </a>
                             </td>
                             <td class="store-cart-list-product-name col-xs-5">
-                                <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                                    <?= $product->getProductName()?>
+                                <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                                    <?= $product->getName()?>
                                 </a>
 
                                 <?php if($cartItem['productAttributes']){?>
@@ -101,7 +101,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                             <td class="store-cart-list-product-qty col-xs-2">
                                 <?php if ($product->allowQuantity()) { ?>
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
-                                    <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getProductQty() . '"');?> min="1" value="<?= $qty?>">
+                                    <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
                                 <?php } ?>
                             </td>
                             <td>

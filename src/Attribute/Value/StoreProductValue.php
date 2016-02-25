@@ -25,7 +25,7 @@ class StoreProductValue extends Value
     {
         $db = Database::connection();
         $db->Execute('delete from CommunityStoreProductAttributeValues where pID = ? and akID = ? and avID = ?', array(
-            $this->product->getProductID(),
+            $this->product->getID(),
             $this->attributeKey->getAttributeKeyID(),
             $this->getAttributeValueID(),
         ));

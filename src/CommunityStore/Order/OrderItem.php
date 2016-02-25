@@ -231,12 +231,12 @@ class OrderItem
     {
         $product = $data['product']['object'];
 
-        $productName = $product->getProductName();
+        $productName = $product->getName();
         $productPrice = $product->getActivePrice();
-        $sku = $product->getProductSKU();
+        $sku = $product->getSKU();
         $qty = $data['product']['qty'];
 
-        $inStock = $product->getProductQty();
+        $inStock = $product->getQty();
         $newStock = $inStock - $qty;
 
         $variation = $product->getVariation();
@@ -280,7 +280,7 @@ class OrderItem
         }
 
         if ($product->hasDigitalDownload()) {
-            $fileObjs = $product->getProductDownloadFileObjects();
+            $fileObjs = $product->getDownloadFileObjects();
             $fileObj = $fileObjs[0];
             $pk = \Concrete\Core\Permission\Key\FileKey::getByHandle('view_file');
             $pk->setPermissionObject($fileObj);

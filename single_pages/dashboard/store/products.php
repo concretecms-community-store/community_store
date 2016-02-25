@@ -12,11 +12,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 ?>
 
 <?php if (in_array($controller->getTask(),$addViews)){ //if adding or editing a product
-    if(!is_object($p)) {
-        $p = new StoreProduct(); //does nothing other than shutup errors.}
+    if(!is_object($product)) {
+        $product = new StoreProduct(); //does nothing other than shutup errors.}
     }
 
-    $pID = $p->getProductID()
+    $pID = $product->getID()
  ?>
 
     <?php if ($pID > 0) { ?>
@@ -36,7 +36,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php } ?>
 
     <form method="post" action="<?= $view->action('save')?>">
-        <input type="hidden" name="pID" value="<?= $p->getProductID()?>"/>
+        <input type="hidden" name="pID" value="<?= $product->getID()?>"/>
 
         <div class="row">
             <div class="col-sm-3">
@@ -58,13 +58,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-8">
                         <div class="form-group">
                             <?= $form->label("pName", t("Product Name"));?>
-                            <?= $form->text("pName", $p->getProductName());?>
+                            <?= $form->text("pName", $product->getName());?>
                         </div>
                     </div>
                     <div class="col-xs-4">
                         <div class="form-group">
                             <?= $form->label("pSKU", t("Code / SKU"));?>
-                            <?= $form->text("pSKU", $p->getProductSKU());?>
+                            <?= $form->text("pSKU", $product->getSKU());?>
                         </div>
                     </div>
                 </div>
@@ -73,13 +73,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pActive", t("Active"));?>
-                            <?= $form->select("pActive", array('1'=>t('Active'),'0'=>t('Inactive')), $p->isActive());?>
+                            <?= $form->select("pActive", array('1'=>t('Active'),'0'=>t('Inactive')), $product->isActive());?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pFeatured", t("Featured Product"));?>
-                            <?= $form->select("pFeatured",array('0'=>t('No'),'1'=>t('Yes')), $p->isFeatured());?>
+                            <?= $form->select("pFeatured",array('0'=>t('No'),'1'=>t('Yes')), $product->isFeatured());?>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group-addon">
                                     <?=  Config::get('communitystore.symbol');?>
                                 </div>
-                                <?php $price = $p->getProductPrice(); ?>
+                                <?php $price = $product->getPrice(); ?>
                                 <?= $form->text("pPrice", $price?$price:'0');?>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group-addon">
                                     <?=  Config::get('communitystore.symbol');?>
                                 </div>
-                                <?php $salePrice = $p->getProductSalePrice(); ?>
+                                <?php $salePrice = $product->getSalePrice(); ?>
                                 <?= $form->text("pSalePrice", $salePrice, array('placeholder'=>'No Sale Price Set'));?>
                             </div>
                         </div>
@@ -113,13 +113,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pTaxable", t("Taxable"));?>
-                            <?= $form->select("pTaxable",array('0'=>t('No'),'1'=>t('Yes')), $p->isTaxable());?>
+                            <?= $form->select("pTaxable",array('0'=>t('No'),'1'=>t('Yes')), $product->isTaxable());?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pTaxClass", t("Tax Class"));?>
-                            <?= $form->select("pTaxClass",$taxClasses, $p->getTaxClassID());?>
+                            <?= $form->select("pTaxClass",$taxClasses, $product->getTaxClassID());?>
                         </div>
                     </div>
                 </div>
@@ -127,11 +127,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pQty", t("Stock Level"));?>
-                            <?php $qty = $p->getProductQty(); ?>
+                            <?php $qty = $product->getQty(); ?>
                             <div class="input-group">
-                                <?= $form->text("pQty", $qty!==''?$qty:'999', array(($p->isUnlimited() ? 'disabled' : '')=>($p->isUnlimited() ? 'disabled' : '')));?>
+                                <?= $form->text("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
                                 <div class="input-group-addon">
-                                    <?= $form->checkbox('pQtyUnlim', '1', $p->isUnlimited())?>
+                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited())?>
                                     <?= $form->label('pQtyUnlim', t('Unlimited'))?>
                                 </div>
 
@@ -159,15 +159,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             </div>
 
                         </div>
-                        <div class="form-group" id="backorders" <?=  ($p->isUnlimited() ? 'style="display: none"' : '');?>>
-                            <?= $form->checkbox('pBackOrder', '1', $p->pBackOrder)?>
+                        <div class="form-group" id="backorders" <?=  ($product->isUnlimited() ? 'style="display: none"' : '');?>>
+                            <?= $form->checkbox('pBackOrder', '1', $product->pBackOrder)?>
                             <?= $form->label('pBackOrder', t('Allow Back Orders'))?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pNoQty", t("Offer quantity selection"));?>
-                            <?= $form->select("pNoQty",array('0'=>t('Yes'),'1'=>t('No, only allow one of this product in a cart')), !$p->allowQuantity());?>
+                            <?= $form->select("pNoQty",array('0'=>t('Yes'),'1'=>t('No, only allow one of this product in a cart')), !$product->allowQuantity());?>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $form->label("pDesc", t("Short Description"));?><br>
                     <?php
                     $editor = Core::make('editor');
-                    echo $editor->outputStandardEditor('pDesc', $p->getProductDesc());
+                    echo $editor->outputStandardEditor('pDesc', $product->getDesc());
                     ?>
                 </div>
 
@@ -184,7 +184,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $form->label("pDesc", t("Product Details (Long Description)"));?><br>
                     <?php
                     $editor = Core::make('editor');
-                    echo $editor->outputStandardEditor('pDetail', $p->getProductDetail());
+                    echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                     ?>
                 </div>
 
@@ -258,7 +258,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <div class="form-group">
                     <?= $form->label("pShippable", t("Product is Shippable"));?>
-                    <?= $form->select("pShippable",array('1'=>t('Yes'),'0'=>t('No')), ($p->isShippable() ? '1' : '0'));?>
+                    <?= $form->select("pShippable",array('1'=>t('Yes'),'0'=>t('No')), ($product->isShippable() ? '1' : '0'));?>
                 </div>
                 
                 <div class="alert alert-info">
@@ -270,7 +270,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="form-group">
                             <?= $form->label("pWeight", t("Weight"));?>
                             <div class="input-group" >
-                                <?php $weight = $p->getProductWeight(); ?>
+                                <?php $weight = $product->getWeight(); ?>
                                 <?= $form->text('pWeight',$weight?$weight:'0')?>
                                 <div class="input-group-addon"><?= Config::get('communitystore.weightUnit')?></div>
                             </div>
@@ -278,7 +278,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         <div class="form-group">
                             <?= $form->label("pNumberItems", t("Number Of Items"));?>
-                                <?= $form->number('pNumberItems',$p->getProductNumberItems(), array('min'=>0, 'step'=>1))?>
+                                <?= $form->number('pNumberItems',$product->getNumberItems(), array('min'=>0, 'step'=>1))?>
                         </div>
                     </div>
                     <div class="col-xs-6">
@@ -286,7 +286,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pLength", t("Length"));?>
                                 <div class="input-group" >
-                                    <?php $length = $p->getDimensions('l'); ?>
+                                    <?php $length = $product->getDimensions('l'); ?>
                                     <?= $form->text('pLength',$length?$length:'0')?>
                                     <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
                                 </div>
@@ -294,7 +294,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pWidth", t("Width"));?>
                                 <div class="input-group" >
-                                    <?php $width = $p->getDimensions('w'); ?>
+                                    <?php $width = $product->getDimensions('w'); ?>
                                     <?= $form->text('pWidth',$width?$width:'0')?>
                                     <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
                                 </div>
@@ -302,7 +302,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pHeight", t("Height"));?>
                                 <div class="input-group">
-                                    <?php $height = $p->getDimensions('h'); ?>
+                                    <?php $height = $product->getDimensions('h'); ?>
                                     <?= $form->text('pHeight',$height?$height:'0')?>
                                     <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
                                 </div>
@@ -318,7 +318,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <div class="form-group">
                     <?= $form->label('pfID',t("Primary Product Image")); ?>
-                    <?php $pfID = $p->getProductImageID(); ?>
+                    <?php $pfID = $product->getImageID(); ?>
                     <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID?File::getByID($pfID):null); ?>
                 </div>
 
@@ -643,7 +643,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <br />
 
             <div class="form-group">
-                <label><?= $form->checkbox('pVariations', '1', $p->hasVariations())?>
+                <label><?= $form->checkbox('pVariations', '1', $product->hasVariations())?>
                 <?= t('Options have different prices, SKUs or stock levels');?></label>
 
                 <?php if (!$pID) { ?>
@@ -654,7 +654,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div>
 
             <?php if (!empty($comboOptions)) { ?>
-            <div id="variations" class="<?= ($p->hasVariations() ? '' : 'hidden');?>">
+            <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden');?>">
 
 
                 <h4><?= t('Variations');?></h4>
@@ -847,7 +847,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 if (count($attribs) > 0) {
                     foreach($attribs as $ak) {
                         if (is_object($p)) {
-                            $caValue = $p->getAttributeValueObject($ak);
+                            $caValue = $product->getAttributeValueObject($ak);
                         }
                         ?>
                         <div class="clearfix">
@@ -871,7 +871,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
                     <?php
-                    $files = $p->getProductDownloadFileObjects();
+                    $files = $product->getDownloadFileObjects();
                     for($i=0;$i<1;$i++){
                         $file = $files[$i];
                         ?>
@@ -891,7 +891,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <?php } ?>
 
                 <div class="form-group">
-                    <?= $form->checkbox('pCreateUserAccount', '1', $p->createsLogin())?>
+                    <?= $form->checkbox('pCreateUserAccount', '1', $product->createsLogin())?>
                     <?= $form->label('pCreateUserAccount', t('Create user account on purchase'))?>
                     <span class="help-block"><?=  t('When checked, if customer is guest, will create a user account on purchase'); ?></span>
                 </div>
@@ -901,7 +901,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <select multiple="multiple" name="pUserGroups[]" id="groupselect" class="select2-select" style="width: 100%;" placeholder="<?= t('Select user groups');?>">
                             <?php
-                            $selectedusergroups = $p->getProductUserGroupIDs();
+                            $selectedusergroups = $product->getUserGroupIDs();
                             foreach ($usergroups as $ugkey=>$uglabel) { ?>
                                 <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                             <?php } ?>
@@ -911,12 +911,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
                 <div class="form-group">
-                    <?= $form->checkbox('pAutoCheckout', '1', $p->autoCheckout())?>
+                    <?= $form->checkbox('pAutoCheckout', '1', $product->autoCheckout())?>
                     <?= $form->label('pAutoCheckout', t('Send customer directly to checkout when added to cart'))?>
                 </div>
 
                 <div class="form-group">
-                    <?= $form->checkbox('pExclusive', '1', $p->isExclusive())?>
+                    <?= $form->checkbox('pExclusive', '1', $product->isExclusive())?>
                     <?= $form->label('pExclusive', t('Prevent this item from being in the cart with other items'))?>
                 </div>
 
@@ -932,10 +932,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-8 store-pane" id="product-page">
 
-                <?php if($p->getProductID()){ ?>
+                <?php if($product->getID()){ ?>
 
                     <?php
-                    $page = Page::getByID($p->getProductPageID());
+                    $page = Page::getByID($product->getPageID());
                     if(!$page->isError()){ ?>
                         <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
 
@@ -950,7 +950,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                         </div>
 
-                        <a href="<?= Url::to('/dashboard/store/products/generate/',$p->getProductID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
+                        <a href="<?= Url::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
 
 
                     <?php } ?>
@@ -1048,9 +1048,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 foreach ($products as $p) {
                     ?>
                     <tr>
-                        <td><?= $p->getProductImageThumb();?></td>
-                        <td><strong><a href="<?= View::url('/dashboard/store/products/edit/', $p->getProductID())?>"><?=  $p->getProductName();
-                                $sku = $p->getProductSKU();
+                        <td><?= $product->getImageThumb();?></td>
+                        <td><strong><a href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><?=  $product->getName();
+                                $sku = $product->getSKU();
                                 if ($sku) {
                                     echo ' (' .$sku . ')';
                                 }
@@ -1058,7 +1058,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 </a></strong></td>
                         <td>
                             <?php
-                            if ($p->isActive()) {
+                            if ($product->isActive()) {
                                 echo "<span class='label label-success'>" . t('Active') . "</span>";
                             } else {
                                 echo "<span class='label label-default'>" . t('Inactive') . "</span>";
@@ -1066,22 +1066,22 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             ?>
                         </td>
                         <td><?php
-                            if ($p->hasVariations()) {
+                            if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span>';
                             } else {
-                                echo($p->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $p->getProductQty());
+                                echo($product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty());
                             }?></td>
                         <td>
                             <?php
-                            if ($p->hasVariations()) {
+                            if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span><br />';
-                                echo t('Base price') . ': ' . $p->getFormattedPrice();
+                                echo t('Base price') . ': ' . $product->getFormattedPrice();
                             } else {
-                                echo $p->getFormattedPrice();
+                                echo $product->getFormattedPrice();
                             } ?></td>
                         <td>
                             <?php
-                            if ($p->isFeatured()) {
+                            if ($product->isFeatured()) {
                                 echo "<span class='label label-success'>" . t('Featured') . "</span>";
                             } else {
                                 echo "<span class='label label-default'>" . t('Not Featured') . "</span>";
@@ -1089,7 +1089,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             ?>
                         </td>
                         <td>
-                            <?php $productgroups = $p->getProductGroups();
+                            <?php $productgroups = $product->getGroups();
                             foreach($productgroups as $pg) { ?>
                                 <span class="label label-primary"><?=  $pg->gName; ?></span>
                              <?php } ?>
@@ -1100,7 +1100,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </td>
                         <td>
                             <a class="btn btn-default"
-                               href="<?= View::url('/dashboard/store/products/edit/', $p->getProductID())?>"><i
+                               href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><i
                                     class="fa fa-pencil"></i></a>
                         </td>
                     </tr>

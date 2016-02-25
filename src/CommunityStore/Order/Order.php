@@ -383,7 +383,7 @@ class Order
         foreach ($orderItems as $orderItem) {
             $product = $orderItem->getProductObject();
             if ($product && $product->hasUserGroups()) {
-                $productusergroups = $product->getProductUserGroups();
+                $productusergroups = $product->getUserGroups();
 
                 foreach ($productusergroups as $pug) {
                     $groupstoadd[] = $pug->getUserGroupID();

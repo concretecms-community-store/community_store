@@ -78,7 +78,7 @@ class ProductOptionGroup
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionGroup')->findBy(array('pID' => $product->getProductID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionGroup')->findBy(array('pID' => $product->getID()));
     }
 
     public static function removeOptionGroupsForProduct(StoreProduct $product, $excluding = array())
@@ -99,14 +99,14 @@ class ProductOptionGroup
     public static function add($product, $name, $sort)
     {
         $productOptionGroup = new self();
-        $pID = $product->getProductID();
+        $pID = $product->getID();
 
         return self::addOrUpdate($pID, $name, $sort, $productOptionGroup);
     }
     public function update($product, $name, $sort)
     {
         $productOptionGroup = $this;
-        $pID = $product->getProductID();
+        $pID = $product->getID();
 
         return self::addOrUpdate($pID, $name, $sort, $productOptionGroup);
     }

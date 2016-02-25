@@ -48,7 +48,7 @@ class ProductReport extends AbstractItemList
                 if ($pID) {
                     $product = StoreProduct::getByID();
                     if (is_object($product)) {
-                        $name = $product->getProductName();
+                        $name = $product->getName();
                     } else {
                         $name = $oi->getProductName();
                     }

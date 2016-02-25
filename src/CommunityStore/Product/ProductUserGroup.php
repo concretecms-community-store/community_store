@@ -57,7 +57,7 @@ class ProductUserGroup
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(array('pID' => $product->getProductID()));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(array('pID' => $product->getID()));
     }
 
     public static function getUserGroupIDsForProduct($product)
@@ -79,7 +79,7 @@ class ProductUserGroup
         //add new ones.
         if (!empty($data['pUserGroups'])) {
             foreach ($data['pUserGroups'] as $gID) {
-                self::add($product->getProductID(), $gID);
+                self::add($product->getID(), $gID);
             }
         }
     }

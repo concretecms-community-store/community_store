@@ -115,17 +115,17 @@ class Products extends DashboardPageController
             $this->redirect('/dashboard/store/products/');
         }
 
-        $optItems = $product->getProductOptionItems();
-        $groups = $product->getProductOptionGroups();
+        $optItems = $product->getOptionItems();
+        $groups = $product->getOptionGroups();
 
-        $this->set('p',$product);
-        $this->set("images",$product->getProductImages());
-        $this->set("groups",$groups);
+        $this->set('product',$product);
+        $this->set('images',$product->getImages());
+        $this->set('groups',$groups);
         $this->set('optItems',$optItems);
-        $this->set('locationPages', $product->getProductLocationPages());
-        $this->set('pgroups', $product->getProductGroupIDs());
+        $this->set('locationPages', $product->getLocationPages());
+        $this->set('pgroups', $product->getGroupIDs());
 
-        $variations = $product->getProductVariations();
+        $variations = $product->getVariations();
         $variationLookup = array();
 
         $optionArrays = array();
@@ -293,9 +293,9 @@ class Products extends DashboardPageController
 
 
                 if($data['pID']){
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getProductID(), 'updated');
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
                 } else {
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getProductID(), 'added');
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'added');
                 }
             }//if no errors
         }//if post

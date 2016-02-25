@@ -23,13 +23,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
                 <tr class="checkout-cart-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
                     <td class="cart-list-thumb">
-                        <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                        <?= $product->getProductImageThumb()?>
+                        <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                        <?= $product->getImageThumb()?>
                         </a>
                     </td>
                     <td class="checkout-cart-product-name">
-                        <a href="<?=URL::page(Page::getByID($product->getProductPageID()))?>">
-                        <?= $product->getProductName()?>
+                        <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                        <?= $product->getName()?>
                         </a>
 
                         <?php if($cartItem['productAttributes']){?>

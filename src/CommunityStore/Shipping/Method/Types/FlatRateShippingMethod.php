@@ -310,7 +310,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         foreach ($shippableItems as $item) {
             $product = StoreProduct::getByID($item['product']['pID']);
             if ($product->isShippable()) {
-                $totalProductWeight = $item['product']['qty'] * $product->getProductWeight();
+                $totalProductWeight = $item['product']['qty'] * $product->getWeight();
                 $totalWeight = $totalWeight + $totalProductWeight;
             }
         }

@@ -173,8 +173,8 @@ class Cart
             if ($product->allowQuantity()) {
                 $newquantity = $cart[$exists['cartItemKey']]['product']['qty'] + $cartItem['product']['qty'];
 
-                if (!$product->isUnlimited() &&  !$product->allowBackOrders() && $product->getProductQty() < max($newquantity, $existingproductcount)) {
-                    $newquantity = $product->getProductQty();
+                if (!$product->isUnlimited() &&  !$product->allowBackOrders() && $product->getQty() < max($newquantity, $existingproductcount)) {
+                    $newquantity = $product->getQty();
                 }
 
                 $added = $newquantity - $existingproductcount;
@@ -187,8 +187,8 @@ class Cart
         } else {
             $newquantity = $cartItem['product']['qty'];
 
-            if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getProductQty() < $newquantity) {
-                $newquantity = $product->getProductQty();
+            if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
+                $newquantity = $product->getQty();
             }
 
             $cartItem['product']['qty'] = $newquantity;
@@ -281,8 +281,8 @@ class Cart
                 $product->setVariation($cart[$instanceID]['product']['variation']);
             }
 
-            if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getProductQty() < $newquantity) {
-                $newquantity = $product->getProductQty();
+            if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
+                $newquantity = $product->getQty();
             }
 
             $cart[$instanceID]['product']['qty'] = $newquantity;
@@ -365,7 +365,7 @@ class Cart
             foreach (self::getCart() as $item) {
                 $product = StoreProduct::getByID($item['product']['pID']);
                 if ($product->isShippable()) {
-                    $totalProductWeight = $product->getProductWeight() * $item['product']['qty'];
+                    $totalProductWeight = $product->getWeight() * $item['product']['qty'];
                     $totalWeight = $totalWeight + $totalProductWeight;
                 }
             }
