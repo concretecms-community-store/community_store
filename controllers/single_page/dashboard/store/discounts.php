@@ -32,7 +32,7 @@ class Discounts extends DashboardPageController
 
         $discountRule = StoreDiscountRule::getByID($drID);
 
-        $this->set('d', $discountRule);
+        $this->set('discountRule', $discountRule);
         $this->set('pageTitle', t('Edit Discount Rule'));
     }
 
@@ -131,9 +131,6 @@ class Discounts extends DashboardPageController
 
             $errors = StoreDiscountCode::validate($data);
             if (!$errors->has()) {
-
-
-
                 if($data['drID']){
                     StoreDiscountRule::edit($data['drID'], $data);
                     $this->redirect('/dashboard/store/discounts/', 'updated');
@@ -166,5 +163,4 @@ class Discounts extends DashboardPageController
         $this->set('success',t("Discount Rule Deleted"));
         $this->view();
     }
-
 }
