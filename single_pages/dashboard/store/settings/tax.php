@@ -131,9 +131,9 @@ if(in_array($controller->getTask(),$addViews)){
                              ?>
                         </td>
                         <td class="text-right">
-                            <a href="<?=URL::to('/dashboard/store/settings/tax/edit_class',$tc->getTaxClassID())?>" class="btn btn-default"><?= t("Edit")?></a>
+                            <a href="<?=URL::to('/dashboard/store/settings/tax/edit_class',$tc->getID())?>" class="btn btn-default"><?= t("Edit")?></a>
                             <?php if(!$tc->isLocked()){?>
-                            <a href="<?=URL::to('/dashboard/store/settings/tax/delete_class',$tc->getTaxClassID())?>" class="btn btn-danger"><?= t("Delete")?></a>
+                            <a href="<?=URL::to('/dashboard/store/settings/tax/delete_class',$tc->getID())?>" class="btn btn-danger"><?= t("Delete")?></a>
                             <?php } ?>
                         </td>
                     </tr>
@@ -170,7 +170,7 @@ if(in_array($controller->getTask(),$addViews)){
 
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
-            <input type="hidden" name="taxClassID" value="<?= $tc->getTaxClassID()?>">
+            <input type="hidden" name="taxClassID" value="<?= $tc->getID()?>">
             <div class="form-group">
                 <?= $form->label('taxClassName',t("Tax Class Name")); ?>
                 <?= $form->text('taxClassName',$tc->getTaxClassName()); ?>

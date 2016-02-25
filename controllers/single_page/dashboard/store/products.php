@@ -245,7 +245,7 @@ class Products extends DashboardPageController
         $this->set('pageTemplates',$templates);
         $taxClasses = array();
         foreach(StoreTaxClass::getTaxClasses() as $taxClass){
-            $taxClasses[$taxClass->getTaxClassID()] = $taxClass->getTaxClassName();
+            $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
         }
         $this->set('taxClasses',$taxClasses);
     }

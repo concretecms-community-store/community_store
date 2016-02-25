@@ -69,6 +69,10 @@ class TaxClass
     {
         return $this->taxClassName;
     }
+    public function getName()
+    {
+        return $this->getTaxClassName();
+    }
     public function isLocked()
     {
         return $this->locked;
