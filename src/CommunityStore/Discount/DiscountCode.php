@@ -21,7 +21,7 @@ class DiscountCode
 
     /**
      * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule", inversedBy="codes")
-     * @JoinColumn(name="drID", referencedColumnName="drID")
+     * @JoinColumn(name="drID", referencedColumnName="drID", onDelete="CASCADE")
      */
     private $discountRule;
 
