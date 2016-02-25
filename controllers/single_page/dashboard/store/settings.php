@@ -96,11 +96,13 @@ class Settings extends DashboardPageController
                     foreach($args['paymentMethodDisplayName'] as $pmID=>$value){
                         $pm = StorePaymentMethod::getByID($pmID);
                         $pm->setDisplayName($value);
+                        $pm->save();
                     }
 
                     foreach($args['paymentMethodSortOrder'] as $pmID=>$value){
                         $pm = StorePaymentMethod::getByID($pmID);
                         $pm->setSortOrder($value);
+                        $pm->save();
                     }
                 }
 

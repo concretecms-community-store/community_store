@@ -252,7 +252,7 @@ class Order
         $taxes = StoreTax::getConcatenatedTaxStrings();
         $totals = StoreCalculator::getTotals();
         $total = $totals['total'];
-        $pmName = $pm->getPaymentMethodName();
+        $pmName = $pm->getName();
 
         $order = new self();
         $order->setCustomerID($customer->getUserID());

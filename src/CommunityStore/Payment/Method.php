@@ -42,38 +42,66 @@ class Method extends Controller
 
     private $methodController;
 
-    public function getPaymentMethodID()
+    public function getID()
     {
         return $this->pmID;
     }
 
-    public function getPaymentMethodHandle()
+    public function getHandle()
     {
         return $this->pmHandle;
     }
 
-    public function getPaymentMethodName()
+    public function setHandle($handle) {
+        $this->pmHandle = $handle;
+    }
+
+    public function getName()
     {
         return $this->pmName;
     }
 
-    public function getPaymentMethodPkgID()
+    public function setName($name)
+    {
+        return $this->pmName = $name;
+    }
+
+    public function getPackageID()
     {
         return $this->pkgID;
     }
 
-    public function getPaymentMethodSortOrder()
+    public function setPackageID($pkgID) {
+        $this->pkgID = $pkgID;
+    }
+
+    public function getSortOrder()
     {
         return $this->pmSortOrder;
     }
 
-    public function getPaymentMethodDisplayName()
+    public function setSortOrder($order)
+    {
+        $this->pmSortOrder = $order;
+    }
+
+    public function getDisplayName()
     {
         if ($this->pmDisplayName == "") {
             return $this->pmName;
         } else {
             return $this->pmDisplayName;
         }
+    }
+
+    public function setDisplayName($name)
+    {
+        $this->pmDisplayName = $name;
+    }
+
+    public function setEnabled($status)
+    {
+        $this->pmEnabled = (bool)$status;
     }
 
     public function isEnabled()
@@ -84,10 +112,11 @@ class Method extends Controller
     public static function getByID($pmID)
     {
         $db = Database::connection();
-        $data = $db->GetRow("SELECT * FROM CommunityStorePaymentMethods WHERE pmID=?", $pmID);
-        if (!empty($data)) {
-            $method = new self();
-            $method->setPropertiesFromArray($data);
+        $em = $db->getEntityManager();
+
+        $method = $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method', $pmID);
+
+        if ($method) {
             $method->setMethodController();
         }
 
@@ -97,16 +126,15 @@ class Method extends Controller
     public static function getByHandle($pmHandle)
     {
         $db = Database::connection();
-        $pm = $db->GetRow("SELECT pmID FROM CommunityStorePaymentMethods WHERE pmHandle=?", $pmHandle);
+        $em = $db->getEntityManager();
 
-        return self::getByID($pm['pmID']);
-    }
+        $method = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findOneBy(array('pmHandle' => $pmHandle));
 
-    public function setPropertiesFromArray($arr)
-    {
-        foreach ($arr as $key => $prop) {
-            $this->{$key} = $prop;
+        if ($method) {
+            $method->setMethodController();
         }
+
+        return ($method instanceof self) ? $method : false;
     }
 
     public function getMethodDirectory()
@@ -141,68 +169,33 @@ class Method extends Controller
      * @param string $pmDisplayName
      * @param bool $enabled
      */
-    public static function add($pmHandle, $pmName, $pkg = null, $pmDisplayName = null, $enabled = false)
+    public static function add($pmHandle, $pmName, $pkg = null)
     {
-        $db = Database::connection();
-        $pkgID = 0;
-        if ($pkg instanceof Package) {
-            $pkgID = $pkg->getPackageID();
-        }
-        if ($pmDisplayName == null) {
-            $pmDisplayName = $pmName;
-        }
-        //make sure this gateway isn't already installed
         $pm = self::getByHandle($pmHandle);
         if (!($pm instanceof self)) {
-            $vals = array($pmHandle, $pmName, $pmDisplayName, $pkgID);
-            $db->Execute("INSERT INTO CommunityStorePaymentMethods (pmHandle,pmName,pmDisplayName,pkgID) VALUES (?,?,?,?)", $vals);
-            $pm = self::getByHandle($pmHandle);
-            if ($enabled) {
-                $pm->setEnabled(1);
-            }
+            $paymentMethod = new self();
+            $paymentMethod->setHandle($pmHandle);
+            $paymentMethod->setName($pmName);
+            $paymentMethod->setPackageID($pkg->getPackageID());
+            $paymentMethod->setDisplayName($pmName);
+            $paymentMethod->setEnabled(false);
+            $paymentMethod->save();
         }
-
-        return $pm;
-    }
-
-    public function setEnabled($status)
-    {
-        $db = Database::connection();
-        $db->Execute("UPDATE CommunityStorePaymentMethods SET pmEnabled=? WHERE pmID=?", array($status, $this->pmID));
-    }
-
-    public function setDisplayName($name)
-    {
-        $db = Database::connection();
-        $db->Execute("UPDATE CommunityStorePaymentMethods SET pmDisplayName=? WHERE pmID=?", array($name, $this->pmID));
-    }
-
-    public function setSortOrder($order)
-    {
-        $db = Database::connection();
-        $db->Execute("UPDATE CommunityStorePaymentMethods SET pmSortOrder=? WHERE pmID=?", array($order, $this->pmID));
-    }
-
-    public function delete()
-    {
-        $db = Database::connection();
-        $db->Execute("DELETE FROM CommunityStorePaymentMethods WHERE pmID=?", $this->pmID);
     }
 
     public static function getMethods($enabled = false)
     {
         $db = Database::connection();
-        if ($enabled == true) {
-            $results = $db->GetAll("SELECT * FROM CommunityStorePaymentMethods WHERE pmEnabled=1 ORDER BY pmSortOrder");
-        } else {
-            $results = $db->GetAll("SELECT * FROM CommunityStorePaymentMethods ORDER BY pmSortOrder");
-        }
-        $methods = array();
-        foreach ($results as $result) {
-            $method = self::getByID($result['pmID']);
-            $methods[] = $method;
-        }
+        $em = $db->getEntityManager();
 
+        if ($enabled) {
+            $methods = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findBy(array('pmEnabled' => 1), array('pmSortOrder'=>'ASC'));
+        } else {
+            $methods = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findBy(array(), array('pmSortOrder'=> 'ASC'));
+        }
+        foreach($methods as $method) {
+            $method->setMethodController();
+        }
         return $methods;
     }
 
@@ -239,7 +232,6 @@ class Method extends Controller
     {
         //load controller    
         $class = $this->getMethodController();
-
         return $class->submitPayment();
     }
 
@@ -251,5 +243,24 @@ class Method extends Controller
     public function getPaymentMaximum()
     {
         return 1000000000; // raises pinky
+    }
+
+    public function save()
+    {
+        $em = Database::connection()->getEntityManager();
+        $em->persist($this);
+        $em->flush();
+    }
+
+    public function delete()
+    {
+        $this->remove();
+    }
+
+    public function remove()
+    {
+        $em = Database::connection()->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 }

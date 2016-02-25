@@ -306,15 +306,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                     $i = 1;
                                     foreach ($enabledPaymentMethods as $pm):
                                         if ($i == 1) {
-                                            $props = array('data-payment-method-id' => $pm->getPaymentMethodID(), 'checked' => 'checked');
+                                            $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
                                         } else {
-                                            $props = array('data-payment-method-id' => $pm->getPaymentMethodID());
+                                            $props = array('data-payment-method-id' => $pm->getID());
                                         }
                                         ?>
                                         <div class='radio'>
                                             <label>
-                                                <?= $form->radio('payment-method', $pm->getPaymentMethodHandle(), false, $props) ?>
-                                                <?= $pm->getPaymentMethodDisplayName() ?>
+                                                <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
+                                                <?= $pm->getDisplayName() ?>
                                             </label>
                                         </div>
                                         <?php
@@ -327,7 +327,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             } ?>"><?= $paymentErrors ?></div>
                             <?php
                             foreach ($enabledPaymentMethods as $pm) {
-                                echo "<div class=\"store-payment-method-container hidden\" data-payment-method-id=\"{$pm->getPaymentMethodID()}\">";
+                                echo "<div class=\"store-payment-method-container hidden\" data-payment-method-id=\"{$pm->getID()}\">";
                                 $pm->renderCheckoutForm();
                                 echo "</div>";
                             }

@@ -154,7 +154,7 @@ class Checkout extends PageController
 
         if($pm->getMethodController()->external == true){
             $pmsess = Session::get('paymentMethod');
-            $pmsess[$pm->getPaymentMethodID()] = $data['payment-method'];
+            $pmsess[$pm->getID()] = $data['payment-method'];
             Session::set('paymentMethod',$pmsess);
             $order = StoreOrder::add($data,$pm,null,'incomplete');
             Session::set('orderID',$order->getOrderID());
@@ -163,7 +163,7 @@ class Checkout extends PageController
             $payment = $pm->submitPayment();
             if($payment['error']==1){
                 $pmsess = Session::get('paymentMethod');
-                $pmsess[$pm->getPaymentMethodID()] = $data['payment-method'];
+                $pmsess[$pm->getID()] = $data['payment-method'];
                 Session::set('paymentMethod',$pmsess);
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors',$errors);

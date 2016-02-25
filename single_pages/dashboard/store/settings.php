@@ -81,23 +81,23 @@
                             
                             <div class="panel panel-default">
                             
-                                <div class="panel-heading"><?= $pm->getPaymentMethodName()?></div>
+                                <div class="panel-heading"><?= $pm->getName()?></div>
                                 <div class="panel-body">
                                     <div class="form-group paymentMethodEnabled">
-                                        <input type="hidden" name="paymentMethodHandle[<?= $pm->getPaymentMethodID()?>]" value="<?= $pm->getPaymentMethodHandle()?>">
+                                        <input type="hidden" name="paymentMethodHandle[<?= $pm->getID()?>]" value="<?= $pm->getHandle()?>">
                                         <label><?= t("Enabled")?></label>
                                         <?php
-                                            echo $form->select("paymentMethodEnabled[".$pm->getPaymentMethodID()."]", array(0=>"No",1=>"Yes"),$pm->isEnabled());
+                                            echo $form->select("paymentMethodEnabled[".$pm->getID()."]", array(0=>"No",1=>"Yes"),$pm->isEnabled());
                                         ?>
                                     </div>
-                                    <div id="paymentMethodForm-<?= $pm->getPaymentMethodID(); ?>" style="display:<?= $pm->isEnabled() ? 'block':'none'; ?>">
+                                    <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block':'none'; ?>">
                                         <div class="form-group">
                                             <label><?= t("Display Name (on checkout)")?></label>
-                                            <?= $form->text('paymentMethodDisplayName['.$pm->getPaymentMethodID().']',$pm->getPaymentMethodDisplayName()); ?>
+                                            <?= $form->text('paymentMethodDisplayName['.$pm->getID().']',$pm->getDisplayName()); ?>
                                         </div>
                                         <div class="form-group">
                                             <label><?= t("Sort Order")?></label>
-                                            <?= $form->text('paymentMethodSortOrder['.$pm->getPaymentMethodID().']',$pm->getPaymentMethodSortOrder()); ?>
+                                            <?= $form->text('paymentMethodSortOrder['.$pm->getID().']',$pm->getSortOrder()); ?>
                                         </div>
                                         <?php
                                             $pm->renderDashboardForm();
