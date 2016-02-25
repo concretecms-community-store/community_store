@@ -14,6 +14,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 <?php if (in_array($controller->getTask(),$addViews)){ //if adding or editing a product
     if(!is_object($product)) {
         $product = new StoreProduct(); //does nothing other than shutup errors.}
+        $product->setIsUnlimited(true);
+        $product->setIsTaxable(true);
     }
 
     $pID = $product->getID()
