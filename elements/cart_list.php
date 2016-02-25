@@ -53,12 +53,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                         <?=StorePrice::format($product->getActivePrice())?>
                     </td>
 
-                    <?php if ($product->allowQuantity()) { ?>
                     <td class="checkout-cart-product-qty">
+                    <?php if ($product->allowQuantity()) { ?>
                         <span class="checkout-cart-item-label"><?= t("Qty:")?></span>
                         <?= $qty?>
-                    </td>
                     <?php } ?>
+                    </td>
 
 
 
