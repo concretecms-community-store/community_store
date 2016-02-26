@@ -54,7 +54,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
             </div>
 
-            <div class="col-sm-8 store-pane active" id="product-overview">
+            <div class="col-sm-9 store-pane active" id="product-overview">
 
                 <div class="row">
                     <div class="col-xs-8">
@@ -193,7 +193,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div><!-- #product-overview -->
 
-            <div class="col-sm-8 store-pane" id="product-categories">
+            <div class="col-sm-9 store-pane" id="product-categories">
                 <h4><?= t('Categorized under pages')?></h4>
 
                 <div class="form-group" id="page_pickers">
@@ -256,7 +256,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div><!-- #product-categories -->
 
 
-            <div class="col-sm-8 store-pane" id="product-shipping">
+            <div class="col-sm-9 store-pane" id="product-shipping">
 
                 <div class="form-group">
                     <?= $form->label("pShippable", t("Product is Shippable"));?>
@@ -316,7 +316,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div><!-- #product-shipping -->
 
-            <div class="col-sm-8 store-pane" id="product-images">
+            <div class="col-sm-9 store-pane" id="product-images">
 
                 <div class="form-group">
                     <?= $form->label('pfID',t("Primary Product Image")); ?>
@@ -433,7 +433,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div><!-- #product-images -->
 
 
-            <div class="col-sm-8 store-pane" id="product-options">
+            <div class="col-sm-9 store-pane" id="product-options">
 
                 <h4><?= t('Options')?></h4>
                 <div id="product-options-container"></div>
@@ -840,7 +840,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div><!-- #product-options -->
 
-            <div class="col-sm-8 store-pane" id="product-attributes">
+            <div class="col-sm-9 store-pane" id="product-attributes">
                 <div class="alert alert-info">
                     <?= t("While you can set and assign attributes, they're are currently only able to be accessed programmatically")?>
                 </div>
@@ -869,7 +869,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
 
-            <div class="col-sm-8 store-pane" id="product-digital">
+            <div class="col-sm-9 store-pane" id="product-digital">
 
                 <?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
                     <?php
@@ -932,7 +932,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div><!-- #product-digital -->
 
-            <div class="col-sm-8 store-pane" id="product-page">
+            <div class="col-sm-9 store-pane" id="product-page">
 
                 <?php if($product->getID()){ ?>
 
