@@ -145,8 +145,8 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <?php if(!is_object($discountRule)){
             $discountRule = new DiscountRule(); //does nothing other than shutup errors.
-            $discountRule->setDiscountTrigger('auto');
-            $discountRule->setDiscountDeductType('percentage');
+            $discountRule->setTrigger('auto');
+            $discountRule->setDeductType('percentage');
         }
         ?>
 
