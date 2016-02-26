@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (is_object($product)) {
     ?>
 
-    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>">
+    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
 
         <div class="row">
             <?php if ($showImage){ ?>
@@ -13,22 +13,28 @@ if (is_object($product)) {
                 <div class="col-md-12">
                     <?php } ?>
                     <?php if ($showProductName) { ?>
-                        <h1 class="store-product-name"><?= $product->getName() ?></h1>
+                        <h1 class="store-product-name" itemprop="name"><?= $product->getName() ?></h1>
+                        <meta itemprop="sku" content="<?= $product->getSKU() ?>" />
                     <?php } ?>
 
                     <?php if ($showProductPrice) { ?>
-                        <p class="store-product-price">
+                        <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                            <meta itemprop="priceCurrency" content="<?= Config::get('communitystore.currency');?>" />
                         <?php
                         $salePrice = $product->getSalePrice();
                         if (isset($salePrice) && $salePrice != "") {
                             echo '<span class="sale-price">' . t("On Sale: ") . $product->getFormattedSalePrice() . '</span>';
                             echo '<span class="original-price">' . $product->getFormattedOriginalPrice() . '</span>';
+                            echo '<meta itemprop="price" content="' . $product->getSalePrice() .'" />';
                         } else {
                             echo $product->getFormattedPrice();
+                            echo '<meta itemprop="price" content="' . $product->getPrice() .'" />';
                         }
                         ?>
                         </p>
                     <?php } ?>
+
+                    <meta itemprop="description" content="<?= strip_tags($product->getDesc()); ?>" />
 
                     <?php if ($showProductDescription) { ?>
                         <div class="store-product-description">
@@ -128,7 +134,7 @@ if (is_object($product)) {
                             $thumb = Core::make('helper/image')->getThumbnail($imgObj, 600, 600, true);
                             ?>
                             <div class="store-product-primary-image">
-                                <a href="<?= $imgObj->getRelativePath() ?>"
+                                <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
                                    title="<?= h($product->getName()); ?>" class="product-thumb">
                                     <img src="<?= $thumb->src ?>">
                                 </a>
