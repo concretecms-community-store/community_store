@@ -766,7 +766,7 @@ class Product
     public function generatePage($templateID = null)
     {
         $pkg = Package::getByHandle('community_store');
-        $targetCID = Config::get('communitystore.productPublishTarget');
+        $targetCID = Config::get('community_store.productPublishTarget');
         $parentPage = Page::getByID($targetCID);
         $pageType = PageType::getByHandle('store_product');
         $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();

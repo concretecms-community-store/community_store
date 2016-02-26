@@ -196,7 +196,7 @@ class TaxRate
                         //if this tax rate is in the tax class associated with this product
                         if (is_object($product->getTaxClass())) {
                             if ($product->getTaxClass()->taxClassContainsTaxRate($this)) {
-                                $taxCalc = Config::get('communitystore.calculation');
+                                $taxCalc = Config::get('community_store.calculation');
 
                                 if ($taxCalc == 'extract') {
                                     $taxrate = 10 / ($this->getTaxRate() + 100);
@@ -233,7 +233,7 @@ class TaxRate
             if ($productObj->isTaxable()) {
                 //if this tax rate is in the tax class associated with this product
                 if ($productObj->getTaxClass()->taxClassContainsTaxRate($this)) {
-                    $taxCalc = $taxCalc = Config::get('communitystore.calculation');
+                    $taxCalc = $taxCalc = Config::get('community_store.calculation');
 
                     if ($taxCalc == 'extract') {
                         $taxrate = 10 / ($this->getTaxRate() + 100);

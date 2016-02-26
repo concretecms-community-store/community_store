@@ -10,7 +10,7 @@ $listViews = array('view','updated','removed','success', 'deleted');
 $addViews = array('add','edit','save');
 $codeViews = array('codes', 'addcodes');
 
-$currencySymbol = Config::get('communitystore.symbol');
+$currencySymbol = Config::get('community_store.symbol');
 
 ?>
 

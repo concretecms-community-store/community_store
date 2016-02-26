@@ -59,7 +59,7 @@ class Calculator
         $subTotal = self::getSubTotal();
         $taxTotal = 0;
         $taxes = self::getTaxTotals();
-        $taxCalc = Config::get('communitystore.calculation');
+        $taxCalc = Config::get('community_store.calculation');
         if ($taxes && $taxCalc != 'extract') {
             foreach ($taxes as $tax) {
                 $taxTotal += $tax['taxamount'];
@@ -91,7 +91,7 @@ class Calculator
         $taxes = StoreTax::getTaxes();
         $addedTaxTotal = 0;
         $includedTaxTotal = 0;
-        $taxCalc = Config::get('communitystore.calculation');
+        $taxCalc = Config::get('community_store.calculation');
 
         if ($taxes) {
             foreach ($taxes as $tax) {

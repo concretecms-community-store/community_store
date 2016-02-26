@@ -91,7 +91,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pPrice", t("Price"));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <?=  Config::get('communitystore.symbol');?>
+                                    <?=  Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $price = $product->getPrice(); ?>
                                 <?= $form->text("pPrice", $price?$price:'0');?>
@@ -103,7 +103,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pSalePrice", t("Sale Price"));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <?=  Config::get('communitystore.symbol');?>
+                                    <?=  Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $salePrice = $product->getSalePrice(); ?>
                                 <?= $form->text("pSalePrice", $salePrice, array('placeholder'=>'No Sale Price Set'));?>
@@ -274,7 +274,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="input-group" >
                                 <?php $weight = $product->getWeight(); ?>
                                 <?= $form->text('pWeight',$weight?$weight:'0')?>
-                                <div class="input-group-addon"><?= Config::get('communitystore.weightUnit')?></div>
+                                <div class="input-group-addon"><?= Config::get('community_store.weightUnit')?></div>
                             </div>
                         </div>
 
@@ -290,7 +290,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group" >
                                     <?php $length = $product->getDimensions('l'); ?>
                                     <?= $form->text('pLength',$length?$length:'0')?>
-                                    <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                    <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -298,7 +298,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group" >
                                     <?php $width = $product->getDimensions('w'); ?>
                                     <?= $form->text('pWidth',$width?$width:'0')?>
-                                    <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                    <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -306,7 +306,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group">
                                     <?php $height = $product->getDimensions('h'); ?>
                                     <?= $form->text('pHeight',$height?$height:'0')?>
-                                    <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                    <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
                             </div>
                         </div>
@@ -740,7 +740,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          <div class="col-md-8">
                             <div class="input-group">
                                  <div class="input-group-addon">
-                                     <?=  Config::get('communitystore.symbol'); ?>
+                                     <?=  Config::get('community_store.symbol'); ?>
                                  </div>
                                  <?= $form->text("pvPrice[".$varid."]", $variation ? $variation->getVariationPrice() : '', array('placeholder' => t('Base Price'))); ?>
                             </div>
@@ -756,7 +756,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          <div class="col-md-8">
                              <div class="input-group">
                                  <div class="input-group-addon">
-                                     <?=  Config::get('communitystore.symbol'); ?>
+                                     <?=  Config::get('community_store.symbol'); ?>
                                  </div>
                                  <?= $form->text("pvSalePrice[".$varid."]", $variation ? $variation->getVariationSalePrice() : '', array('placeholder' => t('Base Sale Price'))); ?>
                              </div>
@@ -783,7 +783,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="col-md-8">
                             <div class="input-group" >
                                 <?= $form->text('pvWeight['.$varid.']',$variation ? $variation->getVariationWeight() : '', array('placeholder'=>t('Base Weight')))?>
-                                <div class="input-group-addon"><?= Config::get('communitystore.weightUnit')?></div>
+                                <div class="input-group-addon"><?= Config::get('community_store.weightUnit')?></div>
                             </div>
                          </div>
                         </div>
@@ -802,7 +802,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="col-md-8">
                              <div class="input-group" >
                                  <?= $form->text('pvLength['.$varid.']',$variation ? $variation->getVariationLength() : '', array('placeholder'=>t('Base Length')))?>
-                                 <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                 <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                              </div>
                         </div>
                         </div>
@@ -814,7 +814,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          <div class="col-md-8">
                              <div class="input-group" >
                                      <?= $form->text('pvWidth['.$varid.']',$variation ? $variation->getVariationWidth() : '', array('placeholder'=>t('Base Width')))?>
-                                     <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                              </div>
                           </div>
                         </div>
@@ -825,7 +825,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          <div class="col-md-8">
                              <div class="input-group" >
                                      <?= $form->text('pvHeight['.$varid.']',$variation ? $variation->getVariationHeight() : '', array('placeholder'=>t('Base Height')))?>
-                                     <div class="input-group-addon"><?= Config::get('communitystore.sizeUnit')?></div>
+                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                              </div>
                          </div>
                         </div>

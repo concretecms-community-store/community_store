@@ -10,14 +10,14 @@ class InvoicePaymentMethod extends StorePaymentMethod
     public function dashboardForm()
     {
         $this->set('form', Core::make("helper/form"));
-        $this->set('invoiceMinimum', Config::get('communitystore.invoiceMinimum'));
-        $this->set('invoiceMaximum', Config::get('communitystore.invoiceMaximum'));
+        $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
+        $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
     }
 
     public function save($data)
     {
-        Config::save('communitystore.invoiceMinimum', $data['invoiceMinimum']);
-        Config::save('communitystore.invoiceMaximum', $data['invoiceMaximum']);
+        Config::save('community_store.invoiceMinimum', $data['invoiceMinimum']);
+        Config::save('community_store.invoiceMaximum', $data['invoiceMaximum']);
     }
     public function validate($args, $e)
     {
@@ -41,7 +41,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     {
         $defaultMin = 0;
 
-        $minconfig = trim(Config::get('communitystore.invoiceMinimum'));
+        $minconfig = trim(Config::get('community_store.invoiceMinimum'));
 
         if ($minconfig == '') {
             return $defaultMin;
@@ -54,7 +54,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     {
         $defaultMax = 1000000000;
 
-        $maxconfig = trim(Config::get('communitystore.invoiceMaximum'));
+        $maxconfig = trim(Config::get('community_store.invoiceMaximum'));
         if ($maxconfig == '') {
             return $defaultMax;
         } else {

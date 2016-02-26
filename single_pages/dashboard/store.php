@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
-$taxCalc = Config::get('communitystore.calculation');
+$taxCalc = Config::get('community_store.calculation');
 $dh = Core::make('helper/date');
 
 if ($taxCalc == 'extract') {

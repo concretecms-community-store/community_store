@@ -23,7 +23,7 @@ class Checkout extends PageController
     {
         $customer = new StoreCustomer();
         $this->set('customer', $customer);
-        $guestCheckout = Config::get('communitystore.guestCheckout');
+        $guestCheckout = Config::get('community_store.guestCheckout');
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
         $this->set('requiresLogin', StoreCart::requiresLogin());
 

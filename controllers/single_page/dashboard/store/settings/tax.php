@@ -147,7 +147,7 @@ class Tax extends DashboardPageController
         if($data['taxClassName']==""){
             $e->add(t("You need a name for this Tax Class"));
         }
-        if(\Config::get('communitystore.calculation')=="extract"){
+        if(\Config::get('community_store.calculation')=="extract"){
             if(count($data['taxClassRates'])>1){
                 $e->add(t("You can only have one tax rate with your current tax settings"));
             }

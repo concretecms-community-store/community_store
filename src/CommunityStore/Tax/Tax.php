@@ -69,7 +69,7 @@ class Tax
     public static function getConcatenatedTaxStrings()
     {
         $taxes = self::getTaxes();
-        $taxCalc = Config::get('communitystore.calculation');
+        $taxCalc = Config::get('community_store.calculation');
 
         $taxTotal = array();
         $taxIncludedTotal = array();

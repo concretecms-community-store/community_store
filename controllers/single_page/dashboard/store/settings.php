@@ -26,7 +26,7 @@ class Settings extends DashboardPageController
        $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
        $this->set("installedPaymentMethods",StorePaymentMethod::getMethods());
        $this->set("orderStatuses",StoreOrderStatus::getAll());
-       $productPublishTarget = Config::get('communitystore.productPublishTarget');
+       $productPublishTarget = Config::get('community_store.productPublishTarget');
        $this->set('productPublishTarget',$productPublishTarget);
     }
     public function loadFormAssets()
@@ -57,30 +57,30 @@ class Settings extends DashboardPageController
             
             if (!$errors->has()) {
                 
-                Config::save('communitystore.symbol',$args['symbol']);
-                Config::save('communitystore.currency',$args['currency']);
-                Config::save('communitystore.whole',$args['whole']);
-                Config::save('communitystore.thousand',$args['thousand']);
-                Config::save('communitystore.taxenabled',$args['taxEnabled']);
-                Config::save('communitystore.taxcountry',$args['taxCountry']);
-                Config::save('communitystore.taxstate',$args['taxState']);
-                Config::save('communitystore.taxcity',trim($args['taxCity']));
-                Config::save('communitystore.taxAddress',trim($args['taxAddress']));
-                Config::save('communitystore.taxMatch',trim($args['taxMatch']));
-                Config::save('communitystore.taxBased',trim($args['taxBased']));
-                Config::save('communitystore.taxrate',trim($args['taxRate']));
-                Config::save('communitystore.taxName',trim($args['taxName']));
-                Config::save('communitystore.calculation',trim($args['calculation']));
-                Config::save('communitystore.shippingenabled',$args['shippingEnabled']);
-                Config::save('communitystore.shippingbase',$args['shippingBasePrice']);
-                Config::save('communitystore.shippingitem',$args['shippingItemPrice']);
-                Config::save('communitystore.weightUnit',$args['weightUnit']);
-                Config::save('communitystore.sizeUnit',$args['sizeUnit']);
-                Config::save('communitystore.notificationemails',$args['notificationEmails']);
-                Config::save('communitystore.emailalerts',$args['emailAlert']);
-                Config::save('communitystore.emailalertsname',$args['emailAlertName']);
-                Config::save('communitystore.productPublishTarget',$args['productPublishTarget']);
-                Config::save('communitystore.guestCheckout',$args['guestCheckout']);
+                Config::save('community_store.symbol',$args['symbol']);
+                Config::save('community_store.currency',$args['currency']);
+                Config::save('community_store.whole',$args['whole']);
+                Config::save('community_store.thousand',$args['thousand']);
+                Config::save('community_store.taxenabled',$args['taxEnabled']);
+                Config::save('community_store.taxcountry',$args['taxCountry']);
+                Config::save('community_store.taxstate',$args['taxState']);
+                Config::save('community_store.taxcity',trim($args['taxCity']));
+                Config::save('community_store.taxAddress',trim($args['taxAddress']));
+                Config::save('community_store.taxMatch',trim($args['taxMatch']));
+                Config::save('community_store.taxBased',trim($args['taxBased']));
+                Config::save('community_store.taxrate',trim($args['taxRate']));
+                Config::save('community_store.taxName',trim($args['taxName']));
+                Config::save('community_store.calculation',trim($args['calculation']));
+                Config::save('community_store.shippingenabled',$args['shippingEnabled']);
+                Config::save('community_store.shippingbase',$args['shippingBasePrice']);
+                Config::save('community_store.shippingitem',$args['shippingItemPrice']);
+                Config::save('community_store.weightUnit',$args['weightUnit']);
+                Config::save('community_store.sizeUnit',$args['sizeUnit']);
+                Config::save('community_store.notificationemails',$args['notificationEmails']);
+                Config::save('community_store.emailalerts',$args['emailAlert']);
+                Config::save('community_store.emailalertsname',$args['emailAlertName']);
+                Config::save('community_store.productPublishTarget',$args['productPublishTarget']);
+                Config::save('community_store.guestCheckout',$args['guestCheckout']);
 
                 //save payment methods
                 if($args['paymentMethodHandle']){

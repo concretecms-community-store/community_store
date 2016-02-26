@@ -8,9 +8,9 @@ class Price
     public static function format($price)
     {
         $price = floatval($price);
-        $symbol = Config::get('communitystore.symbol');
-        $wholeSep = Config::get('communitystore.whole');
-        $thousandSep = Config::get('communitystore.thousand');
+        $symbol = Config::get('community_store.symbol');
+        $wholeSep = Config::get('community_store.whole');
+        $thousandSep = Config::get('community_store.thousand');
         $price = $symbol . number_format($price, 2, $wholeSep, $thousandSep);
 
         return $price;
@@ -31,9 +31,9 @@ class Price
 
     public function getFloat($price)
     {
-        $symbol = Config::get('communitystore.symbol');
-        $wholeSep = Config::get('communitystore.whole');
-        $thousandSep = Config::get('communitystore.thousand');
+        $symbol = Config::get('community_store.symbol');
+        $wholeSep = Config::get('community_store.whole');
+        $thousandSep = Config::get('community_store.thousand');
 
         $price = str_replace($symbol, "", $price);
         $price = str_replace($thousandSep, "", $price); //no commas, or spaces or whatevz

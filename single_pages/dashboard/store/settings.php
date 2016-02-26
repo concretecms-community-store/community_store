@@ -27,23 +27,23 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <?= $form->label('symbol',t('Currency Symbol')); ?>
-                            <?= $form->text('symbol',Config::get('communitystore.symbol'));?>
+                            <?= $form->text('symbol',Config::get('community_store.symbol'));?>
                         </div>
 
                         <div class="form-group col-md-6">
                             <?= $form->label('currency',t('Currency Code')); ?>
-                            <?= $form->text('currency',Config::get('communitystore.currency'));?>
+                            <?= $form->text('currency',Config::get('community_store.currency'));?>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <?= $form->label('thousand',t('Thousands Separator')); ?>
-                            <?= $form->text('thousand',Config::get('communitystore.thousand'));?>
+                            <?= $form->text('thousand',Config::get('community_store.thousand'));?>
                             <span class="help-block"><?= t('e.g. , or a space'); ?></span>
                         </div>
                         <div class="form-group col-md-6">
                             <?= $form->label('whole',t('Whole Number Separator')); ?>
-                            <?= $form->text('whole',Config::get('communitystore.whole')); ?>
+                            <?= $form->text('whole',Config::get('community_store.whole')); ?>
                             <span class="help-block"><?= t('e.g. period or a comma'); ?></span>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
 
                     <div class="form-group">
                         <label for="calculation"><?= t("Are Prices Entered with Tax Included?")?></label>
-                        <?= $form->select('calculation',array('add'=>t("No, I will enter product prices EXCLUSIVE of tax"),'extract'=>t("Yes, I will enter product prices INCLUSIVE of tax")),Config::get('communitystore.calculation')); ?>
+                        <?= $form->select('calculation',array('add'=>t("No, I will enter product prices EXCLUSIVE of tax"),'extract'=>t("Yes, I will enter product prices INCLUSIVE of tax")),Config::get('community_store.calculation')); ?>
                     </div>
                     
                 </div>
@@ -68,14 +68,14 @@
                             <div class="form-group">
                                 <?= $form->label('weightUnit',t('Units for Weight'));?>
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
-                                <?= $form->select('weightUnit',array('lb'=>t('lb'),'kg'=>t('kg'),'g'=>t('g')),Config::get('communitystore.weightUnit'));?>
+                                <?= $form->select('weightUnit',array('lb'=>t('lb'),'kg'=>t('kg'),'g'=>t('g')),Config::get('community_store.weightUnit'));?>
                             </div>
                         </div> 
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <?= $form->label('sizeUnit',t('Units for Size'));?>
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
-                                <?= $form->select('sizeUnit',array('in'=>t('in'),'cm'=>t('cm'),'mm'=>t('mm')),Config::get('communitystore.sizeUnit'));?>
+                                <?= $form->select('sizeUnit',array('in'=>t('in'),'cm'=>t('cm'),'mm'=>t('mm')),Config::get('community_store.sizeUnit'));?>
                             </div>
                         </div>                        
                     </div>
@@ -198,7 +198,7 @@
 
                     <div class="form-group">
                         <?= $form->label('notificationEmails',t('Send order notification to email %sseparate multiple emails with commas%s', '<small class="text-muted">','</small>')); ?>
-                        <?= $form->text('notificationEmails',Config::get('communitystore.notificationemails'), array('placeholder'=>t('Email Address')));?>
+                        <?= $form->text('notificationEmails',Config::get('community_store.notificationemails'), array('placeholder'=>t('Email Address')));?>
                     </div>
 
                     <h4><?= t('Emails Sent From');?></h4>
@@ -207,14 +207,14 @@
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <?= $form->label('emailAlert',t('From Email'));?>
-                                <?= $form->text('emailAlert',Config::get('communitystore.emailalerts'),array('placeholder'=>t('From Email Address'))); ?>
+                                <?= $form->text('emailAlert',Config::get('community_store.emailalerts'),array('placeholder'=>t('From Email Address'))); ?>
                             </div>
                         </div>
 
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <?= $form->label('emailAlertName',t('From Name'));?>
-                                <?= $form->text('emailAlertName',Config::get('communitystore.emailalertsname'),array('placeholder'=>t('From Name'))); ?>
+                                <?= $form->text('emailAlertName',Config::get('community_store.emailalertsname'),array('placeholder'=>t('From Name'))); ?>
                             </div>
                         </div>
                     </div>
@@ -235,7 +235,7 @@
 
                     <h3><?= t('Guest checkout');?></h3>
                     <div class="form-group">
-                        <?php $guestCheckout =  Config::get('communitystore.guestCheckout');
+                        <?php $guestCheckout =  Config::get('community_store.guestCheckout');
                         $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                         ?>
                         <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />

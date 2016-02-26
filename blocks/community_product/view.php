@@ -19,7 +19,7 @@ if (is_object($product)) {
 
                     <?php if ($showProductPrice) { ?>
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                            <meta itemprop="priceCurrency" content="<?= Config::get('communitystore.currency');?>" />
+                            <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
                         $salePrice = $product->getSalePrice();
                         if (isset($salePrice) && $salePrice != "") {
@@ -46,7 +46,7 @@ if (is_object($product)) {
                         <div class="store-product-dimensions">
                             <strong><?= t("Dimensions") ?>:</strong>
                             <?= $product->getDimensions() ?>
-                            <?= Config::get('communitystore.sizeUnit'); ?>
+                            <?= Config::get('community_store.sizeUnit'); ?>
                         </div>
                     <?php } ?>
 
@@ -54,7 +54,7 @@ if (is_object($product)) {
                         <div class="store-product-weight">
                             <strong><?= t("Weight") ?>:</strong>
                             <?= $product->getWeight() ?>
-                            <?= Config::get('communitystore.weightUnit'); ?>
+                            <?= Config::get('community_store.weightUnit'); ?>
                         </div>
                     <?php } ?>
 

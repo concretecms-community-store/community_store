@@ -324,7 +324,7 @@ class Order
 
     public function addOrderItems($cart)
     {
-        $taxCalc = Config::get('communitystore.calculation');
+        $taxCalc = Config::get('community_store.calculation');
         foreach ($cart as $cartItem) {
             $taxes = StoreTax::getTaxForProduct($cartItem);
             $taxProductTotal = array();
@@ -368,12 +368,12 @@ class Order
             $this->setTransactionReference($transactionReference);
         }
 
-        $fromEmail = Config::get('communitystore.emailalerts');
+        $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
             $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
         }
 
-        $fromName = Config::get('communitystore.emailalertsname');
+        $fromName = Config::get('community_store.emailalertsname');
 
         $smID = \Session::get('smID');
         $groupstoadd = array();
@@ -519,7 +519,7 @@ class Order
         //send out the alerts
         $mh = new MailService();
 
-        $alertEmails = explode(",", Config::get('communitystore.notificationemails'));
+        $alertEmails = explode(",", Config::get('community_store.notificationemails'));
         $alertEmails = array_map('trim', $alertEmails);
 
         //receipt
