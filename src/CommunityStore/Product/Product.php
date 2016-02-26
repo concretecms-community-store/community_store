@@ -83,7 +83,10 @@ class Product
      * @Column(type="boolean",nullable=true)
      */
     protected $pQtyUnlim;
-
+    /**
+     * @Column(type="boolean",nullable=true)
+     */
+    protected $pBackOrder;
     /**
      * @Column(type="boolean")
      */
@@ -508,26 +511,21 @@ class Product
     {
         return StoreTaxClass::getByID($this->pTaxClass);
     }
-
     public function isTaxable()
     {
-        if ($this->pTaxable == "1") {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) $this->pTaxable;
     }
     public function isFeatured()
     {
-        return $this->pFeatured;
+        return (bool) $this->pFeatured;
     }
     public function isActive()
     {
-        return $this->pActive;
+        return (bool) $this->pActive;
     }
     public function isShippable()
     {
-        return $this->pShippable;
+        return (bool) $this->pShippable;
     }
 
     public function getDimensions($whl = null)

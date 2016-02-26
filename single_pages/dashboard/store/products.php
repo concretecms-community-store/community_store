@@ -75,13 +75,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pActive", t("Active"));?>
-                            <?= $form->select("pActive", array('1'=>t('Active'),'0'=>t('Inactive')), $product->isActive());?>
+                            <?= $form->select("pActive", array('1'=>t('Active'),'0'=>t('Inactive')), $product->isActive() ? '1' : '0');?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pFeatured", t("Featured Product"));?>
-                            <?= $form->select("pFeatured",array('0'=>t('No'),'1'=>t('Yes')), $product->isFeatured());?>
+                            <?= $form->select("pFeatured",array('0'=>t('No'),'1'=>t('Yes')), $product->isFeatured() ? '1' : '0');?>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pTaxable", t("Taxable"));?>
-                            <?= $form->select("pTaxable",array('0'=>t('No'),'1'=>t('Yes')), $product->isTaxable());?>
+                            <?= $form->select("pTaxable",array('1'=>t('Yes'),'0'=>t('No')), $product->isTaxable() ? '1' : '0');?>
                         </div>
                     </div>
                     <div class="col-xs-6">
@@ -162,7 +162,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         </div>
                         <div class="form-group" id="backorders" <?=  ($product->isUnlimited() ? 'style="display: none"' : '');?>>
-                            <?= $form->checkbox('pBackOrder', '1', $product->pBackOrder)?>
+                            <?= $form->checkbox('pBackOrder', '1', $product->allowBackOrders())?>
                             <?= $form->label('pBackOrder', t('Allow Back Orders'))?>
                         </div>
                     </div>
