@@ -211,6 +211,16 @@ class Products extends DashboardPageController
         StoreProduct::getByID($pID)->generatePage($templateID);
         $this->redirect('/dashboard/store/products/edit',$pID);
     }
+    public function duplicate($pID)
+    {
+        $product = StoreProduct::getByID($pID);
+        if ($product) {
+            $newproduct = $product->duplicate();
+        }
+        $this->redirect('/dashboard/store/products/edit', $newproduct->getID());
+    }
+
+
     public function delete($pID)
     {
         $product = StoreProduct::getByID($pID);

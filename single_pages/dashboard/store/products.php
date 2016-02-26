@@ -23,9 +23,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
     <?php if ($pID > 0) { ?>
     <div class="ccm-dashboard-header-buttons">
-        <form method="post" id="delete" action="<?= View::url('/dashboard/store/products/delete/', $pID)?>" >
-            <button class="btn btn-danger"><?= t("Delete Product")?></button>
+
+        <form class="pull-right"  method="post" id="delete" action="<?= View::url('/dashboard/store/products/delete/', $pID)?>" >
+            &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
+
+        <form class="pull-right" method="post" id="duplicate" action="<?= View::url('/dashboard/store/products/duplicate/', $pID)?>" >
+            <button class="btn btn-default"><?= t("Duplicate Product")?></button>
+        </form>
+
+
 
         <script type="text/javascript">
         $(function(){

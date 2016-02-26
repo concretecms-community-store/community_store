@@ -406,6 +406,12 @@ class Product
     {
         return $this->pID;
     }
+
+    public function setID($id)
+    {
+        $this->pID = $id;
+    }
+
     public function getName()
     {
         return $this->pName;
@@ -761,6 +767,19 @@ class Product
         if (is_object($page)) {
             $page->delete();
         }
+    }
+
+    public function __clone() {
+        if ($this->pID) {
+            $this->setId(null);
+        }
+    }
+
+    public  function duplicate() {
+        $newproduct = clone $this;
+        $newproduct->setIsActive(false);
+        $newproduct->save();
+        return $newproduct;
     }
 
     public function generatePage($templateID = null)

@@ -167,8 +167,6 @@ $currencySymbol = Config::get('community_store.symbol');
             <?= $form->text('drDisplay', $discountRule->getDisplay(), array('class' => '', 'required'=>'required'))?>
         </div>
 
-
-
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
