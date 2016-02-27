@@ -23,6 +23,12 @@ class ProductImage
     protected $pID;
 
     /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
+     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     */
+    protected $product;
+
+    /**
      * @Column(type="integer")
      */
     protected $pifID;
@@ -36,6 +42,12 @@ class ProductImage
     {
         $this->pID = $pID;
     }
+
+    public function setProduct($product)
+    {
+        return $this->product = $product;
+    }
+
     private function setFileID($pifID)
     {
         $this->pifID = $pifID;
@@ -95,7 +107,7 @@ class ProductImage
 
         //add new ones.
         for ($i = 0;$i < count($images['pifID']);++$i) {
-            self::add($product->getID(), $images['pifID'][$i], $images['piSort'][$i]);
+            self::add($product, $images['pifID'][$i], $images['piSort'][$i]);
         }
     }
 
@@ -107,15 +119,22 @@ class ProductImage
         }
     }
 
-    public static function add($pID, $pifID, $piSort)
+    public static function add($product, $pifID, $piSort)
     {
         $productImage = new self();
-        $productImage->setProductID($pID);
+        $productImage->setProduct($product);
         $productImage->setFileID($pifID);
         $productImage->setSort($piSort);
         $productImage->save();
 
         return $productImage;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function save()

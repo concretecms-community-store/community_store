@@ -23,6 +23,12 @@ class ProductGroup
     protected $pID;
 
     /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
+     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     */
+    protected $product;
+
+    /**
      * @Column(type="integer")
      */
     protected $gID;
@@ -40,10 +46,27 @@ class ProductGroup
     {
         return $this->pID;
     }
+
+    public function setProduct($product)
+    {
+        return $this->product = $product;
+    }
+
     public function getGroupID()
     {
         return $this->gID;
     }
+
+    public function getID()
+    {
+        return $this->id;
+    }
+
+    public function setID($id)
+    {
+        $this->id = $id;
+    }
+
 
     public static function getByID($pgID)
     {
@@ -79,11 +102,12 @@ class ProductGroup
 
     public static function addGroupsForProduct(array $data, StoreProduct $product)
     {
+
         self::removeGroupsForProduct($product);
         //add new ones.
         if (!empty($data['pProductGroups'])) {
             foreach ($data['pProductGroups'] as $gID) {
-                self::add($product->getID(), $gID);
+                self::add($product, $gID);
             }
         }
     }
@@ -96,14 +120,21 @@ class ProductGroup
         }
     }
 
-    public static function add($pID, $gID)
+    public static function add($product, $gID)
     {
         $productGroup = new self();
-        $productGroup->setProductID($pID);
+        $productGroup->setProduct($product);
         $productGroup->setGroupID($gID);
         $productGroup->save();
 
         return $productGroup;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function save()

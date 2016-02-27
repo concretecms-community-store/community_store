@@ -28,7 +28,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
 
-        <form class="pull-right" method="post" id="duplicate" action="<?= View::url('/dashboard/store/products/duplicate/', $pID)?>" >
+        <form class="pull-right" method="get" id="duplicate" action="<?= View::url('/dashboard/store/products/duplicate/', $pID)?>" >
             <button class="btn btn-default"><?= t("Duplicate Product")?></button>
         </form>
 
@@ -1159,6 +1159,26 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     </form>
 
 <?php }  ?>
+
+
+<?php if ($controller->getTask() == 'duplicate') { ?>
+    <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
+
+        <div class="form-group">
+            <?= $form->label('newName',t("New Product Name")); ?>
+            <?= $form->text('newName',$product->getName() . ' ' . t('(Copy)')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('newSKU',t("New Product SKU")); ?>
+            <?= $form->text('newSKU',$product->getSKU() . ' ' . t('')); ?>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="<?= t('Duplicate Product');?>">
+    </form>
+
+<?php } ?>
+
 
 <style>
     @media (max-width: 992px) {

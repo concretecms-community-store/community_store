@@ -22,6 +22,12 @@ class ProductUserGroup
     protected $pID;
 
     /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
+     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     */
+    protected $product;
+
+    /**
      * @Column(type="integer")
      */
     protected $gID;
@@ -30,6 +36,12 @@ class ProductUserGroup
     {
         $this->pID = $pID;
     }
+
+    public function setProduct($product)
+    {
+        return $this->product = $product;
+    }
+
     private function setUserGroupID($gID)
     {
         $this->gID = $gID;
@@ -100,6 +112,13 @@ class ProductUserGroup
         $productUserGroup->save();
 
         return $productUserGroup;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function save()

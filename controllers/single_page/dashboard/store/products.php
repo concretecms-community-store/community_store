@@ -105,6 +105,10 @@ class Products extends DashboardPageController
             $this->set("success",t("Product Added"));
         }
 
+        if ($status == 'duplicated') {
+            $this->set("success",t("Product Duplicated"));
+        }
+
         $this->loadFormAssets();
         $this->set("actionType",t("Update"));
         
@@ -214,10 +218,17 @@ class Products extends DashboardPageController
     public function duplicate($pID)
     {
         $product = StoreProduct::getByID($pID);
-        if ($product) {
-            $newproduct = $product->duplicate();
+        if (!$product) {
+            $this->redirect('/dashboard/store/products');
         }
-        $this->redirect('/dashboard/store/products/edit', $newproduct->getID());
+
+        if ($this->post()) {
+            $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
+            $this->redirect('/dashboard/store/products/edit/'. $newproduct->getID().'/duplicated');
+        }
+
+        $this->set('pageTitle', t('Duplicate Product'));
+        $this->set('product', $product);
     }
 
 

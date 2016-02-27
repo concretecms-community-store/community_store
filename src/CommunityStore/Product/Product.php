@@ -9,6 +9,7 @@ use Database;
 use File;
 use Core;
 use Config;
+use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
@@ -166,6 +167,61 @@ class Product
 
     // not stored, used for price/sku/etc lookup purposes
     protected $variation;
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product"))
+     */
+    protected $locations;
+
+    public function getLocations(){
+        return $this->locations;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product"))
+     */
+    protected $groups;
+
+    public function getGroups(){
+        return $this->groups;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product"))
+     */
+    protected $files;
+
+    public function getFiles(){
+        return $this->files;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product"))
+     */
+    protected $images;
+
+    public function getImages(){
+        return $this->images;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product"))
+     */
+    protected $userGroups;
+
+    public function getUserGroups(){
+        return $this->userGroups;
+    }
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+    }
+
 
     public function setVariation($variation)
     {
@@ -660,10 +716,7 @@ class Product
     {
         return count($this->getUserGroups()) > 0 ? true : false;
     }
-    public function getUserGroups()
-    {
-        return StoreProductUserGroup::getUserGroupsForProduct($this);
-    }
+
     public function getUserGroupIDs()
     {
         return StoreProductUserGroup::getUserGroupIDsForProduct($this);
@@ -710,10 +763,6 @@ class Product
         }
     }
 
-    public function getImages()
-    {
-        return StoreProductImage::getImagesForProduct($this);
-    }
     public function getimagesobjects()
     {
         return StoreProductImage::getImageObjectsForProduct($this);
@@ -733,10 +782,6 @@ class Product
     public function getGroupIDs()
     {
         return StoreProductGroup::getGroupIDsForProduct($this);
-    }
-    public function getGroups()
-    {
-        return StoreProductGroup::getGroupsForProduct($this);
     }
     public function getVariations()
     {
@@ -772,12 +817,79 @@ class Product
     public function __clone() {
         if ($this->pID) {
             $this->setId(null);
+            $this->setPageID(null);
+
+            $locations = $this->getLocations();
+            $this->locations = new ArrayCollection();
+            if(count($locations) > 0){
+                foreach ($locations as $loc) {
+                    $cloneLocation = clone $loc;
+                    $this->locations->add($cloneLocation);
+                    $cloneLocation->setProduct($this);
+                    $cloneLocation->save();
+                }
+            }
+
+            $groups = $this->getGroups();
+            $this->groups = new ArrayCollection();
+            if(count($groups) > 0){
+                foreach ($groups as $group) {
+                    $cloneGroup = clone $group;
+                    $this->groups->add($cloneGroup);
+                    $cloneGroup->setProduct($this);
+                    $cloneGroup->save();
+                }
+            }
+
+            $images = $this->getImages();
+            $this->images = new ArrayCollection();
+            if(count($images) > 0){
+                foreach ($images as $image) {
+                    $cloneImage = clone $image;
+                    $this->images->add($cloneImage);
+                    $cloneImage->setProduct($this);
+                    $cloneImage->save();
+                }
+            }
+
+            $files = $this->getFiles();
+            $this->files = new ArrayCollection();
+            if(count($files) > 0){
+                foreach ($files as $file) {
+                    $cloneFile = clone $file;
+                    $this->files->add($cloneFile);
+                    $cloneFile->setProduct($this);
+                    $cloneFile->save();
+                }
+            }
+
+            $userGroups = $this->getUserGroups();
+            $this->userGroups = new ArrayCollection();
+            if(count($userGroups) > 0){
+                foreach ($userGroups as $userGroup) {
+                    $cloneUserGroup = clone $userGroup;
+                    $this->userGroups->add($cloneUserGroup);
+                    $cloneUserGroup->setProduct($this);
+                    $cloneUserGroup->save();
+                }
+            }
+
         }
     }
 
-    public  function duplicate() {
+    public  function duplicate($newName, $newSKU = '') {
         $newproduct = clone $this;
         $newproduct->setIsActive(false);
+        $newproduct->setName($newName);
+        $newproduct->setSKU($newSKU);
+
+        $existingPageID = $this->getPageID();
+        if ($existingPageID) {
+            $existinPage= Page::getByID($existingPageID);
+            $pageTemplateID = $existinPage->getPageTemplateID();
+            $newproduct->generatePage($pageTemplateID);
+        }
+
         $newproduct->save();
         return $newproduct;
     }
