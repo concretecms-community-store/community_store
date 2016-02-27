@@ -269,7 +269,7 @@ class OrderItem
 
         foreach ($data['productAttributes'] as $optionGroup => $selectedOption) {
             $optionGroupID = str_replace("pog", "", $optionGroup);
-            $optionGroupName = self::getProductOptionGroupNameByID($optionGroupID);
+            $optionGroupName = self::getProductOptionNameByID($optionGroupID);
             $optionValue = self::getProductOptionValueByID($selectedOption);
 
             $orderItemOption = new StoreOrderItemOption();
@@ -315,10 +315,10 @@ class OrderItem
     {
         return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
-    public function getProductOptionGroupNameByID($id)
+    public function getProductOptionNameByID($id)
     {
         $db = Database::connection();
-        $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptionGroups WHERE pogID=?", $id);
+        $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptions WHERE pogID=?", $id);
 
         return $optionGroup['pogName'];
     }

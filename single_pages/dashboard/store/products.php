@@ -623,7 +623,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             for($i=0;$i<$count;$i++){
                                 foreach($optItems as $option){
                                     //go through all options, see if it belongs in the group we're on in the for loop
-                                    if($option->getProductOptionGroupID() == $groups[$i]->getID()){
+                                    if($option->getProductOptionID() == $groups[$i]->getID()){
 
                                     ?>
                         var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
@@ -689,7 +689,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          foreach ($combinedOptions as $optionItemID) {
                              $comboIDs[] = $optionItemID;
                              sort($comboIDs);
-                             $group = $groupLookup[$optionItemLookup[$optionItemID]->getProductOptionGroupID()];
+                             $group = $optionLookup[$optionItemLookup[$optionItemID]->getProductOptionID()];
                              echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
                          }
 

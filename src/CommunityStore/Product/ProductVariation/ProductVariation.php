@@ -373,12 +373,14 @@ class ProductVariation
 
     public static function addVariations(array $data, StoreProduct $product)
     {
-        $optItems = $product->getOptionItems();
+        $options = $product->getOptions();
 
         $optionArrays = array();
 
-        foreach ($optItems as $optItem) {
-            $optionArrays[$optItem->getProductOptionGroupID()][] = $optItem->getID();
+        foreach ($options as $option) {
+            foreach($option->getOptionItems() as $optItem) {
+                $optionArrays[$option->getID()][] = $optItem->getID();
+            }
         }
 
         $comboOptions = self::combinations(array_values($optionArrays));

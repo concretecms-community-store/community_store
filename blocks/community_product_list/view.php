@@ -89,7 +89,7 @@ if($products){
                 foreach($optionGroups as $optionGroup) {
                     $groupoptions = array();
                     foreach ($optionItems as $option) {
-                        if ($option->getProductOptionGroupID() == $optionGroup->getID()) {
+                        if ($option->getProductOptionID() == $optionGroup->getID()) {
                             $groupoptions[] = $option;
                         }
                     }

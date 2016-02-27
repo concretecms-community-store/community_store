@@ -15,7 +15,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as S
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionGroup as StoreProductOptionGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
@@ -213,6 +213,24 @@ class Product
         return $this->userGroups;
     }
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product"))
+     */
+    protected $options;
+
+    public function getOptions(){
+        return $this->options;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem", mappedBy="product"))
+     */
+    protected $optionItems;
+
+//    public function getOptionItems(){
+//        return $this->optionItems;
+//    }
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -220,6 +238,8 @@ class Product
         $this->files = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
+        $this->option = new ArrayCollection();
+        $this->optionItems = new ArrayCollection();
     }
 
 
@@ -246,13 +266,13 @@ class Product
     public function setInitialVariation()
     {
         if ($this->hasVariations()) {
-            $optionGroups = $this->getOptionGroups();
+            $options = $this->getOptions();
             $optionItems = $this->getOptionItems();
             $optionkeys = array();
 
-            foreach ($optionGroups as $optionGroup) {
-                foreach ($optionItems as $option) {
-                    if ($option->getProductOptionGroupID() == $optionGroup->getID()) {
+            foreach ($options as $option) {
+                foreach ($optionItems as $optionItem) {
+                    if ($optionItem->getProductOptionID() == $option->getID()) {
                         $optionkeys[] = $option->getID();
                         break;
                     }
@@ -771,14 +791,6 @@ class Product
     {
         return StoreProductLocation::getLocationsForProduct($this);
     }
-    public function getOptionGroups()
-    {
-        return StoreProductOptionGroup::getOptionGroupsForProduct($this);
-    }
-    public function getOptionItems($onlyvisible = false)
-    {
-        return StoreProductOptionItem::getOptionItemsForProduct($this, $onlyvisible);
-    }
     public function getGroupIDs()
     {
         return StoreProductGroup::getGroupIDsForProduct($this);
@@ -798,7 +810,7 @@ class Product
     public function remove()
     {
         StoreProductImage::removeImagesForProduct($this);
-        StoreProductOptionGroup::removeOptionGroupsForProduct($this);
+        StoreProductOption::removeOptionsForProduct($this);
         StoreProductOptionItem::removeOptionItemsForProduct($this);
         StoreProductFile::removeFilesForProduct($this);
         StoreProductGroup::removeGroupsForProduct($this);
@@ -874,12 +886,23 @@ class Product
                 }
             }
 
+            $options = $this->getOptions();
+            $this->options = new ArrayCollection();
+            if(count($options) > 0){
+                foreach ($options as $option) {
+                    $cloneOption = clone $option;
+                    $this->options->add($cloneOption);
+                    //$cloneOptionGroup->setProduct($this);
+                    $cloneOption->save();
+                }
+            }
         }
     }
 
     public  function duplicate($newName, $newSKU = '') {
         $newproduct = clone $this;
         $newproduct->setIsActive(false);
+        $newproduct->setQty(0);
         $newproduct->setName($newName);
         $newproduct->setSKU($newSKU);
 

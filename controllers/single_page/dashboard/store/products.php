@@ -119,13 +119,11 @@ class Products extends DashboardPageController
             $this->redirect('/dashboard/store/products/');
         }
 
-        $optItems = $product->getOptionItems();
-        $groups = $product->getOptionGroups();
+        $options = $product->getOptions();
 
         $this->set('product',$product);
         $this->set('images',$product->getImages());
-        $this->set('groups',$groups);
-        $this->set('optItems',$optItems);
+        $this->set('groups',$options);
         $this->set('locationPages', $product->getLocationPages());
         $this->set('pgroups', $product->getGroupIDs());
 
@@ -135,20 +133,26 @@ class Products extends DashboardPageController
         $optionArrays = array();
         $optionItemLookup = array();
 
-        foreach($optItems as $optItem) {
-            $optionArrays[$optItem->getProductOptionGroupID()][] = $optItem->getID();
-            $optionItemLookup[ $optItem->getID()] = $optItem;
+        foreach($options as $opt) {
+            foreach($opt->getOptionItems() as $optItem) {
+                $optionArrays[$optItem->getProductOptionID()][] = $optItem->getID();
+                $optionItemLookup[ $optItem->getID()] = $optItem;
+            }
         }
 
-        $groupLookup = array();
 
-        foreach($groups as $group) {
-            $groupLookup[$group->getID()] = $group;
+        $optionLookup = array();
+
+        if ($options) {
+            foreach($options as $option) {
+                $optionLookup[$option->getID()] = $option;
+            }
         }
 
-        $this->set('groupLookup', $groupLookup);
+        $this->set('optionLookup', $optionLookup);
 
         $optionArrays = array_values($optionArrays);
+
         $comboOptions = StoreProductVariation::combinations($optionArrays);
 
         $checkedOptions = array();

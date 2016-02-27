@@ -19,12 +19,18 @@ class ProductOptionItem
     /**
      * @Column(type="integer")
      */
-    protected $pID;
+    protected $pogID;
 
     /**
-     * @Column(type="integer")
+     * @ManyToOne(targetEntity="ProductOption",inversedBy="optionItems",cascade={"persist"})
+     * @JoinColumn(name="pogID", referencedColumnName="pogID", onDelete="CASCADE")
      */
-    protected $pogID;
+    protected $option;
+
+    public function setOption($option)
+    {
+        return $this->option = $option;
+    }
 
     /**
      * @Column(type="string")
@@ -46,14 +52,6 @@ class ProductOptionItem
      */
     private $variationoptionitems;
 
-    private function setProductID($pID)
-    {
-        $this->pID = $pID;
-    }
-    private function setProductOptionGroupID($id)
-    {
-        $this->pogID = $id;
-    }
     private function setProductOptionItemName($name)
     {
         $this->poiName = $name;
@@ -75,11 +73,7 @@ class ProductOptionItem
     {
         return $this->poiID;
     }
-    public function getProductID()
-    {
-        return $this->pID;
-    }
-    public function getProductOptionGroupID()
+    public function getProductOptionID()
     {
         return $this->pogID;
     }
@@ -108,18 +102,7 @@ class ProductOptionItem
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', $id);
     }
 
-    public static function getOptionItemsForProduct(StoreProduct $product, $onlyvisible = false)
-    {
-        $db = Database::connection();
-        $em = $db->getEntityManager();
-        if ($onlyvisible) {
-            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getID(), 'poiHidden' => '0'), array('poiSort' => 'asc'));
-        } else {
-            return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pID' => $product->getID()), array('poiSort' => 'asc'));
-        }
-    }
-
-    public static function getOptionItemsForProductOptionGroup(ProductOptionGroup $pog)
+    public static function getOptionItemsForProductOption(ProductOption $pog)
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
@@ -142,12 +125,10 @@ class ProductOptionItem
         }
     }
 
-    public static function add(StoreProduct $product, $pogID, $name, $sort, $hidden = false)
+    public static function add($option, $name, $sort, $hidden = false)
     {
-        $productOptionItem = new self();
-        $pID = $product->getID();
-        $productOptionItem->setProductID($pID);
-        $productOptionItem->setProductOptionGroupID($pogID);
+        $productOptionItem = new self();;
+        $productOptionItem->setOption($option);
         $productOptionItem->setProductOptionItemName($name);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
@@ -156,16 +137,21 @@ class ProductOptionItem
         return $productOptionItem;
     }
 
-    public function update(StoreProduct $product, $name, $sort, $hidden = false)
+    public function update($name, $sort, $hidden = false)
     {
-        $pID = $product->getID();
-        $this->setProductID($pID);
         $this->setName($name);
         $this->setSort($sort);
         $this->setHidden($hidden);
         $this->save();
 
         return $this;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setOption(null);
+        }
     }
 
     public function save()
