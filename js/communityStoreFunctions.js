@@ -67,7 +67,7 @@ $(function(){
     $("#btn-delete-order").click(function(e){
         e.preventDefault();
         var url = $(this).attr("href");
-        var confirmDelete = confirm('Are you sure you wish to delete this order?');
+        var confirmDelete = confirm($(this).data('confirm-message'));
         if(confirmDelete == true) {
             window.location = url;
         }
@@ -76,7 +76,7 @@ $(function(){
         e.preventDefault();
         var url = $(this).attr("href");
         var pageTemplate = $("#selectPageTemplate").val();
-        var confirmDelete = confirm('Any changes to the product will not be saved. Do you wish to continue');
+        var confirmDelete = confirm($(this).data('confirm-message'));
         if(confirmDelete == true) {
             window.location = url+'/'+pageTemplate;        
         }

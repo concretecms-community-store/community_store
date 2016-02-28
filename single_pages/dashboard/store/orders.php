@@ -247,7 +247,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </div>
                 <div class="panel-body">
 
-                    <a id="btn-delete-order" href="<?=View::url("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
+                    <a data-confirm-message="<?= h(t('Are you sure you wish to delete this order?')); ?>" id="btn-delete-order" href="<?=View::url("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
 
                 </div>
             </div>
