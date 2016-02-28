@@ -98,15 +98,15 @@ class Installer
 
     public static function setDefaultConfigValues(Package $pkg)
     {
-        self::setConfigValue('communitystore.productPublishTarget', Page::getByPath('/products')->getCollectionID());
-        self::setConfigValue('communitystore.symbol', '$');
-        self::setConfigValue('communitystore.whole', '.');
-        self::setConfigValue('communitystore.thousand', ',');
-        self::setConfigValue('communitystore.sizeUnit', 'in');
-        self::setConfigValue('communitystore.weightUnit', 'lb');
-        self::setConfigValue('communitystore.taxName', t('Tax'));
-        self::setConfigValue('communitystore.sizeUnit', 'in');
-        self::setConfigValue('communitystore.weightUnit', 'lb');
+        self::setConfigValue('community_store.productPublishTarget', Page::getByPath('/products')->getCollectionID());
+        self::setConfigValue('community_store.symbol', '$');
+        self::setConfigValue('community_store.whole', '.');
+        self::setConfigValue('community_store.thousand', ',');
+        self::setConfigValue('community_store.sizeUnit', 'in');
+        self::setConfigValue('community_store.weightUnit', 'lb');
+        self::setConfigValue('community_store.taxName', t('Tax'));
+        self::setConfigValue('community_store.sizeUnit', 'in');
+        self::setConfigValue('community_store.weightUnit', 'lb');
     }
     public static function setConfigValue($key, $value)
     {
