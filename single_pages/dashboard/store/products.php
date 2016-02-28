@@ -1048,10 +1048,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
         <table class="ccm-search-results-table">
             <thead>
             <th><a><?= t('Primary Image')?></a></th>
-            <th><a><?= t('Product Name')?></a></th>
-            <th><a><?= t('Active')?></a></th>
+            <th><a href="<?=  $productList->getSortURL('alpha');?>"><?= t('Product Name')?></a></th>
+            <th><a href="<?=  $productList->getSortURL('active');?>"><?= t('Active')?></a></th>
             <th><a><?= t('Stock Level')?></a></th>
-            <th><a><?= t('Price')?></a></th>
+            <th><a href="<?=  $productList->getSortURL('price');?>"><?= t('Price')?></a></th>
             <th><a><?= t('Featured')?></a></th>
             <th><a><?= t('Groups')?></a></th>
             <th><a><?= t('Actions')?></a></th>

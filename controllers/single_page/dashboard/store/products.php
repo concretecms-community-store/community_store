@@ -30,17 +30,25 @@ class Products extends DashboardPageController
 
     public function view($gID=null){
         $products = new StoreProductList();
-        $products->setItemsPerPage(10);
+        $products->setItemsPerPage(20);
         $products->setGroupID($gID);
         $products->activeOnly(false);
         $products->setShowOutOfStock(true);
-        $products->setSortBy('date');
+
+
+        if ($this->get('ccm_order_by')) {
+            $products->setSortBy($this->get('ccm_order_by'));
+            $products->setSortByDirection($this->get('ccm_order_by_direction'));
+        } else {
+            $products->setSortBy('date');
+        }
 
 
         if ($this->get('keywords')) {
             $products->setSearch($this->get('keywords'));
         }
 
+        $this->set('productList', $products);
         $paginator = $products->getPagination();
         $pagination = $paginator->renderDefaultView();
         $this->set('products',$paginator->getCurrentPageResults());

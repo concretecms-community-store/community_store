@@ -12,6 +12,7 @@ class ProductList extends AttributedItemList
     protected $gIDs = array();
     protected $groupMatchAny = false;
     protected $sortBy = "alpha";
+    protected $sortByDirection = "desc";
     protected $featured = "all";
     protected $activeOnly = true;
     protected $cIDs = array();
@@ -29,6 +30,15 @@ class ProductList extends AttributedItemList
     public function setSortBy($sort)
     {
         $this->sortBy = $sort;
+    }
+
+    public function setSortByDirection($dir)
+    {
+        $this->sortByDirection = $dir;
+    }
+
+    public function getSortByDirection() {
+        return $this->sortByDirection;
     }
 
     public function setCID($cID)
@@ -100,10 +110,16 @@ class ProductList extends AttributedItemList
 
         switch ($this->sortBy) {
             case "alpha":
-                $query->orderBy('pName', 'ASC');
+                $query->orderBy('pName', $this->getSortByDirection());
+                break;
+            case "price":
+                $query->orderBy('pPrice', $this->getSortByDirection());
+                break;
+            case "active":
+                $query->orderBy('pActive', $this->getSortByDirection());
                 break;
             case "date":
-                $query->orderBy('pDateAdded', 'DESC');
+                $query->orderBy('pDateAdded', $this->getSortByDirection());
                 break;
             case "popular":
                 $pr = new StoreProductReport();
