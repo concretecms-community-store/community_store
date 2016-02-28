@@ -80,7 +80,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
                                         <?php foreach($cartItem['productAttributes'] as $groupID => $valID){
-                                            $groupID = str_replace("pog","",$groupID);
+                                            $groupID = str_replace("po","",$groupID);
                                             $optiongroup = StoreProductOption::getByID($groupID);
                                             $optionvalue = StoreProductOptionItem::getByID($valID);
 

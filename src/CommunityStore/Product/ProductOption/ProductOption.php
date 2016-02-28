@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
 use Database;
+use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
@@ -15,7 +16,7 @@ class ProductOption
      * @Id @Column(type="integer") 
      * @GeneratedValue 
      */
-    protected $pogID;
+    protected $poID;
 
     /**
      * @Column(type="integer")
@@ -28,25 +29,25 @@ class ProductOption
      */
     protected $product;
 
-
     /**
-     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option"))
+     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"persist"})
+     * @OrderBy({"poiSort" = "ASC"})
      */
     protected $optionItems;
 
     /**
      * @Column(type="string")
      */
-    protected $pogName;
+    protected $poName;
 
     /**
      * @Column(type="integer")
      */
-    protected $pogSort;
+    protected $poSort;
 
-    private function setID($pogID)
+    private function setID($poID)
     {
-        $this->pogID = $pogID;
+        $this->poID = $poID;
     }
 
     public function setProduct($product)
@@ -56,16 +57,16 @@ class ProductOption
 
     private function setName($name)
     {
-        $this->pogName = $name;
+        $this->poName = $name;
     }
     private function setSort($sort)
     {
-        $this->pogSort = $sort;
+        $this->poSort = $sort;
     }
 
     public function getID()
     {
-        return $this->pogID;
+        return $this->poID;
     }
     public function getProductID()
     {
@@ -73,11 +74,11 @@ class ProductOption
     }
     public function getName()
     {
-        return $this->pogName;
+        return $this->poName;
     }
     public function getSort()
     {
-        return $this->pogSort;
+        return $this->poSort;
     }
 
 
@@ -139,22 +140,20 @@ class ProductOption
         $obj->setName($name);
         $obj->setSort($sort);
         $obj->save();
+        return $obj;
     }
 
     public function __clone() {
-        if ($this->id) {
-            $this->setID(null);
-            $this->setProduct(null);
+        $this->setID(null);
+        $this->setProduct(null);
 
-            $optionItems = $this->getOptionItems();
-            $this->optionItems = new ArrayCollection();
-            if(count($optionItems) > 0){
-                foreach ($optionItems as $optionItem) {
-                    $cloneOptionItem = clone $optionItem;
-                    $this->optionItems->add($cloneOptionItem);
-                    $cloneOptionItem->setOption($this);
-                    $cloneOptionItem->save();
-                }
+        $optionItems = $this->getOptionItems();
+        $this->optionItems = new ArrayCollection();
+        if(count($optionItems) > 0){
+            foreach ($optionItems as $optionItem) {
+                $cloneOptionItem = clone $optionItem;
+                $cloneOptionItem->setOption($this);
+                $this->optionItems->add($cloneOptionItem);
             }
         }
     }
@@ -175,35 +174,37 @@ class ProductOption
 
     public static function addProductOptions($data, $product)
     {
-        self::removeOptionsForProduct($product, $data['pogID']);
+        self::removeOptionsForProduct($product, $data['poID']);
+        StoreProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
 
-        $count = count($data['pogSort']);
+        $count = count($data['poSort']);
         $ii = 0;//set counter for items
         if ($count > 0) {
-            for ($i = 0;$i < count($data['pogSort']);++$i) {
-                if (isset($data['pogID'][$i])) {
-                    $option = self::getByID($data['pogID'][$i]);
+            for ($i = 0;$i < count($data['poSort']);++$i) {
+                if (isset($data['poID'][$i])) {
+                    $option = self::getByID($data['poID'][$i]);
 
                     if ($option) {
-                        $option->update($product, $data['pogName'][$i], $data['pogSort'][$i]);
+                        $option->update($product, $data['poName'][$i], $data['poSort'][$i]);
                     }
                 }
 
                 if (!$option) {
-                    if ($data['pogName'][$i]) {
-                        $option = self::add($product, $data['pogName'][$i], $data['pogSort'][$i]);
+                    if ($data['poName'][$i]) {
+                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i]);
                     }
                 }
 
                 if ($option) {
                     //add option items
                     $itemsInGroup = count($data['optGroup'.$i]);
+
                     if ($itemsInGroup > 0) {
                         for ($gi = 0;$gi < $itemsInGroup;$gi++, $ii++) {
                             if ($data['poiID'][$ii] > 0) {
                                 $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
                                 if ($optionItem) {
-                                    $optionItem->update($product, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii]);
+                                    $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii]);
                                 }
                             } else {
                                 if ($data['poiName'][$ii]) {

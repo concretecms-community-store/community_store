@@ -2,7 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Database;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group as StoreGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -32,6 +32,20 @@ class ProductGroup
      * @Column(type="integer")
      */
     protected $gID;
+
+    /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group")
+     * @JoinColumn(name="gID", referencedColumnName="gID", onDelete="CASCADE")
+     */
+    protected $group;
+
+    public function getGroup() {
+        return $this->group;
+    }
+
+    public function setGroup($group) {
+        $this->group = $group;
+    }
 
     private function setProductID($pID)
     {
@@ -82,7 +96,7 @@ class ProductGroup
         $em = $db->getEntityManager();
         $groups = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup')->findBy(array('pID' => $product->getID()));
         foreach ($groups as $key => $value) {
-            $group = new StoreGroup\Group();
+            $group = new StoreGroup();
             $groups[$key]->gName = $group->getByID($groups[$key]->gID)->getGroupName();
         }
 
@@ -122,10 +136,14 @@ class ProductGroup
 
     public static function add($product, $gID)
     {
-        $productGroup = new self();
-        $productGroup->setProduct($product);
-        $productGroup->setGroupID($gID);
-        $productGroup->save();
+
+        $group = StoreGroup::getByID($gID);
+        if ($group) {
+            $productGroup = new self();
+            $productGroup->setProduct($product);
+            $productGroup->setGroup($group);
+            $productGroup->save();
+        }
 
         return $productGroup;
     }

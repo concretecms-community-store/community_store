@@ -43,11 +43,11 @@ class Cart
                     $include = true;
 
                     if ($cartitem['product']['variation']) {
-                        $product = clone $product;
-
                         if (!StoreProductVariation::getByID($cartitem['product']['variation'])) {
                             $include = false;
                         } else {
+                            $product->shallowClone = true;
+                            $product = clone $product;
                             $product->setVariation($cartitem['product']['variation']);
                         }
                     }
@@ -137,7 +137,7 @@ class Cart
 
         // search for product options, if found, collect the id
         foreach ($cartItem['productAttributes'] as $name => $value) {
-            if (substr($name, 0, 3) == 'pog') {
+            if (substr($name, 0, 2) == 'po') {
                 $optionItemIds[] = $value;
             }
         }

@@ -19,11 +19,11 @@ class ProductOptionItem
     /**
      * @Column(type="integer")
      */
-    protected $pogID;
+    protected $poID;
 
     /**
      * @ManyToOne(targetEntity="ProductOption",inversedBy="optionItems",cascade={"persist"})
-     * @JoinColumn(name="pogID", referencedColumnName="pogID", onDelete="CASCADE")
+     * @JoinColumn(name="poID", referencedColumnName="poID", onDelete="CASCADE")
      */
     protected $option;
 
@@ -52,17 +52,13 @@ class ProductOptionItem
      */
     private $variationoptionitems;
 
-    private function setProductOptionItemName($name)
+    private function setName($name)
     {
         $this->poiName = $name;
     }
     private function setSort($sort)
     {
         $this->poiSort = $sort;
-    }
-    private function setName($name)
-    {
-        $this->poiName = $name;
     }
     private function setHidden($hidden)
     {
@@ -73,9 +69,9 @@ class ProductOptionItem
     {
         return $this->poiID;
     }
-    public function getProductOptionID()
+    public function getOptionID()
     {
-        return $this->pogID;
+        return $this->poID;
     }
     public function getName()
     {
@@ -102,12 +98,12 @@ class ProductOptionItem
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', $id);
     }
 
-    public static function getOptionItemsForProductOption(ProductOption $pog)
+    public static function getOptionItemsForProductOption(ProductOption $po)
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('pogID' => $pog->getID()), array('poiSort' => 'asc'));
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
     }
 
     public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = array())
@@ -115,12 +111,19 @@ class ProductOptionItem
         if (!is_array($excluding)) {
             $excluding = array();
         }
-
         //clear out existing product option items
-        $existingOptionItems = self::getOptionItemsForProduct($product);
-        foreach ($existingOptionItems as $optionItem) {
-            if (!in_array($optionItem->getID(), $excluding)) {
-                $optionItem->delete();
+        $options = $product->getOptions();
+        if (!empty($options)) {
+            foreach ($options as $option) {
+                $optionItems = $option->getOptionItems();
+
+                if (!empty($optionItems)) {
+                    foreach ($optionItems as $optionItem) {
+                        if (!in_array($optionItem->getID(), $excluding)) {
+                            $optionItem->delete();
+                        }
+                    }
+                }
             }
         }
     }
@@ -129,7 +132,7 @@ class ProductOptionItem
     {
         $productOptionItem = new self();;
         $productOptionItem->setOption($option);
-        $productOptionItem->setProductOptionItemName($name);
+        $productOptionItem->setName($name);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
         $productOptionItem->save();

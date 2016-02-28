@@ -377,9 +377,11 @@ class ProductVariation
 
         $optionArrays = array();
 
-        foreach ($options as $option) {
-            foreach($option->getOptionItems() as $optItem) {
-                $optionArrays[$option->getID()][] = $optItem->getID();
+        if (!empty($options)) {
+            foreach ($options as $option) {
+                foreach ($option->getOptionItems() as $optItem) {
+                    $optionArrays[$option->getID()][] = $optItem->getID();
+                }
             }
         }
 

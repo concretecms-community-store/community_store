@@ -119,37 +119,31 @@ class Products extends DashboardPageController
             $this->redirect('/dashboard/store/products/');
         }
 
-        $options = $product->getOptions();
-
         $this->set('product',$product);
-        $this->set('images',$product->getImages());
-        $this->set('groups',$options);
-        $this->set('locationPages', $product->getLocationPages());
-        $this->set('pgroups', $product->getGroupIDs());
+
+        $options  = $product->getOptions();
 
         $variations = $product->getVariations();
         $variationLookup = array();
 
         $optionArrays = array();
-        $optionItemLookup = array();
-
-        foreach($options as $opt) {
-            foreach($opt->getOptionItems() as $optItem) {
-                $optionArrays[$optItem->getProductOptionID()][] = $optItem->getID();
-                $optionItemLookup[ $optItem->getID()] = $optItem;
-            }
-        }
-
-
         $optionLookup = array();
 
-        if ($options) {
-            foreach($options as $option) {
-                $optionLookup[$option->getID()] = $option;
+        $optionItems = array();
+
+        foreach($options as $opt) {
+            $optionLookup[$opt->getID()] = $opt;
+
+            foreach($opt->getOptionItems() as $optItem) {
+                $optionArrays[$opt->getID()][] = $optItem->getID();
+                $optionItemLookup[$optItem->getID()] = $optItem;
+                $optionItems[] = $optItem;
             }
         }
 
+        $this->set('optionItems', $optionItems);
         $this->set('optionLookup', $optionLookup);
+        $this->set('optionItemLookup', $optionItemLookup);
 
         $optionArrays = array_values($optionArrays);
 

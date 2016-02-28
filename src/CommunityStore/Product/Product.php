@@ -169,7 +169,7 @@ class Product
     protected $variation;
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
     protected $locations;
 
@@ -178,7 +178,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product",cascade={"persist"})
      */
     protected $groups;
 
@@ -187,7 +187,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product",cascade={"persist"}))
      */
     protected $files;
 
@@ -196,7 +196,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product",cascade={"persist"}))
      */
     protected $images;
 
@@ -205,7 +205,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product",cascade={"persist"}))
      */
     protected $userGroups;
 
@@ -214,22 +214,14 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product"))
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product",cascade={"persist"}))
+     * @OrderBy({"poSort" = "ASC"})
      */
     protected $options;
 
     public function getOptions(){
         return $this->options;
     }
-
-    /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem", mappedBy="product"))
-     */
-    protected $optionItems;
-
-//    public function getOptionItems(){
-//        return $this->optionItems;
-//    }
 
     public function __construct()
     {
@@ -267,13 +259,13 @@ class Product
     {
         if ($this->hasVariations()) {
             $options = $this->getOptions();
-            $optionItems = $this->getOptionItems();
             $optionkeys = array();
 
             foreach ($options as $option) {
+                $optionItems = $option->getOptionItems();
                 foreach ($optionItems as $optionItem) {
-                    if ($optionItem->getProductOptionID() == $option->getID()) {
-                        $optionkeys[] = $option->getID();
+                    if (!$optionItem->isHidden()) {
+                        $optionkeys[] = $optionItem->getID();
                         break;
                     }
                 }
@@ -464,7 +456,7 @@ class Product
         $product->setIsExclusive($data['pExclusive']);
 
         // if we have no product groups, we don't have variations to offer
-        if (empty($data['pogName'])) {
+        if (empty($data['poName'])) {
             $product->setHasVariations(0);
         } else {
             $product->setHasVariations($data['pVariations']);
@@ -827,6 +819,10 @@ class Product
     }
 
     public function __clone() {
+        if ($this->shallowClone) {
+            return;
+        }
+
         if ($this->pID) {
             $this->setId(null);
             $this->setPageID(null);
@@ -838,7 +834,6 @@ class Product
                     $cloneLocation = clone $loc;
                     $this->locations->add($cloneLocation);
                     $cloneLocation->setProduct($this);
-                    $cloneLocation->save();
                 }
             }
 
@@ -849,7 +844,6 @@ class Product
                     $cloneGroup = clone $group;
                     $this->groups->add($cloneGroup);
                     $cloneGroup->setProduct($this);
-                    $cloneGroup->save();
                 }
             }
 
@@ -860,7 +854,6 @@ class Product
                     $cloneImage = clone $image;
                     $this->images->add($cloneImage);
                     $cloneImage->setProduct($this);
-                    $cloneImage->save();
                 }
             }
 
@@ -871,7 +864,6 @@ class Product
                     $cloneFile = clone $file;
                     $this->files->add($cloneFile);
                     $cloneFile->setProduct($this);
-                    $cloneFile->save();
                 }
             }
 
@@ -882,7 +874,6 @@ class Product
                     $cloneUserGroup = clone $userGroup;
                     $this->userGroups->add($cloneUserGroup);
                     $cloneUserGroup->setProduct($this);
-                    $cloneUserGroup->save();
                 }
             }
 
@@ -892,8 +883,7 @@ class Product
                 foreach ($options as $option) {
                     $cloneOption = clone $option;
                     $this->options->add($cloneOption);
-                    //$cloneOptionGroup->setProduct($this);
-                    $cloneOption->save();
+                    $cloneOption->setProduct($this);
                 }
             }
         }
@@ -914,6 +904,13 @@ class Product
         }
 
         $newproduct->save();
+
+        $attributes = StoreProductKey::getAttributes($this->getID());
+        foreach($attributes as $handle=>$value) {
+            $spk = StoreProductKey::getByHandle($handle);
+            $spk->saveAttribute($newproduct, $value);
+        }
+
         return $newproduct;
     }
 
@@ -930,7 +927,7 @@ class Product
                 $pageTemplate = $pt;
             }
         }
-        $productParentPage = $parentPage->add(
+        $newProductPage = $parentPage->add(
             $pageType,
             array(
                 'cName' => $this->getName(),
@@ -938,9 +935,9 @@ class Product
             ),
             $pageTemplate
         );
-        $productParentPage->setAttribute('exclude_nav', 1);
+        $newProductPage->setAttribute('exclude_nav', 1);
 
-        $this->setPageID($productParentPage->getCollectionID());
+        $this->savePageID($newProductPage->getCollectionID());
         $this->setPageDescription($this->getDesc());
     }
     public function setPageDescription($newDescription)
@@ -959,6 +956,12 @@ class Product
         }
     }
     public function setPageID($cID)
+    {
+        $this->setCollectionID($cID);
+        //$this->save();
+    }
+
+    public function savePageID($cID)
     {
         $this->setCollectionID($cID);
         $this->save();

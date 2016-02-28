@@ -16,7 +16,7 @@ class OrderItemDiscount
     protected $oidID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", inversedBy="orderItemDiscounts", cascade={"persist"})
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem")
      * @JoinColumn(name="oiID", referencedColumnName="oiID", onDelete="CASCADE")
      */
     protected $orderItem;

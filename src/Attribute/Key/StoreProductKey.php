@@ -73,7 +73,7 @@ class StoreProductKey extends Key
         return parent::getList('store_product');
     }
 
-    protected function saveAttribute($product, $value = false)
+    public function saveAttribute($product, $value = false)
     {
         $av = $product->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);

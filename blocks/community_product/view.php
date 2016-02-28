@@ -63,7 +63,7 @@ if (is_object($product)) {
                             <?php
                             $productgroups = $product->getGroups();
                             foreach ($productgroups as $pg) { ?>
-                                <li class="store-product-group"><?= $pg->gName; ?> </li>
+                                <li class="store-product-group"><?= $pg->getGroup()->getGroupName(); ?> </li>
                             <?php } ?>
                         </ul>
                     <?php } ?>
@@ -87,24 +87,21 @@ if (is_object($product)) {
                         <?php } ?>
                         <?php
 
-                        foreach ($options as $optionGroup) {
-                            $groupoptions = array();
-                            foreach ($optionItems as $option) {
-                                if ($option->getProductOptionID() == $optionGroup->getID()) {
-                                    $groupoptions[] = $option;
-                                }
-                            }
+                        foreach ($options as $option) {
+                            $optionItems = $option->getOptionItems();
+
                             ?>
-                            <?php if (!empty($groupoptions)) { ?>
+                            <?php if (!empty($optionItems)) { ?>
                                 <div class="store-product-option-group form-group">
-                                    <label class="store-product-option-group-label"><?= $optionGroup->getName() ?></label>
-                                    <select class="store-product-option form-control" name="pog<?= $optionGroup->getID() ?>">
+                                    <label class="store-product-option-group-label"><?= $option->getName() ?></label>
+                                    <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
                                         <?php
-                                        foreach ($groupoptions as $option) { ?>
-                                            <option value="<?= $option->getID() ?>"><?= $option->getName() ?></option>
-                                            <?php
+                                        foreach ($optionItems as $optionItem) {
+                                            if (!$optionItem->isHidden()) { ?>
+                                            <option value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() ?></option>
+                                            <?php }
                                             // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                                            //echo '<input type="radio" name="pog'.$optionGroup->getID().'" value="'. $option->getID(). '" />' . $option->getName() . '<br />'; ?>
+                                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
                                         <?php } ?>
                                     </select>
                                 </div>

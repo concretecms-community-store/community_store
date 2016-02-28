@@ -76,7 +76,7 @@ $(function(){
         e.preventDefault();
         var url = $(this).attr("href");
         var pageTemplate = $("#selectPageTemplate").val();
-        var confirmDelete = confirm('Just to let you know, any changes to the product will not be saved. Are you sure you want to proceed?');
+        var confirmDelete = confirm('Any changes to the product will not be saved. Do you wish to continue');
         if(confirmDelete == true) {
             window.location = url+'/'+pageTemplate;        
         }
