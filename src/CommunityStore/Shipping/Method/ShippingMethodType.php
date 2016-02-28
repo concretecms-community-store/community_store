@@ -102,7 +102,7 @@ class ShippingMethodType
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        $obj = $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType', $smtID);
+        $obj = $em->find(get_called_class(), $smtID);
         $obj->setMethodTypeController();
 
         return $obj;
@@ -112,9 +112,7 @@ class ShippingMethodType
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        $obj = $em
-            ->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType')
-            ->findOneBy(array('smtHandle' => $smtHandle));
+        $obj = $em->getRepository(get_called_class())->findOneBy(array('smtHandle' => $smtHandle));
         if (is_object($obj)) {
             $obj->setMethodTypeController();
 

@@ -100,14 +100,6 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         $this->countriesSelected = $countriesSelected;
     }
 
-    public static function getByID($smtmID)
-    {
-        $em = Database::connection()->getEntityManager();
-
-        return $em->getRepository('\Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types\FlatRateShippingMethod')
-            ->find($smtmID);
-    }
-
     public function getBaseRate()
     {
         return $this->baseRate;

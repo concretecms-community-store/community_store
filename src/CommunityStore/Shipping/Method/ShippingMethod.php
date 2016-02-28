@@ -32,6 +32,11 @@ class ShippingMethod
     protected $smName;
 
     /**
+     * @Column(type="text",nullable=true)
+     */
+    protected $smDetails;
+
+    /**
      * @Column(type="integer")
      */
     protected $smEnabled;
@@ -51,6 +56,10 @@ class ShippingMethod
     public function setEnabled($status)
     {
         $this->smEnabled = $status;
+    }
+    public function setDetails($details)
+    {
+        $this->smDetails = $details;
     }
 
     public function getID()
@@ -72,6 +81,10 @@ class ShippingMethod
     {
         return $this->smName;
     }
+    public function getDetails()
+    {
+        return $this->smDetails;
+    }
     public function isEnabled()
     {
         return $this->smEnabled;
@@ -82,16 +95,16 @@ class ShippingMethod
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod', $smID);
+        return $em->find(get_called_class(), $smID);
     }
 
     public static function getAvailableMethods($methodTypeID = null)
     {
         $em = Database::connection()->getEntityManager();
         if ($methodTypeID) {
-            $methods = $em->getRepository('\Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod')->findBy(array('smtID' => $methodTypeID));
+            $methods = $em->getRepository(get_called_class())->findBy(array('smtID' => $methodTypeID, 'smEnabled'=>'1'));
         } else {
-            $methods = $em->createQuery('select sm from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod sm')->getResult();
+            $methods = $em->createQuery('select sm from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod sm where sm.smEnabled = 1')->getResult();
         }
 
         return $methods;
@@ -105,23 +118,25 @@ class ShippingMethod
      *
      * @return ShippingMethod
      */
-    public static function add($smtm, $smt, $smName, $smEnabled)
+    public static function add($smtm, $smt, $smName, $smEnabled, $smDetails)
     {
         $sm = new self();
         $sm->setShippingMethodTypeMethodID($smtm);
         $sm->setShippingMethodTypeID($smt);
         $sm->setName($smName);
         $sm->setEnabled($smEnabled);
+        $sm->setDetails($smDetails);
         $sm->save();
         $smtm->setShippingMethodID($sm->getID());
         $smtm->save();
 
         return $sm;
     }
-    public function update($smName, $smEnabled)
+    public function update($smName, $smEnabled, $smDetails)
     {
         $this->setName($smName);
         $this->setEnabled($smEnabled);
+        $this->setDetails($smDetails);
         $this->save();
 
         return $this;

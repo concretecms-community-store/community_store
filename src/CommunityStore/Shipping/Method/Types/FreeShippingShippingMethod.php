@@ -66,14 +66,6 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         $this->countriesSelected = $countriesSelected;
     }
 
-    public static function getByID($smtmID)
-    {
-        $em = Database::connection()->getEntityManager();
-
-        return $em->getRepository('\Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types\FreeShippingShippingMethod')
-            ->find($smtmID);
-    }
-
     public function getMinimumAmount()
     {
         return $this->minimumAmount;

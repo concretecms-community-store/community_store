@@ -260,7 +260,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
 
-                            <div id="store-checkout-shipping-method-options">
+                            <div id="store-checkout-shipping-method-options" data-error-message="<?= h(t('Please select a shipping method'));?>">
 
                                 <?php
                                 /* shipping options are loaded in via ajax,
@@ -284,7 +284,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                             <div class="row panel-body">
                                 <div class="col-md-6">
-                                    <p class="summary-shipping-method"></p>
+                                    <div class="summary-shipping-method"></div>
                                 </div>
                             </div>
                         </div>

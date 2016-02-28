@@ -65,14 +65,14 @@ class Shipping extends DashboardPageController
                 $shippingMethod = StoreShippingMethod::getByID($this->post('shippingMethodID'));
                 $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                 $shippingMethodTypeMethod->update($this->post());
-                $shippingMethod->update($this->post('methodName'),$this->post('methodEnabled'));
+                $shippingMethod->update($this->post('methodName'),$this->post('methodEnabled'),$this->post('methodDetails'));
                 $this->redirect('/dashboard/store/settings/shipping/updated');
             } else {
                 //first we send the data to the shipping method type.
                 $shippingMethodType = StoreShippingMethodType::getByID($this->post('shippingMethodTypeID'));
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->post());
                 //make a shipping method that correlates with it.
-                StoreShippingMethod::add($shippingMethodTypeMethod,$shippingMethodType,$this->post('methodName'),true);
+                StoreShippingMethod::add($shippingMethodTypeMethod,$shippingMethodType,$this->post('methodName'),true, $this->post('methodDetails'));
                 $this->redirect('/dashboard/store/settings/shipping/success');
             }
         } else {

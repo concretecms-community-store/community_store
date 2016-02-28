@@ -38,8 +38,6 @@ abstract class ShippingMethodTypeMethod extends Controller
         return $this->disableEnabled;
     }
 
-    abstract public static function getByID($smtmID);
-
     public function getShippingMethodTypeMethodID()
     {
         return $this->smtmID;
@@ -54,6 +52,12 @@ abstract class ShippingMethodTypeMethod extends Controller
     abstract public function update($data);
     abstract public function isEligible();
     abstract public function getRate();
+
+    public static function getByID($smtmID)
+    {
+        $em = Database::connection()->getEntityManager();
+        return $em->getRepository(get_called_class())->find($smtmID);
+    }
 
     public function save()
     {

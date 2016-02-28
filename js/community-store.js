@@ -514,10 +514,10 @@ $(document).ready(function () {
         var obj = $(this);
         if ($("#store-checkout-shipping-method-options input[type='radio']:checked").length < 1) {
             $('.store-whiteout').remove();
-            alert("Please select a shipping method");
+            alert($('#store-checkout-shipping-method-options').data('error-message'));
         } else {
             var smID = $("#store-checkout-shipping-method-options input[type='radio']:checked").val();
-            var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().text());
+            var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().find('.store-shipping-details').html());
             obj.find('.summary-shipping-method').html(methodText);
 
             $.ajax({

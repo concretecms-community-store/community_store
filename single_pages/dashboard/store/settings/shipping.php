@@ -32,7 +32,22 @@ if(in_array($controller->getTask(),$addViews)){
                         <?= $form->label('methodEnabled',t("Enabled")); ?>
                         <?= $form->select('methodEnabled',array(true=>"Enabled",false=>"Disabled"),is_object($sm)?$sm->isEnabled():''); ?>
                     </div>
-                </div>                
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <div class="form-group">
+                        <?= $form->label('methodDetails',t("Details")); ?>
+                        <?php
+                        $editor = Core::make('editor');
+                        echo $editor->outputStandardEditor('methodDetails', is_object($sm)?$sm->getDetails():'');
+                        ?>
+                        <style>
+                            .redactor-editor {
+                                min-height: 80px !important;
+                            }
+                        </style>
+                    </div>
+                </div>
+
             </div>    
             <hr>
             <?php $smt->renderDashboardForm($sm); ?>    
