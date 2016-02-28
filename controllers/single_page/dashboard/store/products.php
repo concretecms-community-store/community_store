@@ -41,6 +41,7 @@ class Products extends DashboardPageController
             $products->setSortByDirection($this->get('ccm_order_by_direction'));
         } else {
             $products->setSortBy('date');
+            $products->setSortByDirection('desc');
         }
 
 

@@ -431,7 +431,7 @@ class Product
             //else, we don't know it and we're adding a new product
             $product = new self();
             $dt = Core::make('helper/date');
-            $product->setDateAdded(new \Datetime());
+            $product->setDateAdded(new \DateTime());
         }
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
@@ -901,6 +901,7 @@ class Product
             $newproduct->generatePage($pageTemplateID);
         }
 
+        $newproduct->setDateAdded(new \DateTime());
         $newproduct->save();
 
         $attributes = StoreProductKey::getAttributes($this->getID());
