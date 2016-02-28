@@ -13,9 +13,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 <?php if (in_array($controller->getTask(),$addViews)){ //if adding or editing a product
     if(!is_object($product)) {
-        $product = new StoreProduct(); //does nothing other than shutup errors.}
+        $product = new StoreProduct();
         $product->setIsUnlimited(true);
         $product->setIsTaxable(true);
+    } else {
+        $images = $product->getImages();
+        $options = $product->getOptions();
+        $locationPages = $product->getLocationPages();
+        $pgroups = $product->getGroupIDs();
     }
 
     $pID = $product->getID()
@@ -23,9 +28,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
     <?php if ($pID > 0) { ?>
     <div class="ccm-dashboard-header-buttons">
-        <form method="post" id="delete" action="<?= View::url('/dashboard/store/products/delete/', $pID)?>" >
-            <button class="btn btn-danger"><?= t("Delete Product")?></button>
+
+        <form class="pull-right"  method="post" id="delete" action="<?= View::url('/dashboard/store/products/delete/', $pID)?>" >
+            &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
+
+        <form class="pull-right" method="get" id="duplicate" action="<?= View::url('/dashboard/store/products/duplicate/', $pID)?>" >
+            <button class="btn btn-default"><?= t("Duplicate Product")?></button>
+        </form>
+
+
 
         <script type="text/javascript">
         $(function(){
@@ -447,10 +459,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3 label-shell">
-                                    <label for="pogName<%=sort%>" class="text-right"><i class="fa fa-arrows drag-handle pull-left"></i> <span class="hidden-xs"><?= t('Group Name:')?></span></label>
+                                    <label for="poName<%=sort%>" class="text-right"><i class="fa fa-arrows drag-handle pull-left"></i> <span class="hidden-xs"><?= t('Group Name:')?></span></label>
                                 </div>
                                 <div class="col-xs-6">
-                                    <input type="text" class="form-control" name="pogName[]" value="<%=pogName%>">
+                                    <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
                                 </div>
                                 <div class="col-xs-3 text-right">
                                      <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-delete-item btn-danger"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group')?>" class="fa fa-trash"></i></a>
@@ -463,8 +475,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default"><?= t('Add Option')?></a>
 
                                 </div>
-                            <input type="hidden" name="pogID[]" value="<%=pogID%>">
-                            <input type="hidden" name="pogSort[]" value="<%=sort%>" class="option-group-sort">
+                            <input type="hidden" name="poID[]" value="<%=poID%>">
+                            <input type="hidden" name="poSort[]" value="<%=sort%>" class="option-group-sort">
                         </div>
 
                     </div><!-- .option-group -->
@@ -498,13 +510,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         //load up existing option groups
                         <?php
-                        if($groups) {
-                            foreach ($groups as $group) {
+                        if($options) {
+                            foreach ($options as $option) {
                         ?>
                         optionsContainer.append(optionsTemplate({
-                            pogName: '<?= $group->getName() ?>',
-                            pogID: '<?= $group->getID()?>',
-                            sort: '<?= $group->getSort() ?>'
+                            poName: '<?= $option->getName() ?>',
+                            poID: '<?= $option->getID()?>',
+                            sort: '<?= $option->getSort() ?>'
                         }));
                         <?php
                             }
@@ -519,8 +531,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             temp = (temp);
                             optionsContainer.append(optionsTemplate({
                                 //vars to pass to the template
-                                pogName: '',
-                                pogID: '',
+                                poName: '',
+                                poID: '',
                                 sort: temp
                             }));
 
@@ -544,7 +556,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group">
                                 <input type="text" name="poiName[]" class="form-control" value="<%=poiName%>">
                                     <div class="input-group-addon">
-                                        <label><input type="checkbox" name="poiHide[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
+                                        <label><input type="checkbox" name="poiHidden[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
                                     </div>
                                 </div>
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
@@ -610,22 +622,21 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         //load up items
                         <?php
-
-                        if($optItems) {
-                            $count = count($groups);
+                        if($options) {
+                            $count = count($options);
                             for($i=0;$i<$count;$i++){
-                                foreach($optItems as $option){
-                                    //go through all options, see if it belongs in the group we're on in the for loop
-                                    if($option->getProductOptionGroupID() == $groups[$i]->getID()){
+                                foreach($options[$i]->getOptionItems() as $optionItem){
+                                    if($optionItem->getOptionID() == $options[$i]->getID()){
 
                                     ?>
+
                         var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
                         optItemsContainer.append(optItemsTemplate({
-                            poiName: '<?= h($option->getName())?>',
-                            poiID: '<?= $option->getID()?>',
+                            poiName: '<?= h($optionItem->getName())?>',
+                            poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
-                            sort: <?= $option->getSort()?>,
-                            poiHidden: <?= ($option->isHidden() ? '\'checked="checked"\'' : '""'); ?>
+                            sort: <?= $optionItem->getSort()?>,
+                            poiHidden: <?= ($optionItem->isHidden() ? '\'checked="checked"\'' : '""'); ?>
 
                         }));
                         <?php
@@ -642,10 +653,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 </script>
 
-            <br />
 
+
+            <br />
             <div class="form-group">
-                <label><?= $form->checkbox('pVariations', '1', $product->hasVariations())?>
+                <label><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
                 <?= t('Options have different prices, SKUs or stock levels');?></label>
 
                 <?php if (!$pID) { ?>
@@ -682,7 +694,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          foreach ($combinedOptions as $optionItemID) {
                              $comboIDs[] = $optionItemID;
                              sort($comboIDs);
-                             $group = $groupLookup[$optionItemLookup[$optionItemID]->getProductOptionGroupID()];
+                             $group = $optionLookup[$optionItemLookup[$optionItemID]->getOptionID()];
                              echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
                          }
 
@@ -848,7 +860,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 if (count($attribs) > 0) {
                     foreach($attribs as $ak) {
-                        if (is_object($p)) {
+                        if (is_object($product)) {
                             $caValue = $product->getAttributeValueObject($ak);
                         }
                         ?>
@@ -1093,7 +1105,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <td>
                             <?php $productgroups = $product->getGroups();
                             foreach($productgroups as $pg) { ?>
-                                <span class="label label-primary"><?=  $pg->gName; ?></span>
+                                <span class="label label-primary"><?=  $pg->getGroup()->getGroupName(); ?></span>
                              <?php } ?>
 
                             <?php if (empty($productgroups)) { ?>
@@ -1152,6 +1164,26 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     </form>
 
 <?php }  ?>
+
+
+<?php if ($controller->getTask() == 'duplicate') { ?>
+    <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
+
+        <div class="form-group">
+            <?= $form->label('newName',t("New Product Name")); ?>
+            <?= $form->text('newName',$product->getName() . ' ' . t('(Copy)')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('newSKU',t("New Product SKU")); ?>
+            <?= $form->text('newSKU',$product->getSKU() . ' ' . t('')); ?>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="<?= t('Duplicate Product');?>">
+    </form>
+
+<?php } ?>
+
 
 <style>
     @media (max-width: 992px) {

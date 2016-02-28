@@ -34,10 +34,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
                 ?>
                 <div class="store-product-option-group form-group">
                     <label class="store-option-group-label"><?= $optionGroup->getName()?></label>
-                    <select class="form-control" name="pog<?= $optionGroup->getID()?>">
+                    <select class="form-control" name="po<?= $optionGroup->getID()?>">
                         <?php
                         foreach($optionItems as $option){
-                            if($option->getProductOptionGroupID()==$optionGroup->getID()){?>
+                            if($option->getProductOptionID()==$optionGroup->getID()){?>
                                 <option value="<?= $option->getID()?>"><?= $option->getName()?></option>
                             <?php }
                         }//foreach

@@ -21,13 +21,13 @@ class OrderItem
     protected $oiID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product", inversedBy="orderItemDiscounts", cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @Column(type="integer")
      */
-    protected $product;
+    protected $pID;
+
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order", inversedBy="orderItemDiscounts", cascade={"persist"})
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
      * @JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
     protected $order;
@@ -187,20 +187,9 @@ class OrderItem
         $this->oiQty = $oiQty;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProduct()
-    {
-        return $this->product;
-    }
 
-    /**
-     * @param mixed $product
-     */
-    public function setProduct($product)
-    {
-        $this->product = $product;
+    public function setProductID($productid) {
+        $this->pID = $productid;
     }
 
     /**
@@ -262,14 +251,14 @@ class OrderItem
         $orderItem->setOrder($order);
 
         if ($product) {
-            $orderItem->setProduct($product);
+            $orderItem->setProductID($product->getID());
         }
 
         $orderItem->save();
 
         foreach ($data['productAttributes'] as $optionGroup => $selectedOption) {
-            $optionGroupID = str_replace("pog", "", $optionGroup);
-            $optionGroupName = self::getProductOptionGroupNameByID($optionGroupID);
+            $optionGroupID = str_replace("po", "", $optionGroup);
+            $optionGroupName = self::getProductOptionNameByID($optionGroupID);
             $optionValue = self::getProductOptionValueByID($selectedOption);
 
             $orderItemOption = new StoreOrderItemOption();
@@ -315,12 +304,12 @@ class OrderItem
     {
         return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
-    public function getProductOptionGroupNameByID($id)
+    public function getProductOptionNameByID($id)
     {
         $db = Database::connection();
-        $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptionGroups WHERE pogID=?", $id);
+        $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptions WHERE poID=?", $id);
 
-        return $optionGroup['pogName'];
+        return $optionGroup['poName'];
     }
     public function getProductOptionValueByID($id)
     {

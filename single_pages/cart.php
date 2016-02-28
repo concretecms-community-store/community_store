@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionGroup as StoreProductOptionGroup;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 ?>
 <p class="store-cart">
@@ -72,8 +72,8 @@ $i=1;
                     <?php if($cartItem['productAttributes']){?>
                         <div class="store-cart-list-item-attributes">
                             <?php foreach($cartItem['productAttributes'] as $groupID => $valID){
-                                $groupID = str_replace("pog","",$groupID);
-                                $optiongroup = StoreProductOptionGroup::getByID($groupID);
+                                $groupID = str_replace("po","",$groupID);
+                                $optiongroup = StoreProductOption::getByID($groupID);
                                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                                 ?>

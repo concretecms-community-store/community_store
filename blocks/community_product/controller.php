@@ -54,8 +54,7 @@ class Controller extends BlockController
             }
 
             $this->set('product', $product);
-            $this->set('optionGroups', $product->getOptionGroups());
-            $this->set('optionItems', $product->getOptionItems(true));
+            $this->set('options', $product->getOptions());
         }
     }
     public function registerViewAssets($outputContent = '')

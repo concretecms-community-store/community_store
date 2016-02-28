@@ -22,6 +22,12 @@ class ProductLocation
     protected $pID;
 
     /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
+     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     */
+    protected $product;
+
+    /**
      * @Column(type="integer")
      */
     protected $cID;
@@ -39,10 +45,22 @@ class ProductLocation
     {
         return $this->id;
     }
+
+    public function setID($id)
+    {
+        $this->id = $id;
+    }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
+    public function setProduct($product)
+    {
+        return $this->product = $product;
+    }
+
     public function getCollectionID()
     {
         return $this->cID;
@@ -71,7 +89,9 @@ class ProductLocation
         //add new ones.
         if (!empty($locations['cID'])) {
             foreach ($locations['cID'] as $cID) {
-                self::add($product->getID(), $cID);
+                if ($cID > 0) {
+                    self::add($product, $cID);
+                }
             }
         }
     }
@@ -84,14 +104,21 @@ class ProductLocation
         }
     }
 
-    public static function add($pID, $cID)
+    public static function add($product, $cID)
     {
         $location = new self();
-        $location->setProductID($pID);
+        $location->setProduct($product);
         $location->setCollectionID($cID);
         $location->save();
 
         return $location;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function save()

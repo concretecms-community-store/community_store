@@ -9,12 +9,13 @@ use Database;
 use File;
 use Core;
 use Config;
+use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionGroup as StoreProductOptionGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
@@ -170,6 +171,73 @@ class Product
     // not stored, used for price/sku/etc lookup purposes
     protected $variation;
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
+     */
+    protected $locations;
+
+    public function getLocations(){
+        return $this->locations;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product",cascade={"persist"})
+     */
+    protected $groups;
+
+    public function getGroups(){
+        return $this->groups;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product",cascade={"persist"}))
+     */
+    protected $files;
+
+    public function getFiles(){
+        return $this->files;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product",cascade={"persist"}))
+     */
+    protected $images;
+
+    public function getImages(){
+        return $this->images;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product",cascade={"persist"}))
+     */
+    protected $userGroups;
+
+    public function getUserGroups(){
+        return $this->userGroups;
+    }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product",cascade={"persist"}))
+     * @OrderBy({"poSort" = "ASC"})
+     */
+    protected $options;
+
+    public function getOptions(){
+        return $this->options;
+    }
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->option = new ArrayCollection();
+        $this->optionItems = new ArrayCollection();
+    }
+
+
     public function setVariation($variation)
     {
         if (is_object($variation)) {
@@ -193,14 +261,14 @@ class Product
     public function setInitialVariation()
     {
         if ($this->hasVariations()) {
-            $optionGroups = $this->getOptionGroups();
-            $optionItems = $this->getOptionItems();
+            $options = $this->getOptions();
             $optionkeys = array();
 
-            foreach ($optionGroups as $optionGroup) {
-                foreach ($optionItems as $option) {
-                    if ($option->getProductOptionGroupID() == $optionGroup->getID()) {
-                        $optionkeys[] = $option->getID();
+            foreach ($options as $option) {
+                $optionItems = $option->getOptionItems();
+                foreach ($optionItems as $optionItem) {
+                    if (!$optionItem->isHidden()) {
+                        $optionkeys[] = $optionItem->getID();
                         break;
                     }
                 }
@@ -391,7 +459,7 @@ class Product
         $product->setIsExclusive($data['pExclusive']);
 
         // if we have no product groups, we don't have variations to offer
-        if (empty($data['pogName'])) {
+        if (empty($data['poName'])) {
             $product->setHasVariations(0);
         } else {
             $product->setHasVariations($data['pVariations']);
@@ -409,6 +477,12 @@ class Product
     {
         return $this->pID;
     }
+
+    public function setID($id)
+    {
+        $this->pID = $id;
+    }
+
     public function getName()
     {
         return $this->pName;
@@ -652,10 +726,7 @@ class Product
     {
         return count($this->getUserGroups()) > 0 ? true : false;
     }
-    public function getUserGroups()
-    {
-        return StoreProductUserGroup::getUserGroupsForProduct($this);
-    }
+
     public function getUserGroupIDs()
     {
         return StoreProductUserGroup::getUserGroupIDsForProduct($this);
@@ -702,10 +773,6 @@ class Product
         }
     }
 
-    public function getImages()
-    {
-        return StoreProductImage::getImagesForProduct($this);
-    }
     public function getimagesobjects()
     {
         return StoreProductImage::getImageObjectsForProduct($this);
@@ -714,21 +781,9 @@ class Product
     {
         return StoreProductLocation::getLocationsForProduct($this);
     }
-    public function getOptionGroups()
-    {
-        return StoreProductOptionGroup::getOptionGroupsForProduct($this);
-    }
-    public function getOptionItems($onlyvisible = false)
-    {
-        return StoreProductOptionItem::getOptionItemsForProduct($this, $onlyvisible);
-    }
     public function getGroupIDs()
     {
         return StoreProductGroup::getGroupIDsForProduct($this);
-    }
-    public function getGroups()
-    {
-        return StoreProductGroup::getGroupsForProduct($this);
     }
     public function getVariations()
     {
@@ -745,7 +800,7 @@ class Product
     public function remove()
     {
         StoreProductImage::removeImagesForProduct($this);
-        StoreProductOptionGroup::removeOptionGroupsForProduct($this);
+        StoreProductOption::removeOptionsForProduct($this);
         StoreProductOptionItem::removeOptionItemsForProduct($this);
         StoreProductFile::removeFilesForProduct($this);
         StoreProductGroup::removeGroupsForProduct($this);
@@ -761,6 +816,102 @@ class Product
         }
     }
 
+    public function __clone() {
+        if ($this->shallowClone) {
+            return;
+        }
+
+        if ($this->pID) {
+            $this->setId(null);
+            $this->setPageID(null);
+
+            $locations = $this->getLocations();
+            $this->locations = new ArrayCollection();
+            if(count($locations) > 0){
+                foreach ($locations as $loc) {
+                    $cloneLocation = clone $loc;
+                    $this->locations->add($cloneLocation);
+                    $cloneLocation->setProduct($this);
+                }
+            }
+
+            $groups = $this->getGroups();
+            $this->groups = new ArrayCollection();
+            if(count($groups) > 0){
+                foreach ($groups as $group) {
+                    $cloneGroup = clone $group;
+                    $this->groups->add($cloneGroup);
+                    $cloneGroup->setProduct($this);
+                }
+            }
+
+            $images = $this->getImages();
+            $this->images = new ArrayCollection();
+            if(count($images) > 0){
+                foreach ($images as $image) {
+                    $cloneImage = clone $image;
+                    $this->images->add($cloneImage);
+                    $cloneImage->setProduct($this);
+                }
+            }
+
+            $files = $this->getFiles();
+            $this->files = new ArrayCollection();
+            if(count($files) > 0){
+                foreach ($files as $file) {
+                    $cloneFile = clone $file;
+                    $this->files->add($cloneFile);
+                    $cloneFile->setProduct($this);
+                }
+            }
+
+            $userGroups = $this->getUserGroups();
+            $this->userGroups = new ArrayCollection();
+            if(count($userGroups) > 0){
+                foreach ($userGroups as $userGroup) {
+                    $cloneUserGroup = clone $userGroup;
+                    $this->userGroups->add($cloneUserGroup);
+                    $cloneUserGroup->setProduct($this);
+                }
+            }
+
+            $options = $this->getOptions();
+            $this->options = new ArrayCollection();
+            if(count($options) > 0){
+                foreach ($options as $option) {
+                    $cloneOption = clone $option;
+                    $this->options->add($cloneOption);
+                    $cloneOption->setProduct($this);
+                }
+            }
+        }
+    }
+
+    public  function duplicate($newName, $newSKU = '') {
+        $newproduct = clone $this;
+        $newproduct->setIsActive(false);
+        $newproduct->setQty(0);
+        $newproduct->setName($newName);
+        $newproduct->setSKU($newSKU);
+
+        $existingPageID = $this->getPageID();
+        if ($existingPageID) {
+            $existinPage= Page::getByID($existingPageID);
+            $pageTemplateID = $existinPage->getPageTemplateID();
+            $newproduct->generatePage($pageTemplateID);
+        }
+
+        $newproduct->save();
+
+        $attributes = StoreProductKey::getAttributes($this->getID());
+        foreach($attributes as $handle=>$value) {
+            $spk = StoreProductKey::getByHandle($handle);
+            $spk->saveAttribute($newproduct, $value);
+        }
+
+        return $newproduct;
+    }
+
     public function generatePage($templateID = null)
     {
         $pkg = Package::getByHandle('community_store');
@@ -774,7 +925,7 @@ class Product
                 $pageTemplate = $pt;
             }
         }
-        $productParentPage = $parentPage->add(
+        $newProductPage = $parentPage->add(
             $pageType,
             array(
                 'cName' => $this->getName(),
@@ -782,9 +933,9 @@ class Product
             ),
             $pageTemplate
         );
-        $productParentPage->setAttribute('exclude_nav', 1);
+        $newProductPage->setAttribute('exclude_nav', 1);
 
-        $this->setPageID($productParentPage->getCollectionID());
+        $this->savePageID($newProductPage->getCollectionID());
         $this->setPageDescription($this->getDesc());
     }
     public function setPageDescription($newDescription)
@@ -803,6 +954,12 @@ class Product
         }
     }
     public function setPageID($cID)
+    {
+        $this->setCollectionID($cID);
+        //$this->save();
+    }
+
+    public function savePageID($cID)
     {
         $this->setCollectionID($cID);
         $this->save();

@@ -105,6 +105,10 @@ class Products extends DashboardPageController
             $this->set("success",t("Product Added"));
         }
 
+        if ($status == 'duplicated') {
+            $this->set("success",t("Product Duplicated"));
+        }
+
         $this->loadFormAssets();
         $this->set("actionType",t("Update"));
         
@@ -115,36 +119,34 @@ class Products extends DashboardPageController
             $this->redirect('/dashboard/store/products/');
         }
 
-        $optItems = $product->getOptionItems();
-        $groups = $product->getOptionGroups();
-
         $this->set('product',$product);
-        $this->set('images',$product->getImages());
-        $this->set('groups',$groups);
-        $this->set('optItems',$optItems);
-        $this->set('locationPages', $product->getLocationPages());
-        $this->set('pgroups', $product->getGroupIDs());
+
+        $options  = $product->getOptions();
 
         $variations = $product->getVariations();
         $variationLookup = array();
 
         $optionArrays = array();
-        $optionItemLookup = array();
+        $optionLookup = array();
 
-        foreach($optItems as $optItem) {
-            $optionArrays[$optItem->getProductOptionGroupID()][] = $optItem->getID();
-            $optionItemLookup[ $optItem->getID()] = $optItem;
+        $optionItems = array();
+
+        foreach($options as $opt) {
+            $optionLookup[$opt->getID()] = $opt;
+
+            foreach($opt->getOptionItems() as $optItem) {
+                $optionArrays[$opt->getID()][] = $optItem->getID();
+                $optionItemLookup[$optItem->getID()] = $optItem;
+                $optionItems[] = $optItem;
+            }
         }
 
-        $groupLookup = array();
-
-        foreach($groups as $group) {
-            $groupLookup[$group->getID()] = $group;
-        }
-
-        $this->set('groupLookup', $groupLookup);
+        $this->set('optionItems', $optionItems);
+        $this->set('optionLookup', $optionLookup);
+        $this->set('optionItemLookup', $optionItemLookup);
 
         $optionArrays = array_values($optionArrays);
+
         $comboOptions = StoreProductVariation::combinations($optionArrays);
 
         $checkedOptions = array();
@@ -211,6 +213,23 @@ class Products extends DashboardPageController
         StoreProduct::getByID($pID)->generatePage($templateID);
         $this->redirect('/dashboard/store/products/edit',$pID);
     }
+    public function duplicate($pID)
+    {
+        $product = StoreProduct::getByID($pID);
+        if (!$product) {
+            $this->redirect('/dashboard/store/products');
+        }
+
+        if ($this->post()) {
+            $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
+            $this->redirect('/dashboard/store/products/edit/'. $newproduct->getID().'/duplicated');
+        }
+
+        $this->set('pageTitle', t('Duplicate Product'));
+        $this->set('product', $product);
+    }
+
+
     public function delete($pID)
     {
         $product = StoreProduct::getByID($pID);

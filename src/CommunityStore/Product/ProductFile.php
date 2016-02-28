@@ -22,6 +22,12 @@ class ProductFile
     protected $pID;
 
     /**
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="files",cascade={"persist"})
+     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     */
+    protected $product;
+
+    /**
      * @Column(type="integer")
      */
     protected $dffID;
@@ -30,6 +36,12 @@ class ProductFile
     {
         $this->pID = $pID;
     }
+
+    public function setProduct($product)
+    {
+        return $this->product = $product;
+    }
+
     private function setFileID($fID)
     {
         $this->dffID = $fID;
@@ -82,7 +94,7 @@ class ProductFile
         if (!empty($files['ddfID'])) {
             foreach ($files['ddfID'] as $fileID) {
                 if ($fileID) {
-                    self::add($product->getID(), $fileID);
+                    self::add($product, $fileID);
                     $fileObj = \File::getByID($fileID);
                     $fs = \FileSet::getByName("Digital Downloads");
                     $fs->addFileToSet($fileObj);
@@ -109,14 +121,21 @@ class ProductFile
         }
     }
 
-    public static function add($pID, $fID)
+    public static function add($product, $fID)
     {
         $productFile = new self();
-        $productFile->setProductID($pID);
+        $productFile->setProduct($product);
         $productFile->setFileID($fID);
         $productFile->save();
 
         return $productFile;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function save()
