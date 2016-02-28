@@ -213,7 +213,7 @@ class OrderItem
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem', $oiID);
+        return $em->find(get_class(), $oiID);
     }
 
     public function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '')

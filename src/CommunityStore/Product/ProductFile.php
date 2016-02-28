@@ -65,7 +65,7 @@ class ProductFile
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile', $id);
+        return $em->find(get_class(), $id);
     }
 
     public static function getFilesForProduct(StoreProduct $product)
@@ -73,7 +73,7 @@ class ProductFile
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile')->findBy(array('pID' => $product->getID()));
+        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
     public static function getFileObjectsForProduct(StoreProduct $product)

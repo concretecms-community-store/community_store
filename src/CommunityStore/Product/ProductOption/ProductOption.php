@@ -96,7 +96,7 @@ class ProductOption
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', $id);
+        return $em->find(get_class(), $id);
     }
 
     public static function getOptionsForProduct(StoreProduct $product)
@@ -104,7 +104,7 @@ class ProductOption
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption')->findBy(array('pID' => $product->getID()));
+        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
     public static function removeOptionsForProduct(StoreProduct $product, $excluding = array())

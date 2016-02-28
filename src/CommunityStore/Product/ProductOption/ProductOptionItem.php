@@ -95,7 +95,7 @@ class ProductOptionItem
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', $id);
+        return $em->find(get_class(), $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
@@ -103,7 +103,7 @@ class ProductOptionItem
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem')->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
+        return $em->getRepository(get_class())->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
     }
 
     public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = array())

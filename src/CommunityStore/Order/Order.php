@@ -224,7 +224,7 @@ class Order
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order', $oID);
+        return $em->find(get_class(), $oID);
     }
 
     public function getCustomersMostRecentOrderByCID($cID)
@@ -232,7 +232,7 @@ class Order
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order')->findOneBy(array('cID' => $cID));
+        return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
     }
 
     /**

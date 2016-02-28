@@ -119,7 +119,7 @@ class TaxClass
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass', $tcID);
+        return $em->find(get_class(), $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
@@ -127,7 +127,7 @@ class TaxClass
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass')->findOneBy(array('taxClassHandle' => $taxClassHandle));
+        return $em->getRepository(get_class())->findOneBy(array('taxClassHandle' => $taxClassHandle));
     }
 
     public static function getTaxClasses()

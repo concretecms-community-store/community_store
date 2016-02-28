@@ -92,7 +92,7 @@ class OrderItemOption
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption', $oioID);
+        return $em->find(get_class(), $oioID);
     }
 
     public function save()

@@ -395,7 +395,7 @@ class DiscountRule
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule', $drID);
+        return $em->find(get_class(), $drID);
     }
 
     public static function discountsWithCodesExist()

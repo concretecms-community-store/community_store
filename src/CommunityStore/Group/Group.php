@@ -39,7 +39,7 @@ class Group
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group', $gID);
+        return $em->find(get_called_class(), $gID);
     }
 
     public static function add($groupName)

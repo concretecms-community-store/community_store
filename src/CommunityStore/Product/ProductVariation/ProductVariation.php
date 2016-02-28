@@ -471,7 +471,7 @@ class ProductVariation
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation', $pvID);
+        return $em->find(get_class(), $pvID);
     }
 
     public static function add($productID, $data)
@@ -521,7 +521,7 @@ class ProductVariation
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation')->findBy(array('pID' => $product->getID()));
+        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
     public function delete()

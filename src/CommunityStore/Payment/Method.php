@@ -114,7 +114,7 @@ class Method extends Controller
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        $method = $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method', $pmID);
+        $method = $em->find(get_class(), $pmID);
 
         if ($method) {
             $method->setMethodController();
@@ -128,7 +128,7 @@ class Method extends Controller
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        $method = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findOneBy(array('pmHandle' => $pmHandle));
+        $method = $em->getRepository(get_class())->findOneBy(array('pmHandle' => $pmHandle));
 
         if ($method) {
             $method->setMethodController();
@@ -189,9 +189,9 @@ class Method extends Controller
         $em = $db->getEntityManager();
 
         if ($enabled) {
-            $methods = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findBy(array('pmEnabled' => 1), array('pmSortOrder'=>'ASC'));
+            $methods = $em->getRepository(get_class())->findBy(array('pmEnabled' => 1), array('pmSortOrder'=>'ASC'));
         } else {
-            $methods = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method')->findBy(array(), array('pmSortOrder'=> 'ASC'));
+            $methods = $em->getRepository(get_class())->findBy(array(), array('pmSortOrder'=> 'ASC'));
         }
         foreach($methods as $method) {
             $method->setMethodController();

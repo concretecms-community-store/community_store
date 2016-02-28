@@ -410,7 +410,7 @@ class Product
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product', $pID);
+        return $em->find(get_class(), $pID);
     }
 
     public static function getByCollectionID($cID)
@@ -418,7 +418,7 @@ class Product
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product')->findOneBy(array('cID' => $cID));
+        return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
     }
 
     public function saveProduct($data)

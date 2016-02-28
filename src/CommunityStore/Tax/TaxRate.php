@@ -139,7 +139,7 @@ class TaxRate
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate', $trID);
+        return $em->find(get_class(), $trID);
     }
 
     public function isTaxable()

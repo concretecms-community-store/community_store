@@ -122,7 +122,7 @@ class DiscountCode
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode', $dcID);
+        return $em->find(get_class(), $dcID);
     }
 
     public static function getByCode($code)
@@ -130,7 +130,7 @@ class DiscountCode
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode', array('dcCode' => $code));
+        return $em->find(get_class(), array('dcCode' => $code));
     }
 
     public static function add($discountRule, $code)

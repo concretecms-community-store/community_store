@@ -87,14 +87,14 @@ class ProductGroup
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup', $pgID);
+        return $em->find(get_class(), $pgID);
     }
 
     public static function getGroupsForProduct(StoreProduct $product)
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
-        $groups = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup')->findBy(array('pID' => $product->getID()));
+        $groups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
         foreach ($groups as $key => $value) {
             $group = new StoreGroup();
             $groups[$key]->gName = $group->getByID($groups[$key]->gID)->getGroupName();
