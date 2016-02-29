@@ -17,7 +17,7 @@
                             <li><a href="#settings-payments" data-pane-toggle><?= t('Payments')?></a></li>
                             <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Order Statuses')?></a></li>
                             <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications')?></a></li>
-                            <li><a href="#settings-checkout" data-pane-toggle><?= t('Checkout')?></a></li>
+                            <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
                         </ul>
 
                 </div>

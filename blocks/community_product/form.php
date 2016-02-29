@@ -48,10 +48,10 @@ $(function(){
 });  
 </script>
 
-<legend><?= t("Product to include")?></legend>
+<legend><?= t("Product")?></legend>
 
 <div class="form-group">
-    <?= $form->label('productLocation', t("Choose a Product to show"))?>
+    <?= $form->label('productLocation', t('Product'))?>
     <?= $form->select('productLocation', array('page' => t('Find product associated with this page'), 'search' => t('Search and select product')), $productLocation, array('onChange' => 'updateProductLocation();'))?>
 </div>
 
@@ -71,7 +71,7 @@ $(function(){
    
 </div>
 
-<legend><?= t("What would you like to show")?></legend>
+<legend><?= t("Display Options")?></legend>
 
 <div class="row">
     <div class="col-xs-6">
@@ -122,13 +122,13 @@ $(function(){
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured);?>
-                <?= t('Show if it\'s featured')?>
+                <?= t('Show if featured')?>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showGroups', 1, !isset($showGroups) ? true : $showGroups);?>
-                <?= t('Show Group Product is in')?>
+                <?= t('Show Product Groups')?>
             </label>
         </div>
         <div class="checkbox">
@@ -143,7 +143,7 @@ $(function(){
 
 <div class="form-group">
     <?= $form->label('btnText', t("Add to Cart Button Text"))?>
-    <?= $form->text('btnText', $btnText)?>
+    <?= $form->text('btnText', $btnText, array('placeholder'=>t('Add To Cart')))?>
 </div>
 
 
