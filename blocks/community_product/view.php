@@ -87,7 +87,7 @@ if (is_object($product)) {
                         <?php } ?>
                         <?php
 
-                        foreach ($options as $option) {
+                        foreach ($product->getOptions() as $option) {
                             $optionItems = $option->getOptionItems();
 
                             ?>

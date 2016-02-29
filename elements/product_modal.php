@@ -28,23 +28,25 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
                 <input type="number" name="quantity" class="product-qty form-control" value="1" max="<?= $product->getQty()?>">
             </div>
             <?php
-            $optionGroups = $product->getOptionGroups();
-            $optionItems = $product->getOptionItems();
-            foreach($optionGroups as $optionGroup){
-                ?>
+            foreach ($product->getOptions() as $option) {
+            $optionItems = $option->getOptionItems();
+
+             if (!empty($optionItems)) { ?>
                 <div class="store-product-option-group form-group">
-                    <label class="store-option-group-label"><?= $optionGroup->getName()?></label>
-                    <select class="form-control" name="po<?= $optionGroup->getID()?>">
+                    <label class="store-product-option-group-label"><?= $option->getName() ?></label>
+                    <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
                         <?php
-                        foreach($optionItems as $option){
-                            if($option->getProductOptionID()==$optionGroup->getID()){?>
-                                <option value="<?= $option->getID()?>"><?= $option->getName()?></option>
+                        foreach ($optionItems as $optionItem) {
+                            if (!$optionItem->isHidden()) { ?>
+                                <option value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() ?></option>
                             <?php }
-                        }//foreach
-                        ?>
+                            // below is an example of a radio button, comment out the <select> and <option> tags to use instead
+                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
+                        <?php } ?>
                     </select>
                 </div>
-            <?php } ?>
+            <?php }
+            } ?>
         </div>
         <input type="hidden" name="pID" value="<?= $product->getID()?>">
         <div class="store-product-modal-buttons">
