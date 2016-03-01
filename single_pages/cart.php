@@ -26,7 +26,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
         <?php } ?>
     <?php } ?>
 
-    <input id='cartURL' type='hidden' data-cart-url='<?=View::url("/cart/")?>'>
+    <input id='cartURL' type='hidden' data-cart-url='<?= \URL::to("/cart/")?>'>
 
 
 <?php
@@ -163,7 +163,7 @@ $i=1;
 
     <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code');?></h3>
-        <form method="post" action="<?= View::url('/cart/');?>" class="form-inline">
+        <form method="post" action="<?= \URL::to('/cart/');?>" class="form-inline">
             <input type="text" class="form-control" name="code" />
             <input type="hidden" name="action" value="code" />
             <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
@@ -215,7 +215,7 @@ $i=1;
 
     <div class="store-cart-page-cart-links pull-right">
 
-        <a class="store-btn-cart-page-checkout btn btn-primary" href="<?=View::url('/checkout')?>"><?= t('Checkout')?></a>
+        <a class="store-btn-cart-page-checkout btn btn-primary" href="<?= \URL::to('/checkout')?>"><?= t('Checkout')?></a>
     </div>
     <?php } else { ?>
     <p class="alert alert-info"><?= t('Your cart is empty');?></p>

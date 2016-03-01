@@ -10,7 +10,7 @@ class ProductModal extends Controller
 {
     public function getProductModal()
     {
-        $pID = $this->post('pID');
+        $pID = $this->get('pID');
         $product = StoreProduct::getByID($pID);
         if (Filesystem::exists(DIR_BASE."/application/elements/product_modal.php")) {
             View::element("product_modal", array("product" => $product));

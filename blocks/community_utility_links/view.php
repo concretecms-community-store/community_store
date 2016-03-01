@@ -1,10 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php if (!$shoppingDisabled) { ?>
 <div class="store-utility-links <?= ($itemCount == 0 ? 'store-cart-empty' : ''); ?>">
     <p>
     <?php if ($showSignIn) {
         $u = new User();
         if (!$u->isLoggedIn()) {
-            echo '<a href="' . URL::to('/login') . '">' . t("Sign In") . '</a>';
+            echo '<a href="' . \URL::to('/login') . '">' . t("Sign In") . '</a>';
         }
     } ?>
     <?php if ($showGreeting) {
@@ -35,7 +36,7 @@
             <?php if ($popUpCart && !$inCheckout) { ?>
                 <a href="#" class="store-cart-link store-cart-link-modal"><?= $cartLabel ?></a>
             <?php } else { ?>
-                <a href="<?= View::url('/cart') ?>" class="store-cart-link"><?= $cartLabel ?></a>
+                <a href="<?= \URL::to('/cart') ?>" class="store-cart-link"><?= $cartLabel ?></a>
             <?php } ?>
         </p>
     <?php } ?>
@@ -43,9 +44,9 @@
     <?php if (!$inCheckout) { ?>
         <p>
             <?php if ($showCheckout) { ?>
-                <a href="<?= View::url('/checkout') ?>" class="store-cart-link"><?= t("Checkout") ?></a>
+                <a href="<?= \URL::to('/checkout') ?>" class="store-cart-link"><?= t("Checkout") ?></a>
             <?php } ?>
         </p>
     <?php } ?>
-
 </div>
+<?php } ?>

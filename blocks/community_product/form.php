@@ -20,7 +20,7 @@ $(function(){
             $("#product-search-results").addClass("active");
             $.ajax({
                 type: "post",
-                url: "<?=URL::to('/productfinder')?>",
+                url: "<?=\URL::to('/productfinder')?>",
                 data: {query: searchString},
                 success: function(html){
                     $("ul#results-list").html(html);

@@ -29,7 +29,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             $ui = UserInfo::getByID($order->getCustomerID());
             if ($ui) { ?>
             <h4><?= t("User")?></h4>
-            <p><a href="<?= View::url('/dashboard/users/search/view/' . $ui->getUserID());?>"><?= $ui->getUserName(); ?></a></p>
+            <p><a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID());?>"><?= $ui->getUserName(); ?></a></p>
             <?php } ?>
         </div>
 
@@ -197,7 +197,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </div>
                 <div class="panel-body">
 
-                    <form action="<?=View::url("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
+                    <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
                         <div class="form-group">
                             <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
                         </div>
@@ -247,7 +247,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </div>
                 <div class="panel-body">
 
-                    <a data-confirm-message="<?= h(t('Are you sure you wish to delete this order?')); ?>" id="btn-delete-order" href="<?=View::url("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
+                    <a data-confirm-message="<?= h(t('Are you sure you wish to delete this order?')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
 
                 </div>
             </div>
@@ -260,14 +260,18 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     <div class="ccm-dashboard-header-buttons">
     </div>
 
+    <?php if ($shoppingDisabled) { ?>
+        <p class="alert alert-warning text-center"><?php echo t('Cart and Ordering features are currently disabled. This setting can be changed via the');?> <a href="<?= \URL::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.');?></a></p>
+    <?php } ?>
+
 <div class="ccm-dashboard-content-full">
     <form role="form" class="form-inline ccm-search-fields">
         <div class="ccm-search-fields-row">
             <?php if($statuses){?>
                 <ul id="group-filters" class="nav nav-pills">
-                    <li><a href="<?= View::url('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
+                    <li><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
                     <?php foreach($statuses as $status){ ?>
-                        <li><a href="<?= View::url('/dashboard/store/orders/', $status->getHandle())?>"><?= $status->getName();?></a></li>
+                        <li><a href="<?= \URL::to('/dashboard/store/orders/', $status->getHandle())?>"><?= $status->getName();?></a></li>
                     <?php } ?>
                 </ul>
             <?php } ?>
@@ -301,12 +305,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 foreach($orderList as $order){
             ?>
                 <tr>
-                    <td><a href="<?=View::url('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a></td>
+                    <td><a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a></td>
                     <td><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?></td>
                     <td><?= $dh->formatDateTime($order->getOrderDate())?></td>
                 <td><?=Price::format($order->getTotal())?></td>
                     <td><?=ucwords($order->getStatus())?></td>
-                    <td><a class="btn btn-primary" href="<?=View::url('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
+                    <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
                 </tr>
             <?php } ?>
         </tbody>

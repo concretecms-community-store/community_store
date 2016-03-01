@@ -25,7 +25,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 if ($ui) { ?>
                     <h4><?= t("User") ?></h4>
                     <p>
-                        <a href="<?= View::url('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
+                        <a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
                     </p>
                 <?php } ?>
             </div>

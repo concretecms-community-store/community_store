@@ -9,7 +9,7 @@ if(in_array($controller->getTask(),$addViews)){
 ?>
     
     
-<form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','add_rate')?>" method="post" data-states-utility="<?=View::url('/checkout/getstates')?>">
+<form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','add_rate')?>" method="post" data-states-utility="<?=URL::to('/checkout/getstates')?>">
 
     <div class="row">
         <div class="col-xs-12 col-md-12">
@@ -102,9 +102,9 @@ if(in_array($controller->getTask(),$addViews)){
      
 <?php } elseif(in_array($controller->getTask(),$listViews)) { ?>
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= View::url('/dashboard/store/settings/tax','add')?>" class="btn btn-primary"><?= t("Add Tax Rate")?></a>
-    <a href="<?= View::url('/dashboard/store/settings/tax','add_class')?>" class="btn btn-primary"><?= t("Add Tax Class")?></a>
-    <a href="<?= View::url('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
+    <a href="<?= \URL::to('/dashboard/store/settings/tax','add')?>" class="btn btn-primary"><?= t("Add Tax Rate")?></a>
+    <a href="<?= \URL::to('/dashboard/store/settings/tax','add_class')?>" class="btn btn-primary"><?= t("Add Tax Class")?></a>
+    <a href="<?= \URL::to('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
 </div>
 
 <div class="dashboard-tax-rates">
@@ -166,7 +166,7 @@ if(in_array($controller->getTask(),$addViews)){
 
 <?php } elseif(in_array($controller->getTask(),$addClassViews)){ ?>
 
-<form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','save_class')?>" method="post" data-states-utility="<?=View::url('/checkout/getstates')?>">
+<form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','save_class')?>" method="post" data-states-utility="<?=URL::to('/checkout/getstates')?>">
 
     <div class="row">
         <div class="col-xs-12 col-md-12">

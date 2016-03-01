@@ -23,10 +23,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
             <?= $product->getDesc()?>
         </div>
         <div class="store-product-modal-options">
-            <div class="store-product-modal-option-group form-group">
+            <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
+            <div class="store-product-modal-quantiy form-group">
                 <label class="store-option-group-label"><?= t('Quantity')?></label>
                 <input type="number" name="quantity" class="product-qty form-control" value="1" max="<?= $product->getQty()?>">
             </div>
+            <?php } ?>
             <?php
             foreach ($product->getOptions() as $option) {
             $optionItems = $option->getOptionItems();
@@ -49,11 +51,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
             } ?>
         </div>
         <input type="hidden" name="pID" value="<?= $product->getID()?>">
+        <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
         <div class="store-product-modal-buttons">
             <p><a href="#" data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
             <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
-
         </div>
+        <?php } ?>
     </div>
 </form>
 

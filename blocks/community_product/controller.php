@@ -2,8 +2,7 @@
 namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 
 use Concrete\Core\Block\BlockController;
-use Core;
-use View;
+use Config;
 use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
@@ -54,6 +53,10 @@ class Controller extends BlockController
             }
 
             $this->set('product', $product);
+        }
+
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->set('showCartButton', false);
         }
     }
     public function registerViewAssets($outputContent = '')

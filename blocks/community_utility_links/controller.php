@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
 use Concrete\Core\Block\BlockController;
 use Core;
-use View;
+use Config;
 use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
@@ -49,6 +49,9 @@ class Controller extends BlockController
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
+
+        $this->set('shoppingDisabled', Config::get('community_store.shoppingDisabled') == 'all');
+
     }
     public function registerViewAssets($outputContent = '')
     {

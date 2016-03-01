@@ -3,7 +3,6 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
 use PageController;
 use Core;
-use View;
 use Session;
 use Config;
 use Database;
@@ -21,6 +20,10 @@ class Checkout extends PageController
 {
     public function view()
     {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->redirect("/");
+        }
+
         $customer = new StoreCustomer();
         $this->set('customer', $customer);
         $guestCheckout = Config::get('community_store.guestCheckout');

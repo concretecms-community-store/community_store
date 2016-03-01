@@ -79,7 +79,7 @@ if(in_array($controller->getTask(),$addViews)){
     </div>
     <?php } ?>
     <a href="<?=URL::to('/dashboard/store/settings/shipping/clerk')?>" class="btn btn-info"><i class="fa fa-gift"></i> <?= t("Shipping Clerk")?></a>
-    <a href="<?= View::url('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
+    <a href="<?= \URL::to('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
 </div>
 
 <div class="dashboard-shipping-methods">

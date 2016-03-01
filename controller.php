@@ -9,7 +9,7 @@ use Whoops\Exception\ErrorException;
 use Route;
 use Asset;
 use AssetList;
-use View;
+use URL;
 
 class Controller extends Package
 {
@@ -120,9 +120,9 @@ class Controller extends Package
     {
         return "
         <script type=\"text/javascript\">
-            var PRODUCTMODAL = '" . View::url('/productmodal') . "';
-            var CARTURL = '" . View::url('/cart') . "';
-            var CHECKOUTURL = '" . View::url('/checkout') . "';
+            var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
+            var CARTURL = '" . URL::to('/cart') . "';
+            var CHECKOUTURL = '" . URL::to('/checkout') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";

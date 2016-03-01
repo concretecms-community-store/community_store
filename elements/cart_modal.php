@@ -33,10 +33,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
         <h3><?= t("Shopping Cart")?></h3>
 
-        <input id='cartURL' type='hidden' data-cart-url='<?=View::url("/cart/")?>'>
+        <input id='cartURL' type='hidden' data-cart-url='<?=\URL::to("/cart/")?>'>
             <?php
             if($cart){ ?>
-            <form method="post" action="<?= View::url('/cart/');?>" id="store-modal-cart">
+            <form method="post" action="<?= \URL::to('/cart/');?>" id="store-modal-cart">
             <table id="cart" class="table table-hover table-condensed" >
                 <thead>
                 <tr>
@@ -167,7 +167,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
             <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
             <?php if ($cart  && !empty($cart)) { ?>
             <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
-            <a class="store-btn-cart-modal-checkout btn btn-primary pull-right" href="<?= View::url('/checkout')?>"><?= t('Checkout')?></a>
+            <a class="store-btn-cart-modal-checkout btn btn-primary pull-right" href="<?= \URL::to('/checkout')?>"><?= t('Checkout')?></a>
             <?php } ?>
         </div>
 

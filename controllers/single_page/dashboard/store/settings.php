@@ -56,7 +56,6 @@ class Settings extends DashboardPageController
             $this->error = $errors;
             
             if (!$errors->has()) {
-                
                 Config::save('community_store.symbol',$args['symbol']);
                 Config::save('community_store.currency',$args['currency']);
                 Config::save('community_store.whole',$args['whole']);
@@ -81,11 +80,11 @@ class Settings extends DashboardPageController
                 Config::save('community_store.emailalertsname',$args['emailAlertName']);
                 Config::save('community_store.productPublishTarget',$args['productPublishTarget']);
                 Config::save('community_store.guestCheckout',$args['guestCheckout']);
+                Config::save('community_store.shoppingDisabled',trim($args['shoppingDisabled']));
 
                 //save payment methods
                 if($args['paymentMethodHandle']){
 
-                    // TODO - refactor how this is saved
                     foreach($args['paymentMethodEnabled'] as $pmID=>$value){
                         $pm = StorePaymentMethod::getByID($pmID);
                         $pm->setEnabled($value);

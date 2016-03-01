@@ -37,7 +37,7 @@ var communityStore = {
         $.ajax({
             url: PRODUCTMODAL,
             data: {pID: pID},
-            type: 'post',
+            type: 'get',
             success: function (modalContent) {
                 communityStore.openModal(modalContent);
             }

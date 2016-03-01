@@ -8,7 +8,6 @@ $(function(){
            $(this).parent().addClass("active");
         }
     });
-   
     
     $("a[data-pane-toggle]").click(function(e){
         e.preventDefault();

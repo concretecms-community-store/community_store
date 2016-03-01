@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
 use Concrete\Core\Block\BlockController;
 use Core;
-use View;
+use Config;
 use Page;
 use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
@@ -112,6 +112,10 @@ class Controller extends BlockController
         $this->set('th', Core::make('helper/text'));
 
         $this->requireAsset("css", "font-awesome");
+
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->set('showAddToCart', false);
+        }
     }
     public function registerViewAssets($outputContent = '')
     {

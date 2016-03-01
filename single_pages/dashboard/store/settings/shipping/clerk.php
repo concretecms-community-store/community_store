@@ -8,7 +8,7 @@ if(in_array($controller->getTask(),$listViews)){?>
     <div class="ccm-dashboard-header-buttons">
         <a href="<?=URL::to('/dashboard/store/settings/shipping/clerk/add')?>" class="btn btn-primary"> <?= t("Add Box")?></a>
         <a href="<?=URL::to('/dashboard/store/settings/shipping/')?>" class="btn btn-default"><i class="fa fa-gift"></i> <?= t("Shipping Settings")?></a>
-        <a href="<?= View::url('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
+        <a href="<?= \URL::to('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
     </div>
     
     <div class="alert alert-info">

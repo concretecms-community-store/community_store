@@ -29,11 +29,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php if ($pID > 0) { ?>
     <div class="ccm-dashboard-header-buttons">
 
-        <form class="pull-right"  method="post" id="delete" action="<?= View::url('/dashboard/store/products/delete/', $pID)?>" >
+        <form class="pull-right"  method="post" id="delete" action="<?= \URL::to('/dashboard/store/products/delete/', $pID)?>" >
             &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
 
-        <form class="pull-right" method="get" id="duplicate" action="<?= View::url('/dashboard/store/products/duplicate/', $pID)?>" >
+        <form class="pull-right" method="get" id="duplicate" action="<?= \URL::to('/dashboard/store/products/duplicate/', $pID)?>" >
             <button class="btn btn-default"><?= t("Duplicate Product")?></button>
         </form>
 
@@ -964,7 +964,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                         </div>
 
-                        <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?'));?>" href="<?= Url::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
+                        <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?'));?>" href="<?= \URL::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
 
 
                     <?php } ?>
@@ -987,7 +987,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= URL::to('/dashboard/store/products/')?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products")?></a>
+                <a href="<?= \URL::to('/dashboard/store/products/')?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products")?></a>
                 <button class="pull-right btn btn-success" disabled="disabled" type="submit" ><?= t('%s Product',$actionType)?></button>
             </div>
         </div>
@@ -1015,9 +1015,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 <?php } elseif(in_array($controller->getTask(),$listViews)) { ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <!--<a href="<?= View::url('/dashboard/store/products/', 'attributes')?>" class="btn btn-dark"><?= t("Manage Attributes")?></a>-->
-        <a href="<?= View::url('/dashboard/store/products/', 'groups')?>" class="btn btn-primary"><?= t("Manage Groups")?></a>
-        <a href="<?= View::url('/dashboard/store/products/', 'add')?>" class="btn btn-primary"><?= t("Add Product")?></a>
+        <!--<a href="<?= \URL::to('/dashboard/store/products/', 'attributes')?>" class="btn btn-dark"><?= t("Manage Attributes")?></a>-->
+        <a href="<?= \URL::to('/dashboard/store/products/', 'groups')?>" class="btn btn-primary"><?= t("Manage Groups")?></a>
+        <a href="<?= \URL::to('/dashboard/store/products/', 'add')?>" class="btn btn-primary"><?= t("Add Product")?></a>
     </div>
 
     <div class="ccm-dashboard-content-full">
@@ -1025,9 +1025,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <div class="ccm-search-fields-row">
                 <?php if($grouplist){?>
                     <ul id="group-filters" class="nav nav-pills">
-                        <li><a href="<?= View::url('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
+                        <li><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
                         <?php foreach($grouplist as $group){ ?>
-                            <li><a href="<?= View::url('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
+                            <li><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
                         <?php } ?>
                     </ul>
                 <?php } ?>
@@ -1063,7 +1063,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb();?></td>
-                        <td><strong><a href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><?=  $product->getName();
+                        <td><strong><a href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID())?>"><?=  $product->getName();
                                 $sku = $product->getSKU();
                                 if ($sku) {
                                     echo ' (' .$sku . ')';
@@ -1114,7 +1114,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </td>
                         <td>
                             <a class="btn btn-default"
-                               href="<?= View::url('/dashboard/store/products/edit/', $product->getID())?>"><i
+                               href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID())?>"><i
                                     class="fa fa-pencil"></i></a>
                         </td>
                     </tr>
@@ -1135,7 +1135,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
     <?php if($grouplist){ ?>
         <h3><?= t("Groups")?></h3>
-        <ul class="list-unstyled group-list" data-delete-url="<?= View::url('/dashboard/store/products/deletegroup')?>" data-save-url="<?= View::url('/dashboard/store/products/editgroup')?>">
+        <ul class="list-unstyled group-list" data-delete-url="<?= \URL::to('/dashboard/store/products/deletegroup')?>" data-save-url="<?= \URL::to('/dashboard/store/products/editgroup')?>">
             <?php foreach($grouplist as $group){?>
                 <li data-group-id="<?= $group->getGroupID()?>">
                     <span class="group-name"><?= $group->getGroupName()?></span>

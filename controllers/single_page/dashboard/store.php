@@ -5,6 +5,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Package;
 use Core;
+use Config;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
@@ -45,6 +46,10 @@ class Store extends DashboardPageController
         $this->set('paginator', $paginator);
         
         $this->addHeaderItem(Core::make('helper/html')->css($packagePath.'/css/communityStoreDashboard.css'));
+
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->set('shoppingDisabled', true);
+        }
             
     }
     

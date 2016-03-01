@@ -3,7 +3,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
-
+use Config;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
@@ -34,6 +34,10 @@ class Orders extends DashboardPageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('statuses', StoreOrderStatus::getAll());
+
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->set('shoppingDisabled', true);
+        }
 
     }
     public function order($oID)

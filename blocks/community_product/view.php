@@ -77,7 +77,7 @@ if (is_object($product)) {
 
                     <div class="store-product-options" id="product-options-<?= $bID; ?>">
                         <?php if ($product->allowQuantity()) { ?>
-                            <div class="store-product-modal-option-group form-group">
+                            <div class="store-product-quantity form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
                                 <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1"
                                        step="1" <?= ($product->allowBackOrders() ? '' : 'max="' . $product->getQty() . '"'); ?>>

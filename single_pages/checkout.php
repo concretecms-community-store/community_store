@@ -35,17 +35,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         <div class="row">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= View::url('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default" href="<?= \URL::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
                                     <a class="btn btn-default"
-                                       href="<?= View::url('/register') ?>"><?= t("Register") ?></a>
+                                       href="<?= \URL::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= View::url('/checkout/?guest=1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= \URL::to('/checkout/?guest=1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -292,7 +292,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                 <?php } ?>
 
                 <form class="store-checkout-form-group" id="store-checkout-form-group-payment" method="post"
-                      action="<?= View::url('/checkout/submit') ?>">
+                      action="<?= \URL::to('/checkout/submit') ?>">
 
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Payment") ?></h2>
@@ -405,7 +405,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                     </li>
                 <?php } ?>
                 <?php if ($discountsWithCodesExist && !$hasCode) { ?>
-                    <li class="list-group-item"><a href="<?= View::url('/cart'); ?>"><?= t('Enter discount code'); ?></a></li>
+                    <li class="list-group-item"><a href="<?= \URL::to('/cart'); ?>"><?= t('Enter discount code'); ?></a></li>
                 <?php } ?>
                 <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
                         class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>

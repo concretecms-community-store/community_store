@@ -13,6 +13,11 @@ if ($taxCalc == 'extract') {
 }
 ?>
 
+<?php if ($shoppingDisabled) { ?>
+<p class="alert alert-warning text-center"><?php echo t('Cart and Ordering features are currently disabled. This setting can be changed via the');?> <a href="<?= \URL::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.');?></a></p>
+<?php } ?>
+
+
 <div class="row">
     <div class="col-xs-12 col-sm-6">
         <div class="panel-sale panel panel-default">
@@ -148,7 +153,7 @@ if ($taxCalc == 'extract') {
             <tbody>
                 <?php foreach($orders as $o){?>
                 <tr>
-                    <td><a href="<?=URL::to('/dashboard/store/orders/order',$o->getOrderID())?>"><?= $o->getOrderID()?></a></td>
+                    <td><a href="<?= \URL::to('/dashboard/store/orders/order',$o->getOrderID())?>"><?= $o->getOrderID()?></a></td>
                     <td><?= $dh->formatDateTime($o->getOrderDate())?></td>
                     <td><?=Price::format($o->getSubTotal())?></td>
                     <td><?=Price::format($o->getShippingTotal())?></td>

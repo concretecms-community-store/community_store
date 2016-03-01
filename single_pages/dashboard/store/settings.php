@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 	    
 	    <div class="ccm-dashboard-header-buttons">
-            <a href="<?= View::url('/dashboard/store/settings/shipping')?>" class="btn btn-primary"><i class="fa fa-gift"></i> <?= t("Shipping Methods")?></a>
-            <a href="<?= View::url('/dashboard/store/settings/tax')?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates")?></a>
+            <a href="<?= \URL::to('/dashboard/store/settings/shipping')?>" class="btn btn-primary"><i class="fa fa-gift"></i> <?= t("Shipping Methods")?></a>
+            <a href="<?= \URL::to('/dashboard/store/settings/tax')?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates")?></a>
         </div>
 	    
 	    <form method="post" action="<?= $view->action('save')?>">
@@ -232,6 +232,15 @@
 
                 <!-- #settings-customers -->
                 <div class="col-sm-9 store-pane" id="settings-checkout">
+                    <h3><?= t('Cart and Ordering');?></h3>
+                    <div class="form-group">
+                        <?php $shoppingDisabled =  Config::get('community_store.shoppingDisabled');
+                        ?>
+                        <label><?= $form->radio('shoppingDisabled',' ', ($shoppingDisabled == '') ); ?> <?php  echo t('Enabled'); ?></label><br />
+                        <label><?= $form->radio('shoppingDisabled','all',$shoppingDisabled == 'all'); ?> <?php  echo t('Disabled (Catalog Mode)'); ?></label><br />
+                    </div>
+
+
 
                     <h3><?= t('Guest checkout');?></h3>
                     <div class="form-group">

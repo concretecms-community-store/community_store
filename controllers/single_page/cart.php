@@ -2,7 +2,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
 use PageController;
-use View;
+use Config;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -16,6 +16,10 @@ class Cart extends PageController
 {
     public function view()
     {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            $this->redirect("/");
+        }
+
         $codeerror = false;
         $codesuccess = false;
 
