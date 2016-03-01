@@ -411,11 +411,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
     <form id="store-checkout-redirect-form" action="<?= $action ?>" method="post">
         <?php
         $pm->renderRedirectForm(); ?>
-        <input type="submit" class="btn btn-primary" value="<?= t('Click Here if You\'re not Redirected') ?>">
+        <br />
+        <p><input type="submit" class="btn btn-primary" value="<?= t('Click here if you are not automatically redirected') ?>"></p>
     </form>
     <script type="text/javascript">
         $(function () {
             $("#store-checkout-redirect-form").submit();
         });
     </script>
+    <style>
+        .store-utility-links {
+            display: none;
+        }
+    </style>
 <?php } ?>

@@ -285,7 +285,8 @@ class Order
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
         $order->addOrderItems(StoreCart::getCart());
-        if (!$pm->external) {
+
+        if (!$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference);
         }
 

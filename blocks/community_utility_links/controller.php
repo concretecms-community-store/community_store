@@ -49,9 +49,6 @@ class Controller extends BlockController
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
-
-        $this->set('shoppingDisabled', Config::get('community_store.shoppingDisabled') == 'all');
-
     }
     public function registerViewAssets($outputContent = '')
     {

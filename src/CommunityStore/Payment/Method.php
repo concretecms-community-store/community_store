@@ -263,4 +263,8 @@ class Method extends Controller
         $em->remove($this);
         $em->flush();
     }
+
+    public function isExternal() {
+        return false;
+    }
 }

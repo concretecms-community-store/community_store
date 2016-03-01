@@ -155,7 +155,7 @@ class Checkout extends PageController
             $pm = StorePaymentMethod::getByHandle('invoice');
         }
 
-        if($pm->getMethodController()->external == true){
+        if($pm->getMethodController()->isExternal() == true){
             $pmsess = Session::get('paymentMethod');
             $pmsess[$pm->getID()] = $data['payment-method'];
             Session::set('paymentMethod',$pmsess);
@@ -188,10 +188,6 @@ class Checkout extends PageController
         }
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
-    }
-    public function validate()
-    {
-        
     }
 
 }

@@ -51,7 +51,6 @@ abstract class ShippingMethodTypeMethod extends Controller
     abstract public function addMethodTypeMethod($data);
     abstract public function update($data);
     abstract public function isEligible();
-//    abstract public function getRate();
     abstract public function getOffers();
 
     public static function getByID($smtmID)
