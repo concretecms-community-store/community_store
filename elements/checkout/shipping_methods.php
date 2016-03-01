@@ -7,26 +7,21 @@ $eligibleMethods = StoreShippingMethod::getEligibleMethods();
 $i=1;
 if (!empty($eligibleMethods)) {
 foreach($eligibleMethods as $method){
-    $sessionShippingMethodID = Session::get('smID');
-    if($sessionShippingMethodID == $method->getID()){
-        $checked = true;
-    } else {
-        if($i==1){
-            $checked = true;
-        } else {
-            $checked = false;
-        }
-    } 
 ?>
-    <div class="radio">
-        <label>
-            <input type="radio" name="shippingMethod" value="<?= $method->getID()?>"<?php if($checked){echo " checked";}?>>
-            <div class="store-shipping-details">
-            <?php $rate = $method->getShippingMethodTypeMethod()->getRate(); ?>
-            <p><?= $method->getName()?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
-            <?= $method->getDetails(); ?>
-            </div>
-        </label>
+    <?php foreach($method->getOffers() as $offer) { ?>
+    <div class="store-shipping-method">
+        <div class="store-shipping-method-option radio">
+            <label>
+                <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == Session::get('smID')){echo " checked";}?>>
+                <div class="store-shipping-details">
+                <?php $rate = $offer->getRate(); ?>
+                <p><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                <?= $offer->getOfferDetails(); ?>
+                </div>
+            </label>
+        </div>
+        <?php } ?>
+        <?= $method->getDetails(); ?>
     </div>
 <?php $i++; } ?>
 <?php } else { ?>

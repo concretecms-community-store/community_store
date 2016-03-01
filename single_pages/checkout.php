@@ -261,14 +261,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <h2><?= t("Shipping") ?></h2>
 
                             <div id="store-checkout-shipping-method-options" data-error-message="<?= h(t('Please select a shipping method'));?>">
-
-                                <?php
-                                /* shipping options are loaded in via ajax,
-                                 * since we dont know which shipping methods are available
-                                 * until after the shipping address fields are filled out.
-                                 */
-                                ?>
-
                             </div>
 
                             <div class="store-checkout-form-group-buttons">
@@ -389,7 +381,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                 <?php if ($shippingEnabled) { ?>
                     <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
-                            id="shipping-total"><?= StorePrice::format($shippingtotal); ?></span></li>
+                            id="shipping-total" data-no-charge-label="<?=t('No Charge');?>"><?= $shippingtotal !== '' ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
                 <?php } ?>
                 <?php if (!empty($discounts)) { ?>
                     <li class="store-line-item store-discounts list-group-item">
