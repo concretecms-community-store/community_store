@@ -9,6 +9,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
  * @Entity
@@ -279,7 +280,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         }
     }
 
-    public function getRate()
+    private function getRate()
     {
         $shippableItems = StoreCart::getShippableItems();
         if (count($shippableItems) > 0) {
@@ -337,5 +338,19 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function getShippingMethodTypeName() {
         return t('Flat Rate');
+    }
+
+    public function getOffers() {
+        $offers = array();
+
+        $offer = new StoreShippingMethodOffer();
+        $offer->setRate($this->getRate());
+
+        $offers[] = $offer;
+        return $offers;
+    }
+
+    public function getOffer($key) {
+        $this->getOffers()[$key];
     }
 }

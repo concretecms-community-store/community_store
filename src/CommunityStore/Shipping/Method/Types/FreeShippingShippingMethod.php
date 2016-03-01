@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
+
 use Package;
 use Core;
 use Database;
@@ -8,6 +9,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
  * @Entity
@@ -213,7 +215,17 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         }
     }
 
-    public function getRate()
+    public function getOffers() {
+        $offers = array();
+
+        $offer = new StoreShippingMethodOffer();
+        $offer->setRate($this->getRate());
+
+        $offers[] = $offer;
+        return $offers;
+    }
+
+    private function getRate()
     {
         return 0;
     }

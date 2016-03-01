@@ -247,7 +247,7 @@ class Order
     {
         $customer = new StoreCustomer();
         $now = new \DateTime();
-        $smName = StoreShippingMethod::getActiveShippingMethodName();
+        $smName = StoreShippingMethod::getActiveShippingLabel();
         $shippingTotal = StoreCalculator::getShippingTotal();
         $taxes = StoreTax::getConcatenatedTaxStrings();
         $totals = StoreCalculator::getTotals();
