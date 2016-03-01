@@ -144,6 +144,12 @@
             <?= t('Quickview Link (Modal Window)')?>
         </label>
     </div>
+    <div class="checkbox">
+        <label>
+            <?= $form->checkbox('showQuantity',1,$showQuantity);?>
+            <?= t('Show Quantity Selector')?>
+        </label>
+    </div>
 </fieldset>
 
 

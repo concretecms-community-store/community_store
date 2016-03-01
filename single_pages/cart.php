@@ -4,29 +4,28 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 ?>
-<p class="store-cart">
 
-    <h1><?= t("Shopping Cart")?></h1>
+<h1><?= t("Shopping Cart")?></h1>
 
-    <?php if (isset($actiondata) and !empty($actiondata)) { ?>
-        <?php if( $actiondata['action'] =='update') { ?>
-            <p class="alert alert-success"><?= t('Your cart has been updated');?></p>
-        <?php } ?>
-
-        <?php if($actiondata['action'] == 'clear') { ?>
-            <p class="alert alert-warning"><?= t('Your cart has been cleared');?></p>
-        <?php } ?>
-
-        <?php if($actiondata['action'] == 'remove') { ?>
-            <p class="alert alert-warning"><?= t('Item removed');?></p>
-        <?php } ?>
-
-        <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
-            <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
-        <?php } ?>
+<?php if (isset($actiondata) and !empty($actiondata)) { ?>
+    <?php if( $actiondata['action'] =='update') { ?>
+        <p class="alert alert-success"><?= t('Your cart has been updated');?></p>
     <?php } ?>
 
-    <input id='cartURL' type='hidden' data-cart-url='<?= \URL::to("/cart/")?>'>
+    <?php if($actiondata['action'] == 'clear') { ?>
+        <p class="alert alert-warning"><?= t('Your cart has been cleared');?></p>
+    <?php } ?>
+
+    <?php if($actiondata['action'] == 'remove') { ?>
+        <p class="alert alert-warning"><?= t('Item removed');?></p>
+    <?php } ?>
+
+    <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
+        <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
+    <?php } ?>
+<?php } ?>
+
+<input id='cartURL' type='hidden' data-cart-url='<?= \URL::to("/cart/")?>'>
 
 
 <?php
@@ -103,8 +102,9 @@ $i=1;
             <?php if ($product->allowQuantity()) { ?>
 
                     <input type="hidden" name="instance[]" value="<?= $k?>" />
-                    <span class="cart-item-label"><?= t("Quantity:")?></span>
                     <input type="number" class="form-control" name="pQty[]" min="1" <?=($product->allowBackOrders() || $product->isUnlimited()  ? '' :'max="' . $product->getQty() . '"' );?> value="<?= $qty?>" style="width: 50px;">
+            <?php } else { ?>
+            1
             <?php } ?>
 
             <a name="action"  value="remove" data-instance="<?= $k?>" class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i class="fa fa-remove"></i><?php //echo t("Remove")?></a>
@@ -134,32 +134,6 @@ $i=1;
     </form>
 
 <?php }  ?>
-
-<style>
-    .table>tbody>tr>td, .table>tfoot>tr>td{
-        vertical-align: middle;
-    }
-    @media screen and (max-width: 600px) {
-        table#cart tbody td .form-control{
-            width:20%;
-            display: inline !important;
-        }
-
-
-        table#cart thead { display: none; }
-        table#cart tbody td { display: block;}
-        table#cart tbody td:before {
-            content: attr(data-th); font-weight: bold;
-            display: inline-block; width: 8rem;
-        }
-
-        table#cart tfoot td{display:block; }
-
-    }
-
-</style>
-
-
 
     <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code');?></h3>

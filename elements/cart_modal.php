@@ -68,12 +68,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
                             <td class="store-cart-list-thumb col-xs-2">
-                                <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                                <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
                                     <?= $product->getImageThumb()?>
                                 </a>
                             </td>
                             <td class="store-cart-list-product-name col-xs-5">
-                                <a href="<?=URL::page(Page::getByID($product->getPageID()))?>">
+                                <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
                                     <?= $product->getName()?>
                                 </a>
 
@@ -102,7 +102,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php if ($product->allowQuantity()) { ?>
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
                                     <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
-                                <?php } ?>
+                                <?php }  else { ?>
+                                1
+                            <?php } ?>
                             </td>
                             <td>
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>

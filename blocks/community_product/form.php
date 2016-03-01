@@ -122,28 +122,38 @@ $(function(){
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured);?>
-                <?= t('Show if featured')?>
+                <?= t('Show If Featured')?>
             </label>
         </div>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('showGroups', 1, !isset($showGroups) ? true : $showGroups);?>
-                <?= t('Show Product Groups')?>
-            </label>
-        </div>
+<!--        <div class="checkbox">-->
+<!--            <label>-->
+<!--                --><?//= $form->checkbox('showGroups', 1, !isset($showGroups) ? false : $showGroups);?>
+<!--                --><?//= t('Show Product Groups')?>
+<!--            </label>-->
+<!--        </div>-->
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showDimensions', 1, $showDimensions);?>
                 <?= t('Show Dimensions')?>
             </label>
         </div>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showQuantity', 1, $showQuantity);?>
+                <?= t('Show Quantity Selector')?>
+            </label>
+        </div>
         
     </div>
-</div>    
-
-<div class="form-group">
-    <?= $form->label('btnText', t("Add to Cart Button Text"))?>
-    <?= $form->text('btnText', $btnText, array('placeholder'=>t('Add To Cart')))?>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <?= $form->label('btnText', t("Add to Cart Button Text"))?>
+            <?= $form->text('btnText', $btnText, array('placeholder'=>t('Add To Cart')))?>
+        </div>
+    </div>
 </div>
 
 

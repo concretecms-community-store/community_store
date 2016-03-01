@@ -83,8 +83,18 @@ if($products){
                 <?php if($showPageLink){?>
                 <p><a href="<?= \URL::page(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
                 <?php } ?>
-                <?php if($showAddToCart){
+                <?php if($showAddToCart){ ?>
 
+                <?php if ($product->allowQuantity() && $showQuantity) { ?>
+                    <div class="store-product-quantity form-group">
+                        <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
+                        <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                    </div>
+                <?php } else { ?>
+                    <input type="hidden" name="quantity" class="store-product-qty" value="1">
+                <?php } ?>
+
+                <?php
                 foreach($options as $option) {
                     $optionItems = $option->getOptionItems();
                     ?>
@@ -106,7 +116,8 @@ if($products){
                 }?>
 
                 <input type="hidden" name="pID" value="<?= $product->getID()?>">
-                <input type="hidden" name="quantity" class="store-product-qty" value="1">
+
+
                 <p><a href="#" data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></a></p>
                 <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 

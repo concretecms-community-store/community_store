@@ -19,6 +19,7 @@
 		<field name="showQuickViewLink" type="I"><unsigned/></field>
 		<field name="showPageLink" type="I"><unsigned/></field>
 		<field name="showAddToCart" type="I"><unsigned/></field>
+		<field name="showQuantity" type="I"><unsigned/></field>
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">

@@ -17,6 +17,7 @@
 		<field name="showIsFeatured" type="I"></field>
 		<field name="showGroups" type="I"></field>
 		<field name="showDimensions" type="I"></field>
+		<field name="showQuantity" type="I"><unsigned/></field>
 		<field name="btnText" type="C" size="255"></field>
 	</table>
 </schema>
