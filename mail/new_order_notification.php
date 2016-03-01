@@ -102,9 +102,12 @@ ob_start();
     </tbody>
 </table>
 
-<p>
     <?php if ($order->isShippable()) { ?>
         <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
+    <?php } ?>
+
+    <?php if ($order->isShippable()) { ?>
+        <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
     <?php } ?>
 
     <?php $applieddiscounts = $order->getAppliedDiscounts();
@@ -125,7 +128,14 @@ ob_start();
             :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
     <?php } ?>
 
-    <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?>
+    <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
+
+    <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
+    <?php $transactionReference = $order->getTransactionReference();
+    if ($transactionReference) { ?>
+        <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
+    <?php } ?>
+
 </p>
 
 

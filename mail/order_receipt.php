@@ -138,6 +138,7 @@ if (count($downloads) > 0) {
 <p>
     <?php if ($order->isShippable()) { ?>
         <strong><?= t("Shipping") ?>:</strong>  <?= Price::format($order->getShippingTotal()) ?><br>
+        <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
     <?php } ?>
 
     <?php $applieddiscounts = $order->getAppliedDiscounts();
@@ -158,7 +159,8 @@ if (count($downloads) > 0) {
             :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
     <?php } ?>
 
-    <strong class="text-large"><?= t("Total") ?>:</strong> <?= Price::format($order->getTotal()) ?>
+    <strong class="text-large"><?= t("Total") ?>:</strong> <?= Price::format($order->getTotal()) ?><br><br>
+    <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
 </p>
 </body>
 </html>
