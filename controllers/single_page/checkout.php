@@ -179,16 +179,12 @@ class Checkout extends PageController
     public function external()
     {
         $pm = Session::get('paymentMethod');
-        /*print_r($pm);
-        exit();die();
-        */
+
         foreach($pm as $pmID=>$handle){
             $pm = StorePaymentMethod::getByID($pmID);
         }
-        //$pm = PaymentMethod::getByHandle($pm[3]);
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
-
     }
     public function validate()
     {

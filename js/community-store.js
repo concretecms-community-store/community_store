@@ -525,7 +525,11 @@ $(document).ready(function () {
                 data: {smID: smID},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
-                    $("#shipping-total").text(total);
+                    if (total <= 0) {
+                        $("#shipping-total").text($("#shipping-total").data('no-charge-label'));
+                    } else {
+                        $("#shipping-total").text(total);
+                    }
                     $.ajax({
                         url: CARTURL + "/getTaxTotal",
                         success: function (results) {

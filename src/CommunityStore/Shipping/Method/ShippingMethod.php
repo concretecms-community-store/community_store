@@ -41,6 +41,20 @@ class ShippingMethod
      */
     protected $smEnabled;
 
+    protected $smOfferKey;
+
+    public function setOfferKey($key) {
+        $this->smOfferKey = $key;
+    }
+
+    public function getOfferKey() {
+        if ($this->smOfferKey) {
+            return $this->smOfferKey;
+        } else {
+            return 0;
+        }
+    }
+
     public function setShippingMethodTypeID($smt)
     {
         $this->smtID = $smt->getShippingMethodTypeID();
@@ -77,6 +91,27 @@ class ShippingMethod
 
         return $methodTypeMethod;
     }
+    public function getOffers() {
+        $offers = $this->getShippingMethodTypeMethod()->getOffers();
+        $count = 0;
+
+        foreach($offers as $offer) {
+            $offer->setMethodLabel($this->getName());
+            $offer->setKey($this->getID().'_' . $count++);
+        }
+        return $offers;
+    }
+
+    public function getCurrentOffer() {
+        $currentOffers = $this->getOffers();
+
+        if ($currentOffers && isset($currentOffers[$this->getOfferKey()])) {
+            return $this->getOffers()[$this->getOfferKey()];
+        } else {
+            return null;
+        }
+    }
+
     public function getName()
     {
         return $this->smName;
@@ -92,10 +127,19 @@ class ShippingMethod
 
     public static function getByID($smID)
     {
+        $ident = explode('_', $smID);
+        $smID = $ident[0];
+
         $db = Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find(get_called_class(), $smID);
+        $method =  $em->find(get_called_class(), $smID);
+
+        if (isset($ident[1])) {
+            $method->setOfferKey($ident[1]);
+        }
+
+        return $method;
     }
 
     public static function getAvailableMethods($methodTypeID = null)
@@ -186,17 +230,16 @@ class ShippingMethod
         }
     }
 
-    public static function getActiveShippingMethodName()
-    {
-        $sm = self::getActiveShippingMethod();
-        if ($sm instanceof self) {
-            $shippingMethodTypeName = $sm->getShippingMethodType()->getShippingMethodTypeName();
-            $shippingMethodName = $sm->getName();
-            $smName = $shippingMethodTypeName.": ".$shippingMethodName;
-        } else {
-            $smName = '';
+    public static function getActiveShippingLabel() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getLabel();
+            }
         }
 
-        return $smName;
+       return t('Unknown');
     }
 }

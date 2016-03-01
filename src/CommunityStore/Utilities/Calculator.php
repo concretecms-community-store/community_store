@@ -39,7 +39,7 @@ class Calculator
             $shippingTotal = 0;
         }
         if (is_object($shippingMethod)) {
-            $shippingTotal = $shippingMethod->getShippingMethodTypeMethod()->getRate();
+            $shippingTotal = $shippingMethod->getCurrentOffer()->getRate();
         } else {
             $shippingTotal = 0;
         }
