@@ -367,6 +367,7 @@ class Order
     {
         if ($transactionReference) {
             $this->setTransactionReference($transactionReference);
+            $this->save();
         }
 
         $fromEmail = Config::get('community_store.emailalerts');
