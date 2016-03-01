@@ -160,7 +160,6 @@ if (is_object($product)) {
             <div class="row">
                 <?php if ($showProductDetails) { ?>
                     <div class="store-product-detailed-description col-md-12">
-                        <h2><?= t("Product Details") ?></h2>
                         <?= $product->getDetail() ?>
                     </div>
                 <?php } ?>
