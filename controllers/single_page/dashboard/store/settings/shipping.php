@@ -94,13 +94,7 @@ class Shipping extends DashboardPageController
         if($data['methodName']==""){
             $e->add(t("Method Name must be set"));
         }
-        if(!is_numeric($data['minimumAmount'])){
-            $e->add(t("Minimum Amount must be numeric"));
-        }
-        if(!is_numeric($data['maximumAmount'])){
-            $e->add(t("Maximum Amount must be numeric"));
-        }
-        
+
         //pass the validator to the shipping method to check for it's own errors
         $shippingMethodType = StoreShippingMethodType::getByID($data['shippingMethodTypeID']);
         $e = $shippingMethodType->getMethodTypeController()->validate($data,$e);

@@ -183,9 +183,6 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
     {
         $this->set('form', Core::make("helper/form"));
         $this->set('smt', $this);
-        $pkg = Package::getByHandle("community_store");
-        $pkgconfig = $pkg->getConfig();
-        $this->set('config', $pkgconfig);
         $this->set('countryList', Core::make('helper/lists/countries')->getCountries());
 
         if (is_object($shippingMethod)) {

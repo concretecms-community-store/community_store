@@ -59,6 +59,10 @@ abstract class ShippingMethodTypeMethod extends Controller
         return $em->getRepository(get_called_class())->find($smtmID);
     }
 
+    public function validate($args, $e) {
+        return $e;
+    }
+
     public function save()
     {
         $em = Database::connection()->getEntityManager();
