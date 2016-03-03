@@ -7,7 +7,7 @@
   },
   "minimum-stability": "dev",
   "support": {
-    "source": "https://github.com/mesuva/community_store/src"
+    "source": "https://github.com/concrete5-community-store/community_store/src"
   },
   "require": {
     "dvdoug/boxpacker": "~1.5"
