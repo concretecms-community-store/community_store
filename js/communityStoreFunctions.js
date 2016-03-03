@@ -85,9 +85,11 @@ $(function(){
 var url = window.location.pathname.toString();
 var urlArray = url.split('/');
 var saveSuccess = urlArray[urlArray.length - 1];
-if(saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added"){
+if(saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added" || isNaN(parseInt(localStorage.getItem("selectedTabIndex")))){
     localStorage.removeItem("selectedTab");
-}else{
+    localStorage.removeItem("selectedTabIndex");
+}
+else{
     $(".store-pane").removeClass('active'); 
      $('a[data-pane-toggle]').parent().removeClass('active');
      var paneTarget = localStorage.getItem("selectedTab");
