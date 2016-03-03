@@ -68,6 +68,9 @@ class Order
     /** @Column(type="text", nullable=true) */
     protected $transactionReference;
 
+    /** @Column(type="datetime", nullable=true) */
+    protected $externalPaymentRequested;
+
     public function setCustomerID($cID)
     {
         $this->cID = $cID;
@@ -219,6 +222,20 @@ class Order
         return $this->transactionReference;
     }
 
+    public function getExternalPaymentRequested()
+    {
+        return $this->externalPaymentRequested;
+    }
+
+    public function setExternalPaymentRequested($bool)
+    {
+        if ($bool) {
+            $this->externalPaymentRequested = new \DateTime();
+        } else {
+            $this->externalPaymentRequested = null;
+        }
+    }
+
     public static function getByID($oID)
     {
         $db = Database::connection();
@@ -264,6 +281,10 @@ class Order
         $order->setTaxIncluded($taxes['taxIncludedTotals']);
         $order->setTaxLabels($taxes['taxLabels']);
         $order->setTotal($total);
+        if ($pm->getMethodController()->isExternal()) {
+            $order->setExternalPaymentRequested();
+        }
+
         $order->save();
 
         $discounts = StoreCart::getDiscounts();
@@ -367,8 +388,10 @@ class Order
     {
         if ($transactionReference) {
             $this->setTransactionReference($transactionReference);
-            $this->save();
         }
+
+        $this->setExternalPaymentRequested(null);
+        $this->save();
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {

@@ -64,6 +64,11 @@ class OrderList  extends AttributedItemList
             $this->query->setMaxResults($this->limit);
         }
 
+        if (isset($this->externalPaymentRequested) && $this->externalPaymentRequested) {
+        } else {
+            $this->query->andWhere('o.externalPaymentRequested is null');
+        }
+
         $this->query->orderBy('oID', 'DESC');
 
         return $this->query;
@@ -78,6 +83,12 @@ class OrderList  extends AttributedItemList
     {
         $this->status = $status;
     }
+
+    public function setIncludeExternalPaymentRequested($bool)
+    {
+        $this->externalPaymentRequested = $bool;
+    }
+
     public function setFromDate($date = null)
     {
         if (!$date) {
