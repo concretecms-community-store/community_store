@@ -13,12 +13,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StoreP
 
 class Settings extends DashboardPageController
 {
-
-    public function on_start()
-    {
-        
-    }
-
     public function view(){
        $this->loadFormAssets();
        $this->set("pageSelector",Core::make('helper/form/page_selector'));
@@ -85,33 +79,40 @@ class Settings extends DashboardPageController
                 //save payment methods
                 if($args['paymentMethodHandle']){
 
+                    $paymentData = array();
+
                     foreach($args['paymentMethodEnabled'] as $pmID=>$value){
-                        $pm = StorePaymentMethod::getByID($pmID);
-                        $pm->setEnabled($value);
-                        $controller = $pm->getMethodController();
-                        $controller->save($args);
+                        $paymentData[$pmID]['paymentMethodEnabled'] = $value;
                     }
 
                     foreach($args['paymentMethodDisplayName'] as $pmID=>$value){
-                        $pm = StorePaymentMethod::getByID($pmID);
-                        $pm->setDisplayName($value);
-                        $pm->save();
+                        $paymentData[$pmID]['paymentMethodDisplayName'] = $value;
+                    }
+
+                    foreach($args['paymentMethodButtonLabel'] as $pmID=>$value){
+                        $paymentData[$pmID]['paymentMethodButtonLabel'] = $value;
                     }
 
                     foreach($args['paymentMethodSortOrder'] as $pmID=>$value){
+                        $paymentData[$pmID]['paymentMethodSortOrder'] = $value;
+                    }
+
+                    foreach($paymentData as $pmID=>$data){
                         $pm = StorePaymentMethod::getByID($pmID);
-                        $pm->setSortOrder($value);
+                        $pm->setEnabled($data['paymentMethodEnabled']);
+                        $pm->setDisplayName($data['paymentMethodDisplayName']);
+                        $pm->setButtonLabel($data['paymentMethodButtonLabel']);
+                        $pm->setSortOrder($data['paymentMethodSortOrder']);
+                        $controller = $pm->getMethodController();
+                        $controller->save($args);
                         $pm->save();
                     }
                 }
 
                 $this->saveOrderStatuses($args);
-                
                 $this->redirect('/dashboard/store/settings/success');
-                
-            }//if no errors 
-
-        }//if post
+            }
+        }
 
     }
 

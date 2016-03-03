@@ -101,9 +101,15 @@
                                         ?>
                                     </div>
                                     <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block':'none'; ?>">
-                                        <div class="form-group">
-                                            <label><?= t("Display Name (on checkout)")?></label>
-                                            <?= $form->text('paymentMethodDisplayName['.$pm->getID().']',$pm->getDisplayName()); ?>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label><?= t("Display Name (on checkout)")?></label>
+                                                <?= $form->text('paymentMethodDisplayName['.$pm->getID().']',$pm->getDisplayName()); ?>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label><?= t("Button Label")?></label>
+                                                <?= $form->text('paymentMethodButtonLabel['.$pm->getID().']',$pm->getButtonLabel(), array('placeholder'=>t('Optional'))); ?>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label><?= t("Sort Order")?></label>

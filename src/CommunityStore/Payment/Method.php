@@ -29,6 +29,9 @@ class Method extends Controller
     /** @Column(type="text", nullable=true) */
     protected $pmDisplayName;
 
+    /** @Column(type="text", nullable=true) */
+    protected $pmButtonLabel;
+
     /** @Column(type="boolean") */
     protected $pmEnabled;
 
@@ -64,6 +67,16 @@ class Method extends Controller
     public function setName($name)
     {
         return $this->pmName = $name;
+    }
+
+    public function getButtonLabel()
+    {
+        return $this->pmButtonLabel;
+    }
+
+    public function setButtonLabel($pmButtonLabel)
+    {
+        $this->pmButtonLabel = $pmButtonLabel;
     }
 
     public function getPackageID()
@@ -169,7 +182,7 @@ class Method extends Controller
      * @param string $pmDisplayName
      * @param bool $enabled
      */
-    public static function add($pmHandle, $pmName, $pkg = null)
+    public static function add($pmHandle, $pmName, $pmButtonLabel, $pkg = null)
     {
         $pm = self::getByHandle($pmHandle);
         if (!($pm instanceof self)) {
@@ -178,6 +191,7 @@ class Method extends Controller
             $paymentMethod->setName($pmName);
             $paymentMethod->setPackageID($pkg->getPackageID());
             $paymentMethod->setDisplayName($pmName);
+            $paymentMethod->setButtonLabel($pmButtonLabel);
             $paymentMethod->setEnabled(false);
             $paymentMethod->save();
         }
@@ -266,5 +280,8 @@ class Method extends Controller
 
     public function isExternal() {
         return false;
+    }
+
+    public function redirectForm() {
     }
 }

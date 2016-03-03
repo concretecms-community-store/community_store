@@ -15,6 +15,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Sto
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 
 class Checkout extends PageController
 {
@@ -140,34 +141,31 @@ class Checkout extends PageController
     public function failed()
     {
         $this->set('paymentErrors',Session::get('paymentErrors'));
+        $this->set('activeShippingLabel', StoreShippingMethod::getActiveShippingLabel());
+        $this->set('shippingTotal', StoreCalculator::getShippingTotal());
+        $this->set('lastPaymentMethodHandle',Session::get('paymentMethod'));
         $this->view();
     }
     public function submit()
     {
         $data = $this->post();
+        Session::set('paymentMethod',$data['payment-method']);
         
         //process payment
         $pmHandle = $data['payment-method'];
         $pm = StorePaymentMethod::getByHandle($pmHandle);
         if($pm === false){
-            //There was no payment method enabled somehow.
-            //so we'll force invoice.
-            $pm = StorePaymentMethod::getByHandle('invoice');
+            $this->redirect("/checkout");
+            exit();
         }
 
-        if($pm->getMethodController()->isExternal() == true){
-            $pmsess = Session::get('paymentMethod');
-            $pmsess[$pm->getID()] = $data['payment-method'];
-            Session::set('paymentMethod',$pmsess);
+        if($pm->getMethodController()->isExternal()){
             $order = StoreOrder::add($data,$pm,null,'incomplete');
             Session::set('orderID',$order->getOrderID());
             $this->redirect('/checkout/external');
         } else {
             $payment = $pm->submitPayment();
             if($payment['error']==1){
-                $pmsess = Session::get('paymentMethod');
-                $pmsess[$pm->getID()] = $data['payment-method'];
-                Session::set('paymentMethod',$pmsess);
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors',$errors);
                 $this->redirect("/checkout/failed#payment");
@@ -181,11 +179,9 @@ class Checkout extends PageController
     }
     public function external()
     {
-        $pm = Session::get('paymentMethod');
+        $pmHandle = Session::get('paymentMethod');
+        $pm = StorePaymentMethod::getByHandle($pmHandle);
 
-        foreach($pm as $pmID=>$handle){
-            $pm = StorePaymentMethod::getByID($pmID);
-        }
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
     }

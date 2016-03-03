@@ -53,7 +53,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                 </div>
             <?php } else { ?>
-                <form class="store-checkout-form-group store-active-form-group" id="store-checkout-form-group-billing" action="">
+                <form class="store-checkout-form-group store-active-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-billing" action="">
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Billing Address") ?></h2>
                         <div class="row">
@@ -128,12 +128,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                         </div>
                         <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-default" value="<?= t("Next") ?>">
+                            <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
 
-                    <div class="store-checkout-form-group-summary panel panel-default">
+                    <div class="store-checkout-form-group-summary <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?> panel panel-default ">
                         <div class="panel-heading">
                             <?= t('Billing Address'); ?>
                         </div>
@@ -141,28 +141,27 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-sm-6">
                                 <label><?= t('Name'); ?></label>
 
-                                <p class="store-summary-name"></p>
+                                <p class="store-summary-name"><?= $customer->getValue("billing_first_name") . ' ' . $customer->getValue("billing_last_name"); ?></p>
 
                                 <label><?= t('Email'); ?></label>
 
-                                <p class="store-summary-email"></p>
+                                <p class="store-summary-email"><?= $customer->getEmail(); ?></p>
 
                                 <label><?= t('Phone'); ?></label>
 
-                                <p class="store-summary-phone"></p>
+                                <p class="store-summary-phone"><?= $customer->getValue("billing_phone"); ?></p>
                             </div>
 
                             <div class="col-sm-6">
                                 <label><?= t('Address'); ?></label>
-
-                                <p class="store-summary-address"></p>
+                                <p class="store-summary-address"><?= nl2br($customer->getValue("billing_address")); ?></p>
                             </div>
                         </div>
                     </div>
 
                 </form>
                 <?php if ($shippingEnabled) { ?>
-                    <form class="store-checkout-form-group" id="store-checkout-form-group-shipping">
+                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping">
 
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
@@ -230,7 +229,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -241,21 +240,19 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="row panel-body">
                                 <div class="col-sm-6">
                                     <label><?= t('Name'); ?></label>
-
-                                    <p class="store-summary-name"></p>
+                                    <p class="store-summary-name"><?= $customer->getValue("billing_first_name") . ' ' . $customer->getValue("billing_last_name"); ?></p>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <label><?= t('Address'); ?></label>
 
-                                    <p class="store-summary-address"></p>
+                                    <p class="store-summary-address"><?= nl2br($customer->getValue("shipping_address")); ?></p>
                                 </div>
                             </div>
                         </div>
                     </form>
 
-                    <form class="store-checkout-form-group" id="store-checkout-form-group-shipping-method">
-
+                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping-method">
 
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
@@ -265,7 +262,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
@@ -276,14 +273,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                             <div class="row panel-body">
                                 <div class="col-md-6">
-                                    <div class="summary-shipping-method"></div>
+                                    <div class="summary-shipping-method">
+                                        <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? StorePrice::format($shippingTotal) : t('No Charge');?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
                 <?php } ?>
 
-                <form class="store-checkout-form-group" id="store-checkout-form-group-payment" method="post"
+                <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
                       action="<?= \URL::to('/checkout/submit') ?>">
 
                     <div class="store-checkout-form-group-body">
@@ -297,7 +296,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                     <?php
                                     $i = 1;
                                     foreach ($enabledPaymentMethods as $pm):
-                                        if ($i == 1) {
+                                        if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
                                             $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
                                         } else {
                                             $props = array('data-payment-method-id' => $pm->getID());
@@ -309,33 +308,38 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                                 <?= $pm->getDisplayName() ?>
                                             </label>
                                         </div>
+
                                         <?php
                                         $i++;
                                     endforeach; ?>
                                 </div>
                             </div>
-                            <div class="store-payment-errors alert alert-danger <?php if ($controller->getTask() == 'view') {
-                                echo "hidden";
-                            } ?>"><?= $paymentErrors ?></div>
+
                             <?php
                             foreach ($enabledPaymentMethods as $pm) {
-                                echo "<div class=\"store-payment-method-container hidden\" data-payment-method-id=\"{$pm->getID()}\">";
+                                echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
+                                 if ($pm->getHandle() == $lastPaymentMethodHandle) { ?>
+                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getTask() == 'view') {
+                                echo "hidden";
+                            } ?>"><?= $paymentErrors ?></div>
+                                <?php }
+
+
                                 $pm->renderCheckoutForm();
-                                echo "</div>";
-                            }
+                                ?>
+                                <div class="store-checkout-form-group-buttons">
+                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
+
+                                </div></div>
+
+                            <?php    }
                         } else {  //if payment methods
                             ?>
                             <p class="alert alert-warning"><?= t('There are currently no payment methods available to process your order.'); ?></p>
                         <?php } ?>
 
-                        <div class="store-checkout-form-group-buttons">
-                            <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
 
-                            <?php if ($enabledPaymentMethods) { ?>
-                                <input type="submit" class="store-btn-complete-order btn btn-default"
-                                       value="<?= t("Complete Order") ?>">
-                            <?php } ?>
-                        </div>
 
                     </div>
 
