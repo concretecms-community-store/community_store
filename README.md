@@ -26,10 +26,10 @@ Payment gateways are to be installed as additional add-ons.
 Additional gateways can be found at:
 
 ### Paypal Standard
-https://github.com/Mesuva/community_store_paypal_standard
+https://github.com/concrete5-community-store/community_store_paypal_standard
 
 ### Stripe
-https://github.com/Mesuva/community_store_stripe
+https://github.com/concrete5-community-store/community_store_stripe
 
 The use of the Ominpay library is encouraged to developed further payment add-ons (used by the Stripe add-on).
 
@@ -37,7 +37,6 @@ The use of the Ominpay library is encouraged to developed further payment add-on
 ### Use Statements
 Use statements that include Community Store classes should be aliased with the word 'Store'.
 i.e. 
-        
         use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 ### Class/ID Naming
