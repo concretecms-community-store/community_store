@@ -136,13 +136,7 @@ var communityStore = {
                                 url: CARTURL + "/getTotal",
                                 success: function (total) {
                                     $(".cart-grand-total-value").text(total);
-                                }
-                            });
-
-                            $.ajax({
-                                url: CARTURL + '/getTotal',
-                                success: function (subTotal) {
-                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(total);
                                 }
                             });
                         }
@@ -181,13 +175,7 @@ var communityStore = {
                                 url: CARTURL + "/getTotal",
                                 success: function (total) {
                                     $(".store-cart-grand-total-value").text(total);
-                                }
-                            });
-
-                            $.ajax({
-                                url: CARTURL + '/getTotal',
-                                success: function (subTotal) {
-                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(total);
                                 }
                             });
                         }
@@ -225,13 +213,7 @@ var communityStore = {
                                 url: CARTURL + "/getTotal",
                                 success: function (total) {
                                     $(".store-cart-grand-total-value").text(total);
-                                }
-                            });
-
-                            $.ajax({
-                                url: CARTURL + '/getTotal',
-                                success: function (subTotal) {
-                                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
+                                    $(".store-utility-links .store-total-cart-amount").text(total);
                                 }
                             });
                         }
