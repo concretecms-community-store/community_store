@@ -94,7 +94,7 @@ class Product
     protected $pNoQty;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="integer",nullable=true)
      */
     protected $pTaxClass;
 
