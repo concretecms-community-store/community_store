@@ -112,8 +112,8 @@ if (is_object($product)) {
                         <p class="store-product-button">
                             <input type="hidden" name="pID" value="<?= $product->getID() ?>">
 
-                            <span><a href="#" data-add-type="none" data-product-id="<?= $product->getID() ?>"
-                                  class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></a>
+                            <span><button data-add-type="none" data-product-id="<?= $product->getID() ?>"
+                                  class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></button>
                             </span>
                             <span
                                 class="store-out-of-stock-label <?= ($product->isSellable() ? 'hidden' : ''); ?>"><?= t("Out of Stock") ?></span>
