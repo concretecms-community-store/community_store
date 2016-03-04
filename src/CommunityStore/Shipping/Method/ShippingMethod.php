@@ -135,11 +135,14 @@ class ShippingMethod
 
         $method =  $em->find(get_called_class(), $smID);
 
-        if (isset($ident[1])) {
-            $method->setOfferKey($ident[1]);
+        if ($method) {
+            if (isset($ident[1])) {
+                $method->setOfferKey($ident[1]);
+            }
+            return $method;
         }
 
-        return $method;
+        return false;
     }
 
     public static function getAvailableMethods($methodTypeID = null)
