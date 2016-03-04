@@ -259,7 +259,7 @@ class Method extends Controller
         return 1000000000; // raises pinky
     }
 
-    public function save()
+    public function save(array $data = [])
     {
         $em = Database::connection()->getEntityManager();
         $em->persist($this);
