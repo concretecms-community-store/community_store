@@ -124,6 +124,7 @@ if (is_object($product)) {
 
                 <?php if ($showImage) { ?>
                     <div class="product-image col-md-6">
+                        <p>
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
@@ -154,6 +155,7 @@ if (is_object($product)) {
                             echo '</div>';
                         }
                         ?>
+                        </p>
                     </div>
                 <?php } ?>
             </div>

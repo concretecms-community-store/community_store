@@ -142,7 +142,7 @@ class Cart
             }
         }
 
-        if (!empty($optionItemIds)) {
+        if (!empty($optionItemIds) && $product->hasVariations()) {
             // find the variation via the ids of the options
             $variation = StoreProductVariation::getByOptionItemIDs($optionItemIds);
 
