@@ -14,7 +14,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
         $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
     }
 
-    public function save($data)
+    public function save(array $data = [])
     {
         Config::save('community_store.invoiceMinimum', $data['invoiceMinimum']);
         Config::save('community_store.invoiceMaximum', $data['invoiceMaximum']);
