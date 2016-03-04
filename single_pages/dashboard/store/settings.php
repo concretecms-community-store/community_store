@@ -17,6 +17,7 @@
                             <li><a href="#settings-payments" data-pane-toggle><?= t('Payments')?></a></li>
                             <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Order Statuses')?></a></li>
                             <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications')?></a></li>
+                            <li><a href="#settings-products" data-pane-toggle><?= t('Products')?></a></li>
                             <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
                         </ul>
 
@@ -228,7 +229,7 @@
 
                 <!-- #settings-products -->
                 <div class="col-sm-9 store-pane" id="settings-products">
-                    <h3><?= t("Order Statuses")?></h3>
+                    <h3><?= t("Products")?></h3>
                     <div class="form-group">
                         <?= $form->label('productPublishTarget',t('Page to Publish Product Pages Under'));?>
                         <?= $pageSelector->selectPage('productPublishTarget',$productPublishTarget)?>

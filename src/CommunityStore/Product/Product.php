@@ -917,27 +917,33 @@ class Product
     {
         $pkg = Package::getByHandle('community_store');
         $targetCID = Config::get('community_store.productPublishTarget');
-        $parentPage = Page::getByID($targetCID);
-        $pageType = PageType::getByHandle('store_product');
-        $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();
-        if ($templateID) {
-            $pt = PageTemplate::getByID($templateID);
-            if (is_object($pt)) {
-                $pageTemplate = $pt;
+
+        if ($targetCID > 0) {
+            $parentPage = Page::getByID($targetCID);
+            $pageType = PageType::getByHandle('store_product');
+            $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();
+
+            if ($parentPage && $pageType && $pageTemplate) {
+                if ($templateID) {
+                    $pt = PageTemplate::getByID($templateID);
+                    if (is_object($pt)) {
+                        $pageTemplate = $pt;
+                    }
+                }
+                $newProductPage = $parentPage->add(
+                    $pageType,
+                    array(
+                        'cName' => $this->getName(),
+                        'pkgID' => $pkg->getPackageID(),
+                    ),
+                    $pageTemplate
+                );
+                $newProductPage->setAttribute('exclude_nav', 1);
+
+                $this->savePageID($newProductPage->getCollectionID());
+                $this->setPageDescription($this->getDesc());
             }
         }
-        $newProductPage = $parentPage->add(
-            $pageType,
-            array(
-                'cName' => $this->getName(),
-                'pkgID' => $pkg->getPackageID(),
-            ),
-            $pageTemplate
-        );
-        $newProductPage->setAttribute('exclude_nav', 1);
-
-        $this->savePageID($newProductPage->getCollectionID());
-        $this->setPageDescription($this->getDesc());
     }
     public function setPageDescription($newDescription)
     {

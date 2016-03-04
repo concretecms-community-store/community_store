@@ -956,28 +956,31 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?php } else { ?>
 
                         <div class="alert alert-warning">
-                            <?= t("This product is missing a corrosponding page in the sitemap")?>
+                            <?= t("This product is missing a corresponding page in the sitemap")?>
                         </div>
 
+                        <?php if (Config::get('community_store.productPublishTarget') > 0) { ?>
                         <div class="form-group">
                             <label><?= t("Page Template")?></label>
                             <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                         </div>
 
-                        <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?'));?>" href="<?= \URL::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
-
+                            <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?'));?>" href="<?= \URL::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
+                        <?php } else { ?>
+                            <div class="alert alert-warning">
+                                <?= t("No page is configured as the parent page for new products")?>
+                            </div>
+                        <?php } ?>
 
                     <?php } ?>
 
                 <?php } else { ?>
 
-                    <div class="alert alert-info">
-                        <?= t("When you create a product, we'll make a page for that product. Below is the available templates for the Product Page Type. Choose one, and we'll use this to create the Detail page.")?>
-                    </div>
                     <div class="form-group">
                         <label><?= t("Page Template")?></label>
                         <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                     </div>
+
 
                 <?php } ?>
 
