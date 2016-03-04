@@ -69,8 +69,7 @@ class Installer
                     'cName' => t('Products'),
                     'cHandle' => 'products',
                     'pkgID' => $pkg->getPackageID(),
-                ),
-                PageTemplate::getByHandle('full')
+                )
             );
         }
         $productParentPage->setAttribute('exclude_nav', 1);
@@ -295,9 +294,9 @@ class Installer
     public static function createDDFileset(Package $pkg)
     {
         //create fileset to place digital downloads
-        $fs = FileSet::getByName('Digital Downloads');
+        $fs = FileSet::getByName(t('Digital Downloads'));
         if (!is_object($fs)) {
-            FileSet::add("Digital Downloads");
+            FileSet::add(t("Digital Downloads"));
         }
     }
 
