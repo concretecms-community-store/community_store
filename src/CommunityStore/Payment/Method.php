@@ -182,7 +182,7 @@ class Method extends Controller
      * @param string $pmDisplayName
      * @param bool $enabled
      */
-    public static function add($pmHandle, $pmName, $pmButtonLabel, $pkg = null)
+    public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel ='', $enabled = false)
     {
         $pm = self::getByHandle($pmHandle);
         if (!($pm instanceof self)) {
@@ -192,7 +192,7 @@ class Method extends Controller
             $paymentMethod->setPackageID($pkg->getPackageID());
             $paymentMethod->setDisplayName($pmName);
             $paymentMethod->setButtonLabel($pmButtonLabel);
-            $paymentMethod->setEnabled(false);
+            $paymentMethod->setEnabled($enabled);
             $paymentMethod->save();
         }
     }

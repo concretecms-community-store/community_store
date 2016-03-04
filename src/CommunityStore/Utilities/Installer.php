@@ -119,7 +119,7 @@ class Installer
     {
         self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
     }
-    public static function installPaymentMethod($handle, $name, $pkg = null, $displayName = null, $enabled = false)
+    public static function installPaymentMethod($handle, $name, $pkg = null,$displayName = null, $enabled = true)
     {
         $pm = StorePaymentMethod::getByHandle($handle);
         if (!is_object($pm)) {
