@@ -23,7 +23,7 @@
 
     <p>
         <?php if ($showCartItems) { ?>
-            <span class="store-items-in-cart"><?= $itemsLabel ?> (<span class="items-counter"><?= $itemCount ?></span>)</span>
+            <span class="store-items-in-cart"><?= $itemsLabel ?> (<span class="store-items-counter"><?= $itemCount ?></span>)</span>
         <?php } ?>
 
         <?php if ($showCartTotal) { ?>

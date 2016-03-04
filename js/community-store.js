@@ -89,7 +89,7 @@ var communityStore = {
                     $.ajax({
                         url: CARTURL + '/getTotalItems',
                         success: function (itemCount) {
-                            $(".store-utility-links .items-counter").text(itemCount);
+                            $(".store-utility-links .store-items-counter").text(itemCount);
                             if (itemCount > 0) {
                                 $(".store-utility-links").removeClass('store-cart-empty');
                             }
@@ -125,7 +125,7 @@ var communityStore = {
                 $.ajax({
                     url: CARTURL + '/getTotalItems',
                     success: function (itemCount) {
-                        $(".store-utility-links .items-counter").text(itemCount);
+                        $(".store-utility-links .store-items-counter").text(itemCount);
 
                         if (itemCount == 0) {
                             $(".store-utility-links .store-items-counter").text(0);
@@ -170,7 +170,7 @@ var communityStore = {
                 $.ajax({
                     url: CARTURL + '/getTotalItems',
                     success: function (itemCount) {
-                        $(".store-utility-links .items-counter").text(itemCount);
+                        $(".store-utility-links .store-items-counter").text(itemCount);
 
                         if (itemCount == 0) {
                             $(".store-utility-links .store-items-counter").text(0);
@@ -214,7 +214,7 @@ var communityStore = {
                 $.ajax({
                     url: CARTURL + '/getTotalItems',
                     success: function (itemCount) {
-                        $(".store-utility-links .items-counter").text(itemCount);
+                        $(".store-utility-links .store-items-counter").text(itemCount);
 
                         if (itemCount == 0) {
                             $(".store-utility-links .store-items-counter").text(0);

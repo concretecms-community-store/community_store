@@ -31,7 +31,12 @@ class Controller extends BlockController
         $this->set("itemCount", StoreCart::getTotalItemsInCart());
 
         $totals = StoreCalculator::getTotals();
-        $this->set('total', StorePrice::format($totals['total']));
+
+        if ($totals['total']> 0) {
+            $this->set('total', StorePrice::format($totals['total']));
+        } else {
+            $this->set('total', '');
+        }
 
         $c = Page::getCurrentPage();
         $path = $c->getCollectionPath();
