@@ -94,12 +94,13 @@ class OrderStatus extends Object
             $osName = $textHelper->unhandle($osHandle);
         }
         $db = Database::connection();
-        $sql = "INSERT INTO " . self::getTableName() . " (osHandle, osName, osInformSite, osInformCustomer) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO " . self::getTableName() . " (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
         $values = array(
             $osHandle,
             $osName,
             $osInformSite ? 1 : 0,
             $osInformCustomer ? 1 : 0,
+            $osIsStartingStatus ? 1 : 0
         );
         $db->Execute($sql, $values);
 
