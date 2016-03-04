@@ -58,7 +58,7 @@ if (is_object($product)) {
                         </div>
                     <?php } ?>
 
-                    <?php if ($showGroups) { ?>
+                    <?php if ($showGroups && false) { ?>
                         <ul>
                             <?php
                             $productgroups = $product->getGroups();
@@ -82,7 +82,7 @@ if (is_object($product)) {
                                 <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
                             </div>
                         <?php } else { ?>
-                            <input type="hidden" name="quantity" class="product-qty" value="1">
+                            <input type="hidden" name="quantity" class="store-product-qty" value="1">
                         <?php } ?>
                         <?php
 
@@ -131,7 +131,7 @@ if (is_object($product)) {
                             ?>
                             <div class="store-product-primary-image">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
-                                   title="<?= h($product->getName()); ?>" class="product-thumb">
+                                   title="<?= h($product->getName()); ?>" class="store-product-thumb">
                                     <img src="<?= $thumb->src ?>">
                                 </a>
                             </div>
@@ -146,7 +146,7 @@ if (is_object($product)) {
                                     $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, 300, 300, true);
                                     ?>
                                     <a href="<?= $secondaryimage->getRelativePath() ?>"
-                                       title="<?= h($product->getName()); ?>" class="product-thumb"><img
+                                       title="<?= h($product->getName()); ?>" class="store-product-thumb"><img
                                             src="<?= $thumb->src ?>"></a>
 
                                 <?php }
