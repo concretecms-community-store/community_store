@@ -23,6 +23,7 @@ class Attributes extends DashboardPageController
         $attrList = StoreProductKey::getList();
         $this->set('attrList',$attrList);
         $this->set('types', $types);
+        $this->set('pageTitle', t('Product Attributes'));
     }
     
     public function update_attributes() {
@@ -73,6 +74,7 @@ class Attributes extends DashboardPageController
         $at = AttributeType::getByID($atID);
         $this->set('type', $at);
         $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
+        $this->set('pageTitle', t('Create Product Attribute'));
     }
     
     public function add() {
