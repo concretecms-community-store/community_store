@@ -163,7 +163,7 @@ $(function(){
   		axisY: {
 		    offset: 80,
 		    labelInterpolationFnc: function(value) {
-		      return "$" + value;
+		      return "<?= Config::get('community_store.symbol'); ?>" + value;
 		    }
   		},
   		plugins: [

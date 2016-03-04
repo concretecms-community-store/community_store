@@ -90,12 +90,16 @@ class Controller extends Package
         $al->register('javascript', 'community-store', 'js/community-store.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
         $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
 
-        $al->register('javascript', 'chartist', 'js/chartist.js', array('version' => '0.9.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
-        $al->register('css', 'chartist', 'css/chartist.css', array('version' => '0.9.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'chartist', 'js/chartist.min.js', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('css', 'chartist', 'css/chartist.min.css', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'chartist-tooltip', 'js/chartist-plugin-tooltip.min.js', array('version' => '0.0.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('css', 'chartist-tooltip', 'css/chartist-plugin-tooltip.css', array('version' => '0.0.12', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
         $al->registerGroup('chartist',
             array(
                 array('javascript', 'chartist'),
+                array('javascript', 'chartist-tooltip'),
                 array('css', 'chartist'),
+                array('css', 'chartist-tooltip'),
             )
         );
     }
