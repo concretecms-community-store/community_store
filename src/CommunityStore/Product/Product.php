@@ -373,7 +373,7 @@ class Product
     }
     public function setNumberItems($number)
     {
-        $this->pNumberItems = $number;
+        $this->pNumberItems = ($number != '' ? $number : null);
     }
     public function setCreatesUserAccount($bool)
     {
