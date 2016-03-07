@@ -111,8 +111,6 @@ class Controller extends BlockController
         $this->set('ih', Core::make('helper/image'));
         $this->set('th', Core::make('helper/text'));
 
-        $this->requireAsset("css", "font-awesome");
-
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('showAddToCart', false);
         }

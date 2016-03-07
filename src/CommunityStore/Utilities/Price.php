@@ -36,8 +36,8 @@ class Price
         $thousandSep = Config::get('community_store.thousand');
 
         $price = str_replace($symbol, "", $price);
-        $price = str_replace($thousandSep, "", $price); //no commas, or spaces or whatevz
-        $price = str_replace($wholeSep, ".", $price); // replace whole separator with '.' 
+        $price = str_replace($thousandSep, "", $price);
+        $price = str_replace($wholeSep, ".", $price);
 
         return $price;
     }
