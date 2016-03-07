@@ -66,37 +66,31 @@
 
     <legend><?= t('Pagination')?></legend>
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-4">
             <div class="form-group">
                 <?= $form->label('productsPerRow',t('Products per Row')); ?>
                 <?= $form->select('productsPerRow', array(1=>1,2=>2,3=>3,4=>4),$productsPerRow?$productsPerRow:1, array('style'=>'width:70px')); ?>
             </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-4">
             <div class="form-group">
                 <?= $form->label('maxProducts',t('Max Number of Products')); ?>
                 <?= $form->text('maxProducts', isset($maxProducts)?$maxProducts:"10", array('style'=>'width:50px')); ?>
             </div>
         </div>
+        <div class="col-xs-4">
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('showPagination',1,$showPagination);?>
+                    <?= t('Show Pagination')?>
+                </label>
+            </div>
+        </div>
     </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showPagination',1,$showPagination);?>
-            <?= t('Show Pagination')?>
-        </label>
-    </div>  
-    
     <legend><?= t('Display Options')?></legend>
-    
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showOutOfStock',1,$showOutOfStock);?>
-            <?= t('Show Out of Stock Products')?>
-        </label>
-    </div>
-    
+
     <label><?= t('Show Featured')?></label>
-    
+
     <div class="radio">
         <label>
             <?= $form->radio('showFeatured','all',$showFeatured=='all' || !isset($showFeatured)?true:false);?>
@@ -115,40 +109,50 @@
             <?= t('Non-Featured Only')?>
         </label>
     </div>
-    
+
     <label><?= t('Show:')?></label>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showAddToCart',1,$showAddToCart);?>
-            <?= t('Add to Cart Button')?>
-        </label>
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showOutOfStock',1,$showOutOfStock);?>
+                <?= t('Show Out of Stock Products')?>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showAddToCart',1,$showAddToCart);?>
+                <?= t('Add to Cart Button')?>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showPageLink',1,$showPageLink);?>
+                <?= t('Page Link')?>
+            </label>
+        </div>
     </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showPageLink',1,$showPageLink);?>
-            <?= t('Page Link')?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showDescription',1,$showDescription);?>
-            <?= t('Description')?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <?php if($showQuickViewLink!=0){
-                $showQuickViewLink=1;
-            }?>
-            <?= $form->checkbox('showQuickViewLink',1,$showQuickViewLink);?>
-            <?= t('Quickview Link (Modal Window)')?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('showQuantity',1,$showQuantity);?>
-            <?= t('Show Quantity Selector')?>
-        </label>
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showDescription',1,$showDescription);?>
+                <?= t('Description')?>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?php if($showQuickViewLink!=0){
+                    $showQuickViewLink=1;
+                }?>
+                <?= $form->checkbox('showQuickViewLink',1,$showQuickViewLink);?>
+                <?= t('Quickview Link (Modal Window)')?>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showQuantity',1,$showQuantity);?>
+                <?= t('Show Quantity Selector')?>
+            </label>
+        </div>
     </div>
 </fieldset>
 
@@ -167,6 +171,3 @@
 
     });
 </script>
-
-
-
