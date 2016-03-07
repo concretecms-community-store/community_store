@@ -40,7 +40,6 @@ class Installer
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
         self::installSinglePage('/dashboard/store/settings/', $pkg);
         self::installSinglePage('/dashboard/store/settings/shipping', $pkg);
-        self::installSinglePage('/dashboard/store/settings/shipping/clerk', $pkg);
         self::installSinglePage('/dashboard/store/settings/tax', $pkg);
         self::installSinglePage('/dashboard/store/reports', $pkg);
         self::installSinglePage('/dashboard/store/reports/sales', $pkg);

@@ -10,7 +10,6 @@
     "source": "https://github.com/concrete5-community-store/community_store/src"
   },
   "require": {
-    "dvdoug/boxpacker": "~1.5"
   }
 
 }
