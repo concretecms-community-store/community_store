@@ -25,8 +25,6 @@ class Cart
                 $cart = array();
             }
 
-            $db = Database::connection();
-
             $checkeditems = array();
             $update = false;
             // loop through and check if product hasn't been deleted. Remove from cart session if not found.

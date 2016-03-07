@@ -238,7 +238,7 @@ class Order
 
     public static function getByID($oID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $oID);
@@ -246,7 +246,7 @@ class Order
 
     public function getCustomersMostRecentOrderByCID($cID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
@@ -371,7 +371,7 @@ class Order
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -379,7 +379,7 @@ class Order
     public function delete()
     {
         $this->getShippingMethodTypeMethod()->delete();
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -592,19 +592,19 @@ class Order
 
     public function remove()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
         foreach ($rows as $row) {
-            $db->Execute("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", $row['oiID']);
+            $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", $row['oiID']);
         }
 
-        $db->Execute("DELETE FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
-        $db->Execute("DELETE FROM CommunityStoreOrders WHERE oID=?", $this->oID);
+        $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
+        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", $this->oID);
     }
 
     public function getOrderItems()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
         $items = array();
 
@@ -670,7 +670,7 @@ class Order
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $av = false;
         $v = array($this->getOrderID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
@@ -700,16 +700,16 @@ class Order
 
     public function addDiscount($discount, $code = '')
     {
-        $db = Database::connection();
+        $db = \Database::connection();
 
         //add the discount
         $vals = array($this->oID, $discount->drName, $discount->getDisplay(), $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code);
-        $db->Execute("INSERT INTO CommunityStoreOrderDiscounts(oID,odName,odDisplay,odValue,odPercentage,odDeductFrom,odCode) VALUES (?,?,?,?,?,?,?)", $vals);
+        $db->query("INSERT INTO CommunityStoreOrderDiscounts(oID,odName,odDisplay,odValue,odPercentage,odDeductFrom,odCode) VALUES (?,?,?,?,?,?,?)", $vals);
     }
 
     public function getAppliedDiscounts()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderDiscounts WHERE oID=?", $this->oID);
 
         return $rows;
@@ -717,8 +717,8 @@ class Order
 
     public function associateUser($uID)
     {
-        $db = Database::connection();
-        $rows = $db->Execute("Update CommunityStoreOrders set cID=? where oID = ?", array($uID, $this->oID));
+        $db = \Database::connection();
+        $rows = $db->query("Update CommunityStoreOrders set cID=? where oID = ?", array($uID, $this->oID));
 
         return $rows;
     }

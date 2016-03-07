@@ -43,9 +43,8 @@ class Controller extends BlockController
 
     public function getGroupFilters()
     {
-        $db = Database::connection();
-        $vals = array($this->bID);
-        $result = $db->getAll("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", $vals);
+        $db = \Database::connection();
+        $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", array($this->bID));
 
         $list = array();
 
@@ -138,16 +137,15 @@ class Controller extends BlockController
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
-        $db = Database::connection();
+        $db = \Database::connection();
         $vals = array($this->bID);
-        $db->Execute("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
+        $db->query("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
         //insert  groups
         if (!empty($filtergroups)) {
             foreach ($filtergroups as $gID) {
                 $vals = array($this->bID, (int) $gID);
-                //Log::addEntry($vals);
-                $db->Execute("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
+                $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
             }
         }
 
@@ -158,7 +156,7 @@ class Controller extends BlockController
         $e = Core::make("helper/validation/error");
         $nh = Core::make("helper/number");
         if ($args['maxProducts'] < 1) {
-            $e->add(t('Max Products must be at least 1'));
+            $e->add(t('Max Number of Products must be at least 1'));
         }
 
         if (($args['filter'] == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0) {
@@ -166,7 +164,7 @@ class Controller extends BlockController
         }
 
         if (!$nh->isInteger($args['maxProducts'])) {
-            $e->add(t('Max Product must be a whole number'));
+            $e->add(t('Max Number of Products must be a whole number'));
         }
 
         return $e;

@@ -84,7 +84,7 @@ class ProductGroup
 
     public static function getByID($pgID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $pgID);
@@ -92,7 +92,7 @@ class ProductGroup
 
     public static function getGroupsForProduct(StoreProduct $product)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
         $groups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
         foreach ($groups as $key => $value) {
@@ -157,14 +157,14 @@ class ProductGroup
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -124,7 +124,7 @@ class Method extends Controller
 
     public static function getByID($pmID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         $method = $em->find(get_class(), $pmID);
@@ -138,7 +138,7 @@ class Method extends Controller
 
     public static function getByHandle($pmHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         $method = $em->getRepository(get_class())->findOneBy(array('pmHandle' => $pmHandle));
@@ -199,7 +199,7 @@ class Method extends Controller
 
     public static function getMethods($enabled = false)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         if ($enabled) {
@@ -261,7 +261,7 @@ class Method extends Controller
 
     public function save(array $data = [])
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -273,7 +273,7 @@ class Method extends Controller
 
     public function remove()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -282,6 +282,11 @@ class Method extends Controller
         return false;
     }
 
+    // method stub
     public function redirectForm() {
+    }
+
+    // method stub
+    public function checkoutForm() {
     }
 }

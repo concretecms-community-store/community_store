@@ -130,7 +130,7 @@ class ShippingMethod
         $ident = explode('_', $smID);
         $smID = $ident[0];
 
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         $method =  $em->find(get_called_class(), $smID);
@@ -147,7 +147,7 @@ class ShippingMethod
 
     public static function getAvailableMethods($methodTypeID = null)
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         if ($methodTypeID) {
             $methods = $em->getRepository(get_called_class())->findBy(array('smtID' => $methodTypeID, 'smEnabled'=>'1'));
         } else {
@@ -190,14 +190,14 @@ class ShippingMethod
     }
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
     public function delete()
     {
         $this->getShippingMethodTypeMethod()->delete();
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -23,8 +23,8 @@ class StoreOrderValue extends Value
 
     public function delete()
     {
-        $db = Database::connection();
-        $db->Execute('delete from CommunityStoreOrderAttributeValues where oID = ? and akID = ? and avID = ?', array(
+        $db = \Database::connection();
+        $db->query('delete from CommunityStoreOrderAttributeValues where oID = ? and akID = ? and avID = ?', array(
             $this->order->getOrderID(),
             $this->attributeKey->getAttributeKeyID(),
             $this->getAttributeValueID(),

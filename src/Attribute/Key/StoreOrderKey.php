@@ -10,7 +10,7 @@ class StoreOrderKey extends Key
 {
     public function getAttributes($oID, $method = 'getValue')
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $values = $db->GetAll("select akID, avID from CommunityStoreOrderAttributeValues where oID = ?", array($oID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
@@ -27,7 +27,7 @@ class StoreOrderKey extends Key
     public function load($akID, $loadBy = 'akID')
     {
         parent::load($akID);
-        $db = Database::connection();
+        $db = \Database::connection();
         $row = $db->GetRow("select * from CommunityStoreOrderAttributeKeys where akID = ?", array($akID));
         $this->setPropertiesFromArray($row);
     }
@@ -51,7 +51,7 @@ class StoreOrderKey extends Key
 
     public static function getByHandle($akHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $q = "SELECT ak.akID
             FROM AttributeKeys ak
             INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
@@ -77,7 +77,7 @@ class StoreOrderKey extends Key
     {
         $av = $order->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = Database::connection();
+        $db = \Database::connection();
         $v = array($order->getOrderID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CommunityStoreOrderAttributeValues', array(
             'oID' => $order->getOrderID(),
@@ -94,8 +94,8 @@ class StoreOrderKey extends Key
         extract($args);
 
         $v = array($ak->getAttributeKeyID());
-        $db = Database::connection();
-        $db->Execute('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
+        $db = \Database::connection();
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
 
         $nak = new self();
         $nak->load($ak->getAttributeKeyID());
@@ -108,18 +108,18 @@ class StoreOrderKey extends Key
         $ak = parent::update($args);
         extract($args);
         $v = array($ak->getAttributeKeyID());
-        $db = Database::connection();
-        $db->Execute('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
+        $db = \Database::connection();
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
     }
 
     public function delete()
     {
         parent::delete();
-        $db = Database::connection();
-        $r = $db->Execute('select avID from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db = \Database::connection();
+        $r = $db->query('select avID from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->query('delete from AttributeValues where avID = ?', array($row['avID']));
         }
-        $db->Execute('delete from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->query('delete from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
 }

@@ -23,8 +23,8 @@ class StoreProductValue extends Value
 
     public function delete()
     {
-        $db = Database::connection();
-        $db->Execute('delete from CommunityStoreProductAttributeValues where pID = ? and akID = ? and avID = ?', array(
+        $db = \Database::connection();
+        $db->query('delete from CommunityStoreProductAttributeValues where pID = ? and akID = ? and avID = ?', array(
             $this->product->getID(),
             $this->attributeKey->getAttributeKeyID(),
             $this->getAttributeValueID(),

@@ -116,7 +116,7 @@ class TaxClass
     }
     public static function getByID($tcID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $tcID);
@@ -124,7 +124,7 @@ class TaxClass
 
     public static function getByHandle($taxClassHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findOneBy(array('taxClassHandle' => $taxClassHandle));
@@ -132,7 +132,7 @@ class TaxClass
 
     public static function getTaxClasses()
     {
-        return Database::connection()->getEntityManager()->createQuery('select u from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass u')->getResult();
+        return \Database::connection()->getEntityManager()->createQuery('select u from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass u')->getResult();
     }
 
     public static function add($data)
@@ -165,14 +165,14 @@ class TaxClass
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

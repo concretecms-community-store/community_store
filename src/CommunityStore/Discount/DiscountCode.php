@@ -119,7 +119,7 @@ class DiscountCode
 
     public static function getByID($dcID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $dcID);
@@ -127,7 +127,7 @@ class DiscountCode
 
     public static function getByCode($code)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), array('dcCode' => $code));
@@ -146,14 +146,14 @@ class DiscountCode
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

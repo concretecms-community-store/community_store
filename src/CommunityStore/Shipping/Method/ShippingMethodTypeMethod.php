@@ -55,7 +55,7 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public static function getByID($smtmID)
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         return $em->getRepository(get_called_class())->find($smtmID);
     }
 
@@ -65,13 +65,13 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

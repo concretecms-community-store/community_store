@@ -92,7 +92,7 @@ class ProductOptionItem
 
     public static function getByID($id)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $id);
@@ -100,7 +100,7 @@ class ProductOptionItem
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
@@ -159,14 +159,14 @@ class ProductOptionItem
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

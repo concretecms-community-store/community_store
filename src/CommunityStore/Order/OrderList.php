@@ -31,7 +31,7 @@ class OrderList  extends AttributedItemList
         }
 
         if (isset($this->status)) {
-            $db = Database::connection();
+            $db = \Database::connection();
             $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrderStatusHistories t1
                                             WHERE oshStatus = ? and
                                                 t1.oshDate = (SELECT MAX(t2.oshDate)
@@ -132,7 +132,7 @@ class OrderList  extends AttributedItemList
 
     public static function getDateOfFirstOrder()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $date = $db->GetRow("SELECT * FROM CommunityStoreOrders ORDER BY oDate ASC LIMIT 1");
 
         return $date['oDate'];
@@ -141,7 +141,7 @@ class OrderList  extends AttributedItemList
     {
         $orders = $this->getResults();
         $orderItems = array();
-        $db = Database::connection();
+        $db = \Database::connection();
         foreach ($orders as $order) {
             $oID = $order->getOrderID();
             $OrderOrderItems = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $oID);

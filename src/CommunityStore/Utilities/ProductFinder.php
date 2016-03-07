@@ -21,7 +21,7 @@ class ProductFinder extends Controller
             exit;
         } else {
             $query = $_POST['query'];
-            $db = Database::connection();
+            $db = \Database::connection();
             $results = $db->query('SELECT * FROM CommunityStoreProducts WHERE pName LIKE "%'.$query.'%"');
 
             if ($results) {

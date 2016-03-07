@@ -119,7 +119,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         }
         $sm->setCountriesSelected($countriesSelected);
 
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($sm);
         $em->flush();
 

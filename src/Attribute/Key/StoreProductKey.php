@@ -10,7 +10,7 @@ class StoreProductKey extends Key
 {
     public function getAttributes($pID, $method = 'getValue')
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $values = $db->GetAll("select akID, avID from CommunityStoreProductAttributeValues where pID = ?", array($pID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
@@ -27,7 +27,7 @@ class StoreProductKey extends Key
     public function load($akID, $loadBy = 'akID')
     {
         parent::load($akID);
-        $db = Database::connection();
+        $db = \Database::connection();
         $row = $db->GetRow("select * from CommunityStoreProductAttributeKeys where akID = ?", array($akID));
         $this->setPropertiesFromArray($row);
     }
@@ -51,7 +51,7 @@ class StoreProductKey extends Key
 
     public static function getByHandle($akHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $q = "SELECT ak.akID
             FROM AttributeKeys ak
             INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
@@ -77,7 +77,7 @@ class StoreProductKey extends Key
     {
         $av = $product->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = Database::connection();
+        $db = \Database::connection();
         $v = array($product->getID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CommunityStoreProductAttributeValues', array(
             'pID' => $product->getID(),
@@ -94,8 +94,8 @@ class StoreProductKey extends Key
         extract($args);
 
         $v = array($ak->getAttributeKeyID());
-        $db = Database::connection();
-        $db->Execute('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
+        $db = \Database::connection();
+        $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
 
         $nak = new self();
         $nak->load($ak->getAttributeKeyID());
@@ -108,18 +108,18 @@ class StoreProductKey extends Key
         $ak = parent::update($args);
         extract($args);
         $v = array($ak->getAttributeKeyID());
-        $db = Database::connection();
-        $db->Execute('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
+        $db = \Database::connection();
+        $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
     }
 
     public function delete()
     {
         parent::delete();
-        $db = Database::connection();
-        $r = $db->Execute('select avID from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db = \Database::connection();
+        $r = $db->query('select avID from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->query('delete from AttributeValues where avID = ?', array($row['avID']));
         }
-        $db->Execute('delete from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->query('delete from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
 }

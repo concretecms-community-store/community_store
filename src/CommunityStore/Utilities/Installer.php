@@ -302,7 +302,7 @@ class Installer
     public static function installOrderStatuses(Package $package)
     {
         $table = StoreOrderStatus::getTableName();
-        $db = Database::connection();
+        $db = \Database::connection();
         $statuses = array(
             array('osHandle' => 'incomplete', 'osName' => t('Incomplete'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
             array('osHandle' => 'pending', 'osName' => t('Pending'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 1),

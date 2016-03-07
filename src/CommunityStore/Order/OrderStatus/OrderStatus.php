@@ -44,7 +44,7 @@ class OrderStatus extends Object
 
     public static function getByID($osID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE osID=?", $osID);
         $orderStatus = null;
         if (!empty($data)) {
@@ -57,7 +57,7 @@ class OrderStatus extends Object
 
     public static function getByHandle($osHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $data = $db->GetRow("SELECT osID FROM " . self::getTableName() . " WHERE osHandle=?", $osHandle);
 
         return self::getByID($data['osID']);
@@ -65,7 +65,7 @@ class OrderStatus extends Object
 
     public static function getAll()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $rows = $db->GetAll("SELECT osID FROM " . self::getTableName() . " ORDER BY osSortOrder ASC, osID ASC");
         $statuses = array();
         if (count($rows) > 0) {
@@ -93,7 +93,7 @@ class OrderStatus extends Object
             $textHelper = new TextHelper();
             $osName = $textHelper->unhandle($osHandle);
         }
-        $db = Database::connection();
+        $db = \Database::connection();
         $sql = "INSERT INTO " . self::getTableName() . " (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
         $values = array(
             $osHandle,
@@ -102,7 +102,7 @@ class OrderStatus extends Object
             $osInformCustomer ? 1 : 0,
             $osIsStartingStatus ? 1 : 0
         );
-        $db->Execute($sql, $values);
+        $db->query($sql, $values);
 
         if ($osIsStartingStatus) {
             self::setNewStartingStatus($osHandle);
@@ -187,7 +187,7 @@ class OrderStatus extends Object
     private function setColumn($column, $value)
     {
         $sql = "UPDATE " . self::getTableName() . " SET " . $column . "=? WHERE osID=?";
-        Database::connection()->Execute($sql, array($column, $value));
+        \Database::connection()->Execute($sql, array($column, $value));
     }
 
     public static function setNewStartingStatus($osHandle = null)
@@ -195,9 +195,9 @@ class OrderStatus extends Object
         if ($osHandle) {
             $currentStartingStatus = self::getByHandle($osHandle);
             if ($currentStartingStatus) {
-                $db = Database::connection();
-                $db->Execute("UPDATE " . self::getTableName() . " SET osIsStartingStatus=0 WHERE 1=1");
-                $db->Execute("UPDATE " . self::getTableName() . " SET osIsStartingStatus=1 WHERE osHandle=?", array($osHandle));
+                $db = \Database::connection();
+                $db->query("UPDATE " . self::getTableName() . " SET osIsStartingStatus=0 WHERE 1=1");
+                $db->query("UPDATE " . self::getTableName() . " SET osIsStartingStatus=1 WHERE osHandle=?", array($osHandle));
             }
         }
     }
@@ -220,7 +220,7 @@ class OrderStatus extends Object
             $columnPhrase = implode('=?, ', array_keys($orderStatusUpdateColumns)) . "=?";
             $values = array_values($orderStatusUpdateColumns);
             $values[] = $this->osID;
-            Database::connection()->Execute("UPDATE " . self::getTableName() . " SET " . $columnPhrase . " WHERE osID=?", $values);
+            \Database::connection()->Execute("UPDATE " . self::getTableName() . " SET " . $columnPhrase . " WHERE osID=?", $values);
             if ($startingStatusHandle) {
                 self::setNewStartingStatus($startingStatusHandle);
             }

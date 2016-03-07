@@ -407,7 +407,7 @@ class Product
 
     public static function getByID($pID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $pID);
@@ -415,7 +415,7 @@ class Product
 
     public static function getByCollectionID($cID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
@@ -792,7 +792,7 @@ class Product
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -807,7 +807,7 @@ class Product
         StoreProductLocation::removeLocationsForProduct($this);
         StoreProductUserGroup::removeUserGroupsForProduct($this);
         StoreProductVariation::removeVariationsForProduct($this);
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
         $page = Page::getByID($this->cID);
@@ -978,7 +978,7 @@ class Product
      */
     public function getTotalSold()
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $results = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE pID = ?", $this->pID);
 
         return count($results);
@@ -1005,7 +1005,7 @@ class Product
     }
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $av = false;
         $v = array($this->getID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);

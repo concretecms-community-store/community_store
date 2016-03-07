@@ -447,7 +447,7 @@ class ProductVariation
             }
         }
 
-        $db = Database::connection();
+        $db = \Database::connection();
 
         if (!empty($variationIDs)) {
             $options = implode(',', $variationIDs);
@@ -468,7 +468,7 @@ class ProductVariation
 
     public static function getByID($pvID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $pvID);
@@ -511,14 +511,14 @@ class ProductVariation
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public static function getVariationsForProduct(StoreProduct $product)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
@@ -526,7 +526,7 @@ class ProductVariation
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

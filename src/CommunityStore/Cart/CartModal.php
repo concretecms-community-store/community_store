@@ -16,7 +16,6 @@ class CartModal extends RouteController
         $totals = StoreCalculator::getTotals();
 
         $total = $totals['total'];
-        $subtotal = $totals['subTotal'];
 
         if (Filesystem::exists(DIR_BASE.'/application/elements/cart_modal.php')) {
             View::element('cart_modal', array('cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post()));

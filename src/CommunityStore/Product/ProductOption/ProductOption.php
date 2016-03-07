@@ -93,7 +93,7 @@ class ProductOption
 
     public static function getByID($id)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $id);
@@ -101,7 +101,7 @@ class ProductOption
 
     public static function getOptionsForProduct(StoreProduct $product)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
@@ -160,14 +160,14 @@ class ProductOption
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -331,10 +331,10 @@ class Products extends DashboardPageController
         $e = Core::make('helper/validation/error');
         
         if($args['pName']==""){
-            $e->add(t('You must have a Product Name'));
+            $e->add(t('Please enter a Product Name'));
         }
         if(strlen($args['pName']) > 255){
-            $e->add(t('Keep the Product name under 255 Characters'));
+            $e->add(t('The Product Name can not be greater than 255 Characters'));
         }
         if(!is_numeric($args['pPrice'])){
             $e->add(t('The Price must be set, and numeric'));
@@ -369,7 +369,7 @@ class Products extends DashboardPageController
     }
     public function groupadded()
     {
-        $this->set('success',"Group Successfully Added!");
+        $this->set('success',"Product Group Created");
         $this->groups();
     }
     public function addgroup()
@@ -392,10 +392,10 @@ class Products extends DashboardPageController
         $e = Core::make('helper/validation/error');
         
         if($args['groupName']==""){
-            $e->add(t('You did not enter anything for the Group Name'));
+            $e->add(t('Please enter a Group Name'));
         }
         if(strlen($args['groupName']) > 100){
-            $e->add(t('Keep the Group Name under 100 Characters'));
+            $e->add(t('A Group Name can not be more than 100 characters'));
         }
         return $e;
     }

@@ -14,7 +14,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 
 class Checkout extends Controller
 {
-    //public $error;
     public function updater()
     {
         if (isset($_POST)) {

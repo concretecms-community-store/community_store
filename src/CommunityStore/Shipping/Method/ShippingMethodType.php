@@ -100,7 +100,7 @@ class ShippingMethodType
 
     public static function getByID($smtID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
         $obj = $em->find(get_called_class(), $smtID);
         $obj->setMethodTypeController();
@@ -110,7 +110,7 @@ class ShippingMethodType
 
     public static function getByHandle($smtHandle)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
         $obj = $em->getRepository(get_called_class())->findOneBy(array('smtHandle' => $smtHandle));
         if (is_object($obj)) {
@@ -134,7 +134,7 @@ class ShippingMethodType
     }
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -144,13 +144,13 @@ class ShippingMethodType
         foreach ($methods as $method) {
             $method->delete();
         }
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }
     public static function getAvailableMethodTypes()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $methodTypes = $em->createQuery('select smt from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType smt')->getResult();
 
         $methodsWithControllers = array();

@@ -210,7 +210,7 @@ class OrderItem
 
     public static function getByID($oiID)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $oiID);
@@ -302,18 +302,18 @@ class OrderItem
 
     public function getProductOptions()
     {
-        return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
+        return \Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
     public function getProductOptionNameByID($id)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptions WHERE poID=?", $id);
 
         return $optionGroup['poName'];
     }
     public function getProductOptionValueByID($id)
     {
-        $db = Database::connection();
+        $db = \Database::connection();
         $optionItem = $db->GetRow("SELECT * FROM CommunityStoreProductOptionItems WHERE poiID=?", $id);
 
         return $optionItem['poiName'];
@@ -325,14 +325,14 @@ class OrderItem
 
     public function save()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = Database::connection()->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
     }
