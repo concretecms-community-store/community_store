@@ -282,7 +282,7 @@ class Order
         $order->setTaxLabels($taxes['taxLabels']);
         $order->setTotal($total);
         if ($pm->getMethodController()->isExternal()) {
-            $order->setExternalPaymentRequested();
+            $order->setExternalPaymentRequested(true);
         }
 
         $order->save();
