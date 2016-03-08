@@ -9,18 +9,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as S
 
 class CartTotal extends RouteController
 {
-    public function getSubTotal()
-    {
-        $totals = StoreCalculator::getTotals();
-        $subtotal = $totals['subTotal'];
-        echo StorePrice::format($subtotal);
-    }
-    public function getTotal()
-    {
-        $totals = StoreCalculator::getTotals();
-        $total = $totals['total'];
-        echo StorePrice::format($total);
-    }
     public function getTaxTotal()
     {
         echo json_encode(StoreTax::getTaxes(true));
@@ -35,8 +23,13 @@ class CartTotal extends RouteController
             echo 0;
         }
     }
-    public function getTotalItems()
-    {
-        echo StoreCart::getTotalItemsInCart();
+    public function getCartSummary() {
+        $totals = StoreCalculator::getTotals();
+        $itemCount = StoreCart::getTotalItemsInCart();
+        $total = $totals['total'];
+        $subTotal = $totals['subTotal'];
+
+        $data = array('subTotal'=> StorePrice::format($subTotal), 'total'=>StorePrice::format($total), 'itemCount'=>$itemCount, 'totalCents'=> $total * 100);
+        echo json_encode($data);
     }
 }

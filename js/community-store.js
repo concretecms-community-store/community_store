@@ -28,10 +28,6 @@ var communityStore = {
         $(".store-whiteout").remove();
     },
 
-
-//PRODUCT LIST
-
-    //Open Product Modal
     productModal: function (pID) {
         communityStore.waiting();
         $.ajax({
@@ -44,8 +40,6 @@ var communityStore = {
         });
     },
 
-//SHOPPING CART
-
     displayCart: function (res) {
         $.ajax({
             type: "POST",
@@ -57,8 +51,6 @@ var communityStore = {
         });
     },
 
-
-    //Add Item to Cart
     addToCart: function (pID, type) {
         var form;
         if (type == 'modal') {
@@ -85,22 +77,7 @@ var communityStore = {
                     }
 
                     communityStore.displayCart(res);
-
-                    $.ajax({
-                        url: CARTURL + '/getTotalItems',
-                        success: function (itemCount) {
-                            $(".store-utility-links .store-items-counter").text(itemCount);
-                            if (itemCount > 0) {
-                                $(".store-utility-links").removeClass('store-cart-empty');
-                            }
-                        }
-                    });
-                    $.ajax({
-                        url: CARTURL + '/getTotal',
-                        success: function (subTotal) {
-                            $(".store-utility-links .store-total-cart-amount").text(subTotal);
-                        }
-                    });
+                    communityStore.refreshCartTotals();
                 }
             });
         } else {
@@ -108,7 +85,7 @@ var communityStore = {
         }
     },
 
-    //Update Item in Cart
+    //Update a single item in cart
     updateItem: function (instanceID, modal) {
         var qty = $("*[data-instance-id='" + instanceID + "']").find(".cart-list-product-qty input").val();
         communityStore.waiting();
@@ -122,33 +99,13 @@ var communityStore = {
                     communityStore.displayCart(res);
                 }
 
-                $.ajax({
-                    url: CARTURL + '/getTotalItems',
-                    success: function (itemCount) {
-                        $(".store-utility-links .store-items-counter").text(itemCount);
-
-                        if (itemCount == 0) {
-                            $(".store-utility-links .store-items-counter").text(0);
-                            $(".store-utility-links .store-total-cart-amount").text("");
-                            $(".store-utility-links").addClass('store-cart-empty');
-                        } else {
-                            $.ajax({
-                                url: CARTURL + "/getTotal",
-                                success: function (total) {
-                                    $(".cart-grand-total-value").text(total);
-                                    $(".store-utility-links .store-total-cart-amount").text(total);
-                                }
-                            });
-                        }
-                    }
-                });
-
+                communityStore.refreshCartTotals();
             }
         });
     },
 
 
-    //Update Item in Cart
+    //Update multiple item quantities
     updateMultiple: function (instances, quantities, modal) {
         communityStore.waiting();
         $.ajax({
@@ -161,32 +118,11 @@ var communityStore = {
                     communityStore.displayCart(res);
                 }
 
-                $.ajax({
-                    url: CARTURL + '/getTotalItems',
-                    success: function (itemCount) {
-                        $(".store-utility-links .store-items-counter").text(itemCount);
-
-                        if (itemCount == 0) {
-                            $(".store-utility-links .store-items-counter").text(0);
-                            $(".store-utility-links .store-total-cart-amount").text("");
-                            $(".store-utility-links").addClass('store-cart-empty');
-                        } else {
-                            $.ajax({
-                                url: CARTURL + "/getTotal",
-                                success: function (total) {
-                                    $(".store-cart-grand-total-value").text(total);
-                                    $(".store-utility-links .store-total-cart-amount").text(total);
-                                }
-                            });
-                        }
-                    }
-                });
-
+                communityStore.refreshCartTotals();
             }
         });
     },
 
-    //Remove Item in Cart
     removeItem: function (instanceID, modal) {
         communityStore.waiting();
         $.ajax({
@@ -199,31 +135,11 @@ var communityStore = {
                     communityStore.displayCart(res);
                 }
 
-                $.ajax({
-                    url: CARTURL + '/getTotalItems',
-                    success: function (itemCount) {
-                        $(".store-utility-links .store-items-counter").text(itemCount);
-
-                        if (itemCount == 0) {
-                            $(".store-utility-links .store-items-counter").text(0);
-                            $(".store-utility-links .store-total-cart-amount").text("");
-                            $(".store-utility-links").addClass('store-cart-empty');
-                        } else {
-                            $.ajax({
-                                url: CARTURL + "/getTotal",
-                                success: function (total) {
-                                    $(".store-cart-grand-total-value").text(total);
-                                    $(".store-utility-links .store-total-cart-amount").text(total);
-                                }
-                            });
-                        }
-                    }
-                });
+                communityStore.refreshCartTotals();
             }
         });
     },
 
-    //Clear the Cart
     clearCart: function (modal) {
         $.ajax({
             url: CARTURL + "/clear",
@@ -233,28 +149,47 @@ var communityStore = {
                     communityStore.displayCart(res);
                 }
 
-                $.ajax({
-                    url: CARTURL + "/getTotal",
-                    success: function (total) {
-                        $(".store-cart-grand-total-value").text(total);
-                        $(".store-cart-page-cart-list-item").remove();
-                        $(".store-utility-links .store-items-counter").text(0);
-                        $(".store-utility-links .store-total-cart-amount").text("");
-                        $(".store-utility-links").addClass('store-cart-empty');
-                    }
-                });
-
+                $(".store-utility-links .store-items-counter").text(0);
+                $(".store-utility-links .store-total-cart-amount").text("");
+                $(".store-utility-links").addClass('store-cart-empty');
             }
         });
     },
 
-//CHECKOUT
+    refreshCartTotals: function(callback) {
+        $.ajax({
+            url: CARTURL + '/getCartSummary',
+            success: function (response) {
+                values = $.parseJSON(response);
+                itemCount = values.itemCount;
+                total = values.total;
+                totalCents = values.totalCents;
 
+                if (itemCount == 0) {
+                    $(".store-utility-links .store-items-counter").text(0);
+                    $(".store-utility-links .store-total-cart-amount").text("");
+                    $(".store-utility-links").addClass('store-cart-empty');
+                } else {
+                    $(".store-utility-links .store-items-counter").text(itemCount);
+                    $(".store-cart-grand-total-value").text(total);
+                    $(".store-utility-links .store-total-cart-amount").text(total);
+                }
+
+                $(".store-total-amount").text(total);
+                $(".store-total-amount").data('total-cents',totalCents);
+
+                if (callback){
+                    callback();
+                }
+            }
+        });
+    },
+
+    // checkout
     loadViaHash: function () {
         var hash = window.location.hash;
         hash = hash.replace('#', '');
         if (hash != "") {
-            //$(".checkout-form-group .checkout-form-group-body").hide();
             $(".store-active-form-group").removeClass('store-active-form-group');
             var pane = $("#store-checkout-form-group-" + hash);
             pane.addClass('store-active-form-group');
@@ -264,7 +199,6 @@ var communityStore = {
             });
         }
     },
-    //loadViaHash();
 
     updateBillingStates: function (load) {
         var countryCode = $("#store-checkout-billing-country").val();
@@ -285,7 +219,6 @@ var communityStore = {
         });
     },
 
-
     updateShippingStates: function (load) {
         var countryCode = $("#store-checkout-shipping-country").val();
         var selectedState;
@@ -304,7 +237,6 @@ var communityStore = {
             }
         });
     },
-
 
     nextPane: function (obj) {
         if ($(obj)[0].checkValidity()) {
@@ -377,7 +309,6 @@ $(document).ready(function () {
                 state: bState,
                 postal: bPostal
             },
-            //dataType: 'json',
             success: function (result) {
                 //var test = null;
                 var response = JSON.parse(result);
@@ -402,13 +333,7 @@ $(document).ready(function () {
                             }
                         }
                     });
-                    $.ajax({
-                        url: CARTURL + "/getTotal",
-                        success: function (total) {
-                            $(".store-total-amount").text(total);
-                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
-                        }
-                    });
+                    communityStore.refreshCartTotals();
                 } else {
                     $("#store-checkout-form-group-billing .store-checkout-form-group-body ").prepend('<div class="store-checkout-errors"><div class="store-checkout-error alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-billing .store-checkout-error").html(response.errors.join('<br>'));
@@ -471,13 +396,7 @@ $(document).ready(function () {
                         }
                     });
                     communityStore.showShippingMethods();
-                    $.ajax({
-                        url: CARTURL + "/getTotal",
-                        success: function (total) {
-                            $(".store-total-amount").text(total);
-                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
-                        }
-                    });
+                    communityStore.refreshCartTotals();
                 } else {
                     $("#store-checkout-form-group-shipping .store-checkout-form-group-body").prepend('<div class="store-checkout-errors"><div class="alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-shipping .alert").html(response.errors.join('<br>'));
@@ -524,15 +443,12 @@ $(document).ready(function () {
                             }
                         }
                     });
-                    $.ajax({
-                        url: CARTURL + "/getTotal",
-                        success: function (total) {
-                            $(".store-total-amount").text(total);
-                            $(".store-total-amount").data('total-cents',parseFloat(total.replace(/[^0-9\.]+/g,"")) * 100);
-                            communityStore.nextPane(obj);
-                            $('.store-whiteout').remove();
-                        }
+
+                    communityStore.refreshCartTotals(function() {
+                        communityStore.nextPane(obj);
+                        $('.store-whiteout').remove();
                     });
+
                 }
             });
 
@@ -619,10 +535,8 @@ $(document).ready(function () {
         communityStore.waiting();
     });
 
-
     $('.store-cart-modal-link').click(function (e) {
         e.preventDefault();
         communityStore.displayCart();
     });
-
 });
