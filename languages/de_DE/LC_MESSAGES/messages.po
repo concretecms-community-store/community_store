@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: community_store 3.0dev9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-09 10:56+0100\n"
-"PO-Revision-Date: 2016-03-09 12:19+0100\n"
+"POT-Creation-Date: 2016-03-09 14:21+0100\n"
+"PO-Revision-Date: 2016-03-09 15:25+0100\n"
 "Last-Translator: \n"
 "Language-Team: LennDa\n"
 "Language: de_DE\n"
@@ -389,6 +389,10 @@ msgstr "Fügen Sie einen Shop auf Ihrer Seite hinzu"
 msgid "Community Store"
 msgstr "Community Store"
 
+#: controller.php:54
+msgid "This package requires that the SOAP client for PHP is installed"
+msgstr ""
+
 #: controller.php:128
 msgid "Quantity must be greater than zero"
 msgstr "Menge muss Größer als 0 sein"
@@ -561,7 +565,9 @@ msgstr "Der Versand Basispreis muss eine Zahl sein und gesetzt werden"
 
 #: controllers/single_page/dashboard/store/settings.php:157
 msgid "Shipping Base Rate must be set, and a number (even if just zero)"
-msgstr "Der Versand Basispreis muss eine Zahl sein und gesetzt werden (auch 0 möglich)"
+msgstr ""
+"Der Versand Basispreis muss eine Zahl sein und gesetzt werden (auch 0 "
+"möglich)"
 
 #: controllers/single_page/dashboard/store/settings.php:167
 msgid "At least one payment method must be enabled"
@@ -572,8 +578,13 @@ msgid "You must have at least one Order Status."
 msgstr "Sie benötigen mindestens einen Bestellstatus"
 
 #: controllers/single_page/dashboard/store/settings.php:184
-msgid "The %s Tax Class can't contain more than 1 Tax Rate if you change how the taxes are calculated"
-msgstr "Wenn Sie die Steuerberechnung ändern, darf die %s Steuerklasse nicht mehr als einen Steuersatz enthalten."
+#, php-format
+msgid ""
+"The %s Tax Class can't contain more than 1 Tax Rate if you change how the "
+"taxes are calculated"
+msgstr ""
+"Wenn Sie die Steuerberechnung ändern, darf die %s Steuerklasse nicht mehr "
+"als einen Steuersatz enthalten."
 
 #: controllers/single_page/dashboard/store/settings/shipping.php:21
 msgid "Add Shipping Method"
@@ -632,7 +643,8 @@ msgstr "Bezeichnung für Steuerklasse fehlt"
 
 #: controllers/single_page/dashboard/store/settings/tax.php:152
 msgid "You can only have one tax rate with your current tax settings"
-msgstr "Sie können nur einen Steuersatz mit dem aktuellen Steuereinstellungen haben"
+msgstr ""
+"Sie können nur einen Steuersatz mit dem aktuellen Steuereinstellungen haben"
 
 #: controllers/single_page/dashboard/store/settings/tax.php:166
 msgid "Tax Class removed"
@@ -1036,8 +1048,12 @@ msgid "Sign in or Register"
 msgstr "Bitte Einloggen oder Registrieren"
 
 #: single_pages/checkout.php:37
-msgid "In order to proceed, you'll need to either register, or sign in with your existing account."
-msgstr "Um Ihre Bestellung abzuschließen, müssen Sie sich entweder registrieren oder Sie melden sich mit Ihrem bestehenden Konto an."
+msgid ""
+"In order to proceed, you'll need to either register, or sign in with your "
+"existing account."
+msgstr ""
+"Um Ihre Bestellung abzuschließen, müssen Sie sich entweder registrieren oder "
+"Sie melden sich mit Ihrem bestehenden Konto an."
 
 #: single_pages/checkout.php:41
 msgid "Register"
@@ -1135,7 +1151,8 @@ msgstr "Jetzt verbindlich bestellen"
 
 #: single_pages/checkout.php:339
 msgid "There are currently no payment methods available to process your order."
-msgstr "Es gibt derzeit keine Zahlungsmethoden zur Abwicklung Ihrer Bestellung ."
+msgstr ""
+"Es gibt derzeit keine Zahlungsmethoden zur Abwicklung Ihrer Bestellung ."
 
 #: single_pages/checkout.php:354
 msgid "Your Cart"
@@ -1162,12 +1179,15 @@ msgid "Click here if you are not automatically redirected"
 msgstr "Klicken Sie hier , wenn Sie nicht automatisch umgeleitet  werden"
 
 #: single_pages/checkout/complete.php:2
-msgid "Order %s is Complete"
-msgstr "Bestellung %s ist abgeschlossen"
+#, php-format
+msgid "Order #%s is Complete"
+msgstr "Bestellung Nr. %s ist Vollständig"
 
 #: single_pages/checkout/complete.php:4
 msgid "Thank you for your order. A receipt should be emailed to you shortly."
-msgstr "Vielen Dank für Ihre Bestellung. Eine Bestätigung wird Ihnen in Kürze per Email zugesendet."
+msgstr ""
+"Vielen Dank für Ihre Bestellung. Eine Bestätigung wird Ihnen in Kürze per "
+"Email zugesendet."
 
 #: single_pages/dashboard/store.php:9
 #: single_pages/dashboard/store/reports/sales.php:11
@@ -1176,8 +1196,12 @@ msgstr "Inkl."
 
 #: single_pages/dashboard/store.php:17
 #: single_pages/dashboard/store/orders.php:264
-msgid "Cart and Ordering features are currently disabled. This setting can be changed via the"
-msgstr "Warenkorb und Bestellfunktionensind zur Zeit deaktiviert. Diese Einstellung kann geändert werden über "
+msgid ""
+"Cart and Ordering features are currently disabled. This setting can be "
+"changed via the"
+msgstr ""
+"Warenkorb und Bestellfunktionensind zur Zeit deaktiviert. Diese Einstellung "
+"kann geändert werden über "
 
 #: single_pages/dashboard/store.php:17
 #: single_pages/dashboard/store/orders.php:264
@@ -1243,12 +1267,11 @@ msgstr "Verfügbarkeit"
 #: single_pages/dashboard/store/discounts.php:32
 #: single_pages/dashboard/store/discounts.php:93
 #: single_pages/dashboard/store/discounts.php:161
-#: single_pages/dashboard/store/discounts.php:162
 #: single_pages/dashboard/store/settings.php:99
 #: single_pages/dashboard/store/settings.php:246
 #: single_pages/dashboard/store/settings/shipping.php:32
 msgid "Enabled"
-msgstr "Aktivieren"
+msgstr "Aktiviert"
 
 #: single_pages/dashboard/store/discounts.php:33
 #: single_pages/dashboard/store/products.php:1055
@@ -1308,10 +1331,9 @@ msgid "always"
 msgstr "immer"
 
 #: single_pages/dashboard/store/discounts.php:91
-#: single_pages/dashboard/store/discounts.php:162
 #: single_pages/dashboard/store/settings.php:257
 msgid "Disabled"
-msgstr "Deaktivieren"
+msgstr "Deaktiviert"
 
 #: single_pages/dashboard/store/discounts.php:100
 msgid "Manage Codes"
@@ -1323,6 +1345,23 @@ msgstr "Codes verwalten"
 #: single_pages/dashboard/store/settings/tax.php:157
 msgid "Delete"
 msgstr "Löschen"
+
+#: single_pages/dashboard/store/discounts.php:162
+#: single_pages/dashboard/store/products.php:96
+#: single_pages/dashboard/store/products.php:130
+#: single_pages/dashboard/store/products.php:184
+#: single_pages/dashboard/store/products.php:275
+#: single_pages/dashboard/store/settings/tax.php:21
+msgid "Yes"
+msgstr "Ja"
+
+#: single_pages/dashboard/store/discounts.php:162
+#: single_pages/dashboard/store/products.php:96
+#: single_pages/dashboard/store/products.php:130
+#: single_pages/dashboard/store/products.php:275
+#: single_pages/dashboard/store/settings/tax.php:21
+msgid "No"
+msgstr "Nein"
 
 #: single_pages/dashboard/store/discounts.php:166
 msgid "Display Text"
@@ -1355,6 +1394,10 @@ msgstr "Abzug von"
 #: single_pages/dashboard/store/discounts.php:203
 msgid "Total, including shipping"
 msgstr "Total, inkl. Versand"
+
+#: single_pages/dashboard/store/discounts.php:203
+msgid "Items Sub-total"
+msgstr "Artikel Zwischensumme"
 
 #: single_pages/dashboard/store/discounts.php:208
 msgid "Automatically, (when matching all restrictions)"
@@ -1398,7 +1441,7 @@ msgstr "Nie"
 
 #: single_pages/dashboard/store/discounts.php:243
 msgid "At a specified date"
-msgstr "ab einembestimmten DAtum"
+msgstr "ab einem bestimmten Datum"
 
 #: single_pages/dashboard/store/discounts.php:257
 msgid "Description / Notes"
@@ -1467,7 +1510,9 @@ msgstr "Code(s)"
 
 #: single_pages/dashboard/store/discounts.php:416
 msgid "Seperate codes via lines or commas. Codes are case-insensitive."
-msgstr "Codes mit Zeile oder Komma trennen. Gross-/Kleinschreibung wird nicht berücksichtigt"
+msgstr ""
+"Codes mit Zeile oder Komma trennen. Gross-/Kleinschreibung wird nicht "
+"berücksichtigt"
 
 #: single_pages/dashboard/store/discounts.php:427
 msgid "Return to Discount Rules"
@@ -1587,7 +1632,7 @@ msgstr "Attribute"
 
 #: single_pages/dashboard/store/products.php:64
 msgid "Memberships and Downloads"
-msgstr ""
+msgstr "Mitgliedschaften und Downloads"
 
 #: single_pages/dashboard/store/products.php:65
 msgid "Detail Page"
@@ -1612,21 +1657,6 @@ msgstr "Inaktiv"
 #: single_pages/dashboard/store/products.php:95
 msgid "Featured Product"
 msgstr "Highlight Produkt"
-
-#: single_pages/dashboard/store/products.php:96
-#: single_pages/dashboard/store/products.php:130
-#: single_pages/dashboard/store/products.php:275
-#: single_pages/dashboard/store/settings/tax.php:21
-msgid "No"
-msgstr "Nein"
-
-#: single_pages/dashboard/store/products.php:96
-#: single_pages/dashboard/store/products.php:130
-#: single_pages/dashboard/store/products.php:184
-#: single_pages/dashboard/store/products.php:275
-#: single_pages/dashboard/store/settings/tax.php:21
-msgid "Yes"
-msgstr "Ja"
 
 #: single_pages/dashboard/store/products.php:115
 #: single_pages/dashboard/store/products.php:761
@@ -1760,15 +1790,21 @@ msgstr "Optionen haben verschiedene Preise, Artikelnummern oder Lagerbestände"
 
 #: single_pages/dashboard/store/products.php:659
 msgid "After creating options add the product to configure product variations."
-msgstr "Nach dem Erstellen von Optionen können Sie zu dem Produkt einzelne Produktvariationen konfigurieren."
+msgstr ""
+"Nach dem Erstellen von Optionen können Sie zu dem Produkt einzelne "
+"Produktvariationen konfigurieren."
 
 #: single_pages/dashboard/store/products.php:669
 msgid "Variations"
 msgstr "Variationen"
 
 #: single_pages/dashboard/store/products.php:672
-msgid "Product options have changed, update the product to configure updated variations"
-msgstr "Produkt Optionen wurden geändert, aktualisieren Sie das Produkt um bereits aktualisierte Variationen zu konfigurieren"
+msgid ""
+"Product options have changed, update the product to configure updated "
+"variations"
+msgstr ""
+"Produkt Optionen wurden geändert, aktualisieren Sie das Produkt um bereits "
+"aktualisierte Variationen zu konfigurieren"
 
 #: single_pages/dashboard/store/products.php:698
 msgid "More options"
@@ -1816,8 +1852,13 @@ msgid "Base Height"
 msgstr "Basis Höhe"
 
 #: single_pages/dashboard/store/products.php:852
-msgid "While you can set and assign attributes, they're are currently only able to be accessed programmatically"
-msgstr "Sie können Attribute seperat anlegen. Diese werden nach dem Anlegen automatisch in allen Produkten angezeigt und können dann je Produkt konfiguriert werden"
+msgid ""
+"While you can set and assign attributes, they're are currently only able to "
+"be accessed programmatically"
+msgstr ""
+"Sie können Attribute seperat anlegen. Diese werden nach dem Anlegen "
+"automatisch in allen Produkten angezeigt und können dann je Produkt "
+"konfiguriert werden"
 
 #: single_pages/dashboard/store/products.php:871
 msgid "You haven't created product attributes"
@@ -1833,15 +1874,20 @@ msgstr "Datei auswählen"
 
 #: single_pages/dashboard/store/products.php:897
 #, php-format
-msgid "In order to have digital downloads, you need to %sturn on advanced permissions%s."
-msgstr "Um in Ihren Bestellungen digitale Downloads zu verwenden, müssen Sie %s die Erweiterten Berechtigungen aktivieren %s"
+msgid ""
+"In order to have digital downloads, you need to %sturn on advanced "
+"permissions%s."
+msgstr ""
+"Um in Ihren Bestellungen digitale Downloads zu verwenden, müssen Sie %s die "
+"Erweiterten Berechtigungen aktivieren %s"
 
 #: single_pages/dashboard/store/products.php:904
 msgid "Create user account on purchase"
 msgstr "Kundenkonto beim Bezahlen anlegen"
 
 #: single_pages/dashboard/store/products.php:905
-msgid "When checked, if customer is guest, will create a user account on purchase"
+msgid ""
+"When checked, if customer is guest, will create a user account on purchase"
 msgstr "Wenn der Kunde als Gast bezahlt, wird ein Benutzer Konto angelegt."
 
 #: single_pages/dashboard/store/products.php:909
@@ -1854,7 +1900,8 @@ msgstr "Benutzergruppe(n) auswählen"
 
 #: single_pages/dashboard/store/products.php:924
 msgid "Send customer directly to checkout when added to cart"
-msgstr "Kunde gelangt direkt zur Kasse, wenn das Produkt in den Warenkorb gelegt wird"
+msgstr ""
+"Kunde gelangt direkt zur Kasse, wenn das Produkt in den Warenkorb gelegt wird"
 
 #: single_pages/dashboard/store/products.php:929
 msgid "Prevent this item from being in the cart with other items"
@@ -1875,7 +1922,9 @@ msgstr "Seiten Template"
 
 #: single_pages/dashboard/store/products.php:963
 msgid "Any changes to the product will not be saved. Create product page?"
-msgstr "Alle Änderungen an dem Produkt werden nicht gespeichert. Produktseite erstellen ?"
+msgstr ""
+"Alle Änderungen an dem Produkt werden nicht gespeichert. Produktseite "
+"erstellen ?"
 
 #: single_pages/dashboard/store/products.php:963
 msgid "Generate a Product Page"
@@ -1883,7 +1932,8 @@ msgstr "Produktseite erstellen"
 
 #: single_pages/dashboard/store/products.php:966
 msgid "No page is configured as the parent page for new products"
-msgstr "Es wird keine Seite als übergeordnete  Seite für neue Produkte konfiguriert"
+msgstr ""
+"Es wird keine Seite als übergeordnete  Seite für neue Produkte konfiguriert"
 
 #: single_pages/dashboard/store/products.php:988
 msgid "Cancel / View All Products"
@@ -1991,7 +2041,7 @@ msgstr "Anzahl Verkauft"
 
 #: single_pages/dashboard/store/reports/sales.php:49
 msgid "Past 30 Days"
-msgstr "letzten 30 TAge"
+msgstr "letzten 30 Tage"
 
 #: single_pages/dashboard/store/reports/sales.php:183
 msgid "View Orders by Date"
@@ -2011,7 +2061,7 @@ msgstr "Export als CSV Liste"
 
 #: single_pages/dashboard/store/settings.php:4
 msgid "Shipping Methods"
-msgstr "Versan Methode(n)"
+msgstr "Versand Methode(n)"
 
 #: single_pages/dashboard/store/settings.php:5
 #: single_pages/dashboard/store/settings/tax.php:147
@@ -2057,7 +2107,7 @@ msgstr "Tausender Trennzeichen"
 
 #: single_pages/dashboard/store/settings.php:43
 msgid "e.g. , or a space"
-msgstr "z.Bsp. , oder leerzeichen"
+msgstr "z.Bsp. , oder Leerzeichen"
 
 #: single_pages/dashboard/store/settings.php:46
 msgid "Whole Number Separator"
@@ -2171,12 +2221,15 @@ msgstr "Benachrichtigungs e-Mails"
 
 #: single_pages/dashboard/store/settings.php:207
 #, php-format
-msgid "Send order notification to email %sseparate multiple emails with commas%s"
-msgstr "Benachrichtigungs e-Mails an folgende Adresse(n)%s. Mehrere Adressen mit Komma trennen%s"
+msgid ""
+"Send order notification to email %sseparate multiple emails with commas%s"
+msgstr ""
+"Benachrichtigungs e-Mails an folgende Adresse(n)%s. Mehrere Adressen mit "
+"Komma trennen%s"
 
 #: single_pages/dashboard/store/settings.php:208
 msgid "Email Address"
-msgstr "e-MAil Adresse"
+msgstr "e-Mail Adresse"
 
 #: single_pages/dashboard/store/settings.php:211
 msgid "Emails Sent From"
@@ -2217,7 +2270,9 @@ msgstr "Kasse als Angebotsoption"
 
 #: single_pages/dashboard/store/settings.php:259
 msgid "Always (unless login required for products in cart)"
-msgstr "Immer (es sei denn ein Login ist erforderlich, um Produkte in den Warenkorb zu legen)"
+msgstr ""
+"Immer (es sei denn ein Login ist erforderlich, um Produkte in den Warenkorb "
+"zu legen)"
 
 #: single_pages/dashboard/store/settings.php:269
 msgid "Save Settings"
@@ -2328,8 +2383,14 @@ msgstr "Name der Steuerklasse"
 
 #: single_pages/dashboard/store/settings/tax.php:180
 #, php-format
-msgid "Since you're prices INCLUDE Tax, you can only specify one tax rate per class. If you need more, you must change this setting in the %stax setting here%s"
+msgid ""
+"Since you're prices INCLUDE Tax, you can only specify one tax rate per "
+"class. If you need more, you must change this setting in the %stax setting "
+"here%s"
 msgstr ""
+"Wenn die Preise Steuern ENTHALTEN, können Sie nur einen Steuersatz pro "
+"Klasse angeben. Wenn Sie mehr benötigen , müssen Sie diese Einstellung %s "
+"unter %s ändern"
 
 #: single_pages/dashboard/store/settings/tax.php:184
 msgid "Select Tax Class Rates"
@@ -2338,35 +2399,47 @@ msgstr "Steuerklassen-Sätze auswählen"
 #: src/CommunityStore/Discount/DiscountRule.php:384
 #: src/CommunityStore/Discount/DiscountRule.php:388
 msgid "off"
-msgstr ""
+msgstr "aus"
+
+#: src/CommunityStore/Payment/Methods/Invoice/InvoicePaymentMethod.php:12
+msgid "Invoice"
+msgstr "Rechnung"
 
 #: src/CommunityStore/Shipping/Method/ShippingMethod.php:246
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:198
 msgid "Please set a Base Rate"
-msgstr ""
+msgstr "Bitte setzen Sie einen Basis Preis "
 
 #: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:201
 msgid "Base Rate should be a number"
-msgstr ""
+msgstr "Basis Preis muss eine Zahl sein"
 
 #: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:205
-msgid "The Price Per Item doesn't have to be set, but it does have to be numeric"
+msgid ""
+"The Price Per Item doesn't have to be set, but it does have to be numeric"
 msgstr ""
+"Der Preis pro Artikel muss nicht eingestellt werden. Wenn ja, muss er "
+"numerisch sein."
 
 #: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:337
 msgid "Flat Rate"
-msgstr ""
+msgstr "Pauschaltarif"
 
 #: src/CommunityStore/Shipping/Method/Types/FreeShippingShippingMethod.php:231
 msgid "Free Shipping"
-msgstr ""
+msgstr "Gratis Versand"
 
 #: src/CommunityStore/Utilities/Checkout.php:44
-msgid "The email address you have entered has already been used to create an account. Please login first or enter a different email address."
+msgid ""
+"The email address you have entered has already been used to create an "
+"account. Please login first or enter a different email address."
 msgstr ""
+"Die E-Mail- Adresse, die Sie eingegeben haben, wurde bereits verwendet, um "
+"ein Konto zu erstellen. Bitte loggen Sie sich ein oder verwenden eine andere "
+"E-Mail -Adresse."
 
 #: src/CommunityStore/Utilities/Checkout.php:157
 msgid "You must enter a valid email address"
@@ -2378,7 +2451,7 @@ msgstr "Sie müssen einen Vornamen eingeben"
 
 #: src/CommunityStore/Utilities/Checkout.php:166
 msgid "Please enter a first name under 255 characters"
-msgstr ""
+msgstr "Bitte geben Sie einen Vornamen mit weniger als 255 Zeichen ein"
 
 #: src/CommunityStore/Utilities/Checkout.php:169
 msgid "You must enter a Last Name"
@@ -2454,3 +2527,10 @@ msgstr "Abgeschlossen"
 #: src/CommunityStore/Utilities/Installer.php:329
 msgid "Default"
 msgstr "Standard"
+
+#: src/CommunityStore/Utilities/ProductFinder.php:36
+msgid "I can't find a product by that name"
+msgstr "Ein Produkt mit diesem Namen kann nicht gefunden werden"
+
+#~ msgid "Order %s is Complete"
+#~ msgstr "Bestellung %s ist abgeschlossen"

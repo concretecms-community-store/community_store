@@ -115,7 +115,7 @@ class Installer
     }
     public static function installPaymentMethods(Package $pkg)
     {
-        self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
+        self::installPaymentMethod('invoice', 'Rechnung', $pkg, null, true);
     }
     public static function installPaymentMethod($handle, $name, $pkg = null,$displayName = null, $enabled = true)
     {

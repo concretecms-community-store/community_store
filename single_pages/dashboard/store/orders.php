@@ -147,7 +147,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <tr>
                     <td><?= h($discount['odName']); ?></td>
                     <td><?= h($discount['odDisplay']); ?></td>
-                    <td><?= h($discount['odDeductFrom']); ?></td>
+                    <td><?= t(ucwords($discount['odDeductFrom'])); ?></td>
                     <td><?= ($discount['odValue'] > 0 ? $discount['odValue'] : $discount['odPercentage'] . '%' ); ?></td>
                     <td><?= ($discount['odCode'] ? t('by code'). ' <em>' .$discount['odCode'] .'</em>': t('Automatically') ); ?></td>
                 </tr>
@@ -173,7 +173,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <strong><?= t("Grand Total") ?>: </strong><?= Price::format($order->getTotal()) ?>
     </p>
     <p>
-        <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
+        <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
         <?php $transactionReference = $order->getTransactionReference();
         if ($transactionReference) { ?>
             <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
@@ -199,7 +199,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
                         <div class="form-group">
-                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
+                          <select id="orderStatus" name="orderStatus" ccm-passed-value="Pending" class="form-control">
+                          <?php
+                          foreach ($orderStatuses as $key => $value) {
+                            echo '<option value="'.$key.'">';
+                            echo t($value);
+                            echo '</option>';
+                          }
+                          ?>
+                        </select>
                         </div>
                         <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
                     </form>
@@ -223,7 +231,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     foreach($history as $status){
                         ?>
                         <tr>
-                            <td><?= $status->getOrderStatusName()?></td>
+                            <td><?= t($status->getOrderStatusName())?></td>
                             <td><?= $status->getDate()?></td>
                             <td><?= $status->getUserName()?></td>
                         </tr>
@@ -271,7 +279,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <ul id="group-filters" class="nav nav-pills">
                     <li><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
                     <?php foreach($statuses as $status){ ?>
-                        <li><a href="<?= \URL::to('/dashboard/store/orders/', $status->getHandle())?>"><?= $status->getName();?></a></li>
+                        <li><a href="<?= \URL::to('/dashboard/store/orders/', $status->getHandle())?>"><?= t($status->getName());?></a></li>
                     <?php } ?>
                 </ul>
             <?php } ?>
@@ -309,7 +317,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <td><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?></td>
                     <td><?= $dh->formatDateTime($order->getOrderDate())?></td>
                 <td><?=Price::format($order->getTotal())?></td>
-                    <td><?=ucwords($order->getStatus())?></td>
+                    <td><?=t(ucwords($order->getStatus()))?></td>
                     <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
                 </tr>
             <?php } ?>

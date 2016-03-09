@@ -1,12 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-	    
+
 	    <div class="ccm-dashboard-header-buttons">
             <a href="<?= \URL::to('/dashboard/store/settings/shipping')?>" class="btn btn-primary"><i class="fa fa-gift"></i> <?= t("Shipping Methods")?></a>
             <a href="<?= \URL::to('/dashboard/store/settings/tax')?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates")?></a>
         </div>
-	    
+
 	    <form method="post" action="<?= $view->action('save')?>">
-	        
+
             <div class="row">
                 <div class="col-sm-3">
 
@@ -22,7 +22,7 @@
                         </ul>
 
                 </div>
-                
+
                 <div class="col-sm-9 store-pane active" id="settings-currency">
                     <h3><?= t('Currency Settings');?></h3>
                     <div class="row">
@@ -48,9 +48,9 @@
                             <span class="help-block"><?= t('e.g. period or a comma'); ?></span>
                         </div>
                     </div>
-            
+
                 </div><!-- #settings-currency -->
-                
+
                 <div class="col-sm-9 store-pane" id="settings-tax">
                     <h3><?= t('Tax Settings');?></h3>
 
@@ -58,11 +58,11 @@
                         <label for="calculation"><?= t("Are Prices Entered with Tax Included?")?></label>
                         <?= $form->select('calculation',array('add'=>t("No, I will enter product prices EXCLUSIVE of tax"),'extract'=>t("Yes, I will enter product prices INCLUSIVE of tax")),Config::get('community_store.calculation')); ?>
                     </div>
-                    
+
                 </div>
-                                                
+
                 <div class="col-sm-9 store-pane" id="settings-shipping">
-                
+
                     <h3><?= t("Shipping Units")?></h3>
                     <div class="row">
                         <div class="col-xs-6">
@@ -71,34 +71,34 @@
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
                                 <?= $form->select('weightUnit',array('lb'=>t('lb'),'kg'=>t('kg'),'g'=>t('g')),Config::get('community_store.weightUnit'));?>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <?= $form->label('sizeUnit',t('Units for Size'));?>
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
                                 <?= $form->select('sizeUnit',array('in'=>t('in'),'cm'=>t('cm'),'mm'=>t('mm')),Config::get('community_store.sizeUnit'));?>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
-                    
-            
+
+
                 </div><!-- #settings-shipping -->
-                    
+
                 <div class="col-sm-9 store-pane" id="settings-payments">
                     <h3><?= t("Payment Methods")?></h3>
                     <?php
                         if($installedPaymentMethods){
                             foreach($installedPaymentMethods as $pm){?>
-                            
+
                             <div class="panel panel-default">
-                            
-                                <div class="panel-heading"><?= $pm->getName()?></div>
+
+                                <div class="panel-heading"><?= t($pm->getName())?></div>
                                 <div class="panel-body">
                                     <div class="form-group paymentMethodEnabled">
                                         <input type="hidden" name="paymentMethodHandle[<?= $pm->getID()?>]" value="<?= $pm->getHandle()?>">
                                         <label><?= t("Enabled")?></label>
                                         <?php
-                                            echo $form->select("paymentMethodEnabled[".$pm->getID()."]", array(0=>"No",1=>"Yes"),$pm->isEnabled());
+                                            echo $form->select("paymentMethodEnabled[".$pm->getID()."]", array(0=>t("No"),1=>t("Yes")),$pm->isEnabled());
                                         ?>
                                     </div>
                                     <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block':'none'; ?>">
@@ -122,16 +122,16 @@
                                     </div>
 
                                 </div>
-                            
+
                             </div>
-                            
-                        <?php 
+
+                        <?php
                             }
                         } else {
                             echo t("No Payment Methods are Installed");
                         }
-                    ?>                                    
-                    
+                    ?>
+
                     <script>
                         $(function(){
                             $('.paymentMethodEnabled SELECT').on('change',function(){
@@ -169,7 +169,7 @@
                                 <?php foreach($orderStatuses as $orderStatus){?>
                                     <tr>
                                         <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
-                                        <td><input type="text" name="osName[]" value="<?= $orderStatus->getName(); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
+                                        <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
                                         <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked':''; ?>></td>
                                         <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked':''; ?> class="form-control"></td>
                                         <td style="display:none;"><input type="checkbox" name="osInformCustomer[]" value="1" <?= $orderStatus->getInformCustomer() ? 'checked':''; ?> class="form-control"></td>
@@ -234,7 +234,7 @@
                         <?= $form->label('productPublishTarget',t('Page to Publish Product Pages Under'));?>
                         <?= $pageSelector->selectPage('productPublishTarget',$productPublishTarget)?>
                     </div>
-            
+
                 </div>
 
                 <!-- #settings-customers -->
@@ -263,7 +263,7 @@
                 </div>
 
             </div><!-- .row -->
-                
+
     	    <div class="ccm-dashboard-form-actions-wrapper">
     	        <div class="ccm-dashboard-form-actions">
     	            <button class="pull-right btn btn-success" type="submit" ><?= t('Save Settings')?></button>

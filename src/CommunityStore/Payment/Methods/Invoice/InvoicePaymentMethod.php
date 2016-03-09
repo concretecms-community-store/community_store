@@ -7,6 +7,11 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePa
 
 class InvoicePaymentMethod extends StorePaymentMethod
 {
+    public function getName()
+    {
+      return t('Invoice');
+    }
+
     public function dashboardForm()
     {
         $this->set('form', Core::make("helper/form"));
@@ -22,7 +27,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     public function validate($args, $e)
     {
 
-        //$e->add("error message");        
+        //$e->add("error message");
         return $e;
     }
     public function checkoutForm()
