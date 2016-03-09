@@ -67,11 +67,9 @@ class Controller extends Package
 
     public function registerRoutes()
     {
-        Route::register('/cart/getSubTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getSubTotal');
         Route::register('/cart/getTaxTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getTaxTotal');
-        Route::register('/cart/getTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getTotal');
         Route::register('/cart/getShippingTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
-        Route::register('/cart/getTotalItems', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getTotalItems');
+        Route::register('/cart/getCartSummary', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getCartSummary');
         Route::register('/cart/getmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartModal::getCartModal');
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
         Route::register('/checkout/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\States::getStateList');

@@ -29,15 +29,19 @@ class Calculator
     }
     public static function getShippingTotal($smID = null)
     {
-        $sessionShippingMethodID = Session::get('smID');
+        $cart = StoreCart::getCart();
+        if (empty($cart)) {
+            return false;
+        }
+
+        $existingShippingMethodID = Session::get('smID');
         if ($smID) {
             $shippingMethod = StoreShippingMethod::getByID($smID);
             Session::set('smID', $smID);
-        } elseif (!empty($sessionShippingMethodID)) {
-            $shippingMethod = StoreShippingMethod::getByID($sessionShippingMethodID);
-        } else {
-            $shippingTotal = 0;
+        } elseif ($existingShippingMethodID) {
+            $shippingMethod = StoreShippingMethod::getByID($existingShippingMethodID);
         }
+
         if (is_object($shippingMethod)) {
             $shippingTotal = $shippingMethod->getCurrentOffer()->getRate();
         } else {

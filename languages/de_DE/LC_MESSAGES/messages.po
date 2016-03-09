@@ -184,7 +184,7 @@ msgstr "Unterhalb der aktuellen Seite"
 
 #: packages/community_store/blocks/community_product_list/form.php:16
 msgid "Under current page and child pages"
-msgstr ""
+msgstr "Unterhalb der aktuellen Seite und deren Unterseiten"
 
 #: packages/community_store/blocks/community_product_list/form.php:17
 msgid "Under a specified page"
@@ -192,7 +192,7 @@ msgstr "Unterhalb einer spezifischen Seite"
 
 #: packages/community_store/blocks/community_product_list/form.php:18
 msgid "Under a specified page and child pages"
-msgstr ""
+msgstr "Unterhalb einer spezifischen Seite und deren Unterseiten"
 
 #: packages/community_store/blocks/community_product_list/form.php:33
 msgid "Sort Order"
@@ -212,23 +212,23 @@ msgstr "Beliebteste"
 
 #: packages/community_store/blocks/community_product_list/form.php:43
 msgid "Filter by Groups"
-msgstr ""
+msgstr "Nach Gruppen filtern"
 
 #: packages/community_store/blocks/community_product_list/form.php:59
 msgid "Matching"
-msgstr ""
+msgstr "Übereinstimmend"
 
 #: packages/community_store/blocks/community_product_list/form.php:60
 msgid "All groups listed"
-msgstr ""
+msgstr "Alle Gruppen"
 
 #: packages/community_store/blocks/community_product_list/form.php:60
 msgid "Any group listed"
-msgstr ""
+msgstr "Einzelne Gruppe"
 
 #: packages/community_store/blocks/community_product_list/form.php:67
 msgid "Pagination"
-msgstr "Pagination"
+msgstr "Seitenumbruch"
 
 #: packages/community_store/blocks/community_product_list/form.php:71
 msgid "Products per Row"
@@ -248,7 +248,7 @@ msgstr "Darstellungs Optionen"
 
 #: packages/community_store/blocks/community_product_list/form.php:94
 msgid "Show Out of Stock Products"
-msgstr ""
+msgstr "Zeige ausverkaufte Produkte"
 
 #: packages/community_store/blocks/community_product_list/form.php:98
 msgid "Show Featured"
@@ -324,7 +324,7 @@ msgstr "Anzahl Produkte im Warenkorb anzeigen"
 
 #: packages/community_store/blocks/community_utility_links/form.php:13
 msgid "Show Cart SubTotal"
-msgstr ""
+msgstr "Zeige Warenkorb Zwischensumme"
 
 #: packages/community_store/blocks/community_utility_links/form.php:20
 msgid "Show Sign-in Link"
@@ -332,15 +332,15 @@ msgstr "Login-Link anzeigen"
 
 #: packages/community_store/blocks/community_utility_links/form.php:27
 msgid "Show Greeting  (Welcome back, FirstName)"
-msgstr ""
+msgstr "Zeige Begrüssung (Wilkommen zurück, Vorname)"
 
 #: packages/community_store/blocks/community_utility_links/form.php:34
 msgid "Show Checkout Link"
-msgstr ""
+msgstr "Link zur Kasse"
 
 #: packages/community_store/blocks/community_utility_links/form.php:41
 msgid "Link to popup cart instead of cart page"
-msgstr ""
+msgstr "Link zum Popup Warenkorb anstelle Warenkorb Seite"
 
 #: packages/community_store/blocks/community_utility_links/form.php:46
 msgid "Cart Link Label"
@@ -352,7 +352,7 @@ msgstr "Warenkorb anzeigen"
 
 #: packages/community_store/blocks/community_utility_links/form.php:50
 msgid "Cart Items Label"
-msgstr ""
+msgstr "Warenkorb einzelne Beschriftungen"
 
 #: packages/community_store/blocks/community_utility_links/form.php:51
 msgid "Items in Cart"
@@ -443,11 +443,11 @@ msgstr "Methodennamen ist zwingend"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:97
 msgid "Minimum Amount must be numeric"
-msgstr ""
+msgstr "Minimale Anzahl muss numerisch sein"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:100
 msgid "Maximum Amount must be numeric"
-msgstr ""
+msgstr "Maximale Anzahl muss numerisch sein"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:27
 #: packages/community_store/single_pages/dashboard/store/settings/tax.php:105
@@ -464,7 +464,7 @@ msgstr "Steuersatz erfolgreich hinzugefügt"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:96
 msgid "You need a label for this Tax Rate"
-msgstr ""
+msgstr "Bezeichnung für Steuersatz fehlt"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:100
 msgid "Tax Rate must be a number"
@@ -476,11 +476,11 @@ msgstr "Steuersatz muss angegeben werden"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:151
 msgid "You need a name for this Tax Class"
-msgstr ""
+msgstr "Bezeichnung für Steuerklasse fehlt"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:155
 msgid "You can only have one tax rate with your current tax settings"
-msgstr ""
+msgstr "Sie können nur einen Steuersatz mit dem aktuellen Steuereinstellungen haben"
 
 #: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:169
 msgid "Tax Class removed"
@@ -510,7 +510,7 @@ msgstr "Rabatt-Regel hinzufügen"
 
 #: packages/community_store/controllers/single_page/dashboard/store/discounts.php:46
 msgid "Codes for discount rule"
-msgstr ""
+msgstr "Codes für Rabatt Regel"
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:51
 msgid "Order Removed"
@@ -696,7 +696,7 @@ msgstr "Maximaler Auftragswert"
 
 #: packages/community_store/elements/paypal_standard/checkout_form.php:5
 msgid "Click \"Complete Order\" to Proceed to the PayPal Website."
-msgstr ""
+msgstr "Klick auf \"Complete Order\" um zur PayPal Webseite zu kommen"
 
 #: packages/community_store/elements/paypal_standard/dashboard_form.php:10
 #: packages/community_store/single_pages/dashboard/store/settings.php:17
@@ -730,7 +730,7 @@ msgstr "Preis pro"
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:36
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:5
 msgid "Which Countries does this Apply to?"
-msgstr ""
+msgstr "Für welche Länder gilt das?"
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:37
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:6
@@ -745,34 +745,34 @@ msgstr "Bestimmte Länder"
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:42
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:11
 msgid "If Certain Countries, which?"
-msgstr ""
+msgstr "Einzelne Länder auswählen"
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:55
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:24
 msgid "Minimum Purchase Amount for this rate to apply"
-msgstr ""
+msgstr "Mindestabnahmemenge  für diesen Satz "
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:61
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:30
 msgid "Maximum Purchase Amount for this rate to apply"
-msgstr ""
+msgstr "Maximum Abnahmemenge  für diesen Satz anwenden"
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:63
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:84
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:32
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:53
 msgid "Leave at 0 for no maximum"
-msgstr ""
+msgstr "0 für Maximal"
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:70
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:39
 msgid "Minimum Weight Amount for this rate to apply"
-msgstr ""
+msgstr "Mindestgewicht Menge für diesen Satz "
 
 #: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:79
 #: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:48
 msgid "Maximum Weight Amount for this rate to apply"
-msgstr ""
+msgstr "Maximalgewicht Menge für diesen Satz "
 
 #: packages/community_store/elements/cart_list.php:36
 #: packages/community_store/elements/cart_modal.php:67
@@ -782,17 +782,17 @@ msgstr "Menge:"
 
 #: packages/community_store/elements/cart_modal.php:12
 msgid "has been added to your cart"
-msgstr ""
+msgstr "zum Warenkorb hinzugefügt"
 
 #: packages/community_store/elements/cart_modal.php:16
 #: packages/community_store/single_pages/cart.php:12
 msgid "Your cart has been updated"
-msgstr ""
+msgstr "Der Warenkorb wurde aktualisiert"
 
 #: packages/community_store/elements/cart_modal.php:20
 #: packages/community_store/single_pages/cart.php:16
 msgid "Your cart has been cleared"
-msgstr ""
+msgstr "Der Warenkorb wurde geleert"
 
 #: packages/community_store/elements/cart_modal.php:24
 #: packages/community_store/single_pages/cart.php:20
@@ -802,7 +802,7 @@ msgstr "Element gelöscht"
 #: packages/community_store/elements/cart_modal.php:28
 #: packages/community_store/single_pages/cart.php:24
 msgid "Due to stock levels your quantity has been limited"
-msgstr ""
+msgstr "Aufgrund der Lagerbestände wurde Ihre Menge begrenzt"
 
 #: packages/community_store/elements/cart_modal.php:33
 #: packages/community_store/single_pages/cart.php:8
@@ -948,7 +948,7 @@ msgstr "Versandart"
 #: packages/community_store/elements/order_slip.php:110
 #: packages/community_store/single_pages/dashboard/store/orders.php:116
 msgid "Discounts Applied"
-msgstr ""
+msgstr "Rabatte angewendet"
 
 #: packages/community_store/elements/order_slip.php:115
 #: packages/community_store/single_pages/dashboard/store/discounts.php:27
@@ -961,12 +961,12 @@ msgstr "Name"
 #: packages/community_store/elements/order_slip.php:116
 #: packages/community_store/single_pages/dashboard/store/orders.php:122
 msgid "Displayed"
-msgstr ""
+msgstr "Angezeigt"
 
 #: packages/community_store/elements/order_slip.php:117
 #: packages/community_store/single_pages/dashboard/store/orders.php:123
 msgid "Deducted From"
-msgstr ""
+msgstr "Abgezogen von"
 
 #: packages/community_store/elements/order_slip.php:118
 #: packages/community_store/single_pages/dashboard/store/orders.php:124
@@ -976,12 +976,12 @@ msgstr "Menge"
 #: packages/community_store/elements/order_slip.php:119
 #: packages/community_store/single_pages/dashboard/store/orders.php:125
 msgid "Triggered"
-msgstr ""
+msgstr "Ausgelöst"
 
 #: packages/community_store/elements/order_slip.php:130
 #: packages/community_store/single_pages/dashboard/store/orders.php:136
 msgid "by code"
-msgstr ""
+msgstr "von Code"
 
 #: packages/community_store/elements/order_slip.php:130
 #: packages/community_store/single_pages/dashboard/store/orders.php:136
