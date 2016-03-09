@@ -1675,7 +1675,7 @@ msgstr "Produktdetails (Langtext)"
 
 #: single_pages/dashboard/store/products.php:209
 msgid "Categorized under pages"
-msgstr "Kategorisiered unter fplgender Seite"
+msgstr "Kategorisiered unter folgender Seite"
 
 #: single_pages/dashboard/store/products.php:224
 msgid "In product groups"
@@ -1927,7 +1927,7 @@ msgstr "Mehrere"
 
 #: single_pages/dashboard/store/products.php:1090
 msgid "Base price"
-msgstr "Grund Preis"
+msgstr "Basis Preis"
 
 #: single_pages/dashboard/store/products.php:1099
 msgid "Not Featured"
