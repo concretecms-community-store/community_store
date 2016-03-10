@@ -24,6 +24,7 @@ if (is_object($product)) {
                         $salePrice = $product->getSalePrice();
                         if (isset($salePrice) && $salePrice != "") {
                             echo '<span class="sale-price">' . t("On Sale: ") . $product->getFormattedSalePrice() . '</span>';
+                            echo '&nbsp;'.t('was').'&nbsp;';
                             echo '<span class="original-price">' . $product->getFormattedOriginalPrice() . '</span>';
                             echo '<meta itemprop="price" content="' . $product->getSalePrice() .'" />';
                         } else {
@@ -170,7 +171,7 @@ if (is_object($product)) {
 
     <script type="text/javascript">
         $(function () {
-            $('.product-thumb').magnificPopup({
+            $('.store-product-thumb').magnificPopup({
                 type: 'image',
                 gallery: {enabled: true}
             });
@@ -225,14 +226,12 @@ if (is_object($product)) {
                     pdb.find('.store-out-of-stock-label').removeClass('hidden');
                     pdb.find('.store-btn-add-to-cart').addClass('hidden');
                 }
-
                 if (variationdata[ar.join('_')]['imageThumb']) {
                     var image = pdb.find('.store-product-primary-image img');
 
                     if (image) {
                         image.attr('src', variationdata[ar.join('_')]['imageThumb']);
                         var link = image.parent();
-
                         if (link) {
                             link.attr('href', variationdata[ar.join('_')]['image'])
                         }
