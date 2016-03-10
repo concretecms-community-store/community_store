@@ -123,7 +123,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         </p>
 
         <p>
-            <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
+            <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
             <?php if ($order->isShippable()) { ?>
             <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
             <?php } ?>

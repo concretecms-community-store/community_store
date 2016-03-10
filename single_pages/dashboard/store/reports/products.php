@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 ?>
@@ -25,14 +25,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 			<div class="form-group form-group-full">
 				<?= $form->label('orderBy', t('Order By'))?>
 				<div class="ccm-search-field-content ccm-search-field-content-select2">
-					<?= $form->select('orderBy',array('quantity'=>'Quantity Sold','pricePaid'=>'Total'),$orderBy); ?>
+					<?= $form->select('orderBy',array('quantity'=>t('Quantity Sold'),t('pricePaid')=>'Total'),$orderBy); ?>
 				</div>
 			</div>
 		</div>
 		<div class="ccm-search-fields-submit">
 	        <button type="submit" class="btn btn-primary pull-right"><?= t('Filter Results')?></button>
 	    </div>
-		
+
 	</form>
 
 </div>
@@ -58,4 +58,3 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 <?php if ($paginator->getTotalPages() > 1) { ?>
     <?= $pagination ?>
 <?php } ?>
-
