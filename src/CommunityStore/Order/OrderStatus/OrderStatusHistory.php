@@ -150,7 +150,7 @@ class OrderStatusHistory extends Object
             $updatedOrder = clone $order;
             $updatedOrder->updateStatus(self::recordStatusChange($order, $statusHandle));
             $event = new StoreOrderEvent($updatedOrder, $order);
-            Events::dispatch('on_communitystore_order_status_update', $event);
+            Events::dispatch('on_community_store_order_status_update', $event);
         }
     }
 
