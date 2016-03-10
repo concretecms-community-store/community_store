@@ -11,6 +11,7 @@ use Config;
 use Page;
 use UserInfo;
 use Session;
+use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
@@ -71,6 +72,21 @@ class Order
     /** @Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
+     */
+    protected $orderItems;
+
+    public function getOrderItems()
+    {
+        return $this->orderItems;
+    }
+
+    public function __construct()
+    {
+        $this->orderItems = new ArrayCollection();
+    }
+    
     public function setCustomerID($cID)
     {
         $this->cID = $cID;
@@ -365,7 +381,8 @@ class Order
             $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);
             $taxProductLabels = implode(',', $taxProductLabels);
 
-            StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
+            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
+            $this->orderItems->add($orderItem);
         }
     }
 
@@ -539,7 +556,7 @@ class Order
 
         // create order event and dispatch
         $event = new StoreOrderEvent($this);
-        Events::dispatch('on_communitystore_order', $event);
+        Events::dispatch('on_community_store_order', $event);
 
         //send out the alerts
         $mh = new MailService();
@@ -595,24 +612,11 @@ class Order
         $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
         foreach ($rows as $row) {
-            $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", $row['oiID']);
+            $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", array($row['oiID']));
         }
 
-        $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
-        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", $this->oID);
-    }
-
-    public function getOrderItems()
-    {
-        $db = \Database::connection();
-        $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
-        $items = array();
-
-        foreach ($rows as $row) {
-            $items[] = StoreOrderItem::getByID($row['oiID']);
-        }
-
-        return $items;
+        $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", array($this->oID));
+        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", array($this->oID));
     }
 
     public function isShippable()

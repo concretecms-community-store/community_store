@@ -243,6 +243,6 @@ class ShippingMethod
             }
         }
 
-       return t('Unknown');
+       return '';
     }
 }

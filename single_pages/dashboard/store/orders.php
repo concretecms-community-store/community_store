@@ -51,9 +51,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <h4><?= t("Shipping Information")?></h4>
                     <p>
                         <?= $order->getAttribute("shipping_first_name"). " " . $order->getAttribute("shipping_last_name")?><br>
-                        <?php $shippingaddres = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
-                        if ($shippingaddres) {
-                            echo $shippingaddres->getValue('displaySanitized', 'display');
+                        <?php $shippingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
+                        if ($shippingaddress) {
+                            echo $shippingaddress->getValue('displaySanitized', 'display');
                         }
                         ?>
                     </p>
