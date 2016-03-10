@@ -207,17 +207,6 @@ class Cart
 
     public function checkForExistingCartItem($cartItem)
     {
-        /*
-         * We need to add the item to the cart, however, first we need to do some comparisons.
-         * If we're adding a product that already exists, but the attributes are different,
-         * we need to create a new instance of that item. 
-         * If the attibutes are the same, we just need to update the quantity.
-         * If it doesn't exist, we're free to just add it. 
-         * 
-         * phew.
-         * 
-         */
-
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.
             if ($cart['product']['pID'] == $cartItem['product']['pID']) {

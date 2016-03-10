@@ -539,7 +539,7 @@ class Order
 
         // create order event and dispatch
         $event = new StoreOrderEvent($this);
-        Events::dispatch('on_communitystore_order', $event);
+        Events::dispatch('on_community_store_order', $event);
 
         //send out the alerts
         $mh = new MailService();
