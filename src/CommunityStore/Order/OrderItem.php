@@ -284,6 +284,8 @@ class OrderItem
                 $pao->assignPermissionAccess($pa);
             }
         }
+
+        return $orderItem;
     }
 
     public function getProductID()
