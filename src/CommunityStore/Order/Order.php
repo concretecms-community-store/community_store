@@ -651,6 +651,19 @@ class Order
         }
     }
 
+    public function getStatusHandle()
+    {
+        $history = StoreOrderStatusHistory::getForOrder($this);
+
+        if (!empty($history)) {
+            $laststatus = $history[0];
+
+            return $laststatus->getOrderStatusHandle();
+        } else {
+            return '';
+        }
+    }
+
     public function setAttribute($ak, $value)
     {
         if (!is_object($ak)) {

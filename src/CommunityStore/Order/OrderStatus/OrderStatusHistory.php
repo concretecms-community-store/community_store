@@ -146,11 +146,15 @@ class OrderStatusHistory extends Object
     {
         $history = self::getForOrder($order);
 
+
         if (empty($history) || $history[0]->getOrderStatusHandle() != $statusHandle) {
-            $updatedOrder = clone $order;
-            $updatedOrder->updateStatus(self::recordStatusChange($order, $statusHandle));
-            $event = new StoreOrderEvent($updatedOrder, $order);
-            Events::dispatch('on_community_store_order_status_update', $event);
+            $previousStatus = $order->getStatusHandle();
+            $order->updateStatus(self::recordStatusChange($order, $statusHandle));
+
+            if (!empty($history)) {
+                $event = new StoreOrderEvent($order, $previousStatus);
+                Events::dispatch('on_community_store_order_status_update', $event);
+            }
         }
     }
 

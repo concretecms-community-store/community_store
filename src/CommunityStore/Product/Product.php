@@ -9,6 +9,7 @@ use Database;
 use File;
 use Core;
 use Config;
+use Events;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
@@ -18,6 +19,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation a
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
@@ -426,12 +428,16 @@ class Product
         if ($data['pID']) {
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
+            $originalProduct = clone $product;
+
             $product->setPageDescription($data['pDesc']);
+            $newproduct = false;
         } else {
             //else, we don't know it and we're adding a new product
             $product = new self();
             $dt = Core::make('helper/date');
             $product->setDateAdded(new \DateTime());
+            $newproduct = true;
         }
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
@@ -468,6 +474,15 @@ class Product
         $product->save();
         if (!$data['pID']) {
             $product->generatePage($data['selectPageTemplate']);
+        }
+
+        // create product event and dispatch
+        if ($newproduct) {
+            $event = new StoreProductEvent($product);
+            Events::dispatch('on_community_store_product_add', $event);
+        } else {
+            $event = new StoreProductEvent($originalProduct, $product);
+            Events::dispatch('on_community_store_product_update', $event);
         }
 
         return $product;
@@ -807,6 +822,11 @@ class Product
         StoreProductLocation::removeLocationsForProduct($this);
         StoreProductUserGroup::removeUserGroupsForProduct($this);
         StoreProductVariation::removeVariationsForProduct($this);
+
+        // create product event and dispatch
+        $event = new StoreProductEvent($this);
+        Events::dispatch('on_community_store_product_delete', $event);
+
         $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
@@ -910,6 +930,10 @@ class Product
             $spk->saveAttribute($newproduct, $value);
         }
 
+        // create product event and dispatch
+        $event = new StoreProductEvent($this, $newproduct);
+        Events::dispatch('on_community_store_product_duplicate', $event);
+
         return $newproduct;
     }
 
@@ -963,7 +987,6 @@ class Product
     public function setPageID($cID)
     {
         $this->setCollectionID($cID);
-        //$this->save();
     }
 
     public function savePageID($cID)
