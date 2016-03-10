@@ -612,11 +612,11 @@ class Order
         $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
         foreach ($rows as $row) {
-            $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", $row['oiID']);
+            $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", array($row['oiID']));
         }
 
-        $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
-        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", $this->oID);
+        $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", array($this->oID));
+        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", array($this->oID));
     }
 
     public function isShippable()
