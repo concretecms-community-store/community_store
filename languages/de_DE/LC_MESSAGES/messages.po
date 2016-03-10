@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: community_store 3.0dev9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-09 14:21+0100\n"
-"PO-Revision-Date: 2016-03-09 15:25+0100\n"
+"POT-Creation-Date: 2016-03-10 09:25+0100\n"
+"PO-Revision-Date: 2016-03-10 09:37+0100\n"
 "Last-Translator: \n"
 "Language-Team: LennDa\n"
 "Language: de_DE\n"
@@ -397,6 +397,10 @@ msgstr ""
 msgid "Quantity must be greater than zero"
 msgstr "Menge muss Größer als 0 sein"
 
+#: controllers/single_page/dashboard/store.php:53
+msgid "Store"
+msgstr "Shop"
+
 #: controllers/single_page/dashboard/store/discounts.php:24
 msgid "Discount Rules"
 msgstr "Rabatt-Regeln"
@@ -426,6 +430,10 @@ msgstr "Rabatt Regel aktualisiert"
 #: controllers/single_page/dashboard/store/discounts.php:163
 msgid "Discount Rule Deleted"
 msgstr "Rabatt Regel gelöscht"
+
+#: controllers/single_page/dashboard/store/orders.php:41
+msgid "Orders"
+msgstr "Bestellungen"
 
 #: controllers/single_page/dashboard/store/orders.php:57
 msgid "Order Removed"
@@ -469,7 +477,7 @@ msgstr "Produkt wurde dupliziert"
 #: controllers/single_page/dashboard/store/settings/tax.php:113
 #: elements/cart_modal.php:128 single_pages/cart.php:123
 #: single_pages/dashboard/store/discounts.php:268
-#: single_pages/dashboard/store/orders.php:204
+#: single_pages/dashboard/store/orders.php:212
 msgid "Update"
 msgstr "Aktualisieren"
 
@@ -710,7 +718,7 @@ msgstr "Angewendete Rabatte"
 #: single_pages/cart.php:184 single_pages/dashboard/store.php:31
 #: single_pages/dashboard/store.php:57 single_pages/dashboard/store.php:111
 #: single_pages/dashboard/store.php:113 single_pages/dashboard/store.php:150
-#: single_pages/dashboard/store/orders.php:299
+#: single_pages/dashboard/store/orders.php:307
 #: single_pages/dashboard/store/reports/products.php:44
 #: single_pages/dashboard/store/reports/sales.php:28
 #: single_pages/dashboard/store/reports/sales.php:54
@@ -766,7 +774,7 @@ msgid "Email"
 msgstr "Email"
 
 #: elements/order_slip.php:26 single_pages/dashboard/store/orders.php:31
-#: single_pages/dashboard/store/orders.php:216
+#: single_pages/dashboard/store/orders.php:224
 msgid "User"
 msgstr "Benutzer"
 
@@ -1195,7 +1203,7 @@ msgid "Incl."
 msgstr "Inkl."
 
 #: single_pages/dashboard/store.php:17
-#: single_pages/dashboard/store/orders.php:264
+#: single_pages/dashboard/store/orders.php:272
 msgid ""
 "Cart and Ordering features are currently disabled. This setting can be "
 "changed via the"
@@ -1204,7 +1212,7 @@ msgstr ""
 "kann geändert werden über "
 
 #: single_pages/dashboard/store.php:17
-#: single_pages/dashboard/store/orders.php:264
+#: single_pages/dashboard/store/orders.php:272
 msgid "settings page."
 msgstr "Einstellungen Seite."
 
@@ -1247,7 +1255,7 @@ msgid "Order #"
 msgstr "Bestell-Nummer "
 
 #: single_pages/dashboard/store.php:146
-#: single_pages/dashboard/store/orders.php:215
+#: single_pages/dashboard/store/orders.php:223
 #: single_pages/dashboard/store/reports/sales.php:224
 msgid "Date"
 msgstr "Datum"
@@ -1351,6 +1359,8 @@ msgstr "Löschen"
 #: single_pages/dashboard/store/products.php:130
 #: single_pages/dashboard/store/products.php:184
 #: single_pages/dashboard/store/products.php:275
+#: single_pages/dashboard/store/settings.php:101
+#: single_pages/dashboard/store/settings/shipping.php:33
 #: single_pages/dashboard/store/settings/tax.php:21
 msgid "Yes"
 msgstr "Ja"
@@ -1359,6 +1369,8 @@ msgstr "Ja"
 #: single_pages/dashboard/store/products.php:96
 #: single_pages/dashboard/store/products.php:130
 #: single_pages/dashboard/store/products.php:275
+#: single_pages/dashboard/store/settings.php:101
+#: single_pages/dashboard/store/settings/shipping.php:33
 #: single_pages/dashboard/store/settings/tax.php:21
 msgid "No"
 msgstr "Nein"
@@ -1554,55 +1566,55 @@ msgstr "Bestellstatus Historie"
 msgid "Update Status"
 msgstr "Aktualisierungsstatus"
 
-#: single_pages/dashboard/store/orders.php:214
-#: single_pages/dashboard/store/orders.php:300
+#: single_pages/dashboard/store/orders.php:222
+#: single_pages/dashboard/store/orders.php:308
 msgid "Status"
 msgstr "Status"
 
-#: single_pages/dashboard/store/orders.php:240
+#: single_pages/dashboard/store/orders.php:248
 msgid "Manage Order"
 msgstr "Bestellungen verwalten"
 
-#: single_pages/dashboard/store/orders.php:246
+#: single_pages/dashboard/store/orders.php:254
 msgid "Order Options"
 msgstr "Bestell-Optionen"
 
-#: single_pages/dashboard/store/orders.php:250
+#: single_pages/dashboard/store/orders.php:258
 msgid "Are you sure you wish to delete this order?"
 msgstr "Möchten Sie diese Bestellung wirklich löschen?"
 
-#: single_pages/dashboard/store/orders.php:250
+#: single_pages/dashboard/store/orders.php:258
 msgid "Delete Order"
 msgstr "Bestellung löschen"
 
-#: single_pages/dashboard/store/orders.php:272
+#: single_pages/dashboard/store/orders.php:280
 msgid "All Statuses"
 msgstr "Alle Status"
 
-#: single_pages/dashboard/store/orders.php:285
+#: single_pages/dashboard/store/orders.php:293
 msgid "Search Orders"
 msgstr "Bestellungen durchsuchen"
 
-#: single_pages/dashboard/store/orders.php:288
+#: single_pages/dashboard/store/orders.php:296
 #: single_pages/dashboard/store/products.php:1041
 msgid "Search"
 msgstr "Suchen"
 
-#: single_pages/dashboard/store/orders.php:296
+#: single_pages/dashboard/store/orders.php:304
 #, php-format
 msgid "Order %s"
 msgstr "Bestellung %s"
 
-#: single_pages/dashboard/store/orders.php:297
+#: single_pages/dashboard/store/orders.php:305
 msgid "Customer Name"
 msgstr "Kundenname"
 
-#: single_pages/dashboard/store/orders.php:298
+#: single_pages/dashboard/store/orders.php:306
 msgid "Order Date"
 msgstr "Bestelldatum"
 
-#: single_pages/dashboard/store/orders.php:301
-#: single_pages/dashboard/store/orders.php:313
+#: single_pages/dashboard/store/orders.php:309
+#: single_pages/dashboard/store/orders.php:321
 msgid "View"
 msgstr "Anzeigen"
 
@@ -2031,13 +2043,18 @@ msgstr "An"
 msgid "Order By"
 msgstr "Sortierung"
 
-#: single_pages/dashboard/store/reports/products.php:33
-msgid "Filter Results"
-msgstr "Filter Ergebniss(e)"
-
+#: single_pages/dashboard/store/reports/products.php:28
 #: single_pages/dashboard/store/reports/products.php:43
 msgid "Quantity Sold"
 msgstr "Anzahl Verkauft"
+
+#: single_pages/dashboard/store/reports/products.php:28
+msgid "pricePaid"
+msgstr ""
+
+#: single_pages/dashboard/store/reports/products.php:33
+msgid "Filter Results"
+msgstr "Filter Ergebniss(e)"
 
 #: single_pages/dashboard/store/reports/sales.php:49
 msgid "Past 30 Days"
@@ -2405,10 +2422,6 @@ msgstr "aus"
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: src/CommunityStore/Shipping/Method/ShippingMethod.php:246
-msgid "Unknown"
-msgstr "Unbekannt"
-
 #: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:198
 msgid "Please set a Base Rate"
 msgstr "Bitte setzen Sie einen Basis Preis "
@@ -2531,6 +2544,9 @@ msgstr "Standard"
 #: src/CommunityStore/Utilities/ProductFinder.php:36
 msgid "I can't find a product by that name"
 msgstr "Ein Produkt mit diesem Namen kann nicht gefunden werden"
+
+#~ msgid "Unknown"
+#~ msgstr "Unbekannt"
 
 #~ msgid "Order %s is Complete"
 #~ msgstr "Bestellung %s ist abgeschlossen"
