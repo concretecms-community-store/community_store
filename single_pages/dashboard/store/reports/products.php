@@ -25,7 +25,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 			<div class="form-group form-group-full">
 				<?= $form->label('orderBy', t('Order By'))?>
 				<div class="ccm-search-field-content ccm-search-field-content-select2">
-					<?= $form->select('orderBy',array('quantity'=>t('Quantity Sold'),t('pricePaid')=>'Total'),$orderBy); ?>
+					<?= $form->select('orderBy',array('quantity'=>t('Quantity Sold'),'pricePaid'=>t('Total')),$orderBy); ?>
 				</div>
 			</div>
 		</div>
