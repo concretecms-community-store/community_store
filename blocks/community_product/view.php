@@ -170,7 +170,7 @@ if (is_object($product)) {
 
     <script type="text/javascript">
         $(function () {
-            $('.product-thumb').magnificPopup({
+            $('.store-product-thumb').magnificPopup({
                 type: 'image',
                 gallery: {enabled: true}
             });
@@ -207,7 +207,7 @@ if (is_object($product)) {
                 })
 
                 ar.sort();
-                var pdb = $(this).closest('.store-product-detail-block');
+                var pdb = $(this).closest('.store-product-block');
 
                 if (variationdata[ar.join('_')]['saleprice']) {
                     var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>' +
