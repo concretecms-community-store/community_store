@@ -108,9 +108,9 @@ ob_start();
 
 <?php
 $downloads = array();
-$orderItems = $order->getOrderItems();
-foreach ($orderItems as $item) {
+foreach ($items as $item) {
     $pObj = $item->getProductObject();
+
     if (is_object($pObj)) {
         if ($pObj->hasDigitalDownload()) {
             $fileObjs = $pObj->getDownloadFileObjects();
@@ -122,13 +122,11 @@ if (count($downloads) > 0) {
     ?>
     <div style="margin: 30px 0;">
         <p><strong><?= t("Your Downloads") ?></strong></p>
-
-        <p><?= t("Note: You must be logged in to download files") ?></p>
         <ul class="order-downloads">
             <?php
             foreach ($downloads as $name => $file) {
                 if (is_object($file)) {
-                    echo '<li><a href="' . $file->getDownloadURL() . '">' . $name . '</a></li>';
+                    echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
                 }
             } ?>
         </ul>

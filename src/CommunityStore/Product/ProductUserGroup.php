@@ -32,10 +32,6 @@ class ProductUserGroup
      */
     protected $gID;
 
-    private function setProductID($pID)
-    {
-        $this->pID = $pID;
-    }
 
     public function setProduct($product)
     {
@@ -91,7 +87,7 @@ class ProductUserGroup
         //add new ones.
         if (!empty($data['pUserGroups'])) {
             foreach ($data['pUserGroups'] as $gID) {
-                self::add($product->getID(), $gID);
+                self::add($product, $gID);
             }
         }
     }
@@ -104,10 +100,11 @@ class ProductUserGroup
         }
     }
 
-    public static function add($pID, $gID)
+    public static function add($product, $gID)
     {
+
         $productUserGroup = new self();
-        $productUserGroup->setProductID($pID);
+        $productUserGroup->setProduct($product);
         $productUserGroup->setUserGroupID($gID);
         $productUserGroup->save();
 

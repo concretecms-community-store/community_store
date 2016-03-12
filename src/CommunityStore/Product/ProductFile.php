@@ -98,16 +98,6 @@ class ProductFile
                     $fileObj = \File::getByID($fileID);
                     $fs = \FileSet::getByName("Digital Downloads");
                     $fs->addFileToSet($fileObj);
-//                    $fileObj->resetPermissions(1);
-//                    $pk = \Concrete\Core\Permission\Key\FileKey::getByHandle('view_file');
-//                    $pk->setPermissionObject($fileObj);
-//                    $pao = $pk->getPermissionAssignmentObject();
-//                    $groupEntity = \Concrete\Core\Permission\Access\Entity\GroupEntity::getOrCreate(\Group::getByID(GUEST_GROUP_ID));
-//                    $pa = $pk->getPermissionAccessObject();
-//                    if ($pa) {
-//                        $pa->removeListItem($groupEntity);
-//                        $pao->assignPermissionAccess($pa);
-//                    }
                 }
             }
         }

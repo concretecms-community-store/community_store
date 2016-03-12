@@ -10,7 +10,7 @@
         $pObj = $item->getProductObject();
         if(is_object($pObj)){
             if($pObj->hasDigitalDownload()){
-                $fileObjs = $pObj->getProductDownloadFileObjects();
+                $fileObjs = $pObj->getDownloadFileObjects();
                 $downloads[$item->getProductName()] = $fileObjs[0];
             }
         }
@@ -20,7 +20,7 @@
         <ul class="order-downloads">
         <?php
         foreach($downloads as $name=>$file){
-            echo '<li><a href="'.$file->getDownloadURL().'">'.$name.'</a></li>';
+            echo '<li><a href="'.$file->getForceDownloadURL().'">'.$name.'</a></li>';
         }?>
         </ul>
     <?php }

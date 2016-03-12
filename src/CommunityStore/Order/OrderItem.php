@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Concrete\Core\Foundation\Object as Object;
 use Database;
-use User;
-use UserInfo;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
  * @Entity
@@ -268,23 +266,6 @@ class OrderItem
             $orderItemOption->save();
         }
 
-        if ($product->hasDigitalDownload()) {
-            $fileObjs = $product->getDownloadFileObjects();
-            $fileObj = $fileObjs[0];
-            $pk = \Concrete\Core\Permission\Key\FileKey::getByHandle('view_file');
-            $pk->setPermissionObject($fileObj);
-            $pao = $pk->getPermissionAssignmentObject();
-            $u = new User();
-            $uID = $u->getUserID();
-            $ui = UserInfo::getByID($uID);
-            $user = \Concrete\Core\Permission\Access\Entity\UserEntity::getOrCreate($ui);
-            $pa = $pk->getPermissionAccessObject();
-            if ($pa) {
-                $pa->addListItem($user);
-                $pao->assignPermissionAccess($pa);
-            }
-        }
-
         return $orderItem;
     }
 
@@ -322,7 +303,7 @@ class OrderItem
     }
     public function getProductObject()
     {
-        return $this->product;
+        return StoreProduct::getByID($this->getProductID());
     }
 
     public function save()
