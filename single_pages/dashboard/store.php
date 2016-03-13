@@ -95,9 +95,9 @@ if ($taxCalc == 'extract') {
                 
                 labels: [ <?php for($i=0;$i<7;$i++){
                         if($i!=6){
-                            echo "'".$months[$i]->format("m/d")."',";
+                            echo "'".$months[$i]->format(t("m/d"))."',";
                         } else {
-                            echo "'".$months[$i]->format("m/d")."'";
+                            echo "'".$months[$i]->format(t("m/d"))."'";
                         }
                     } ?> ],
                 // Our series array that contains series objects or in this case series data arrays
@@ -121,7 +121,7 @@ if ($taxCalc == 'extract') {
                 axisY: {
                     offset: 80,
                     labelInterpolationFnc: function(value) {
-                      return "$" + value;
+                      return "<?=  Config::get('community_store.symbol');?>" + value;
                     }
                 },
                 plugins: [
