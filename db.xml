@@ -13,6 +13,10 @@
         <field name="akID" type="integer"><unsigned/><key/></field>
         <field name="avID" type="integer"><unsigned/><key/></field>
     </table>
+    <table name="CommunityStoreOrderAttributeKeyUserGroups">
+        <field name="akID" type="integer"><unsigned/><key/></field>
+        <field name="gID" type="integer"><unsigned/><key/></field>
+    </table>
     <table name="CommunityStoreProductAttributeKeys">
         <field name="akID" type="integer"><unsigned/><key/></field>
     </table>
