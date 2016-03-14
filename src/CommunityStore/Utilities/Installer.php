@@ -35,6 +35,7 @@ class Installer
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
         self::installSinglePage('/dashboard/store/orders/', $pkg);
+        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
         self::installSinglePage('/dashboard/store/discounts/', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
