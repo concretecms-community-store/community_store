@@ -7,7 +7,7 @@
     <form method="post" action="<?= $this->action('edit')?>" id="ccm-attribute-key-form">
     
         <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-        <?php Loader::packageElement("attribute/order_type_form_required", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
+        <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
     
     </form>
 
@@ -17,7 +17,7 @@
     <?php  if (isset($type)) { ?>
         <form method="post" action="<?= $this->action('add')?>" id="ccm-attribute-key-form">
             <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-            <?php Loader::packageElement("attribute/order_type_form_required", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
+            <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
         </form> 
     <?php  } ?>
     
