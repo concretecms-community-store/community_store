@@ -77,9 +77,8 @@ class Attributes extends DashboardPageController {
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
         $this->set('pageTitle', t('Create Order Attribute'));
 
-        $gl = new GroupList;
-        $this->set('groupList', $gl->getResults());
-        $this->set('oGroups', array()); // TODO: get groups for this attribute
+        $this->set('oaGroups', array());
+        $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
     }
     
@@ -106,6 +105,9 @@ class Attributes extends DashboardPageController {
         $this->set('key', $key);
         $this->set('type', $type);
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
+
+        $this->set('oaGroups', $key->getAttributeGroups());
+        $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
         
         if ($this->post()) {
@@ -119,5 +121,14 @@ class Attributes extends DashboardPageController {
                 $this->redirect('/dashboard/store/orders/attributes', 'updated');
             }
         }
+    }
+
+    public function getGroupList()
+    {
+        $gl = new GroupList;
+        foreach ($gl->getResults() as $group) {
+            $groupList[$group->getGroupID()] = $group->getGroupName();
+        }
+        return $groupList;
     }
 }
