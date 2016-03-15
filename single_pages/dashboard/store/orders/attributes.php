@@ -7,17 +7,16 @@
     <form method="post" action="<?= $this->action('edit')?>" id="ccm-attribute-key-form">
     
         <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-        <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
+        <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('key' => $key, 'groupList' => $groupList, 'oaGroups' => $oaGroups)); ?>
     
     </form>
 
 <?php  } elseif (in_array($controller->getTask(),$addViews)) { ?>
 
-    
     <?php  if (isset($type)) { ?>
         <form method="post" action="<?= $this->action('add')?>" id="ccm-attribute-key-form">
             <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-            <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('groupList' => $groupList, 'oGroups' => $oGroups)); ?>
+            <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('key' => $key, 'groupList' => $groupList, 'oaGroups' => $oaGroups)); ?>
         </form> 
     <?php  } ?>
     
@@ -42,6 +41,5 @@
         </div>
     
     </form>
-
 
 <?php  } ?>
