@@ -246,6 +246,7 @@ class Installer
             $oakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
             $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
         $text = AttributeType::getByHandle('text');
