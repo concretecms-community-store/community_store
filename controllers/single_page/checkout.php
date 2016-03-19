@@ -7,6 +7,7 @@ use Session;
 use Config;
 use Database;
 use UserAttributeKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -16,6 +17,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Checkout extends PageController
 {
@@ -99,6 +101,12 @@ class Checkout extends PageController
         $this->set("defaultShippingCountry",$defaultShippingCountry);
 
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
+
+        $otherAttributes = StoreOrderKey::getOtherAttributesList();
+        $this->set("otherAttributes", count($otherAttributes)? true : false);
+        if (count($otherAttributes)) {
+            $this->set("otherAttributesList", $otherAttributes);
+        }
 
         $totals = StoreCalculator::getTotals();
 
