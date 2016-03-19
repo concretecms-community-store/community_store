@@ -83,6 +83,18 @@ class StoreOrderKey extends Key
         return parent::getList('store_order');
     }
 
+    public static function getOtherAttributesList()
+    {
+        $list = array();
+        foreach (parent::getList('store_order') as $oaKey) {
+            if ($oaKey->getPackageHandle() != "community_store") {
+                print_r($oaKey->getAttributeSets());
+                $list[] = $oaKey;
+            }
+        }
+        return $list;
+    }
+
     protected function saveAttribute($order, $value = false)
     {
         $av = $order->getAttributeValueObject($this, true);
@@ -107,8 +119,10 @@ class StoreOrderKey extends Key
         $db = \Database::connection();
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
-        foreach ($oaGroups as $gID) {
-            $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+        if (is_array($oaGroups) && !empty($oaGroups)) {
+            foreach ($oaGroups as $gID) {
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+            }
         }
 
         $nak = new self();
@@ -121,13 +135,16 @@ class StoreOrderKey extends Key
     {
         $ak = parent::update($args);
         extract($args);
+        
         $akID = $ak->getAttributeKeyID();
         $db = \Database::connection();
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
         $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
-        foreach ($oaGroups as $gID) {
-            $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+        if (is_array($oaGroups) && !empty($oaGroups)) {
+            foreach ($oaGroups as $gID) {
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+            }
         }
     }
 
