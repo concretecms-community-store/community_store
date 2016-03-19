@@ -133,7 +133,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                                 <div class="store-checkout-form-group-body">
                                     <h2><?= t("Other Choices") ?></h2>
-
                                     <?php foreach ($otherAttributesList as $oaKey) { ?>
                                         <div class="row">
                                             <div class="col-md-12">
