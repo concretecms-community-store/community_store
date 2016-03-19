@@ -5,6 +5,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Page\Controller\DashboardPageController;
 use View;
 use Core;
+use Package;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Type as AttributeType;
 use GroupList;
@@ -91,7 +92,7 @@ class Attributes extends DashboardPageController {
             $this->set('error', $e);
         } else {
             $type = AttributeType::getByID($this->post('atID'));
-            StoreOrderKey::add($type, $this->post());
+            StoreOrderKey::add($type, $this->post(), Package::getByHandle('community_store'));
             $this->redirect('/dashboard/store/orders/attributes/', 'success');
         }
     }
@@ -129,6 +130,6 @@ class Attributes extends DashboardPageController {
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
-        return $groupList;
+        return (is_array($groupList))? $groupList : array();
     }
 }
