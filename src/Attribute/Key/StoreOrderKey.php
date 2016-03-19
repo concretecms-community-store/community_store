@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\Attribute\Key;
 
 use Database;
+use AttributeSet;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
 use Concrete\Core\Attribute\Key\Key as Key;
@@ -87,8 +88,7 @@ class StoreOrderKey extends Key
     {
         $list = array();
         foreach (parent::getList('store_order') as $oaKey) {
-            if ($oaKey->getPackageHandle() != "community_store") {
-                print_r($oaKey->getAttributeSets());
+            if (in_array(AttributeSet::getByHandle("order_choices"), $oaKey->getAttributeSets())) {
                 $list[] = $oaKey;
             }
         }

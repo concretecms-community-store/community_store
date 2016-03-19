@@ -104,7 +104,7 @@ class Checkout extends PageController
 
         $otherAttributes = StoreOrderKey::getOtherAttributesList();
         $this->set("otherAttributes", count($otherAttributes)? true : false);
-        if (count($otherAttributes)) {
+        if (is_array($otherAttributes) && !empty($otherAttributes)) {
             $this->set("otherAttributesList", $otherAttributes);
         }
 
