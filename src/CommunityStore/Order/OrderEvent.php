@@ -7,6 +7,8 @@ class OrderEvent extends GenericEvent
 {
     protected $event;
 
+    protected $notificationEmails;
+    
     public function __construct($currentOrder, $previousStatusHandle = null)
     {
         $this->currentOrder = $currentOrder;
@@ -16,6 +18,16 @@ class OrderEvent extends GenericEvent
     public function getOrder()
     {
         return $this->currentOrder;
+    }
+
+    public function setNotificationEmails($notificationEmails)
+    {
+        $this->notificationEmails = $notificationEmails;
+    }
+
+    public function getNotificationEmails()
+    {
+        return $this->notificationEmails;
     }
 
     public function getPreviousStatusHandle()
