@@ -102,10 +102,10 @@ class Checkout extends PageController
 
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
 
-        $otherAttributes = StoreOrderKey::getOtherAttributesList();
-        $this->set("otherAttributes", count($otherAttributes)? true : false);
-        if (is_array($otherAttributes) && !empty($otherAttributes)) {
-            $this->set("otherAttributesList", $otherAttributes);
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+        $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
+        if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+            $this->set("otherAttributesList", $orderChoicesAttList);
         }
 
         $totals = StoreCalculator::getTotals();

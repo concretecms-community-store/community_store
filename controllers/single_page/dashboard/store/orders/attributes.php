@@ -78,7 +78,7 @@ class Attributes extends DashboardPageController {
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
         $this->set('pageTitle', t('Create Order Attribute'));
 
-        $this->set('oaGroups', array());
+        $this->set('ocGroups', array());
         $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
     }
@@ -107,7 +107,7 @@ class Attributes extends DashboardPageController {
         $this->set('type', $type);
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
 
-        $this->set('oaGroups', $key->getAttributeGroups());
+        $this->set('groups', $key->getAttributeGroups());
         $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
         
