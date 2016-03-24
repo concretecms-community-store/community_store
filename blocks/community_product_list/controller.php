@@ -12,9 +12,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreG
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
-    protected $btInterfaceWidth = "450";
+    protected $btInterfaceWidth = "800";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "400";
+    protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
 
     public function getBlockTypeDescription()
@@ -89,7 +89,7 @@ class Controller extends BlockController
             }
         }
 
-        $products->setItemsPerPage($this->maxProducts);
+        $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
         $products->setFeatureType($this->showFeatured);
         $products->setShowOutOfStock($this->showOutOfStock);
@@ -133,6 +133,7 @@ class Controller extends BlockController
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['maxProducts'] = isset($args['maxProducts']) ? $args['maxProducts'] : 0;
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
@@ -155,16 +156,13 @@ class Controller extends BlockController
     {
         $e = Core::make("helper/validation/error");
         $nh = Core::make("helper/number");
-        if ($args['maxProducts'] < 1) {
-            $e->add(t('Max Number of Products must be at least 1'));
-        }
 
         if (($args['filter'] == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));
         }
 
-        if (!$nh->isInteger($args['maxProducts'])) {
-            $e->add(t('Max Number of Products must be a whole number'));
+        if ($args['maxProducts'] && !$nh->isInteger($args['maxProducts'])) {
+            $e->add(t('Number of Products must be a whole number'));
         }
 
         return $e;

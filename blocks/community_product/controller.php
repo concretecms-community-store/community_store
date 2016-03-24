@@ -13,7 +13,7 @@ class Controller extends BlockController
     protected $btTable = 'btCommunityStoreProduct';
     protected $btInterfaceWidth = "450";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "520";
+    protected $btInterfaceHeight = "538";
     protected $btDefaultSet = 'community_store';
 
     public function getBlockTypeDescription()
@@ -86,5 +86,22 @@ class Controller extends BlockController
             }
         }
         parent::save($args);
+    }
+
+    public function add()
+    {
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
+    }
+    public function edit()
+    {
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
+
+        if ($this->pID) {
+            $this->set('product', StoreProduct::getByID($this->pID));
+        } else {
+            $this->set('product', false);
+        }
     }
 }
