@@ -44,11 +44,12 @@ class StoreOrderKey extends Key
     public function getAttributeGroups()
     {
         $db = \Database::connection();
-        $groups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", array($this->akID));
-        foreach ($groups as $group) {
-            $oaGroups[] = $group['gID'];
+        $groups = array();
+        $allGroups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", array($this->akID));
+        foreach ($allGroups as $group) {
+            $groups[] = $group['gID'];
         }
-        return $oaGroups;
+        return $groups;
     }
 
     public static function getByID($akID)
@@ -84,15 +85,19 @@ class StoreOrderKey extends Key
         return parent::getList('store_order');
     }
 
-    public static function getOtherAttributesList()
+    public static function getAttributeListBySet($set)
     {
-        $list = array();
-        foreach (parent::getList('store_order') as $oaKey) {
-            if (in_array(AttributeSet::getByHandle("order_choices"), $oaKey->getAttributeSets())) {
-                $list[] = $oaKey;
+        if (!$set instanceof AttributeSet) {
+            $set = AttributeSet::getByHandle($set);
+        }
+
+        $attList = array();
+        foreach (parent::getList('store_order') as $att) {
+            if (in_array($set, $att->getAttributeSets())) {
+                $attList[] = $att;
             }
         }
-        return $list;
+        return $attList;
     }
 
     protected function saveAttribute($order, $value = false)
@@ -119,8 +124,8 @@ class StoreOrderKey extends Key
         $db = \Database::connection();
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
-        if (is_array($oaGroups) && !empty($oaGroups)) {
-            foreach ($oaGroups as $gID) {
+        if (is_array($groups) && !empty($groups)) {
+            foreach ($groups as $gID) {
                 $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
             }
         }
@@ -141,8 +146,8 @@ class StoreOrderKey extends Key
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
         $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
-        if (is_array($oaGroups) && !empty($oaGroups)) {
-            foreach ($oaGroups as $gID) {
+        if (is_array($groups) && !empty($groups)) {
+            foreach ($groups as $gID) {
                 $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
             }
         }

@@ -128,24 +128,22 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                         </div>
 
-                        <?php if ($otherAttributes) { ?>
+                        <?php if ($orderChoicesEnabled) { ?>
                             <div class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-other-attributes">
 
                                 <div class="store-checkout-form-group-body">
                                     <h2><?= t("Other Choices") ?></h2>
-                                    <?php foreach ($otherAttributesList as $oaKey) { ?>
+                                    <?php foreach ($otherAttributesList as $att) { ?>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label style="width:100%;"><?= $oaKey->getAttributeKeyDisplayName(); ?>
-                                                        <?php $oaKey->getAttributeType()->render('form', $oaKey, $customer->getValue($oaKey->getAttributeKeyHandle())); ?>
-                                                        <?php // = $form->text('store-checkout-other-attribute', $customer->getValue($oaKey->getAttributeKeyHandle()), array("required" => "required")); ?>
+                                                    <label style="width:100%;"><?= $att->getAttributeKeyDisplayName(); ?>
+                                                        <?php $att->getAttributeType()->render('form', $att, $customer->getValue($att->getAttributeKeyHandle())); ?>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                     <?php } ?>
-
                                 </div>
 
                             </div>
