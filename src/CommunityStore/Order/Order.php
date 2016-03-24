@@ -565,7 +565,7 @@ class Order
         $notificationEmails = array_map('trim', $notificationEmails);
 
         // Create "on_before_community_store_order_notification_emails" event and dispatch
-        $event = new StoreOderEvent($this);
+        $event = new StoreOrderEvent($this);
         $event->setNotificationEmails($notificationEmails);
         $event = Events::dispatch('on_before_community_store_order_notification_emails', $event);
         $notificationEmails = $event->getNotificationEmails();
