@@ -1,74 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<style type="text/css">
-    #product-search { position: relative; }
-    #product-search-results { position: absolute; z-index: 2; display: none; top: 57px; padding: 10px 20px;background: #fff; width: 100%; height: 90px; overflow-y: scroll; border: 1px solid #ccc; box-shadow: 0 0 10px #ccc; }
-    #product-search-results.active { display: block; }
-        #product-search-results ul { padding: 0; }
-        #product-search-results ul li { list-style: none; padding: 2px 5px; cursor: pointer; }
-        #product-search-results ul li:hover { background: #0088ff; color: #fff; }
-</style>
-<script type="text/javascript">
-$(function(){
-    //search accounts
-    $("input#productSearch").on("keyup", function(e) {
-
-        // Set Search String
-        var searchString = $(this).val();
-    
-        // Do Search
-        if(searchString.length > 0){
-            $("#product-search-results").addClass("active");
-            $.ajax({
-                type: "post",
-                url: "<?=\URL::to('/productfinder')?>",
-                data: {query: searchString},
-                success: function(html){
-                    $("ul#results-list").html(html);
-                    $("#product-search-results ul li").click(function(){
-                        var pID = $(this).attr('data-product-id'); 
-                        var productName = $(this).text();
-                        $("#pID").val(pID);
-                        $("#product-search-results").removeClass("active");
-                        $('#productSearch').val('');
-                        $("#selected-product").html(productName);
-                    });
-                    $("*:not(#product-search-results ul li)").click(function(){
-                        $("#product-search-results").removeClass("active");
-                    })
-                }
-            });
-            
-        }
-        else{
-            $("#product-search-results").removeClass("active");
-        }
-    });
-    
-    
-});  
-</script>
-
 <legend><?= t("Product")?></legend>
 
 <div class="form-group">
     <?= $form->label('productLocation', t('Product'))?>
-    <?= $form->select('productLocation', array('page' => t('Find product associated with this page'), 'search' => t('Search and select product')), $productLocation, array('onChange' => 'updateProductLocation();'))?>
+    <?= $form->select('productLocation', array('search' => t('A selected product'),'page' => t('Product associated with this page')), $productLocation, array('onChange' => 'updateProductLocation();'))?>
 </div>
 
 <div class="form-group" id="product-search">
     <?= $form->label('productSearch', 'Search for a product')?>
-    <?= $form->text('productSearch')?>
-    <?= $form->hidden('pID', $pID)?>
-    <div id="product-search-results">
-        <ul id="results-list">
-            
-        </ul>
-    </div>
-    <div class="alert alert-info">
-        <strong><?= t("Selected Product:")?></strong>
-        <span id="selected-product"></span>
-    </div>
-   
+    <input name="pID" id="product-select"  class="select2-select" style="width: 100%" placeholder="<?= t('Select Product') ?>" />
 </div>
 
 <legend><?= t("Display Options")?></legend>
@@ -125,12 +65,6 @@ $(function(){
                 <?= t('Show If Featured')?>
             </label>
         </div>
-<!--        <div class="checkbox">-->
-<!--            <label>-->
-<!--                --><?//= $form->checkbox('showGroups', 1, !isset($showGroups) ? false : $showGroups);?>
-<!--                --><?//= t('Show Product Groups')?>
-<!--            </label>-->
-<!--        </div>-->
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showDimensions', 1, $showDimensions);?>
@@ -166,4 +100,37 @@ $(function(){
         }
     };
     updateProductLocation();
+
+    $(document).ready(function () {
+
+        $("#product-select").select2({
+            ajax: {
+                url: "<?= \URL::to('/productfinder')?>",
+                dataType: 'json',
+                quietMillis: 250,
+                data: function (term, page) {
+                    return {
+                        q: term, // search term
+                    };
+                },
+                results: function (data) {
+                    var results = [];
+                    $.each(data, function(index, item){
+                        results.push({
+                            id: item.pID,
+                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 2,
+            initSelection: function(element, callback) {
+                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? $product->getName() : '');?>' });
+            },
+        }).select2('val', []);;
+    });
 </script>

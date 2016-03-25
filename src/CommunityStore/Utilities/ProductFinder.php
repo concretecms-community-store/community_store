@@ -16,26 +16,22 @@ class ProductFinder extends Controller
             echo "Access Denied";
             exit;
         }
-        if (!$_POST['query']) {
+        if (!$_GET['q']) {
             echo "Access Denied";
             exit;
         } else {
-            $query = $_POST['query'];
+            $query = $_GET['q'];
             $db = \Database::connection();
-            $results = $db->query('SELECT * FROM CommunityStoreProducts WHERE pName LIKE "%'.$query.'%"');
+            $results = $db->query('SELECT * FROM CommunityStoreProducts WHERE pName LIKE ? OR pSKU LIKE ? ', array('%'. $query . '%','%'. $query . '%'));
+            $resultsArray = array();
 
             if ($results) {
                 foreach ($results as $result) {
-                    ?>
-        
-                <li data-product-id="<?= $result['pID']?>"><?= $result['pName']?></li>
-        
-            <?php 
-                } //for each
-            } else { //if no results ?>
-                <li><?= t("I can't find a product by that name")?></li>
-            <?php 
+                    $resultsArray[] = array('pID'=> $result['pID'], 'name'=>$result['pName'], 'SKU'=>$result['pSKU']);
+                }
             }
+            echo json_encode($resultsArray);
         }
     }
 }
+
