@@ -592,9 +592,9 @@ class Order
             $mh->from($fromEmail);
         }
 
-        foreach ($notificationEmails as $alertEmail) {
-            if ($alertEmail) {
-                $mh->to($alertEmail);
+        foreach ($notificationEmails as $notificationEmail) {
+            if ($notificationEmail) {
+                $mh->to($notificationEmail);
                 $validNotification = true;
             }
         }
