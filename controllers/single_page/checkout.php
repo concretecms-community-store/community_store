@@ -105,7 +105,7 @@ class Checkout extends PageController
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
         $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-            $this->set("otherAttributesList", $orderChoicesAttList);
+            $this->set("orderChoicesAttList", $orderChoicesAttList);
         }
 
         $totals = StoreCalculator::getTotals();
@@ -170,6 +170,7 @@ class Checkout extends PageController
         if($pm->getMethodController()->isExternal()){
             $order = StoreOrder::add($data,$pm,null,'incomplete');
             Session::set('orderID',$order->getOrderID());
+            $this->saveOrderChoices($order);
             $this->redirect('/checkout/external');
         } else {
             $payment = $pm->submitPayment();
@@ -179,7 +180,8 @@ class Checkout extends PageController
                 $this->redirect("/checkout/failed#payment");
             } else {
                 $transactionReference = $payment['transactionReference'];
-                StoreOrder::add($data,$pm,$transactionReference);
+                $order = StoreOrder::add($data,$pm,$transactionReference);
+                $this->saveOrderChoices($order);
                 $this->redirect('/checkout/complete');
             }
         }
@@ -192,6 +194,16 @@ class Checkout extends PageController
 
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
+    }
+
+    public function saveOrderChoices($order)
+    {
+        //save product attributes
+        $akList = StoreOrderKey::getAttributeListBySet('order_choices');
+        foreach($akList as $ak) {
+            $ak->saveAttributeForm($order);
+        }
+
     }
 
 }
