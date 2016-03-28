@@ -292,6 +292,14 @@ $(document).ready(function () {
         var bPostal = $("#store-checkout-billing-zip").val();
         $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
 
+
+        $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
+            var akID = $(el).data("akid");
+            var value = $(el).find("input").val();
+            $('.store-summary-order-choices-' + akID).html(value);
+            $('#store-checkout-form-group-payment').append('<input name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+        });;
+
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
