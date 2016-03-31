@@ -561,8 +561,14 @@ class Order
         //send out the alerts
         $mh = new MailService();
 
-        $alertEmails = explode(",", Config::get('community_store.notificationemails'));
-        $alertEmails = array_map('trim', $alertEmails);
+        $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
+        $notificationEmails = array_map('trim', $notificationEmails);
+
+        // Create "on_before_community_store_order_notification_emails" event and dispatch
+        $event = new StoreOrderEvent($this);
+        $event->setNotificationEmails($notificationEmails);
+        $event = Events::dispatch('on_before_community_store_order_notification_emails', $event);
+        $notificationEmails = $event->getNotificationEmails();
 
         //receipt
         if ($fromName) {
@@ -586,9 +592,9 @@ class Order
             $mh->from($fromEmail);
         }
 
-        foreach ($alertEmails as $alertEmail) {
-            if ($alertEmail) {
-                $mh->to($alertEmail);
+        foreach ($notificationEmails as $notificationEmail) {
+            if ($notificationEmail) {
+                $mh->to($notificationEmail);
                 $validNotification = true;
             }
         }
