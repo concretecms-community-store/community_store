@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $addViews = array('add','add_method','edit');
 $editViews = array('edit');
@@ -6,10 +6,10 @@ $editViews = array('edit');
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 
 if(in_array($controller->getTask(),$addViews)){
-/// Add Shipping Method View    
+/// Add Shipping Method View
 ?>
-    
-    
+
+
 <form action="<?=URL::to('/dashboard/store/settings/shipping','add_method')?>" method="post">
 
     <div class="row">
@@ -30,7 +30,7 @@ if(in_array($controller->getTask(),$addViews)){
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                         <?= $form->label('methodEnabled',t("Enabled")); ?>
-                        <?= $form->select('methodEnabled',array(true=>"Enabled",false=>"Disabled"),is_object($sm)?$sm->isEnabled():''); ?>
+                        <?= $form->select('methodEnabled',array(true=>t('Yes'),false=>t('No')),is_object($sm)?$sm->isEnabled():''); ?>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12">
@@ -48,24 +48,24 @@ if(in_array($controller->getTask(),$addViews)){
                     </div>
                 </div>
 
-            </div>    
+            </div>
             <hr>
-            <?php $smt->renderDashboardForm($sm); ?>    
+            <?php $smt->renderDashboardForm($sm); ?>
         </div>
     </div>
 
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-success" type="submit" ><?= t('%s Shipping Method',$task)?></button>
         </div>
     </div>
-    
+
 </form>
-     
+
 <?php } else { ?>
 <div class="ccm-dashboard-header-buttons">
-    <?php 
+    <?php
     if(count($methodTypes) > 0){?>
     <div class="btn-group">
         <a href="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><?= t('Add Method')?> <span class="caret"></span></a>
@@ -82,7 +82,7 @@ if(in_array($controller->getTask(),$addViews)){
 </div>
 
 <div class="dashboard-shipping-methods">
-	
+
 	<?php if(count($methodTypes) > 0){?>
 		<?php foreach($methodTypes as $methodType){?>
 			<table class="table table-striped">
@@ -108,7 +108,7 @@ if(in_array($controller->getTask(),$addViews)){
 			</table>
 		<?php } ?>
 	<?php } ?>
-	
+
 </div>
 
 <?php } ?>

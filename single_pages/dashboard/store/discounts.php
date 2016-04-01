@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 
@@ -159,7 +159,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <div class="form-group">
             <?= $form->label('drEnabled', t('Enabled'))?>
-            <?= $form->select('drEnabled', array('1'=>t('Enabled'), '0'=>t('Disabled')), $discountRule->isEnabled(), array('class' => ''))?>
+            <?= $form->select('drEnabled', array('1'=>t('Yes'), '0'=>t('No')), $discountRule->isEnabled(), array('class' => ''))?>
         </div>
 
         <div class="form-group">
@@ -200,7 +200,7 @@ $currencySymbol = Config::get('community_store.symbol');
             <?php
             // commenting out following until product and product group matching is implemented
             //echo $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping'), 'product'=> t('Specific Product'), 'group'=> t('Products in Product Group')), $discountRule->drDeductFrom, array('class' => ''))?>
-            <?= $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
+            <?= $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>t('Items Sub-total'), 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
         </div>
 
         <div class="form-group">
@@ -429,5 +429,3 @@ $currencySymbol = Config::get('community_store.symbol');
     </div>
 
 <?php } ?>
-
-
