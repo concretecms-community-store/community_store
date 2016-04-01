@@ -199,15 +199,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
                         <div class="form-group">
-                          <select id="orderStatus" name="orderStatus" ccm-passed-value="Pending" class="form-control">
-                          <?php
-                          foreach ($orderStatuses as $key => $value) {
-                            echo '<option value="'.$key.'">';
-                            echo t($value);
-                            echo '</option>';
-                          }
-                          ?>
-                        </select>
+                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
                         </div>
                         <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
                     </form>
