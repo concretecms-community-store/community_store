@@ -1,38 +1,42 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php if (!$shoppingDisabled) { ?>
 <div class="store-utility-links <?= ($itemCount == 0 ? 'store-cart-empty' : ''); ?>">
-    <p>
-    <?php if ($showSignIn) {
-        $u = new User();
-        if (!$u->isLoggedIn()) {
-            echo '<a href="' . \URL::to('/login') . '">' . t("Sign In") . '</a>';
-        }
-    } ?>
-    <?php if ($showGreeting) {
-        $u = new User();
-        if ($u->isLoggedIn()) {
-            $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
-            $ui = UserInfo::getByID($u->getUserID());
-            if ($firstname = $ui->getAttribute('billing_first_name')) {
-                $msg = '<span class="store-welcome-message">' . t("Welcome back, ") . '<span class="first-name">' . $firstname . '</span></span>';
+    <?php if ($showSignIn || $showGreeting) { ?>
+    <p class="store-utility-links-login">
+        <?php if ($showSignIn) {
+            $u = new User();
+            if (!$u->isLoggedIn()) {
+                echo '<a href="' . \URL::to('/login') . '">' . t("Sign In") . '</a>';
             }
-            echo $msg;
-        }
-    } ?>
-    </p>
+        } ?>
+        <?php if ($showGreeting) {
+            $u = new User();
+            if ($u->isLoggedIn()) {
+                $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
+                $ui = UserInfo::getByID($u->getUserID());
+                if ($firstname = $ui->getAttribute('billing_first_name')) {
+                    $msg = '<span class="store-welcome-message">' . t("Welcome back, ") . '<span class="first-name">' . $firstname . '</span></span>';
+                }
+                echo $msg;
+            }
+        } ?>
+        </p>
+    <?php } ?>
 
-    <p>
-        <?php if ($showCartItems) { ?>
-            <span class="store-items-in-cart"><?= $itemsLabel ?> (<span class="store-items-counter"><?= $itemCount ?></span>)</span>
-        <?php } ?>
+    <?php if ($showCartItems || $showCartTotal) { ?>
+        <p class="store-utility-links-totals">
+            <?php if ($showCartItems) { ?>
+                <span class="store-items-in-cart"><?= $itemsLabel ?> (<span class="store-items-counter"><?= $itemCount ?></span>)</span>
+            <?php } ?>
 
-        <?php if ($showCartTotal) { ?>
-            <span class="store-total-cart-amount"><?= $total ?></span>
-        <?php } ?>
-    </p>
+            <?php if ($showCartTotal) { ?>
+                <span class="store-total-cart-amount"><?= $total ?></span>
+            <?php } ?>
+        </p>
+    <?php } ?>
 
     <?php if (!$inCart) { ?>
-        <p>
+        <p class="store-utility-links-cart-link">
             <?php if ($popUpCart && !$inCheckout) { ?>
                 <a href="#" class="store-cart-link store-cart-link-modal"><?= $cartLabel ?></a>
             <?php } else { ?>
@@ -42,11 +46,11 @@
     <?php } ?>
 
     <?php if (!$inCheckout) { ?>
-        <p>
-            <?php if ($showCheckout) { ?>
-                <a href="<?= \URL::to('/checkout') ?>" class="store-cart-link"><?= t("Checkout") ?></a>
-            <?php } ?>
+        <?php if ($showCheckout) { ?>
+        <p  class="store-utility-links-checkout-link">
+            <a href="<?= \URL::to('/checkout') ?>" class="store-cart-link"><?= t("Checkout") ?></a>
         </p>
+        <?php } ?>
     <?php } ?>
 </div>
 <?php } ?>
