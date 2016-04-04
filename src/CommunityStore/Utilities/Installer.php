@@ -337,6 +337,11 @@ class Installer
 
     public static function upgrade(Package $pkg)
     {
+        $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
+        if ($singlePage->error) {
+            self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+        }
+
         // now we refresh all blocks
         $items = $pkg->getPackageItems();
         if (is_array($items['block_types'])) {
