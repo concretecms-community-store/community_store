@@ -342,6 +342,12 @@ class Installer
             self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         }
 
+        $oakc = AttributeKeyCategory::getByHandle('store_order');
+        $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
+        if (!$orderCustSet instanceof AttributeSet) {
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        }
+
         // now we refresh all blocks
         $items = $pkg->getPackageItems();
         if (is_array($items['block_types'])) {
