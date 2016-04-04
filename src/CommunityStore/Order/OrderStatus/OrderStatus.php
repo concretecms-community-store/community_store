@@ -81,7 +81,7 @@ class OrderStatus extends Object
     {
         $statuses = array();
         foreach (self::getAll() as $status) {
-            $statuses[$status->getHandle()] = $status->getName();
+            $statuses[$status->getHandle()] = t($status->getName());
         }
 
         return $statuses;

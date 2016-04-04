@@ -39,7 +39,7 @@ class Orders extends DashboardPageController
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('shoppingDisabled', true);
         }
-
+        $this->set('pageTitle', t('Orders'));
     }
     public function order($oID)
     {
