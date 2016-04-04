@@ -123,7 +123,7 @@ if (is_object($product)) {
                 </div>
 
                 <?php if ($showImage) { ?>
-                    <div class="product-image col-md-6">
+                    <div class="store-product-image col-md-6">
                         <p>
                         <?php
                         $imgObj = $product->getImageObj();
