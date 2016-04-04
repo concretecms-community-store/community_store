@@ -4,13 +4,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (is_object($product)) {
     ?>
 
-    <form class="store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
-
+    <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
         <div class="row">
             <?php if ($showImage){ ?>
-            <div class="col-md-6">
+            <div class="store-product-details col-md-6">
                 <?php } else { ?>
-                <div class="col-md-12">
+                <div class="store-product-details col-md-12">
                     <?php } ?>
                     <?php if ($showProductName) { ?>
                         <h1 class="store-product-name" itemprop="name"><?= $product->getName() ?></h1>
