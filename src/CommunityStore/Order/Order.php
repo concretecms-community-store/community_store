@@ -321,6 +321,7 @@ class Order
         $customer->setLastOrderID($order->getOrderID());
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
+        $order->saveOrderChoices($order);
         $order->addOrderItems(StoreCart::getCart());
 
         if (!$pm->getMethodController()->isExternal()) {
@@ -745,4 +746,15 @@ class Order
 
         return $rows;
     }
+
+    public function saveOrderChoices($order)
+    {
+        //save product attributes
+        $akList = StoreOrderKey::getAttributeListBySet('order_choices');
+        foreach($akList as $ak) {
+            $ak->saveAttributeForm($order);
+        }
+
+    }
+
 }

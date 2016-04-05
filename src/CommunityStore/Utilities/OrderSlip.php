@@ -14,6 +14,7 @@ class OrderSlip extends Controller
         $o = StoreOrder::getByID($this->post('oID'));
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
         $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
+        
         if (Filesystem::exists(DIR_BASE."/application/elements/order_slip.php")) {
             View::element("order_slip", array('order' => $o, 'orderChoicesEnabled' => $orderChoicesEnabled, 'orderChoicesAttList' => $orderChoicesAttList));
         } else {
