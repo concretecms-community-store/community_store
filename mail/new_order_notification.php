@@ -40,7 +40,7 @@ ob_start();
                 <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
             </p>
         </td>
-        <td valign="top">
+        <td valign="top"></td>
         <td>
             <?php if ($order->isShippable()) { ?>
                 <strong><?= t('Shipping Information') ?></strong>
@@ -66,14 +66,13 @@ ob_start();
                 <h4><?= t("Other Choices")?></h4>
                 <?php foreach ($orderChoicesAttList as $ak) { ?>
                     <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                    <p><?php echo $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display'); ?></p>
+                    <p><?= $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display'); ?></p>
                 <?php } ?>
             </td>
         </tr>
     <?php } ?>
 
 </table>
-
 <h3><?= t('Order Details') ?></h3>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <thead>
