@@ -295,7 +295,8 @@ $(document).ready(function () {
 
         $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
             var akID = $(el).data("akid");
-            var value = $(el).find("input").val();
+            var value = $(el).find(".form-control").val();
+console.log("'" + akID +"': " + value);
             $('.store-summary-order-choices-' + akID).html(value);
             $('#store-checkout-form-group-payment').append('<input name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
         });;
