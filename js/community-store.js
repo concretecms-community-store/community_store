@@ -173,6 +173,7 @@ var communityStore = {
                     $(".store-utility-links .store-items-counter").text(itemCount);
                     $(".store-cart-grand-total-value").text(total);
                     $(".store-utility-links .store-total-cart-amount").text(total);
+                    $(".store-utility-links").removeClass('store-cart-empty');
                 }
 
                 $(".store-total-amount").text(total);

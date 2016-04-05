@@ -54,13 +54,16 @@ if($products){
                         $thumb = $ih->getThumbnail($imgObj,400,280,true);?>
                         <p class="store-product-list-thumbnail">
                             <?php if($showQuickViewLink){ ?>
-                            <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
-                                <img src="<?= $thumb->src?>" class="img-responsive">
-                            </a>
+                                <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
+                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                                </a>
+                            <?php } elseif ($showPageLink) { ?>
+                                <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
+                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                                </a>
                             <?php } else { ?>
-                            <img src="<?= $thumb->src?>" class="img-responsive">
+                                <img src="<?= $thumb->src?>" class="img-responsive">
                             <?php } ?>
-
                         </p>
                 <?php
                     }// if is_obj
@@ -81,7 +84,7 @@ if($products){
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
                 <?php if($showPageLink){?>
-                <p><a href="<?= \URL::page(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
+                <p><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){ ?>
 
