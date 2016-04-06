@@ -1174,7 +1174,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
         <div class="form-group">
             <?= $form->label('newSKU',t("New Product SKU")); ?>
-            <?= $form->text('newSKU',$product->getSKU() . ' ' . t('')); ?>
+            <?= $form->text('newSKU',$product->getSKU()); ?>
         </div>
 
         <input type="submit" class="btn btn-primary" value="<?= t('Duplicate Product');?>">
