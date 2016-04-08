@@ -111,7 +111,7 @@ if(in_array($controller->getTask(),$addViews)){
 	
 	<table class="table table-striped">
         <thead>
-            <th><?= t("Tax Classes")?></th>
+            <th><?= t("Tax Class")?></th>
             <th><?= t("Associated Tax Rates")?></th>
             <th class="text-right"><?= t("Actions")?></th>
         </thead>
@@ -144,7 +144,9 @@ if(in_array($controller->getTask(),$addViews)){
 	
 	<table class="table table-striped">
 		<thead>
-			<th><?= t("Tax Rates")?></th>
+			<th><?= t("Tax Rate")?></th>
+			<th><?= t("Rate")?></th>
+			<th><?= t("Enabled")?></th>
 			<th class="text-right"><?= t("Actions")?></th>
 		</thead>
 		<tbody>
@@ -152,7 +154,9 @@ if(in_array($controller->getTask(),$addViews)){
 		        <?php foreach($taxRates as $tr){?>
         			<tr>
         				<td><?= $tr->getTaxLabel()?></td>
-        				<td class="text-right">
+                        <td><?= $tr->getTaxRate()?>%</td>
+                        <td><?= ($tr->isEnabled() ? t('Yes') : t('No'))?></td>
+                        <td class="text-right">
         					<a href="<?=URL::to('/dashboard/store/settings/tax/edit',$tr->getTaxRateID())?>" class="btn btn-default"><?= t("Edit")?></a>
         					<a href="<?=URL::to('/dashboard/store/settings/tax/delete',$tr->getTaxRateID())?>" class="btn btn-danger"><?= t("Delete")?></a>
         				</td>
