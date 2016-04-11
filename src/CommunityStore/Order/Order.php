@@ -538,7 +538,7 @@ class Order
             //add user to Store Customers group
             $group = \Group::getByName('Store Customer');
             if (is_object($group) || $group->getGroupID() < 1) {
-                $user->enterGroup($group);
+                $user->getUserObject()->enterGroup($group);
             }
 
             foreach ($groupstoadd as $id) {
