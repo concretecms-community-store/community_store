@@ -236,7 +236,10 @@ class ShippingMethod
     public static function getActiveShippingLabel() {
         $activeShippingMethod = self::getActiveShippingMethod();
 
-        if ($activeShippingMethod) {
+
+        if ($activeShippingMethod->hasCustomView("customOrderReceiptView")) {
+            return $activeShippingMethod->getShippingMethodTypeMethod()->getCustomOrderReceiptView(\Session::get('smData'));
+        } else if ($activeShippingMethod) {
             $currentOffer = $activeShippingMethod->getCurrentOffer();
             if ($currentOffer) {
                 return $currentOffer->getLabel();
@@ -245,4 +248,13 @@ class ShippingMethod
 
        return '';
     }
+
+    public function hasCustomView($viewHandle) {
+        $smtm = $this->getShippingMethodTypeMethod();
+        if (isset($smtm->$viewHandle)) {
+            return $smtm;
+        }
+        return false;
+    }
+
 }

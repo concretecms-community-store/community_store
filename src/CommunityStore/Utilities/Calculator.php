@@ -27,7 +27,7 @@ class Calculator
 
         return max($subtotal, 0);
     }
-    public static function getShippingTotal($smID = null)
+    public static function getShippingTotal($smID = null, $smData = null)
     {
         $cart = StoreCart::getCart();
         if (empty($cart)) {
@@ -38,6 +38,9 @@ class Calculator
         if ($smID) {
             $shippingMethod = StoreShippingMethod::getByID($smID);
             Session::set('smID', $smID);
+            if ($smData) {
+                Session::set('smData', $smData);
+            }
         } elseif ($existingShippingMethodID) {
             $shippingMethod = StoreShippingMethod::getByID($existingShippingMethodID);
         }

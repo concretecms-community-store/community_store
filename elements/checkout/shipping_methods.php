@@ -6,25 +6,33 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 $eligibleMethods = StoreShippingMethod::getEligibleMethods();
 $count=0;
 $currentShippingID = Session::get('smID');
+
 if (!empty($eligibleMethods)) {
 foreach($eligibleMethods as $method){
 ?>
-    <?php foreach($method->getOffers() as $offer) { ?>
-    <div class="store-shipping-method">
-        <div class="store-shipping-method-option radio">
-            <label>
-                <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() ==  $currentShippingID|| !$currentShippingID && $count==0 ){echo " checked";}?>>
-                <div class="store-shipping-details">
-                <?php $rate = $offer->getRate(); ?>
-                <p><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
-                <?= $offer->getOfferDetails(); ?>
+    <?php if ($smtm = $method->hasCustomView('customShippingMethodView')) { ?>
+        <?php Loader::packageElement($smtm->getCustomShippingMethodView(), $smtm->getPackageHandle(), array('method' => $method)); ?>
+    <?php } else { ?>
+
+        <?php foreach($method->getOffers() as $offer) { ?>
+            <div class="store-shipping-method">
+                <div class="store-shipping-method-option radio">
+                    <label>
+                        <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
+                        <div class="store-shipping-details">
+                            <?php $rate = $offer->getRate(); ?>
+                            <p><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                            <?= $offer->getOfferDetails(); ?>
+                        </div>
+                    </label>
                 </div>
-            </label>
-        </div>
+            </div>
         <?php } ?>
         <?= $method->getDetails(); ?>
-    </div>
-<?php $count++; } ?>
+
+    <?php } ?>
+
+<?php } ?>
 <?php } else { ?>
 <p class="store-no-shipping-warning alert alert-warning"><?= t('There are no shipping options to process your order.'); ?></p>
 <?php } ?>
