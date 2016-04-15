@@ -41,7 +41,7 @@ $task = $controller->getTask();
 	</form>
 
 </div>
-<table class="table table-stripe">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= t("Name")?></th>
@@ -75,7 +75,7 @@ $task = $controller->getTask();
 		<a href="<?= \URL::to('/dashboard/store/reports/products/export/' . $product->getID())?>" class="btn btn-primary"><?= t("Export CSV")?></a>
 	</div>
 
-	<table class="table table-stripe">
+	<table class="table table-striped">
 		<thead>
 		<tr>
 			<?php foreach($reportHeader as $header) { ?>
