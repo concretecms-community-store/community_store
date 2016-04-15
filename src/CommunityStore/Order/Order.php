@@ -607,7 +607,6 @@ class Order
 
         // unset the shipping type, as next order might be unshippable
         \Session::set('smID', '');
-        \Session::set('smData', '');
 
         StoreCart::clear();
 

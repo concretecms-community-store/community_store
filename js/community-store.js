@@ -419,13 +419,12 @@ $(document).ready(function () {
             alert($('#store-checkout-shipping-method-options').data('error-message'));
         } else {
             var smID = $("#store-checkout-shipping-method-options input[type='radio']:checked").val();
-            var smData = $("#store-checkout-shipping-method-options input[type='radio']:checked").data('smData');
             var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().find('.store-shipping-details').html());
             obj.find('.summary-shipping-method').html(methodText);
 
             $.ajax({
                 type: 'post',
-                data: {smID: smID, smData: smData},
+                data: {smID: smID},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
                     if (total <= 0) {
