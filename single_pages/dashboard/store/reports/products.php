@@ -3,6 +3,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 ?>
 
+<?php
+$task = $controller->getTask();
+?>
+
+<?php if ($task == 'view') { ?>
 <div class="ccm-dashboard-content-full">
 	<form action="<?=URL::to('/dashboard/store/reports/products')?>" method="post" class="form form-inline ccm-search-fields">
 		<div class="ccm-search-fields-row">
@@ -47,7 +52,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 	<tbody>
 		<?php foreach($products as $product){ ?>
 		<tr>
-			<td><?= $product['name']?></td>
+			<td><a href="<?php echo URL::to('/dashboard/store/reports/products/detail/ ' . $product['pID']); ?>"><?= $product['name']?></a></td>
 			<td><?= $product['quantity']?></td>
 			<td><?=Price::format($product['pricePaid'])?></td>
 		</tr>
@@ -57,4 +62,72 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 <?php if ($paginator->getTotalPages() > 1) { ?>
     <?= $pagination ?>
+<?php } ?>
+<?php } ?>
+
+<?php if ($task == 'detail') {
+	$dh = Core::make('helper/date');
+	$totalSold = 0;
+
+	?>
+
+	<div class="ccm-dashboard-header-buttons">
+		<a href="<?= \URL::to('/dashboard/store/reports/products/export/' . $product->getID())?>" class="btn btn-primary"><?= t("Export CSV")?></a>
+	</div>
+
+	<table class="table table-stripe">
+		<thead>
+		<tr>
+			<?php foreach($reportHeader as $header) { ?>
+				<th><?= $header; ?></th>
+			<?php } ?>
+
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach($orderItems as $item){
+			$order = $item->getOrder();
+			?>
+			<tr>
+				<td><?= $order->getOrderID(); ?></td>
+				<td><?= $order->getAttribute("billing_last_name");?></td>
+				<td><?= $order->getAttribute("billing_first_name"); ?></td>
+				<td><?= $order->getAttribute("email"); ?></td>
+				<td><?= $order->getAttribute("billing_phone"); ?></td>
+				<td><?= $item->getProductName()?>
+					<?php if ($sku = $item->getSKU()) {
+						echo '(' .  $sku . ')';
+					} ?>
+				</td>
+				<td><?php
+					$qty = $item->getQty();
+					$totalSold +=  $qty;
+					echo $qty; ?></td>
+				<td>
+					<?php
+					$options = $item->getProductOptions();
+					if($options){
+
+						foreach($options as $option){
+							echo "<strong>".$option['oioKey'].": </strong>";
+							echo $option['oioValue'] . '<br />';
+						}
+					}
+					?>
+
+				</td>
+				<td><?= $dh->formatDateTime($order->getOrderDate()); ?></td>
+				<td><?= $order->getStatus(); ?></td>
+
+			</tr>
+		<?php } ?>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="6" class="text-right"><strong><?= t('Total Quantity Sold'); ?>:</strong></td>
+				<td colspan="4"><strong><?= $totalSold; ?></strong></td>
+			</tr>
+		</tfoot>
+	</table>
+
 <?php } ?>
