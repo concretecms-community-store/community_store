@@ -415,6 +415,14 @@ class Product
         return $em->find(get_class(), $pID);
     }
 
+    public static function getBySKU($pSKU)
+    {
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+
+        return $em->getRepository(get_class())->findOneBy(array('pSKU' => $pSKU));
+    }
+
     public static function getByCollectionID($cID)
     {
         $db = \Database::connection();
