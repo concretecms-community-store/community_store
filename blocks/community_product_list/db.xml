@@ -15,6 +15,7 @@
 		<field name="productsPerRow" type="I"><unsigned/></field>
 		<field name="showPagination" type="I"><unsigned/></field>
 		<field name="showFeatured" type="C" size="30"></field>
+		<field name="showSale" type="C" size="30"></field>
 		<field name="showDescription" type="I"><unsigned/></field>
 		<field name="showQuickViewLink" type="I"><unsigned/></field>
 		<field name="showPageLink" type="I"><unsigned/></field>
