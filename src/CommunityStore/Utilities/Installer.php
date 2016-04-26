@@ -214,7 +214,7 @@ class Installer
     {
         $attr = UserAttributeKey::getByHandle($handle);
         if (!is_object($attr)) {
-            $name = Core::make("helper/text")->camelcase($handle);
+            $name = Core::make("helper/text")->unhandle($handle);
             if (!$data) {
                 $data = array(
                     'akHandle' => $handle,
@@ -264,7 +264,7 @@ class Installer
     {
         $attr = StoreOrderKey::getByHandle($handle);
         if (!is_object($attr)) {
-            $name = Core::make("helper/text")->camelcase($handle);
+            $name = Core::make("helper/text")->unhandle($handle);
             if (!$data) {
                 $data = array(
                     'akHandle' => $handle,
