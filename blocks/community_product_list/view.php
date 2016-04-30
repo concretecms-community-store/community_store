@@ -2,7 +2,22 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 if($products){
-    echo "<div class='store-product-list row'>";
+
+    $columnClass = 'col-md-12';
+
+    if ($productsPerRow == 2) {
+        $columnClass = 'col-md-6';
+    }
+
+    if ($productsPerRow == 3) {
+        $columnClass = 'col-md-4';
+    }
+
+    if ($productsPerRow == 4) {
+        $columnClass = 'col-md-3';
+    }
+
+    echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
 
     $i=1;
     foreach($products as $product){
@@ -27,21 +42,6 @@ if($products){
         if(Page::getCurrentPage()->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
         }
-
-        $columnClass = 'col-md-12';
-
-        if ($productsPerRow == 2) {
-            $columnClass = 'col-md-6';
-        }
-
-        if ($productsPerRow == 3) {
-            $columnClass = 'col-md-4';
-        }
-
-        if ($productsPerRow == 4) {
-            $columnClass = 'col-md-3';
-        }
-
 
     ?>
     
