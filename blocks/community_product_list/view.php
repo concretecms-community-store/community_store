@@ -219,5 +219,5 @@ if($products){
     
 } //if products
 else { ?>
-    <div class="alert alert-info"><?= t("No Products Available")?></div>
+    <p class="alert alert-info"><?= t("No Products Available")?></p>
 <?php } ?>
