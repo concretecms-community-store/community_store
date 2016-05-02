@@ -1,17 +1,20 @@
-<?xml version="1.0"?>
-<schema version="0.3">
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+		xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
 	<table name="btCommunityUtilityLinks">
-		<field name="bID" type="I">
-			<key />
+		<field name="bID" type="integer">
 			<unsigned />
+			<key />
 		</field>
-		<field name="showCartItems" type="I"></field>
-		<field name="showCartTotal" type="I"></field>
-		<field name="showSignIn" type="I"></field>
-		<field name="showGreeting" type="I"></field>
-		<field name="popUpCart" type="I"></field>
-		<field name="cartLabel" type="C" size="255"></field>
-		<field name="itemsLabel" type="C" size="255"></field>
-		<field name="showCheckout" type="I"></field>
+		<field name="showCartItems" type="boolean"></field>
+		<field name="showCartTotal" type="boolean"></field>
+		<field name="showSignIn" type="boolean"></field>
+		<field name="showGreeting" type="boolean"></field>
+		<field name="popUpCart" type="boolean"></field>
+		<field name="cartLabel" type="string" size="255"></field>
+		<field name="itemsLabel" type="string" size="255"></field>
+		<field name="showCheckout" type="boolean"></field>
 	</table>
 </schema>

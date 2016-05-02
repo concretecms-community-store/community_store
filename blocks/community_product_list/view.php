@@ -68,7 +68,7 @@ if($products){
                 <?php
                     }// if is_obj
                 ?>
-
+                <?php if ($showPrice) { ?>
                 <p class="store-product-list-price">
                     <?php
                         $salePrice = $product->getSalePrice();
@@ -80,11 +80,12 @@ if($products){
                         }
                     ?>
                 </p>
+                <?php } ?>
                 <?php if($showDescription){ ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
                 <?php if($showPageLink){?>
-                <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
+                <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){ ?>
 
