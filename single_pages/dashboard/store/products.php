@@ -349,15 +349,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
 
                 <div href="#" id="launch_additional" data-launch="file-manager" class="ccm-file-selector"><div class="ccm-file-selector-choose-new"><?= t('Choose Images'); ?></div></div>
-
-                <style>
-                    .ccm-ui .multi-file-list {margin-bottom: 0};
-                    .multi-file-list li {cursor: move}
-                    .ccm-ui .multi-file-list li:last-child {margin-bottom: 10px;}
-                    .multi-file-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
-                    .multi-file-list .fa {cursor: pointer}
-                    .multi-file-list a:hover {color: red}
-                </style>
                 <script type="text/javascript">
                     $(function() {
                         $('#launch_additional').on('click', function(e) {
