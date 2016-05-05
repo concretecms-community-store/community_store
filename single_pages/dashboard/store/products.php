@@ -66,13 +66,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
             </div>
 
-            <div class="col-sm-9 store-pane active" id="product-overview">
-
+            <div class="col-sm-9" id="product-header">
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="form-group">
                             <?= $form->label("pName", t("Product Name"));?>
-                            <?= $form->text("pName", $product->getName());?>
+                            <?= $form->text("pName", $product->getName(), array('required'=>'required'));?>
                         </div>
                     </div>
                     <div class="col-xs-4">
@@ -82,6 +81,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                     </div>
                 </div>
+                <hr />
+            </div>
+
+
+            <div class="col-sm-9 store-pane active" id="product-overview">
+
+
 
                 <div class="row">
                     <div class="col-xs-6">
@@ -206,7 +212,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div><!-- #product-overview -->
 
             <div class="col-sm-9 store-pane" id="product-categories">
-                <h4><?= t('Categorized under pages')?></h4>
+                <label><?= t('Categorized under pages')?></label>
 
                 <div class="form-group" id="page_pickers">
                     <div class="page_picker">
@@ -221,7 +227,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?php } ?>
                 </div>
 
-                <h4><?= t('In product groups')?></h4>
+                <label><?= t('In product groups')?></label>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                     <select multiple="multiple" name="pProductGroups[]" class="existing-select2 select2-select" style="width: 100%"
                             placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
@@ -332,7 +338,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
 
 
-                <h4><?= t('Additional Images')?></h4>
+                <label><?= t('Additional Images')?></label>
 
                 <div id="additional-images-container"></div>
 
@@ -442,7 +448,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-options">
 
-                <h4><?= t('Options')?></h4>
+                <label><?= t('Options')?></label>
                 <div id="product-options-container"></div>
 
                 <div class="clearfix">
@@ -666,7 +672,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden');?>">
 
 
-                <h4><?= t('Variations');?></h4>
+                <label><?= t('Variations');?></label>
 
                 <?php if ($pID) { ?>
                     <p class="alert alert-info hidden" id="changenotice"><?= t('Product options have changed, update the product to configure updated variations') ?></p>
