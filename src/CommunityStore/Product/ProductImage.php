@@ -107,7 +107,7 @@ class ProductImage
 
         //add new ones.
         for ($i = 0;$i < count($images['pifID']);++$i) {
-            self::add($product, $images['pifID'][$i], $images['piSort'][$i]);
+            self::add($product, $images['pifID'][$i], $i);
         }
     }
 

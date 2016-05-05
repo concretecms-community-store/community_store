@@ -334,113 +334,58 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="form-group">
                     <?= $form->label('pfID',t("Primary Product Image")); ?>
                     <?php $pfID = $product->getImageID(); ?>
-                    <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID?File::getByID($pfID):null); ?>
+                    <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID):null); ?>
                 </div>
 
 
                 <label><?= t('Additional Images')?></label>
 
-                <div id="additional-images-container"></div>
-
-                <div class="clearfix">
-                    <span class="btn btn-default" id="btn-add-image"><?= t('Add Image')?></span>
-                </div>
-
-                <!-- THE TEMPLATE WE'LL USE FOR EACH IMAGE -->
-                <script type="text/template" id="image-template">
-                    <div class="additional-image clearfix" data-order="<%=sort%>">
-                        <div class="move-shell pull-left text-center">
-                            <i class="fa fa-arrows"></i>
-                        </div>
-                        <a href="javascript:deleteImage(<%=sort%>)" class="trash-shell bg-danger text-danger pull-right">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                        <a href="javascript:chooseImage(<%=sort%>);" class="select-image pull" id="select-image-<%=sort%>">
-                            <% if (thumb.length > 0) { %>
-                            <img src="<%= thumb %>" />
-                            <% } else { %>
-                            <i class="fa fa-picture-o"></i> <?= t('Choose Image');?>
-                            <% } %>
-                        </a>
-
-                        <input type="hidden" name="pifID[]" class="image-fID" value="<%=pifID%>" />
-                        <input type="hidden" name="piSort[]" value="<%=sort%>" class="image-sort">
-                    </div><!-- .additional-image -->
-                </script>
-                <script type="text/javascript">
-                    var chooseImage = function(i){
-                        var imgShell = $('#select-image-'+i);
-                        ConcreteFileManager.launchDialog(function (data) {
-                            ConcreteFileManager.getFileDetails(data.fID, function(r) {
-                                jQuery.fn.dialog.hideLoader();
-                                var file = r.files[0];
-                                imgShell.html(file.resultsThumbnailImg);
-                                imgShell.next('.image-fID').val(file.fID);
-                            });
-                        });
-                    };
-                    function deleteImage(id){
-                        $(".additional-image[data-order='"+id+"']").remove();
+                <ul class="list-group multi-file-list" id="additional-image-list">
+                    <?php  foreach ($product->getimagesobjects() as $file) {
+                    $thumb = $file->getListingThumbnailImage();
+                    echo '<li class="list-group-item">' . $thumb . ' ' .$file->getTitle() .'<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
                     }
-                    $(function(){
-                        function indexItems(){
-                            $('#additional-images-container .additional-image').each(function(i) {
-                                $(this).find('.image-sort').val(i);
-                                $(this).attr("data-order",i);
-                            });
-                        };
+                    ?>
+                </ul>
 
-                        //Make items sortable. If we re-sort them, re-index them.
-                        $("#additional-images-container").sortable({
-                            handle: ".move-shell",
-                            update: function(){
-                                indexItems();
+                <div href="#" id="launch_additional" data-launch="file-manager" class="ccm-file-selector"><div class="ccm-file-selector-choose-new"><?= t('Choose Images'); ?></div></div>
+
+                <style>
+                    .ccm-ui .multi-file-list {margin-bottom: 0};
+                    .multi-file-list li {cursor: move}
+                    .ccm-ui .multi-file-list li:last-child {margin-bottom: 10px;}
+                    .multi-file-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
+                    .multi-file-list .fa {cursor: pointer}
+                    .multi-file-list a:hover {color: red}
+                </style>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#launch_additional').on('click', function(e) {
+                            e.preventDefault();
+
+
+                            var options = {
+                                multipleSelection: true,
+                                filters : [{ field : 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
                             }
+
+                            ConcreteFileManager.launchDialog(function (data) {
+                                ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                                    for(var i in r.files) {
+                                        var file = r.files[i];
+                                        $('#additional-image-list').append('<li class="list-group-item">'+ file.resultsThumbnailImg +' ' +  file.title +'<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
+                                    }
+
+                                });
+                            },options);
                         });
 
-                        //Define container and items
-                        var itemsContainer = $('#additional-images-container');
-                        var itemTemplate = _.template($('#image-template').html());
+                        $('#additional-image-list').sortable({axis: 'y'});
 
-                        //load up images
-                        <?php
-                        if($images) {
-                            $count = 0;
-                            foreach ($images as $image) {
-                        ?>
-                        itemsContainer.append(itemTemplate({
-
-                            pifID: '<?= $image->getFileID(); ?>',
-                            <?php if($image->getFileID() > 0) { ?>
-                            thumb: '<?= File::getByID($image->getFileID())->getThumbnailURL('file_manager_listing');?>',
-                            <?php } else { ?>
-                            thumb: '',
-                            <?php } ?>
-                            sort: '<?= $count++ ?>'
-                        }));
-                        <?php
-                            }
-                        }
-                        ?>
-
-                        //add item
-                        $('#btn-add-image').click(function(){
-
-                            //Use the template to create a new item.
-                            var temp = $(".additional-image").length;
-                            temp = (temp);
-                            itemsContainer.append(itemTemplate({
-                                //vars to pass to the template
-                                pifID: '',
-                                thumb: '',
-                                sort: temp
-                            }));
-
-                            //Init Index
-                            indexItems();
+                        $('#additional-image-list').on('click', 'a', function(){
+                            $(this).parent().remove();
                         });
                     });
-
                 </script>
 
             </div><!-- #product-images -->
