@@ -192,6 +192,7 @@ class ProductOption
                 if (!$option) {
                     if ($data['poName'][$i]) {
                         $option = self::add($product, $data['poName'][$i], $data['poSort'][$i]);
+                        $product->getOptions()->add($option);
                     }
                 }
 
@@ -208,7 +209,8 @@ class ProductOption
                                 }
                             } else {
                                 if ($data['poiName'][$ii]) {
-                                    StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii]);
+                                    $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii]);
+                                    $option->getOptionItems()->add($optionItem);
                                 }
                             }
                         }
