@@ -235,8 +235,7 @@ class Product
         $this->files = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
-        $this->option = new ArrayCollection();
-        $this->optionItems = new ArrayCollection();
+        $this->options = new ArrayCollection();
     }
 
 
