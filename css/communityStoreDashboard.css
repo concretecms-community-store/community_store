@@ -13,12 +13,12 @@
 .store-pane.active { display: block; }
 
 /* Multiple Image selector */
-.ccm-ui .multi-file-list {margin-bottom: 0}
-.multi-file-list li {cursor: move}
-.ccm-ui .multi-file-list li:last-child {margin-bottom: 10px;}
-.multi-file-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
-.multi-file-list .fa {cursor: pointer}
-.multi-file-list a:hover {color: red}
+.ccm-ui .multi-select-list {margin-bottom: 0}
+.multi-select-sortable li {cursor: move}
+.ccm-ui .multi-select-list li:last-child {margin-bottom: 10px;}
+.multi-select-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
+.multi-select-list .fa {cursor: pointer}
+.multi-select-list a:hover {color: red}
 
 /* Options */
 #product-options-container {  }

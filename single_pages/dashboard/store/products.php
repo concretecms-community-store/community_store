@@ -215,16 +215,20 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <label><?= t('Categorized under pages')?></label>
 
                 <div class="form-group" id="page_pickers">
+
+                    <ul class="list-group multi-select-list" id="pagelocations">
+                        <?php  foreach ($locationPages as $location) {
+                            if ($location) {
+                                $page = \Page::getByID($location->getCollectionID());
+                                echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                            }
+                        }
+                        ?>
+                    </ul>
+
                     <div class="page_picker">
-                        <?= $ps->selectPage('cID[]',($locationPages[0] && $locationPages[0]->getCollectionID()) ?  $locationPages[0]->getCollectionID() : false); ?>
+                        <?= $ps->selectPage('noneselection'); ?>
                     </div>
-
-                    <?php for($i = 1; $i < 7; $i++) { ?>
-                        <div class="page_picker <?=  ($locationPages[$i - 1] && $locationPages[$i - 1]->getCollectionID() ? '' : 'picker_hidden' ); ?>">
-                            <?= $ps->selectPage('cID[]',  ($locationPages[$i] && $locationPages[$i]->getCollectionID()) ?  $locationPages[$i]->getCollectionID() : false); ?>
-                        </div>
-
-                    <?php } ?>
                 </div>
 
                 <label><?= t('In product groups')?></label>
@@ -248,17 +252,28 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     $(document).ready(function(){
                         $('.existing-select2').select2();
 
+                        $('#pagelocations').on('click', 'a', function(){
+                            $(this).parent().remove();
+                        });
+
                         Concrete.event.bind('ConcreteSitemap', function(e, instance) {
                             var instance = instance;
+
                             Concrete.event.bind('SitemapSelectPage', function(e, data) {
                                 if (data.instance == instance) {
                                     Concrete.event.unbind(e);
 
-                                    if ($('.page_picker :input[value="0"]').length == $('.picker_hidden :input[value="0"]').length) {
-                                        $('#page_pickers .picker_hidden').first().removeClass('picker_hidden');
+                                    //var existing = $('#pagelocations input[value=' + + ']').size();
+                                    if($('#pagelocations input[value=' + data.cID + ']').size() == 0) {
+                                        $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
                                     }
 
+                                    $('.page_picker > div').hide();
 
+                                    setTimeout(function() {
+                                           $('#product-categories a[data-page-selector-action=clear]').trigger( "click" );
+                                        $('.page_picker > div').show();
+                                    }, 1000);
                                 }
                             });
                         });
@@ -340,7 +355,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <label><?= t('Additional Images')?></label>
 
-                <ul class="list-group multi-file-list" id="additional-image-list">
+                <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
                     <?php  foreach ($product->getimagesobjects() as $file) {
                     $thumb = $file->getListingThumbnailImage();
                     echo '<li class="list-group-item">' . $thumb . ' ' .$file->getTitle() .'<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
@@ -353,7 +368,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     $(function() {
                         $('#launch_additional').on('click', function(e) {
                             e.preventDefault();
-
 
                             var options = {
                                 multipleSelection: true,
@@ -584,13 +598,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             ?>
 
                         //indexOptionItems();
-
-
                     });
 
                 </script>
-
-
 
             <br />
             <div class="form-group">
@@ -606,7 +616,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <?php if (!empty($comboOptions)) { ?>
             <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden');?>">
-
 
                 <label><?= t('Variations');?></label>
 
@@ -937,7 +946,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 setTimeout(
                     function() {
                        $('.ccm-dashboard-form-actions .btn-success').removeAttr('disabled');
-                    }, 2000);
+                    }, 500);
             });
 
             $(function(){
