@@ -35,6 +35,7 @@ class Installer
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
         self::installSinglePage('/dashboard/store/orders/', $pkg);
+        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
         self::installSinglePage('/dashboard/store/discounts/', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
@@ -245,6 +246,7 @@ class Installer
             $oakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
             $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
         $text = AttributeType::getByHandle('text');
@@ -335,6 +337,17 @@ class Installer
 
     public static function upgrade(Package $pkg)
     {
+        $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
+        if ($singlePage->error) {
+            self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+        }
+
+        $oakc = AttributeKeyCategory::getByHandle('store_order');
+        $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
+        if (!$orderCustSet instanceof AttributeSet) {
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        }
+
         // now we refresh all blocks
         $items = $pkg->getPackageItems();
         if (is_array($items['block_types'])) {

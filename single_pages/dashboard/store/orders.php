@@ -45,6 +45,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <br /> <br /><?= t('Phone'); ?>: <?= $order->getAttribute("billing_phone")?>
             </p>
         </div>
+
         <?php if ($order->isShippable()) { ?>
             <div class="col-sm-6">
                 <?php if ($order->getAttribute("shipping_address")->address1) { ?>
@@ -60,7 +61,24 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <?php } ?>
             </div>
         <?php } ?>
+
     </div>
+
+    <div class="row">
+        <?php if ($orderChoicesEnabled) { ?>
+            <div class="col-sm-12">
+                <h4><?= t("Other Choices")?></h4>
+                <?php foreach ($orderChoicesAttList as $ak) { ?>
+                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                    <p>
+                        <?php echo $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue(); ?>
+                        <?php //echo $ak->getAttributeType()->render('view', $ak); ?>
+                    </p>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    </div>
+
     <h3><?= t("Order Info")?></h3>
     <hr>
     <table class="table table-striped">

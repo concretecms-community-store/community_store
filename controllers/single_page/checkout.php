@@ -7,6 +7,7 @@ use Session;
 use Config;
 use Database;
 use UserAttributeKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -16,6 +17,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Checkout extends PageController
 {
@@ -100,6 +102,12 @@ class Checkout extends PageController
 
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
 
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+        $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
+        if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+            $this->set("orderChoicesAttList", $orderChoicesAttList);
+        }
+
         $totals = StoreCalculator::getTotals();
 
         $this->set('subtotal',$totals['subTotal']);
@@ -171,7 +179,7 @@ class Checkout extends PageController
                 $this->redirect("/checkout/failed#payment");
             } else {
                 $transactionReference = $payment['transactionReference'];
-                StoreOrder::add($data,$pm,$transactionReference);
+                $order = StoreOrder::add($data,$pm,$transactionReference);
                 $this->redirect('/checkout/complete');
             }
         }
