@@ -474,6 +474,14 @@ class ProductVariation
         return $em->find(get_class(), $pvID);
     }
 
+    public static function getBySKU($pvSKU)
+    {
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+
+        return $em->getRepository(get_class())->findOneBy(array('pvSKU' => $pvSKU));
+    }
+
     public static function add($productID, $data)
     {
         $variation = new self();

@@ -551,7 +551,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group">
                                 <input type="text" name="poiName[]" class="form-control" value="<%=poiName%>">
                                     <div class="input-group-addon">
-                                        <label><input type="checkbox" name="poiHidden[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
+                                        <label>
+                                            <input type="hidden" name="poiHidden[]" value="<%=poiHiddenValue%>" />
+                                            <input type="checkbox" class="optionHiddenToggle" name="poiHiddenToggle[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
                                     </div>
                                 </div>
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
@@ -594,7 +596,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poiID: '',
                             optGroup: group,
                             sort: temp,
-                            poiHidden: ''
+                            poiHidden: '',
+                            poiHiddenValue: '0'
                         }));
 
                         //Init Index
@@ -602,8 +605,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         $('#variationshider').addClass('hidden');
                         $('#changenotice').removeClass('hidden');
                     }
+
+                    // add handler for hide checkbox, to adjust hidden value when changed
+                    $(document).on('change', '.optionHiddenToggle', function() {
+                        $(this).prev().val(($(this).prop('checked') ? '1' : '0'));
+                    });
+
                     $(function(){
-                        
                         //Make items sortable. If we re-sort them, re-index them.
                         $(".option-group-item-container").sortable({
                             handle: ".grabme",
@@ -631,7 +639,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
                             sort: <?= $optionItem->getSort()?>,
-                            poiHidden: <?= ($optionItem->isHidden() ? '\'checked="checked"\'' : '""'); ?>
+                            poiHidden: <?= ($optionItem->isHidden() ? '\'checked="checked"\'' : '""'); ?>,
+                            poiHiddenValue:  '<?= ($optionItem->isHidden() ? '1' : '0'); ?>'
 
                         }));
                         <?php
@@ -640,10 +649,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 }
             }//if items
             ?>
-
                         //indexOptionItems();
-
-
                     });
 
                 </script>

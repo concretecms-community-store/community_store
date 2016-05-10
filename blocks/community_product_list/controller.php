@@ -92,6 +92,7 @@ class Controller extends BlockController
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
         $products->setFeatureType($this->showFeatured);
+        $products->setShowSaleType($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
         $paginator = $products->getPagination();

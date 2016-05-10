@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 use Session;
 use User;
 use UserInfo;
+use Concrete\Attribute\Address\Value as AddressAttributeValue;
 
 class Customer
 {
@@ -34,6 +35,31 @@ class Customer
         } else {
             $this->ui->setAttribute($handle, $value);
         }
+    }
+
+    public function getAddress($handle) {
+
+        if ($this->isGuest()) {
+            $addressraw = Session::get('community_' .$handle);
+
+            if (is_array($addressraw)) {
+                $address = new AddressAttributeValue();
+
+                // use concrete5's built in address class for formatting
+                $address->address1 = $addressraw['address1'];
+                $address->address2 = $addressraw['address2'];
+                $address->city = $addressraw['city'];
+                $address->state_province = $addressraw['state_province'];
+                $address->postal_code = $addressraw['postal_code'];
+                $address->city = $addressraw['city'];
+                $address->country = $addressraw['country'];
+            }
+
+            return $address . '';
+        } else {
+            return $this->ui->getAttribute($handle);
+        }
+
     }
 
     public function getValue($handle)

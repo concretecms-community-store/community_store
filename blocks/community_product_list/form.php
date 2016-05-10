@@ -67,23 +67,18 @@
 
             <?php } ?>
 
-
-            <div class="form-group radio">
+            <div class="form-group checkbox">
                 <label>
-                    <?= $form->radio('showFeatured', 'all', $showFeatured == 'all' || !isset($showFeatured) ? true : false); ?>
-                    <?= t('Show Both Featured &amp; Non-featured') ?>
-                </label>
-            </div>
-            <div class="form-group radio">
-                <label>
-                    <?= $form->radio('showFeatured', 'featured', $showFeatured == 'featured' ? true : false); ?>
+                    <?= $form->hidden('showFeatured', 'all'); ?>
+                    <?= $form->checkbox('showFeatured', 'featured', $showFeatured == 'featured' ? true : false); ?>
                     <?= t('Show Featured Only') ?>
                 </label>
             </div>
-            <div class="form-group radio">
+            <div class="form-group checkbox">
                 <label>
-                    <?= $form->radio('showFeatured', 'nonfeatured', $showFeatured == 'nonfeatured' ? true : false); ?>
-                    <?= t('Show Non-Featured Only') ?>
+                    <?= $form->hidden('showSale', 'all'); ?>
+                    <?= $form->checkbox('showSale', 'sale', $showSale == 'sale' ? true : false); ?>
+                    <?= t('Show On Sale Only') ?>
                 </label>
             </div>
             <div class="form-group checkbox">

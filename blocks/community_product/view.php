@@ -244,5 +244,5 @@ if (is_object($product)) {
     </script>
 
 <?php } else { ?>
-    <div class="alert alert-info"><?= t("Product not available") ?></div>
+    <p class="alert alert-info"><?= t("Product not available") ?></p>
 <?php } ?>

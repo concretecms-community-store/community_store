@@ -117,8 +117,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                     <label for="store-checkout-billing-state"><?= t("State") ?></label>
                                     <?php $billingState = $customer->getValue("billing_address")->state_province; ?>
                                     <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : ""); ?>
-                                    <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
                                 </div>
+                                <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -176,7 +176,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                             <div class="col-sm-6">
                                 <label><?= t('Address'); ?></label>
-                                <p class="store-summary-address"><?= nl2br($customer->getValue("billing_address")); ?></p>
+                                <p class="store-summary-address"><?= nl2br($customer->getAddress("billing_address")); ?></p>
                             </div>
                         </div>
                     </div>
@@ -254,9 +254,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                         <label for="store-checkout-shipping-state"><?= t("State") ?></label>
                                         <?php $shippingState = $customer->getValue("shipping_address")->state_province; ?>
                                         <?= $form->select('store-checkout-shipping-state', $states, $shippingState ? $shippingState : ""); ?>
-                                        <input type="hidden" id="store-checkout-saved-shipping-state"
-                                               value="<?= $shippingState ?>">
                                     </div>
+                                    <input type="hidden" id="store-checkout-saved-shipping-state" value="<?= $shippingState ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -284,7 +283,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <div class="col-sm-6">
                                     <label><?= t('Address'); ?></label>
 
-                                    <p class="store-summary-address"><?= nl2br($customer->getValue("shipping_address")); ?></p>
+                                    <p class="store-summary-address"><?= nl2br($customer->getAddress("shipping_address")); ?></p>
                                 </div>
                             </div>
                         </div>

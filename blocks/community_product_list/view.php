@@ -2,7 +2,22 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 if($products){
-    echo "<div class='store-product-list row'>";
+
+    $columnClass = 'col-md-12';
+
+    if ($productsPerRow == 2) {
+        $columnClass = 'col-md-6';
+    }
+
+    if ($productsPerRow == 3) {
+        $columnClass = 'col-md-4';
+    }
+
+    if ($productsPerRow == 4) {
+        $columnClass = 'col-md-3';
+    }
+
+    echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
 
     $i=1;
     foreach($products as $product){
@@ -27,21 +42,6 @@ if($products){
         if(Page::getCurrentPage()->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
         }
-
-        $columnClass = 'col-md-12';
-
-        if ($productsPerRow == 2) {
-            $columnClass = 'col-md-6';
-        }
-
-        if ($productsPerRow == 3) {
-            $columnClass = 'col-md-4';
-        }
-
-        if ($productsPerRow == 4) {
-            $columnClass = 'col-md-3';
-        }
-
 
     ?>
     
@@ -84,7 +84,7 @@ if($products){
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
                 <?php if($showPageLink){?>
-                <p><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
+                <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= t("More Details")?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){ ?>
 
@@ -121,7 +121,7 @@ if($products){
                 <input type="hidden" name="pID" value="<?= $product->getID()?>">
 
 
-                <p><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
+                <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
                 <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
                 <?php } ?>
@@ -219,5 +219,5 @@ if($products){
     
 } //if products
 else { ?>
-    <div class="alert alert-info"><?= t("No Products Available")?></div>
+    <p class="alert alert-info"><?= t("No Products Available")?></p>
 <?php } ?>

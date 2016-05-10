@@ -60,6 +60,10 @@ class ProductList extends AttributedItemList
     {
         $this->featured = $type;
     }
+    public function setShowSaleType($type)
+    {
+        $this->sale = $type;
+    }
     public function activeOnly($bool)
     {
         $this->activeOnly = $bool;
@@ -140,6 +144,14 @@ class ProductList extends AttributedItemList
                 break;
             case "nonfeatured":
                 $query->andWhere("pFeatured = 0");
+                break;
+        }
+        switch ($this->sale) {
+            case "sale":
+                $query->andWhere("pSalePrice is not null");
+                break;
+            case "nonsale":
+                $query->andWhere("pFeatured is null");
                 break;
         }
         if (!$this->showOutOfStock) {

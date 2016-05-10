@@ -235,8 +235,7 @@ class Product
         $this->files = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
-        $this->option = new ArrayCollection();
-        $this->optionItems = new ArrayCollection();
+        $this->options = new ArrayCollection();
     }
 
 
@@ -413,6 +412,14 @@ class Product
         $em = $db->getEntityManager();
 
         return $em->find(get_class(), $pID);
+    }
+
+    public static function getBySKU($pSKU)
+    {
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+
+        return $em->getRepository(get_class())->findOneBy(array('pSKU' => $pSKU));
     }
 
     public static function getByCollectionID($cID)
