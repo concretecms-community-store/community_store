@@ -59,7 +59,6 @@
                     </div>
                 </div>
 
-
                 <div class="form-group">
                     <?= $form->label('groupMatchAny', t('Matching')); ?>
                     <?= $form->select('groupMatchAny', array('0' => t("All groups selected"), '1' => t('Any group selected')), $groupMatchAny); ?>
@@ -71,20 +70,20 @@
                 <label>
                     <?= $form->hidden('showFeatured', 'all'); ?>
                     <?= $form->checkbox('showFeatured', 'featured', $showFeatured == 'featured' ? true : false); ?>
-                    <?= t('Show Featured Only') ?>
+                    <?= t('Include Featured Only') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->hidden('showSale', 'all'); ?>
                     <?= $form->checkbox('showSale', 'sale', $showSale == 'sale' ? true : false); ?>
-                    <?= t('Show On Sale Only') ?>
+                    <?= t('Include On Sale Only') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->checkbox('showOutOfStock', 1, $showOutOfStock); ?>
-                    <?= t('Show Out of Stock Products') ?>
+                    <?= t('Include Out of Stock Products') ?>
                 </label>
             </div>
         </fieldset>
@@ -93,7 +92,7 @@
     </div>
     <div class="col-xs-6">
         <fieldset>
-            <legend><?= t('Number and Pagination') ?></legend>
+            <legend><?= t('Pagination and Display Options') ?></legend>
 
             <div class="form-group">
                 <?= $form->label('maxProducts', t('Number of Products to Display')); ?>
@@ -106,32 +105,36 @@
                     <?= t('Display pagination interface if more products are available than are displayed.') ?>
                 </label>
             </div>
-
-
-        </fieldset>
-
-        <fieldset>
-            <legend><?= t('Display Options') ?></legend>
             <div class="form-group">
                 <?= $form->label('productsPerRow', t('Products per Row')); ?>
                 <?= $form->select('productsPerRow', array(1 => 1, 2 => 2, 3 => 3, 4 => 4), $productsPerRow ? $productsPerRow : 1); ?>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showAddToCart', 1, $showAddToCart); ?>
-                    <?= t('Add to Cart Button') ?>
+                    <?= $form->checkbox('showPrice', 1, $showPrice); ?>
+                    <?= t('Display Price') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showPageLink', 1, $showPageLink); ?>
-                    <?= t('Page Link') ?>
+                    <?= $form->checkbox('showAddToCart', 1, $showAddToCart); ?>
+                    <?= t('Display Add To Cart Button') ?>
+                </label>
+            </div>
+            <div class="form-group <?= ($showAddToCart ? '' : 'hidden'); ?>" id="addToCartTextField">
+                <?= $form->label('btnText', t("Add To Cart Button Text"))?>
+                <?= $form->text('btnText', $btnText, array('placeholder'=>t("Defaults to: Add To Cart")))?>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
+                    <?= t('Display Quantity Selector') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->checkbox('showDescription', 1, $showDescription); ?>
-                    <?= t('Product Description') ?>
+                    <?= t('Display Product Description') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
@@ -140,14 +143,18 @@
                         $showQuickViewLink = 1;
                     } ?>
                     <?= $form->checkbox('showQuickViewLink', 1, $showQuickViewLink); ?>
-                    <?= t('Quickview Link (Modal Window)') ?>
+                    <?= t('Display Quickview Link (Modal Window)') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
-                    <?= t('Quantity Selector') ?>
+                    <?= $form->checkbox('showPageLink', 1, $showPageLink); ?>
+                    <?= t('Display Link To Product Page') ?>
                 </label>
+            </div>
+            <div class="form-group <?= ($showPageLink ? '' : 'hidden'); ?>" id="pageLinkTextField">
+                <?= $form->label('pageLinkText', t("Link To Product Page Text"))?>
+                <?= $form->text('pageLinkText', $pageLinkText, array('placeholder'=>t("Defaults to: More Details")))?>
             </div>
         </fieldset>
     </div>
@@ -162,6 +169,22 @@
                 $('#pageselector>div').show();
             } else {
                 $('#pageselector>div').hide();
+            }
+        });
+
+        $('#showPageLink').change(function () {
+            if ($(this).prop('checked')) {
+                $('#pageLinkTextField').removeClass('hidden');
+            } else {
+                $('#pageLinkTextField').addClass('hidden');
+            }
+        });
+
+        $('#showAddToCart').change(function () {
+            if ($(this).prop('checked')) {
+                $('#addToCartTextField').removeClass('hidden');
+            } else {
+                $('#addToCartTextField').addClass('hidden');
             }
         });
 
