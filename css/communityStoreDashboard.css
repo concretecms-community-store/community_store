@@ -7,26 +7,18 @@
     .group-list .hideme { display: none !important; }
 
 #group-filters { margin: 0 0 30px; }
-
     #group-filters li a { transition: .2s ease all; }
-    
-
 
 .store-pane { display: none; }
 .store-pane.active { display: block; }
-    .sortable { cursor: move; text-align: center; }
 
-/* Dynamic Image Selector */
-.additional-image { margin-bottom: 20px; background: #f8f8f8; border: 1px solid #ccc; text-align: center; color: #333; }
-    .move-shell { padding: 15px; border-right: 1px solid #ccc; background: #ddd; cursor: move; }
-        .move-shell .fa-arrows { }
-    .select-image { display: block; cursor: pointer; transition: .2s ease all; }
-    .select-image:hover { background: #fff; text-decoration: none !important; }
-        .select-image i { padding: 15px; }
-        .select-image img { max-height: 50px;  }
-    .trash-shell { padding: 15px; border-left: 1px solid #ebccd1; cursor: pointer; }
-    .trash-shell:hover { color: #a94442 !important; }
-        .trash-shell .fa-trash {  }
+/* Multiple Image selector */
+.ccm-ui .multi-select-list {margin-bottom: 0}
+.multi-select-sortable li {cursor: move}
+.ccm-ui .multi-select-list li:last-child {margin-bottom: 10px;}
+.multi-select-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
+.multi-select-list .fa {cursor: pointer}
+.multi-select-list a:hover {color: red}
 
 /* Options */
 #product-options-container {  }
