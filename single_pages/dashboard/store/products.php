@@ -826,7 +826,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
 
                 <div class="form-group" id="product-search">
-                    <?= $form->label('productSearch', 'Search for a product')?>
                     <input name="pID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
                 </div>
 
