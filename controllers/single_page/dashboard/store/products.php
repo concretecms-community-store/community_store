@@ -19,6 +19,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as S
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
@@ -258,7 +259,9 @@ class Products extends DashboardPageController
 
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
+
         $attrList = StoreProductKey::getList();
         $this->set('attribs',$attrList);
         
@@ -317,6 +320,8 @@ class Products extends DashboardPageController
                 // save variations
                 StoreProductVariation::addVariations($data, $product);
 
+                // save related products
+                StoreProductRelated::addRelatedProducts($data, $product);
 
                 if($data['pID']){
                     $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
