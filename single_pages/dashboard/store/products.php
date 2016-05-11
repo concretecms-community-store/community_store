@@ -814,7 +814,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <h4><?= t('Related Products')?></h4>
 
-                <ul class="list-group multi-select-list" id="related-products">
+                <ul class="list-group multi-select-list multi-select-sortable" id="related-products">
                     <?php
                     $relatedProducts = $product->getRelatedProducts();
                     if (!empty($relatedProducts)) {
@@ -872,6 +872,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         $('#related-products').on('click', 'a', function(){
                             $(this).parent().remove();
                         });
+
+                        $('#related-products').sortable({axis: 'y'});
 
                     });
 

@@ -33,6 +33,11 @@ class ProductRelated
     protected $relatedPID;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $relatedSort;
+
+    /**
      * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",cascade={"persist"})
      * @JoinColumn(name="relatedPID", referencedColumnName="pID", onDelete="CASCADE")
      */
@@ -74,6 +79,15 @@ class ProductRelated
         return $this->relatedProduct = $product;
     }
 
+    public function getSort()
+    {
+        return $this->relatedSort;
+    }
+
+    public function setSort($relatedSort)
+    {
+        $this->relatedSort = $relatedSort;
+    }
 
     public static function getByID($cID)
     {
@@ -97,9 +111,11 @@ class ProductRelated
         self::removeRelatedProducts($product);
         //add new ones
         if (!empty($products['pRelatedProducts'])) {
+            $count = 0;
             foreach ($products['pRelatedProducts'] as $pID) {
                 if ($pID > 0) {
-                    self::add($product, $pID);
+                    self::add($product, $pID, $count);
+                    $count++;
                 }
             }
         }
@@ -113,17 +129,18 @@ class ProductRelated
         }
     }
 
-    public static function add($product, $relatedProductID)
+    public static function add($product, $relatedProductID, $sort)
     {
         $relatedProduct = StoreProduct::getByID($relatedProductID);
         if ($relatedProduct) {
-            $location = new self();
-            $location->setProduct($product);
-            $location->setRelatedProduct($relatedProduct);
-            $location->save();
+            $relation = new self();
+            $relation->setProduct($product);
+            $relation->setRelatedProduct($relatedProduct);
+            $relation->setSort($sort);
+            $relation->save();
         }
 
-        return $location;
+        return $relation;
     }
 
     public function __clone() {
