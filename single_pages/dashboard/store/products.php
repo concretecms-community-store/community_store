@@ -814,12 +814,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <h4><?= t('Related Products')?></h4>
 
-                <ul class="list-group" id="related-products">
+                <ul class="list-group multi-select-list" id="related-products">
                     <?php
                     $relatedProducts = $product->getRelatedProducts();
-
-                    foreach($relatedProducts as $relatedProduct) {
-                        echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '</li>';
+                    if (!empty($relatedProducts)) {
+                        foreach ($relatedProducts as $relatedProduct) {
+                            echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '<input type="hidden" name="pRelatedProducts[]" value="'.$relatedProduct->getRelatedProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>';
+                        }
                     }
                     ?>
                 </ul>
@@ -864,10 +865,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         $('#product-select').on("change", function(e) {
                             var data = $(this).select2('data');
-                            $('#related-products').append('<li class="list-group-item">'+ data.text  +'</li>');
+                            $('#related-products').append('<li class="list-group-item">'+ data.text  +'<input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>');
                             $(this).select2("val", []);
                         });
+
+                        $('#related-products').on('click', 'a', function(){
+                            $(this).parent().remove();
+                        });
+
                     });
+
+
 
                 </script>
 

@@ -96,8 +96,8 @@ class ProductRelated
         //clear out existing locations
         self::removeRelatedProducts($product);
         //add new ones
-        if (!empty($products['pID'])) {
-            foreach ($products['pID'] as $pID) {
+        if (!empty($products['pRelatedProducts'])) {
+            foreach ($products['pRelatedProducts'] as $pID) {
                 if ($pID > 0) {
                     self::add($product, $pID);
                 }
