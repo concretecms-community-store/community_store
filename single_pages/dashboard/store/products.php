@@ -217,10 +217,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="form-group" id="page_pickers">
 
                     <ul class="list-group multi-select-list" id="pagelocations">
-                        <?php  foreach ($locationPages as $location) {
-                            if ($location) {
-                                $page = \Page::getByID($location->getCollectionID());
-                                echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                        <?php
+                        if (!empty($locationPages)) {
+                            foreach ($locationPages as $location) {
+                                if ($location) {
+                                    $page = \Page::getByID($location->getCollectionID());
+                                    echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                }
                             }
                         }
                         ?>
