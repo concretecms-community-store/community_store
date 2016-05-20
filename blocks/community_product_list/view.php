@@ -126,82 +126,81 @@ if($products){
 
                 <?php } ?>
 
+                <?php if ($product->hasVariations() && !empty($variationLookup)) {?>
+                    <script>
+                        $(function() {
+                            <?php
+                            $varationData = array();
+                            foreach($variationLookup as $key=>$variation) {
+                                $product->setVariation($variation);
+
+                                $imgObj = $product->getImageObj();
+
+                                if ($imgObj) {
+                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj,400,280,true);
+                                }
+
+                                $varationData[$key] = array(
+                                'price'=>$product->getFormattedOriginalPrice(),
+                                'saleprice'=>$product->getFormattedSalePrice(),
+                                'available'=>($variation->isSellable()),
+                                'imageThumb'=>$thumb ? $thumb->src : '',
+                                'image'=>$imgObj ? $imgObj->getRelativePath() : '');
+
+                            } ?>
+
+
+                            $('#store-form-add-to-cart-list-<?= $product->getID()?> select').change(function(){
+                                var variationdata = <?= json_encode($varationData); ?>;
+                                var ar = [];
+
+                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
+                                    ar.push($(this).val());
+                                })
+
+                                ar.sort();
+
+                                var pli = $(this).closest('.store-product-list-item');
+
+                                if (variationdata[ar.join('_')]['saleprice']) {
+                                    var pricing =  '<span class="store-sale-price">'+ variationdata[ar.join('_')]['saleprice']+'</span>' +
+                                        ' <?= t('was');?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
+
+                                    pli.find('.store-product-list-price').html(pricing);
+
+                                } else {
+                                    pli.find('.store-product-list-price').html(variationdata[ar.join('_')]['price']);
+                                }
+
+                                if (variationdata[ar.join('_')]['available']) {
+                                    pli.find('.store-out-of-stock-label').addClass('hidden');
+                                    pli.find('.store-btn-add-to-cart').removeClass('hidden');
+                                } else {
+                                    pli.find('.store-out-of-stock-label').removeClass('hidden');
+                                    pli.find('.store-btn-add-to-cart').addClass('hidden');
+                                }
+
+                                if (variationdata[ar.join('_')]['imageThumb']) {
+                                    var image = pli.find('.store-product-list-thumbnail img');
+
+                                    if (image) {
+                                        image.attr('src', variationdata[ar.join('_')]['imageThumb']);
+
+                                    }
+                                }
+
+                            });
+                        });
+                    </script>
+                <?php } ?>
+
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
-
-
-        <?php if ($product->hasVariations() && !empty($variationLookup)) {?>
-            <script>
-                $(function() {
-                    <?php
-                    $varationData = array();
-                    foreach($variationLookup as $key=>$variation) {
-                        $product->setVariation($variation);
-
-                        $imgObj = $product->getImageObj();
-
-                        if ($imgObj) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj,400,280,true);
-                        }
-
-                        $varationData[$key] = array(
-                        'price'=>$product->getFormattedOriginalPrice(),
-                        'saleprice'=>$product->getFormattedSalePrice(),
-                        'available'=>($variation->isSellable()),
-                        'imageThumb'=>$thumb ? $thumb->src : '',
-                        'image'=>$imgObj ? $imgObj->getRelativePath() : '');
-
-                    } ?>
-
-
-                    $('#store-form-add-to-cart-list-<?= $product->getID()?> select').change(function(){
-                        var variationdata = <?= json_encode($varationData); ?>;
-                        var ar = [];
-
-                        $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
-                            ar.push($(this).val());
-                        })
-
-                        ar.sort();
-
-                        var pli = $(this).closest('.store-product-list-item');
-
-                        if (variationdata[ar.join('_')]['saleprice']) {
-                            var pricing =  '<span class="store-sale-price">'+ variationdata[ar.join('_')]['saleprice']+'</span>' +
-                               ' <?= t('was');?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
-
-                            pli.find('.store-product-list-price').html(pricing);
-
-                        } else {
-                            pli.find('.store-product-list-price').html(variationdata[ar.join('_')]['price']);
-                        }
-
-                        if (variationdata[ar.join('_')]['available']) {
-                            pli.find('.store-out-of-stock-label').addClass('hidden');
-                            pli.find('.store-btn-add-to-cart').removeClass('hidden');
-                        } else {
-                            pli.find('.store-out-of-stock-label').removeClass('hidden');
-                            pli.find('.store-btn-add-to-cart').addClass('hidden');
-                        }
-
-                        if (variationdata[ar.join('_')]['imageThumb']) {
-                            var image = pli.find('.store-product-list-thumbnail img');
-
-                            if (image) {
-                                image.attr('src', variationdata[ar.join('_')]['imageThumb']);
-
-                            }
-                        }
-
-                    });
-                });
-            </script>
-        <?php } ?>
         
         <?php 
             if($i%$productsPerRow==0){
                 echo "</div>";
-                echo "<div class='store-product-list row'>";
+                echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
             }
         
         $i++;
