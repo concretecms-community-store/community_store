@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Installer
 {
-    public static function installSinglePages(Package $pkg)
+    public static function installSinglePages($pkg)
     {
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
@@ -59,7 +59,7 @@ class Installer
             SinglePage::add($path, $pkg);
         }
     }
-    public static function installProductParentPage(Package $pkg)
+    public static function installProductParentPage($pkg)
     {
         $productParentPage = Page::getByPath('/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
@@ -74,7 +74,7 @@ class Installer
         }
         $productParentPage->setAttribute('exclude_nav', 1);
     }
-    public static function installStoreProductPageType(Package $pkg)
+    public static function installStoreProductPageType($pkg)
     {
         //install product detail page type
         $pageType = PageType::getByHandle('store_product');
@@ -95,7 +95,7 @@ class Installer
         }
     }
 
-    public static function setDefaultConfigValues(Package $pkg)
+    public static function setDefaultConfigValues($pkg)
     {
         self::setConfigValue('community_store.productPublishTarget', Page::getByPath('/products')->getCollectionID());
         self::setConfigValue('community_store.symbol', '$');
@@ -114,7 +114,7 @@ class Installer
             Config::save($key, $value);
         }
     }
-    public static function installPaymentMethods(Package $pkg)
+    public static function installPaymentMethods($pkg)
     {
         self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
     }
@@ -125,7 +125,7 @@ class Installer
             StorePaymentMethod::add($handle, $name, $pkg, $displayName, $enabled);
         }
     }
-    public static function installShippingMethods(Package $pkg)
+    public static function installShippingMethods($pkg)
     {
         self::installShippingMethod('flat_rate', 'Flat Rate', $pkg);
         self::installShippingMethod('free_shipping', 'Free Shipping', $pkg);
@@ -139,7 +139,7 @@ class Installer
         }
     }
 
-    public static function installBlocks(Package $pkg)
+    public static function installBlocks($pkg)
     {
         $bts = BlockTypeSet::getByHandle('community_store');
         if (!is_object($bts)) {
@@ -156,7 +156,7 @@ class Installer
             BlockType::installBlockType($handle, $pkg);
         }
     }
-    public static function setPageTypeDefaults(Package $pkg)
+    public static function setPageTypeDefaults($pkg)
     {
         $pageType = PageType::getByHandle('store_product');
         $template = $pageType->getPageTypeDefaultPageTemplateObject();
@@ -180,7 +180,7 @@ class Installer
         }
     }
 
-    public static function installCustomerGroups(Package $pkg)
+    public static function installCustomerGroups($pkg)
     {
         $group = Group::getByName('Store Customer');
         if (!$group || $group->getGroupID() < 1) {
@@ -188,7 +188,7 @@ class Installer
         }
     }
 
-    public static function installUserAttributes(Package $pkg)
+    public static function installUserAttributes($pkg)
     {
         //user attributes for customers
         $uakc = AttributeKeyCategory::getByHandle('user');
@@ -232,7 +232,7 @@ class Installer
         }
     }
 
-    public static function installOrderAttributes(Package $pkg)
+    public static function installOrderAttributes($pkg)
     {
         //create custom attribute category for orders
         $oakc = AttributeKeyCategory::getByHandle('store_order');
@@ -277,7 +277,7 @@ class Installer
         }
     }
 
-    public static function installProductAttributes(Package $pkg)
+    public static function installProductAttributes($pkg)
     {
         //create custom attribute category for products
         $pakc = AttributeKeyCategory::getByHandle('store_product');
@@ -292,7 +292,7 @@ class Installer
         }
     }
 
-    public static function createDDFileset(Package $pkg)
+    public static function createDDFileset($pkg)
     {
         //create fileset to place digital downloads
         $fs = FileSet::getByName(t('Digital Downloads'));
@@ -301,7 +301,7 @@ class Installer
         }
     }
 
-    public static function installOrderStatuses(Package $package)
+    public static function installOrderStatuses($pkg)
     {
         $table = StoreOrderStatus::getTableName();
         $db = \Database::connection();
@@ -335,7 +335,7 @@ class Installer
         }
     }
 
-    public static function upgrade(Package $pkg)
+    public static function upgrade($pkg)
     {
         $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
         if ($singlePage->error) {
