@@ -12,8 +12,7 @@ $count=0;
 <?php if (!empty($eligibleMethods)) { ?>
 
     <?php foreach ($eligibleMethods as $method) { ?>
-
-        <?php if (Filesystem::exists(DIR_BASE . "/packages/" . $method->getPackageHandle() . "/elements/checkout/shipping_methods.php")) { ?>
+        <?php if ($method->getPackageHandle() != 'community_store' && Filesystem::exists(DIR_BASE . "/packages/" . $method->getPackageHandle() . "/elements/checkout/shipping_methods.php")) { ?>
             <?php View::element("checkout/shipping_methods", array('method' => $method), $method->getPackageHandle()); ?>
         <?php } else { ?>
 
