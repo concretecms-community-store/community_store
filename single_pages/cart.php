@@ -91,7 +91,7 @@ $i=1;
             <?php
             $salePrice = $product->getSalePrice();
             if(isset($salePrice) && $salePrice != ""){
-                echo '<span class="original-price">'.StorePrice::format($product->getPrice()).'</span>';
+                //echo '<span class="original-price">'.StorePrice::format($product->getPrice()).'</span>';
                 echo '<span class="sale-price">'.StorePrice::format($salePrice).'</span>';
             } else {
                 echo StorePrice::format($product->getPrice());

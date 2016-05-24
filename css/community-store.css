@@ -124,8 +124,9 @@
     display: block;
 }
 
-
-
+.store-checkout-code-form {
+    display: none;
+}
 
 #store-cart>tbody>tr>td, #store-cart>tfoot>tr>td{
     vertical-align: middle;
