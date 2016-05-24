@@ -370,7 +370,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?php if ($code->isUsed()) { ?>
                             <tr>
                                 <td><strike><?= $code->getCode(); ?></strike></td>
-                                <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code['oID']); ?>"><?= t('View Order'); ?></a></td>
+                                <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>
                         <?php } else { ?>
