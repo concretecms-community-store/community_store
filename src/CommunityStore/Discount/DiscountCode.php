@@ -130,7 +130,7 @@ class DiscountCode
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->find(get_class(), array('dcCode' => $code));
+        return $em->getRepository(get_class())->findOneBy(array('dcCode' => $code));
     }
 
     public static function add($discountRule, $code)

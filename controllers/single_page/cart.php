@@ -24,9 +24,16 @@ class Cart extends PageController
         $codesuccess = false;
 
         if ($this->post()) {
-            if ($this->post('action') == 'code' && $this->post('code')) {
-                $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
-                $codeerror = !$codesuccess;
+            if ($this->post('action') == 'code') {
+                $codeerror = false;
+                $codesuccess = false;
+
+                if ($this->post('code')) {
+                    $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
+                    $codeerror = !$codesuccess;
+                } else {
+                    StoreDiscountCode::clearCartCode();
+                }
             }
 
             if ($this->post('action') == 'update') {

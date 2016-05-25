@@ -21,6 +21,24 @@ class Checkout extends PageController
 {
     public function view()
     {
+        if ($this->post()) {
+            if ($this->post('action') == 'code') {
+
+                $codeerror = false;
+                $codesuccess = false;
+
+                if ($this->post('code')) {
+                    $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
+                    $codeerror = !$codesuccess;
+                } else {
+                    StoreDiscountCode::clearCartCode();
+                }
+            }
+
+            $this->set('codeerror', $codeerror);
+            $this->set('codesuccess', $codesuccess);
+        }
+
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->redirect("/");
         }

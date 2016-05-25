@@ -309,6 +309,14 @@ class Order
             $orderDiscount->setOrder($order);
             if ($discount->getTrigger() == 'code') {
                 $orderDiscount->setCode(Session::get('communitystore.code'));
+
+                if ($discount->isSingleUse()) {
+                    $code = StoreDiscountCode::getByCode(Session::get('communitystore.code'));
+                    if ($code) {
+                        $code->setOID($order->getOrderID());
+                        $code->save();
+                    }
+                }
             }
             $orderDiscount->setDisplay($discount->getDisplay());
             $orderDiscount->setName($discount->getName());

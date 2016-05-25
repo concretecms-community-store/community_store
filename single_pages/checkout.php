@@ -399,8 +399,36 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         ?>
                     </li>
                 <?php } ?>
-                <?php if ($discountsWithCodesExist && !$hasCode) { ?>
-                    <li class="list-group-item"><a href="<?= \URL::to('/cart'); ?>"><?= t('Enter discount code'); ?></a></li>
+                <?php if ($discountsWithCodesExist) { ?>
+                    <li class="list-group-item">
+                        <?php if ($codesuccess) { ?>
+                            <p><?= t('Discount has been applied');?></p>
+                        <?php } ?>
+
+                        <?php if ($codeerror) { ?>
+                            <p><?= t('Invalid code');?></p>
+                        <?php } ?>
+
+                        <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+
+                        <form method="post" action="" class="form-inline store-checkout-code-form">
+                            <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
+                            <input type="hidden" name="action" value="code" />
+                            <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
+                        </form>
+
+                         <script type="text/javascript">
+                            $(function () {
+                                $("#store-enter-discount-trigger").click(function(e){
+                                    $('.store-checkout-code-form').show().find('.form-control').focus();
+                                    $(this).remove();
+                                    e.preventDefault();
+                                });
+                            });
+                        </script>
+
+                    </li>
+
                 <?php } ?>
                 <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
                         class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
