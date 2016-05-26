@@ -6,16 +6,17 @@ use Core;
 use Session;
 use Config;
 use Database;
+use User;
 use UserAttributeKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
@@ -120,7 +121,7 @@ class Checkout extends PageController
 
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
 
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+        $orderChoicesAttList = $this->getOrderChoicesAttList();
         $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
             $this->set("orderChoicesAttList", $orderChoicesAttList);
@@ -210,6 +211,17 @@ class Checkout extends PageController
 
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
+    }
+    public function getOrderChoicesAttList()
+    {
+        foreach (StoreOrderKey::getAttributeListBySet('order_choices') as $ak) {
+            $u = new User;
+            $uGroupIDs = array_keys($u->getUserGroups());
+            if (count(array_intersect($ak->getAttributeGroups(), $uGroupIDs))) {
+                $list[] = $ak;
+            }
+        }
+        return $list;
     }
 
 }
