@@ -1,9 +1,12 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
-$orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use User;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+
+$orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
 $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
 
 $subject = t("Order Receipt");

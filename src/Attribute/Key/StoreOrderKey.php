@@ -85,19 +85,25 @@ class StoreOrderKey extends Key
         return parent::getList('store_order');
     }
 
-    public static function getAttributeListBySet($set)
+    public static function getAttributeListBySet($set, $user = null)
     {
         if (!$set instanceof AttributeSet) {
             $set = AttributeSet::getByHandle($set);
         }
 
-        $attList = array();
-        foreach (parent::getList('store_order') as $att) {
-            if (in_array($set, $att->getAttributeSets())) {
-                $attList[] = $att;
+        if ($user) {
+            $uGroupIDs = array_keys($user->getUserGroups());
+        }
+
+        $akList = array();
+        foreach (parent::getList('store_order') as $ak) {
+            if (in_array($set, $ak->getAttributeSets())) {
+                if ($user && !count(array_intersect($ak->getAttributeGroups(), $uGroupIDs))) { continue; }
+                $akList[] = $ak;
             }
         }
-        return $attList;
+
+        return $akList;
     }
 
     protected function saveAttribute($order, $value = false)

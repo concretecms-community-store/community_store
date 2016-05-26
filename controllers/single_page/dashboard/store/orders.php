@@ -2,11 +2,12 @@
 
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use User;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Orders extends DashboardPageController
@@ -48,7 +49,7 @@ class Orders extends DashboardPageController
         if ($order) {
             $this->set("order", $order);
             $this->set('orderStatuses', StoreOrderStatus::getList());
-            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
             $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
                 $this->set("orderChoicesAttList", $orderChoicesAttList);

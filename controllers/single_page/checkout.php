@@ -121,7 +121,7 @@ class Checkout extends PageController
 
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
 
-        $orderChoicesAttList = $this->getOrderChoicesAttList();
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
         $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
             $this->set("orderChoicesAttList", $orderChoicesAttList);
@@ -211,17 +211,6 @@ class Checkout extends PageController
 
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
-    }
-    public function getOrderChoicesAttList()
-    {
-        foreach (StoreOrderKey::getAttributeListBySet('order_choices') as $ak) {
-            $u = new User;
-            $uGroupIDs = array_keys($u->getUserGroups());
-            if (count(array_intersect($ak->getAttributeGroups(), $uGroupIDs))) {
-                $list[] = $ak;
-            }
-        }
-        return $list;
     }
 
 }

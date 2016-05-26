@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Controller;
+use User;
 use View;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
@@ -12,7 +13,7 @@ class OrderSlip extends Controller
     public function renderOrderPrintSlip()
     {
         $o = StoreOrder::getByID($this->post('oID'));
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
         $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
         
         if (Filesystem::exists(DIR_BASE."/application/elements/order_slip.php")) {
