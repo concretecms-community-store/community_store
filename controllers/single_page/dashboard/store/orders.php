@@ -49,7 +49,7 @@ class Orders extends DashboardPageController
         if ($order) {
             $this->set("order", $order);
             $this->set('orderStatuses', StoreOrderStatus::getList());
-            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($order->getCustomerID()));
             $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
                 $this->set("orderChoicesAttList", $orderChoicesAttList);

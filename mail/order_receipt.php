@@ -1,8 +1,6 @@
 <?php
-
 defined('C5_EXECUTE') or die("Access Denied.");
-
-use User;
+use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
@@ -67,8 +65,8 @@ ob_start();
             <td colspan="3">
                 <h4><?= t("Other Choices")?></h4>
                 <?php foreach ($orderChoicesAttList as $ak) { ?>
-                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                    <p><?= $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display'); ?></p>
+                    <strong><?= $ak->getAttributeKeyDisplayName()?></stong>
+                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
                 <?php } ?>
             </td>
         </tr>
