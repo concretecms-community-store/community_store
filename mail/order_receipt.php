@@ -134,9 +134,31 @@ if (count($downloads) > 0) {
 <?php } ?>
 
 <p>
+
     <?php if ($order->isShippable()) { ?>
-        <strong><?= t("Shipping") ?>:</strong>  <?= Price::format($order->getShippingTotal()) ?><br>
+        <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
         <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
+
+        <?php
+        $shippingInstructions = $order->getShippingInstructions();
+        if ($shippingInstructions) { ?>
+            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+        <?php } ?>
+    <?php } ?>
+
+    <?php if ($order->isShippable()) { ?>
+        <br><strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
+
+        <?php if ($order->isShippable()) { ?>
+            <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
+
+            <?php
+            $shippingInstructions = $order->getShippingInstructions();
+            if ($shippingInstructions) { ?>
+                <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+            <?php } ?>
+        <?php } ?>
+
     <?php } ?>
 
     <?php $applieddiscounts = $order->getAppliedDiscounts();

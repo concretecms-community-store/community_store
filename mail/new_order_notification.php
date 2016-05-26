@@ -108,10 +108,13 @@ ob_start();
 
     <?php if ($order->isShippable()) { ?>
         <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
-    <?php } ?>
-
-    <?php if ($order->isShippable()) { ?>
         <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
+
+        <?php
+        $shippingInstructions = $order->getShippingInstructions();
+        if ($shippingInstructions) { ?>
+            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+        <?php } ?>
     <?php } ?>
 
     <?php $applieddiscounts = $order->getAppliedDiscounts();

@@ -421,10 +421,13 @@ $(document).ready(function () {
             var smID = $("#store-checkout-shipping-method-options input[type='radio']:checked").val();
             var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().find('.store-shipping-details').html());
             obj.find('.summary-shipping-method').html(methodText);
+            var sInstructions = $('#store-checkout-shipping-instructions').val();
+            obj.find('.summary-shipping-instructions').html(sInstructions);
 
             $.ajax({
                 type: 'post',
-                data: {smID: smID},
+                data: { smID: smID,
+                        sInstructions: sInstructions},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
                     if (total <= 0) {

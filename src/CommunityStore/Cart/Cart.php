@@ -394,4 +394,12 @@ class Cart
 
         return false;
     }
+
+    public static function setShippingInstructions($sInstructions) {
+        \Session::set('communitystore.sInstructions', $sInstructions);
+    }
+
+    public static function getShippingInstructions() {
+        return  \Session::get('communitystore.sInstructions');
+    }
 }

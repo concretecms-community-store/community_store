@@ -51,6 +51,9 @@ class Order
     /** @Column(type="text") */
     protected $smName;
 
+    /** @Column(type="text") */
+    protected $sInstructions;
+
     /** @Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
 
@@ -105,6 +108,11 @@ class Order
     public function setShippingMethodName($smName)
     {
         $this->smName = $smName;
+    }
+
+    public function setShippingInstructions($sInstructions)
+    {
+        $this->sInstructions = $sInstructions;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -166,6 +174,11 @@ class Order
     public function getShippingMethodName()
     {
         return $this->smName;
+    }
+
+    public function getShippingInstructions()
+    {
+        return $this->sInstructions;
     }
 
     public function getShippingTotal()
@@ -281,6 +294,8 @@ class Order
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
+        $sInstructions = StoreCart::getShippingInstructions();
+        StoreCart::getShippingInstructions('');
         $shippingTotal = StoreCalculator::getShippingTotal();
         $taxes = StoreTax::getConcatenatedTaxStrings();
         $totals = StoreCalculator::getTotals();
@@ -292,6 +307,7 @@ class Order
         $order->setDate($now);
         $order->setPaymentMethodName($pmName);
         $order->setShippingMethodName($smName);
+        $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxes['taxTotals']);
         $order->setTaxIncluded($taxes['taxIncludedTotals']);
@@ -425,7 +441,7 @@ class Order
 
         $fromName = Config::get('community_store.emailalertsname');
 
-        $smID = \Session::get('smID');
+        $smID = \Session::get('community_store.smID');
         $groupstoadd = array();
         $createlogin = false;
         $orderItems = $this->getOrderItems();
@@ -537,7 +553,7 @@ class Order
             $customer->setValue('billing_address', $billing_address);
             $customer->setValue('billing_phone', $billing_phone);
 
-            if ($smID) {
+            if ($order->isShippable()) {
                 $customer->setValue('shipping_first_name', $shipping_first_name);
                 $customer->setValue('shipping_last_name', $shipping_last_name);
                 $customer->setValue('shipping_address', $shipping_address);
@@ -614,7 +630,7 @@ class Order
         }
 
         // unset the shipping type, as next order might be unshippable
-        \Session::set('smID', '');
+        \Session::set('community_store.smID', '');
 
         StoreCart::clear();
 
