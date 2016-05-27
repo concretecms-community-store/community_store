@@ -260,7 +260,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
 
                             <?php if (Config::get('community_store.deliveryInstructions')) { ?>
-                            <div class="form-group store-checkout-form-delivery-instructions">
+                            <div class="store-checkout-form-delivery-instructions form-group">
                                 <label><?= t('Delivery Instructions'); ?></label>
                                 <?= $form->textarea('store-checkout-shipping-instructions', h($shippingInstructions)); ?>
                             </div>

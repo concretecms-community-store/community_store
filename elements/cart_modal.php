@@ -7,6 +7,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
+    <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
         <?php if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add') { ?>
@@ -28,10 +29,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
             <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
-
         <?php } ?>
-
-        <h3><?= t("Shopping Cart")?></h3>
 
         <input id='cartURL' type='hidden' data-cart-url='<?=\URL::to("/cart/")?>'>
             <?php
