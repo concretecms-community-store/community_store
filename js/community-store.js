@@ -471,7 +471,7 @@ $(document).ready(function () {
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");
         e.preventDefault();
     });
-    $("#ckbx-copy-billing").change(function () {
+    $("#store-copy-billing").change(function () {
         if ($(this).is(":checked")) {
             $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
             $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());

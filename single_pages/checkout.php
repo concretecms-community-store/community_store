@@ -166,12 +166,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
                             <p>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="ckbx-copy-billing">
-                                        <?= t("Same as Billing Address") ?>
-                                    </label>
-                                </div>
+                                <label>
+                                    <input type="checkbox" id="store-copy-billing" />
+                                    <?= t("Same as Billing Address") ?>
+                                </label>
                             </p>
                             <div class="row">
                                 <div class="col-md-6">
