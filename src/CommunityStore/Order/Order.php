@@ -51,7 +51,7 @@ class Order
     /** @Column(type="text") */
     protected $smName;
 
-    /** @Column(type="text") */
+    /** @Column(type="text",nullable=true) */
     protected $sInstructions;
 
     /** @Column(type="decimal", precision=10, scale=2) * */

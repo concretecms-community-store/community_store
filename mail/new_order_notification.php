@@ -106,6 +106,7 @@ ob_start();
     </tbody>
 </table>
 
+<p>
     <?php if ($order->isShippable()) { ?>
         <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
         <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>

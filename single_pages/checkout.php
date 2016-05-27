@@ -259,10 +259,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div id="store-checkout-shipping-method-options" data-error-message="<?= h(t('Please select a shipping method'));?>">
                             </div>
 
+                            <?php if (Config::get('community_store.deliveryInstructions')) { ?>
                             <div class="form-group store-checkout-form-delivery-instructions">
                                 <label><?= t('Delivery Instructions'); ?></label>
                                 <?= $form->textarea('store-checkout-shipping-instructions', h($shippingInstructions)); ?>
                             </div>
+                            <?php } ?>
 
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
