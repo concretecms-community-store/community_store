@@ -186,6 +186,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                         <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), array("required" => "required")); ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-address-1"><?= t("Address 1") ?></label>
