@@ -282,9 +282,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                     <div class="summary-shipping-method">
                                         <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? StorePrice::format($shippingTotal) : t('No Charge');?>
                                     </div>
-                                    <div class="summary-shipping-instructions">
+                                    <p class="summary-shipping-instructions">
                                         <?= h($shippingInstructions); ?>
-                                    </div>
+                                    </p>
                                 </div>
                             </div>
                         </div>
