@@ -5,7 +5,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 $eligibleMethods = StoreShippingMethod::getEligibleMethods();
-$currentShippingID = Session::get('smID');
+$currentShippingID = Session::get('community_store.smID');
 $count=0;
 ?>
 
