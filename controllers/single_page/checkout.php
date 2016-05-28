@@ -136,6 +136,7 @@ class Checkout extends PageController
         $this->set('shippingtotal',$totals['shippingTotal']);
         $this->set('total',$totals['total']);
         $this->set('shippingEnabled', StoreCart::isShippable());
+        $this->set('shippingInstructions', StoreCart::getShippingInstructions());
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
@@ -167,6 +168,7 @@ class Checkout extends PageController
     
     public function failed()
     {
+        $this->set('shippingInstructions', StoreCart::getShippingInstructions());
         $this->set('paymentErrors',Session::get('paymentErrors'));
         $this->set('activeShippingLabel', StoreShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', StoreCalculator::getShippingTotal());

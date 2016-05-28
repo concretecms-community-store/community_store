@@ -32,7 +32,18 @@ class InvoicePaymentMethod extends StorePaymentMethod
     }
     public function checkoutForm()
     {
-        //nada
+        $pmID = StorePaymentMethod::getByHandle('invoice')->getID();
+        
+        $this->addFooterItem("
+            <script type=\"text/javascript\">
+                 $(function() {
+                     $('div[data-payment-method-id=".$pmID."] .store-btn-complete-order').click(function(){
+                         $(this).attr({disabled: true}).val('" .  t('Processing...').  "');
+                         $(this).closest('form').submit();
+                     });
+                 });
+            </script>
+        ");
     }
 
     public function submitPayment()

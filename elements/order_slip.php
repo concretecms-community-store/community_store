@@ -7,6 +7,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 <link href="/concrete/css/app.css" rel="stylesheet" type="text/css" media="all">
 <div class="ccm-ui">
     <div class="container">
+        <h1><?= t("Order #") . $order->getOrderID() ?></h1>
         <h3><?= t("Customer Overview") ?></h3>
         <hr>
 
@@ -136,8 +137,18 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <p>
             <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
             <?php if ($order->isShippable()) { ?>
-            <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
-            <?php } ?>
+            <br><strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+
+            <?php
+            $shippingInstructions = $order->getShippingInstructions();
+            if ($shippingInstructions) { ?>
+        <p>
+            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?>
+        </p>
+        <?php } ?>
+
+
+        <?php } ?>
         </p>
 
     </div>

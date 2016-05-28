@@ -205,12 +205,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
                             <p>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="ckbx-copy-billing">
-                                        <?= t("Same as Billing Address") ?>
-                                    </label>
-                                </div>
+                                <label>
+                                    <input type="checkbox" id="store-copy-billing" />
+                                    <?= t("Same as Billing Address") ?>
+                                </label>
                             </p>
                             <div class="row">
                                 <div class="col-md-6">
@@ -225,6 +223,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                         <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), array("required" => "required")); ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-address-1"><?= t("Address 1") ?></label>
@@ -298,6 +298,13 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             <div id="store-checkout-shipping-method-options" data-error-message="<?= h(t('Please select a shipping method'));?>">
                             </div>
 
+                            <?php if (Config::get('community_store.deliveryInstructions')) { ?>
+                            <div class="store-checkout-form-delivery-instructions form-group">
+                                <label><?= t('Delivery Instructions'); ?></label>
+                                <?= $form->textarea('store-checkout-shipping-instructions', h($shippingInstructions)); ?>
+                            </div>
+                            <?php } ?>
+
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
@@ -314,6 +321,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                     <div class="summary-shipping-method">
                                         <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? StorePrice::format($shippingTotal) : t('No Charge');?>
                                     </div>
+                                    <p class="summary-shipping-instructions">
+                                        <?= h($shippingInstructions); ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>

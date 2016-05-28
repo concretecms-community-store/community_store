@@ -58,6 +58,8 @@ class Orders extends DashboardPageController
         } else {
             $this->redirect('/dashboard/store/orders');
         }
+
+        $this->set('pageTitle', t("Order #") . $order->getOrderID());
     }
     public function removed()
     {

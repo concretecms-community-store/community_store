@@ -429,10 +429,13 @@ $(document).ready(function () {
             var smID = $("#store-checkout-shipping-method-options input[type='radio']:checked").val();
             var methodText = $.trim($("#store-checkout-shipping-method-options input[type='radio']:checked").parent().find('.store-shipping-details').html());
             obj.find('.summary-shipping-method').html(methodText);
+            var sInstructions = $('#store-checkout-shipping-instructions').val();
+            obj.find('.summary-shipping-instructions').html(sInstructions);
 
             $.ajax({
                 type: 'post',
-                data: {smID: smID},
+                data: { smID: smID,
+                        sInstructions: sInstructions},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
                     if (total <= 0) {
@@ -476,7 +479,7 @@ $(document).ready(function () {
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");
         e.preventDefault();
     });
-    $("#ckbx-copy-billing").change(function () {
+    $("#store-copy-billing").change(function () {
         if ($(this).is(":checked")) {
             $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
             $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());

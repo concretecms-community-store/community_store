@@ -196,10 +196,20 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     </p>
 
     <?php if ($order->isShippable()) { ?>
-        <p>
+        <br /><p>
             <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
         </p>
+
+        <?php
+        $shippingInstructions = $order->getShippingInstructions();
+        if ($shippingInstructions) { ?>
+            <p>
+                <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?>
+            </p>
+        <?php } ?>
+
     <?php } ?>
+
 
     <br />
     <h3><?= t("Order Status History")?></h3>

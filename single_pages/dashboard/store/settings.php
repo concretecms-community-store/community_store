@@ -81,6 +81,13 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('deliveryInstructions', '1',Config::get('community_store.deliveryInstructions') ? '1' : '0')?>
+                                <?= t('Include Delivery Instructions field in checkout');?></label>
+                        </div>
+                    </div>
+
 
                 </div><!-- #settings-shipping -->
 

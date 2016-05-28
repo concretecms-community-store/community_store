@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use User as User;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
@@ -113,8 +113,9 @@ ob_start();
                     ?>
                 </td>
                 <td><?= $item->getQty() ?></td>
-                <td><?= Price::format($item->getPricePaid()) ?></td>
                 <td><?= Price::format($item->getSubTotal()) ?></td>
+                <td><?= StorePrice::format($item->getPricePaid()) ?></td>
+                <td><?= StorePrice::format($item->getSubTotal()) ?></td>
             </tr>
             <?php
         }
@@ -153,8 +154,14 @@ if (count($downloads) > 0) {
 
 <p>
     <?php if ($order->isShippable()) { ?>
-        <strong><?= t("Shipping") ?>:</strong>  <?= Price::format($order->getShippingTotal()) ?><br>
+        <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
         <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
+
+        <?php
+        $shippingInstructions = $order->getShippingInstructions();
+        if ($shippingInstructions) { ?>
+            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+        <?php } ?>
     <?php } ?>
 
     <?php $applieddiscounts = $order->getAppliedDiscounts();
@@ -172,10 +179,10 @@ if (count($downloads) > 0) {
 
     <?php foreach ($order->getTaxes() as $tax) { ?>
         <strong><?= $tax['label'] ?>
-            :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
+            :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
     <?php } ?>
 
-    <strong class="text-large"><?= t("Total") ?>:</strong> <?= Price::format($order->getTotal()) ?><br><br>
+    <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
     <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
 </p>
 </body>
@@ -222,8 +229,8 @@ if ($items) {
 }
 ?>
 
-<?= t("Tax") ?>: <?= Price::format($order->getTaxTotal()) ?>
-<?= t("Shipping") ?>:  <?= Price::format($order->getShippingTotal()) ?>
+<?= t("Tax") ?>: <?= StorePrice::format($order->getTaxTotal()) ?>
+<?= t("Shipping") ?>:  <?= StorePrice::format($order->getShippingTotal()) ?>
 <?php $applieddiscounts = $order->getAppliedDiscounts();
 if (!empty($applieddiscounts)) { ?>
     <?php
@@ -234,7 +241,7 @@ if (!empty($applieddiscounts)) { ?>
     echo (count($applieddiscounts) > 1 ? t('Discounts') : t('Discount')) . ' ' . implode(',', $discountsApplied);
     ?>
 <?php } ?>
-<?= t("Total") ?>: <?= Price::format($order->getTotal()) ?>
+<?= t("Total") ?>: <?= StorePrice::format($order->getTotal()) ?>
 
 <?php
 
