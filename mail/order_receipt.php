@@ -65,7 +65,7 @@ ob_start();
             <td colspan="3">
                 <h4><?= t("Other Choices")?></h4>
                 <?php foreach ($orderChoicesAttList as $ak) { ?>
-                    <strong><?= $ak->getAttributeKeyDisplayName()?></stong>
+                    <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
                     <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
                 <?php } ?>
             </td>

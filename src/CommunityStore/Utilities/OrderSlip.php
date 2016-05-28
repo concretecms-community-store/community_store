@@ -13,7 +13,7 @@ class OrderSlip extends Controller
     public function renderOrderPrintSlip()
     {
         $o = StoreOrder::getByID($this->post('oID'));
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($order->getCustomerID()));
         $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
         
         if (Filesystem::exists(DIR_BASE."/application/elements/order_slip.php")) {
