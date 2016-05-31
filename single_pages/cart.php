@@ -35,7 +35,7 @@ $i=1;
 
 ?>
 <form method="post" class="form-inline">
-<table id="store-cart" class="table table-hover table-condensed" >
+<table id="store-cart" class="store-cart-table store-cart-page-table table table-hover table-condensed" >
     <thead>
     <tr>
         <th><?= t('Product'); ?></th>
