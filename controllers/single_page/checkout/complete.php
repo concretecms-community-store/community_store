@@ -14,7 +14,11 @@ class Complete extends PageController
     public function view()
     {
         $customer = new StoreCustomer();
-        $order = StoreOrder::getByID($customer->getLastOrderID());
+        $lastorderid = $customer->getLastOrderID();
+
+        if ($lastorderid) {
+            $order = StoreOrder::getByID($customer->getLastOrderID());
+        }
 
         if(is_object($order)){
             $this->set("order",$order);
