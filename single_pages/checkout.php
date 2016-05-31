@@ -60,13 +60,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-first-name"><?= t("First Name") ?></label>
-                                    <?= $form->text('store-checkout-billing-first-name', $customer->getValue("billing_first_name"), array("required" => "required")); ?>
+                                    <?= $form->text('store-checkout-billing-first-name', $customer->getValue('billing_first_name'), array("required" => "required")); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-last-name"><?= t("Last Name") ?></label>
-                                    <?= $form->text('store-checkout-billing-last-name', $customer->getValue("billing_last_name"), array("required" => "required")); ?>
+                                    <?= $form->text('store-checkout-billing-last-name', $customer->getValue('billing_last_name'), array("required" => "required")); ?>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-phone"><?= t("Phone") ?></label>
-                                    <?= $form->telephone('store-checkout-billing-phone', $customer->getValue("billing_phone"), array("required" => "required")); ?>
+                                    <?= $form->telephone('store-checkout-billing-phone', $customer->getValue('billing_phone'), array("required" => "required")); ?>
                                 </div>
                             </div>
                         </div>
@@ -90,32 +90,32 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-address-1"><?= t("Address 1") ?></label>
-                                    <?= $form->text('store-checkout-billing-address-1', $customer->getValue("billing_address")->address1, array("required" => "required")); ?>
+                                    <?= $form->text('store-checkout-billing-address-1', $customer->getAddressValue('billing_address', 'address1'), array("required" => "required")); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-address-1"><?= t("Address 2") ?></label>
-                                    <?= $form->text('store-checkout-billing-address-2', $customer->getValue("billing_address")->address2); ?>
+                                    <?= $form->text('store-checkout-billing-address-2', $customer->getAddressValue('billing_address', 'address2')); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
-                                    <?php $country = $customer->getValue("billing_address")->country; ?>
+                                    <?php $country = $customer->getValue('billing_address')->country; ?>
                                     <?= $form->select('store-checkout-billing-country', $billingCountries, $country ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-city"><?= t("City") ?></label>
-                                    <?= $form->text('store-checkout-billing-city', $customer->getValue("billing_address")->city, array("required" => "required")); ?>
+                                    <?= $form->text('store-checkout-billing-city', $customer->getAddressValue('billing_address', 'city'), array("required" => "required")); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-state"><?= t("State") ?></label>
-                                    <?php $billingState = $customer->getValue("billing_address")->state_province; ?>
+                                    <?php $billingState = $customer->getAddressValue('billing_address', 'state_province'); ?>
                                     <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : ""); ?>
                                 </div>
                                 <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
@@ -123,7 +123,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-zip"><?= t("Postal Code") ?></label>
-                                    <?= $form->text('store-checkout-billing-zip', $customer->getValue("billing_address")->postal_code, array("required" => "required")); ?>
+                                    <?= $form->text('store-checkout-billing-zip', $customer->getAddressValue('billing_address', 'postal_code'), array("required" => "required")); ?>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-sm-6">
                                 <label><?= t('Name'); ?></label>
 
-                                <p class="store-summary-name"><?= $customer->getValue("billing_first_name") . ' ' . $customer->getValue("billing_last_name"); ?></p>
+                                <p class="store-summary-name"><?= $customer->getValue('billing_first_name') . ' ' . $customer->getValue('billing_last_name'); ?></p>
 
                                 <label><?= t('Email'); ?></label>
 
@@ -149,12 +149,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                                 <label><?= t('Phone'); ?></label>
 
-                                <p class="store-summary-phone"><?= $customer->getValue("billing_phone"); ?></p>
+                                <p class="store-summary-phone"><?= $customer->getValue('billing_phone'); ?></p>
                             </div>
 
                             <div class="col-sm-6">
                                 <label><?= t('Address'); ?></label>
-                                <p class="store-summary-address"><?= nl2br($customer->getAddress("billing_address")); ?></p>
+                                <p class="store-summary-address"><?= nl2br($customer->getAddress('billing_address')); ?></p>
                             </div>
                         </div>
                     </div>
@@ -189,32 +189,32 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-address-1"><?= t("Address 1") ?></label>
-                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getValue("shipping_address")->address1, array("required" => "required")); ?>
+                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), array("required" => "required")); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-address-1"><?= t("Address 2") ?></label>
-                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getValue("shipping_address")->address2); ?>
+                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2')); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
-                                        <?php $country = $customer->getValue("shipping_address")->country; ?>
+                                        <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
                                         <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-city"><?= t("City") ?></label>
-                                        <?= $form->text('store-checkout-shipping-city', $customer->getValue("shipping_address")->city, array("required" => "required")); ?>
+                                        <?= $form->text('store-checkout-shipping-city', $customer->getAddressValue('shipping_address', 'city'), array("required" => "required")); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-state"><?= t("State") ?></label>
-                                        <?php $shippingState = $customer->getValue("shipping_address")->state_province; ?>
+                                        <?php $shippingState = $customer->getAddressValue('shipping_address', 'state_province'); ?>
                                         <?= $form->select('store-checkout-shipping-state', $states, $shippingState ? $shippingState : ""); ?>
                                     </div>
                                     <input type="hidden" id="store-checkout-saved-shipping-state" value="<?= $shippingState ?>">
@@ -222,7 +222,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-zip"><?= t("Postal Code") ?></label>
-                                        <?= $form->text('store-checkout-shipping-zip', $customer->getValue("shipping_address")->postal_code, array("required" => "required")); ?>
+                                        <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), array("required" => "required")); ?>
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +245,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <div class="col-sm-6">
                                     <label><?= t('Address'); ?></label>
 
-                                    <p class="store-summary-address"><?= nl2br($customer->getAddress("shipping_address")); ?></p>
+                                    <p class="store-summary-address"><?= nl2br($customer->getAddress('shipping_address')); ?></p>
                                 </div>
                             </div>
                         </div>
