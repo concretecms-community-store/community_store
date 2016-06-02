@@ -9,7 +9,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
     <?php
     if($cart){
         $i=1; ?>
-        <table id="cart" class="table table-hover table-condensed" >
+        <table id="cart" class="store-cart-table table table-hover table-condensed" >
         <?php
         foreach ($cart as $k=>$cartItem){
 

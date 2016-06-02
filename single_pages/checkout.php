@@ -399,90 +399,91 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <!-- .checkout-form-shell -->
 
         <div class="store-checkout-cart-view col-md-4">
-            <h2><?= t("Your Cart") ?></h2>
-
-            <?php
-
-            if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . '/application/elements/cart_list.php')) {
-                View::element('cart_list', array('cart' => $cart));
-            } else {
-                View::element('cart_list', array('cart' => $cart), 'community_store');
-            }
-            ?>
-
-            <ul class="store-checkout-totals-line-items list-group">
-                <li class="store-line-item store-sub-total list-group-item">
-                    <strong><?= t("Items Subtotal") ?>:</strong> <?= StorePrice::format($subtotal); ?>
-                    <?php if ($calculation == 'extract') {
-                        echo '<small class="text-muted">' . t("inc. taxes") . "</small>";
-                    } ?>
-                </li>
+            <div class="store-checkout-cart-contents">
+                <h2><?= t("Your Cart") ?></h2>
 
                 <?php
-                if ($taxtotal > 0) {
-                    foreach ($taxes as $tax) {
-                        if ($tax['taxamount'] > 0) { ?>
-                            <li class="store-line-item store-tax-item list-group-item"><strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>
-                                    :</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
-                            </li>
-                        <?php }
-                    }
+
+                if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . '/application/elements/cart_list.php')) {
+                    View::element('cart_list', array('cart' => $cart));
+                } else {
+                    View::element('cart_list', array('cart' => $cart), 'community_store');
                 }
                 ?>
 
+                <ul class="store-checkout-totals-line-items list-group">
+                    <li class="store-line-item store-sub-total list-group-item">
+                        <strong><?= t("Items Subtotal") ?>:</strong> <?= StorePrice::format($subtotal); ?>
+                        <?php if ($calculation == 'extract') {
+                            echo '<small class="text-muted">' . t("inc. taxes") . "</small>";
+                        } ?>
+                    </li>
 
-                <?php if ($shippingEnabled) { ?>
-                    <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
-                            id="shipping-total" data-no-charge-label="<?=t('No Charge');?>"><?= $shippingtotal !== '' ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
-                <?php } ?>
-                <?php if (!empty($discounts)) { ?>
-                    <li class="store-line-item store-discounts list-group-item">
-                        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-                            :</strong>
-                        <?php
-                        $discountstrings = array();
-                        foreach ($discounts as $discount) {
-                            $discountstrings[] = h($discount->getDisplay());
+                    <?php
+                    if ($taxtotal > 0) {
+                        foreach ($taxes as $tax) {
+                            if ($tax['taxamount'] > 0) { ?>
+                                <li class="store-line-item store-tax-item list-group-item"><strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>
+                                        :</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                </li>
+                            <?php }
                         }
-                        echo implode(', ', $discountstrings);
-                        ?>
-                    </li>
-                <?php } ?>
-                <?php if ($discountsWithCodesExist) { ?>
-                    <li class="list-group-item">
-                        <?php if ($codesuccess) { ?>
-                            <p><?= t('Discount has been applied');?></p>
-                        <?php } ?>
+                    }
+                    ?>
 
-                        <?php if ($codeerror) { ?>
-                            <p><?= t('Invalid code');?></p>
-                        <?php } ?>
 
-                        <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+                    <?php if ($shippingEnabled) { ?>
+                        <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
+                                id="shipping-total" data-no-charge-label="<?=t('No Charge');?>"><?= $shippingtotal !== '' ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
+                    <?php } ?>
+                    <?php if (!empty($discounts)) { ?>
+                        <li class="store-line-item store-discounts list-group-item">
+                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
+                                :</strong>
+                            <?php
+                            $discountstrings = array();
+                            foreach ($discounts as $discount) {
+                                $discountstrings[] = h($discount->getDisplay());
+                            }
+                            echo implode(', ', $discountstrings);
+                            ?>
+                        </li>
+                    <?php } ?>
+                    <?php if ($discountsWithCodesExist) { ?>
+                        <li class="list-group-item">
+                            <?php if ($codesuccess) { ?>
+                                <p><?= t('Discount has been applied');?></p>
+                            <?php } ?>
 
-                        <form method="post" action="" class="form-inline store-checkout-code-form">
-                            <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
-                            <input type="hidden" name="action" value="code" />
-                            <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
-                        </form>
+                            <?php if ($codeerror) { ?>
+                                <p><?= t('Invalid code');?></p>
+                            <?php } ?>
 
-                         <script type="text/javascript">
-                            $(function () {
-                                $("#store-enter-discount-trigger").click(function(e){
-                                    $('.store-checkout-code-form').show().find('.form-control').focus();
-                                    $(this).remove();
-                                    e.preventDefault();
+                            <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+
+                            <form method="post" action="" class="form-inline store-checkout-code-form">
+                                <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
+                                <input type="hidden" name="action" value="code" />
+                                <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
+                            </form>
+
+                             <script type="text/javascript">
+                                $(function () {
+                                    $("#store-enter-discount-trigger").click(function(e){
+                                        $('.store-checkout-code-form').show().find('.form-control').focus();
+                                        $(this).remove();
+                                        e.preventDefault();
+                                    });
                                 });
-                            });
-                        </script>
+                            </script>
 
-                    </li>
+                        </li>
 
-                <?php } ?>
-                <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
-                        class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
-            </ul>
-
+                    <?php } ?>
+                    <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
+                            class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
+                </ul>
+            </div>
         </div>
 
     </div>
