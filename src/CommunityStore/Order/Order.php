@@ -45,6 +45,9 @@ class Order
     /** @Column(type="datetime") */
     protected $oDate;
 
+    /** @Column(type="integer",nullable=true) */
+    protected $pmID;
+
     /** @Column(type="text") */
     protected $pmName;
 
@@ -103,6 +106,11 @@ class Order
     public function setPaymentMethodName($pmName)
     {
         $this->pmName = $pmName;
+    }
+
+    public function setPaymentMethodID($pmID)
+    {
+        $this->pmID = $pmID;
     }
 
     public function setShippingMethodName($smName)
@@ -164,6 +172,11 @@ class Order
     public function getOrderDate()
     {
         return $this->oDate;
+    }
+
+    public function getPaymentMethodID()
+    {
+        return $this->pmID;
     }
 
     public function getPaymentMethodName()
@@ -306,6 +319,7 @@ class Order
         $order->setCustomerID($customer->getUserID());
         $order->setDate($now);
         $order->setPaymentMethodName($pmName);
+        $order->setPaymentMethodID($pm->getID());
         $order->setShippingMethodName($smName);
         $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
@@ -553,7 +567,7 @@ class Order
             $customer->setValue('billing_address', $billing_address);
             $customer->setValue('billing_phone', $billing_phone);
 
-            if ($order->isShippable()) {
+            if ($this->isShippable()) {
                 $customer->setValue('shipping_first_name', $shipping_first_name);
                 $customer->setValue('shipping_last_name', $shipping_last_name);
                 $customer->setValue('shipping_address', $shipping_address);
@@ -603,6 +617,17 @@ class Order
 
         $mh->to($customer->getEmail());
 
+        $pmID = $this->getPaymentMethodID();
+
+        $paymentInstructions = '';
+        if ($pmID) {
+            $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
+            if ($paymentMethodUsed) {
+                $paymentInstructions = $paymentMethodUsed->getMethodController()->getPaymentInstructions();
+            }
+        }
+
+        $mh->addParameter('paymentInstructions', $paymentInstructions);
         $mh->addParameter("order", $this);
         $mh->load("order_receipt", "community_store");
         $mh->sendMail();
