@@ -8,11 +8,36 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 <?php if ($controller->getTask() == 'order'){ ?>
 
     <div class="ccm-dashboard-header-buttons">
+
         <form action="<?=URL::to('/dashboard/store/orders/details/slip')?>" method="post" target="_blank">
             <input type="hidden" name="oID" value="<?= $order->getOrderID()?>">
             <button class="btn btn-primary"><?= t("Print Order Slip")?></button>
         </form>
     </div>
+
+
+
+<div class="row">
+    <div class="col-sm-8">
+        <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
+     </div>
+    <div class="col-sm-4">
+    <?php
+    $refunded = $order->getRefunded();
+    $paid = $order->getPaid();
+
+    if ($refunded) {
+        echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ' - '. $order->getRefundReason(). '</strong></p>';
+    } elseif ($paid) {
+        echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . '</strong></p>';
+    } elseif ($order->getTotal() > 0) {
+        echo '<p class="alert alert-danger text-center"><strong>' . t('Unpaid') . '</strong></p>';
+    } else {
+        echo '<p class="alert alert-default text-center"><strong>' . t('Free Order') . '</strong></p>';
+    }
+    ?>
+    </div>
+</div>
 
     <fieldset>
     <legend><?= t("Customer Overview")?></legend>
@@ -65,9 +90,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     </fieldset>
 
     <fieldset>
-    <legend><?= t("Order Info")?></legend>
-
-    <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
+    <legend><?= t("Order Items")?></legend>
 
     <table class="table table-striped">
         <thead>
@@ -259,12 +282,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <?php  if($order->getTotal() == 0) { ?>
             <p><?= t('Free Order');?></p>
             <?php } else {
-
-             $paid = $order->getPaid();
-             $refunded = $order->getRefunded();
-
             if (!$paid) { ?>
-            <p class="alert alert-danger"><?= t('Unpaid');?></p>
+            <p class="text-danger"><?= t('Unpaid');?></p>
             <?php } ?>
 
             <?php if ($paid || $refunded) { ?>
@@ -451,18 +470,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         $paid = $order->getPaid();
 
                         if ($refunded) {
-                            echo '<span class="label label-warning">' . t('refunded') . '</span>';
+                            echo '<span class="label label-warning">' . t('Refunded') . '</span>';
                         } elseif ($paid) {
-                            echo '<span class="label label-success">' . t('paid') . '</span>';
+                            echo '<span class="label label-success">' . t('Paid') . '</span>';
                         } elseif ($order->getTotal() > 0) {
-                            echo '<span class="label label-danger">' . t('unpaid') . '</span>';
+                            echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
                         } else {
-                            echo '<span class="label label-default">' . t('free order') . '</span>';
+                            echo '<span class="label label-default">' . t('Free Order') . '</span>';
                         }
-
-
                         ?>
-
                     </td>
                     <td><?=t(ucwords($order->getStatus()))?></td>
                     <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
