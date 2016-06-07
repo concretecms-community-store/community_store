@@ -25,15 +25,21 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     <?php
     $refunded = $order->getRefunded();
     $paid = $order->getPaid();
+    $cancelled = $order->getCancelled();
 
-    if ($refunded) {
-        echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ' - '. $order->getRefundReason(). '</strong></p>';
-    } elseif ($paid) {
-        echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . '</strong></p>';
-    } elseif ($order->getTotal() > 0) {
-        echo '<p class="alert alert-danger text-center"><strong>' . t('Unpaid') . '</strong></p>';
+    if ($cancelled) {
+        echo '<p class="alert alert-danger text-center"><strong>' . t('Cancelled') . '</strong></p>';
     } else {
-        echo '<p class="alert alert-default text-center"><strong>' . t('Free Order') . '</strong></p>';
+        if ($refunded) {
+            $refundreason = $order->getRefundReason();
+            echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ($refundreason ? ' - ' .$refundreason : '') . '</strong></p>';
+        } elseif ($paid) {
+            echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . '</strong></p>';
+        } elseif ($order->getTotal() > 0) {
+            echo '<p class="alert alert-danger text-center"><strong>' . t('Unpaid') . '</strong></p>';
+        } else {
+            echo '<p class="alert alert-default text-center"><strong>' . t('Free Order') . '</strong></p>';
+        }
     }
     ?>
     </div>
@@ -390,22 +396,16 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     </fieldset>
 
     <fieldset>
-    <legend><?= t("Cancel Order")?></legend>
-    <hr>
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title"><?= t("Order Options")?></h4>
-                </div>
-                <div class="panel-body">
 
-                    <a data-confirm-message="<?= h(t('Are you sure you wish to delete this order?')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
-
-                </div>
-            </div>
-        </div>
-    </div>
+     <?php if (!$order->getCancelled()) { ?>
+     <legend><?= t("Cancel Order")?></legend>
+        <form action="<?=URL::to("/dashboard/store/orders/markcancelled",$order->getOrderID())?>" method="post">
+        <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
+        </form>
+    <?php } else { ?>
+    <legend><?= t("Delete Order")?></legend>
+        <a data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
+    <?php } ?>
     </fieldset>
 
 
@@ -458,12 +458,27 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <tbody>
             <?php
                 foreach($orderList as $order){
+
+                $cancelled = $order->getCancelled();
+                $canstart = '';
+                $canend = '';
+                if ($cancelled) {
+                    $canstart = '<strike>';
+                    $canend = '</strike>';
+                }
             ?>
-                <tr>
-                    <td><a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a></td>
-                    <td><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?></td>
-                    <td><?= $dh->formatDateTime($order->getOrderDate())?></td>
-                    <td><?=Price::format($order->getTotal())?></td>
+                <tr class="danger">
+                    <td><?= $canstart; ?>
+                    <a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a><?= $canend; ?>
+
+                    <?php if ($cancelled) {
+                        echo '<span class="text-danger">' . t('Cancelled') .'</span>';
+                    }
+                    ?>
+                    </td>
+                    <td><?= $canstart; ?><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate())?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?=Price::format($order->getTotal())?><?= $canend; ?></td>
                     <td>
                         <?php
                         $refunded = $order->getRefunded();
