@@ -13,3 +13,10 @@ extract($vars);
     <input type="text" name="invoiceMaximum" value="<?= $invoiceMaximum?>" class="form-control">
 </div>
 
+<div class="form-group">
+    <label><?= t("Payment Instructions")?></label>
+    <?php $editor = \Core::make('editor');
+    echo $editor->outputStandardEditor('paymentInstructions', $paymentInstructions);?>
+</div>
+
+

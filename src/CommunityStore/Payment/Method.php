@@ -293,4 +293,9 @@ class Method extends Controller
     // method stub
     public function checkoutForm() {
     }
+
+    // method stub
+    public function getPaymentInstructions() {
+        return '';
+    }
 }
