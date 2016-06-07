@@ -14,10 +14,11 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         </form>
     </div>
 
-    <h3><?= t("Customer Overview")?></h3>
-    <hr>
+    <fieldset>
+    <legend><?= t("Customer Overview")?></legend>
+
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-4">
             <?php $orderemail = $order->getAttribute("email");
 
             if ($orderemail) { ?>
@@ -33,7 +34,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <?php } ?>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <h4><?= t("Billing Information")?></h4>
             <p>
                 <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
@@ -46,7 +47,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </p>
         </div>
         <?php if ($order->isShippable()) { ?>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <?php if ($order->getAttribute("shipping_address")->address1) { ?>
                     <h4><?= t("Shipping Information")?></h4>
                     <p>
@@ -61,8 +62,13 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         <?php } ?>
     </div>
-    <h3><?= t("Order Info")?></h3>
-    <hr>
+    </fieldset>
+
+    <fieldset>
+    <legend><?= t("Order Info")?></legend>
+
+    <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -195,33 +201,17 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <?php } ?>
 
-
+    </fieldset>
     <br />
-    <h3><?= t("Order Status History")?></h3>
-    <hr>
+
     <div class="row">
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title"><?= t("Update Status")?></h4>
-                </div>
-                <div class="panel-body">
-
-                    <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
-                        <div class="form-group">
-                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
-                        </div>
-                        <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
-                    </form>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
+            <fieldset>
+            <legend><?= t("Fulfilment")?></legend>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><strong><?= t("Status")?></strong></th>
+                    <th><?= t("Status")?></th>
                     <th><?= t("Date")?></th>
                     <th><?= t("User")?></th>
                 </tr>
@@ -237,17 +227,151 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             <td><?= $status->getDate()?></td>
                             <td><?= $status->getUserName()?></td>
                         </tr>
-                    <?php
+                        <?php
                     }
                 }
                 ?>
                 </tbody>
             </table>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><?= t("Update Fulfilment Status")?></h4>
+                </div>
+                <div class="panel-body">
+
+                    <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
+                        <div class="form-group">
+                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
+                        </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
+                    </form>
+
+                </div>
+            </div>
+            </fieldset>
+        </div>
+        <div class="col-sm-6">
+            <fieldset>
+            <legend><?= t("Payment Status")?></legend>
+
+
+
+            <?php  if($order->getTotal() == 0) { ?>
+            <p><?= t('Free Order');?></p>
+            <?php } else {
+
+             $paid = $order->getPaid();
+             $refunded = $order->getRefunded();
+
+            if (!$paid) { ?>
+            <p class="alert alert-danger"><?= t('Unpaid');?></p>
+            <?php } ?>
+
+            <?php if ($paid || $refunded) { ?>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th><?= t("Status")?></th>
+                    <th><?= t("Date / Reference")?></th>
+                    <th><?= t("By")?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <?php if ($paid) { ?>
+                    <tr>
+                        <td><?= t('Paid')?>
+                        </td>
+                        <td><?= $dh->formatDateTime($paid)?>
+                            <br />
+                            <?= t('Ref') . ':'?> <?= $order->getTransactionReference() ; ?>
+                        </td>
+                        <td>
+                        <?php $paiduser = User::getByUserID($order->getPaidByUID());
+                            if ($paiduser) {
+                                echo $paiduser->getUserName();
+                            } else {
+                                echo t('payment');
+                            }
+                        ?></td>
+                        <td><?php if (!$refunded && $paiduser) { ?>
+
+                         <form action="<?=URL::to("/dashboard/store/orders/reversepaid",$order->getOrderID())?>" method="post">
+                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this payment?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                         </form>
+
+                        <?php } ?></td>
+
+                    </tr>
+                 <?php } ?>
+
+                 <?php if ($refunded) { ?>
+                    <tr>
+                        <td><?= t('Refunded')?></td>
+                        <td><?= $dh->formatDateTime($refunded)?><br />
+                        <?= $order->getRefundReason(); ?>
+                        </td>
+                        <td>
+                        <?php $refundeduser = User::getByUserID($order->getRefundedByUID());
+                            if ($refundeduser) {
+                                echo $refundeduser->getUserName();
+                            }
+                        ?></td>
+                        <td>
+
+                         <form action="<?=URL::to("/dashboard/store/orders/reverserefund",$order->getOrderID())?>" method="post">
+                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                         </form>
+
+                        </td>
+
+                    </tr>
+                 <?php } ?>
+
+                </tbody>
+            </table>
+             <?php } ?>
+
+           <?php if (!$paid || !$refunded) { ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><?= t("Update Payment Status")?></h4>
+                </div>
+                <div class="panel-body">
+
+                    <?php if (!$paid) { ?>
+                    <form action="<?=URL::to("/dashboard/store/orders/markpaid",$order->getOrderID())?>" method="post">
+                       <div class="form-group">
+                       <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
+                       <input type="text" class="form-control ccm-input-text" name="transactionReference" />
+                       </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Mark Paid")?>">
+                    </form>
+                    <?php } elseif (!$refunded) {  ?>
+                        <form action="<?=URL::to("/dashboard/store/orders/markrefunded",$order->getOrderID())?>" method="post">
+                           <div class="form-group">
+                           <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
+                           <input type="text" class="form-control ccm-input-text" name="oRefundReason" />
+                           </div>
+                            <input type="submit" class="btn btn-default" value="<?= t("Mark Refunded")?>">
+                        </form>
+                    <?php } ?>
+
+                </div>
+            </div>
+            <?php } ?>
+
+             <?php } ?>
+
+             </fieldset>
         </div>
 
     </div>
+    </fieldset>
 
-    <h3><?= t("Manage Order")?></h3>
+    <fieldset>
+    <legend><?= t("Cancel Order")?></legend>
     <hr>
     <div class="row">
         <div class="col-sm-4">
@@ -263,6 +387,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         </div>
     </div>
+    </fieldset>
 
 
 <?php } else { ?>
@@ -307,7 +432,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <th><a><?= t("Customer Name")?></a></th>
             <th><a><?= t("Order Date")?></a></th>
             <th><a><?= t("Total")?></a></th>
-            <th><a><?= t("Status")?></a></th>
+            <th><a><?= t("Payment")?></a></th>
+            <th><a><?= t("Fulfilment")?></a></th>
             <th><a><?= t("View")?></a></th>
         </thead>
         <tbody>
@@ -318,7 +444,26 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <td><a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a></td>
                     <td><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?></td>
                     <td><?= $dh->formatDateTime($order->getOrderDate())?></td>
-                <td><?=Price::format($order->getTotal())?></td>
+                    <td><?=Price::format($order->getTotal())?></td>
+                    <td>
+                        <?php
+                        $refunded = $order->getRefunded();
+                        $paid = $order->getPaid();
+
+                        if ($refunded) {
+                            echo '<span class="label label-warning">' . t('refunded') . '</span>';
+                        } elseif ($paid) {
+                            echo '<span class="label label-success">' . t('paid') . '</span>';
+                        } elseif ($order->getTotal() > 0) {
+                            echo '<span class="label label-danger">' . t('unpaid') . '</span>';
+                        } else {
+                            echo '<span class="label label-default">' . t('free order') . '</span>';
+                        }
+
+
+                        ?>
+
+                    </td>
                     <td><?=t(ucwords($order->getStatus()))?></td>
                     <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
                 </tr>

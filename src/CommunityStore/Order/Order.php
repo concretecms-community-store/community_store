@@ -73,6 +73,27 @@ class Order
     protected $transactionReference;
 
     /** @Column(type="datetime", nullable=true) */
+    protected $oPaid;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oPaidByUID;
+
+    /** @Column(type="datetime", nullable=true) */
+    protected $oCancelled;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oCancelledByUID;
+
+    /** @Column(type="datetime", nullable=true) */
+    protected $oRefunded;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oRefundedByUID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $oRefundReason;
+
+    /** @Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
     /**
@@ -149,6 +170,76 @@ class Order
     {
         $this->setTransactionReference($transactionReference);
         $this->save();
+    }
+
+    public function getPaid()
+    {
+        return $this->oPaid;
+    }
+
+    public function setPaid($oPaid)
+    {
+        $this->oPaid = $oPaid;
+    }
+
+    public function getPaidByUID()
+    {
+        return $this->oPaidByUID;
+    }
+
+    public function setPaidByUID($oPaidByUID)
+    {
+        $this->oPaidByUID = $oPaidByUID;
+    }
+
+    public function getCancelled()
+    {
+        return $this->oCancelled;
+    }
+
+    public function setCancelled($oCancelled)
+    {
+        $this->oCancelled = $oCancelled;
+    }
+
+    public function getCancelledByUID()
+    {
+        return $this->oCancelledByUID;
+    }
+
+    public function setCancelledByUID($oCancelledByUID)
+    {
+        $this->oCancelledByUID = $oCancelledByUID;
+    }
+
+    public function getRefunded()
+    {
+        return $this->oRefunded;
+    }
+
+    public function setRefunded($oRefunded)
+    {
+        $this->oRefunded = $oRefunded;
+    }
+
+    public function getRefundedByUID()
+    {
+        return $this->oRefundedByUID;
+    }
+
+    public function setRefundedByUID($oRefundedByUID)
+    {
+        $this->oRefundedByUID = $oRefundedByUID;
+    }
+
+    public function getRefundReason()
+    {
+        return $this->oRefundReason;
+    }
+
+    public function setRefundReason($oRefundReason)
+    {
+        $this->oRefundReason = $oRefundReason;
     }
 
     public function getOrderID()

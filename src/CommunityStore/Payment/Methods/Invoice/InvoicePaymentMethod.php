@@ -77,4 +77,8 @@ class InvoicePaymentMethod extends StorePaymentMethod
             return min($maxconfig, $defaultMax);
         }
     }
+
+    public function markPaid() {
+        return false;
+    }
 }

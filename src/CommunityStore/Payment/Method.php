@@ -282,6 +282,10 @@ class Method extends Controller
         return false;
     }
 
+    public function markPaid() {
+        return true;
+    }
+
     // method stub
     public function redirectForm() {
     }
