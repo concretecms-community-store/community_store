@@ -73,8 +73,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 if ($billingaddress) {
                     echo $billingaddress->getValue('displaySanitized', 'display');
                 }
+
+                $phone = $order->getAttribute("billing_phone");
+                if ($phone) {
                 ?>
-                <br /> <br /><?= t('Phone'); ?>: <?= $order->getAttribute("billing_phone")?>
+                <br /> <br /><?= t('Phone'); ?>: <?= $phone; ?>
+                <?php } ?>
             </p>
         </div>
         <?php if ($order->isShippable()) { ?>
@@ -395,14 +399,22 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     </div>
     </fieldset>
 
-    <fieldset>
+
 
      <?php if (!$order->getCancelled()) { ?>
-     <legend><?= t("Cancel Order")?></legend>
-        <form action="<?=URL::to("/dashboard/store/orders/markcancelled",$order->getOrderID())?>" method="post">
-        <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
-        </form>
+        <fieldset>
+            <legend><?= t("Cancel Order")?></legend>
+            <form action="<?=URL::to("/dashboard/store/orders/markcancelled",$order->getOrderID())?>" method="post">
+            <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
+            </form>
+        </fieldset>
     <?php } else { ?>
+     <form action="<?=URL::to("/dashboard/store/orders/reversecancel",$order->getOrderID())?>" method="post">
+        <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this cancellation?')); ?>" type="submit" class="confirm-action btn btn-default" value="<?= t("Reverse Cancellation")?>">
+     </form>
+     <br />
+
+    <fieldset>
     <legend><?= t("Delete Order")?></legend>
         <a data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
     <?php } ?>
@@ -476,7 +488,18 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     }
                     ?>
                     </td>
-                    <td><?= $canstart; ?><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?php
+
+                   $last = $order->getAttribute('billing_last_name');
+                   $first = $order->getAttribute('billing_first_name');
+
+                   if ($last || $first ) {
+                    echo $last.", ".$first;
+                   } else {
+                    echo '<em>' .t('Not found') . '</em>';
+                   }
+
+                    ?><?= $canend; ?></td>
                     <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate())?><?= $canend; ?></td>
                     <td><?= $canstart; ?><?=Price::format($order->getTotal())?><?= $canend; ?></td>
                     <td>
