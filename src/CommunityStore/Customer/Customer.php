@@ -65,7 +65,10 @@ class Customer
 
     public function getAddressValue($handle, $valuename) {
         $att = $this->getValue($handle);
+        return $this->returnAttributeValue($att,$valuename);
+    }
 
+    private function returnAttributeValue($att, $valuename) {
         $valuename = camel_case($valuename);
 
         if (method_exists($att, 'get' .$valuename)) {
@@ -74,7 +77,6 @@ class Customer
         } else {
             return $att->$valuename;
         }
-
     }
 
     public function getValueArray($handle)
@@ -130,35 +132,42 @@ class Customer
     public static function formatAddress($address)
     {
         $ret = '';
-        if ($address->address1) {
-            $ret .= $address->address1 . "\n";
+        $address1 = self::returnAttributeValue($address, 'address1');
+        $address2 = self::returnAttributeValue($address, 'address2');
+        $city = self::returnAttributeValue($address, 'city');
+        $state_province = self::returnAttributeValue($address, 'state_province');
+        $postal_code = self::returnAttributeValue($address, 'postal_code');
+        $country = self::returnAttributeValue($address, 'country');
+
+        if ($address1) {
+            $ret .= $address1 . "\n";
         }
-        if ($address->address2) {
-            $ret .= $address->address2 . "\n";
+        if ($address2) {
+            $ret .= $address2 . "\n";
         }
-        if ($address->city) {
-            $ret .= $address->city;
+        if ($city) {
+            $ret .= $city;
         }
-        if ($address->city && $address->state_province) {
+        if ($state_province) {
             $ret .= ", ";
         }
-        if ($address->state_province) {
+        if ($state_province) {
 
-            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($address->state_province, $address->country);
+            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
             if ($val == '') {
-                $ret .= $address->state_province;
+                $ret .= $state_province;
             } else {
                 $ret .= $val;
             }
         }
-        if ($address->postal_code) {
-            $ret .= " " . $address->postal_code;
+        if ($postal_code) {
+            $ret .= " " . $postal_code;
         }
-        if ($address->city || $address->state_province || $address->postal_code) {
+        if ($city || $state_province || $postal_code) {
             $ret .= "\n";
         }
-        if ($address->country) {
-            $ret .= \Core::make('helper/lists/countries')->getCountryName($address->country);
+        if ($country) {
+            $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
         }
         return $ret;
     }

@@ -102,7 +102,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
-                                    <?php $country = $customer->getValue('billing_address')->country; ?>
+                                    <?php $country = $customer->getAddressValue('billing_address', 'country') ?>
                                     <?= $form->select('store-checkout-billing-country', $billingCountries, $country ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
                                 </div>
                             </div>
