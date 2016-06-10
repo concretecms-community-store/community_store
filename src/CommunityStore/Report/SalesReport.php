@@ -11,6 +11,7 @@ class SalesReport extends StoreOrderList
         $this->setFromDate();
         $this->setToDate();
         $this->setLimit(0);
+        $this->setPaid(true);
     }
     public static function getTotalsByRange($from, $to, $limit = 0)
     {

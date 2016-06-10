@@ -282,11 +282,20 @@ class Method extends Controller
         return false;
     }
 
+    public function markPaid() {
+        return true;
+    }
+
     // method stub
     public function redirectForm() {
     }
 
     // method stub
     public function checkoutForm() {
+    }
+
+    // method stub
+    public function getPaymentInstructions() {
+        return '';
     }
 }

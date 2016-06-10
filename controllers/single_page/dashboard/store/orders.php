@@ -65,6 +65,86 @@ class Orders extends DashboardPageController
         StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
+
+    public function markpaid($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+
+        if ($this->post('transactionReference')) {
+            $order->setTransactionReference($this->post('transactionReference'));
+        }
+
+        $user = new \User();
+
+        $order->setPaid(new \DateTime());
+        $order->setPaidByUID($user->getUserID());
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function reversepaid($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setPaid(null);
+        $order->setPaidByUID(null);
+        $order->setTransactionReference(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+
+
+
+    public function markrefunded($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $user = new \User();
+
+        $order->setRefunded(new \DateTime());
+        $order->setRefundedByUID($user->getUserID());
+        $order->setRefundReason($this->post('oRefundReason'));
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function reverserefund($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setRefunded(null);
+        $order->setRefundedByUID(null);
+        $order->setRefundReason(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function markcancelled($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $user = new \User();
+
+        $order->setCancelled(new \DateTime());
+        $order->setCancelledByUID($user->getUserID());
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+
+
+    public function reversecancel($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setCancelled(null);
+        $order->setCancelledByUID(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
     public function remove($oID)
     {
         StoreOrder::getByID($oID)->remove();
