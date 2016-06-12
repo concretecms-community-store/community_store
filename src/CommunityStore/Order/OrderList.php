@@ -60,6 +60,11 @@ class OrderList  extends AttributedItemList
         if (isset($this->toDate)) {
             $this->query->andWhere('DATE(oDate) <= DATE(?)')->setParameter($paramcount++, $this->toDate);
         }
+        if (isset($this->paid)) {
+            $this->query->andWhere('o.oPaid is not null');
+            $this->query->andWhere('o.oRefunded is null');
+        }
+
         if ($this->limit > 0) {
             $this->query->setMaxResults($this->limit);
         }
@@ -106,6 +111,11 @@ class OrderList  extends AttributedItemList
     public function setLimit($limit = 0)
     {
         $this->limit = $limit;
+    }
+
+    public function setPaid($bool)
+    {
+        $this->paid = $bool;
     }
 
     public function getResult($queryRow)

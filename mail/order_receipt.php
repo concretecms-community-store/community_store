@@ -166,6 +166,9 @@ if (count($downloads) > 0) {
     <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
     <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
 </p>
+
+<?php echo $paymentInstructions; ?>
+
 </body>
 </html>
 
@@ -223,6 +226,10 @@ if (!empty($applieddiscounts)) { ?>
     ?>
 <?php } ?>
 <?= t("Total") ?>: <?= StorePrice::format($order->getTotal()) ?>
+
+<?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
+
+<?php echo strip_tags($paymentInstructions); ?>
 
 <?php
 
