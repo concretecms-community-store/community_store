@@ -41,21 +41,7 @@ class Customer
 
         if ($this->isGuest()) {
             $addressraw = Session::get('community_' .$handle);
-
-            if (is_array($addressraw)) {
-                $address = new AddressAttributeValue();
-
-                // use concrete5's built in address class for formatting
-                $address->address1 = $addressraw['address1'];
-                $address->address2 = $addressraw['address2'];
-                $address->city = $addressraw['city'];
-                $address->state_province = $addressraw['state_province'];
-                $address->postal_code = $addressraw['postal_code'];
-                $address->city = $addressraw['city'];
-                $address->country = $addressraw['country'];
-            }
-
-            return $address . '';
+            return self::formatAddress($addressraw);
         } else {
             return $this->ui->getAttribute($handle);
         }
@@ -74,6 +60,22 @@ class Customer
             return $val;
         } else {
             return $this->ui->getAttribute($handle);
+        }
+    }
+
+    public function getAddressValue($handle, $valuename) {
+        $att = $this->getValue($handle);
+        return $this->returnAttributeValue($att,$valuename);
+    }
+
+    private function returnAttributeValue($att, $valuename) {
+        $valuename = camel_case($valuename);
+
+        if (method_exists($att, 'get' .$valuename)) {
+            $functionname = 'get'.$valuename;
+            return $att->$functionname();
+        } else {
+            return $att->$valuename;
         }
     }
 
@@ -124,5 +126,49 @@ class Customer
     public function setLastOrderID($id)
     {
         Session::set('community_lastOrderID', $id);
+    }
+
+    // 5.7 compatibility function
+    public static function formatAddress($address)
+    {
+        $ret = '';
+        $address1 = self::returnAttributeValue($address, 'address1');
+        $address2 = self::returnAttributeValue($address, 'address2');
+        $city = self::returnAttributeValue($address, 'city');
+        $state_province = self::returnAttributeValue($address, 'state_province');
+        $postal_code = self::returnAttributeValue($address, 'postal_code');
+        $country = self::returnAttributeValue($address, 'country');
+
+        if ($address1) {
+            $ret .= $address1 . "\n";
+        }
+        if ($address2) {
+            $ret .= $address2 . "\n";
+        }
+        if ($city) {
+            $ret .= $city;
+        }
+        if ($state_province) {
+            $ret .= ", ";
+        }
+        if ($state_province) {
+
+            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
+            if ($val == '') {
+                $ret .= $state_province;
+            } else {
+                $ret .= $val;
+            }
+        }
+        if ($postal_code) {
+            $ret .= " " . $postal_code;
+        }
+        if ($city || $state_province || $postal_code) {
+            $ret .= "\n";
+        }
+        if ($country) {
+            $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
+        }
+        return $ret;
     }
 }

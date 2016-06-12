@@ -59,19 +59,29 @@ class Checkout extends PageController
         $db = \Database::connection();
 
         $ak = UserAttributeKey::getByHandle('billing_address');
-        $row = $db->GetRow(
-            'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
-            array($ak->getAttributeKeyID())
-        );
+        $aktype = $ak->getAttributeKeyType();
 
-        $defaultBillingCountry = $row['akDefaultCountry'];
+        if (method_exists($aktype, 'getDefaultCountry')) {
+            $defaultBillingCountry = $aktype->getDefaultCountry();
+            $hasCustomerBillingCountries = $aktype->hasCustomCountries();
+            $availableBillingCountries = $aktype->getCustomCountries();
 
-        if ($row['akHasCustomCountries'] == 1) {
+        } else {
+            $row = $db->GetRow(
+                'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
+                array($ak->getAttributeKeyID())
+            );
+
             $availableBillingCountries = $db->GetCol(
                 'select country from atAddressCustomCountries where akID = ?',
                 array($ak->getAttributeKeyID())
             );
 
+            $defaultBillingCountry = $row['akDefaultCountry'];
+            $hasCustomerBillingCountries = $row['akHasCustomCountries'];
+        }
+
+        if ($hasCustomerBillingCountries) {
             $billingCountries = array();
             foreach($availableBillingCountries as $countrycode) {
                 $billingCountries[$countrycode] = $allcountries[$countrycode];
@@ -81,19 +91,27 @@ class Checkout extends PageController
         }
 
         $ak = UserAttributeKey::getByHandle('shipping_address');
-        $row = $db->GetRow(
-            'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
-            array($ak->getAttributeKeyID())
-        );
+        $aktype = $ak->getAttributeKeyType();
 
-        $defaultShippingCountry = $row['akDefaultCountry'];
+        if (method_exists($aktype, 'getDefaultCountry')) {
+            $defaultShippingCountry = $aktype->getDefaultCountry();
+            $hasCustomerShippingCountries = $aktype->hasCustomCountries();
+            $availableShippingCountries = $aktype->getCustomCountries();
 
-        if ($row['akHasCustomCountries'] == 1) {
+        } else {
+            $row = $db->GetRow(
+                'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
+                array($ak->getAttributeKeyID())
+            );
+            $defaultShippingCountry = $row['akDefaultCountry'];
+            $hasCustomerShippingCountries = $row['akHasCustomCountries'];
             $availableShippingCountries = $db->GetCol(
                 'select country from atAddressCustomCountries where akID = ?',
                 array($ak->getAttributeKeyID())
             );
+        }
 
+        if ($hasCustomerShippingCountries) {
             $shippingCountries = array();
             foreach($availableShippingCountries as $countrycode) {
                 $shippingCountries[$countrycode] = $allcountries[$countrycode];
@@ -156,7 +174,7 @@ class Checkout extends PageController
 
         $this->set("enabledPaymentMethods",$availableMethods);
     }
-    
+
     public function failed()
     {
         $this->set('shippingInstructions', StoreCart::getShippingInstructions());
@@ -170,7 +188,7 @@ class Checkout extends PageController
     {
         $data = $this->post();
         Session::set('paymentMethod',$data['payment-method']);
-        
+
         //process payment
         $pmHandle = $data['payment-method'];
         $pm = StorePaymentMethod::getByHandle($pmHandle);
