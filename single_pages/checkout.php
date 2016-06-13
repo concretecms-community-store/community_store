@@ -127,6 +127,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                     <?= $form->text('store-checkout-billing-zip', $customer->getAddressValue('billing_address', 'postal_code'), array("required" => "required")); ?>
                                 </div>
                             </div>
+
+                            <?php if ($shippingEnabled) { ?>
+                            <div class="col-md-12">
+                                <label>
+                                    <input type="checkbox" id="store-copy-billing" />
+                                    <?= t("Use these details for shipping") ?>
+                                </label>
+                            </div>
+                            <?php } ?>
                         </div>
 
                         <?php if ($orderChoicesEnabled) { ?>
@@ -204,12 +213,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
-                            <p>
-                                <label>
-                                    <input type="checkbox" id="store-copy-billing" />
-                                    <?= t("Same as Billing Address") ?>
-                                </label>
-                            </p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -261,7 +264,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-zip"><?= t("Postal Code") ?></label>
-                                        <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), array("required" => "required")); ?>
+                                            <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), array("required" => "required")); ?>
                                     </div>
                                 </div>
                             </div>
@@ -338,29 +341,26 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <?php
                         if ($enabledPaymentMethods) {
                             ?>
-                            <div class="container-fluid">
-                                <div id="store-checkout-payment-method-options"
-                                     class="<?= count($enabledPaymentMethods) == 1 ? "hidden" : ""; ?>">
+                            <div id="store-checkout-payment-method-options"
+                                 class="<?= count($enabledPaymentMethods) == 1 ? "hidden" : ""; ?>">
+                                <?php
+                                $i = 1;
+                                foreach ($enabledPaymentMethods as $pm):
+                                    if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
+                                        $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
+                                    } else {
+                                        $props = array('data-payment-method-id' => $pm->getID());
+                                    }
+                                    ?>
+                                    <div class='radio'>
+                                        <label>
+                                            <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
+                                            <?= $pm->getDisplayName() ?>
+                                        </label>
+                                    </div>
                                     <?php
-                                    $i = 1;
-                                    foreach ($enabledPaymentMethods as $pm):
-                                        if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
-                                            $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
-                                        } else {
-                                            $props = array('data-payment-method-id' => $pm->getID());
-                                        }
-                                        ?>
-                                        <div class='radio'>
-                                            <label>
-                                                <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                                <?= $pm->getDisplayName() ?>
-                                            </label>
-                                        </div>
-
-                                        <?php
-                                        $i++;
-                                    endforeach; ?>
-                                </div>
+                                    $i++;
+                                endforeach; ?>
                             </div>
 
                             <?php

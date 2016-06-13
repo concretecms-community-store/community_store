@@ -267,6 +267,20 @@ var communityStore = {
         var pmID = $("#store-checkout-payment-method-options input[type='radio']:checked").attr('data-payment-method-id');
         $('.store-payment-method-container').addClass('hidden');
         $(".store-payment-method-container[data-payment-method-id='" + pmID + "']").removeClass('hidden');
+    },
+
+    copyBillingToShipping: function() {
+        $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
+        $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
+        $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
+        $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
+        $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
+        $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
+        $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
+        $("#store-checkout-shipping-city").val($("#store-checkout-billing-city").val());
+        var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
+        $("#store-checkout-shipping-state").replaceWith(billingstate);
+        $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
     }
 
 
@@ -322,7 +336,14 @@ $(document).ready(function () {
                 //var test = null;
                 var response = JSON.parse(result);
                 if (response.error == false) {
-                    $(".store-whiteout").remove();
+
+                    if ($('#store-copy-billing').is(":checked")) {
+                        communityStore.copyBillingToShipping();
+                        $("#store-checkout-form-group-shipping").submit();
+                    } else {
+                        $(".store-whiteout").remove();
+                    }
+
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-phone').html(response.phone);
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
@@ -343,6 +364,7 @@ $(document).ready(function () {
                         }
                     });
                     communityStore.refreshCartTotals();
+
                 } else {
                     $("#store-checkout-form-group-billing .store-checkout-form-group-body ").prepend('<div class="store-checkout-errors"><div class="store-checkout-error alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-billing .store-checkout-error").html(response.errors.join('<br>'));
@@ -479,21 +501,7 @@ $(document).ready(function () {
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");
         e.preventDefault();
     });
-    $("#store-copy-billing").change(function () {
-        if ($(this).is(":checked")) {
-            $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
-            $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
-            $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
-            $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
-            $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
-            $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
-            $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
-            $("#store-checkout-shipping-city").val($("#store-checkout-billing-city").val());
-            var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
-            $("#store-checkout-shipping-state").replaceWith(billingstate);
-            $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
-        }
-    });
+
     $("#store-checkout-payment-method-options input[type='radio']").change(function () {
         communityStore.showPaymentForm();
     });
