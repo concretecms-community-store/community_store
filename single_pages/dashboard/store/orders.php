@@ -8,7 +8,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 <?php if ($controller->getTask() == 'order'){ ?>
 
     <div class="ccm-dashboard-header-buttons">
-
         <form action="<?=URL::to('/dashboard/store/orders/details/slip')?>" method="post" target="_blank">
             <input type="hidden" name="oID" value="<?= $order->getOrderID()?>">
             <button class="btn btn-primary"><?= t("Print Order Slip")?></button>
@@ -97,11 +96,21 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         <?php } ?>
     </div>
-    </fieldset>
 
-    <fieldset>
-    <legend><?= t("Order Items")?></legend>
+    <div class="row">
+        <?php if ($orderChoicesEnabled) { ?>
+            <div class="col-sm-12">
+                <h4><?= t("Other Choices")?></h4>
+                <?php foreach ($orderChoicesAttList as $ak) { ?>
+                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    </div>
 
+    <h3><?= t("Order Info")?></h3>
+    <hr>
     <table class="table table-striped">
         <thead>
             <tr>

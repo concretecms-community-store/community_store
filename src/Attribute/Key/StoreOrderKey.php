@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\Attribute\Key;
 
 use Database;
+use AttributeSet;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
 use Concrete\Core\Attribute\Key\Key as Key;
@@ -40,6 +41,17 @@ class StoreOrderKey extends Key
         return $av->{$method}();
     }
 
+    public function getAttributeGroups()
+    {
+        $db = \Database::connection();
+        $groups = array();
+        $allGroups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", array($this->akID));
+        foreach ($allGroups as $group) {
+            $groups[] = $group['gID'];
+        }
+        return $groups;
+    }
+
     public static function getByID($akID)
     {
         $ak = new self();
@@ -73,6 +85,27 @@ class StoreOrderKey extends Key
         return parent::getList('store_order');
     }
 
+    public static function getAttributeListBySet($set, $user = null)
+    {
+        if (!$set instanceof AttributeSet) {
+            $set = AttributeSet::getByHandle($set);
+        }
+
+        if ($user) {
+            $uGroupIDs = array_keys($user->getUserGroups());
+        }
+
+        $akList = array();
+        foreach (parent::getList('store_order') as $ak) {
+            if (in_array($set, $ak->getAttributeSets())) {
+                if ($user && !count(array_intersect($ak->getAttributeGroups(), $uGroupIDs))) { continue; }
+                $akList[] = $ak;
+            }
+        }
+
+        return $akList;
+    }
+
     protected function saveAttribute($order, $value = false)
     {
         $av = $order->getAttributeValueObject($this, true);
@@ -93,9 +126,15 @@ class StoreOrderKey extends Key
 
         extract($args);
 
-        $v = array($ak->getAttributeKeyID());
+        $akID = $ak->getAttributeKeyID();
         $db = \Database::connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
+
+        if (is_array($groups) && !empty($groups)) {
+            foreach ($groups as $gID) {
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+            }
+        }
 
         $nak = new self();
         $nak->load($ak->getAttributeKeyID());
@@ -107,9 +146,17 @@ class StoreOrderKey extends Key
     {
         $ak = parent::update($args);
         extract($args);
-        $v = array($ak->getAttributeKeyID());
+        
+        $akID = $ak->getAttributeKeyID();
         $db = \Database::connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', $v);
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
+
+        $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
+        if (is_array($groups) && !empty($groups)) {
+            foreach ($groups as $gID) {
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+            }
+        }
     }
 
     public function delete()

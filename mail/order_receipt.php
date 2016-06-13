@@ -1,6 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use User as User;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+
+$orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
+$orderChoicesEnabled = count($orderChoicesAttList)? true : false;
 
 $subject = t("Order Receipt");
 
@@ -54,6 +59,19 @@ ob_start();
             <?php } ?>
         </td>
     </tr>
+
+    <?php if ($orderChoicesEnabled) { ?>
+        <tr>
+            <td colspan="3">
+                <h4><?= t("Other Choices")?></h4>
+                <?php foreach ($orderChoicesAttList as $ak) { ?>
+                    <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
+                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                <?php } ?>
+            </td>
+        </tr>
+    <?php } ?>
+
 </table>
 
 <h3><?= t('Order Details') ?></h3>
@@ -95,6 +113,7 @@ ob_start();
                     ?>
                 </td>
                 <td><?= $item->getQty() ?></td>
+                <td><?= Price::format($item->getSubTotal()) ?></td>
                 <td><?= StorePrice::format($item->getPricePaid()) ?></td>
                 <td><?= StorePrice::format($item->getSubTotal()) ?></td>
             </tr>

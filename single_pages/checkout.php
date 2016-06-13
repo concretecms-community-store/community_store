@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 ?>
 <?php if ($controller->getTask() == "view" || $controller->getTask() == "failed") { ?>
@@ -127,6 +128,28 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 </div>
                             </div>
                         </div>
+
+                        <?php if ($orderChoicesEnabled) { ?>
+                            <div id="store-checkout-form-group-other-attributes" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
+
+                                <div class="">
+                                    <h2><?= t("Other Choices") ?></h2>
+                                    <?php foreach ($orderChoicesAttList as $ak) { ?>
+                                        <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label style="width:100%;"><?= $ak->getAttributeKeyDisplayName(); ?>
+                                                        <?php $ak->getAttributeType()->render('form', $ak); ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
+                            </div>
+                        <?php } ?>
+
                         <div class="store-checkout-form-group-buttons">
                             <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
                         </div>
@@ -158,6 +181,22 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             </div>
                         </div>
                     </div>
+
+                    <?php if ($orderChoicesEnabled) { ?>
+                        <div class="store-checkout-form-group-summary <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?> panel panel-default ">
+                            <div class="panel-heading">
+                                <?= t('Other Choices'); ?>
+                            </div>
+                            <div class="row panel-body">
+                                <div class="col-md-12">
+                                    <?php foreach ($orderChoicesAttList as $ak) { ?>
+                                        <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                                        <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
 
                 </form>
                 <?php if ($shippingEnabled) { ?>
