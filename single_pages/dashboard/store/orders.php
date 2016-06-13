@@ -96,21 +96,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         <?php } ?>
     </div>
+    </fieldset>
 
-    <div class="row">
-        <?php if ($orderChoicesEnabled) { ?>
-            <div class="col-sm-12">
-                <h4><?= t("Other Choices")?></h4>
-                <?php foreach ($orderChoicesAttList as $ak) { ?>
-                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
-                <?php } ?>
-            </div>
-        <?php } ?>
-    </div>
-
-    <h3><?= t("Order Info")?></h3>
-    <hr>
+    <fieldset>
+    <legend><?= t("Order Items")?></legend>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -242,6 +231,19 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <?php } ?>
 
     <?php } ?>
+
+     <div class="row">
+        <?php if ($orderChoicesEnabled) { ?>
+            <div class="col-sm-12">
+                <h4><?= t("Other Choices")?></h4>
+                <?php foreach ($orderChoicesAttList as $ak) { ?>
+                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    </div>
+
 
     </fieldset>
     <br />

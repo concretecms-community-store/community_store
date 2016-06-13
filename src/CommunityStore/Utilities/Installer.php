@@ -342,7 +342,7 @@ class Installer
 
         $oakc = AttributeKeyCategory::getByHandle('store_order');
         $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
-        if (!$orderCustSet instanceof AttributeSet) {
+        if (!$orderChoiceSet instanceof AttributeSet) {
             $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
