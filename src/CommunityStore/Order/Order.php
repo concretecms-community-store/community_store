@@ -900,7 +900,22 @@ class Order
         foreach($akList as $ak) {
             $ak->saveAttributeForm($order);
         }
+    }
 
+    public function getAddressValue($handle, $valuename) {
+        $att = $this->getValue($handle);
+        return $this->returnAttributeValue($att,$valuename);
+    }
+
+    private function returnAttributeValue($att, $valuename) {
+        $valueCamel = camel_case($valuename);
+
+        if (method_exists($att, 'get' .$valueCamel)) {
+            $functionname = 'get'.$valueCamel;
+            return $att->$functionname();
+        } else {
+            return $att->$valuename;
+        }
     }
 
 }

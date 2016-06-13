@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
 
@@ -32,13 +33,9 @@ ob_start();
             <p>
                 <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
                 <br>
-                <?= $order->getAttribute("billing_address")->address1 ?><br>
-                <?php if ($order->getAttribute("billing_address")->address2) {
-                    echo $order->getAttribute("billing_address")->address2 . "<br>";
-                } ?>
-                <?= $order->getAttribute("billing_address")->city ?>
-                , <?= $order->getAttribute("billing_address")->state_province ?> <?= $order->getAttribute("billing_address")->postal_code ?>
-                <br><br>
+                <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
+                <?= nl2br($address); ?>
+
                 <strong><?= t('Email') ?></strong>: <a
                     href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
                 <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
@@ -50,15 +47,13 @@ ob_start();
                 <strong><?= t('Shipping Information') ?></strong>
                 <p>
                     <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-                    <br>
-                    <?= $order->getAttribute("shipping_address")->address1 ?><br>
-                    <?php if ($order->getAttribute("shipping_address")->address2) {
-                        echo $order->getAttribute("shipping_address")->address2 . "<br>";
-                    } ?>
-                    <?= $order->getAttribute("shipping_address")->city ?>
-                    , <?= $order->getAttribute("shipping_address")->state_province ?> <?= $order->getAttribute("shipping_address")->postal_code ?>
-                    <br>
-
+                    <br />
+                    <?php $shippingaddress = StoreCustomer::formatAddress($order->getAttribute("shipping_address")); ?>
+                    <?php if ($shippingaddress) {
+                        $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
+                        echo nl2br($address);
+                    }
+                    ?>
                 </p>
             <?php } ?>
         </td>

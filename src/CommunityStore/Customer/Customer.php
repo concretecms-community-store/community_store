@@ -68,7 +68,7 @@ class Customer
         return $this->returnAttributeValue($att,$valuename);
     }
 
-    private function returnAttributeValue($att, $valuename) {
+    private static function returnAttributeValue($att, $valuename) {
         $valueCamel = camel_case($valuename);
 
         if (method_exists($att, 'get' .$valueCamel)) {
