@@ -69,10 +69,10 @@ class Customer
     }
 
     private function returnAttributeValue($att, $valuename) {
-        $valuename = camel_case($valuename);
-
-        if (method_exists($att, 'get' .$valuename)) {
-            $functionname = 'get'.$valuename;
+        $valueCamel = camel_case($valuename);
+        
+        if (method_exists($att, 'get' .$valueCamel)) {
+            $functionname = 'get'.$valueCamel;
             return $att->$functionname();
         } else {
             return $att->$valuename;
