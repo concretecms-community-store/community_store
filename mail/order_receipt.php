@@ -117,7 +117,6 @@ ob_start();
                     ?>
                 </td>
                 <td><?= $item->getQty() ?></td>
-                <td><?= StorePrice::format($item->getSubTotal()) ?></td>
                 <td><?= StorePrice::format($item->getPricePaid()) ?></td>
                 <td><?= StorePrice::format($item->getSubTotal()) ?></td>
             </tr>

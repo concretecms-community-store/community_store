@@ -129,7 +129,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             </div>
 
                             <?php if ($shippingEnabled) { ?>
-                            <div class="col-md-12">
+                            <div class="col-md-12 store-copy-billing-container">
                                 <label>
                                     <input type="checkbox" id="store-copy-billing" />
                                     <?= t("Use these details for shipping") ?>
