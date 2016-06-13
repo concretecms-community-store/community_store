@@ -340,6 +340,7 @@ $(document).ready(function () {
                     if ($('#store-copy-billing').is(":checked")) {
                         communityStore.copyBillingToShipping();
                         $("#store-checkout-form-group-shipping").submit();
+                        $('#store-copy-billing').prop('checked', false)
                     } else {
                         $(".store-whiteout").remove();
                     }
