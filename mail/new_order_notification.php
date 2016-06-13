@@ -4,6 +4,8 @@ use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
+$dh = Core::make('helper/date');
+
 $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
 $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
 
@@ -20,6 +22,7 @@ ob_start();
 <h2><?= t('An order has been placed') ?></h2>
 
 <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
+<p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
 
 <table border="0" width="100%">
     <tr>

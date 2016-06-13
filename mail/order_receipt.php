@@ -4,8 +4,11 @@ use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
+$dh = Core::make('helper/date');
+
 $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
 $orderChoicesEnabled = count($orderChoicesAttList)? true : false;
+
 
 $subject = t("Order Receipt");
 
@@ -22,6 +25,7 @@ ob_start();
 <h2><?= t('Your Order') ?></h2>
 
 <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
+<p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
 
 <p><?= t('Below are the details of your order:') ?></p>
 <table border="0" width="100%">
@@ -113,7 +117,7 @@ ob_start();
                     ?>
                 </td>
                 <td><?= $item->getQty() ?></td>
-                <td><?= Price::format($item->getSubTotal()) ?></td>
+                <td><?= StorePrice::format($item->getSubTotal()) ?></td>
                 <td><?= StorePrice::format($item->getPricePaid()) ?></td>
                 <td><?= StorePrice::format($item->getSubTotal()) ?></td>
             </tr>
