@@ -3,8 +3,13 @@ var communityStore = {
     openModal: function (content) {
         if ($(".store-whiteout").length) {
             $(".store-whiteout").empty().html(content);
+            $('.store-cart-modal').addClass('store-cart-modal-active');
         } else {
             $("body").append("<div class='store-whiteout'>" + content + "</div>");
+
+            setTimeout(function () {
+                $('.store-cart-modal').addClass('store-cart-modal-active');
+            }, 10);
 
             $(".store-whiteout").click(function (e) {
                 if (e.target != this) return;  // only allow the actual whiteout background to close the dialog
@@ -18,8 +23,8 @@ var communityStore = {
                 }
             });
         }
-    }
-    ,
+    },
+
     waiting: function () {
         communityStore.openModal("<div class='store-spinner-container'><div class='store-spinner'></div></div>");
     },
@@ -87,8 +92,8 @@ var communityStore = {
 
     //Update a single item in cart
     updateItem: function (instanceID, modal) {
-        var qty = $("*[data-instance-id='" + instanceID + "']").find(".cart-list-product-qty input").val();
-        communityStore.waiting();
+        var qty = $("*[data-instance-id='" + instanceID + "']").find(".store-cart-list-product-qty .form-control").val();
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update",
             data: {instance: instanceID, pQty: qty},
@@ -107,7 +112,6 @@ var communityStore = {
 
     //Update multiple item quantities
     updateMultiple: function (instances, quantities, modal) {
-        communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update",
             data: {instance: instances, pQty: quantities},
@@ -124,7 +128,6 @@ var communityStore = {
     },
 
     removeItem: function (instanceID, modal) {
-        communityStore.waiting();
         $.ajax({
             url: CARTURL + "/remove",
             data: {instance: instanceID},
@@ -460,7 +463,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'post',
                 data: { smID: smID,
-                        sInstructions: sInstructions},
+                    sInstructions: sInstructions},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
                     if (total <= 0) {
@@ -542,21 +545,20 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-btn-cart-modal-clear', function(e) {
-        communityStore.clearCart(true)
+        communityStore.clearCart(true);
+        $(this).addClass('disabled');
         e.preventDefault();
     });
 
     $(document).on('click', '.store-btn-cart-modal-update', function(e) {
-       var instances = $("#store-modal-cart input[name='instance[]']").map(function(){return $(this).val();}).get();
-       var pQty = $("#store-modal-cart input[name='pQty[]']").map(function(){return $(this).val();}).get();
+        var instances = $("#store-modal-cart input[name='instance[]']").map(function(){return $(this).val();}).get();
+        var pQty = $("#store-modal-cart input[name='pQty[]']").map(function(){return $(this).val();}).get();
 
         communityStore.updateMultiple(instances,pQty,true);
+        $(this).addClass('disabled');
         e.preventDefault();
     });
 
-    $(document).on('click', '.store-btn-cart-list-update', function(e) {
-        communityStore.waiting();
-    });
 
     $('.store-cart-modal-link').click(function (e) {
         e.preventDefault();
