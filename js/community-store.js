@@ -286,12 +286,14 @@ var communityStore = {
 
 };
 
-communityStore.updateBillingStates(true);
-communityStore.updateShippingStates(true);
-communityStore.showShippingMethods();
-communityStore.showPaymentForm();
-
 $(document).ready(function () {
+    if ($('.store-checkout-form-shell').size() > 0) {
+        communityStore.updateBillingStates(true);
+        communityStore.updateShippingStates(true);
+        communityStore.showShippingMethods();
+        communityStore.showPaymentForm();
+    }
+
     $("#store-checkout-form-group-billing").submit(function (e) {
         e.preventDefault();
         var email = $("#store-email").val();
