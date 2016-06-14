@@ -1,9 +1,8 @@
 var communityStore = {
 
-    openModal: function (content) {
+    openModal: function (content, animatecart) {
         if ($(".store-whiteout").length) {
             $(".store-whiteout").empty().html(content);
-            $('.store-cart-modal').addClass('store-cart-modal-active');
         } else {
             $("body").append("<div class='store-whiteout'>" + content + "</div>");
 
@@ -22,6 +21,14 @@ var communityStore = {
                     $(document).unbind("keyup.communitywhiteout");
                 }
             });
+        }
+
+        if (animatecart) {
+            setTimeout(function () {
+                $('.store-cart-modal').addClass('store-cart-modal-active');
+            }, 10);
+        } else {
+            $('.store-cart-modal').addClass('store-cart-modal-active');
         }
     },
 
@@ -45,13 +52,13 @@ var communityStore = {
         });
     },
 
-    displayCart: function (res) {
+    displayCart: function (res, animatecart) {
         $.ajax({
             type: "POST",
             data: res,
             url: CARTURL + '/getmodal',
             success: function (data) {
-                communityStore.openModal(data);
+                communityStore.openModal(data, animatecart);
             }
         });
     },
@@ -81,7 +88,7 @@ var communityStore = {
                         return false;
                     }
 
-                    communityStore.displayCart(res);
+                    communityStore.displayCart(res, true);
                     communityStore.refreshCartTotals();
                 }
             });
@@ -112,6 +119,7 @@ var communityStore = {
 
     //Update multiple item quantities
     updateMultiple: function (instances, quantities, modal) {
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update",
             data: {instance: instances, pQty: quantities},
@@ -128,6 +136,7 @@ var communityStore = {
     },
 
     removeItem: function (instanceID, modal) {
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/remove",
             data: {instance: instanceID},
@@ -535,7 +544,7 @@ $(document).ready(function () {
     });
 
     $('.store-cart-link-modal').click(function(e){
-        communityStore.displayCart();
+        communityStore.displayCart(false, true);
         e.preventDefault();
     });
 
@@ -562,6 +571,6 @@ $(document).ready(function () {
 
     $('.store-cart-modal-link').click(function (e) {
         e.preventDefault();
-        communityStore.displayCart();
+        communityStore.displayCart(false, true);
     });
 });
