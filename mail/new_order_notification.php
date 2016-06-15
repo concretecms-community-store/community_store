@@ -15,6 +15,17 @@ ob_start();
 ?>
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
 <html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            vertical-align: top;
+            padding: 0;
+        }
+    </style>
+</head>
 <body>
 <h2><?= t('An order has been placed') ?></h2>
 
@@ -24,23 +35,20 @@ ob_start();
 <table border="0" width="100%">
     <tr>
         <td width="50%" valign="top">
-            <strong><?= t('Billing Information') ?></strong>
-
+            <h3><?= t('Billing Information') ?></h3>
             <p>
-                <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
-                <br>
+                <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
                 <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
                 <?= nl2br($address); ?>
-
-                <strong><?= t('Email') ?></strong>: <a
-                    href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
-                <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
+                <br><br>
+                <strong><?= t('Email') ?></strong>: <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
+                <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?>
             </p>
         </td>
         <td valign="top"></td>
         <td>
             <?php if ($order->isShippable()) { ?>
-                <strong><?= t('Shipping Information') ?></strong>
+                <h3><?= t('Shipping Information') ?></h3>
                 <p>
                     <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
                     <br />
@@ -58,7 +66,7 @@ ob_start();
     <?php if ($orderChoicesEnabled) { ?>
         <tr>
             <td colspan="3">
-                <h4><?= t("Other Choices")?></h4>
+                <h3><?= t("Other Choices")?></h3>
                 <?php foreach ($orderChoicesAttList as $ak) { ?>
                     <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
                     <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
@@ -157,6 +165,8 @@ ob_start();
 
 </p>
 
+
+<p><a href="<?= \URL::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
 
 </body>
 </html>

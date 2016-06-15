@@ -1,7 +1,8 @@
+<div class="store-order-complete-page">
 <?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<h1><?= t("Order #%s is Complete",$order->getOrderID())?></h1>
+<h1><?= t("Order #%s has been placed",$order->getOrderID())?></h1>
 
-<p><?= t("Thank you for your order. A receipt should be emailed to you shortly.")?></p>
+<p><?= t("Thank you for your order. A receipt will be emailed to you shortly.")?></p>
 
 <?php 
     $downloads = array();
@@ -41,3 +42,5 @@
  *  }
  * 
  */
+?>
+</div>

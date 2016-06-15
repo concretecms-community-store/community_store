@@ -15,6 +15,17 @@ ob_start();
 ?>
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
 <html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            vertical-align: top;
+            padding: 0;
+        }
+    </style>
+</head>
 <body>
 
 <?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
@@ -31,19 +42,18 @@ ob_start();
 <table border="0" width="100%">
     <tr>
         <td width="50%">
-            <strong><?= t('Billing Information') ?></strong>
+            <h3><?= t('Billing Information') ?></h3>
             <p>
-                <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
-                <br>
+                <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
                 <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
                 <?= nl2br($address); ?>
-                <br>
-                <?= $order->getAttribute("billing_phone") ?>
+                <br><br>
+                <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
             </p>
         </td>
         <td>
             <?php if ($order->isShippable()) { ?>
-                <strong><?= t('Shipping Information') ?></strong>
+                <h3><?= t('Shipping Information') ?></h3>
                 <p>
                     <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
                     <br>
@@ -61,7 +71,7 @@ ob_start();
     <?php if ($orderChoicesEnabled) { ?>
         <tr>
             <td colspan="3">
-                <h4><?= t("Other Choices")?></h4>
+                <h3><?= t("Other Choices")?></h3>
                 <?php foreach ($orderChoicesAttList as $ak) { ?>
                     <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
                     <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
@@ -136,17 +146,17 @@ foreach ($items as $item) {
 }
 if (count($downloads) > 0) {
     ?>
-    <div style="margin: 30px 0;">
-        <p><strong><?= t("Your Downloads") ?></strong></p>
-        <ul class="order-downloads">
-            <?php
-            foreach ($downloads as $name => $file) {
-                if (is_object($file)) {
-                    echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
-                }
-            } ?>
-        </ul>
-    </div>
+
+    <h3><?= t("Your Downloads") ?></h3>
+    <ul class="order-downloads">
+        <?php
+        foreach ($downloads as $name => $file) {
+            if (is_object($file)) {
+                echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
+            }
+        } ?>
+    </ul>
+
 <?php } ?>
 
 <p>

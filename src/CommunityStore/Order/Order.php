@@ -405,11 +405,12 @@ class Order
         $totals = StoreCalculator::getTotals();
         $total = $totals['total'];
         $pmName = $pm->getName();
+        $pmDisplayName = $pm->getDisplayName();
 
         $order = new self();
         $order->setCustomerID($customer->getUserID());
         $order->setDate($now);
-        $order->setPaymentMethodName($pmName);
+        $order->setPaymentMethodName($pmDisplayName ? $pmDisplayName : $pmName);
         $order->setPaymentMethodID($pm->getID());
         $order->setShippingMethodName($smName);
         $order->setShippingInstructions($sInstructions);

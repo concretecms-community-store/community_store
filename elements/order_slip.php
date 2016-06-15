@@ -59,9 +59,15 @@ $dh = Core::make('helper/date');
 
                     if ($orderemail) { ?>
                         <h4><?= t("Email") ?></h4>
-                        <p>
-                            <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a>
-                        </p>
+                        <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
+                    <?php } ?>
+
+                    <?php
+                    $phone = $order->getAttribute("billing_phone");
+                    if ($phone) {
+                    ?>
+                        <h4><?= t("Phone") ?></h4>
+                        <p><?= $order->getAttribute("billing_phone") ?></p>
                     <?php } ?>
 
                     <?php
@@ -83,12 +89,7 @@ $dh = Core::make('helper/date');
                         <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
                         if ($billingaddress) {
                             echo $billingaddress->getValue('displaySanitized', 'display');
-                        }
-                        $phone = $order->getAttribute("billing_phone");
-                        if ($phone) {
-                            ?>
-                            <?= t('Phone'); ?>: <?= $order->getAttribute("billing_phone") ?>
-                        <?php } ?>
+                        }?>
                     </p>
                 </div>
                 <div class="col-xs-4">
