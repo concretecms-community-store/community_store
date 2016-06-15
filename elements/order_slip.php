@@ -55,8 +55,10 @@ $dh = Core::make('helper/date');
             <legend><?= t("Customer Details") ?></legend>
             <div class="row">
                 <div class="col-xs-4">
-                    <?php $orderemail = $order->getAttribute("email");
+                    <h4><?= t("Name")?></h4>
+                    <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
 
+                    <?php $orderemail = $order->getAttribute("email");
                     if ($orderemail) { ?>
                         <h4><?= t("Email") ?></h4>
                         <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
@@ -81,7 +83,7 @@ $dh = Core::make('helper/date');
                 </div>
 
                 <div class="col-xs-4">
-                    <h4><?= t("Billing Information") ?></h4>
+                    <h4><?= t("Billing Address") ?></h4>
 
                     <p>
                         <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
@@ -96,7 +98,7 @@ $dh = Core::make('helper/date');
                     <?php
                     $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
                     if ($billingaddress) { ?>
-                        <h4><?= t("Shipping Information") ?></h4>
+                        <h4><?= t("Shipping Address") ?></h4>
                         <p>
                             <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
                             <br>

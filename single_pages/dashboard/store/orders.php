@@ -49,11 +49,22 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <div class="row">
         <div class="col-sm-4">
-            <?php $orderemail = $order->getAttribute("email");
+            <?php $orderemail = $order->getAttribute("email"); ?>
 
-            if ($orderemail) { ?>
+            <h4><?= t("Name")?></h4>
+            <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
+
+            <?php if ($orderemail) { ?>
             <h4><?= t("Email")?></h4>
             <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
+            <?php } ?>
+
+            <?php
+            $phone = $order->getAttribute("billing_phone");
+            if ($phone) {
+            ?>
+            <h4><?= t('Phone'); ?></h4>
+            <p><?= $phone; ?></p>
             <?php } ?>
 
             <?php
@@ -65,25 +76,20 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         </div>
 
         <div class="col-sm-4">
-            <h4><?= t("Billing Information")?></h4>
+            <h4><?= t("Billing Address")?></h4>
             <p>
                 <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
                 <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
                 if ($billingaddress) {
                     echo $billingaddress->getValue('displaySanitized', 'display');
                 }
-
-                $phone = $order->getAttribute("billing_phone");
-                if ($phone) {
                 ?>
-                <br /> <br /><?= t('Phone'); ?>: <?= $phone; ?>
-                <?php } ?>
             </p>
         </div>
         <?php if ($order->isShippable()) { ?>
             <div class="col-sm-4">
                 <?php if ($order->getAttribute("shipping_address")->address1) { ?>
-                    <h4><?= t("Shipping Information")?></h4>
+                    <h4><?= t("Shipping Address")?></h4>
                     <p>
                         <?= $order->getAttribute("shipping_first_name"). " " . $order->getAttribute("shipping_last_name")?><br>
                         <?php $shippingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
