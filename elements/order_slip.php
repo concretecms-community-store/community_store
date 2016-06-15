@@ -52,7 +52,7 @@ $dh = Core::make('helper/date');
         </div>
 
         <fieldset>
-            <legend><?= t("Customer Overview") ?></legend>
+            <legend><?= t("Customer Details") ?></legend>
             <div class="row">
                 <div class="col-xs-4">
                     <?php $orderemail = $order->getAttribute("email");

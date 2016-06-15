@@ -45,7 +45,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 </div>
 
     <fieldset>
-    <legend><?= t("Customer Overview")?></legend>
+    <legend><?= t("Customer Details")?></legend>
 
     <div class="row">
         <div class="col-sm-4">
