@@ -1,14 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
-
-$orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
-$orderChoicesEnabled = count($orderChoicesAttList)? true : false;
 
 $subject = t("New Order Notification");
 /**

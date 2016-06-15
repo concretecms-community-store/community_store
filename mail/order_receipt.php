@@ -1,18 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use User as User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
-
-$orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
-$orderChoicesEnabled = count($orderChoicesAttList)? true : false;
-
-
 $subject = t("Order Receipt");
-
 
 /**
  * HTML BODY START
@@ -23,12 +16,18 @@ ob_start();
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
 <html>
 <body>
+
+<?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
+
+<?php if ($header) {
+    echo $header;
+} else { ?>
 <h2><?= t('Your Order') ?></h2>
+<?php } ?>
 
 <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
 <p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
 
-<p><?= t('Below are the details of your order:') ?></p>
 <table border="0" width="100%">
     <tr>
         <td width="50%">
@@ -186,6 +185,8 @@ if (count($downloads) > 0) {
 
 <?php echo $paymentInstructions; ?>
 
+<?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+
 </body>
 </html>
 
@@ -194,60 +195,5 @@ $bodyHTML = ob_get_clean();
 /**
  * HTML BODY END
  *
- * ======================
- *
- * PLAIN TEXT BODY START
  */
-ob_start();
-
 ?>
-
-<?= t("Order #%s has been received", $order->getOrderID()) ?>
-
-<?= t("BILLING INFORMATION") ?>
-<?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
-<?php if ($order->getAttribute("billing_address")->address2) {
-    echo $order->getAttribute("billing_address")->address2;
-} ?>
-<?= $order->getAttribute("billing_address")->city ?>, <?= $order->getAttribute("billing_address")->state_province ?> <?= $order->getAttribute("billing_address")->postal_code ?>
-<?= $order->getAttribute("billing_phone") ?>
-
-<?= t("SHIPPING INFORMATION") ?>
-<?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-<?= $order->getAttribute("shipping_address")->address1 ?>
-<?php if ($order->getAttribute("shipping_address")->address2) {
-    echo $order->getAttribute("shipping_address")->address2;
-} ?>
-<?= $order->getAttribute("shipping_address")->city ?>, <?= $order->getAttribute("shipping_address")->state_province ?> <?= $order->getAttribute("shipping_address")->postal_code ?>
-
-<?= t("ORDER ITEMS") ?>
-<?php
-$items = $order->getOrderItems();
-if ($items) {
-    foreach ($items as $item) {
-        echo "{$item->getQty()}x {$item->getProductName()}";
-    }
-}
-?>
-
-<?= t("Tax") ?>: <?= StorePrice::format($order->getTaxTotal()) ?>
-<?= t("Shipping") ?>:  <?= StorePrice::format($order->getShippingTotal()) ?>
-<?php $applieddiscounts = $order->getAppliedDiscounts();
-if (!empty($applieddiscounts)) { ?>
-    <?php
-    $discountsApplied = array();
-    foreach ($applieddiscounts as $discount) {
-        $discountsApplied[] = $discount['odDisplay'];
-    }
-    echo (count($applieddiscounts) > 1 ? t('Discounts') : t('Discount')) . ' ' . implode(',', $discountsApplied);
-    ?>
-<?php } ?>
-<?= t("Total") ?>: <?= StorePrice::format($order->getTotal()) ?>
-
-<?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
-
-<?php echo strip_tags($paymentInstructions); ?>
-
-<?php
-
-$body = ob_get_clean(); ?>
