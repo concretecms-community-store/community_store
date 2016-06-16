@@ -174,6 +174,7 @@ var communityStore = {
             success: function (response) {
                 values = $.parseJSON(response);
                 itemCount = values.itemCount;
+                subTotal = values.subTotal;
                 total = values.total;
                 totalCents = values.totalCents;
 
@@ -188,6 +189,7 @@ var communityStore = {
                     $(".store-utility-links").removeClass('store-cart-empty');
                 }
 
+                $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
                 $(".store-total-amount").data('total-cents',totalCents);
 
@@ -439,6 +441,7 @@ $(document).ready(function () {
                                     $("#store-taxes").append('<li class="store-line-item store-tax-item"><strong>' + taxes[i].name + ":</strong> <span class=\"tax-amount\">" + taxes[i].taxamount + "</span></li>");
                                 }
                             }
+                            $("#shipping-total").text($("#shipping-total").data('unknown-label'));
                         }
                     });
                     communityStore.showShippingMethods();

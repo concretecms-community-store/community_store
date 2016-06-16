@@ -151,7 +151,8 @@ class Checkout extends PageController
         $this->set('taxes',$totals['taxes']);
 
         $this->set('taxtotal',$totals['taxTotal']);
-        $this->set('shippingtotal',$totals['shippingTotal']);
+        $this->set('shippingtotal',false);
+
         $this->set('total',$totals['total']);
         $this->set('shippingEnabled', StoreCart::isShippable());
         $this->set('shippingInstructions', StoreCart::getShippingInstructions());
@@ -201,7 +202,9 @@ class Checkout extends PageController
         //process payment
         $pmHandle = $data['payment-method'];
         $pm = StorePaymentMethod::getByHandle($pmHandle);
-        if($pm === false){
+
+        // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
+        if($pm === false || (StoreCart::isShippable() && !Session::get('community_store.smID'))){
             $this->redirect("/checkout");
             exit();
         }

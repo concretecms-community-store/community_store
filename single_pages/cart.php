@@ -38,8 +38,7 @@ if ($cart) {
             <tr>
                 <th><?= t('Product'); ?></th>
                 <th><?= t('Price'); ?></th>
-                <th><?= t('Quantity'); ?></th>
-
+                <th class="text-right"><?= t('Quantity'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -99,7 +98,7 @@ if ($cart) {
                             }
                             ?>
                         </td>
-                        <td data-th="Quantity">
+                        <td data-th="Quantity" class="text-right">
                             <?php if ($product->allowQuantity()) { ?>
 
                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
@@ -125,13 +124,11 @@ if ($cart) {
 
             <tfoot>
             <tr>
-                <td></td>
-                <td></td>
-                <td>
-                    <button name="action" value="update" class="store-btn-cart-list-update btn btn-default"
-                            type="submit"><?= t("Update") ?></button>
+                <td colspan="3" class="text-right">
                     <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-default"
                             type="submit"><?= t("Clear Cart") ?></button>
+                    <button name="action" value="update" class="store-btn-cart-list-update btn btn-default"
+                            type="submit"><?= t("Update") ?></button>
                 </td>
             </tr>
             </tfoot>
@@ -149,7 +146,9 @@ if ($cart) {
 <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code'); ?></h3>
     <form method="post" action="<?= \URL::to('/cart/'); ?>" class="form-inline">
-        <input type="text" class="form-control" name="code"/>
+        <div class="form-group">
+            <input type="text" class="form-control" name="code"/>
+        </div>
         <input type="hidden" name="action" value="code"/>
         <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply'); ?></button>
     </form>
@@ -172,7 +171,7 @@ if ($cart) {
 
     <?php if ($shippingEnabled) { ?>
         <p class="text-right"><strong><?= t("Shipping") ?>:</strong> <span
-                id="store-shipping-total"><?= StorePrice::format($shippingtotal); ?></span></p>
+                id="store-shipping-total"><?=t('to be determined');?></span></p>
     <?php } ?>
 
     <?php if (!empty($discounts)) { ?>

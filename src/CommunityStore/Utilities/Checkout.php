@@ -114,6 +114,7 @@ class Checkout extends Controller
         );
         $customer->setValue("billing_address", $address);
         Session::set('billing_address', $address);
+        Session::set('community_store.smID', false);
     }
 
     public function updateShipping($data)
@@ -135,6 +136,7 @@ class Checkout extends Controller
         );
         $customer->setValue("shipping_address", $address);
         Session::set('shipping_address', $address);
+        Session::set('community_store.smID', false);
     }
 
     public function validateAddress($data, $billing = null)
