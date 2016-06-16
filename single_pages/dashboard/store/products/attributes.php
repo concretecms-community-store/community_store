@@ -5,7 +5,7 @@ if (isset($key)) { ?>
     
     <form method="post" action="<?= $this->action('edit')?>" id="ccm-attribute-key-form">
     
-        <?php  Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+        <?php  View::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
     
     </form>
 
@@ -14,13 +14,13 @@ if (isset($key)) { ?>
 	
 	<?php  if (isset($type)) { ?>
 		<form method="post" action="<?= $this->action('add')?>" id="ccm-attribute-key-form">
-		    <?php  Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
+		    <?php  View::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 		</form>	
 	<?php  } ?>
 	
 <?php  } else {
 
-    Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/products/attributes')); ?>
+	View::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/products/attributes')); ?>
 
 	<form method="get" class="form-horizontal" action="<?= $this->action('select_type')?>" id="ccm-attribute-type-form">
     	
