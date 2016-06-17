@@ -128,23 +128,23 @@
     display: none;
 }
 
-#store-cart>tbody>tr>td, #store-cart>tfoot>tr>td{
+.store-cart-page-cart > tbody > tr > td, .store-cart-page-cart > tfoot > tr > td{
     vertical-align: middle;
 }
-@media screen and (max-width: 600px) {
-    table#store-cart tbody td .form-control{
+
+@media screen and (max-width: 768px) {
+    .store-cart-page-cart tbody td .form-control{
         width:20%;
         display: inline !important;
     }
 
-    table#store-cart thead { display: none; }
-    table#store-cart tbody td { display: block;}
-    table#store-cart tbody td:before {
+    .store-cart-page-cart thead { display: none; }
+    .store-cart-page-cart tbody td { display: block;}
+    .store-cart-page-cart tbody td:before {
         content: attr(data-th); font-weight: bold;
         display: inline-block; width: 8rem;
     }
 
-    table#store-cart tfoot td{display:block; }
+    .store-cart-page-cart tfoot td{display:block; }
 
 }
-    
