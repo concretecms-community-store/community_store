@@ -5,7 +5,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
 ?>
-
+<div class="store-cart-page">
 <h1><?= t("Shopping Cart") ?></h1>
 
 <?php if (isset($actiondata) and !empty($actiondata)) { ?>
@@ -33,7 +33,7 @@ if ($cart) {
     $i = 1;
     ?>
     <form method="post" class="form-inline">
-        <table id="store-cart" class="table table-hover table-condensed">
+        <table id="store-cart" class="store-cart-page-cart table table-hover table-condensed">
             <thead>
             <tr>
                 <th><?= t('Product'); ?></th>
@@ -170,7 +170,7 @@ if ($cart) {
     </p>
 
     <?php if ($shippingEnabled) { ?>
-        <p class="text-right"><strong><?= t("Shipping") ?>:</strong> <span
+        <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong> <span
                 id="store-shipping-total"><?=t('to be determined');?></span></p>
     <?php } ?>
 
@@ -195,12 +195,12 @@ if ($cart) {
         <span class="store-cart-grand-total-value"><?= StorePrice::format($total) ?></span>
     </p>
 
-
     <div class="store-cart-page-cart-links pull-right">
-
         <a class="store-btn-cart-page-checkout btn btn-primary"
            href="<?= \URL::to('/checkout') ?>"><?= t('Checkout') ?></a>
     </div>
 <?php } else { ?>
     <p class="alert alert-info"><?= t('Your cart is empty'); ?></p>
 <?php } ?>
+
+</div>
