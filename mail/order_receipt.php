@@ -5,7 +5,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrde
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
-$subject = t("Order Receipt");
+$subject = t("Order Receipt") . ' #' .$order->getOrderID();
 
 /**
  * HTML BODY START
@@ -13,192 +13,179 @@ $subject = t("Order Receipt");
 ob_start();
 
 ?>
-<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
-<html>
-<head>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-        td {
-            vertical-align: top;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
+    <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+    <html>
+    <head>
+    </head>
+    <body>
+    <?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
 
-<?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
+    <?php if ($header) {
+        echo $header;
+    } else { ?>
+        <h2><?= t('Your Order') ?></h2>
+    <?php } ?>
 
-<?php if ($header) {
-    echo $header;
-} else { ?>
-<h2><?= t('Your Order') ?></h2>
-<?php } ?>
+    <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
+    <p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
 
-<p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
-<p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
-
-<table border="0" width="100%">
-    <tr>
-        <td width="50%">
-            <h3><?= t('Billing Information') ?></h3>
-            <p>
-                <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
-                <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
-                <?= nl2br($address); ?>
-                <br><br>
-                <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
-            </p>
-        </td>
-        <td>
-            <?php if ($order->isShippable()) { ?>
-                <h3><?= t('Shipping Information') ?></h3>
-                <p>
-                    <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-                    <br>
-                    <?php $shippingaddress = StoreCustomer::formatAddress($order->getAttribute("shipping_address")); ?>
-                    <?php if ($shippingaddress) {
-                        $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
-                        echo nl2br($address);
-                    }
-                    ?>
-                </p>
-            <?php } ?>
-        </td>
-    </tr>
-
-    <?php if ($orderChoicesEnabled) { ?>
+    <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
-            <td colspan="3">
-                <h3><?= t("Other Choices")?></h3>
-                <?php foreach ($orderChoicesAttList as $ak) { ?>
-                    <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
-                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+            <td width="50%" style="vertical-align: top; padding: 0; padding-right: 10px;">
+                <h3><?= t('Billing Information') ?></h3>
+                <p>
+                    <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
+                    <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
+                    <?= nl2br($address); ?>
+                    <br><br>
+                    <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
+                </p>
+            </td>
+            <td style="vertical-align: top; padding: 0;">
+                <?php if ($order->isShippable()) { ?>
+                    <h3><?= t('Shipping Information') ?></h3>
+                    <p>
+                        <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
+                        <br>
+                        <?php $shippingaddress = StoreCustomer::formatAddress($order->getAttribute("shipping_address")); ?>
+                        <?php if ($shippingaddress) {
+                            $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
+                            echo nl2br($address);
+                        }
+                        ?>
+                    </p>
                 <?php } ?>
             </td>
         </tr>
-    <?php } ?>
 
-</table>
-
-<h3><?= t('Order Details') ?></h3>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Product Name') ?></th>
-        <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Options') ?></th>
-        <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Qty') ?></th>
-        <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Price') ?></th>
-        <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Subtotal') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
-    $items = $order->getOrderItems();
-    if ($items) {
-        foreach ($items as $item) {
-            ?>
+        <?php if ($orderChoicesEnabled) { ?>
             <tr>
-                <td><?= $item->getProductName() ?>
-                    <?php if ($sku = $item->getSKU()) {
-                        echo '(' . $sku . ')';
-                    } ?>
+                <td colspan="3">
+                    <h3><?= t("Other Choices")?></h3>
+                    <?php foreach ($orderChoicesAttList as $ak) { ?>
+                        <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
+                        <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                    <?php } ?>
                 </td>
-                <td>
-                    <?php
-                    $options = $item->getProductOptions();
-                    if ($options) {
-                        echo "<ul class='list-unstyled'>";
-                        foreach ($options as $option) {
-                            echo "<li>";
-                            echo "<strong>" . $option['oioKey'] . ": </strong>";
-                            echo $option['oioValue'];
-                            echo "</li>";
-                        }
-                        echo "</ul>";
-                    }
-                    ?>
-                </td>
-                <td><?= $item->getQty() ?></td>
-                <td><?= StorePrice::format($item->getPricePaid()) ?></td>
-                <td><?= StorePrice::format($item->getSubTotal()) ?></td>
             </tr>
-            <?php
-        }
-    }
-    ?>
-    </tbody>
-</table>
-
-
-<?php
-$downloads = array();
-foreach ($items as $item) {
-    $pObj = $item->getProductObject();
-
-    if (is_object($pObj)) {
-        if ($pObj->hasDigitalDownload()) {
-            $fileObjs = $pObj->getDownloadFileObjects();
-            $downloads[$item->getProductName()] = $fileObjs[0];
-        }
-    }
-}
-if (count($downloads) > 0) {
-    ?>
-
-    <h3><?= t("Your Downloads") ?></h3>
-    <ul class="order-downloads">
-        <?php
-        foreach ($downloads as $name => $file) {
-            if (is_object($file)) {
-                echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
-            }
-        } ?>
-    </ul>
-
-<?php } ?>
-
-<p>
-    <?php if ($order->isShippable()) { ?>
-        <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
-        <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
-
-        <?php
-        $shippingInstructions = $order->getShippingInstructions();
-        if ($shippingInstructions) { ?>
-            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
         <?php } ?>
-    <?php } ?>
 
-    <?php $applieddiscounts = $order->getAppliedDiscounts();
-    if (!empty($applieddiscounts)) { ?>
-        <strong><?= (count($applieddiscounts) > 1 ? t('Discounts') : t('Discount')); ?>: </strong>
+    </table>
+
+    <h3><?= t('Order Details') ?></h3>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Product Name') ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Options') ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Qty') ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Price') ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Subtotal') ?></th>
+        </tr>
+        </thead>
+        <tbody>
         <?php
-        $discountsApplied = array();
-        foreach ($applieddiscounts as $discount) {
-            $discountsApplied[] = $discount['odDisplay'];
+        $items = $order->getOrderItems();
+        if ($items) {
+            foreach ($items as $item) {
+                ?>
+                <tr>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getProductName() ?>
+                        <?php if ($sku = $item->getSKU()) {
+                            echo '(' . $sku . ')';
+                        } ?>
+                    </td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;">
+                        <?php
+                        $options = $item->getProductOptions();
+                        if ($options) {
+                            $optionOutput = array();
+                            foreach ($options as $option) {
+                                $optionOutput[] =  "<strong>" . $option['oioKey'] . ": </strong>" . $option['oioValue'];
+                            }
+                            echo implode('<br>', $optionOutput);
+                        }
+                        ?>
+                    </td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()) ?></td>
+                    <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()) ?></td>
+                </tr>
+                <?php
+            }
         }
-        echo implode(',', $discountsApplied);
         ?>
-        <br/>
+        </tbody>
+    </table>
+
+
+    <?php
+    $downloads = array();
+    foreach ($items as $item) {
+        $pObj = $item->getProductObject();
+
+        if (is_object($pObj)) {
+            if ($pObj->hasDigitalDownload()) {
+                $fileObjs = $pObj->getDownloadFileObjects();
+                $downloads[$item->getProductName()] = $fileObjs[0];
+            }
+        }
+    }
+    if (count($downloads) > 0) {
+        ?>
+
+        <h3><?= t("Your Downloads") ?></h3>
+        <ul class="order-downloads">
+            <?php
+            foreach ($downloads as $name => $file) {
+                if (is_object($file)) {
+                    echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
+                }
+            } ?>
+        </ul>
+
     <?php } ?>
 
-    <?php foreach ($order->getTaxes() as $tax) { ?>
-        <strong><?= $tax['label'] ?>
-            :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
-    <?php } ?>
+    <p>
+        <?php if ($order->isShippable()) { ?>
+            <strong><?= t("Shipping") ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()) ?><br>
+            <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?> <br>
 
-    <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
-    <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
-</p>
+            <?php
+            $shippingInstructions = $order->getShippingInstructions();
+            if ($shippingInstructions) { ?>
+                <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+            <?php } ?>
+        <?php } ?>
 
-<?php echo $paymentInstructions; ?>
+        <?php $applieddiscounts = $order->getAppliedDiscounts();
+        if (!empty($applieddiscounts)) { ?>
+            <strong><?= (count($applieddiscounts) > 1 ? t('Discounts') : t('Discount')); ?>: </strong>
+            <?php
+            $discountsApplied = array();
+            foreach ($applieddiscounts as $discount) {
+                $discountsApplied[] = $discount['odDisplay'];
+            }
+            echo implode(',', $discountsApplied);
+            ?>
+            <br/>
+        <?php } ?>
 
-<?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+        <?php foreach ($order->getTaxes() as $tax) { ?>
+            <strong><?= $tax['label'] ?>
+                :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
+        <?php } ?>
 
-</body>
-</html>
+        <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
+        <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
+    </p>
+
+    <?php echo $paymentInstructions; ?>
+
+    <?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+
+    </body>
+    </html>
 
 <?php
 $bodyHTML = ob_get_clean();

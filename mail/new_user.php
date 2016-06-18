@@ -9,6 +9,10 @@ $subject = $siteName.' - '.t('account Created');
 ob_start();
 
 ?>
+<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+<html>
+<head> </head>
+<body>
     <h2><?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?></h2>
 
     <p>Your username is: <strong><?= $username; ?></strong></p>
@@ -17,6 +21,8 @@ ob_start();
 <?php if ($link) { ?>
     <p>You can now access <?= $link; ?></p>
 <?php } ?>
+</body>
+</html>
 
 <?php
 $bodyHTML = ob_get_clean();
@@ -30,7 +36,7 @@ $bodyHTML = ob_get_clean();
 ob_start();
 
 ?>
-<?= t('An account has been created for you at') ?> <?= $siteName ?>
+<?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?>
 
     Your username is: <?= $username; ?>
     Your password is: <?= $password; ?>
@@ -43,9 +49,6 @@ ob_start();
 
 $body = ob_get_clean();
 ob_end_clean();
-
-// plain text and html emails not currently working, fix coming for 5.7
-$body = '';
 
 /**
  * PLAIN TEXT BODY END
