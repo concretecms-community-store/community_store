@@ -65,12 +65,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                         ?>
 
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
-                            <td class="store-cart-list-thumb col-xs-2">
-                                <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
-                                    <?= $product->getImageThumb()?>
+                            <?php $thumb = $product->getImageThumb(); ?>
+                            <?php if ($thumb) { ?>
+                            <td class="cart-list-thumb col-xs-2">
+                                <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                                    <?= $thumb ?>
                                 </a>
                             </td>
-                            <td class="store-cart-list-product-name col-xs-5">
+                            <td class="checkout-cart-product-name col-xs-5">
+                                <?php } else { ?>
+                            <td colspan="2" class="checkout-cart-product-name">
+                                <?php } ?>
                                 <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
                                     <?= $product->getName()?>
                                 </a>

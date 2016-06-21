@@ -35,7 +35,7 @@ if ($cart) {
                     <?php $thumb = $product->getImageThumb(); ?>
                     <?php if ($thumb) { ?>
                     <td class="cart-list-thumb">
-                        <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                             <?= $thumb ?>
                         </a>
                     </td>
@@ -43,7 +43,7 @@ if ($cart) {
                         <?php } else { ?>
                     <td colspan="2" class="checkout-cart-product-name">
                         <?php } ?>
-                        <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                             <?= $product->getName() ?>
                         </a>
 

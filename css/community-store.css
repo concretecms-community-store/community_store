@@ -133,18 +133,8 @@
 }
 
 @media screen and (max-width: 768px) {
-    .store-cart-page-cart tbody td .form-control{
+    .store-cart-page .store-cart-page-cart tbody td .form-control{
         width:20%;
         display: inline !important;
     }
-
-    .store-cart-page-cart thead { display: none; }
-    .store-cart-page-cart tbody td { display: block;}
-    .store-cart-page-cart tbody td:before {
-        content: attr(data-th); font-weight: bold;
-        display: inline-block; width: 8rem;
-    }
-
-    .store-cart-page-cart tfoot td{display:block; }
-
 }
