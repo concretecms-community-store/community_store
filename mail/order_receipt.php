@@ -5,7 +5,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrde
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
-$subject = t("Order Receipt") . ' #' .$order->getOrderID();
+$subject = t("Order Receipt #%s", $order->getOrderID());
 
 /**
  * HTML BODY START

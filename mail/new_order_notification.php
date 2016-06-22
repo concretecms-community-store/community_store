@@ -6,7 +6,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 
 $dh = Core::make('helper/date');
 
-$subject = t("New Order Notification") . ' #' .$order->getOrderID();
+$subject = t("New Order Notification #%s", $order->getOrderID());
 /**
  * HTML BODY START
  */
