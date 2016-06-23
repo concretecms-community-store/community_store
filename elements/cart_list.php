@@ -11,11 +11,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 if ($cart) {
     $i = 1; ?>
     <table id="cart" class="store-cart-table table table-hover table-condensed">
+        <thead>
         <tr>
             <th colspan="2"><?= t('Product');?></th>
             <th><?= t('Price');?></th>
             <th><?= t('Quantity');?></th>
         </tr>
+        </thead>
+        <tbody>
         <?php
         foreach ($cart as $k => $cartItem) {
 
@@ -30,48 +33,48 @@ if ($cart) {
             if (is_object($product)) {
                 ?>
 
-                <tr class="checkout-cart-item <?= $classes ?>" data-instance-id="<?= $k ?>"
+                <tr class="store-cart-item <?= $classes ?>" data-instance-id="<?= $k ?>"
                     data-product-id="<?= $pID ?>">
                     <?php $thumb = $product->getImageThumb(); ?>
                     <?php if ($thumb) { ?>
-                    <td class="cart-list-thumb">
+                    <td class="store-cart-list-thumb">
                         <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                             <?= $thumb ?>
                         </a>
                     </td>
-                    <td class="checkout-cart-product-name">
+                    <td class="store-cart-product-name">
                         <?php } else { ?>
-                    <td colspan="2" class="checkout-cart-product-name">
+                    <td colspan="2" class="store-cart-product-name">
                         <?php } ?>
                         <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                             <?= $product->getName() ?>
                         </a>
 
                         <?php if ($cartItem['productAttributes']) { ?>
-                            <div class="checkout-cart-item-attributes">
+                            <div class="store-cart-item-attributes">
                                 <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {
                                     $groupID = str_replace("po", "", $groupID);
                                     $optiongroup = StoreProductOption::getByID($groupID);
                                     $optionvalue = StoreProductOptionItem::getByID($valID);
 
                                     ?>
-                                    <div class="cart-list-item-attribute">
+                                    <div class="store-cart-list-item-attribute">
                                         <span
-                                            class="cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '') ?>
+                                            class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '') ?>
                                             :</span>
                                         <span
-                                            class="cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName() : '') ?></span>
+                                            class="store-cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName() : '') ?></span>
                                     </div>
                                 <?php } ?>
                             </div>
                         <?php } ?>
                     </td>
 
-                    <td class="checkout-cart-item-price">
+                    <td class="store-cart-item-price">
                         <?= StorePrice::format($product->getActivePrice()) ?>
                     </td>
 
-                    <td class="checkout-cart-product-qty text-center">
+                    <td class="store-cart-product-qty text-center">
                         <?php if ($product->allowQuantity()) { ?>
                             <?= $qty ?>
                         <?php } ?>
@@ -84,6 +87,7 @@ if ($cart) {
             $i++;
         }//foreach
         ?>
+        </tbody>
     </table>
 <?php }//if cart
 ?>

@@ -83,8 +83,17 @@ class Cart extends PageController
 
         $totals = StoreCalculator::getTotals();
 
-        $this->set('shippingtotal',$totals['shippingTotal']);
-        $this->set('shippingEnabled', StoreCart::isShippable());
+        if (StoreCart::isShippable()) {
+            $this->set('shippingEnabled', true);
+
+            if (\Session::get('community_store.smID')) {
+                $this->set('shippingtotal',$totals['shippingTotal']);
+            } else {
+                $this->set('shippingtotal',false);
+            }
+        } else {
+            $this->set('shippingEnabled', false);
+        }
 
         $this->set('total', $totals['total']);
         $this->set('subTotal', $totals['subTotal']);

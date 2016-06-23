@@ -109,7 +109,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 1
                             <?php } ?>
                             </td>
-                            <td>
+                            <td class="store-cart-list-remove-button col-xs-1 text-right">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
                             </td>
 

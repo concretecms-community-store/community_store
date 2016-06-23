@@ -33,10 +33,10 @@ if ($cart) {
     $i = 1;
     ?>
     <form method="post" class="form-inline">
-        <table id="store-cart" class="store-cart-page-cart table table-hover table-condensed">
+        <table id="store-cart" class="store-cart-table table table-hover table-condensed">
             <thead>
             <tr>
-                <th><?= t('Product'); ?></th>
+                <th colspan="2"><?= t('Product'); ?></th>
                 <th><?= t('Price'); ?></th>
                 <th class="text-right"><?= t('Quantity'); ?></th>
             </tr>
@@ -50,55 +50,52 @@ if ($cart) {
                 if (is_object($product)) {
                     ?>
 
-                    <tr>
-                        <td data-th="Product">
-                            <div class="row">
-                                <div class="col-sm-2 hidden-xs">
-                                    <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
-                                        <?= $product->getImageThumb() ?>
-                                    </a>
-                                </div>
-                                <div class="col-sm-10">
-                                    <h4 class="nomargin">
-                                        <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
-                                            <?= $product->getName() ?>
-                                        </a>
-                                    </h4>
-
-                                    <?php if ($cartItem['productAttributes']) { ?>
-                                        <div class="store-cart-list-item-attributes">
-                                            <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {
-                                                $groupID = str_replace("po", "", $groupID);
-                                                $optiongroup = StoreProductOption::getByID($groupID);
-                                                $optionvalue = StoreProductOptionItem::getByID($valID);
-
-                                                ?>
-                                                <div class="store-cart-list-item-attribute">
-                                                    <span
-                                                        class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '') ?>
-                                                        :</span>
-                                                    <span
-                                                        class="store-cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName() : '') ?></span>
-                                                </div>
-                                            <?php } ?>
-                                        </div>
-                                    <?php } ?>
-
-                                </div>
-                            </div>
+                    <tr class="store-cart-item">
+                        <?php $thumb = $product->getImageThumb(); ?>
+                        <?php if ($thumb) { ?>
+                        <td class="store-cart-list-thumb">
+                            <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                                <?=  $product->getImageThumb() ?>
+                            </a>
                         </td>
-                        <td data-th="Price">
+                        <td class="store-cart-product-name">
+                        <?php } else { ?>
+                        <td class="store-cart-product-name" colspan="2">
+                        <?php } ?>
+                        <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                            <?= $product->getName() ?>
+                        </a>
+
+                        <?php if ($cartItem['productAttributes']) { ?>
+                            <div class="store-cart-list-item-attributes">
+                                <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {
+                                    $groupID = str_replace("po", "", $groupID);
+                                    $optiongroup = StoreProductOption::getByID($groupID);
+                                    $optionvalue = StoreProductOptionItem::getByID($valID);
+
+                                    ?>
+                                    <div class="store-cart-list-item-attribute">
+                                        <span
+                                            class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '') ?>
+                                            :</span>
+                                        <span
+                                            class="store-cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName() : '') ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                        </td>
+                        <td class="store-cart-item-price">
                             <?php
                             $salePrice = $product->getSalePrice();
                             if (isset($salePrice) && $salePrice != "") {
-                                //echo '<span class="original-price">'.StorePrice::format($product->getPrice()).'</span>';
                                 echo '<span class="sale-price">' . StorePrice::format($salePrice) . '</span>';
                             } else {
                                 echo StorePrice::format($product->getPrice());
                             }
                             ?>
                         </td>
-                        <td data-th="Quantity" class="text-right">
+                        <td class="store-cart-product-qty text-right">
                             <?php if ($product->allowQuantity()) { ?>
 
                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
@@ -114,8 +111,6 @@ if ($cart) {
                                     class="fa fa-remove"></i><?php //echo t("Remove")
                                 ?></a>
                         </td>
-
-
                     </tr>
                 <?php }
             } ?>
@@ -124,7 +119,7 @@ if ($cart) {
 
             <tfoot>
             <tr>
-                <td colspan="3" class="text-right">
+                <td colspan="4" class="text-right">
                     <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-default"
                             type="submit"><?= t("Clear Cart") ?></button>
                     <button name="action" value="update" class="store-btn-cart-list-update btn btn-default"
@@ -170,8 +165,10 @@ if ($cart) {
     </p>
 
     <?php if ($shippingEnabled) { ?>
-        <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong> <span
-                id="store-shipping-total"><?=t('to be determined');?></span></p>
+        <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong>
+        <span id="store-shipping-total">
+         <?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
+        </span></p>
     <?php } ?>
 
     <?php if (!empty($discounts)) { ?>

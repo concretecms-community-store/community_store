@@ -128,10 +128,6 @@
     display: none;
 }
 
-.store-cart-page-cart > tbody > tr > td, .store-cart-page-cart > tfoot > tr > td{
-    vertical-align: middle;
-}
-
 @media screen and (max-width: 768px) {
     .store-cart-page .store-cart-page-cart tbody td .form-control{
         width:20%;
