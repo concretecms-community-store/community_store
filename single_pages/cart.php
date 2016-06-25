@@ -142,7 +142,7 @@ if ($cart) {
     <h3><?= t('Enter Discount Code'); ?></h3>
     <form method="post" action="<?= \URL::to('/cart/'); ?>" class="form-inline">
         <div class="form-group">
-            <input type="text" class="store-cart-page-discount-field form-control" name="code"/>
+            <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
         </div>
         <input type="hidden" name="action" value="code"/>
         <button type="submit" class="store-cart-page-discount-apply btn btn-default"><?= t('Apply'); ?></button>

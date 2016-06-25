@@ -137,7 +137,9 @@ class Checkout extends PageController
         $this->set("defaultBillingCountry",$defaultBillingCountry);
         $this->set("defaultShippingCountry",$defaultShippingCountry);
 
-        $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
+        $statelist = array(''=>'');
+        $statelist = array_merge($statelist, Core::make('helper/lists/states_provinces')->getStates());
+        $this->set("states", $statelist);
 
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
         $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
