@@ -148,9 +148,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label style="width:100%;"><?= $ak->getAttributeKeyDisplayName(); ?>
-                                                        <?php $ak->getAttributeType()->render('form', $ak); ?>
-                                                    </label>
+                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label>
+                                                     <?php $ak->getAttributeType()->render('form', $ak); ?>
                                                 </div>
                                             </div>
                                         </div>

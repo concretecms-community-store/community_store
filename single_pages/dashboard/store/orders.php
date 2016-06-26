@@ -239,12 +239,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     <?php } ?>
 
      <div class="row">
-        <?php if ($orderChoicesEnabled) { ?>
+        <?php if (!empty($orderChoicesAttList)) { ?>
             <div class="col-sm-12">
                 <h4><?= t("Other Choices")?></h4>
-                <?php foreach ($orderChoicesAttList as $ak) { ?>
+                <?php foreach ($orderChoicesAttList as $ak) {
+                    $attValue = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                    if ($attValue) {  ?>
                     <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                    <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                    <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                    <?php } ?>
                 <?php } ?>
             </div>
         <?php } ?>

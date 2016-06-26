@@ -685,6 +685,13 @@ class Order
             $paymentInstructions = $paymentMethodUsed->getMethodController()->getPaymentInstructions();
         }
 
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+
+        if (!is_array($orderChoicesAttList)) {
+            $orderChoicesAttList = array();
+        }
+
+        $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
         $mh->addParameter('paymentInstructions', $paymentInstructions);
         $mh->addParameter("order", $this);
         $mh->load("order_receipt", "community_store");
@@ -707,6 +714,7 @@ class Order
         }
 
         if ($validNotification) {
+            $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
             $mh->addParameter("order", $this);
             $mh->load("new_order_notification", "community_store");
             $mh->sendMail();

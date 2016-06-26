@@ -98,8 +98,11 @@ class StoreOrderKey extends Key
         $akList = array();
         foreach (parent::getList('store_order') as $ak) {
             if (in_array($set, $ak->getAttributeSets())) {
-                if ($user && !count(array_intersect($ak->getAttributeGroups(), $uGroupIDs))) { continue; }
-                $akList[] = $ak;
+                $attributeGroups = $ak->getAttributeGroups();
+
+                if (is_null($user) || (empty($attributeGroups) || array_intersect($ak->getAttributeGroups(), $uGroupIDs))) {
+                    $akList[] = $ak;
+                }
             }
         }
 

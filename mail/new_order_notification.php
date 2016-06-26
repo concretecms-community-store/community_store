@@ -53,13 +53,16 @@ ob_start();
             </td>
         </tr>
 
-        <?php if ($orderChoicesEnabled) { ?>
+        <?php if (!empty($orderChoicesAttList)) { ?>
             <tr>
-                <td colspan="3">
+                <td colspan="2">
                     <h3><?= t("Other Choices")?></h3>
-                    <?php foreach ($orderChoicesAttList as $ak) { ?>
-                        <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
-                        <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                    <?php foreach ($orderChoicesAttList as $ak) {
+                        $orderOtherAtt = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                        if ($orderOtherAtt) { ?>
+                            <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
+                            <p><?= str_replace("\r\n", "<br>", $orderOtherAtt->getValue('displaySanitized', 'display')); ?></p>
+                        <?php } ?>
                     <?php } ?>
                 </td>
             </tr>
