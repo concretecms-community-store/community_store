@@ -14,15 +14,57 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         </form>
     </div>
 
-    <h3><?= t("Customer Overview")?></h3>
-    <hr>
-    <div class="row">
-        <div class="col-sm-12">
-            <?php $orderemail = $order->getAttribute("email");
 
-            if ($orderemail) { ?>
+
+<div class="row">
+    <div class="col-sm-8">
+        <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
+     </div>
+    <div class="col-sm-4">
+    <?php
+    $refunded = $order->getRefunded();
+    $paid = $order->getPaid();
+    $cancelled = $order->getCancelled();
+
+    if ($cancelled) {
+        echo '<p class="alert alert-danger text-center"><strong>' . t('Cancelled') . '</strong></p>';
+    } else {
+        if ($refunded) {
+            $refundreason = $order->getRefundReason();
+            echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ($refundreason ? ' - ' .$refundreason : '') . '</strong></p>';
+        } elseif ($paid) {
+            echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . '</strong></p>';
+        } elseif ($order->getTotal() > 0) {
+            echo '<p class="alert alert-danger text-center"><strong>' . t('Unpaid') . '</strong></p>';
+        } else {
+            echo '<p class="alert alert-default text-center"><strong>' . t('Free Order') . '</strong></p>';
+        }
+    }
+    ?>
+    </div>
+</div>
+
+    <fieldset>
+    <legend><?= t("Customer Details")?></legend>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <?php $orderemail = $order->getAttribute("email"); ?>
+
+            <h4><?= t("Name")?></h4>
+            <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
+
+            <?php if ($orderemail) { ?>
             <h4><?= t("Email")?></h4>
             <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
+            <?php } ?>
+
+            <?php
+            $phone = $order->getAttribute("billing_phone");
+            if ($phone) {
+            ?>
+            <h4><?= t('Phone'); ?></h4>
+            <p><?= $phone; ?></p>
             <?php } ?>
 
             <?php
@@ -33,8 +75,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <?php } ?>
         </div>
 
-        <div class="col-sm-6">
-            <h4><?= t("Billing Information")?></h4>
+        <div class="col-sm-4">
+            <h4><?= t("Billing Address")?></h4>
             <p>
                 <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
                 <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
@@ -42,13 +84,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     echo $billingaddress->getValue('displaySanitized', 'display');
                 }
                 ?>
-                <br /> <br /><?= t('Phone'); ?>: <?= $order->getAttribute("billing_phone")?>
             </p>
         </div>
         <?php if ($order->isShippable()) { ?>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <?php if ($order->getAttribute("shipping_address")->address1) { ?>
-                    <h4><?= t("Shipping Information")?></h4>
+                    <h4><?= t("Shipping Address")?></h4>
                     <p>
                         <?= $order->getAttribute("shipping_first_name"). " " . $order->getAttribute("shipping_last_name")?><br>
                         <?php $shippingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
@@ -61,8 +102,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         <?php } ?>
     </div>
-    <h3><?= t("Order Info")?></h3>
-    <hr>
+    </fieldset>
+
+    <fieldset>
+    <legend><?= t("Order Items")?></legend>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -195,33 +238,33 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <?php } ?>
 
-
-    <br />
-    <h3><?= t("Order Status History")?></h3>
-    <hr>
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title"><?= t("Update Status")?></h4>
-                </div>
-                <div class="panel-body">
-
-                    <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
-                        <div class="form-group">
-                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
-                        </div>
-                        <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
-                    </form>
-
-                </div>
+     <div class="row">
+        <?php if (!empty($orderChoicesAttList)) { ?>
+            <div class="col-sm-12">
+                <h4><?= t("Other Choices")?></h4>
+                <?php foreach ($orderChoicesAttList as $ak) {
+                    $attValue = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                    if ($attValue) {  ?>
+                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                    <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                    <?php } ?>
+                <?php } ?>
             </div>
-        </div>
-        <div class="col-sm-8">
+        <?php } ?>
+    </div>
+
+
+    </fieldset>
+    <br />
+
+    <div class="row">
+        <div class="col-sm-6">
+            <fieldset>
+            <legend><?= t("Fulfilment")?></legend>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><strong><?= t("Status")?></strong></th>
+                    <th><?= t("Status")?></th>
                     <th><?= t("Date")?></th>
                     <th><?= t("User")?></th>
                 </tr>
@@ -237,32 +280,165 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             <td><?= $status->getDate()?></td>
                             <td><?= $status->getUserName()?></td>
                         </tr>
-                    <?php
+                        <?php
                     }
                 }
                 ?>
                 </tbody>
             </table>
-        </div>
-
-    </div>
-
-    <h3><?= t("Manage Order")?></h3>
-    <hr>
-    <div class="row">
-        <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title"><?= t("Order Options")?></h4>
+                    <h4 class="panel-title"><?= t("Update Fulfilment Status")?></h4>
                 </div>
                 <div class="panel-body">
 
-                    <a data-confirm-message="<?= h(t('Are you sure you wish to delete this order?')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
+                    <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
+                        <div class="form-group">
+                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
+                        </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
+                    </form>
 
                 </div>
             </div>
+            </fieldset>
         </div>
+        <div class="col-sm-6">
+            <fieldset>
+            <legend><?= t("Payment Status")?></legend>
+
+
+
+            <?php  if($order->getTotal() == 0) { ?>
+            <p><?= t('Free Order');?></p>
+            <?php } else {
+            if (!$paid) { ?>
+            <p class="text-danger"><?= t('Unpaid');?></p>
+            <?php } ?>
+
+            <?php if ($paid || $refunded) { ?>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th><?= t("Status")?></th>
+                    <th><?= t("Date / Reference")?></th>
+                    <th><?= t("By")?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <?php if ($paid) { ?>
+                    <tr>
+                        <td><?= t('Paid')?>
+                        </td>
+                        <td><?= $dh->formatDateTime($paid)?>
+                            <br />
+                            <?= t('Ref') . ':'?> <?= $order->getTransactionReference() ; ?>
+                        </td>
+                        <td>
+                        <?php $paiduser = User::getByUserID($order->getPaidByUID());
+                            if ($paiduser) {
+                                echo $paiduser->getUserName();
+                            } else {
+                                echo t('payment');
+                            }
+                        ?></td>
+                        <td><?php if (!$refunded && $paiduser) { ?>
+
+                         <form action="<?=URL::to("/dashboard/store/orders/reversepaid",$order->getOrderID())?>" method="post">
+                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this payment?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                         </form>
+
+                        <?php } ?></td>
+
+                    </tr>
+                 <?php } ?>
+
+                 <?php if ($refunded) { ?>
+                    <tr>
+                        <td><?= t('Refunded')?></td>
+                        <td><?= $dh->formatDateTime($refunded)?><br />
+                        <?= $order->getRefundReason(); ?>
+                        </td>
+                        <td>
+                        <?php $refundeduser = User::getByUserID($order->getRefundedByUID());
+                            if ($refundeduser) {
+                                echo $refundeduser->getUserName();
+                            }
+                        ?></td>
+                        <td>
+
+                         <form action="<?=URL::to("/dashboard/store/orders/reverserefund",$order->getOrderID())?>" method="post">
+                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                         </form>
+
+                        </td>
+
+                    </tr>
+                 <?php } ?>
+
+                </tbody>
+            </table>
+             <?php } ?>
+
+           <?php if (!$paid || !$refunded) { ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><?= t("Update Payment Status")?></h4>
+                </div>
+                <div class="panel-body">
+
+                    <?php if (!$paid) { ?>
+                    <form action="<?=URL::to("/dashboard/store/orders/markpaid",$order->getOrderID())?>" method="post">
+                       <div class="form-group">
+                       <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
+                       <input type="text" class="form-control ccm-input-text" name="transactionReference" />
+                       </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Mark Paid")?>">
+                    </form>
+                    <?php } elseif (!$refunded) {  ?>
+                        <form action="<?=URL::to("/dashboard/store/orders/markrefunded",$order->getOrderID())?>" method="post">
+                           <div class="form-group">
+                           <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
+                           <input type="text" class="form-control ccm-input-text" name="oRefundReason" />
+                           </div>
+                            <input type="submit" class="btn btn-default" value="<?= t("Mark Refunded")?>">
+                        </form>
+                    <?php } ?>
+
+                </div>
+            </div>
+            <?php } ?>
+
+             <?php } ?>
+
+             </fieldset>
+        </div>
+
     </div>
+    </fieldset>
+
+
+
+     <?php if (!$order->getCancelled()) { ?>
+        <fieldset>
+            <legend><?= t("Cancel Order")?></legend>
+            <form action="<?=URL::to("/dashboard/store/orders/markcancelled",$order->getOrderID())?>" method="post">
+            <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
+            </form>
+        </fieldset>
+    <?php } else { ?>
+     <form action="<?=URL::to("/dashboard/store/orders/reversecancel",$order->getOrderID())?>" method="post">
+        <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this cancellation?')); ?>" type="submit" class="confirm-action btn btn-default" value="<?= t("Reverse Cancellation")?>">
+     </form>
+     <br />
+
+    <fieldset>
+    <legend><?= t("Delete Order")?></legend>
+        <a data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
+    <?php } ?>
+    </fieldset>
 
 
 <?php } else { ?>
@@ -307,18 +483,61 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <th><a><?= t("Customer Name")?></a></th>
             <th><a><?= t("Order Date")?></a></th>
             <th><a><?= t("Total")?></a></th>
-            <th><a><?= t("Status")?></a></th>
+            <th><a><?= t("Payment")?></a></th>
+            <th><a><?= t("Fulfilment")?></a></th>
             <th><a><?= t("View")?></a></th>
         </thead>
         <tbody>
             <?php
                 foreach($orderList as $order){
+
+                $cancelled = $order->getCancelled();
+                $canstart = '';
+                $canend = '';
+                if ($cancelled) {
+                    $canstart = '<strike>';
+                    $canend = '</strike>';
+                }
             ?>
-                <tr>
-                    <td><a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a></td>
-                    <td><?= $order->getAttribute('billing_last_name').", ".$order->getAttribute('billing_first_name')?></td>
-                    <td><?= $dh->formatDateTime($order->getOrderDate())?></td>
-                <td><?=Price::format($order->getTotal())?></td>
+                <tr class="danger">
+                    <td><?= $canstart; ?>
+                    <a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a><?= $canend; ?>
+
+                    <?php if ($cancelled) {
+                        echo '<span class="text-danger">' . t('Cancelled') .'</span>';
+                    }
+                    ?>
+                    </td>
+                    <td><?= $canstart; ?><?php
+
+                   $last = $order->getAttribute('billing_last_name');
+                   $first = $order->getAttribute('billing_first_name');
+
+                   if ($last || $first ) {
+                    echo $last.", ".$first;
+                   } else {
+                    echo '<em>' .t('Not found') . '</em>';
+                   }
+
+                    ?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate())?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?=Price::format($order->getTotal())?><?= $canend; ?></td>
+                    <td>
+                        <?php
+                        $refunded = $order->getRefunded();
+                        $paid = $order->getPaid();
+
+                        if ($refunded) {
+                            echo '<span class="label label-warning">' . t('Refunded') . '</span>';
+                        } elseif ($paid) {
+                            echo '<span class="label label-success">' . t('Paid') . '</span>';
+                        } elseif ($order->getTotal() > 0) {
+                            echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
+                        } else {
+                            echo '<span class="label label-default">' . t('Free Order') . '</span>';
+                        }
+                        ?>
+                    </td>
                     <td><?=t(ucwords($order->getStatus()))?></td>
                     <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
                 </tr>

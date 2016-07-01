@@ -71,6 +71,15 @@ $(function(){
             window.location = url;
         }
     });
+
+    $(".confirm-action").click(function(e){
+        e.preventDefault();
+        var confirmDelete = confirm($(this).data('confirm-message'));
+        if(confirmDelete == true) {
+            $(this).closest('form').submit();
+        }
+    });
+
     $("#btn-generate-page").click(function(e){
         e.preventDefault();
         var url = $(this).attr("href");

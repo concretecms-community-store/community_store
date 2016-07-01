@@ -18,8 +18,10 @@ class States extends Controller
             if ($type == "tax") {
                 echo "<select name='taxState' id='taxState' class='form-control'>";
             } else {
-                echo "<select name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='form-control'>";
+                echo "<select required='required' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='form-control'>";
             }
+            echo '<option value=""></option>';
+
             foreach ($list as $code => $country) {
                 if ($code == $selectedState) {
                     echo "<option selected value='{$code}'>{$country}</option>";
@@ -30,9 +32,9 @@ class States extends Controller
             echo "<select>";
         } else {
             if ($type == "tax") {
-                echo "<input name='taxState' id='taxState' class='form-control'>";
+                echo "<input type='text' name='taxState' id='taxState' class='form-control'>";
             } else {
-                echo "<input name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='form-control'>";
+                echo "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='form-control' placeholder='".t('State / Province')."'>";
             }
         }
     }

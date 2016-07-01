@@ -8,7 +8,6 @@ use Illuminate\Filesystem\Filesystem;
 use View;
 use User;
 use UserInfo;
-use Concrete\Attribute\Address\Value as AttributeValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 
@@ -48,8 +47,6 @@ class Checkout extends Controller
                 echo $e->outputJSON();
             } else {
                 $customer = new StoreCustomer();
-                $address = new AttributeValue();
-
                 if ($data['adrType'] == 'billing') {
                     $this->updateBilling($data);
                     $addressraw = $customer->getValue('billing_address');
@@ -68,16 +65,11 @@ class Checkout extends Controller
                     $last_name = $customer->getValue('shipping_last_name');
                 }
 
-                // use concrete5's built in address class for formatting
-                $address->address1 = $addressraw->address1;
-                $address->address2 = $addressraw->address2;
-                $address->city = $addressraw->city;
-                $address->state_province = $addressraw->state_province;
-                $address->postal_code = $addressraw->postal_code;
-                $address->city = $addressraw->city;
-                $address->country = $addressraw->country;
-
-                $address = nl2br($address . '');  // force to string
+                if (method_exists($addressraw, 'getDisplayValue')) {
+                    $address = $addressraw->getDisplayValue();
+                } else {
+                    $address = nl2br(StoreCustomer::formatAddress($addressraw));  // force to string
+                }
 
                 echo json_encode(array('first_name' => $first_name, 'last_name' => $last_name, 'phone' => $phone, 'email' => $email, 'address' => $address, "error" => false));
             }
@@ -122,6 +114,7 @@ class Checkout extends Controller
         );
         $customer->setValue("billing_address", $address);
         Session::set('billing_address', $address);
+        Session::set('community_store.smID', false);
     }
 
     public function updateShipping($data)
@@ -143,6 +136,7 @@ class Checkout extends Controller
         );
         $customer->setValue("shipping_address", $address);
         Session::set('shipping_address', $address);
+        Session::set('community_store.smID', false);
     }
 
     public function validateAddress($data, $billing = null)

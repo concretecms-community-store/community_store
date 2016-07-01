@@ -42,7 +42,7 @@ class Calculator
             $shippingMethod = StoreShippingMethod::getByID($existingShippingMethodID);
         }
 
-        if (is_object($shippingMethod)) {
+        if (is_object($shippingMethod) && $shippingMethod->getCurrentOffer()) {
             $shippingTotal = $shippingMethod->getCurrentOffer()->getRate();
         } else {
             $shippingTotal = 0;

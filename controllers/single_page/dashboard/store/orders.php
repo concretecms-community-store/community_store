@@ -2,11 +2,13 @@
 
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use User;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Orders extends DashboardPageController
 {
@@ -47,6 +49,12 @@ class Orders extends DashboardPageController
         if ($order) {
             $this->set("order", $order);
             $this->set('orderStatuses', StoreOrderStatus::getList());
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+            if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+                $this->set("orderChoicesAttList", $orderChoicesAttList);
+            } else {
+                $this->set("orderChoicesAttList", array());
+            }
             $this->requireAsset('javascript', 'communityStoreFunctions');
         } else {
             $this->redirect('/dashboard/store/orders');
@@ -65,6 +73,86 @@ class Orders extends DashboardPageController
         StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
+
+    public function markpaid($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+
+        if ($this->post('transactionReference')) {
+            $order->setTransactionReference($this->post('transactionReference'));
+        }
+
+        $user = new \User();
+
+        $order->setPaid(new \DateTime());
+        $order->setPaidByUID($user->getUserID());
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function reversepaid($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setPaid(null);
+        $order->setPaidByUID(null);
+        $order->setTransactionReference(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+
+
+
+    public function markrefunded($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $user = new \User();
+
+        $order->setRefunded(new \DateTime());
+        $order->setRefundedByUID($user->getUserID());
+        $order->setRefundReason($this->post('oRefundReason'));
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function reverserefund($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setRefunded(null);
+        $order->setRefundedByUID(null);
+        $order->setRefundReason(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function markcancelled($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $user = new \User();
+
+        $order->setCancelled(new \DateTime());
+        $order->setCancelledByUID($user->getUserID());
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+
+
+    public function reversecancel($oID)
+    {
+        $order = StoreOrder::getByID($oID);
+        $order->setCancelled(null);
+        $order->setCancelledByUID(null);
+        $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
     public function remove($oID)
     {
         StoreOrder::getByID($oID)->remove();

@@ -35,6 +35,7 @@ class Installer
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
         self::installSinglePage('/dashboard/store/orders/', $pkg);
+        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
         self::installSinglePage('/dashboard/store/discounts/', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
@@ -245,6 +246,7 @@ class Installer
             $oakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
             $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
         $text = AttributeType::getByHandle('text');
@@ -304,20 +306,18 @@ class Installer
         $table = StoreOrderStatus::getTableName();
         $db = \Database::connection();
         $statuses = array(
-            array('osHandle' => 'incomplete', 'osName' => t('Incomplete'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'pending', 'osName' => t('Pending'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 1),
-            array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1),
+            array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
             array('osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'complete', 'osName' => t('Complete'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
         );
+
+        $db->query("DELETE FROM " . $table);
+
         foreach ($statuses as $status) {
-            $row = $db->GetRow("SELECT * FROM " . $table . " WHERE osHandle=?", array($status['osHandle']));
-            if (!isset($row['osHandle'])) {
-                StoreOrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
-            } else {
-                $orderStatus = StoreOrderStatus::getByID($row['osID']);
-                $orderStatus->update($status, true);
-            }
+            StoreOrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
         }
     }
 
@@ -335,6 +335,17 @@ class Installer
 
     public static function upgrade($pkg)
     {
+        $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
+        if ($singlePage->error) {
+            self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+        }
+
+        $oakc = AttributeKeyCategory::getByHandle('store_order');
+        $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
+        if (!$orderChoiceSet instanceof AttributeSet) {
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        }
+
         // now we refresh all blocks
         $items = $pkg->getPackageItems();
         if (is_array($items['block_types'])) {

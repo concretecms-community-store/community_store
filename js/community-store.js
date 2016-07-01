@@ -1,10 +1,14 @@
 var communityStore = {
 
-    openModal: function (content) {
+    openModal: function (content, animatecart) {
         if ($(".store-whiteout").length) {
             $(".store-whiteout").empty().html(content);
         } else {
             $("body").append("<div class='store-whiteout'>" + content + "</div>");
+
+            setTimeout(function () {
+                $('.store-cart-modal').addClass('store-cart-modal-active');
+            }, 10);
 
             $(".store-whiteout").click(function (e) {
                 if (e.target != this) return;  // only allow the actual whiteout background to close the dialog
@@ -18,8 +22,16 @@ var communityStore = {
                 }
             });
         }
-    }
-    ,
+
+        if (animatecart) {
+            setTimeout(function () {
+                $('.store-cart-modal').addClass('store-cart-modal-active');
+            }, 10);
+        } else {
+            $('.store-cart-modal').addClass('store-cart-modal-active');
+        }
+    },
+
     waiting: function () {
         communityStore.openModal("<div class='store-spinner-container'><div class='store-spinner'></div></div>");
     },
@@ -40,13 +52,13 @@ var communityStore = {
         });
     },
 
-    displayCart: function (res) {
+    displayCart: function (res, animatecart) {
         $.ajax({
             type: "POST",
             data: res,
             url: CARTURL + '/getmodal',
             success: function (data) {
-                communityStore.openModal(data);
+                communityStore.openModal(data, animatecart);
             }
         });
     },
@@ -76,7 +88,7 @@ var communityStore = {
                         return false;
                     }
 
-                    communityStore.displayCart(res);
+                    communityStore.displayCart(res, true);
                     communityStore.refreshCartTotals();
                 }
             });
@@ -87,8 +99,8 @@ var communityStore = {
 
     //Update a single item in cart
     updateItem: function (instanceID, modal) {
-        var qty = $("*[data-instance-id='" + instanceID + "']").find(".cart-list-product-qty input").val();
-        communityStore.waiting();
+        var qty = $("*[data-instance-id='" + instanceID + "']").find(".store-cart-list-product-qty .form-control").val();
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update",
             data: {instance: instanceID, pQty: qty},
@@ -107,7 +119,7 @@ var communityStore = {
 
     //Update multiple item quantities
     updateMultiple: function (instances, quantities, modal) {
-        communityStore.waiting();
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update",
             data: {instance: instances, pQty: quantities},
@@ -124,7 +136,7 @@ var communityStore = {
     },
 
     removeItem: function (instanceID, modal) {
-        communityStore.waiting();
+        //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/remove",
             data: {instance: instanceID},
@@ -162,6 +174,7 @@ var communityStore = {
             success: function (response) {
                 values = $.parseJSON(response);
                 itemCount = values.itemCount;
+                subTotal = values.subTotal;
                 total = values.total;
                 totalCents = values.totalCents;
 
@@ -176,6 +189,7 @@ var communityStore = {
                     $(".store-utility-links").removeClass('store-cart-empty');
                 }
 
+                $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
                 $(".store-total-amount").data('total-cents',totalCents);
 
@@ -267,17 +281,33 @@ var communityStore = {
         var pmID = $("#store-checkout-payment-method-options input[type='radio']:checked").attr('data-payment-method-id');
         $('.store-payment-method-container').addClass('hidden');
         $(".store-payment-method-container[data-payment-method-id='" + pmID + "']").removeClass('hidden');
+    },
+
+    copyBillingToShipping: function() {
+        $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
+        $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
+        $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
+        $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
+        $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
+        $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
+        $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
+        $("#store-checkout-shipping-city").val($("#store-checkout-billing-city").val());
+        var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
+        $("#store-checkout-shipping-state").replaceWith(billingstate);
+        $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
     }
 
 
 };
 
-communityStore.updateBillingStates(true);
-communityStore.updateShippingStates(true);
-communityStore.showShippingMethods();
-communityStore.showPaymentForm();
-
 $(document).ready(function () {
+    if ($('.store-checkout-form-shell').size() > 0) {
+        communityStore.updateBillingStates(true);
+        communityStore.updateShippingStates(true);
+        communityStore.showShippingMethods();
+        communityStore.showPaymentForm();
+    }
+
     $("#store-checkout-form-group-billing").submit(function (e) {
         e.preventDefault();
         var email = $("#store-email").val();
@@ -291,6 +321,14 @@ $(document).ready(function () {
         var bState = $("#store-checkout-billing-state").val();
         var bPostal = $("#store-checkout-billing-zip").val();
         $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
+
+
+        $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
+            var akID = $(el).data("akid");
+            var value = $(el).find(".form-control").val();
+            $('.store-summary-order-choices-' + akID).html(value.replace(/[\n\r]/g, '<br>'));
+            $('#store-checkout-form-group-payment').append('<input name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+        });;
 
         communityStore.waiting();
         var obj = $(this);
@@ -314,7 +352,15 @@ $(document).ready(function () {
                 //var test = null;
                 var response = JSON.parse(result);
                 if (response.error == false) {
-                    $(".store-whiteout").remove();
+
+                    if ($('#store-copy-billing').is(":checked")) {
+                        communityStore.copyBillingToShipping();
+                        $("#store-checkout-form-group-shipping").submit();
+                        $('#store-copy-billing').prop('checked', false)
+                    } else {
+                        $(".store-whiteout").remove();
+                    }
+
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-phone').html(response.phone);
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
@@ -335,6 +381,7 @@ $(document).ready(function () {
                         }
                     });
                     communityStore.refreshCartTotals();
+
                 } else {
                     $("#store-checkout-form-group-billing .store-checkout-form-group-body ").prepend('<div class="store-checkout-errors"><div class="store-checkout-error alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-billing .store-checkout-error").html(response.errors.join('<br>'));
@@ -394,6 +441,7 @@ $(document).ready(function () {
                                     $("#store-taxes").append('<li class="store-line-item store-tax-item"><strong>' + taxes[i].name + ":</strong> <span class=\"tax-amount\">" + taxes[i].taxamount + "</span></li>");
                                 }
                             }
+                            $("#shipping-total").text($("#shipping-total").data('unknown-label'));
                         }
                     });
                     communityStore.showShippingMethods();
@@ -427,7 +475,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'post',
                 data: { smID: smID,
-                        sInstructions: sInstructions},
+                    sInstructions: sInstructions},
                 url: CARTURL + "/getShippingTotal",
                 success: function (total) {
                     if (total <= 0) {
@@ -471,21 +519,7 @@ $(document).ready(function () {
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");
         e.preventDefault();
     });
-    $("#store-copy-billing").change(function () {
-        if ($(this).is(":checked")) {
-            $("#store-checkout-shipping-first-name").val($("#store-checkout-billing-first-name").val());
-            $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
-            $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
-            $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
-            $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
-            $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
-            $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
-            $("#store-checkout-shipping-city").val($("#store-checkout-billing-city").val());
-            var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
-            $("#store-checkout-shipping-state").replaceWith(billingstate);
-            $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
-        }
-    });
+
     $("#store-checkout-payment-method-options input[type='radio']").change(function () {
         communityStore.showPaymentForm();
     });
@@ -513,7 +547,7 @@ $(document).ready(function () {
     });
 
     $('.store-cart-link-modal').click(function(e){
-        communityStore.displayCart();
+        communityStore.displayCart(false, true);
         e.preventDefault();
     });
 
@@ -523,24 +557,23 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-btn-cart-modal-clear', function(e) {
-        communityStore.clearCart(true)
+        communityStore.clearCart(true);
+        $(this).addClass('disabled');
         e.preventDefault();
     });
 
     $(document).on('click', '.store-btn-cart-modal-update', function(e) {
-       var instances = $("#store-modal-cart input[name='instance[]']").map(function(){return $(this).val();}).get();
-       var pQty = $("#store-modal-cart input[name='pQty[]']").map(function(){return $(this).val();}).get();
+        var instances = $("#store-modal-cart input[name='instance[]']").map(function(){return $(this).val();}).get();
+        var pQty = $("#store-modal-cart input[name='pQty[]']").map(function(){return $(this).val();}).get();
 
         communityStore.updateMultiple(instances,pQty,true);
+        $(this).addClass('disabled');
         e.preventDefault();
     });
 
-    $(document).on('click', '.store-btn-cart-list-update', function(e) {
-        communityStore.waiting();
-    });
 
     $('.store-cart-modal-link').click(function (e) {
         e.preventDefault();
-        communityStore.displayCart();
+        communityStore.displayCart(false, true);
     });
 });
