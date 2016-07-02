@@ -165,7 +165,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     </div>
 
-                    <div class="store-checkout-form-group-summary <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?> panel panel-default ">
+                    <div class="store-checkout-form-group-summary panel panel-default ">
                         <div class="panel-heading">
                             <?= t('Billing Address'); ?>
                         </div>
@@ -418,7 +418,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             echo '<small class="text-muted">' . t("inc. taxes") . "</small>";
                         } ?>
                     </li>
+                </ul>
 
+                <ul class="store-checkout-totals-line-items list-group" id="store-taxes">
                     <?php
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
@@ -430,8 +432,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         }
                     }
                     ?>
+                </ul>
 
-
+                <ul class="store-checkout-totals-line-items list-group">
                     <?php if ($shippingEnabled) { ?>
                         <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
                                 id="shipping-total" data-no-charge-label="<?=t('No Charge');?>" data-unknown-label="<?=t('to be determined');?>"><?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
