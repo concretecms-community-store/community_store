@@ -56,13 +56,13 @@ class ProductList extends AttributedItemList
         $this->groupMatchAny = (bool) $match;
     }
 
-    public function setFeatureType($type)
+    public function setFeatureType($bool)
     {
-        $this->featured = $type;
+        $this->featured = $bool;
     }
-    public function setShowSaleType($type)
+    public function setShowSaleType($bool)
     {
-        $this->sale = $type;
+        $this->sale = $bool;
     }
     public function activeOnly($bool)
     {
@@ -138,21 +138,11 @@ class ProductList extends AttributedItemList
                 }
                 break;
         }
-        switch ($this->featured) {
-            case "featured":
-                $query->andWhere("pFeatured = 1");
-                break;
-            case "nonfeatured":
-                $query->andWhere("pFeatured = 0");
-                break;
+        if ($this->featured) {
+            $query->andWhere("pFeatured = 1");
         }
-        switch ($this->sale) {
-            case "sale":
-                $query->andWhere("pSalePrice is not null");
-                break;
-            case "nonsale":
-                $query->andWhere("pFeatured is null");
-                break;
+        if ($this->sale) {
+            $query->andWhere("pSalePrice is not null");
         }
         if (!$this->showOutOfStock) {
             $query->andWhere("pQty > 0 OR pQtyUnlim = 1");
