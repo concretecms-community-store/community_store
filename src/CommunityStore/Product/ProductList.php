@@ -13,7 +13,8 @@ class ProductList extends AttributedItemList
     protected $groupMatchAny = false;
     protected $sortBy = "alpha";
     protected $sortByDirection = "desc";
-    protected $featured = "all";
+    protected $featuredOnly = false;
+    protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = array();
 
@@ -56,15 +57,15 @@ class ProductList extends AttributedItemList
         $this->groupMatchAny = (bool) $match;
     }
 
-    public function setFeatureType($bool)
+    public function setFeaturedOnly($bool)
     {
-        $this->featured = $bool;
+        $this->featuredOnly = $bool;
     }
-    public function setShowSaleType($bool)
+    public function setSaleOnly($bool)
     {
-        $this->sale = $bool;
+        $this->saleOnly = $bool;
     }
-    public function activeOnly($bool)
+    public function setActiveOnly($bool)
     {
         $this->activeOnly = $bool;
     }
@@ -138,10 +139,10 @@ class ProductList extends AttributedItemList
                 }
                 break;
         }
-        if ($this->featured) {
+        if ($this->featuredOnly) {
             $query->andWhere("pFeatured = 1");
         }
-        if ($this->sale) {
+        if ($this->saleOnly) {
             $query->andWhere("pSalePrice is not null");
         }
         if (!$this->showOutOfStock) {
