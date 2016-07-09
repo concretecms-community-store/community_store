@@ -137,7 +137,7 @@ class Controller extends BlockController
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
         $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
-        $args['maxProducts'] = isset($args['maxProducts']) ? $args['maxProducts'] : 0;
+        $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
