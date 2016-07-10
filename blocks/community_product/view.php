@@ -184,6 +184,8 @@ if (is_object($product)) {
 
                 $imgObj = $variation->getVariationImageObj();
 
+                $thumb = false;
+
                 if ($imgObj) {
                     $thumb = Core::make('helper/image')->getThumbnail($imgObj,600,800,true);
                 }

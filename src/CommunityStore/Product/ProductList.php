@@ -13,7 +13,8 @@ class ProductList extends AttributedItemList
     protected $groupMatchAny = false;
     protected $sortBy = "alpha";
     protected $sortByDirection = "desc";
-    protected $featured = "all";
+    protected $featuredOnly = false;
+    protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = array();
 
@@ -56,15 +57,15 @@ class ProductList extends AttributedItemList
         $this->groupMatchAny = (bool) $match;
     }
 
-    public function setFeatureType($type)
+    public function setFeaturedOnly($bool)
     {
-        $this->featured = $type;
+        $this->featuredOnly = $bool;
     }
-    public function setShowSaleType($type)
+    public function setSaleOnly($bool)
     {
-        $this->sale = $type;
+        $this->saleOnly = $bool;
     }
-    public function activeOnly($bool)
+    public function setActiveOnly($bool)
     {
         $this->activeOnly = $bool;
     }
@@ -138,21 +139,11 @@ class ProductList extends AttributedItemList
                 }
                 break;
         }
-        switch ($this->featured) {
-            case "featured":
-                $query->andWhere("pFeatured = 1");
-                break;
-            case "nonfeatured":
-                $query->andWhere("pFeatured = 0");
-                break;
+        if ($this->featuredOnly) {
+            $query->andWhere("pFeatured = 1");
         }
-        switch ($this->sale) {
-            case "sale":
-                $query->andWhere("pSalePrice is not null");
-                break;
-            case "nonsale":
-                $query->andWhere("pFeatured is null");
-                break;
+        if ($this->saleOnly) {
+            $query->andWhere("pSalePrice is not null");
         }
         if (!$this->showOutOfStock) {
             $query->andWhere("pQty > 0 OR pQtyUnlim = 1");

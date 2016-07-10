@@ -228,7 +228,7 @@ class ShippingMethod
 
     public static function getActiveShippingMethod()
     {
-        $smID = \Session::get('smID');
+        $smID = \Session::get('community_store.smID');
         if ($smID) {
             $sm = self::getByID($smID);
 

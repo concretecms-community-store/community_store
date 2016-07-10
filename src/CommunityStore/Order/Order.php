@@ -45,11 +45,17 @@ class Order
     /** @Column(type="datetime") */
     protected $oDate;
 
+    /** @Column(type="integer",nullable=true) */
+    protected $pmID;
+
     /** @Column(type="text") */
     protected $pmName;
 
     /** @Column(type="text") */
     protected $smName;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sInstructions;
 
     /** @Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
@@ -68,6 +74,27 @@ class Order
 
     /** @Column(type="text", nullable=true) */
     protected $transactionReference;
+
+    /** @Column(type="datetime", nullable=true) */
+    protected $oPaid;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oPaidByUID;
+
+    /** @Column(type="datetime", nullable=true) */
+    protected $oCancelled;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oCancelledByUID;
+
+    /** @Column(type="datetime", nullable=true) */
+    protected $oRefunded;
+
+    /** @Column(type="integer", nullable=true) */
+    protected $oRefundedByUID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $oRefundReason;
 
     /** @Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
@@ -102,9 +129,19 @@ class Order
         $this->pmName = $pmName;
     }
 
+    public function setPaymentMethodID($pmID)
+    {
+        $this->pmID = $pmID;
+    }
+
     public function setShippingMethodName($smName)
     {
         $this->smName = $smName;
+    }
+
+    public function setShippingInstructions($sInstructions)
+    {
+        $this->sInstructions = $sInstructions;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -143,6 +180,76 @@ class Order
         $this->save();
     }
 
+    public function getPaid()
+    {
+        return $this->oPaid;
+    }
+
+    public function setPaid($oPaid)
+    {
+        $this->oPaid = $oPaid;
+    }
+
+    public function getPaidByUID()
+    {
+        return $this->oPaidByUID;
+    }
+
+    public function setPaidByUID($oPaidByUID)
+    {
+        $this->oPaidByUID = $oPaidByUID;
+    }
+
+    public function getCancelled()
+    {
+        return $this->oCancelled;
+    }
+
+    public function setCancelled($oCancelled)
+    {
+        $this->oCancelled = $oCancelled;
+    }
+
+    public function getCancelledByUID()
+    {
+        return $this->oCancelledByUID;
+    }
+
+    public function setCancelledByUID($oCancelledByUID)
+    {
+        $this->oCancelledByUID = $oCancelledByUID;
+    }
+
+    public function getRefunded()
+    {
+        return $this->oRefunded;
+    }
+
+    public function setRefunded($oRefunded)
+    {
+        $this->oRefunded = $oRefunded;
+    }
+
+    public function getRefundedByUID()
+    {
+        return $this->oRefundedByUID;
+    }
+
+    public function setRefundedByUID($oRefundedByUID)
+    {
+        $this->oRefundedByUID = $oRefundedByUID;
+    }
+
+    public function getRefundReason()
+    {
+        return $this->oRefundReason;
+    }
+
+    public function setRefundReason($oRefundReason)
+    {
+        $this->oRefundReason = $oRefundReason;
+    }
+
     public function getOrderID()
     {
         return $this->oID;
@@ -158,6 +265,11 @@ class Order
         return $this->oDate;
     }
 
+    public function getPaymentMethodID()
+    {
+        return $this->pmID;
+    }
+
     public function getPaymentMethodName()
     {
         return $this->pmName;
@@ -166,6 +278,11 @@ class Order
     public function getShippingMethodName()
     {
         return $this->smName;
+    }
+
+    public function getShippingInstructions()
+    {
+        return $this->sInstructions;
     }
 
     public function getShippingTotal()
@@ -281,17 +398,22 @@ class Order
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
+        $sInstructions = StoreCart::getShippingInstructions();
+        StoreCart::getShippingInstructions('');
         $shippingTotal = StoreCalculator::getShippingTotal();
         $taxes = StoreTax::getConcatenatedTaxStrings();
         $totals = StoreCalculator::getTotals();
         $total = $totals['total'];
         $pmName = $pm->getName();
+        $pmDisplayName = $pm->getDisplayName();
 
         $order = new self();
         $order->setCustomerID($customer->getUserID());
         $order->setDate($now);
-        $order->setPaymentMethodName($pmName);
+        $order->setPaymentMethodName($pmDisplayName ? $pmDisplayName : $pmName);
+        $order->setPaymentMethodID($pm->getID());
         $order->setShippingMethodName($smName);
+        $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxes['taxTotals']);
         $order->setTaxIncluded($taxes['taxIncludedTotals']);
@@ -309,6 +431,14 @@ class Order
             $orderDiscount->setOrder($order);
             if ($discount->getTrigger() == 'code') {
                 $orderDiscount->setCode(Session::get('communitystore.code'));
+
+                if ($discount->isSingleUse()) {
+                    $code = StoreDiscountCode::getByCode(Session::get('communitystore.code'));
+                    if ($code) {
+                        $code->setOID($order->getOrderID());
+                        $code->save();
+                    }
+                }
             }
             $orderDiscount->setDisplay($discount->getDisplay());
             $orderDiscount->setName($discount->getName());
@@ -321,6 +451,7 @@ class Order
         $customer->setLastOrderID($order->getOrderID());
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
+        $order->saveOrderChoices($order);
         $order->addOrderItems(StoreCart::getCart());
 
         if (!$pm->getMethodController()->isExternal()) {
@@ -360,51 +491,23 @@ class Order
         }
     }
 
-    public function addOrderItems($cart)
-    {
-        $taxCalc = Config::get('community_store.calculation');
-        foreach ($cart as $cartItem) {
-            $taxes = StoreTax::getTaxForProduct($cartItem);
-            $taxProductTotal = array();
-            $taxProductIncludedTotal = array();
-            $taxProductLabels = array();
-
-            foreach ($taxes as $tax) {
-                if ($taxCalc == 'extract') {
-                    $taxProductIncludedTotal[] = $tax['taxamount'];
-                } else {
-                    $taxProductTotal[] = $tax['taxamount'];
-                }
-                $taxProductLabels[] = $tax['name'];
-            }
-            $taxProductTotal = implode(',', $taxProductTotal);
-            $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);
-            $taxProductLabels = implode(',', $taxProductLabels);
-
-            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
-            $this->orderItems->add($orderItem);
-        }
-    }
-
-    public function save()
-    {
-        $em = \Database::connection()->getEntityManager();
-        $em->persist($this);
-        $em->flush();
-    }
-
-    public function delete()
-    {
-        $this->getShippingMethodTypeMethod()->delete();
-        $em = \Database::connection()->getEntityManager();
-        $em->remove($this);
-        $em->flush();
-    }
-
     public function completeOrder($transactionReference = null)
     {
         if ($transactionReference) {
             $this->setTransactionReference($transactionReference);
+        }
+
+        $pmID = $this->getPaymentMethodID();
+
+        if ($pmID) {
+            $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
+
+            if ($paymentMethodUsed) {
+                // if the payment method actually is a payment (as opposed to an invoice), mark order as paid
+                if ($paymentMethodUsed->getMethodController()->markPaid()) {
+                    $this->setPaid(new \DateTime());
+                }
+            }
         }
 
         $this->setExternalPaymentRequested(null);
@@ -417,7 +520,7 @@ class Order
 
         $fromName = Config::get('community_store.emailalertsname');
 
-        $smID = \Session::get('smID');
+        $smID = \Session::get('community_store.smID');
         $groupstoadd = array();
         $createlogin = false;
         $orderItems = $this->getOrderItems();
@@ -461,8 +564,6 @@ class Order
                 }
 
                 $valc = Core::make('helper/concrete/validation');
-
-
                 $min = Config::get('concrete.user.username.minimum');
                 $max = Config::get('concrete.user.username.maximum');
 
@@ -529,7 +630,7 @@ class Order
             $customer->setValue('billing_address', $billing_address);
             $customer->setValue('billing_phone', $billing_phone);
 
-            if ($smID) {
+            if ($this->isShippable()) {
                 $customer->setValue('shipping_first_name', $shipping_first_name);
                 $customer->setValue('shipping_last_name', $shipping_last_name);
                 $customer->setValue('shipping_address', $shipping_address);
@@ -579,6 +680,19 @@ class Order
 
         $mh->to($customer->getEmail());
 
+        $paymentInstructions = '';
+        if ($paymentMethodUsed) {
+            $paymentInstructions = $paymentMethodUsed->getMethodController()->getPaymentInstructions();
+        }
+
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+
+        if (!is_array($orderChoicesAttList)) {
+            $orderChoicesAttList = array();
+        }
+
+        $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
+        $mh->addParameter('paymentInstructions', $paymentInstructions);
         $mh->addParameter("order", $this);
         $mh->load("order_receipt", "community_store");
         $mh->sendMail();
@@ -600,17 +714,59 @@ class Order
         }
 
         if ($validNotification) {
+            $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
             $mh->addParameter("order", $this);
             $mh->load("new_order_notification", "community_store");
             $mh->sendMail();
         }
 
         // unset the shipping type, as next order might be unshippable
-        \Session::set('smID', '');
+        \Session::set('community_store.smID', '');
 
         StoreCart::clear();
 
         return $this;
+    }
+
+    public function addOrderItems($cart)
+    {
+        $taxCalc = Config::get('community_store.calculation');
+        foreach ($cart as $cartItem) {
+            $taxes = StoreTax::getTaxForProduct($cartItem);
+            $taxProductTotal = array();
+            $taxProductIncludedTotal = array();
+            $taxProductLabels = array();
+
+            foreach ($taxes as $tax) {
+                if ($taxCalc == 'extract') {
+                    $taxProductIncludedTotal[] = $tax['taxamount'];
+                } else {
+                    $taxProductTotal[] = $tax['taxamount'];
+                }
+                $taxProductLabels[] = $tax['name'];
+            }
+            $taxProductTotal = implode(',', $taxProductTotal);
+            $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);
+            $taxProductLabels = implode(',', $taxProductLabels);
+
+            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
+            $this->orderItems->add($orderItem);
+        }
+    }
+
+    public function save()
+    {
+        $em = \Database::connection()->getEntityManager();
+        $em->persist($this);
+        $em->flush();
+    }
+
+    public function delete()
+    {
+        $this->getShippingMethodTypeMethod()->delete();
+        $em = \Database::connection()->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 
     public function remove()
@@ -745,4 +901,30 @@ class Order
 
         return $rows;
     }
+
+    public function saveOrderChoices($order)
+    {
+        //save product attributes
+        $akList = StoreOrderKey::getAttributeListBySet('order_choices');
+        foreach($akList as $ak) {
+            $ak->saveAttributeForm($order);
+        }
+    }
+
+    public function getAddressValue($handle, $valuename) {
+        $att = $this->getValue($handle);
+        return $this->returnAttributeValue($att,$valuename);
+    }
+
+    private function returnAttributeValue($att, $valuename) {
+        $valueCamel = camel_case($valuename);
+
+        if (method_exists($att, 'get' .$valueCamel)) {
+            $functionname = 'get'.$valueCamel;
+            return $att->$functionname();
+        } else {
+            return $att->$valuename;
+        }
+    }
+
 }

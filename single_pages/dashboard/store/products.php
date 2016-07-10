@@ -87,9 +87,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
             <div class="col-sm-9 store-pane active" id="product-overview">
-
-
-
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -191,8 +188,26 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->select("pNoQty",array('0'=>t('Yes'),'1'=>t('No, only allow one of this product in a cart')), !$product->allowQuantity());?>
                         </div>
                     </div>
-
                 </div>
+                <?php if ($controller->getTask() == 'edit') { ?>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pDateAdded", t("Date Added"));?>
+                            <?= \Core::make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
+                        </div>
+                        <style>
+                            #ui-datepicker-div {
+                                z-index: 100 !important;
+                            }
+                        </style>
+                    </div>
+                    <div class="col-xs-6">
+
+                    </div>
+                </div>
+                <?php } ?>
+
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Short Description"));?><br>
                     <?php

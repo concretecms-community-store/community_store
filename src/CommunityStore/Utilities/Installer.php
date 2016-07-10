@@ -30,11 +30,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Installer
 {
-    public static function installSinglePages(Package $pkg)
+    public static function installSinglePages($pkg)
     {
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
         self::installSinglePage('/dashboard/store/orders/', $pkg);
+        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
         self::installSinglePage('/dashboard/store/discounts/', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
@@ -58,7 +59,7 @@ class Installer
             SinglePage::add($path, $pkg);
         }
     }
-    public static function installProductParentPage(Package $pkg)
+    public static function installProductParentPage($pkg)
     {
         $productParentPage = Page::getByPath('/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
@@ -73,7 +74,7 @@ class Installer
         }
         $productParentPage->setAttribute('exclude_nav', 1);
     }
-    public static function installStoreProductPageType(Package $pkg)
+    public static function installStoreProductPageType($pkg)
     {
         //install product detail page type
         $pageType = PageType::getByHandle('store_product');
@@ -94,7 +95,7 @@ class Installer
         }
     }
 
-    public static function setDefaultConfigValues(Package $pkg)
+    public static function setDefaultConfigValues($pkg)
     {
         self::setConfigValue('community_store.productPublishTarget', Page::getByPath('/products')->getCollectionID());
         self::setConfigValue('community_store.symbol', '$');
@@ -113,7 +114,7 @@ class Installer
             Config::save($key, $value);
         }
     }
-    public static function installPaymentMethods(Package $pkg)
+    public static function installPaymentMethods($pkg)
     {
         self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
     }
@@ -124,7 +125,7 @@ class Installer
             StorePaymentMethod::add($handle, $name, $pkg, $displayName, $enabled);
         }
     }
-    public static function installShippingMethods(Package $pkg)
+    public static function installShippingMethods($pkg)
     {
         self::installShippingMethod('flat_rate', 'Flat Rate', $pkg);
         self::installShippingMethod('free_shipping', 'Free Shipping', $pkg);
@@ -138,7 +139,7 @@ class Installer
         }
     }
 
-    public static function installBlocks(Package $pkg)
+    public static function installBlocks($pkg)
     {
         $bts = BlockTypeSet::getByHandle('community_store');
         if (!is_object($bts)) {
@@ -155,7 +156,7 @@ class Installer
             BlockType::installBlockType($handle, $pkg);
         }
     }
-    public static function setPageTypeDefaults(Package $pkg)
+    public static function setPageTypeDefaults($pkg)
     {
         $pageType = PageType::getByHandle('store_product');
         $template = $pageType->getPageTypeDefaultPageTemplateObject();
@@ -179,7 +180,7 @@ class Installer
         }
     }
 
-    public static function installCustomerGroups(Package $pkg)
+    public static function installCustomerGroups($pkg)
     {
         $group = Group::getByName('Store Customer');
         if (!$group || $group->getGroupID() < 1) {
@@ -187,7 +188,7 @@ class Installer
         }
     }
 
-    public static function installUserAttributes(Package $pkg)
+    public static function installUserAttributes($pkg)
     {
         //user attributes for customers
         $uakc = AttributeKeyCategory::getByHandle('user');
@@ -231,7 +232,7 @@ class Installer
         }
     }
 
-    public static function installOrderAttributes(Package $pkg)
+    public static function installOrderAttributes($pkg)
     {
         //create custom attribute category for orders
         $oakc = AttributeKeyCategory::getByHandle('store_order');
@@ -245,6 +246,7 @@ class Installer
             $oakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
             $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
         $text = AttributeType::getByHandle('text');
@@ -275,7 +277,7 @@ class Installer
         }
     }
 
-    public static function installProductAttributes(Package $pkg)
+    public static function installProductAttributes($pkg)
     {
         //create custom attribute category for products
         $pakc = AttributeKeyCategory::getByHandle('store_product');
@@ -290,7 +292,7 @@ class Installer
         }
     }
 
-    public static function createDDFileset(Package $pkg)
+    public static function createDDFileset($pkg)
     {
         //create fileset to place digital downloads
         $fs = FileSet::getByName(t('Digital Downloads'));
@@ -299,25 +301,23 @@ class Installer
         }
     }
 
-    public static function installOrderStatuses(Package $package)
+    public static function installOrderStatuses($pkg)
     {
         $table = StoreOrderStatus::getTableName();
         $db = \Database::connection();
         $statuses = array(
-            array('osHandle' => 'incomplete', 'osName' => t('Incomplete'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'pending', 'osName' => t('Pending'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 1),
-            array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1),
+            array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
             array('osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'complete', 'osName' => t('Complete'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
+            array('osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
         );
+
+        $db->query("DELETE FROM " . $table);
+
         foreach ($statuses as $status) {
-            $row = $db->GetRow("SELECT * FROM " . $table . " WHERE osHandle=?", array($status['osHandle']));
-            if (!isset($row['osHandle'])) {
-                StoreOrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
-            } else {
-                $orderStatus = StoreOrderStatus::getByID($row['osID']);
-                $orderStatus->update($status, true);
-            }
+            StoreOrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
         }
     }
 
@@ -333,8 +333,19 @@ class Installer
         }
     }
 
-    public static function upgrade(Package $pkg)
+    public static function upgrade($pkg)
     {
+        $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
+        if ($singlePage->error) {
+            self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+        }
+
+        $oakc = AttributeKeyCategory::getByHandle('store_order');
+        $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
+        if (!$orderChoiceSet instanceof AttributeSet) {
+            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        }
+
         // now we refresh all blocks
         $items = $pkg->getPackageItems();
         if (is_array($items['block_types'])) {

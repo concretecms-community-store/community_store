@@ -449,6 +449,7 @@ class Product
 
             $product->setPageDescription($data['pDesc']);
             $newproduct = false;
+            $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] .':' . $data['pDateAdded_m']));
         } else {
             //else, we don't know it and we're adding a new product
             $product = new self();
@@ -820,6 +821,9 @@ class Product
     public function getVariations()
     {
         return StoreProductVariation::getVariationsForProduct($this);
+    }
+    public function getDateAdded(){
+        return $this->pDateAdded;
     }
 
     public function save()

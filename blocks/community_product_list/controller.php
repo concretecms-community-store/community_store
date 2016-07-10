@@ -14,7 +14,7 @@ class Controller extends BlockController
     protected $btTable = 'btCommunityStoreProductList';
     protected $btInterfaceWidth = "800";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "520";
+    protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
 
     public function getBlockTypeDescription()
@@ -91,8 +91,8 @@ class Controller extends BlockController
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
-        $products->setFeatureType($this->showFeatured);
-        $products->setShowSaleType($this->showSale);
+        $products->setFeaturedOnly($this->showFeatured);
+        $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
         $paginator = $products->getPagination();
@@ -129,12 +129,15 @@ class Controller extends BlockController
         $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
         $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
         $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
+        $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
         $args['showAddToCart'] = isset($args['showAddToCart']) ? 1 : 0;
         $args['showLink'] = isset($args['showLink']) ? 1 : 0;
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
-        $args['maxProducts'] = isset($args['maxProducts']) ? $args['maxProducts'] : 0;
+        $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
+        $args['showSale'] = isset($args['showSale']) ? 1 : 0;
+        $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);

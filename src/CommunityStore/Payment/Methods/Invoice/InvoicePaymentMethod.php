@@ -16,13 +16,15 @@ class InvoicePaymentMethod extends StorePaymentMethod
     {
         $this->set('form', Core::make("helper/form"));
         $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
-        $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
+        $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
+        $this->set('paymentInstructions', Config::get('community_store.paymentInstructions'));
     }
 
     public function save(array $data = [])
     {
         Config::save('community_store.invoiceMinimum', $data['invoiceMinimum']);
         Config::save('community_store.invoiceMaximum', $data['invoiceMaximum']);
+        Config::save('community_store.paymentInstructions', $data['paymentInstructions']);
     }
     public function validate($args, $e)
     {
@@ -32,7 +34,18 @@ class InvoicePaymentMethod extends StorePaymentMethod
     }
     public function checkoutForm()
     {
-        //nada
+        $pmID = StorePaymentMethod::getByHandle('invoice')->getID();
+        
+        $this->addFooterItem("
+            <script type=\"text/javascript\">
+                 $(function() {
+                     $('div[data-payment-method-id=".$pmID."] .store-btn-complete-order').click(function(){
+                         $(this).attr({disabled: true}).val('" .  t('Processing...').  "');
+                         $(this).closest('form').submit();
+                     });
+                 });
+            </script>
+        ");
     }
 
     public function submitPayment()
@@ -65,5 +78,15 @@ class InvoicePaymentMethod extends StorePaymentMethod
         } else {
             return min($maxconfig, $defaultMax);
         }
+    }
+
+    public function markPaid() {
+        return false;
+    }
+
+    // to be overridden by individual payment methods
+    public function getPaymentInstructions()
+    {
+        return Config::get('community_store.paymentInstructions');
     }
 }

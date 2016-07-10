@@ -370,7 +370,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?php if ($code->isUsed()) { ?>
                             <tr>
                                 <td><strike><?= $code->getCode(); ?></strike></td>
-                                <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code['oID']); ?>"><?= t('View Order'); ?></a></td>
+                                <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>
                         <?php } else { ?>
@@ -387,10 +387,10 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?php }  ?>
                     <?php } else { ?>
                         <tr>
-                            <td><?= $code['dcCode']; ?></td>
+                            <td><?= $code->getCode(); ?></td>
                             <td>
                                 <form method="post" action="<?= \URL::to('/dashboard/store/discounts/deletecode/')?>">
-                                    <input type="hidden" name="dcID" value="<?= $code['dcID']?>" />
+                                    <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
                                     <button class="btn btn-danger" ><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>

@@ -7,6 +7,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
+    <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
         <?php if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add') { ?>
@@ -28,10 +29,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
             <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
-
         <?php } ?>
-
-        <h3><?= t("Shopping Cart")?></h3>
 
         <input id='cartURL' type='hidden' data-cart-url='<?=\URL::to("/cart/")?>'>
             <?php
@@ -67,12 +65,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                         ?>
 
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
-                            <td class="store-cart-list-thumb col-xs-2">
-                                <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
-                                    <?= $product->getImageThumb()?>
+                            <?php $thumb = $product->getImageThumb(); ?>
+                            <?php if ($thumb) { ?>
+                            <td class="cart-list-thumb col-xs-2">
+                                <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                                    <?= $thumb ?>
                                 </a>
                             </td>
-                            <td class="store-cart-list-product-name col-xs-5">
+                            <td class="checkout-cart-product-name col-xs-5">
+                                <?php } else { ?>
+                            <td colspan="2" class="checkout-cart-product-name">
+                                <?php } ?>
                                 <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
                                     <?= $product->getName()?>
                                 </a>
@@ -106,7 +109,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 1
                             <?php } ?>
                             </td>
-                            <td>
+                            <td class="store-cart-list-remove-button col-xs-1 text-right">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
                             </td>
 

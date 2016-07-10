@@ -238,7 +238,7 @@ class ProductVariation
      */
     public function setVariationQty($pvQty)
     {
-        $this->pvQty = $pvQty;
+        $this->pvQty = $pvQty ? $pvQty : 0;
     }
 
     /**
@@ -406,9 +406,9 @@ class ProductVariation
                         'pvSKU' => '',
                         'pvPrice' => '',
                         'pvSalePrice' => '',
-                        'pvQty' => '',
-                        'pvQtyUnlim' => '',
-                        'pvfID' => '',
+                        'pvQty' => 0,
+                        'pvQtyUnlim' => null,
+                        'pvfID' => null,
                         'pvWeight' => '',
                         'pvNumberItems' => '',
                         'pvWidth' => '',
@@ -434,10 +434,10 @@ class ProductVariation
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationQty($data['pvQty'][$key]);
                     $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
-                    $variation->setVariationFID($data['pvfID'][$key]);
-                    $variation->setVariationWidth($data['pvWeight'][$key]);
+                    $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
+                    $variation->setVariationWeight($data['pvWeight'][$key]);
                     $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
-                    $variation->setVariationWeight($data['pvWidth'][$key]);
+                    $variation->setVariationWidth($data['pvWidth'][$key]);
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->save();

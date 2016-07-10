@@ -33,7 +33,7 @@ class Products extends DashboardPageController
         $products = new StoreProductList();
         $products->setItemsPerPage(20);
         $products->setGroupID($gID);
-        $products->activeOnly(false);
+        $products->setActiveOnly(false);
         $products->setShowOutOfStock(true);
 
 
@@ -252,6 +252,8 @@ class Products extends DashboardPageController
     {
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
         
         $this->set('fp',FilePermissions::getGlobal());
         $this->set('tp', new TaskPermission());

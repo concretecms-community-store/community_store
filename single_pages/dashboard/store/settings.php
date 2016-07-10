@@ -16,7 +16,7 @@
                             <li><a href="#settings-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                             <li><a href="#settings-payments" data-pane-toggle><?= t('Payments')?></a></li>
                             <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Order Statuses')?></a></li>
-                            <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications')?></a></li>
+                            <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts')?></a></li>
                             <li><a href="#settings-products" data-pane-toggle><?= t('Products')?></a></li>
                             <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
                         </ul>
@@ -78,6 +78,13 @@
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
                                 <?= $form->select('sizeUnit',array('in'=>t('in'),'cm'=>t('cm'),'mm'=>t('mm')),Config::get('community_store.sizeUnit'));?>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('deliveryInstructions', '1',Config::get('community_store.deliveryInstructions') ? '1' : '0')?>
+                                <?= t('Include Delivery Instructions field in checkout');?></label>
                         </div>
                     </div>
 
@@ -225,6 +232,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <h3><?= t('Receipt Emails');?></h3>
+
+                    <div class="form-group">
+                        <label><?= t("Receipt Email Header Content")?></label>
+                        <?php $editor = \Core::make('editor');
+                        echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader'));?>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?= t("Receipt Email Footer Content")?></label>
+                        <?php $editor = \Core::make('editor');
+                        echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter'));?>
+                    </div>
+
+
                 </div>
 
                 <!-- #settings-products -->

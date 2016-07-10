@@ -24,9 +24,16 @@ class Cart extends PageController
         $codesuccess = false;
 
         if ($this->post()) {
-            if ($this->post('action') == 'code' && $this->post('code')) {
-                $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
-                $codeerror = !$codesuccess;
+            if ($this->post('action') == 'code') {
+                $codeerror = false;
+                $codesuccess = false;
+
+                if ($this->post('code')) {
+                    $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
+                    $codeerror = !$codesuccess;
+                } else {
+                    StoreDiscountCode::clearCartCode();
+                }
             }
 
             if ($this->post('action') == 'update') {
@@ -76,8 +83,17 @@ class Cart extends PageController
 
         $totals = StoreCalculator::getTotals();
 
-        $this->set('shippingtotal',$totals['shippingTotal']);
-        $this->set('shippingEnabled', StoreCart::isShippable());
+        if (StoreCart::isShippable()) {
+            $this->set('shippingEnabled', true);
+
+            if (\Session::get('community_store.smID')) {
+                $this->set('shippingtotal',$totals['shippingTotal']);
+            } else {
+                $this->set('shippingtotal',false);
+            }
+        } else {
+            $this->set('shippingEnabled', false);
+        }
 
         $this->set('total', $totals['total']);
         $this->set('subTotal', $totals['subTotal']);

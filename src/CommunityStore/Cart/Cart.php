@@ -98,6 +98,7 @@ class Cart
 
     public function add($data)
     {
+        Session::set('community_store.smID', false);
         $product = StoreProduct::getByID((int) $data['pID']);
 
         if (!$product) {
@@ -243,6 +244,7 @@ class Cart
 
     public static function updateMutiple($data)
     {
+        Session::set('community_store.smID', false);
         $count = 0;
         $multipleResult = array();
         foreach ($data['instance'] as $instance) {
@@ -255,6 +257,7 @@ class Cart
 
     public static function update($data)
     {
+        Session::set('community_store.smID', false);
         $instanceID = $data['instance'];
         $qty = (int) $data['pQty'];
         $cart = self::getCart();
@@ -286,6 +289,7 @@ class Cart
 
     public static function remove($instanceID)
     {
+        Session::set('community_store.smID', false);
         $cart = self::getCart();
         unset($cart[$instanceID]);
         Session::set('communitystore.cart', $cart);
@@ -294,6 +298,7 @@ class Cart
 
     public static function clear()
     {
+        Session::set('community_store.smID', false);
         $cart = self::getCart();
         unset($cart);
         Session::set('communitystore.cart', null);
@@ -393,5 +398,13 @@ class Cart
         }
 
         return false;
+    }
+
+    public static function setShippingInstructions($sInstructions) {
+        \Session::set('communitystore.sInstructions', $sInstructions);
+    }
+
+    public static function getShippingInstructions() {
+        return  \Session::get('communitystore.sInstructions');
     }
 }

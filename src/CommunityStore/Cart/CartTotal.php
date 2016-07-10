@@ -16,6 +16,9 @@ class CartTotal extends RouteController
     public function getShippingTotal()
     {
         $smID = $_POST['smID'];
+        $sInstructions = $_POST['sInstructions'];
+
+        StoreCart::setShippingInstructions($sInstructions);
 
         $total = StoreCalculator::getShippingTotal($smID);
         if ($total>0) {

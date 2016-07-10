@@ -34,15 +34,15 @@ class Calculator
             return false;
         }
 
-        $existingShippingMethodID = Session::get('smID');
+        $existingShippingMethodID = Session::get('community_store.smID');
         if ($smID) {
             $shippingMethod = StoreShippingMethod::getByID($smID);
-            Session::set('smID', $smID);
+            Session::set('community_store.smID', $smID);
         } elseif ($existingShippingMethodID) {
             $shippingMethod = StoreShippingMethod::getByID($existingShippingMethodID);
         }
 
-        if (is_object($shippingMethod)) {
+        if (is_object($shippingMethod) && $shippingMethod->getCurrentOffer()) {
             $shippingTotal = $shippingMethod->getCurrentOffer()->getRate();
         } else {
             $shippingTotal = 0;
