@@ -191,7 +191,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
                 <?php if ($controller->getTask() == 'edit') { ?>
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-xs-12">
                         <div class="form-group">
                             <?= $form->label("pDateAdded", t("Date Added"));?>
                             <?= \Core::make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
