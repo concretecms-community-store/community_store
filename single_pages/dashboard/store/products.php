@@ -841,7 +841,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
 
                 <div class="form-group" id="product-search">
-                    <input name="pID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
+                    <input name="reletedpID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
                 </div>
 
                 <script type="text/javascript">
