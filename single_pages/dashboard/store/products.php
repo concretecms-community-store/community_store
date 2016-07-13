@@ -146,7 +146,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pQty", t("Stock Level"));?>
                             <?php $qty = $product->getQty(); ?>
                             <div class="input-group">
-                                <?= $form->text("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
+                                <?= $form->number("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
                                 <div class="input-group-addon">
                                     <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited())?>
                                     <?= $form->label('pQtyUnlim', t('Unlimited'))?>
@@ -704,9 +704,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                  <div class="input-group">
                                      <?php
                                      if ($variation) {
-                                         echo $form->text("pvQty[".$varid."]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '')=>($variation->isUnlimited() ? 'readonly' : '')));
+                                         echo $form->number("pvQty[".$varid."]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '')=>($variation->isUnlimited() ? 'readonly' : '')));
                                      } else {
-                                         echo $form->text("pvQty[".$varid."]", '', array('readonly'=>'readonly'));
+                                         echo $form->number("pvQty[".$varid."]", '', array('readonly'=>'readonly'));
                                      }
                                      ?>
 
