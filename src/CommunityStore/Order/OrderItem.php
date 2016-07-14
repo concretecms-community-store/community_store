@@ -134,7 +134,7 @@ class OrderItem
      */
     public function setTax($oitax)
     {
-        $this->oiTax = ($oitax ? $oitax : 0);
+        $this->oiTax = $oitax;
     }
 
     /**
@@ -150,7 +150,7 @@ class OrderItem
      */
     public function setTaxIncluded($oiTaxIncluded)
     {
-        $this->oiTaxIncluded = ($oiTaxIncluded ? $oiTaxIncluded : 0);
+        $this->oiTaxIncluded = $oiTaxIncluded;
     }
 
     /**
