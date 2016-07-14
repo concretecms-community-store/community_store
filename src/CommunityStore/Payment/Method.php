@@ -95,7 +95,7 @@ class Method extends Controller
 
     public function setSortOrder($order)
     {
-        $this->pmSortOrder = $order ? $order : 0;
+        $this->pmSortOrder = $order;
     }
 
     public function getDisplayName()

@@ -216,7 +216,7 @@ class DiscountRule
      */
     public function setValue($drValue)
     {
-        $this->drValue = ($drValue ? $drValue : 0);
+        $this->drValue = $drValue;
     }
 
     /**
@@ -232,7 +232,7 @@ class DiscountRule
      */
     public function setPercentage($drPercentage)
     {
-        $this->drPercentage = ($drPercentage ? $drPercentage : 0);
+        $this->drPercentage = $drPercentage;
     }
 
     /**

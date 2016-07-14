@@ -91,8 +91,8 @@ class Controller extends BlockController
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
-        $products->setFeaturedOnly($this->showFeatured);
-        $products->setSaleOnly($this->showSale);
+        $products->setFeatureType($this->showFeatured);
+        $products->setShowSaleType($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
         $paginator = $products->getPagination();
@@ -135,9 +135,7 @@ class Controller extends BlockController
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
-        $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
-        $args['showSale'] = isset($args['showSale']) ? 1 : 0;
-        $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
+        $args['maxProducts'] = isset($args['maxProducts']) ? $args['maxProducts'] : 0;
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
