@@ -86,9 +86,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
             <div class="col-sm-9 store-pane active" id="product-overview">
-
-
-
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -149,7 +146,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pQty", t("Stock Level"));?>
                             <?php $qty = $product->getQty(); ?>
                             <div class="input-group">
-                                <?= $form->text("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
+                                <?= $form->number("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
                                 <div class="input-group-addon">
                                     <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited())?>
                                     <?= $form->label('pQtyUnlim', t('Unlimited'))?>
@@ -190,8 +187,26 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->select("pNoQty",array('0'=>t('Yes'),'1'=>t('No, only allow one of this product in a cart')), !$product->allowQuantity());?>
                         </div>
                     </div>
-
                 </div>
+                <?php if ($controller->getTask() == 'edit') { ?>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pDateAdded", t("Date Added"));?>
+                            <?= \Core::make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
+                        </div>
+                        <style>
+                            #ui-datepicker-div {
+                                z-index: 100 !important;
+                            }
+                        </style>
+                    </div>
+                    <div class="col-xs-6">
+
+                    </div>
+                </div>
+                <?php } ?>
+
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Short Description"));?><br>
                     <?php
@@ -689,9 +704,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                  <div class="input-group">
                                      <?php
                                      if ($variation) {
-                                         echo $form->text("pvQty[".$varid."]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '')=>($variation->isUnlimited() ? 'readonly' : '')));
+                                         echo $form->number("pvQty[".$varid."]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '')=>($variation->isUnlimited() ? 'readonly' : '')));
                                      } else {
-                                         echo $form->text("pvQty[".$varid."]", '', array('readonly'=>'readonly'));
+                                         echo $form->number("pvQty[".$varid."]", '', array('readonly'=>'readonly'));
                                      }
                                      ?>
 
