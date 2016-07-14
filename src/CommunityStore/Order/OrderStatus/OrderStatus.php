@@ -32,7 +32,7 @@ class OrderStatus extends Object
     /** @Column(type="boolean") */
     protected $osIsStartingStatus;
 
-    /** @Column(type="integer",nullable=true) */
+    /** @Column(type="integer") */
     protected $osSortOrder;
 
     protected static $table = "CommunityStoreOrderStatuses";

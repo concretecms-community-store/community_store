@@ -199,7 +199,7 @@ class ProductVariation
     public function setVariationPrice($pvPrice)
     {
         if ($pvPrice != '') {
-            $this->pvPrice = (float)$pvPrice;
+            $this->pvPrice = $pvPrice;
         } else {
             $this->pvPrice = null;
         }
@@ -219,7 +219,7 @@ class ProductVariation
     public function setVariationSalePrice($pvSalePrice)
     {
         if ($pvSalePrice != '') {
-            $this->pvSalePrice = (float)$pvSalePrice;
+            $this->pvSalePrice = $pvSalePrice;
         } else {
             $this->pvSalePrice = null;
         }
@@ -238,7 +238,7 @@ class ProductVariation
      */
     public function setVariationQty($pvQty)
     {
-        $this->pvQty = $pvQty ? (int)$pvQty : 0;
+        $this->pvQty = $pvQty;
     }
 
     /**
@@ -271,7 +271,7 @@ class ProductVariation
     public function setVariationWidth($pvWidth)
     {
         if ($pvWidth != '') {
-            $this->pvWidth = (int)$pvWidth;
+            $this->pvWidth = $pvWidth;
         } else {
             $this->pvWidth = null;
         }
@@ -291,7 +291,7 @@ class ProductVariation
     public function setVariationHeight($pvHeight)
     {
         if ($pvHeight != '') {
-            $this->pvHeight = (int)$pvHeight;
+            $this->pvHeight = $pvHeight;
         } else {
             $this->pvHeight = null;
         }
@@ -311,7 +311,7 @@ class ProductVariation
     public function setVariationLength($pvLength)
     {
         if ($pvLength != '') {
-            $this->pvLength = (int)$pvLength;
+            $this->pvLength = $pvLength;
         } else {
             $this->pvLength = null;
         }
@@ -331,7 +331,7 @@ class ProductVariation
     public function setVariationWeight($pvWeight)
     {
         if ($pvWeight != '') {
-            $this->pvWeight = (int)$pvWeight;
+            $this->pvWeight = $pvWeight;
         } else {
             $this->pvWeight = null;
         }
@@ -351,7 +351,7 @@ class ProductVariation
     public function setVariationNumberItems($pvNumberItems)
     {
         if ($pvNumberItems != '') {
-            $this->pvNumberItems = (int)$pvNumberItems;
+            $this->pvNumberItems = $pvNumberItems;
         } else {
             $this->pvNumberItems = null;
         }
@@ -406,9 +406,9 @@ class ProductVariation
                         'pvSKU' => '',
                         'pvPrice' => '',
                         'pvSalePrice' => '',
-                        'pvQty' => 0,
-                        'pvQtyUnlim' => null,
-                        'pvfID' => null,
+                        'pvQty' => '',
+                        'pvQtyUnlim' => '',
+                        'pvfID' => '',
                         'pvWeight' => '',
                         'pvNumberItems' => '',
                         'pvWidth' => '',
@@ -434,7 +434,7 @@ class ProductVariation
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationQty($data['pvQty'][$key]);
                     $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
-                    $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
+                    $variation->setVariationFID($data['pvfID'][$key]);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
                     $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
                     $variation->setVariationWidth($data['pvWidth'][$key]);

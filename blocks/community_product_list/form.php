@@ -69,13 +69,15 @@
 
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
+                    <?= $form->hidden('showFeatured', 'all'); ?>
+                    <?= $form->checkbox('showFeatured', 'featured', $showFeatured == 'featured' ? true : false); ?>
                     <?= t('Include Featured Only') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showSale', 1, $showSale); ?>
+                    <?= $form->hidden('showSale', 'all'); ?>
+                    <?= $form->checkbox('showSale', 'sale', $showSale == 'sale' ? true : false); ?>
                     <?= t('Include On Sale Only') ?>
                 </label>
             </div>

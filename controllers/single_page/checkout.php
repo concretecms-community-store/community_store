@@ -153,12 +153,7 @@ class Checkout extends PageController
         $this->set('taxes',$totals['taxes']);
 
         $this->set('taxtotal',$totals['taxTotal']);
-
-        if (\Session::get('community_store.smID')) {
-            $this->set('shippingtotal', $totals['shippingTotal']);
-        } else {
-            $this->set('shippingtotal', false);
-        }
+        $this->set('shippingtotal',false);
 
         $this->set('total',$totals['total']);
         $this->set('shippingEnabled', StoreCart::isShippable());

@@ -9,11 +9,12 @@ $dh = Core::make('helper/date');
 <html>
 <head>
     <title><?= t("Order #") . $order->getOrderID() ?></title>
-    <link href="<?= str_replace('/index.php/', '/' , \URL::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <link href="<?= \URL::to('/concrete/css/app.css'); ?>" rel="stylesheet" type="text/css" media="all">
     <style>
         td, th {
             font-size: 14px;
         }
+
     </style>
 </head>
 <body>

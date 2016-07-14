@@ -32,7 +32,7 @@ class Products extends DashboardPageController
         $products = new StoreProductList();
         $products->setItemsPerPage(20);
         $products->setGroupID($gID);
-        $products->setActiveOnly(false);
+        $products->activeOnly(false);
         $products->setShowOutOfStock(true);
 
 
