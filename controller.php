@@ -67,14 +67,13 @@ class Controller extends Package
 
     public function registerRoutes()
     {
-        Route::register('/cart/getTaxTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getTaxTotal');
-        Route::register('/cart/getShippingTotal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/cart/getCartSummary', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getCartSummary');
         Route::register('/cart/getmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartModal::getCartModal');
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
         Route::register('/checkout/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\States::getStateList');
         Route::register('/checkout/getShippingMethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::getShippingMethods');
         Route::register('/checkout/updater', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::updater');
+        Route::register('/checkout/selectShipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
         Route::register('/dashboard/store/orders/details/slip', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OrderSlip::renderOrderPrintSlip');
     }

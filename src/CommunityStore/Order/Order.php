@@ -399,13 +399,35 @@ class Order
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
         $sInstructions = StoreCart::getShippingInstructions();
-        StoreCart::getShippingInstructions('');
-        $shippingTotal = StoreCalculator::getShippingTotal();
-        $taxes = StoreTax::getConcatenatedTaxStrings();
         $totals = StoreCalculator::getTotals();
+        StoreCart::getShippingInstructions('');
+        $shippingTotal = $totals['shippingTotal'];
+        $taxes = $totals['taxes'];
+
         $total = $totals['total'];
         $pmName = $pm->getName();
         $pmDisplayName = $pm->getDisplayName();
+
+        $taxCalc = Config::get('community_store.calculation');
+
+        $taxTotal = array();
+        $taxIncludedTotal = array();
+        $taxLabels = array();
+
+        foreach ($taxes as $tax) {
+            if ($tax['taxamount'] > 0) {
+                if ($taxCalc == 'extract') {
+                    $taxIncludedTotal[] = $tax['taxamount'];
+                } else {
+                    $taxTotal[] = $tax['taxamount'];
+                }
+                $taxLabels[] = $tax['name'];
+            }
+        }
+
+        $taxTotal = implode(',', $taxTotal);
+        $taxIncludedTotal = implode(',', $taxIncludedTotal);
+        $taxLabels = implode(',', $taxLabels);
 
         $order = new self();
         $order->setCustomerID($customer->getUserID());
@@ -415,9 +437,9 @@ class Order
         $order->setShippingMethodName($smName);
         $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
-        $order->setTaxTotal($taxes['taxTotals']);
-        $order->setTaxIncluded($taxes['taxIncludedTotals']);
-        $order->setTaxLabels($taxes['taxLabels']);
+        $order->setTaxTotal($taxTotal);
+        $order->setTaxIncluded($taxIncludedTotal);
+        $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
         if ($pm->getMethodController()->isExternal()) {
             $order->setExternalPaymentRequested(true);
@@ -738,12 +760,15 @@ class Order
             $taxProductLabels = array();
 
             foreach ($taxes as $tax) {
-                if ($taxCalc == 'extract') {
-                    $taxProductIncludedTotal[] = $tax['taxamount'];
-                } else {
-                    $taxProductTotal[] = $tax['taxamount'];
+
+                if ( $tax['taxamount'] > 0) {
+                    if ($taxCalc == 'extract') {
+                        $taxProductIncludedTotal[] = $tax['taxamount'];
+                    } else {
+                        $taxProductTotal[] = $tax['taxamount'];
+                    }
+                    $taxProductLabels[] = $tax['name'];
                 }
-                $taxProductLabels[] = $tax['name'];
             }
             $taxProductTotal = implode(',', $taxProductTotal);
             $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);

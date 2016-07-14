@@ -177,6 +177,10 @@ var communityStore = {
                 subTotal = values.subTotal;
                 total = values.total;
                 totalCents = values.totalCents;
+                taxes = values.taxes;
+                shippingTotal = values.shippingTotal;
+                shippingTotalRaw = values.shippingTotalRaw;
+
 
                 if (itemCount == 0) {
                     $(".store-utility-links .store-items-counter").text(0);
@@ -188,6 +192,23 @@ var communityStore = {
                     $(".store-utility-links .store-total-cart-amount").text(total);
                     $(".store-utility-links").removeClass('store-cart-empty');
                 }
+
+                if (shippingTotalRaw == false) {
+                    $("#shipping-total").text($("#shipping-total").data('unknown-label'));
+                } else if(shippingTotalRaw <= 0) {
+                    $("#shipping-total").text($("#shipping-total").data('no-charge-label'));
+                } else {
+                    $("#shipping-total").text(shippingTotal);
+                }
+
+
+                $("#store-taxes").html("");
+                for (var i = 0; i < taxes.length; i++) {
+                    if (taxes[i].taxed === true) {
+                        $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
+                    }
+                }
+
 
                 $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
@@ -366,20 +387,6 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
                     communityStore.nextPane(obj);
-                    //update tax
-                    $.ajax({
-                        url: CARTURL + "/getTaxTotal",
-                        success: function (results) {
-                            var taxes = JSON.parse(results);
-                            //alert(taxes.length);
-                            $("#store-taxes").html("");
-                            for (var i = 0; i < taxes.length; i++) {
-                                if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
-                                }
-                            }
-                        }
-                    });
                     communityStore.refreshCartTotals();
 
                 } else {
@@ -430,20 +437,6 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
                     communityStore.nextPane(obj);
-                    //update tax
-                    $.ajax({
-                        url: CARTURL + "/getTaxTotal",
-                        success: function (results) {
-                            var taxes = JSON.parse(results);
-                            $("#store-taxes").html("");
-                            for (var i = 0; i < taxes.length; i++) {
-                                if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"tax-amount\">" + taxes[i].taxamount + "</span></li>");
-                                }
-                            }
-                            $("#shipping-total").text($("#shipping-total").data('unknown-label'));
-                        }
-                    });
                     communityStore.showShippingMethods();
                     communityStore.refreshCartTotals();
                 } else {
@@ -476,31 +469,12 @@ $(document).ready(function () {
                 type: 'post',
                 data: { smID: smID,
                     sInstructions: sInstructions},
-                url: CARTURL + "/getShippingTotal",
+                url: CHECKOUTURL + "/selectShipping",
                 success: function (total) {
-                    if (total <= 0) {
-                        $("#shipping-total").text($("#shipping-total").data('no-charge-label'));
-                    } else {
-                        $("#shipping-total").text(total);
-                    }
-                    $.ajax({
-                        url: CARTURL + "/getTaxTotal",
-                        success: function (results) {
-                            var taxes = JSON.parse(results);
-                            $("#store-taxes").html("");
-                            for (var i = 0; i < taxes.length; i++) {
-                                if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
-                                }
-                            }
-                        }
-                    });
-
                     communityStore.refreshCartTotals(function() {
                         communityStore.nextPane(obj);
                         $('.store-whiteout').remove();
                     });
-
                 }
             });
 

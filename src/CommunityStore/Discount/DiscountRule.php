@@ -401,7 +401,7 @@ class DiscountRule
     public static function discountsWithCodesExist()
     {
         $db = \Database::connection();
-        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 "); // TODO
+        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
 
         return $data['codecount'] > 0;
     }

@@ -65,9 +65,9 @@ class Calculator
     public static function getTotals()
     {
         $subTotal = self::getSubTotal();
-        $originalSubTotal = $subTotal;
 
         $taxes = StoreTax::getTaxes();
+
         $shippingTotal = self::getShippingTotal();
         $discounts = StoreCart::getDiscounts();
 
@@ -91,8 +91,7 @@ class Calculator
         }
 
         $adjustedSubtotal = $subTotal;
-
-
+        $adjustedShippingTotal = $shippingTotal;
 
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
@@ -104,35 +103,49 @@ class Calculator
                     if ($discount->getDeductType() == 'percentage') {
                         $adjustedSubtotal -= ($discount->getPercentage() / 100 * $adjustedSubtotal);
                     }
+                } elseif($discount->getDeductFrom() == 'shipping') {
+
+                    if ($discount->getDeductType() == 'value') {
+                        $adjustedShippingTotal -= $discount->getValue();
+                    }
+
+                    if ($discount->getDeductType() == 'percentage') {
+                        $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $shippingTotal);
+                    }
                 }
             }
 
+            $discountRatio = 1;
+            $discountShippingRatio = 1;
 
+            if ($subTotal > 0) {
+                $discountRatio = $adjustedSubtotal / $subTotal;
+            }
 
-            $discountRatio = $adjustedSubtotal / $originalSubTotal;
-
+            if ($shippingTotal > 0) {
+                $discountShippingRatio = $adjustedShippingTotal / $shippingTotal;
+            }
 
             $addedTaxTotal  = $discountRatio * $addedTaxTotal;
             $includedTaxTotal  = $discountRatio * $includedTaxTotal;
 
+
+            foreach($taxes as $tax) {
+                $tax['taxamount'] =  ($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']);
+                $formattedtaxes[] = $tax;
+            }
+
+            $taxes = $formattedtaxes;
         }
+
+        $shippingTotal = max($adjustedShippingTotal, 0);
+        $adjustedSubtotal = max($adjustedSubtotal, 0);
+        $addedTaxTotal = max($addedTaxTotal, 0);
+        $addedShippingTaxTotal = max($addedShippingTaxTotal, 0);
+
 
         $total = ($adjustedSubtotal + $addedTaxTotal  + $addedShippingTaxTotal + $shippingTotal);
 
-
-//        foreach ($discounts as $discount) {
-//            if ($discount->getDeductFrom() == 'total') {
-//                if ($discount->getDeductType()  == 'value') {
-//                    $total -= $discount->getValue();
-//                }
-//
-//                if ($discount->getDeductType()  == 'percentage') {
-//                    $total -= ($discount->getPercentage() / 100 * $total);
-//                }
-//            }
-//        }
-
-
-        return array('subTotal' => $subTotal, 'taxes' => $taxes, 'taxTotal' => $addedTaxTotal + $includedTaxTotal, 'shippingTotal' => $shippingTotal, 'total' => $total);
+        return array('discountRatio'=>$discountRatio,'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $addedTaxTotal + $includedTaxTotal, 'addedTaxTotal'=>$addedTaxTotal,'includeTaxTotal'=>$includedTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total);
     }
 }
