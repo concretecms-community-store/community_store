@@ -375,7 +375,7 @@ $(document).ready(function () {
                             $("#store-taxes").html("");
                             for (var i = 0; i < taxes.length; i++) {
                                 if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span><li>");
+                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
                                 }
                             }
                         }
@@ -438,7 +438,7 @@ $(document).ready(function () {
                             $("#store-taxes").html("");
                             for (var i = 0; i < taxes.length; i++) {
                                 if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item"><strong>' + taxes[i].name + ":</strong> <span class=\"tax-amount\">" + taxes[i].taxamount + "</span></li>");
+                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"tax-amount\">" + taxes[i].taxamount + "</span></li>");
                                 }
                             }
                             $("#shipping-total").text($("#shipping-total").data('unknown-label'));
@@ -490,7 +490,7 @@ $(document).ready(function () {
                             $("#store-taxes").html("");
                             for (var i = 0; i < taxes.length; i++) {
                                 if (taxes[i].taxed === true) {
-                                    $("#store-taxes").append('<li class="store-line-item store-tax-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
+                                    $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
                                 }
                             }
                         }

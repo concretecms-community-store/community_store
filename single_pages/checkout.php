@@ -420,13 +420,21 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     </li>
                 </ul>
 
+                 <?php if ($shippingEnabled) { ?>
+                 <ul class="store-checkout-totals-line-items list-group">
+                        <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
+                                id="shipping-total" data-no-charge-label="<?=t('No Charge');?>" data-unknown-label="<?=t('to be determined');?>"><?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
+
+                 </ul>
+                 <?php } ?>
+
                 <ul class="store-checkout-totals-line-items list-group" id="store-taxes">
                     <?php
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
                             if ($tax['taxamount'] > 0) { ?>
-                                <li class="store-line-item store-tax-item list-group-item"><strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>
-                                        :</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                <li class="store-line-item store-tax-item list-group-item">
+                                <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
                         }
@@ -435,10 +443,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </ul>
 
                 <ul class="store-checkout-totals-line-items list-group">
-                    <?php if ($shippingEnabled) { ?>
-                        <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
-                                id="shipping-total" data-no-charge-label="<?=t('No Charge');?>" data-unknown-label="<?=t('to be determined');?>"><?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
-                    <?php } ?>
+
                     <?php if (!empty($discounts)) { ?>
                         <li class="store-line-item store-discounts list-group-item">
                             <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>

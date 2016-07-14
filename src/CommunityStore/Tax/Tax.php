@@ -23,8 +23,13 @@ class Tax
         if (count($taxRates) > 0) {
             foreach ($taxRates as $taxRate) {
                 if ($taxRate->isTaxable()) {
-                    $taxAmount = $taxRate->calculate();
-                    if ($taxAmount > 0) {
+                    $taxAmounts = $taxRate->calculate();
+
+                    $productTaxAmount = $taxAmounts['producttax'];
+                    $shippingTaxAmount = $taxAmounts['shippingtax'];
+                    $taxAmount = $productTaxAmount + $shippingTaxAmount;
+
+                    if ($productTaxAmount > 0 || $shippingTaxAmount > 0) {
                         $tax = true;
                     } else {
                         $tax = false;
@@ -34,6 +39,8 @@ class Tax
                     }
                     $taxes[] = array(
                         'name' => $taxRate->getTaxLabel(),
+                        'producttaxamount' => $productTaxAmount,
+                        'shippingtaxamount' => $shippingTaxAmount,
                         'taxamount' => $taxAmount,
                         'based' => $taxRate->getTaxBasedOn(),
                         'taxed' => $tax,

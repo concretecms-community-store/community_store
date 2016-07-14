@@ -185,7 +185,8 @@ class TaxRate
     public function calculate()
     {
         $cart = StoreCart::getCart();
-        $taxtotal = 0;
+        $producttaxtotal = 0;
+        $shippingtaxtotal = 0;
         if ($cart) {
             foreach ($cart as $cartItem) {
                 $pID = $cartItem['product']['pID'];
@@ -204,8 +205,8 @@ class TaxRate
                                     $taxrate = $this->getTaxRate() / 100;
                                 }
 
-                                switch ($this->getTaxBasedOn()) {
-                                    case "subtotal":
+//                                switch ($this->getTaxBasedOn()) {
+//                                    case "subtotal":
                                         $productSubTotal = $product->getActivePrice() * $qty;
 
                                         if ($taxCalc == 'extract') {
@@ -214,22 +215,22 @@ class TaxRate
                                             $tax = $taxrate * $productSubTotal;
                                         }
 
-                                        $taxtotal = $taxtotal + $tax;
-                                        break;
-                                    case "grandtotal":
-                                        $productSubTotal = $product->getActivePrice() * $qty;
-                                        $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
-                                        $taxableTotal = $productSubTotal + $shippingTotal;
-
-                                        if ($taxCalc == 'extract') {
-                                            $tax = $taxableTotal - ($taxableTotal / $taxrate);
-                                        } else {
-                                            $tax = $taxrate * $taxableTotal;
-                                        }
-
-                                        $taxtotal = $taxtotal + $tax;
-                                        break;
-                                }
+                                        $producttaxtotal = $producttaxtotal + $tax;
+//                                        break;
+//                                    case "grandtotal":
+//                                        $productSubTotal = $product->getActivePrice() * $qty;
+//                                        $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+//                                        $taxableTotal = $productSubTotal + $shippingTotal;
+//
+//                                        if ($taxCalc == 'extract') {
+//                                            $tax = $taxableTotal - ($taxableTotal / $taxrate);
+//                                        } else {
+//                                            $tax = $taxrate * $taxableTotal;
+//                                        }
+//
+//                                        $taxtotal = $taxtotal + $tax;
+//                                        break;
+//                                }
                             }
                         }//if in products tax class
                     }//if product is taxable
@@ -237,7 +238,19 @@ class TaxRate
             }//foreach
         }//if cart
 
-        return $taxtotal;
+        if ($this->getTaxBasedOn() =='grandtotal') {
+            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+
+            if ($taxCalc == 'extract') {
+                $shippingtaxtotal = $shippingTotal - ($shippingTotal / $taxrate);
+            } else {
+                $shippingtaxtotal = $taxrate * $shippingTotal;
+            }
+
+        }
+
+        return array('producttax'=> $producttaxtotal, 'shippingtax' =>$shippingtaxtotal);
+
     }
     public function calculateProduct($productObj, $qty)
     {
@@ -255,8 +268,8 @@ class TaxRate
                         $taxrate = $this->getTaxRate() / 100;
                     }
 
-                    switch ($this->getTaxBasedOn()) {
-                        case "subtotal":
+//                    switch ($this->getTaxBasedOn()) {
+//                        case "subtotal":
                             $productSubTotal = $productObj->getActivePrice() * $qty;
 
                             if ($taxCalc == 'extract') {
@@ -266,21 +279,21 @@ class TaxRate
                             }
 
                             $taxtotal = $taxtotal + $tax;
-                            break;
-                        case "grandtotal":
-                            $productSubTotal = $productObj->getActivePrice() * $qty;
-                            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
-                            $taxableTotal = $productSubTotal + $shippingTotal;
-
-                            if ($taxCalc == 'extract') {
-                                $tax = $taxableTotal - ($taxableTotal / $taxrate);
-                            } else {
-                                $tax = $taxrate * $taxableTotal;
-                            }
-
-                            $taxtotal = $taxtotal + $tax;
-                            break;
-                    }
+//                            break;
+//                        case "grandtotal":
+//                            $productSubTotal = $productObj->getActivePrice() * $qty;
+//                            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+//                            $taxableTotal = $productSubTotal + $shippingTotal;
+//
+//                            if ($taxCalc == 'extract') {
+//                                $tax = $taxableTotal - ($taxableTotal / $taxrate);
+//                            } else {
+//                                $tax = $taxrate * $taxableTotal;
+//                            }
+//
+//                            $taxtotal = $taxtotal + $tax;
+//                            break;
+//                    }
                 }//if in products tax class
             }//if product is taxable
         }//if obj
