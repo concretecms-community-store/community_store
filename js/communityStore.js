@@ -193,7 +193,7 @@ var communityStore = {
                     $(".store-utility-links").removeClass('store-cart-empty');
                 }
 
-                if (shippingTotalRaw == false) {
+                if (shippingTotalRaw === false) {
                     $("#shipping-total").text($("#shipping-total").data('unknown-label'));
                 } else if(shippingTotalRaw <= 0) {
                     $("#shipping-total").text($("#shipping-total").data('no-charge-label'));

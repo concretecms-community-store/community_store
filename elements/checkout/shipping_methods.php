@@ -4,10 +4,13 @@ use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
+
 $eligibleMethods = StoreShippingMethod::getEligibleMethods();
 $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
+
+
 ?>
 
 <?php if (!empty($eligibleMethods)) { ?>
@@ -26,7 +29,7 @@ $foundOffer = false;
                         <label>
                             <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
                             <div class="store-shipping-details">
-                                <?php $rate = $offer->getRate(); ?>
+                                <?php $rate = $offer->getDiscountedRate(); ?>
                                 <p><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
                                 <?= $offer->getOfferDetails(); ?>
                             </div>

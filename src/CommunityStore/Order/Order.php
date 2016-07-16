@@ -403,8 +403,9 @@ class Order
         StoreCart::getShippingInstructions('');
         $shippingTotal = $totals['shippingTotal'];
         $taxes = $totals['taxes'];
-
         $total = $totals['total'];
+        $discountRatio = $totals['discountRatio'];
+
         $pmName = $pm->getName();
         $pmDisplayName = $pm->getDisplayName();
 
@@ -474,7 +475,7 @@ class Order
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
         $order->saveOrderChoices($order);
-        $order->addOrderItems(StoreCart::getCart());
+        $order->addOrderItems(StoreCart::getCart(), $discountRatio);
 
         if (!$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference);
@@ -750,7 +751,7 @@ class Order
         return $this;
     }
 
-    public function addOrderItems($cart)
+    public function addOrderItems($cart, $discountRatio = 1)
     {
         $taxCalc = Config::get('community_store.calculation');
         foreach ($cart as $cartItem) {
@@ -763,9 +764,9 @@ class Order
 
                 if ( $tax['taxamount'] > 0) {
                     if ($taxCalc == 'extract') {
-                        $taxProductIncludedTotal[] = $tax['taxamount'];
+                        $taxProductIncludedTotal[] = $tax['taxamount'] * $discountRatio;
                     } else {
-                        $taxProductTotal[] = $tax['taxamount'];
+                        $taxProductTotal[] = $tax['taxamount'] * $discountRatio;
                     }
                     $taxProductLabels[] = $tax['name'];
                 }
@@ -774,7 +775,7 @@ class Order
             $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);
             $taxProductLabels = implode(',', $taxProductLabels);
 
-            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels);
+            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels, $discountRatio);
             $this->orderItems->add($orderItem);
         }
     }

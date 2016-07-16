@@ -214,7 +214,7 @@ class OrderItem
         return $em->find(get_class(), $oiID);
     }
 
-    public function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '')
+    public function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)
     {
         $product = $data['product']['object'];
 
@@ -241,7 +241,7 @@ class OrderItem
         $orderItem = new self();
         $orderItem->setProductName($productName);
         $orderItem->setSKU($sku);
-        $orderItem->setPricePaid($productPrice);
+        $orderItem->setPricePaid($productPrice * $adjustRatio);
         $orderItem->setTax($tax);
         $orderItem->setTaxIncluded($taxIncluded);
         $orderItem->setTaxName($taxName);

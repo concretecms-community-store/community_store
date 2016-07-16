@@ -110,7 +110,7 @@ class Calculator
                     }
 
                     if ($discount->getDeductType() == 'percentage') {
-                        $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $shippingTotal);
+                        $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
                     }
                 }
             }
@@ -127,7 +127,10 @@ class Calculator
             }
 
             $addedTaxTotal  = $discountRatio * $addedTaxTotal;
-            $includedTaxTotal  = $discountRatio * $includedTaxTotal;
+            $addedShippingTaxTotal  =  $discountShippingRatio * $addedShippingTaxTotal;
+
+            $includedTaxTotal  = $discountRatio * $includedTaxTotal ;
+            $includedShippingTaxTotal  =  $discountShippingRatio * $includedShippingTaxTotal;
 
 
             foreach($taxes as $tax) {
@@ -138,14 +141,18 @@ class Calculator
             $taxes = $formattedtaxes;
         }
 
-        $shippingTotal = max($adjustedShippingTotal, 0);
         $adjustedSubtotal = max($adjustedSubtotal, 0);
+        $adjustedShippingTotal = max($adjustedShippingTotal, 0);
+
         $addedTaxTotal = max($addedTaxTotal, 0);
         $addedShippingTaxTotal = max($addedShippingTaxTotal, 0);
 
+        $includedTaxTotal = max($includedTaxTotal, 0);
+        $includedShippingTaxTotal = max($includedShippingTaxTotal, 0);
 
-        $total = ($adjustedSubtotal + $addedTaxTotal  + $addedShippingTaxTotal + $shippingTotal);
+        $total = $adjustedSubtotal + $adjustedShippingTotal + $addedTaxTotal + $addedShippingTaxTotal;
+        $totalTax = $addedTaxTotal + $addedShippingTaxTotal + $includedTaxTotal + $includedShippingTaxTotal;
 
-        return array('discountRatio'=>$discountRatio,'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $addedTaxTotal + $includedTaxTotal, 'addedTaxTotal'=>$addedTaxTotal,'includeTaxTotal'=>$includedTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total);
+        return array('discountRatio'=>$discountRatio,'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $totalTax, 'addedTaxTotal'=>$addedTaxTotal + $addedShippingTaxTotal,'includeTaxTotal'=>$includedTaxTotal + $includedShippingTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total);
     }
 }
