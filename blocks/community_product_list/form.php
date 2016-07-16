@@ -14,7 +14,8 @@
                     'current' => t('Under current page'),
                     'current_children' => t('Under current page and child pages'),
                     'page' => t('Under a specified page'),
-                    'page_children' => t('Under a specified page and child pages')
+                    'page_children' => t('Under a specified page and child pages'),
+                    'related' => t('Related to product displayed on this page')
                 ), $filter); ?>
             </div>
 
