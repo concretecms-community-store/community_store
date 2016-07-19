@@ -23,8 +23,13 @@ class Tax
         if (count($taxRates) > 0) {
             foreach ($taxRates as $taxRate) {
                 if ($taxRate->isTaxable()) {
-                    $taxAmount = $taxRate->calculate();
-                    if ($taxAmount > 0) {
+                    $taxAmounts = $taxRate->calculate();
+
+                    $productTaxAmount = $taxAmounts['producttax'];
+                    $shippingTaxAmount = $taxAmounts['shippingtax'];
+                    $taxAmount = $productTaxAmount + $shippingTaxAmount;
+
+                    if ($productTaxAmount > 0 || $shippingTaxAmount > 0) {
                         $tax = true;
                     } else {
                         $tax = false;
@@ -34,6 +39,8 @@ class Tax
                     }
                     $taxes[] = array(
                         'name' => $taxRate->getTaxLabel(),
+                        'producttaxamount' => $productTaxAmount,
+                        'shippingtaxamount' => $shippingTaxAmount,
                         'taxamount' => $taxAmount,
                         'based' => $taxRate->getTaxBasedOn(),
                         'taxed' => $tax,
@@ -66,34 +73,5 @@ class Tax
 
         return $taxes;
     }
-    public static function getConcatenatedTaxStrings()
-    {
-        $taxes = self::getTaxes();
-        $taxCalc = Config::get('community_store.calculation');
-
-        $taxTotal = array();
-        $taxIncludedTotal = array();
-        $taxLabels = array();
-
-        foreach ($taxes as $tax) {
-            if ($taxCalc == 'extract') {
-                $taxIncludedTotal[] = $tax['taxamount'];
-            } else {
-                $taxTotal[] = $tax['taxamount'];
-            }
-            $taxLabels[] = $tax['name'];
-        }
-
-        $taxTotal = implode(',', $taxTotal);
-        $taxIncludedTotal = implode(',', $taxIncludedTotal);
-        $taxLabels = implode(',', $taxLabels);
-
-        $taxStrings = array(
-            'taxTotals' => $taxTotal,
-            'taxIncludedTotals' => $taxIncludedTotal,
-            'taxLabels' => $taxLabels,
-        );
-
-        return $taxStrings;
-    }
+    
 }

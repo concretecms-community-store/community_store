@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+
 class ShippingMethodOffer
 {
     private $label;
@@ -87,7 +89,32 @@ class ShippingMethodOffer
      */
     public function getRate()
     {
-        return $this->rate;
+        return $this->rate ;
+    }
+
+
+    public function getDiscountedRate()
+    {
+        $discounts = StoreCart::getDiscounts();
+        $deduct = 0;
+        $percentage = 1;
+
+        if (!empty($discounts)) {
+            foreach ($discounts as $discount) {
+                if($discount->getDeductFrom() == 'shipping') {
+
+                    if ($discount->getDeductType() == 'value') {
+                        $deduct += $discount->getValue();
+                    }
+
+                    if ($discount->getDeductType() == 'percentage') {
+                        $percentage -= ($discount->getPercentage() / 100);
+                    }
+                }
+            }
+        }
+
+        return max(($this->rate * $percentage) - $deduct, 0);
     }
 
     /**

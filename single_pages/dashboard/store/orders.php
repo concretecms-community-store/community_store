@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Core::make('helper/date');
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+
 ?>
 
 <?php if ($controller->getTask() == 'order'){ ?>
@@ -162,13 +163,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     </table>
 
 
-     <?php if ($order->isShippable()) { ?>
-     <p>
-        <strong><?= t("Shipping")?>: </strong><?=Price::format($order->getShippingTotal())?>
-     </p>
-        <?php } ?>
-
-
     <?php $applieddiscounts = $order->getAppliedDiscounts();
 
     if (!empty($applieddiscounts)) { ?>
@@ -199,6 +193,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </tbody>
         </table>
 
+    <?php } ?>
+
+    <?php if ($order->isShippable()) { ?>
+    <p>
+        <strong><?= t("Shipping")?>: </strong><?=Price::format($order->getShippingTotal())?>
+    </p>
     <?php } ?>
 
     <?php $taxes = $order->getTaxes();

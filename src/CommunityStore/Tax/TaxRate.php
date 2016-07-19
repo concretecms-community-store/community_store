@@ -185,7 +185,8 @@ class TaxRate
     public function calculate()
     {
         $cart = StoreCart::getCart();
-        $taxtotal = 0;
+        $producttaxtotal = 0;
+        $shippingtaxtotal = 0;
         if ($cart) {
             foreach ($cart as $cartItem) {
                 $pID = $cartItem['product']['pID'];
@@ -207,25 +208,28 @@ class TaxRate
                                     $tax = $taxrate * $productSubTotal;
                                 }
 
-                                $taxtotal = $taxtotal + $tax;
+                                $producttaxtotal = $producttaxtotal + $tax;
                             }
                         }//if in products tax class
                     }//if product is taxable
                 }//if obj
             }//foreach
-
-            if ($this->getTaxBasedOn() =='grandtotal') {
-                $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
-
-                if ($taxCalc == 'extract') {
-                    $shippingtaxtotal = $shippingTotal - ($shippingTotal / $taxrate);
-                } else {
-                    $shippingtaxtotal = $taxrate * $shippingTotal;
-                }
-            }
         }//if cart
 
-        return $taxtotal + $shippingtaxtotal;
+        if ($this->getTaxBasedOn() =='grandtotal') {
+            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+
+            if ($taxCalc == 'extract') {
+                $taxrate =   1 + ($this->getTaxRate() / 100) ;
+                $shippingtaxtotal = $shippingTotal - ($shippingTotal / $taxrate);
+            } else {
+                $taxrate = $this->getTaxRate() / 100;
+                $shippingtaxtotal = $taxrate * $shippingTotal;
+            }
+
+        }
+
+        return array('producttax'=> $producttaxtotal, 'shippingtax' =>$shippingtaxtotal);
     }
 
     public function calculateProduct($productObj, $qty)
@@ -242,7 +246,6 @@ class TaxRate
                     if ($taxCalc == 'extract') {
                         $taxrate = 1 + ($this->getTaxRate() / 100);
                         $tax = $productSubTotal - ($productSubTotal / $taxrate);
-
                     } else {
                         $taxrate = $this->getTaxRate() / 100;
                         $tax = $taxrate * $productSubTotal;
