@@ -89,6 +89,13 @@ class Controller extends BlockController
             }
         }
 
+        if ($this->filter == 'related') {
+            $cID = Page::getCurrentPage()->getCollectionID();
+            $product = StoreProduct::getByCollectionID($cID);
+
+
+        }
+
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
         $products->setFeaturedOnly($this->showFeatured);
