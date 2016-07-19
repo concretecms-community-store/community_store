@@ -216,7 +216,7 @@ class DiscountRule
      */
     public function setValue($drValue)
     {
-        $this->drValue = ($drValue ? $drValue : 0);
+        $this->drValue = ($drValue ? $drValue : null);
     }
 
     /**
@@ -232,7 +232,7 @@ class DiscountRule
      */
     public function setPercentage($drPercentage)
     {
-        $this->drPercentage = ($drPercentage ? $drPercentage : 0);
+        $this->drPercentage = ($drPercentage ? $drPercentage : null);
     }
 
     /**
@@ -471,6 +471,13 @@ class DiscountRule
 
     public static function loadData($discountRule, $data)
     {
+
+        if ($data['drDeductType'] == 'percentage') {
+            $data['drValue'] = null;
+        } else {
+            $data['drPercentage'] == null;
+        }
+
         $discountRule->setEnabled($data['drEnabled'] ? true : false);
         $discountRule->setName($data['drName']);
         $discountRule->setDisplay($data['drDisplay']);

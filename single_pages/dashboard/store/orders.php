@@ -185,7 +185,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <td><?= h($discount['odName']); ?></td>
                     <td><?= h($discount['odDisplay']); ?></td>
                     <td><?= t(ucwords($discount['odDeductFrom'])); ?></td>
-                    <td><?= ($discount['odValue'] > 0 ? $discount['odValue'] : $discount['odPercentage'] . '%' ); ?></td>
+                    <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : $discount['odPercentage'] . '%' ); ?></td>
                     <td><?= ($discount['odCode'] ? t('by code'). ' <em>' .$discount['odCode'] .'</em>': t('Automatically') ); ?></td>
                 </tr>
             <?php } ?>
