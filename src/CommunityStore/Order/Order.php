@@ -636,7 +636,8 @@ class Order
         if ($user) {  // $user is going to either be the new one, or the user of the currently logged in customer
 
             // update the order created with the user from the newly created user
-            $this->associateUser($user->getUserID());
+            $this->setCustomerID($user->getUserID());
+            $this->save();
 
             $billing_first_name = $customer->getValue("billing_first_name");
             $billing_last_name = $customer->getValue("billing_last_name");
@@ -916,14 +917,6 @@ class Order
     {
         $db = \Database::connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderDiscounts WHERE oID=?", $this->oID);
-
-        return $rows;
-    }
-
-    public function associateUser($uID)
-    {
-        $db = \Database::connection();
-        $rows = $db->query("Update CommunityStoreOrders set cID=? where oID = ?", array($uID, $this->oID));
 
         return $rows;
     }
