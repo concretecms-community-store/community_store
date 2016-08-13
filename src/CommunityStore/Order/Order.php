@@ -563,7 +563,7 @@ class Order
         }
 
         if ($createlogin && $customer->isGuest()) {
-            $email = $customer->getEmail();
+            $email = $this->getAttribute('email');
             $user = UserInfo::getByEmail($email);
 
             if (!$user) {
