@@ -67,6 +67,10 @@ class Controller extends BlockController
         $products = new StoreProductList();
         $products->setSortBy($this->sortOrder);
 
+        if ($this->sortOrder == 'alpha') {
+            $products->setSortByDirection('asc');
+        }
+
         if ($this->filter == 'current' || $this->filter == 'current_children') {
             $page = Page::getCurrentPage();
             $products->setCID($page->getCollectionID());
