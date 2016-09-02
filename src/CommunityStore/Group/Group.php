@@ -42,6 +42,14 @@ class Group
         return $em->find(get_called_class(), $gID);
     }
 
+    public static function getByName($gName)
+    {
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+
+        return $em->getRepository(get_class())->findOneBy(array('groupName' => $gName));
+    }
+
     public static function add($groupName)
     {
         $productGroup = new self();
