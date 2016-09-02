@@ -95,9 +95,8 @@ class ProductGroup
         $db = \Database::connection();
         $em = $db->getEntityManager();
         $groups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
-        foreach ($groups as $key => $value) {
-            $group = new StoreGroup();
-            $groups[$key]->gName = $group->getByID($groups[$key]->gID)->getGroupName();
+        foreach ($groups as $productGroup) {
+            $groups[] = $productGroup->getGroup();
         }
 
         return $groups;
