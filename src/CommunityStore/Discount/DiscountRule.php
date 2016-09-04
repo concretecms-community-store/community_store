@@ -216,7 +216,7 @@ class DiscountRule
      */
     public function setValue($drValue)
     {
-        $this->drValue = ($drValue ? $drValue : 0);
+        $this->drValue = ($drValue ? $drValue : null);
     }
 
     /**
@@ -232,7 +232,7 @@ class DiscountRule
      */
     public function setPercentage($drPercentage)
     {
-        $this->drPercentage = ($drPercentage ? $drPercentage : 0);
+        $this->drPercentage = ($drPercentage ? $drPercentage : null);
     }
 
     /**
@@ -401,7 +401,7 @@ class DiscountRule
     public static function discountsWithCodesExist()
     {
         $db = \Database::connection();
-        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 "); // TODO
+        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
 
         return $data['codecount'] > 0;
     }
@@ -471,6 +471,13 @@ class DiscountRule
 
     public static function loadData($discountRule, $data)
     {
+
+        if ($data['drDeductType'] == 'percentage') {
+            $data['drValue'] = null;
+        } else {
+            $data['drPercentage'] == null;
+        }
+
         $discountRule->setEnabled($data['drEnabled'] ? true : false);
         $discountRule->setName($data['drName']);
         $discountRule->setDisplay($data['drDisplay']);
@@ -478,7 +485,7 @@ class DiscountRule
         $discountRule->setDeductFrom($data['drDeductFrom']);
         $discountRule->setPercentage($data['drPercentage']);
         $discountRule->setValue($data['drValue']);
-        $discountRule->setSingleUseCodes($data['drPercentage'] ? true : false);
+        $discountRule->setSingleUseCodes($data['drSingleUseCodes'] ? true : false);
         $discountRule->setTrigger($data['drTrigger']);
         $discountRule->setDescription($data['drDescription']);
         $discountRule->setDateAdded(new \DateTime());

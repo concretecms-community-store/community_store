@@ -43,7 +43,7 @@ class Customer
             $addressraw = Session::get('community_' .$handle);
             return self::formatAddress($addressraw);
         } else {
-            return $this->ui->getAttribute($handle);
+            return (string)$this->ui->getAttribute($handle);
         }
 
     }

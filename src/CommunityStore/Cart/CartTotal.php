@@ -9,10 +9,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as S
 
 class CartTotal extends RouteController
 {
-    public function getTaxTotal()
-    {
-        echo json_encode(StoreTax::getTaxes(true));
-    }
     public function getShippingTotal()
     {
         $smID = $_POST['smID'];
@@ -32,8 +28,23 @@ class CartTotal extends RouteController
         $itemCount = StoreCart::getTotalItemsInCart();
         $total = $totals['total'];
         $subTotal = $totals['subTotal'];
+        $shippingTotal = $totals['shippingTotal'];
 
-        $data = array('subTotal'=> StorePrice::format($subTotal), 'total'=>StorePrice::format($total), 'itemCount'=>$itemCount, 'totalCents'=> $total * 100);
+        $taxes = $totals['taxes'];
+        $formattedtaxes = array();
+
+        foreach($taxes as $tax) {
+            $tax['taxamount'] = StorePrice::format($tax['taxamount']);
+            $formattedtaxes[] = $tax;
+        }
+
+        if (!\Session::get('community_store.smID')) {
+            $shippingTotalRaw = false;
+        } else {
+            $shippingTotalRaw = $shippingTotal;
+        }
+
+        $data = array('subTotal'=> StorePrice::format($subTotal), 'total'=>StorePrice::format($total), 'itemCount'=>$itemCount, 'totalCents'=> $total * 100, 'taxes'=>$formattedtaxes, 'shippingTotalRaw'=> $shippingTotalRaw,'shippingTotal'=>StorePrice::format($shippingTotal));
         echo json_encode($data);
     }
 }
