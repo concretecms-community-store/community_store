@@ -841,7 +841,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </ul>
 
                 <div class="form-group" id="product-search">
-                    <input name="reletedpID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
+                    <input name="relatedpID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
                 </div>
 
                 <script type="text/javascript">
@@ -890,8 +890,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         $('#related-products').sortable({axis: 'y'});
 
                     });
-
-
 
                 </script>
 

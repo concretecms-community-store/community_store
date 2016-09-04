@@ -17,6 +17,7 @@ class ProductList extends AttributedItemList
     protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = array();
+    protected $relatedProduct = false;
 
     public function setGroupID($gID)
     {
@@ -72,6 +73,10 @@ class ProductList extends AttributedItemList
     public function setShowOutOfStock($bool)
     {
         $this->showOutOfStock = $bool;
+    }
+    public function setRelatedProduct($product)
+    {
+        $this->relatedProduct = $product;
     }
 
     protected function getAttributeKeyClassName()
@@ -152,7 +157,24 @@ class ProductList extends AttributedItemList
             $query->andWhere("pActive = 1");
         }
 
-        if (is_array($this->cIDs) && !empty($this->cIDs)) {
+        // if we have a true value for related, we don't have an object, meaning it couldn't find a product to look for related products for
+        // this means we should return no products
+        if ($this->relatedProduct === true) {
+            $query->andWhere("1 = 0");
+        }  elseif (is_object($this->relatedProduct)) {
+            $relatedids = array();
+            $related = $this->relatedProduct->getRelatedProducts();
+
+            foreach($related as $r) {
+                $relatedids[] = $r->getRelatedProductID();
+            }
+
+            if (!empty($relatedids)) {
+                $query->andWhere('pID in ('. implode(',', $relatedids) .')');
+            } else {
+                $query->andWhere('1 = 0');
+            }
+        } elseif (is_array($this->cIDs) && !empty($this->cIDs)) {
             $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' .  implode(',', $this->cIDs). ')');
         }
 

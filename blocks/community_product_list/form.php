@@ -15,7 +15,8 @@
                     'current_children' => t('Under current page and child pages'),
                     'page' => t('Under a specified page'),
                     'page_children' => t('Under a specified page and child pages'),
-                    'related' => t('Related to product displayed on this page')
+                    'related' => t('Related to product displayed on this page'),
+                    'related_product' => t('Related to a specified product')
                 ), $filter); ?>
             </div>
 
@@ -27,6 +28,55 @@
                     echo $ps->selectPage('filterCID', ($filterCID > 0 ? $filterCID : false)); ?>
                 </div>
             </div>
+
+            <div class="form-group" id="product-search" <?= ($filter == 'related_product' ? '' : 'style="display: none"'); ?>>
+                <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
+            </div>
+
+            <?php
+                if ($relatedProduct) {
+                    $relatedProductName = $relatedProduct->getName();
+                } else {
+                    $relatedProductName = '';
+                }
+            ?>
+
+            <script type="text/javascript">
+
+                $(function(){
+                    $("#product-select").select2({
+                        ajax: {
+                            url: "<?= \URL::to('/productfinder')?>",
+                            dataType: 'json',
+                            quietMillis: 250,
+                            data: function (term, page) {
+                                return {
+                                    q: term, // search term
+                                };
+                            },
+                            results: function (data) {
+                                var results = [];
+                                $.each(data, function(index, item){
+                                    results.push({
+                                        id: item.pID,
+                                        text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
+                                    });
+                                });
+                                return {
+                                    results: results
+                                };
+                            },
+                            cache: true
+                        },
+                        minimumInputLength: 2,
+                        initSelection: function(element, callback) {
+                            callback({text:<?php echo json_encode($relatedProductName);?>,id:'<?= $relatedPID; ?>'});
+                        },
+                    }).select2('val', []);
+
+                });
+
+            </script>
 
             <div class="form-group">
                 <?= $form->label('sortOrder', t('Sort Order')); ?>
@@ -170,6 +220,12 @@
                 $('#pageselector>div').show();
             } else {
                 $('#pageselector>div').hide();
+            }
+
+            if ($(this).val() == 'related_product') {
+                $('#product-search').show();
+            } else {
+                $('#product-search').hide();
             }
         });
 

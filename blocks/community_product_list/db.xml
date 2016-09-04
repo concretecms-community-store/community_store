@@ -12,6 +12,7 @@
 		<field name="gID" type="integer"><unsigned/></field>
 		<field name="filter" type="string" size="30"></field>
 		<field name="filterCID" type="integer"><unsigned/></field>
+		<field name="relatedPID" type="integer"><unsigned/></field>
 		<field name="groupMatchAny" type="boolean"></field>
 		<field name="maxProducts" type="integer"></field>
 		<field name="showOutOfStock" type="boolean"></field>

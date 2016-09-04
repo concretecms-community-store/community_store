@@ -6,6 +6,7 @@ use Core;
 use Config;
 use Page;
 use Database;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 
@@ -39,6 +40,11 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
+
+        if ($this->relatedPID) {
+            $relatedProduct = StoreProduct::getByID($this->relatedPID);
+            $this->set('relatedProduct', $relatedProduct);
+        }
     }
 
     public function getGroupFilters()
@@ -93,12 +99,22 @@ class Controller extends BlockController
             }
         }
 
-        if ($this->filter == 'related') {
-            $cID = Page::getCurrentPage()->getCollectionID();
-            $product = StoreProduct::getByCollectionID($cID);
+        if ($this->filter == 'related' || $this->filter == 'related_product') {
 
+            if ($this->filter == 'related') {
+                $cID = Page::getCurrentPage()->getCollectionID();
+                $product = StoreProduct::getByCollectionID($cID);
+            } else {
+                $product = StoreProduct::getByID($this->relatedPID);
+            }
 
+            if (is_object($product)) {
+                $products->setRelatedProduct($product);
+            } else {
+                $products->setRelatedProduct(true);
+            }
         }
+
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
