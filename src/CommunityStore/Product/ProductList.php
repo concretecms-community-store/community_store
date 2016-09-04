@@ -133,7 +133,7 @@ class ProductList extends AttributedItemList
             }
 
             if (!empty($relatedids)) {
-                $query->andWhere('pID in ('. implode(',', $relatedids) .')');
+                $query->andWhere('p.pID in ('. implode(',', $relatedids) .')');
             } else {
                 $query->andWhere('1 = 0');
             }
@@ -145,8 +145,20 @@ class ProductList extends AttributedItemList
             case "alpha":
                 $query->orderBy('pName', $this->getSortByDirection());
                 break;
+            case "alpha_asc":
+                $query->orderBy('pName', 'asc');
+                break;
+            case "alpha_desc":
+                $query->orderBy('pName', 'desc');
+                break;
             case "price":
                 $query->orderBy('pPrice', $this->getSortByDirection());
+                break;
+            case "price_asc":
+                $query->orderBy('pPrice', 'asc');
+                break;
+            case "price_desc":
+                $query->orderBy('pPrice', 'desc');
                 break;
             case "active":
                 $query->orderBy('pActive', $this->getSortByDirection());
