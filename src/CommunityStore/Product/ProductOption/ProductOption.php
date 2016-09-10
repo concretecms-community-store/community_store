@@ -146,12 +146,13 @@ class ProductOption
     public function __clone() {
         $this->setID(null);
         $this->setProduct(null);
-
+        
         $optionItems = $this->getOptionItems();
         $this->optionItems = new ArrayCollection();
         if(count($optionItems) > 0){
             foreach ($optionItems as $optionItem) {
                 $cloneOptionItem = clone $optionItem;
+                $cloneOptionItem->originalID = $optionItem->getID();
                 $cloneOptionItem->setOption($this);
                 $this->optionItems->add($cloneOptionItem);
             }

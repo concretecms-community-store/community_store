@@ -19,6 +19,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation a
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
@@ -941,6 +942,44 @@ class Product
         foreach($attributes as $handle=>$value) {
             $spk = StoreProductKey::getByHandle($handle);
             $spk->saveAttribute($newproduct, $value);
+        }
+
+
+        $variations = $this->getVariations();
+        $newvariations = array();
+
+        if(count($variations) > 0){
+            foreach ($variations as $variation) {
+                $cloneVariation = clone $variation;
+                $cloneVariation->setProductID($newproduct->getID());
+                $cloneVariation->save();
+                $newvariations[] = $cloneVariation;
+            }
+        }
+
+        $optionMap = array();
+
+        foreach($newproduct->getOptions() as $newoption) {
+            foreach($newoption->getOptionItems() as $optionItem) {
+                $optionMap[$optionItem->originalID] = $optionItem;
+            }
+        }
+
+        foreach($newvariations as $variation) {
+
+            foreach($variation->getOptions() as $option) {
+
+                $optionid = $option->getOption()->getID();
+
+                $variationoption = new StoreProductVariationOptionItem();
+                $variationoption->setOption($optionMap[$optionid]);
+                $variationoption->setVariation($variation);
+                $variationoption->save();
+
+
+                $option->setOption($optionMap[$optionid]);
+                $option->save();
+            }
         }
 
         // create product event and dispatch

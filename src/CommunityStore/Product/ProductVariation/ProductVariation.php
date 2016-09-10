@@ -579,4 +579,21 @@ class ProductVariation
 
         return $result;
     }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+
+        $options = $this->getOptions();
+        $this->options = new ArrayCollection();
+        if(count($options) > 0){
+            foreach ($options as $option) {
+                $cloneOption = clone $option;
+                $cloneOption->setVariation($this);
+                $this->options->add($cloneOption);
+            }
+        }
+    }
 }
