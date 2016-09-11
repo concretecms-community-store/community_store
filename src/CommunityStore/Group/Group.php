@@ -74,7 +74,7 @@ class Group
         $em->flush();
     }
 
-    public function remove()
+    public function delete()
     {
         $em = \Database::connection()->getEntityManager();
         $em->remove($this);
