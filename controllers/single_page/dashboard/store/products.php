@@ -403,6 +403,6 @@ class Products extends DashboardPageController
     }
     public function deletegroup($gID)
     {
-        StoreGroup::getByID($gID)->remove();
+        StoreGroup::getByID($gID)->delete();
     }
 }

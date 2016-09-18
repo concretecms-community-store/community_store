@@ -127,9 +127,11 @@ class ProductGroup
 
     public static function removeGroupsForProduct(StoreProduct $product)
     {
-        $existingGroups = self::getGroupsForProduct($product);
-        foreach ($existingGroups as $group) {
-            $group->delete();
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+        $groups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        foreach ($groups as $productGroup) {
+            $productGroup->delete();
         }
     }
 
