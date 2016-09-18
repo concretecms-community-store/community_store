@@ -64,7 +64,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                     if(is_object($product)){
                         ?>
 
-                        <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $pID?>">
+                        <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $product->getID()?>">
                             <?php $thumb = $product->getImageThumb(); ?>
                             <?php if ($thumb) { ?>
                             <td class="cart-list-thumb col-xs-2">
