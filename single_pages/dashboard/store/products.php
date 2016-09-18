@@ -16,6 +16,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
         $product = new StoreProduct();
         $product->setIsUnlimited(true);
         $product->setIsTaxable(true);
+        $product->setIsShippable(true);
     } else {
         $images = $product->getImages();
         $options = $product->getOptions();
