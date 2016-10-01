@@ -96,7 +96,7 @@ class Cart
         return self::$discounts;
     }
 
-    public function add($data)
+    public static function add($data)
     {
         Session::set('community_store.smID', false);
         $product = StoreProduct::getByID((int) $data['pID']);
@@ -201,6 +201,7 @@ class Cart
             $added = $newquantity;
         }
 
+        self::$cart = $cart;
         Session::set('communitystore.cart', $cart);
 
         return array('added' => $added, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive);
