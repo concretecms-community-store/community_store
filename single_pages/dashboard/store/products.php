@@ -376,8 +376,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
                     <?php  foreach ($product->getimagesobjects() as $file) {
-                    $thumb = $file->getListingThumbnailImage();
-                    echo '<li class="list-group-item">' . $thumb . ' ' .$file->getTitle() .'<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
+                        if ($file) {
+                            $thumb = $file->getListingThumbnailImage();
+                            if ($thumb) {
+                                echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
+                            }
+                        }
                     }
                     ?>
                 </ul>
