@@ -702,7 +702,7 @@ class Order
             $mh->from($fromEmail);
         }
 
-        $mh->to($customer->getEmail());
+        $mh->to($this->getAttribute('email'));
 
         $paymentInstructions = '';
         if ($paymentMethodUsed) {
