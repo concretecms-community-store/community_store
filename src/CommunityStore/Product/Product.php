@@ -966,18 +966,12 @@ class Product
         }
 
         foreach($newvariations as $variation) {
-
             foreach($variation->getOptions() as $option) {
-
                 $optionid = $option->getOption()->getID();
-
                 $variationoption = new StoreProductVariationOptionItem();
                 $variationoption->setOption($optionMap[$optionid]);
                 $variationoption->setVariation($variation);
                 $variationoption->save();
-
-
-                $option->setOption($optionMap[$optionid]);
                 $option->save();
             }
         }

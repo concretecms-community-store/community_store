@@ -146,7 +146,7 @@ class ProductOption
     public function __clone() {
         $this->setID(null);
         $this->setProduct(null);
-        
+
         $optionItems = $this->getOptionItems();
         $this->optionItems = new ArrayCollection();
         if(count($optionItems) > 0){
