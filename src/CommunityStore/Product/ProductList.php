@@ -6,6 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 class ProductList extends AttributedItemList
 {
@@ -160,7 +161,24 @@ class ProductList extends AttributedItemList
 
         if ($this->search) {
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $query->orWhere('pDesc like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $query->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+
+
+            //search through groupNames
+
+              $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
+              $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
+              $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+
+
+            //search attributes
+            $validPIDs = StoreProductKey::filterAttributeValues($this->search);
+            if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
+
         }
+
+
 
         return $query;
     }

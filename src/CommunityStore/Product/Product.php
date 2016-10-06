@@ -32,9 +32,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StoreP
  */
 class Product
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $pID;
 
@@ -1100,5 +1100,15 @@ class Product
         }
 
         return $av;
+    }
+    /*get attributes by mary*/
+    public function getAttributes(){
+      $attributes = StoreProductKey::getAttributes($this->getID());
+      foreach($attributes as $handle=>$value) {
+          $ak = StoreProductKey::getByHandle($handle);
+          $display[$ak->akName] = $value;
+      }
+      return $display;
+
     }
 }

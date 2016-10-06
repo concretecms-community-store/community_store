@@ -44,11 +44,11 @@ if($products){
         }
 
     ?>
-    
+
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form   id="store-form-add-to-cart-list-<?= $product->getID()?>">
                 <h2 class="store-product-list-name"><?= $product->getName()?></h2>
-                <?php 
+                <?php
                     $imgObj = $product->getImageObj();
                     if(is_object($imgObj)){
                         $thumb = $ih->getThumbnail($imgObj,400,280,true);?>
@@ -84,6 +84,15 @@ if($products){
                 <?php if($showDescription){ ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
+                <?php if(is_array($product->getAttributes())) :
+                        foreach($product->getAttributes() as $aName => $value){ ?>
+                          <div class="store-product-attributes">
+                            <strong><?= t($aName) ?>:</strong>
+                            <?= $value ?>
+                          </div>
+                <?php   }
+                      endif;
+                ?>
                 <?php if($showPageLink){?>
                 <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
                 <?php } ?>
@@ -197,18 +206,18 @@ if($products){
 
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
-        
-        <?php 
+
+        <?php
             if($i%$productsPerRow==0){
                 echo "</div>";
                 echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
             }
-        
+
         $i++;
-    
-    }// foreach    
+
+    }// foreach
     echo "</div><!-- .product-list -->";
-    
+
     if($showPagination){
         if ($paginator->getTotalPages() > 1) {
             echo '<div class="row">';
@@ -216,7 +225,7 @@ if($products){
             echo '</div>';
         }
     }
-    
+
 } //if products
 else { ?>
     <p class="alert alert-info"><?= t("No Products Available")?></p>

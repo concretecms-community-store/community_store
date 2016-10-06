@@ -122,4 +122,25 @@ class StoreProductKey extends Key
         }
         $db->query('delete from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
+    public function filterAttributeValues($keyword){
+      $nak = new self();
+
+      $keys = $nak->getList();
+      $validPIDs = Array();
+      foreach ($keys as $ak) {
+        if($ak->akIsSearchable){
+          $avIDs = $ak->getAttributeValueIDList();
+          foreach($avIDs as $avID){
+            $av = $ak->getAttributeValue($avID);
+            if(  stripos($av, $keyword) !== false){
+              $db = \Database::connection();
+              $r = $db->fetchColumn('select pID from CommunityStoreProductAttributeValues where avID = ?', array($avID) );
+              $validPIDs[] = $r;
+
+            }
+          }
+        }
+      }
+      return $validPIDs;
+    }
 }
