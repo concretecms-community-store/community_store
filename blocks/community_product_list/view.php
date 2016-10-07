@@ -1,6 +1,55 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+?>
+
+<form role="form" class="ccm-search-fields" id="filterForm">
+  <div class="row" style="padding: 20px; border: 1px solid #ddd; ">
+    <div class="col-sm-6">
+      <label for="group-filter">Groups:</label>
+      <?php foreach($grouplist as $group):?>
+      <div class="checkbox">
+          <label>
+            <input name="group-filter[]" type="checkbox" id="group_<?php echo $group->getGroupID(); ?>" value="<?php echo $group->getGroupID();?>" <?php echo in_array($group->getGroupID(),$filters['group-filter']) ? 'checked' : ''; ?>><?php echo $group->getGroupName();?>
+          </label>
+      </div>
+      <?php endforeach;?>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="amount">Price range:</label>
+        <input type="text" id="price-range" name="price-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        <input type="hidden" id="minprice-filter" name="minprice-filter" value="<?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>">
+        <input type="hidden" id="maxprice-filter" name="maxprice-filter" value="<?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?>">
+        <div id="slider-range"></div>
+      </div>
+      <div class="form-group form-inline">
+          <?= $form->search('keywords', $filters['keywords'], array('placeholder' => t('Search Name, Description or SKU')))?>
+          <button type="submit" class="btn btn-primary"><?= t('Search')?></button>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+$( function() {
+  $( "#slider-range" ).slider({
+    range: true,
+    min: <?php echo $minPrice; ?>,
+    max:  <?php echo $maxPrice; ?>,
+    values: [ <?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>, <?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?> ],
+    slide: function( event, ui ) {
+      $( "#price-range" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      $("#minprice-filter").val(ui.values[ 0 ]);
+      $("#maxprice-filter").val(ui.values[ 1 ]);
+    }
+  });
+  $( "#price-range" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+    " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+} );
+</script>
+
+
+<?php
 if($products){
 
     $columnClass = 'col-md-12';

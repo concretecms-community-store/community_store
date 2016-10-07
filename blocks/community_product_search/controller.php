@@ -39,6 +39,8 @@ class Controller extends SearchBlockController
 
         if (null!==Request::request('query')) {
             $products->setSearch($q);
+            $products->setGroupSearch($q);
+            $products->setAttributesearch($q);
         }
 
         $pagination = $products->getPagination();

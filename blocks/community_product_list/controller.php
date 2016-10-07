@@ -67,6 +67,8 @@ class Controller extends BlockController
         $products = new StoreProductList();
         $products->setSortBy($this->sortOrder);
 
+        $filters = Array();
+
         if ($this->sortOrder == 'alpha') {
             $products->setSortByDirection('asc');
         }
@@ -94,11 +96,36 @@ class Controller extends BlockController
         }
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
-        $products->setGroupIDs($this->getGroupFilters());
+
+        if(!empty($this->get('group-filter'))){
+          $groupIDs = Array();
+          $products->setGroupIDs($this->get('group-filter'));
+          $filters['group-filter'] = $this->get('group-filter');
+        }else {
+          $products->setGroupIDs($this->getGroupFilters());
+          $filters['group-filter'] = Array();
+        }
+        if($this->get('keywords')){
+          $products->setSearch($this->get('keywords'));
+          $products->setAttributeSearch($this->get('keywords'));
+          $filters['keywords'] = $this->get('keywords');
+        }
+
+        if($this->get('minprice-filter')){
+          $filters['minPrice'] = $this->get('minprice-filter');
+          $products->setMinPrice($this->get('minprice-filter'));
+        }
+        if($this->get('maxprice-filter')){
+          $filters['maxPrice'] = $this->get('maxprice-filter');
+          $products->setMaxPrice($this->get('maxprice-filter'));
+        }
+
         $products->setFeaturedOnly($this->showFeatured);
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
+
+
         $paginator = $products->getPagination();
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
@@ -118,6 +145,15 @@ class Controller extends BlockController
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('showAddToCart', false);
         }
+        //set group list
+        $grouplist = StoreGroupList::getGroupList();
+        $this->set('grouplist', $grouplist);
+        //set filters
+        $this->set('filters', $filters);
+        //setting minimum and maximum range of price range slider
+        $maxMinPrices = $this->getMaxMinPrice();
+        $this->set('maxPrice', $maxMinPrices['max']);
+        $this->set('minPrice', $maxMinPrices['min']);
     }
     public function registerViewAssets($outputContent = '')
     {
@@ -174,5 +210,29 @@ class Controller extends BlockController
         }
 
         return $e;
+    }
+
+    public function getMaxMinPrice(){
+      $db = \Database::connection();
+      $r = $db->query("SELECT MAX(pPrice) as 'maxPPrice', MIN(pPrice) as 'minPPrice', MAX(pSalePrice) as 'maxSalePrice', MIN(pSalePrice) as 'minSalePrice' FROM CommunityStoreProducts");
+      $result = $r->fetchRow();
+
+      if($result['maxPPrice'] > $result['maxSalePrice']){
+        $maxPrice = $result['maxPPrice'];
+      } else {
+        $maxPrice = $result['maxSalePrice'];
+      }
+      if($result['minSalePrice']!=null && $result['minPPrice']!=null){
+        $minPrice = $result['minSalePrice'] < $result['minPPrice'] ? $result['minSalePrice'] :  $result['minPPrice'];
+      }else if($result['minSalePrice']==null){
+        $minPrice = $result['minPPrice'];
+      }else if($result['minPPrice']==null){
+        $minPrice = $result['minSalePrice'];
+      }else {
+        $minPrice = 0;
+      }
+      $maxMinPrices['max'] = $maxPrice;
+      $maxMinPrices['min'] = $minPrice;
+      return($maxMinPrices);
     }
 }

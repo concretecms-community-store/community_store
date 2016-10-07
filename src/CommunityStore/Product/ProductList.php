@@ -91,7 +91,21 @@ class ProductList extends AttributedItemList
     {
         $this->search = $search;
     }
+    public function setGroupSearch($search)
+    {
+        $this->groupSearch = $search;
+    }
+    public function setAttributeSearch($search)
+    {
+        $this->attributeSearch = $search;
+    }
 
+    public function setMinPrice($price){
+        $this->minPrice = $price;
+    }
+    public function setMaxPrice($price){
+        $this->maxPrice = $price;
+    }
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $paramcount = 0;
@@ -159,21 +173,28 @@ class ProductList extends AttributedItemList
 
         $query->groupBy('p.pID');
 
+        //for price range filter
+        if($this->minPrice){
+          $query->andWhere('pPrice >= ? OR pSalePrice >= ?')->setParameter($paramcount++,$this->minPrice)->setParameter($paramcount++,$this->minPrice);
+        }
+        if($this->maxPrice){
+          $query->andWhere('pPrice <= ? OR pSalePrice <= ?')->setParameter($paramcount++,$this->maxPrice)->setParameter($paramcount++,$this->maxPrice);
+        }
+
         if ($this->search) {
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
             $query->orWhere('pDesc like ?')->setParameter($paramcount++, '%'. $this->search. '%');
             $query->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
-
-
-            //search through groupNames
-
-              $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
-              $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
-              $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
-
-
+        }
+        if($this->groupSearch){
+          //search through groupNames
+            $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
+            $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
+            $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->groupSearch. '%');
+        }
+        if($this->attributeSearch){
             //search attributes
-            $validPIDs = StoreProductKey::filterAttributeValues($this->search);
+            $validPIDs = StoreProductKey::filterAttributeValues($this->attributeSearch);
             if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
 
         }

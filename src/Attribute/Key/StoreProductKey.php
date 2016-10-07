@@ -122,6 +122,8 @@ class StoreProductKey extends Key
         }
         $db->query('delete from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
+
+    //gets the product pIDs where product has an attribute value = $keyword
     public function filterAttributeValues($keyword){
       $nak = new self();
 
