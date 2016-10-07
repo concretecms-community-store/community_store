@@ -96,7 +96,7 @@ class Controller extends BlockController
         }
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
-
+        //group filter
         if(!empty($this->get('group-filter'))){
           $groupIDs = Array();
           $products->setGroupIDs($this->get('group-filter'));
@@ -105,12 +105,13 @@ class Controller extends BlockController
           $products->setGroupIDs($this->getGroupFilters());
           $filters['group-filter'] = Array();
         }
+        //keyword filter
         if($this->get('keywords')){
           $products->setSearch($this->get('keywords'));
           $products->setAttributeSearch($this->get('keywords'));
           $filters['keywords'] = $this->get('keywords');
         }
-
+        //price filter
         if($this->get('minprice-filter')){
           $filters['minPrice'] = $this->get('minprice-filter');
           $products->setMinPrice($this->get('minprice-filter'));
@@ -118,6 +119,24 @@ class Controller extends BlockController
         if($this->get('maxprice-filter')){
           $filters['maxPrice'] = $this->get('maxprice-filter');
           $products->setMaxPrice($this->get('maxprice-filter'));
+        }
+        //width filter
+        if($this->get('minwidth-filter')){
+          $filters['minWidth'] = $this->get('minwidth-filter');
+          $products->setMinWidth($this->get('minwidth-filter'));
+        }
+        if($this->get('maxwidth-filter')){
+          $filters['maxWidth'] = $this->get('maxwidth-filter');
+          $products->setMaxWidth($this->get('maxwidth-filter'));
+        }
+        //height filter
+        if($this->get('minheight-filter')){
+          $filters['minHeight'] = $this->get('minheight-filter');
+          $products->setMinHeight($this->get('minheight-filter'));
+        }
+        if($this->get('maxheight-filter')){
+          $filters['maxHeight'] = $this->get('maxheight-filter');
+          $products->setMaxHeight($this->get('maxheight-filter'));
         }
 
         $products->setFeaturedOnly($this->showFeatured);
@@ -154,6 +173,14 @@ class Controller extends BlockController
         $maxMinPrices = $this->getMaxMinPrice();
         $this->set('maxPrice', $maxMinPrices['max']);
         $this->set('minPrice', $maxMinPrices['min']);
+        //setting minimum and maximum range of width
+        $maxMinWidth = $this->getMaxMinWidth();
+        $this->set('maxWidth', $maxMinWidth['max']);
+        $this->set('minWidth', $maxMinWidth['min']);
+        //setting minimum and maximum range of height
+        $maxMinHeight = $this->getMaxMinHeight();
+        $this->set('maxHeight', $maxMinHeight['max']);
+        $this->set('minHeight', $maxMinHeight['min']);
     }
     public function registerViewAssets($outputContent = '')
     {
@@ -235,5 +262,18 @@ class Controller extends BlockController
       $maxMinPrices['max'] = $maxPrice;
       $maxMinPrices['min'] = $minPrice;
       return($maxMinPrices);
+    }
+    public function getMaxMinWidth(){
+      $db = \Database::connection();
+      $r = $db->query("SELECT MAX(pWidth) as 'max', MIN(pWidth) as 'min' FROM CommunityStoreProducts");
+      $result = $r->fetchRow();
+      return $result;
+    }
+
+    public function getMaxMinHeight(){
+      $db = \Database::connection();
+      $r = $db->query("SELECT MAX(pHeight) as 'max', MIN(pHeight) as 'min' FROM CommunityStoreProducts");
+      $result = $r->fetchRow();
+      return $result;
     }
 }

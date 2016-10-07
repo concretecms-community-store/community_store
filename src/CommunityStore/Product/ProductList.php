@@ -106,6 +106,21 @@ class ProductList extends AttributedItemList
     public function setMaxPrice($price){
         $this->maxPrice = $price;
     }
+
+    public function setMinWidth($width){
+        $this->minWidth = $width;
+    }
+    public function setMaxWidth($width){
+        $this->maxWidth = $width;
+    }
+
+    public function setMinHeight($height){
+        $this->minHeight = $height;
+    }
+    public function setMaxHeight($height){
+        $this->maxHeight = $height;
+    }
+
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $paramcount = 0;
@@ -179,6 +194,20 @@ class ProductList extends AttributedItemList
         }
         if($this->maxPrice){
           $query->andWhere('pPrice <= ? OR pSalePrice <= ?')->setParameter($paramcount++,$this->maxPrice)->setParameter($paramcount++,$this->maxPrice);
+        }
+        //for width filter
+        if($this->minWidth){
+          $query->andWhere('pWidth >= ?')->setParameter($paramcount++,$this->minWidth);
+        }
+        if($this->maxWidth){
+          $query->andWhere('pWidth <= ?')->setParameter($paramcount++,$this->maxWidth);
+        }
+        //for height filter
+        if($this->minHeight){
+          $query->andWhere('pHeight >= ?')->setParameter($paramcount++,$this->minHeight);
+        }
+        if($this->maxHeight){
+          $query->andWhere('pHeight <= ?')->setParameter($paramcount++,$this->maxHeight);
         }
 
         if ($this->search) {

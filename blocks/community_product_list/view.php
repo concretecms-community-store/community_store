@@ -5,7 +5,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 
 <form role="form" class="ccm-search-fields" id="filterForm">
   <div class="row" style="padding: 20px; border: 1px solid #ddd; ">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <label for="group-filter">Groups:</label>
       <?php foreach($grouplist as $group):?>
       <div class="checkbox">
@@ -15,13 +15,29 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
       </div>
       <?php endforeach;?>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="width">Width:</label>
+        <input type="text" id="width-range" name="width-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        <input type="hidden" id="minwidth-filter" name="minwidth-filter" value="<?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>">
+        <input type="hidden" id="maxwidth-filter" name="maxwidth-filter" value="<?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?>">
+        <div id="slider-width-range"></div>
+      </div>
+      <div class="form-group">
+        <label for="height">Height:</label>
+        <input type="text" id="height-range" name="height-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        <input type="hidden" id="minheight-filter" name="minheight-filter" value="<?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>">
+        <input type="hidden" id="maxheight-filter" name="maxheight-filter" value="<?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?>">
+        <div id="slider-height-range"></div>
+      </div>
+    </div>
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="amount">Price range:</label>
         <input type="text" id="price-range" name="price-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
         <input type="hidden" id="minprice-filter" name="minprice-filter" value="<?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>">
         <input type="hidden" id="maxprice-filter" name="maxprice-filter" value="<?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?>">
-        <div id="slider-range"></div>
+        <div id="slider-price-range"></div>
       </div>
       <div class="form-group form-inline">
           <?= $form->search('keywords', $filters['keywords'], array('placeholder' => t('Search Name, Description or SKU')))?>
@@ -32,7 +48,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 </form>
 <script>
 $( function() {
-  $( "#slider-range" ).slider({
+  $( "#slider-price-range" ).slider({
     range: true,
     min: <?php echo $minPrice; ?>,
     max:  <?php echo $maxPrice; ?>,
@@ -43,8 +59,39 @@ $( function() {
       $("#maxprice-filter").val(ui.values[ 1 ]);
     }
   });
-  $( "#price-range" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-    " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  $( "#price-range" ).val( "$" + $( "#slider-price-range" ).slider( "values", 0 ) +
+    " - $" + $( "#slider-price-range" ).slider( "values", 1 ) );
+
+
+  $( "#slider-width-range" ).slider({
+    range: true,
+    min: <?php echo $minWidth; ?>,
+    max:  <?php echo $maxWidth; ?>,
+    values: [ <?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>, <?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?> ],
+    slide: function( event, ui ) {
+      $( "#width-range" ).val(  ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      $("#minwidth-filter").val(ui.values[ 0 ]);
+      $("#maxwidth-filter").val(ui.values[ 1 ]);
+    }
+  });
+  $( "#width-range" ).val( $( "#slider-width-range" ).slider( "values", 0 ) +
+    " - " + $( "#slider-width-range" ).slider( "values", 1 ) );
+
+  $( "#slider-height-range" ).slider({
+    range: true,
+    min: <?php echo $minHeight; ?>,
+    max:  <?php echo $maxHeight; ?>,
+    values: [ <?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>, <?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?> ],
+    slide: function( event, ui ) {
+      $( "#height-range" ).val(  ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      $("#minheight-filter").val(ui.values[ 0 ]);
+      $("#maxheight-filter").val(ui.values[ 1 ]);
+    }
+  });
+  $( "#height-range" ).val( $( "#slider-height-range" ).slider( "values", 0 ) +
+    " - " + $( "#slider-height-range" ).slider( "values", 1 ) );
+
+
 } );
 </script>
 
@@ -142,6 +189,13 @@ if($products){
                 <?php   }
                       endif;
                 ?>
+                <?php// if ($showDimensions) { ?>
+                    <div class="store-product-dimensions">
+                        <strong><?= t("Dimensions") ?>:</strong>
+                        <?= $product->getDimensions() ?>
+                        <?= Config::get('community_store.sizeUnit'); ?>
+                    </div>
+                <?php// } ?>
                 <?php if($showPageLink){?>
                 <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
                 <?php } ?>
