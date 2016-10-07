@@ -162,6 +162,7 @@ class Controller extends BlockController
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
+        $this->requireAsset('jquery/ui');
     }
     public function save($args)
     {
