@@ -22,7 +22,7 @@ class ProductVariationOptionItem
     protected $variation;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem",cascade={"persist"})
+     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem")
      * @JoinColumn(name="poiID", referencedColumnName="poiID", onDelete="CASCADE")
      */
     protected $option;
