@@ -29,14 +29,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
       </div>
 
         <div class="form-group">
-          <label for="width">Width:</label>
+          <label for="width">Width (<?= Config::get('community_store.sizeUnit'); ?>):</label>
           <span id="width-range" class="min-max-values"></span>
           <input type="hidden" id="minwidth-filter" name="minwidth-filter" class="lower-value" value="<?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>">
           <input type="hidden" id="maxwidth-filter" name="maxwidth-filter" class="higher-value" value="<?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?>">
           <div id="slider-width-range" class="slider"></div>
         </div>
         <div class="form-group">
-          <label for="height">Height:</label>
+          <label for="height">Height (<?= Config::get('community_store.sizeUnit'); ?>):</label>
           <span id="height-range" class="min-max-values"></span>
           <input type="hidden" id="minheight-filter" name="minheight-filter" class="lower-value" value="<?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>">
           <input type="hidden" id="maxheight-filter" name="maxheight-filter" class="higher-value" value="<?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?>">
@@ -310,21 +310,23 @@ else { ?>
 $( function() {
   $( "#slider-price-range" ).slider({
     range: true,
+    step: 30,
     min: <?php echo $minPrice; ?>,
     max:  <?php echo $maxPrice; ?>,
     values: [ <?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>, <?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?> ],
     slide: function( event, ui ) {
-      $( "#price-range" ).text( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      $( "#price-range" ).text( "<?php echo $symbol; ?>" + ui.values[ 0 ] + " - <?php echo $symbol; ?>" + ui.values[ 1 ] );
       $("#minprice-filter").val(ui.values[ 0 ]);
       $("#maxprice-filter").val(ui.values[ 1 ]);
     }
   });
-  $( "#price-range" ).text( "$" + $( "#slider-price-range" ).slider( "values", 0 ) +
-    " - $" + $( "#slider-price-range" ).slider( "values", 1 ) );
+  $( "#price-range" ).text( "<?php echo $symbol; ?>" + $( "#slider-price-range" ).slider( "values", 0 ) +
+    " - <?php echo $symbol; ?>" + $( "#slider-price-range" ).slider( "values", 1 ) );
 
 
   $( "#slider-width-range" ).slider({
     range: true,
+    step: 30,
     min: <?php echo $minWidth; ?>,
     max:  <?php echo $maxWidth; ?>,
     values: [ <?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>, <?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?> ],
@@ -339,6 +341,7 @@ $( function() {
 
   $( "#slider-height-range" ).slider({
     range: true,
+    step: 30,
     min: <?php echo $minHeight; ?>,
     max:  <?php echo $maxHeight; ?>,
     values: [ <?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>, <?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?> ],
@@ -360,6 +363,9 @@ $( function() {
       $(this).siblings('.lower-value').val(options.min);
       $(this).siblings('.higher-value').val(options.max);
     });
+  });
+  $('.slider').each(function(){
+    $(this).draggable();
   });
 
 } );
