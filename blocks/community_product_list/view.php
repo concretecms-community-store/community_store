@@ -326,7 +326,7 @@ $( function() {
 
   $( "#slider-width-range" ).slider({
     range: true,
-    step: 50,
+    step: 20,
     min: <?php echo $minWidth; ?>,
     max:  <?php echo $maxWidth; ?>,
     values: [ <?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>, <?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?> ],
@@ -341,7 +341,7 @@ $( function() {
 
   $( "#slider-height-range" ).slider({
     range: true,
-    step: 50,
+    step: 20,
     min: <?php echo $minHeight; ?>,
     max:  <?php echo $maxHeight; ?>,
     values: [ <?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>, <?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?> ],
