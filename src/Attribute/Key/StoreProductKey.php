@@ -134,10 +134,13 @@ class StoreProductKey extends Key
           $avIDs = $ak->getAttributeValueIDList();
           foreach($avIDs as $avID){
             $av = $ak->getAttributeValue($avID);
+
             if(  stripos($av, $keyword) !== false){
               $db = \Database::connection();
-              $r = $db->fetchColumn('select pID from CommunityStoreProductAttributeValues where avID = ?', array($avID) );
-              $validPIDs[] = $r;
+              $r = $db->fetchAll('select pID from CommunityStoreProductAttributeValues where avID = ?', array($avID) );
+              foreach($r as $val){
+                $validPIDs[] = $val['pID'];
+              }
 
             }
           }
