@@ -836,23 +836,42 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <?php
 
                 if (count($attribs) > 0) {
-                    foreach($attribs as $ak) {
-                        if (is_object($product)) {
-                            $caValue = $product->getAttributeValueObject($ak);
+                  foreach($attribs as $id => $akv): ?>
+                  <div class="form-group">
+                  <?php
+                    if (is_object($product)) {
+                        $caValue = $product->getAttributeValueByID($id);
+                        $caValue = $caValue!=null ? $caValue->getValue() : '';
+                    }
+                    ?>
+                      <label for="<?php echo $akv['name']?>" class="control-label"><?php echo $akv['name']?>:</label>
+                      <select class="form-control attribute-select" name="akID[<?php echo $id; ?>][value]" style="width: 100%;">
+                        <option></option>
+                      <?php
+                        if (count($akv['values']) > 0) {
+                          foreach($akv['values'] as $key => $val):?>
+                            <option value="<?php echo $key;?>" <?php echo strcmp($val,$caValue)==0 ? 'selected' : ''; ?>><?php echo $val;?></option>
+                    <?php endforeach;
                         }
-                        ?>
-                        <div class="clearfix">
-                            <?= $ak->render('label');?>
-                            <div class="input">
-                                <?= $ak->render('composer', $caValue, true)?>
-                            </div>
-                        </div>
-                    <?php  } ?>
+                      ?>
+                      </select>
+                  </div>
+                  <?php endforeach;?>
 
                 <?php  } else {?>
                     <em><?= t('You haven\'t created product attributes')?></em>
 
                 <?php }?>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('.attribute-select').select2({
+                          placeholder: 'select or create new value',
+                          tags: true,
+                          allowClear: true
+                        });
+                    });
+                </script>
 
             </div>
 

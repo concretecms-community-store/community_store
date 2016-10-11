@@ -8,7 +8,7 @@ use Page;
 use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
@@ -138,6 +138,15 @@ class Controller extends BlockController
           $filters['maxHeight'] = $this->get('maxheight-filter');
           $products->setMaxHeight($this->get('maxheight-filter'));
         }
+        //attribute filter
+        if(!empty($this->get('attribute-filter'))){
+          $attributeIDs = Array();
+          $products->setAttributeVals($this->get('attribute-filter'));
+          $filters['attribute-filter'] = $this->get('attribute-filter');
+        }else {
+          $filters['attribute-filter'] = Array();
+        }
+
 
         $products->setFeaturedOnly($this->showFeatured);
         $products->setSaleOnly($this->showSale);
@@ -181,6 +190,8 @@ class Controller extends BlockController
         $maxMinHeight = $this->getMaxMinHeight();
         $this->set('maxHeight', $maxMinHeight['max']);
         $this->set('minHeight', $maxMinHeight['min']);
+
+        $this->set('akvList',$this->getAttributeKeyValueList());
     }
     public function registerViewAssets($outputContent = '')
     {
@@ -275,5 +286,10 @@ class Controller extends BlockController
       $r = $db->query("SELECT MAX(pHeight) as 'max', MIN(pHeight) as 'min' FROM CommunityStoreProducts");
       $result = $r->fetchRow();
       return $result;
+    }
+
+    public function getAttributeKeyValueList(){
+      $list = StoreProductKey::getAttributeKeyValueList();
+      return $list;
     }
 }

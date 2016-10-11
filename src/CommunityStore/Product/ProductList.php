@@ -120,7 +120,10 @@ class ProductList extends AttributedItemList
     public function setMaxHeight($height){
         $this->maxHeight = $height;
     }
-
+    public function setAttributeVals($attributes)
+    {
+        $this->attributeVals = $attributes;
+    }
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $paramcount = 0;
@@ -209,6 +212,20 @@ class ProductList extends AttributedItemList
         if($this->maxHeight){
           $query->andWhere('pHeight <= ?')->setParameter($paramcount++,$this->maxHeight);
         }
+        //attributeVals filter
+        if (!empty($this->attributeVals)) {
+          $aks = array();
+          $avs = array();
+          foreach($this->attributeVals as $ak => $av){
+            $aks[] = $ak;
+            foreach($av as $avID){
+              $avs[] = $avID;
+            }
+          }
+          $query->innerJoin('p', 'CommunityStoreProductAttributeValues', 'av', 'p.pID = av.pID');
+          $query->andWhere('av.akID in('. implode(',', $aks) .') and av.avID in('. implode(',', $avs).')');
+
+        }
 
         if ($this->search) {
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
@@ -223,12 +240,10 @@ class ProductList extends AttributedItemList
         }
         if($this->attributeSearch){
             //search attributes
-            $validPIDs = StoreProductKey::filterAttributeValues($this->attributeSearch);
+            $validPIDs = StoreProductKey::filterAttributeValuesByKeyword($this->attributeSearch);
             if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
 
         }
-
-
 
         return $query;
     }

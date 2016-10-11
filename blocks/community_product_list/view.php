@@ -16,6 +16,18 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
       <?php endforeach;?>
     </div>
     <div class="col-sm-4">
+      <?php foreach($akvList as $id => $akv):?>
+        <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
+        <?php foreach($akv['values'] as $key => $val):?>
+          <div class="checkbox">
+              <label>
+                <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> ><?php echo $val;?>
+              </label>
+          </div>
+        <?php endforeach;?>
+      <?php endforeach;?>
+    </div>
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="width">Width:</label>
         <input type="text" id="width-range" name="width-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
