@@ -43,7 +43,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
           <div id="slider-height-range" class="slider"></div>
         </div>
       <div class="form-group">
-        <label for="amount">Price range:</label>
+        <label for="amount">Price (<?=  Config::get('community_store.symbol'); ?>):</label>
         <span id="price-range" class="min-max-values"></span>
         <input type="hidden" id="minprice-filter" name="minprice-filter" class="lower-value" value="<?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>">
         <input type="hidden" id="maxprice-filter" name="maxprice-filter" class="higher-value" value="<?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?>">
@@ -310,23 +310,23 @@ else { ?>
 $( function() {
   $( "#slider-price-range" ).slider({
     range: true,
-    step: 30,
+    step: 50,
     min: <?php echo $minPrice; ?>,
     max:  <?php echo $maxPrice; ?>,
     values: [ <?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>, <?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?> ],
     slide: function( event, ui ) {
-      $( "#price-range" ).text( "<?php echo $symbol; ?>" + ui.values[ 0 ] + " - <?php echo $symbol; ?>" + ui.values[ 1 ] );
+      $( "#price-range" ).text(  ui.values[ 0 ] + " - " + ui.values[ 1 ] );
       $("#minprice-filter").val(ui.values[ 0 ]);
       $("#maxprice-filter").val(ui.values[ 1 ]);
     }
   });
-  $( "#price-range" ).text( "<?php echo $symbol; ?>" + $( "#slider-price-range" ).slider( "values", 0 ) +
-    " - <?php echo $symbol; ?>" + $( "#slider-price-range" ).slider( "values", 1 ) );
+  $( "#price-range" ).text( $( "#slider-price-range" ).slider( "values", 0 ) +
+    " - " + $( "#slider-price-range" ).slider( "values", 1 ) );
 
 
   $( "#slider-width-range" ).slider({
     range: true,
-    step: 30,
+    step: 50,
     min: <?php echo $minWidth; ?>,
     max:  <?php echo $maxWidth; ?>,
     values: [ <?php echo $filters['minWidth']!=null ? $filters['minWidth'] : $minWidth; ?>, <?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?> ],
@@ -341,7 +341,7 @@ $( function() {
 
   $( "#slider-height-range" ).slider({
     range: true,
-    step: 30,
+    step: 50,
     min: <?php echo $minHeight; ?>,
     max:  <?php echo $maxHeight; ?>,
     values: [ <?php echo $filters['minHeight']!=null ? $filters['minHeight'] : $minHeight; ?>, <?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?> ],

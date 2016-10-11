@@ -16,3 +16,7 @@
   padding: 20px;
   display: block;
 }
+
+#filter-area .slider {
+  margin: 0 10px;
+}

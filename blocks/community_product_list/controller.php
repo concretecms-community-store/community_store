@@ -192,9 +192,6 @@ class Controller extends BlockController
         $this->set('minHeight', $maxMinHeight['min']);
 
         $this->set('akvList',$this->getAttributeKeyValueList());
-        $symbol = Config::get('community_store.symbol');
-
-        $this->set('symbol', $symbol);
 
     }
     public function registerViewAssets($outputContent = '')

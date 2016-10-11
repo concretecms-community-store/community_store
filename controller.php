@@ -90,6 +90,9 @@ class Controller extends Package
         $al->register('css', 'select2', 'css/select2.min.css', array('version' => '4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
         $al->register('javascript', 'select2', 'js/select2.min.js', array('version' => '4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
 
+        $al->register('css', 'jquery/ui', 'css/jquery-ui.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'jquery/ui', 'js/jquery-ui.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+
         $al->register('javascript', 'chartist', 'js/chartist.min.js', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
         $al->register('css', 'chartist', 'css/chartist.min.css', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
         $al->register('javascript', 'chartist-tooltip', 'js/chartist-plugin-tooltip.min.js', array('version' => '0.0.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
