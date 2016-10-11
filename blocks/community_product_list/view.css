@@ -1,3 +1,18 @@
 .store-original-price {
     text-decoration: line-through;
 }
+
+.min-max-values {
+  border:0;
+  color:#f6931f;
+  font-weight:bold;
+  width: 100%;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+#filter-area .filter-container {
+  padding: 20px;
+  display: block;
+}
