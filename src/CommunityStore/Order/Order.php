@@ -790,7 +790,6 @@ class Order
 
     public function delete()
     {
-        $this->getShippingMethodTypeMethod()->delete();
         $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();

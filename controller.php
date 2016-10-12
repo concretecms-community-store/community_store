@@ -10,6 +10,7 @@ use Route;
 use Asset;
 use AssetList;
 use URL;
+use Core;
 
 class Controller extends Package
 {
@@ -99,6 +100,16 @@ class Controller extends Package
                 array('css', 'chartist-tooltip'),
             )
         );
+
+
+        if (Core::make('app')->isRunThroughCommandLineInterface()) {
+            try {
+                $app = Core::make('console');
+                $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
+
+            } catch (Exception $e) {}
+        }
+
     }
     public function uninstall()
     {

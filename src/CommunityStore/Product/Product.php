@@ -826,6 +826,12 @@ class Product
         $em->flush();
     }
 
+    public function delete() {
+        $em = \Database::connection()->getEntityManager();
+        $em->remove($this);
+        $em->flush();
+    }
+
     public function remove()
     {
         StoreProductImage::removeImagesForProduct($this);
@@ -841,9 +847,7 @@ class Product
         $event = new StoreProductEvent($this);
         Events::dispatch('on_community_store_product_delete', $event);
 
-        $em = \Database::connection()->getEntityManager();
-        $em->remove($this);
-        $em->flush();
+        $this->delete();
         $page = Page::getByID($this->cID);
         if (is_object($page)) {
             $page->delete();
