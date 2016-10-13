@@ -120,6 +120,12 @@ class ProductList extends AttributedItemList
     public function setMaxHeight($height){
         $this->maxHeight = $height;
     }
+    public function setMinLength($length){
+        $this->minLength = $length;
+    }
+    public function setMaxLength($length){
+        $this->maxLength = $length;
+    }
     public function setAttributeVals($attributes)
     {
         $this->attributeVals = $attributes;
@@ -212,6 +218,15 @@ class ProductList extends AttributedItemList
         if($this->maxHeight){
           $query->andWhere('pHeight <= ?')->setParameter($paramcount++,$this->maxHeight);
         }
+
+        //for length filter
+        if($this->minLength){
+          $query->andWhere('pLength >= ?')->setParameter($paramcount++,$this->minLength);
+        }
+        if($this->maxLength){
+          $query->andWhere('pLength <= ?')->setParameter($paramcount++,$this->maxLength);
+        }
+
         //attributeVals filter
         if (!empty($this->attributeVals)) {
           $aks = array();

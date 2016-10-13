@@ -56,6 +56,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
           <div id="slider-height-range" class="slider"></div>
         </div>
       <?php } ?>
+      <?php if ($showLengthFilter) { ?>
+        <div class="form-group">
+          <label for="length">Length (<?= Config::get('community_store.sizeUnit'); ?>):</label>
+          <span id="length-range" class="min-max-values"></span>
+          <input type="hidden" id="minlength-filter" name="minlength-filter" class="lower-value" value="<?php echo $filters['minLength']!=null ? $filters['minLength'] : $minLength; ?>">
+          <input type="hidden" id="maxlength-filter" name="maxlength-filter" class="higher-value" value="<?php echo $filters['maxLength']!=null ? $filters['maxLength'] : $maxLength; ?>">
+          <div id="slider-length-range" class="slider"></div>
+        </div>
+      <?php } ?>
       <?php if ($showPriceFilter) { ?>
         <div class="form-group">
           <label for="amount">Price (<?=  Config::get('community_store.symbol'); ?>):</label>
@@ -327,6 +336,7 @@ else { ?>
 </div>
 <script>
 $( function() {
+  <?php if ($showPriceFilter) { ?>
   $( "#slider-price-range" ).slider({
     range: true,
     step: 50,
@@ -341,8 +351,8 @@ $( function() {
   });
   $( "#price-range" ).text( $( "#slider-price-range" ).slider( "values", 0 ) +
     " - " + $( "#slider-price-range" ).slider( "values", 1 ) );
-
-
+  <?php } ?>
+  <?php if ($showWidthFilter) { ?>
   $( "#slider-width-range" ).slider({
     range: true,
     step: 20,
@@ -357,7 +367,8 @@ $( function() {
   });
   $( "#width-range" ).text( $( "#slider-width-range" ).slider( "values", 0 ) +
     " - " + $( "#slider-width-range" ).slider( "values", 1 ) );
-
+  <?php } ?>
+  <?php if ($showHeightFilter) { ?>
   $( "#slider-height-range" ).slider({
     range: true,
     step: 20,
@@ -373,6 +384,24 @@ $( function() {
   $( "#height-range" ).text( $( "#slider-height-range" ).slider( "values", 0 ) +
     " - " + $( "#slider-height-range" ).slider( "values", 1 ) );
 
+  <?php } ?>
+  <?php if ($showLengthFilter) { ?>
+    $( "#slider-length-range" ).slider({
+      range: true,
+      step: 20,
+      min: <?php echo $minLength; ?>,
+      max:  <?php echo $maxLength; ?>,
+      values: [ <?php echo $filters['minLength']!=null ? $filters['minLength'] : $minLength; ?>, <?php echo $filters['maxLength']!=null ? $filters['maxLength'] : $maxLength; ?> ],
+      slide: function( event, ui ) {
+        $( "#length-range" ).text(  ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        $("#minlength-filter").val(ui.values[ 0 ]);
+        $("#maxlength-filter").val(ui.values[ 1 ]);
+      }
+    });
+    $( "#length-range" ).text( $( "#slider-length-range" ).slider( "values", 0 ) +
+      " - " + $( "#slider-length-range" ).slider( "values", 1 ) );
+  <?php } ?>
+  <?php if ($hasFilters) { ?>
   $('#reset-button').on('click', function(){
     $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
     $(':checkbox, :radio').prop('checked', false);
@@ -386,6 +415,7 @@ $( function() {
   $('.slider').each(function(){
     $(this).draggable();
   });
+  <?php } ?>
 
 } );
 </script>

@@ -167,6 +167,16 @@ class Controller extends BlockController
           $products->setMaxHeight($this->get('maxheight-filter'));
         }
 
+        //length filter
+        if($this->get('minlength-filter')){
+          $filters['minLength'] = $this->get('minlength-filter');
+          $products->setMinLength($this->get('minlength-filter'));
+        }
+        if($this->get('maxlength-filter')){
+          $filters['maxLength'] = $this->get('maxlength-filter');
+          $products->setMaxLength($this->get('maxlength-filter'));
+        }
+
 
 
         $products->setFeaturedOnly($this->showFeatured);
@@ -209,6 +219,10 @@ class Controller extends BlockController
         $maxMinHeight = $this->getMaxMinHeight();
         $this->set('maxHeight', $maxMinHeight['max']);
         $this->set('minHeight', $maxMinHeight['min']);
+        //setting minimum and maximum range of length
+        $maxMinLength = $this->getMaxMinLength();
+        $this->set('maxLength', $maxMinLength['max']);
+        $this->set('minLength', $maxMinLength['min']);
 
 
 
@@ -323,6 +337,13 @@ class Controller extends BlockController
     public function getMaxMinHeight(){
       $db = \Database::connection();
       $r = $db->query("SELECT MAX(pHeight) as 'max', MIN(pHeight) as 'min' FROM CommunityStoreProducts");
+      $result = $r->fetchRow();
+      return $result;
+    }
+
+    public function getMaxMinLength(){
+      $db = \Database::connection();
+      $r = $db->query("SELECT MAX(pLength) as 'max', MIN(pLength) as 'min' FROM CommunityStoreProducts");
       $result = $r->fetchRow();
       return $result;
     }
