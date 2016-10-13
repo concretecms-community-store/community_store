@@ -67,10 +67,57 @@
 
             <?php } ?>
 
+
+            <?php
+            if(!empty($attributeList)){
+              foreach ($attributeList as $key => $val) {
+                  $attributes[$key] = $val['name'];
+              }
+            }
+            ?>
+            <?php if (!empty($attributes)) { ?>
+                <?= $form->label('attributes', t('Filter by Product Attributes')); ?>
+                <div class="form-group">
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <select multiple="multiple" name="filterattributes[]" id="attributes-select"
+                                class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Attributes') ?>">
+                            <?php foreach ($attributes as $akey => $alabel) { ?>
+                                <option
+                                    value="<?= $akey; ?>" <?= (in_array($akey, $attributefilters) ? 'selected="selected"' : ''); ?>><?= $alabel; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            <?php } ?>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
-                    <?= t('Include Featured Only') ?>
+                    <?= $form->checkbox('showWidthFilter', 1, $showWidthFilter); ?>
+                    <?= t('Show Width Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showHeightFilter', 1, $showHeightFilter); ?>
+                    <?= t('Show Height Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showLengthFilter', 1, $showLengthFilter); ?>
+                    <?= t('Show Length Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showPriceFilter', 1, $showPriceFilter); ?>
+                    <?= t('Show Price Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showKeywordFilter', 1, $showKeywordFilter); ?>
+                    <?= t('Show Keyword Filter') ?>
                 </label>
             </div>
             <div class="form-group checkbox">
@@ -163,6 +210,7 @@
 <script>
     $(document).ready(function () {
         $('#groups-select').select2();
+        $('#attributes-select').select2();
 
         $('#filter').change(function () {
             if ($(this).val() == 'page' || $(this).val() == 'page_children') {
@@ -189,6 +237,3 @@
         });
     });
 </script>
-
-
-

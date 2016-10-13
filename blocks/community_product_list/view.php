@@ -2,32 +2,43 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 ?>
-<div class="col-sm-3" id="filter-area">
+<?php
+ if(!empty($grouplist) || !empty($akvList) || $showWidthFilter || $showHeightFilter || $showLengthFilter || $showPriceFilter || $showKeywordFilter){
+   $hasFilters = true;
+ } else{
+   $hasFilters = false;
+ }
+?>
+<div class="<?= $hasFilters ? 'col-sm-3' : ''?>" id="filter-area">
   <form role="form" class="ccm-search-fields" id="filterForm">
     <div class="row filter-container">
-      <div class="form-group">
-        <label for="group-filter">Groups:</label>
-        <?php foreach($grouplist as $group):?>
-        <div class="checkbox">
-            <label>
-              <input name="group-filter[]" type="checkbox" id="group_<?php echo $group->getGroupID(); ?>" value="<?php echo $group->getGroupID();?>" <?php echo in_array($group->getGroupID(),$filters['group-filter']) ? 'checked' : ''; ?>><?php echo $group->getGroupName();?>
-            </label>
-        </div>
-        <?php endforeach;?>
-      </div>
-      <div class="form-group">
-        <?php foreach($akvList as $id => $akv):?>
-          <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
-          <?php foreach($akv['values'] as $key => $val):?>
-            <div class="checkbox">
-                <label>
-                  <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> ><?php echo $val;?>
-                </label>
-            </div>
+      <?php if(!empty($grouplist)): ?>
+        <div class="form-group">
+          <label for="group-filter">Groups:</label>
+          <?php foreach($grouplist as $group):?>
+          <div class="checkbox">
+              <label>
+                <input name="group-filter[]" type="checkbox" id="group_<?php echo $group->getGroupID(); ?>" value="<?php echo $group->getGroupID();?>" <?php echo in_array($group->getGroupID(),$filters['group-filter']) ? 'checked' : ''; ?>><?php echo $group->getGroupName();?>
+              </label>
+          </div>
           <?php endforeach;?>
-        <?php endforeach;?>
-      </div>
-
+        </div>
+      <?php endif; ?> <!-- END OF GROUP FILTER -->
+      <?php if(!empty($akvList)): ?>
+        <div class="form-group">
+          <?php foreach($akvList as $id => $akv):?>
+            <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
+            <?php foreach($akv['values'] as $key => $val):?>
+              <div class="checkbox">
+                  <label>
+                    <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> ><?php echo $val;?>
+                  </label>
+              </div>
+            <?php endforeach;?>
+          <?php endforeach;?>
+        </div>
+      <?php endif; ?> <!-- END OF GROUP FILTER -->
+      <?php if ($showWidthFilter) { ?>
         <div class="form-group">
           <label for="width">Width (<?= Config::get('community_store.sizeUnit'); ?>):</label>
           <span id="width-range" class="min-max-values"></span>
@@ -35,6 +46,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
           <input type="hidden" id="maxwidth-filter" name="maxwidth-filter" class="higher-value" value="<?php echo $filters['maxWidth']!=null ? $filters['maxWidth'] : $maxWidth; ?>">
           <div id="slider-width-range" class="slider"></div>
         </div>
+      <?php } ?>
+      <?php if ($showHeightFilter) { ?>
         <div class="form-group">
           <label for="height">Height (<?= Config::get('community_store.sizeUnit'); ?>):</label>
           <span id="height-range" class="min-max-values"></span>
@@ -42,32 +55,38 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
           <input type="hidden" id="maxheight-filter" name="maxheight-filter" class="higher-value" value="<?php echo $filters['maxHeight']!=null ? $filters['maxHeight'] : $maxHeight; ?>">
           <div id="slider-height-range" class="slider"></div>
         </div>
-      <div class="form-group">
-        <label for="amount">Price (<?=  Config::get('community_store.symbol'); ?>):</label>
-        <span id="price-range" class="min-max-values"></span>
-        <input type="hidden" id="minprice-filter" name="minprice-filter" class="lower-value" value="<?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>">
-        <input type="hidden" id="maxprice-filter" name="maxprice-filter" class="higher-value" value="<?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?>">
-        <div id="slider-price-range" class="slider"></div>
+      <?php } ?>
+      <?php if ($showPriceFilter) { ?>
+        <div class="form-group">
+          <label for="amount">Price (<?=  Config::get('community_store.symbol'); ?>):</label>
+          <span id="price-range" class="min-max-values"></span>
+          <input type="hidden" id="minprice-filter" name="minprice-filter" class="lower-value" value="<?php echo $filters['minPrice']!=null ? $filters['minPrice'] : $minPrice; ?>">
+          <input type="hidden" id="maxprice-filter" name="maxprice-filter" class="higher-value" value="<?php echo $filters['maxPrice']!=null ? $filters['maxPrice'] : $maxPrice; ?>">
+          <div id="slider-price-range" class="slider"></div>
+        </div>
+      <?php } ?>
+      <?php if ($showKeywordFilter) { ?>
+        <div class="form-group">
+          <label for="keywords">Keywords:</label>
+            <?= $form->search('keywords', $filters['keywords'], array('placeholder' => t('Search Name, Description or SKU')))?>
+        </div>
+      <?php } ?>
+      <?php if ($hasFilters) { ?>
+      <div class="btn-group btn-group-justified" role="group" aria-label="..." style="margin-top : 10px;">
+        <div class="btn-group" role="group">
+          <button type="submit" class="btn btn-primary"><?= t('Search')?></button>
+        </div>
+        <div class="btn-group" role="group">
+          <input id="reset-button" type="button" class="btn btn-default" value="<?= t('Clear')?>"/>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="keywords">Keywords:</label>
-          <?= $form->search('keywords', $filters['keywords'], array('placeholder' => t('Search Name, Description or SKU')))?>
-
-          <div class="btn-group btn-group-justified" role="group" aria-label="..." style="margin-top : 10px;">
-            <div class="btn-group" role="group">
-              <button type="submit" class="btn btn-primary"><?= t('Search')?></button>
-            </div>
-            <div class="btn-group" role="group">
-              <input id="reset-button" type="button" class="btn btn-default" value="<?= t('Clear')?>"/>
-            </div>
-          </div>
-      </div>
+      <?php } ?>
     </div>
   </form>
 </div>
 
 
-<div class="col-sm-9">
+<div class="<?= $hasFilters ? 'col-sm-9' : 'col-sm-12'?>">
 <?php
 if($products){
 

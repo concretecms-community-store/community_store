@@ -149,18 +149,36 @@ class StoreProductKey extends Key
       return $validPIDs;
     }
     //prepares attribute list for filter
-    public function getAttributeKeyValueList(){
-      $nak = new self();
-      $keys = $nak->getList();
+    public function getAttributeKeyValueList($akIDs = array()){
+
       $list = Array();
-      foreach ($keys as $ak) {
-        if($ak->akIsSearchable){
-          $list[$ak->akID]['name'] = $ak->akName;
-          $avIDs = $ak->getAttributeValueIDList();
-          foreach($avIDs as $avID){
-            $avalue = $ak->getAttributeValue($avID);
-            if(!empty($avalue)){
-              $list[$ak->akID]['values'][$avID] = $avalue;
+      if(!empty($akIDs)){
+        foreach($akIDs as $id){
+          $nak = new self();
+          $ak = $nak->getByID($id);
+          if($ak->akIsSearchable){
+            $list[$ak->akID]['name'] = $ak->akName;
+            $avIDs = $ak->getAttributeValueIDList();
+            foreach($avIDs as $avID){
+              $avalue = $ak->getAttributeValue($avID);
+              if(!empty($avalue)){
+                $list[$ak->akID]['values'][$avID] = $avalue;
+              }
+            }
+          }
+        }
+      }else{
+        $nak = new self();
+        $keys = $nak->getList();
+        foreach ($keys as $ak) {
+          if($ak->akIsSearchable){
+            $list[$ak->akID]['name'] = $ak->akName;
+            $avIDs = $ak->getAttributeValueIDList();
+            foreach($avIDs as $avID){
+              $avalue = $ak->getAttributeValue($avID);
+              if(!empty($avalue)){
+                $list[$ak->akID]['values'][$avID] = $avalue;
+              }
             }
           }
         }

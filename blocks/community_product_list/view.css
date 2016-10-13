@@ -20,3 +20,6 @@
 #filter-area .slider {
   margin: 0 10px;
 }
+#filter-area .slider.ui-slider .ui-slider-range {
+  transition: none;
+}

@@ -9,6 +9,7 @@ use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
@@ -39,6 +40,8 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
+        $this->set("attributeList", $this->getAttributeKeyValueList());
+        $this->set('attributefilters',$this->getAttributeFilters());
     }
 
     public function getGroupFilters()
@@ -96,21 +99,46 @@ class Controller extends BlockController
         }
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
+
         //group filter
         if(!empty($this->get('group-filter'))){
-          $groupIDs = Array();
           $products->setGroupIDs($this->get('group-filter'));
           $filters['group-filter'] = $this->get('group-filter');
         }else {
           $products->setGroupIDs($this->getGroupFilters());
           $filters['group-filter'] = Array();
         }
+
+        //set group list
+        if(!empty($this->getGroupFilters())){
+          $grouplist = Array();
+          foreach($this->getGroupFilters() as $groupID){
+            $grouplist[] = StoreGroup::getByID($groupID);
+          }
+          $this->set('grouplist', $grouplist);
+        }
+
+        //attribute filter
+        if(!empty($this->get('attribute-filter'))){
+          $attributeIDs = Array();
+          $products->setAttributeVals($this->get('attribute-filter'));
+          $filters['attribute-filter'] = $this->get('attribute-filter');
+        }else {
+          $filters['attribute-filter'] = Array();
+        }
+        if(!empty($this->getAttributeFilters())){
+          $this->set('akvList',$this->getAttributeKeyValueList($this->getAttributeFilters()));
+        }
+
+
+
         //keyword filter
         if($this->get('keywords')){
           $products->setSearch($this->get('keywords'));
           $products->setAttributeSearch($this->get('keywords'));
           $filters['keywords'] = $this->get('keywords');
         }
+
         //price filter
         if($this->get('minprice-filter')){
           $filters['minPrice'] = $this->get('minprice-filter');
@@ -138,14 +166,7 @@ class Controller extends BlockController
           $filters['maxHeight'] = $this->get('maxheight-filter');
           $products->setMaxHeight($this->get('maxheight-filter'));
         }
-        //attribute filter
-        if(!empty($this->get('attribute-filter'))){
-          $attributeIDs = Array();
-          $products->setAttributeVals($this->get('attribute-filter'));
-          $filters['attribute-filter'] = $this->get('attribute-filter');
-        }else {
-          $filters['attribute-filter'] = Array();
-        }
+
 
 
         $products->setFeaturedOnly($this->showFeatured);
@@ -173,9 +194,7 @@ class Controller extends BlockController
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('showAddToCart', false);
         }
-        //set group list
-        $grouplist = StoreGroupList::getGroupList();
-        $this->set('grouplist', $grouplist);
+
         //set filters
         $this->set('filters', $filters);
         //setting minimum and maximum range of price range slider
@@ -191,7 +210,7 @@ class Controller extends BlockController
         $this->set('maxHeight', $maxMinHeight['max']);
         $this->set('minHeight', $maxMinHeight['min']);
 
-        $this->set('akvList',$this->getAttributeKeyValueList());
+
 
     }
     public function registerViewAssets($outputContent = '')
@@ -219,6 +238,12 @@ class Controller extends BlockController
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
 
+        $args['showWidthFilter'] = isset($args['showWidthFilter']) ? 1 : 0;
+        $args['showHeightFilter'] = isset($args['showHeightFilter']) ? 1 : 0;
+        $args['showLengthFilter'] = isset($args['showLengthFilter']) ? 1 : 0;
+        $args['showPriceFilter'] = isset($args['showPriceFilter']) ? 1 : 0;
+        $args['showKeywordFilter'] = isset($args['showKeywordFilter']) ? 1 : 0;
+
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
@@ -231,6 +256,19 @@ class Controller extends BlockController
             foreach ($filtergroups as $gID) {
                 $vals = array($this->bID, (int) $gID);
                 $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
+            }
+        }
+        //insert attributes
+        $filterattributes = $args['filterattributes'];
+        unset($args['filterattributes']);
+        $db = \Database::connection();
+        $vals = array($this->bID);
+        $db->query("DELETE FROM btCommunityStoreProductListAttributes where bID = ?", $vals);
+
+        if (!empty($filterattributes)) {
+            foreach ($filterattributes as $akID) {
+                $vals = array($this->bID, (int) $akID);
+                $db->query("INSERT INTO btCommunityStoreProductListAttributes (bID,akID) VALUES (?,?)", $vals);
             }
         }
 
@@ -289,8 +327,23 @@ class Controller extends BlockController
       return $result;
     }
 
-    public function getAttributeKeyValueList(){
-      $list = StoreProductKey::getAttributeKeyValueList();
+    public function getAttributeKeyValueList($akIDs = array()){
+      $list = StoreProductKey::getAttributeKeyValueList($akIDs);
       return $list;
+    }
+
+    public function getAttributeFilters()
+    {
+        $db = \Database::connection();
+        $result = $db->query("SELECT akID FROM btCommunityStoreProductListAttributes where bID = ?", array($this->bID));
+
+        $list = array();
+
+        if ($result) {
+            foreach ($result as $ak) {
+                $list[] = $ak['akID'];
+            }
+        }
+        return $list;
     }
 }
