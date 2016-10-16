@@ -5,10 +5,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Exception;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
 
 class ResetCommand extends Command
 {
@@ -16,8 +18,8 @@ class ResetCommand extends Command
     {
         $this
             ->setName('cstore:reset')
-            ->setDescription('Reset the community store package')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
+            ->setDescription('Reset the Community Store package')
+            ->addArgument('type', InputArgument::OPTIONAL,  'Type of reset')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
@@ -29,48 +31,78 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rc = 0;
-        try {
-            if (!$input->getOption('force')) {
-                if (!$input->isInteractive()) {
-                    throw new Exception("You have to specify the --force option in order to run this command");
-                }
-                $confirmQuestion = new ConfirmationQuestion(
-                    'Are you sure you want to reset community store? ' .
-                    'This will remove all orders and products! (y/n)',
-                    false
-                );
-                if (!$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
-                    throw new Exception("Operation aborted.");
-                }
 
-                $orderList = new StoreOrderList();
-                $orders = $orderList->getResults();
-                $orderCount = count($orders);
+        $operationType = $input->getArgument('type');
 
-                foreach($orders as $order) {
-                    $order->delete();
-                }
-                $output->writeln('<info>' . t2('%d order deleted', '%d orders deleted', $orderCount) .'</info>');
+        if (!$operationType) {
+            throw new Exception("You have to specify the type of reset to run this command");
+        }
 
-                $productList = new StoreProductList();
-                $productList->setActiveOnly(false);
-                $productList->setShowOutOfStock(true);
-                $products = $productList->getResults();
-                $productCount = count($products);
+        if ($operationType == 'all') {
+            $typeMessage = t('Are you sure you want to remove all products, orders and discounts from Community Store? (y/n)');
+        }
 
-                foreach($products as $product) {
-                    $product->remove();
+        if ($operationType == 'products') {
+            $typeMessage = t('Are you sure you want to remove all products from Community Store? (y/n)');
+        }
 
-                }
-                $output->writeln('<info>' . t2('%d product deleted', '%d products deleted', $productCount) .'</info>');
+        if ($operationType == 'orders') {
+            $typeMessage = t('Are you sure you want to remove all orders from Community Store? (y/n)');
+        }
 
+        if ($operationType == 'discounts') {
+            $typeMessage = t('Are you sure you want to remove all discounts from Community Store? (y/n)');
+        }
+
+        $confirmQuestion = new ConfirmationQuestion(
+            $typeMessage,
+            false
+        );
+
+        if (!$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
+            throw new Exception(t("Operation aborted."));
+        }
+
+        if ($operationType == 'all' || $operationType == 'orders') {
+            $orderList = new StoreOrderList();
+            $orders = $orderList->getResults();
+            $orderCount = count($orders);
+
+            foreach ($orders as $order) {
+                $order->delete();
+            }
+            $output->writeln('<info>' . t2('%d order deleted', '%d orders deleted', $orderCount) . '</info>');
+        }
+
+        if ($operationType == 'all' || $operationType == 'products') {
+            $productList = new StoreProductList();
+            $productList->setActiveOnly(false);
+            $productList->setShowOutOfStock(true);
+            $products = $productList->getResults();
+            $productCount = count($products);
+
+            foreach ($products as $product) {
+                $product->remove();
 
             }
-
-        } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
-            $rc = 1;
+            $output->writeln('<info>' . t2('%d product deleted', '%d products deleted', $productCount) . '</info>');
         }
+
+        if ($operationType == 'all' || $operationType == 'discounts') {
+            $discountList = new StoreDiscountRuleList();
+            $discounts = $discountList->getResults();
+
+            $discountCount = 0;
+
+            foreach ($discounts as $discount) {
+                $discount->delete();
+                $discountCount++;
+            }
+
+            $output->writeln('<info>' . t2('%d discount deleted', '%d discounts deleted', $discountCount) . '</info>');
+
+        }
+
 
         return $rc;
     }
