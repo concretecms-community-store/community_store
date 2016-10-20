@@ -391,7 +391,7 @@ class ProductImporter
   }
 
   protected function saveProductGroups($data,$product){
-    $group = explode(';',$data['pProductGroups']);
+    $group = explode(',',$data['pProductGroups']);
     $list = array();
     foreach($group as $gName){
       $gName = trim($gName);
