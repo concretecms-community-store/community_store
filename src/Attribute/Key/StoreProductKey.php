@@ -77,13 +77,16 @@ class StoreProductKey extends Key
     {
         $av = $product->getAttributeValueObject($this, true, $newAvID);
         //saves new attribute value
-        if(!is_numeric($newAvID)) parent::saveAttribute($av, $value);
+        if(!is_numeric($newAvID)){
+          parent::saveAttribute($av, $newAvID);
+        }
         $db = \Database::connection();
         $db->Replace('CommunityStoreProductAttributeValues', array(
             'pID' => $product->getID(),
             'akID' => $this->getAttributeKeyID(),
             'avID' => $av->getAttributeValueID(),
         ), array('pID', 'akID'));
+
         unset($av);
     }
 
@@ -171,6 +174,7 @@ class StoreProductKey extends Key
         $nak = new self();
         $keys = $nak->getList();
         foreach ($keys as $ak) {
+
           if($ak->akIsSearchable){
             $list[$ak->akID]['name'] = $ak->akName;
             $avIDs = $ak->getAttributeValueIDList();
@@ -185,4 +189,22 @@ class StoreProductKey extends Key
       }
       return $list;
     }
+
+    public function getAvIDbyValue($value, $akID){
+      $nak = new self();
+      $ak = $nak->getByID($akID);
+      $avIDs = $ak->getAttributeValueIDList();
+      foreach($avIDs as $avID){
+        $avalue = $ak->getAttributeValue($avID);
+        if(!empty($avalue) && $avalue==$value){
+          return $avID;
+        }
+      }
+
+    }
+
+
+    //prepares attribute list for filter
+
+
 }

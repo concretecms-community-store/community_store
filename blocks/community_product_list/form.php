@@ -88,6 +88,11 @@
                         </select>
                     </div>
                 </div>
+                <style>
+                .select2-container {
+                  z-index: 2000;
+                }
+                </style>
 
             <?php } ?>
             <div class="form-group checkbox">

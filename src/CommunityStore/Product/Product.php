@@ -481,7 +481,6 @@ class Product
         } else {
             $product->setHasVariations($data['pVariations']);
         }
-
         $product->save();
         if (!$data['pID']) {
             $product->generatePage($data['selectPageTemplate']);
@@ -1104,7 +1103,7 @@ class Product
         }
         return $av;
     }
-    /*get attributes by mary*/
+
     public function getAttributes(){
       $attributes = StoreProductKey::getAttributes($this->getID());
       foreach($attributes as $handle=>$value) {
@@ -1116,7 +1115,6 @@ class Product
 
     public function getAttributeValueByID($akID)
     {
-      // echo $akID;
       $db = \Database::connection();
       $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", Array($this->getID(),$akID));
       if ($avID > 0) {
@@ -1126,7 +1124,159 @@ class Product
               $av->setAttributeKey(StoreProductKey::getInstanceByID($akID));
           }
       }
-      // print_r($av);
       return $av;
+    }
+
+    public function getImportFields(){
+      $attributes =  StoreProductKey::getAttributeKeyList('store_product');
+      $attrList = array();
+      foreach($attributes as $attr){
+        $attrList[$attr->akHandle] = array(
+          "default" => "",
+          "label" => $attr->akName
+        );
+      }
+      $list = array(
+        "Overview" => array(
+          "pName" => array(
+            "default" => "",
+            "label" => "Product Name"
+          ),
+          "pSKU" => array(
+            "default" => "",
+            "label" => "Code / SKU"
+          ),
+          "pActive" => array(
+            "default" => 0,
+            "label" => "Active"
+          ),
+          "pFeatured" => array(
+            "default" => 0,
+            "label" => "Featured Product"
+          ),
+          "pPrice" => array(
+            "default" => 0,
+            "label" => "Price"
+          ),
+          "pSalePrice" => array(
+            "default" => "",
+            "label" => "Sale Price"
+          ),
+          "pTaxable" => array(
+            "default" => 1,
+            "label" => "Taxable"
+          ),
+          "pTaxClass" => array(
+            "default" => 1,
+            "label" => "Tax Class"
+          ),
+          "pQty" => array(
+            "default" => 0,
+            "label" => "Stock Level"
+          ),
+          "pQtyUnlim" => array(
+            "default" => 1,
+            "label" => "Is Unlimited"
+          ),
+          "pNoQty" => array(
+            "default" => 0,
+            "label" => "Offer quantity selection"
+          ),
+          "pBackOrder" => array(
+            "default" => "",
+            "label" => "Allow Back Orders"
+          ),
+          "pDesc" => array(
+            "default" => "",
+            "label" => "Short Description"
+          ),
+          "pDetail" => array(
+            "default" => "",
+            "label" => "Product Details"
+          )
+        ),
+        "Shipping" => array(
+          "pShippable" => array(
+            "default" => 1,
+            "label" => "Product is Shippable"
+          ),
+          "pWeight" => array(
+            "default" => 0,
+            "label" => "Weight"
+          ),
+          "pNumberItems" => array(
+            "default" => "",
+            "label" => "Number Of Items"
+          ),
+          "pLength" => array(
+            "default" => 0,
+            "label" => "Length"
+          ),
+          "pWidth" => array(
+            "default" => 0,
+            "label" => "Width"
+          ),
+          "pHeight" => array(
+            "default" => 0,
+            "label" => "Height"
+          )
+        ),
+        "Categories" => array(
+          "pProductGroups" => array(
+            "default" => "",
+            "label" => "In Product Groups"
+          )
+        ),
+        "Images" => array(
+          "pfID" => array(
+            "default" => 0,
+            "label" => "Primary Product Image"
+          ),
+          "url_upload_1" => array(
+            "default" => 0,
+            "label" => "Additional Product Image 1"
+          ),
+          "url_upload_2" => array(
+            "default" => 0,
+            "label" => "Additional Product Image 2"
+          ),
+          "url_upload_3" => array(
+            "default" => 0,
+            "label" => "Additional Product Image 3"
+          ),
+          "url_upload_4" => array(
+            "default" => 0,
+            "label" => "Additional Product Image 4"
+          ),
+          "url_upload_5" => array(
+            "default" => 0,
+            "label" => "Additional Product Image 5"
+          )
+        ),
+        "Options" => array(
+          "pVariations" => array(
+            "default" => 0,
+            "label" => "Options have different prices, SKUs or stock levels"
+          )
+        ),
+        "Attributes" => $attrList,
+        "Memberships and Downloads" => array(
+          "pAutoCheckout" => array(
+            "default" => "",
+            "label" => " Send customer directly to checkout when added to cart"
+          ),
+          "pExclusive" => array(
+            "default" => "",
+            "label" => "Prevent this item from being in the cart with other items"
+          )
+        ),
+        "Detail Page" => array(
+          "selectPageTemplate" => array(
+            "default" => 5,
+            "label" => "Page Template"
+          )
+        )
+      );
+      return $list;
     }
 }

@@ -10,6 +10,10 @@ use TaskPermission;
 use File;
 use PageType;
 use GroupList;
+use Request;
+use Job;
+
+use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
@@ -24,7 +28,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGrou
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImporter;
 class Products extends DashboardPageController
 {
 
@@ -296,7 +300,10 @@ class Products extends DashboardPageController
                 //save product attributes
                 foreach($data['akID'] as $key => $value){
                   $ak = StoreProductKey::getByID($key);
-                  $ak->saveAttribute($product,false,$value['value']);
+                  if(!empty($value['value'])){
+                    $ak->saveAttribute($product,false,$value['value']);
+                  }
+
                 }
                 //save images
                 StoreProductImage::addImagesForProduct($data,$product);
@@ -405,4 +412,43 @@ class Products extends DashboardPageController
     {
         StoreGroup::getByID($gID)->delete();
     }
+
+    // IMPORT PAGE
+    public function import()
+    {
+        $product = new StoreProduct();
+        $this->set('importFields', $product::getImportFields());
+        $this->requireAsset('css', 'communityStoreDashboard');
+        $this->requireAsset('javascript', 'communityStoreFunctions');
+
+        // clear the environment overrides cache first
+        $env = \Environment::get();
+        $env->clearOverrideCache();
+        $this->set('auth', Job::generateAuth());
+        $session = new SymfonySession();
+        $preview = $session->get('csv_rows');
+        $headers = $session->get('csv_headers');
+        if($headers) {
+            $this->set('headers',$headers);
+            $this->set('rows',$preview);
+
+            $session->remove('csv_headers');
+            $session->remove('csv_rows');
+        }
+    }
+
+    public function importproducts(){
+      ProductImporter::importCsv();
+    }
+
+    public function processQueue(){
+      ProductImporter::processQueue();
+    }
+    public function beginImport(){
+      $post = \Request::post();
+      echo serialize($post);
+      exit;
+    }
+
+
 }
