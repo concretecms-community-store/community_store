@@ -1183,7 +1183,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <tbody>
               <?php foreach($vals as $tColumn => $tDesc ): ?>
                 <tr>
-                  <td><label><?= t($tDesc['label']) ?></label> <em><?= strlen($tDesc['default'])==0 ? "" : "(Default: ".$tDesc['default'].")"   ?></em></td>
+                  <td><label><?= t($tDesc['label']) ?></label><?php echo $tDesc['label']=="In Product Groups" ? " (Separated by comma) " : ""; ?> <em><?= strlen($tDesc['default'])==0 ? "" : "(Default: ".$tDesc['default'].")"   ?></em></td>
 
                   <td style="width: 200px;">
                     <select class="form-control" name="column[<?= $tColumn ?>]">
@@ -1290,9 +1290,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                       "<?php echo URL::to('/dashboard/store/products/', 'processQueue');?>",
                       params,
                       '<?php echo t("Importing CSV file, dont close your browser."); ?>',
-                      function() {
+                      function(successMessage) {
                         $('.ui-dialog-content').dialog('close');
-                        alert("Successfully imported products!");
+                        alert(successMessage.result);
                         window.location.replace("<?= \URL::to('/dashboard/store/products/')?>");
                       },
                       function() {

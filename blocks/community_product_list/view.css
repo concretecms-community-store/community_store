@@ -23,3 +23,8 @@
 #filter-area .slider.ui-slider .ui-slider-range {
   transition: none;
 }
+
+#filter-area .filter-container .list-area {
+  max-height: 250px;
+  overflow-y: scroll;
+}

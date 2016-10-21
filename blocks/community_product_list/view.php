@@ -15,6 +15,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
       <?php if(!empty($grouplist)): ?>
         <div class="form-group">
           <label for="group-filter">Groups:</label>
+          <div class="list-area">
           <?php foreach($grouplist as $group):?>
           <div class="checkbox">
               <label>
@@ -22,12 +23,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
               </label>
           </div>
           <?php endforeach;?>
+          </div>
         </div>
       <?php endif; ?> <!-- END OF GROUP FILTER -->
       <?php if(!empty($akvList)): ?>
         <div class="form-group">
           <?php foreach($akvList as $id => $akv):?>
             <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
+            <div class="list-area">
             <?php foreach($akv['values'] as $key => $val):?>
               <div class="checkbox">
                   <label>
@@ -35,6 +38,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
                   </label>
               </div>
             <?php endforeach;?>
+            </div>
           <?php endforeach;?>
         </div>
       <?php endif; ?> <!-- END OF GROUP FILTER -->

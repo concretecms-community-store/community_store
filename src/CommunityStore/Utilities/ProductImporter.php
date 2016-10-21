@@ -19,6 +19,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 
 
 class ProductImporter
@@ -79,6 +80,17 @@ class ProductImporter
             if($messages){
               foreach($messages as $message){
                 $queue->deleteMessage($message);
+              }
+            }
+
+          }
+          $failed = Queue::get('failed_products');
+          while($failed->count()>0){
+            //delete failed products queue
+            $messages = $failed->receive();
+            if($messages){
+              foreach($messages as $message){
+                $failed->deleteMessage($message);
               }
             }
 
@@ -149,7 +161,7 @@ class ProductImporter
 
           $obj  = new stdClass;
           $obj->error = false;
-
+          $obj->importedItems = 0;
           if (Job::authenticateRequest($post['auth'])) {
 
                   if($post['process']) {
@@ -157,6 +169,8 @@ class ProductImporter
                       try {
                           $product_columns = unserialize($post['attr']);
                           $messages = $q->receive(1);
+
+
                           foreach ($messages as $message) {  //loop through the queue
 
                               $products  = unserialize($message->body);
@@ -189,6 +203,7 @@ class ProductImporter
 
                                   //upload images
                                   $images = array();
+
                                   if($newProduct['pfID']){
                                     if(!is_numeric($newProduct['pfID'])){
                                       $images = self::uploadProductImages($newProduct);
@@ -201,27 +216,32 @@ class ProductImporter
                                         }else{
                                           $newProduct['pfID'] = 0;
                                         }
-                                        echo "<pre>";
-                                        print_r($images['errors']);
-                                        exit;
+
+                                        $newProduct['error'] = $images['error'];
+                                        $failed = Queue::get('failed_products');
+                                        $failed->send(serialize($newProduct));
                                       }
                                     }
                                   }
+                                  if(empty($images['errors'])){
+                                    //save the product
+                                    $product = StoreProduct::saveProduct($newProduct);
 
-                                  //save the product
-                                  $product = StoreProduct::saveProduct($newProduct);
+                                    //save product groups
+                                    self::saveProductGroups($newProduct,$product);
 
-                                  //save product groups
-                                  self::saveProductGroups($newProduct,$product);
-
-                                  //save product attributes
-                                  self::saveProductAttributes($newProduct, $product);
+                                    //save product attributes
+                                    self::saveProductAttributes($newProduct, $product);
 
 
-                                  //save additional images
-                                  if(!empty($images['pifID'])){
-                                    StoreProductImage::addImagesForProduct($images,$product);
+                                    //save additional images
+                                    if(!empty($images['pifID'])){
+                                      StoreProductImage::addImagesForProduct($images,$product);
+                                    }
+
+                                    $obj->importedItems++;
                                   }
+
 
                                   //save product user groups
                                   // StoreProductUserGroup::addUserGroupsForProduct($data,$product);
@@ -238,22 +258,47 @@ class ProductImporter
                                   // save variations
                                   // StoreProductVariation::addVariations($data, $product);
 
-
+                                  $q->deleteMessage($message);
                               }else{
-                                print_r($producterrors->getList());
+                                foreach($producterrors->getList() as $error){
+                                  echo $error.". ";
+                                }
+                                echo " Please review your table mapping.";
+                                $obj->error = true;
                               }
-                              $q->deleteMessage($message);
+
 
                           }
                           $totalItems = $q->count();
                           $obj->totalItems = $totalItems;
-                          $obj->message = 'Success';
+
+
                           if ($q->count() == 0) {
-                              $result = 'Success';
-                              $obj->result = $result;
                               $obj->error = false;
                               $obj->totalItems = $totalItems;
+                              $result = $result."\nWoohooh! Import successful!";
+
+                              $obj->result = $result;
+                              $failedproducts = Queue::get('failed_products');
+                              if( $failedproducts->count() > 0){
+                                //shows sku of failed products
+                                $result = $result."\nFailed Products: ".$failedproducts->count()."\nCodes/SKUs: ";
+                                while($failedproducts->count() > 0){
+                                  $messages = $failedproducts->receive(1);
+                                  foreach ($messages as $message) {  //loop through the queue
+                                      $products  = unserialize($message->body);
+                                      $result = $result." ".$products['pSKU'].",";
+                                      $failedproducts->deleteMessage($message);
+                                  }
+                                }
+                                $result = rtrim($result, ",");
+                                $obj->result = $result;
+                              }
+
                           }
+
+
+
                       } catch (\Exception $e) {
                           $obj->error = true;
                           $obj->message = $obj->result; // needed for progressive library.
@@ -395,14 +440,18 @@ class ProductImporter
     $list = array();
     foreach($group as $gName){
       $gName = trim($gName);
-      $storedgroup = StoreGroup::getByName($gName);
-      if(empty($storedgroup)){
-        $storedgroup = StoreGroup::add($gName);
+      if(!empty($gName)){
+        $storedgroup = StoreGroup::getByName($gName);
+        if(empty($storedgroup)){
+          $storedgroup = StoreGroup::add($gName);
+        }
+        $list['pProductGroups'][] = $storedgroup->getGroupID();
       }
-      $list['pProductGroups'][] = $storedgroup->getGroupID();
       $storedgroup = null;
     }
-    StoreProductGroup::addGroupsForProduct($list,$product);
+    if(!empty($list)){
+      StoreProductGroup::addGroupsForProduct($list,$product);
+    }
   }
 
   protected function saveProductAttributes($data, $product){
@@ -430,10 +479,10 @@ class ProductImporter
     $addtl_urls = array();
     for ($i = 1; $i < 6; $i++) {
       if(!empty(trim($data['url_upload_' .$i]))){
-        $urls['pifID'][] = trim($data['url_upload_' .$i]);
+        $urls['pifID_'.$i] = trim($data['url_upload_' .$i]);
+
       }
     }
-
     $u = new User();
 
     $cf = Core::make('helper/file');
@@ -477,12 +526,7 @@ class ProductImporter
               $request->setUri($url);
               $client = new \Zend\Http\Client();
               $response = $client->dispatch($request);
-
-              if($key=="pfID"){
-                $incoming_urls[$key] = $url;
-              }else{
-                $incoming_urls[$key][] = $url;
-              }
+              $incoming_urls[$key] = $url;
           } catch (\Exception $e) {
               array_push($error,$e->getMessage());
           }
@@ -492,6 +536,7 @@ class ProductImporter
         }
 
     }
+
     $files = array();
     // if we haven't gotten any errors yet then try to process the form
     if (empty($error)) {
@@ -548,7 +593,8 @@ class ProductImporter
                           $files[$key] = $respf->getFileID();
                         }else{
 
-                          $files[$key][] = $respf->getFileID();
+                          $str = explode('_',$key);
+                          $files[$str[0]][] = $respf->getFileID();
                         }
 
                     }
@@ -567,7 +613,6 @@ class ProductImporter
     if(!empty($error)){
       $files['errors'] = $error;
     }
-
     return $files;
   }
 }

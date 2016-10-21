@@ -11,9 +11,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
  */
 class ProductImage
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $piID;
 
