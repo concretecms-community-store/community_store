@@ -127,22 +127,22 @@ class Product
     protected $pShippable;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pWidth;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pHeight;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pLength;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pWeight;
 
