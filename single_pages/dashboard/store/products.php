@@ -61,6 +61,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images')?></a></li>
                     <li><a href="#product-options" data-pane-toggle><?= t('Options')?></a></li>
+                    <li><a href="#product-related" data-pane-toggle><?= t('Related Products')?></a></li>
                     <li><a href="#product-attributes" data-pane-toggle><?= t('Attributes')?></a></li>
                     <li><a href="#product-digital" data-pane-toggle><?= t("Memberships and Downloads")?></a></li>
                     <li><a href="#product-page" data-pane-toggle><?= t('Detail Page')?></a></li>
@@ -191,7 +192,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
                 <?php if ($controller->getTask() == 'edit') { ?>
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-xs-12">
                         <div class="form-group">
                             <?= $form->label("pDateAdded", t("Date Added"));?>
                             <?= \Core::make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
@@ -829,6 +830,76 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div><!-- #product-options -->
 
+            <div class="col-sm-9 store-pane" id="product-related">
+
+                <h4><?= t('Related Products')?></h4>
+
+                <ul class="list-group multi-select-list multi-select-sortable" id="related-products">
+                    <?php
+                    $relatedProducts = $product->getRelatedProducts();
+                    if (!empty($relatedProducts)) {
+                        foreach ($relatedProducts as $relatedProduct) {
+                            echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '<input type="hidden" name="pRelatedProducts[]" value="'.$relatedProduct->getRelatedProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>';
+                        }
+                    }
+                    ?>
+                </ul>
+
+                <div class="form-group" id="product-search">
+                    <input name="relatedpID" id="product-select"    style="width: 100%" placeholder="<?= t('Search for a Product') ?>" />
+                </div>
+
+                <script type="text/javascript">
+
+                    $(function(){
+                        $("#product-select").select2({
+                            ajax: {
+                                url: "<?= \URL::to('/productfinder')?>",
+                                dataType: 'json',
+                                quietMillis: 250,
+                                data: function (term, page) {
+                                    return {
+                                        q: term, // search term
+                                    };
+                                },
+                                results: function (data) {
+                                    var results = [];
+                                    $.each(data, function(index, item){
+                                        results.push({
+                                            id: item.pID,
+                                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
+                                        });
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                },
+                                cache: true
+                            },
+                            minimumInputLength: 2,
+                            initSelection: function(element, callback) {
+                                callback({});
+                            },
+                        }).select2('val', []);
+
+                        $('#product-select').on("change", function(e) {
+                            var data = $(this).select2('data');
+                            $('#related-products').append('<li class="list-group-item">'+ data.text  +'<input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>');
+                            $(this).select2("val", []);
+                        });
+
+                        $('#related-products').on('click', 'a', function(){
+                            $(this).parent().remove();
+                        });
+
+                        $('#related-products').sortable({axis: 'y'});
+
+                    });
+
+                </script>
+
+            </div><!-- #product-related -->
+
             <div class="col-sm-9 store-pane" id="product-attributes">
                 <div class="alert alert-info">
                     <?= t("While you can set and assign attributes, they're are currently only able to be accessed programmatically")?>
@@ -856,10 +927,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             </div>
 
-
-
             <div class="col-sm-9 store-pane" id="product-digital">
-
                 <?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
                     <?php
                     $files = $product->getDownloadFileObjects();

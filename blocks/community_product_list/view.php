@@ -1,8 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-if($products){
+$c = Page::getCurrentPage();
 
+if($products){
     $columnClass = 'col-md-12';
 
     if ($productsPerRow == 2) {
@@ -39,7 +40,7 @@ if($products){
         }
 
         //this is done so we can get a type of active class if there's a product list on the product page
-        if(Page::getCurrentPage()->getCollectionID()==$product->getPageID()){
+        if($c->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
         }
 
@@ -218,6 +219,6 @@ if($products){
     }
     
 } //if products
-else { ?>
-    <p class="alert alert-info"><?= t("No Products Available")?></p>
+elseif (is_object($c) && $c->isEditMode()) { ?>
+    <p class="alert alert-info"><?= t("Empty Product List")?></p>
 <?php } ?>

@@ -17,6 +17,7 @@ class ProductList extends AttributedItemList
     protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = array();
+    protected $relatedProduct = false;
 
     public function setGroupID($gID)
     {
@@ -73,6 +74,10 @@ class ProductList extends AttributedItemList
     {
         $this->showOutOfStock = $bool;
     }
+    public function setRelatedProduct($product)
+    {
+        $this->relatedProduct = $product;
+    }
 
     protected function getAttributeKeyClassName()
     {
@@ -113,12 +118,47 @@ class ProductList extends AttributedItemList
             }
         }
 
+        $relatedids = array();
+
+        // if we have a true value for related, we don't have an object, meaning it couldn't find a product to look for related products for
+        // this means we should return no products
+        if ($this->relatedProduct === true) {
+            $query->andWhere("1 = 0");
+        }  elseif (is_object($this->relatedProduct)) {
+
+            $related = $this->relatedProduct->getRelatedProducts();
+
+            foreach($related as $r) {
+                $relatedids[] = $r->getRelatedProductID();
+            }
+
+            if (!empty($relatedids)) {
+                $query->andWhere('p.pID in ('. implode(',', $relatedids) .')');
+            } else {
+                $query->andWhere('1 = 0');
+            }
+        } elseif (is_array($this->cIDs) && !empty($this->cIDs)) {
+            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' .  implode(',', $this->cIDs). ')');
+        }
+
         switch ($this->sortBy) {
             case "alpha":
                 $query->orderBy('pName', $this->getSortByDirection());
                 break;
+            case "alpha_asc":
+                $query->orderBy('pName', 'asc');
+                break;
+            case "alpha_desc":
+                $query->orderBy('pName', 'desc');
+                break;
             case "price":
                 $query->orderBy('pPrice', $this->getSortByDirection());
+                break;
+            case "price_asc":
+                $query->orderBy('pPrice', 'asc');
+                break;
+            case "price_desc":
+                $query->orderBy('pPrice', 'desc');
                 break;
             case "active":
                 $query->orderBy('pActive', $this->getSortByDirection());
@@ -138,6 +178,11 @@ class ProductList extends AttributedItemList
                     $query->addOrderBy("pID = ?", 'DESC')->setParameter($paramcount++, $pID);
                 }
                 break;
+            case "related":
+                if (!empty($relatedids)) {
+                    $query->addOrderBy('FIELD (pID, '. implode(',', $relatedids) .')');
+                }
+                break;
         }
         if ($this->featuredOnly) {
             $query->andWhere("pFeatured = 1");
@@ -150,10 +195,6 @@ class ProductList extends AttributedItemList
         }
         if ($this->activeOnly) {
             $query->andWhere("pActive = 1");
-        }
-
-        if (is_array($this->cIDs) && !empty($this->cIDs)) {
-            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' .  implode(',', $this->cIDs). ')');
         }
 
         $query->groupBy('p.pID');

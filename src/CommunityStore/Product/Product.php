@@ -229,6 +229,15 @@ class Product
         return $this->options;
     }
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated", mappedBy="product",cascade={"persist"}))
+     */
+    protected $related;
+
+    public function getRelatedProducts(){
+        return $this->related;
+    }
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -237,6 +246,7 @@ class Product
         $this->images = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
         $this->options = new ArrayCollection();
+        $this->related = new ArrayCollection();
     }
 
 
