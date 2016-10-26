@@ -34,15 +34,19 @@ use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as Sto
           <?php foreach($akvList as $id => $akv):?>
             <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
             <div class="list-area">
-            <?php foreach($akv['values'] as $key => $val):?>
-              <?php $attrNumProducts = StoreProductValue::getNumProducts($id,$key);?>
-              <div class="checkbox">
-                  <label>
-                    <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> >
-                    <?php echo "{$val} ({$attrNumProducts})"; ?>
-                  </label>
-              </div>
-            <?php endforeach;?>
+              <?php
+              if (is_array($akv['values']) || is_object($akv['values']))
+              {
+                foreach($akv['values'] as $key => $val){?>
+                  <?php $attrNumProducts = StoreProductValue::getNumProducts($id,$key);?>
+                  <div class="checkbox">
+                      <label>
+                        <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> >
+                        <?php echo "{$val} ({$attrNumProducts})"; ?>
+                      </label>
+                  </div>
+                <?php }
+              } ?>
             </div>
           <?php endforeach;?>
         </div>

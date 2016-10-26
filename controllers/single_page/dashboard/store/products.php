@@ -446,6 +446,16 @@ class Products extends DashboardPageController
     }
     public function beginImport(){
       $post = \Request::post();
+      if($post['wipeProducts']){
+        //get all products and delete them
+        $productIds = StoreProduct::getAllProductIDs();
+        foreach ($productIds as $pID) {
+          $product = StoreProduct::getByID($pID);
+          if ($product) {
+              $product->remove();
+          }
+        }
+      }
       echo serialize($post);
       exit;
     }

@@ -1212,6 +1212,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
         <?php } ?>
       <?php endforeach; ?>
       <div class="form-group">
+        <div class="checkbox">
+            <label>
+              <input name="wipeProducts" type="checkbox" id="wipeProducts">
+              <?php echo t('Wipe product list clean before import.'); ?>
+            </label>
+        </div>
+      </div>
+      <div class="form-group">
         <input type="button" class="btn btn-primary import-submit-btn btn ccm-input-submit" data-action="<?= $view->action('beginImport')?>" id="importbutton" name="importbutton" value="<?= t('Begin Import');?>"/>
       </div>
       <?php }else{ ?>
@@ -1284,38 +1292,48 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 return false; //prevent the form for submiting or redirecting
     	    });
 
+
           $('#importbutton').on('click', function() {
             if($('select[name="column[pSKU]"]').val()!="" && $('select[name="column[pName]"]').val()!=""  ){
-              var postData = new FormData($('form')[0]);
-              postData.append('auth', '<?php echo $auth; ?>');
-
-              $.ajax({
-                  url :  $(this).attr('data-action'),
-                  type: "POST",
-                  data : postData,
-                  processData: false,
-                  contentType: false,
-                  success:function(result){
-                    var params = [
-                      {'name': 'auth', 'value': '<?php echo $auth?>'},
-                      {'name': 'attr', 'value': result}
-                    ];
-                    ccm_triggerProgressiveOperation(
-                      "<?php echo URL::to('/dashboard/store/products/', 'processQueue');?>",
-                      params,
-                      '<?php echo t("Importing CSV file, dont close your browser."); ?>',
-                      function(successMessage) {
-                        $('.ui-dialog-content').dialog('close');
-                        alert(successMessage.result);
-                        window.location.replace("<?= \URL::to('/dashboard/store/products/')?>");
-                      },
-                      function() {
-                        alert('error');
-                      }
-                    );
-
+                if($('#wipeProducts').is(':checked')){
+                  answer = confirm("Are you sure you want to delete all products before import? Clicking Cancel will proceed with import without cleaning up product list.");
+                  if(!answer){
+                    $("#wipeProducts").prop('checked', false);
                   }
-              });
+                }
+                var postData = new FormData($('form')[0]);
+                postData.append('auth', '<?php echo $auth; ?>');
+                if($('#wipeProducts').is(':checked')){
+                  postData.append('wipeProducts', 'true');
+                }
+                $.ajax({
+                    url :  $(this).attr('data-action'),
+                    type: "POST",
+                    data : postData,
+                    processData: false,
+                    contentType: false,
+                    success:function(result){
+                      var params = [
+                        {'name': 'auth', 'value': '<?php echo $auth?>'},
+                        {'name': 'attr', 'value': result}
+                      ];
+                      ccm_triggerProgressiveOperation(
+                        "<?php echo URL::to('/dashboard/store/products/', 'processQueue');?>",
+                        params,
+                        '<?php echo t("Importing CSV file, dont close your browser."); ?>',
+                        function(successMessage) {
+                          $('.ui-dialog-content').dialog('close');
+                          alert(successMessage.result);
+                          window.location.replace("<?= \URL::to('/dashboard/store/products/')?>");
+                        },
+                        function() {
+                          alert('error');
+                        }
+                      );
+
+                    }
+                });
+
             }else{
               alert("Product name and SKU required.");
             }

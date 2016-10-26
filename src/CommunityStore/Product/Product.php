@@ -1292,4 +1292,11 @@ class Product
       );
       return $list;
     }
+
+    public function getAllProductIDs(){
+      $db = \Database::connection();
+      $results = $db->getCol("SELECT pID FROM CommunityStoreProducts");
+
+      return $results;
+    }
 }
