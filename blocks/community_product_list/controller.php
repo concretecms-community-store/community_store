@@ -105,7 +105,7 @@ class Controller extends BlockController
           $products->setGroupIDs($this->get('group-filter'));
           $filters['group-filter'] = $this->get('group-filter');
         }else {
-          $products->setGroupIDs($this->getGroupFilters());
+          //$products->setGroupIDs($this->getGroupFilters());
           $filters['group-filter'] = Array();
         }
 

@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as StoreProductValue; ?>
 
 <div class="row">
 
@@ -37,13 +39,9 @@
         <fieldset>
             <legend><?= t('Filtering') ?></legend>
 
-            <?php
-            foreach ($grouplist as $productgroup) {
-                $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
-            }
-            ?>
 
-            <?php if (!empty($productgroups)) { ?>
+
+            <?php if (!empty($grouplist)) { ?>
 
                 <div class="form-group">
                     <?= $form->label('gID', t('Filter by Product Groups')); ?>
@@ -51,9 +49,9 @@
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <select multiple="multiple" name="filtergroups[]" id="groups-select"
                                 class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Groups') ?>">
-                            <?php foreach ($productgroups as $pgkey => $pglabel) { ?>
+                            <?php foreach ($grouplist as $productgroup) { ?>
                                 <option
-                                    value="<?= $pgkey; ?>" <?= (in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''); ?>><?= $pglabel; ?></option>
+                                    value="<?= $productgroup->getGroupID(); ?>" <?= (in_array($productgroup->getGroupID(), $groupfilters) ? 'selected="selected"' : ''); ?>><?php echo $productgroup->getGroupName()." (".$productgroup->getNumProducts().")"; ?></option>
                             <?php } ?>
                         </select>
                     </div>

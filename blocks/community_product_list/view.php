@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as StoreProductValue;
 ?>
 <?php
  if(!empty($grouplist) || !empty($akvList) || $showWidthFilter || $showHeightFilter || $showLengthFilter || $showPriceFilter || $showKeywordFilter){
@@ -19,7 +20,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
           <?php foreach($grouplist as $group):?>
           <div class="checkbox">
               <label>
-                <input name="group-filter[]" type="checkbox" id="group_<?php echo $group->getGroupID(); ?>" value="<?php echo $group->getGroupID();?>" <?php echo in_array($group->getGroupID(),$filters['group-filter']) ? 'checked' : ''; ?>><?php echo $group->getGroupName();?>
+                <input name="group-filter[]" type="checkbox" id="group_<?php echo $group->getGroupID(); ?>" value="<?php echo $group->getGroupID();?>" <?php echo in_array($group->getGroupID(),$filters['group-filter']) ? 'checked' : ''; ?>><?php echo $group->getGroupName()." (".$group->getNumProducts().")"; ?>
               </label>
           </div>
           <?php endforeach;?>
@@ -32,9 +33,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
             <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
             <div class="list-area">
             <?php foreach($akv['values'] as $key => $val):?>
+              <?php $attrNumProducts = StoreProductValue::getNumProducts($id,$key);?>
               <div class="checkbox">
                   <label>
-                    <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> ><?php echo $val;?>
+                    <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> >
+                    <?php echo "{$val} ({$attrNumProducts})"; ?>
                   </label>
               </div>
             <?php endforeach;?>

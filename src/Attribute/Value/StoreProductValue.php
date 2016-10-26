@@ -36,4 +36,14 @@ class StoreProductValue extends Value
             parent::delete();
         }
     }
+
+    public function getNumProducts($akID, $avID){
+        $db = \Database::connection();
+        $result = $db->query('Select count(*) as count from CommunityStoreProductAttributeValues as av left join CommunityStoreProducts as p on av.pID = p.pID where av.akID = ? and av.avID = ? and p.pActive = 1', array(
+            $akID, $avID
+        ));
+
+        $result = $result->fetchRow();
+        return $result['count'];
+    }
 }
