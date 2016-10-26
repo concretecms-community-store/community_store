@@ -11,7 +11,9 @@
   display: block;
   margin-bottom: 10px;
 }
-
+#filter-area {
+  margin-top: 20px;
+}
 #filter-area .filter-container {
   padding: 20px;
   display: block;
