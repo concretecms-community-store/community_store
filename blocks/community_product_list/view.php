@@ -160,7 +160,7 @@ if($products){
                                     ar.push($(this).val());
                                 })
 
-                                ar.sort();
+                                ar.sort(communityStore.sortNumber);
 
                                 var pli = $(this).closest('.store-product-list-item');
 

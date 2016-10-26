@@ -208,7 +208,7 @@ if (is_object($product) && $product->isActive()) {
                     ar.push($(this).val());
                 })
 
-                ar.sort();
+                ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
 
                 if (variationdata[ar.join('_')]['saleprice']) {

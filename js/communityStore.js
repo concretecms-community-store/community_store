@@ -316,6 +316,10 @@ var communityStore = {
         var billingstate = $("#store-checkout-billing-state").clone().val($("#store-checkout-billing-state").val()).attr("name", "store-checkout-shipping-state").attr("id", "store-checkout-shipping-state");
         $("#store-checkout-shipping-state").replaceWith(billingstate);
         $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
+    },
+
+    sortNumber: function(a,b) {
+        return a - b;
     }
 
 
