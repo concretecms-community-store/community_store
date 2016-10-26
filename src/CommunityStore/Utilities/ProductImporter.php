@@ -13,6 +13,7 @@ use Job;
 use FilePermissions;
 use FileImporter;
 use Permissions;
+use PageType;
 
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
@@ -20,7 +21,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
-
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 
 class ProductImporter
 {
@@ -380,9 +381,21 @@ class ProductImporter
 
   protected function getDefaultValue($tableName,$sku){
     $product = StoreProduct::getBySKU($sku);
+    //page template
+    $pageType = PageType::getByHandle("store_product");
+    $pageTemplates = $pageType->getPageTypePageTemplateObjects();
+    $templates = array();
+    foreach($pageTemplates as $pt){
+        $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+    }
+    //tax class
+    $taxClasses = array();
+    foreach(StoreTaxClass::getTaxClasses() as $taxClass){
+        $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
+    }
     switch ($tableName) {
       case 'selectPageTemplate':
-          $val = 5;
+          $val = key($templates);
           break;
       case 'pWidth':
           $val = $product ? $product->getDimensions('w') : 0;
@@ -412,7 +425,7 @@ class ProductImporter
           $val = $product ? $product->allowQuantity() : 0;
           break;
       case 'pTaxClass':
-          $val = $product ? $product->getTaxClassID() : 1;
+          $val = $product ? $product->getTaxClassID() : key($taxClasses);
           break;
       case 'pTaxable':
           $val = $product ? $product->isTaxable() : 1;

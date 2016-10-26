@@ -1128,6 +1128,7 @@ class Product
     }
 
     public function getImportFields(){
+      //attributes
       $attributes =  StoreProductKey::getAttributeKeyList('store_product');
       $attrList = array();
       foreach($attributes as $attr){
@@ -1135,6 +1136,18 @@ class Product
           "default" => "",
           "label" => $attr->akName
         );
+      }
+      //page template
+      $pageType = PageType::getByHandle("store_product");
+      $pageTemplates = $pageType->getPageTypePageTemplateObjects();
+      $templates = array();
+      foreach($pageTemplates as $pt){
+          $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+      }
+      //tax class
+      $taxClasses = array();
+      foreach(StoreTaxClass::getTaxClasses() as $taxClass){
+          $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
       }
       $list = array(
         "Overview" => array(
@@ -1167,7 +1180,7 @@ class Product
             "label" => "Taxable"
           ),
           "pTaxClass" => array(
-            "default" => 1,
+            "default" => key($taxClasses),
             "label" => "Tax Class"
           ),
           "pQty" => array(
@@ -1272,7 +1285,7 @@ class Product
         ),
         "Detail Page" => array(
           "selectPageTemplate" => array(
-            "default" => 5,
+            "default" => key($templates),
             "label" => "Page Template"
           )
         )

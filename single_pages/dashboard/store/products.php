@@ -1177,45 +1177,59 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <?= t("Map the columns in your CSV file to the product fields.")?>
         </div>
       <?php foreach($importFields as $area => $vals):?>
+        <?php if($area != "Options" && $area != "Detail Page") {?>
         <h4><?= t($area) ?></h4>
         <div class="table-responsive form-group">
           <table class="table table-striped">
             <tbody>
+        <?php } ?>
               <?php foreach($vals as $tColumn => $tDesc ): ?>
-                <tr>
-                  <td><label><?= t($tDesc['label']) ?></label><?php echo $tDesc['label']=="In Product Groups" ? " (Separated by comma) " : ""; ?> <em><?= strlen($tDesc['default'])==0 ? "" : "(Default: ".$tDesc['default'].")"   ?></em></td>
+                <?php if($tColumn == "pVariations" || $tColumn == "selectPageTemplate"){ ?>
+                  <input type="hidden" name="column[<?= $tColumn ?>]" value="<?= strlen($tDesc['default'])==0 ? "" : $tDesc['default']  ?>"/>
+                <?php  }else{ ?>
+                  <tr>
+                    <td><label><?= t($tDesc['label']) ?></label><?php echo $tDesc['label']=="In Product Groups" ? " (Separated by comma) " : ""; ?> <em><?= strlen($tDesc['default'])==0 ? "" : "(Default: ".$tDesc['default'].")"   ?></em></td>
 
-                  <td style="width: 200px;">
-                    <select class="form-control" name="column[<?= $tColumn ?>]">
-                      <option value="" selected>Select Column</option>
-                      <?php
-                      $ctr = 0;
+                    <td style="width: 200px;">
 
-                        foreach($headers as $head){?>
-                          <option value="<?= $ctr++ ?>"><?= $head ?></option>
-                        <?php }?>
-                    </select>
-                  </td>
-                </tr>
+                      <select class="form-control" name="column[<?= $tColumn ?>]">
+                        <option value="" selected>Select Column</option>
+                        <?php
+                        $ctr = 0;
+
+                          foreach($headers as $head){?>
+                            <option value="<?= $ctr++ ?>"><?= $head ?></option>
+                          <?php }?>
+                      </select>
+                    </td>
+                  </tr>
+                <?php } ?>
               <?php endforeach; ?>
+        <?php if($area != "Options" && $area != "Detail Page") {?>
             </tbody>
           </table>
         </div>
+        <?php } ?>
       <?php endforeach; ?>
       <div class="form-group">
         <input type="button" class="btn btn-primary import-submit-btn btn ccm-input-submit" data-action="<?= $view->action('beginImport')?>" id="importbutton" name="importbutton" value="<?= t('Begin Import');?>"/>
       </div>
       <?php }else{ ?>
-
+      <?php
+      	$pk=Package::getByHandle('community_store');
+      	$ppath=$pk->getRelativePath();
+      ?>
       <div class="form-group">
           <div class="ccm-system-errors alert alert-danger alert-dismissable import-error" style="display:none;"><?php echo t('Please upload a valid CSV file!'); ?></div>
 
           <label class="control-label"><?php echo t('Upload CSV file'); ?></label>
           <div><input type="file" name="csv" id="csv"></div>
+
+
       </div>
       <div class="form-group">
         <input type="button" class="btn btn-primary import-submit-btn btn ccm-input-submit" id="upload" name="upload" value="<?= t('Upload');?>"/>
-
+        <span id="loading_img" style="display: none;"><img src="<?php echo $ppath; ?>/images/gif-load.gif" /> <?php echo t('Uploading CSV file...'); ?></span>
       </div>
 
       <?php } ?>
@@ -1228,7 +1242,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     			var action  = $('input[name=action]:checked').val();
     			var file    = $('input[type="file"]').val();
     			var get_ext = file.split('.').reverse()[0].toLowerCase();
-
+          $('#loading_img').show();
 
     			if(file){
 
