@@ -10,7 +10,9 @@ use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as Sto
    $hasFilters = false;
  }
 ?>
+
 <div class="<?= $hasFilters ? 'col-sm-3' : ''?>" id="filter-area">
+  <a class="btn btn-default  btn-block" href="#" role="button" id="showFilters">Hide Filters</a>
   <form role="form" class="ccm-search-fields" id="filterForm">
     <div class="row filter-container">
       <?php if(!empty($grouplist)): ?>
@@ -423,6 +425,14 @@ $( function() {
     $(this).draggable();
   });
   <?php } ?>
-
+  $('#showFilters').click(function(e){
+    $('.filter-container').toggle();
+    if($('.filter-container').is(":visible") == false){
+      $('#showFilters').text('Show Filters');
+    }else{
+      $('#showFilters').text('Hide Filters');
+    }
+    e.preventDefault();
+  });
 } );
 </script>
