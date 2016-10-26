@@ -794,6 +794,10 @@ class Product
 
     public function isSellable()
     {
+        if (!$this->isActive()) {
+            return false;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isSellable();
         } else {
