@@ -227,6 +227,17 @@ class ProductList extends AttributedItemList
           $query->andWhere('pLength <= ?')->setParameter($paramcount++,$this->maxLength);
         }
 
+
+
+        if ($this->search) {
+            $query->andWhere('pName like ? OR pDesc like ? OR pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%')->setParameter($paramcount++, '%'. $this->search. '%')->setParameter($paramcount++, '%'. $this->search. '%');
+        }
+        if($this->groupSearch){
+          //search through groupNames
+            $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
+            $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
+            $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->groupSearch. '%');
+        }
         //attributeVals filter
         if (!empty($this->attributeVals)) {
           $aks = array();
@@ -237,21 +248,9 @@ class ProductList extends AttributedItemList
               $avs[] = $avID;
             }
           }
-          $query->innerJoin('p', 'CommunityStoreProductAttributeValues', 'av', 'p.pID = av.pID');
+          $query->leftJoin('p', 'CommunityStoreProductAttributeValues', 'av', 'p.pID = av.pID');
           $query->andWhere('av.akID in('. implode(',', $aks) .') and av.avID in('. implode(',', $avs).')');
 
-        }
-
-        if ($this->search) {
-            $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
-            $query->orWhere('pDesc like ?')->setParameter($paramcount++, '%'. $this->search. '%');
-            $query->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
-        }
-        if($this->groupSearch){
-          //search through groupNames
-            $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
-            $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
-            $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->groupSearch. '%');
         }
         if($this->attributeSearch){
             //search attributes
@@ -259,7 +258,6 @@ class ProductList extends AttributedItemList
             if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
 
         }
-
         return $query;
     }
 

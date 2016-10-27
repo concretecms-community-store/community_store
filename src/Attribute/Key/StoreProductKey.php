@@ -140,7 +140,7 @@ class StoreProductKey extends Key
 
             if(  stripos($av, $keyword) !== false){
               $db = \Database::connection();
-              $r = $db->fetchAll('select pID from CommunityStoreProductAttributeValues where avID = ?', array($avID) );
+              $r = $db->fetchAll('select p.pID as pID from CommunityStoreProductAttributeValues av right join CommunityStoreProducts p on av.pID = p.pID where avID = ? and p.pActive = 1', array($avID) );
               foreach($r as $val){
                 $validPIDs[] = $val['pID'];
               }
