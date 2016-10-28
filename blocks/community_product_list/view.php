@@ -202,13 +202,13 @@ if($products){
                 <?php   }
                       endif;
                 ?>
-                <?php// if ($showDimensions) { ?>
+                <?php if ($showDimensions) { ?>
                     <div class="store-product-dimensions">
                         <strong><?= t("Dimensions") ?>:</strong>
                         <?= $product->getDimensions() ?>
                         <?= Config::get('community_store.sizeUnit'); ?>
                     </div>
-                <?php// } ?>
+                <?php } ?>
                 <?php if($showPageLink){?>
                 <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
                 <?php } ?>

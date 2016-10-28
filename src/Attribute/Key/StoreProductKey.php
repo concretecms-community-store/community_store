@@ -129,15 +129,15 @@ class StoreProductKey extends Key
     //gets the product pIDs where product has an attribute value = $keyword
     public function filterAttributeValuesByKeyword($keyword){
       $nak = new self();
-
       $keys = $nak->getList();
       $validPIDs = Array();
       foreach ($keys as $ak) {
-        if($ak->akIsSearchable){
-          $avIDs = $ak->getAttributeValueIDList();
+        if($ak->isAttributeKeySearchable()){
+          $akID = $ak->getAttributeKeyID();
+          $db = \Database::connection();
+          $avIDs = $db->GetCol("select distinct(avID) from CommunityStoreProductAttributeValues where akID = ?", array($akID));
           foreach($avIDs as $avID){
             $av = $ak->getAttributeValue($avID);
-
             if(  stripos($av, $keyword) !== false){
               $db = \Database::connection();
               $r = $db->fetchAll('select p.pID as pID from CommunityStoreProductAttributeValues av right join CommunityStoreProducts p on av.pID = p.pID where avID = ? and p.pActive = 1', array($avID) );
@@ -151,37 +151,42 @@ class StoreProductKey extends Key
       }
       return $validPIDs;
     }
-    //prepares attribute list for filter
+
     public function getAttributeKeyValueList($akIDs = array()){
 
       $list = Array();
       if(!empty($akIDs)){
+        //prepares attribute list for filter
         foreach($akIDs as $id){
           $nak = new self();
           $ak = $nak->getByID($id);
-          if($ak->akIsSearchable){
-            $list[$ak->akID]['name'] = $ak->akName;
-            $avIDs = $ak->getAttributeValueIDList();
-            foreach($avIDs as $avID){
-              $avalue = $ak->getAttributeValue($avID);
-              if(!empty($avalue)){
-                $list[$ak->akID]['values'][$avID] = $avalue;
+          if($ak->isAttributeKeySearchable()){
+            $akID = $ak->getAttributeKeyID();
+            $list[$akID]['name'] = $ak->getAttributeKeyName();
+            $db = \Database::connection();
+            $values = $db->GetAll("select akID, avID from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+            foreach ($values as $val) {
+              $value = $ak->getAttributeValue($val['avID']);
+              if(!empty($value)){
+                $list[$akID]['values'][$val['avID']] = $value;
               }
             }
           }
         }
       }else{
+        //prepares attribute list for selectable attribute
         $nak = new self();
         $keys = $nak->getList();
         foreach ($keys as $ak) {
-
-          if($ak->akIsSearchable){
-            $list[$ak->akID]['name'] = $ak->akName;
-            $avIDs = $ak->getAttributeValueIDList();
-            foreach($avIDs as $avID){
-              $avalue = $ak->getAttributeValue($avID);
-              if(!empty($avalue)){
-                $list[$ak->akID]['values'][$avID] = $avalue;
+          if($ak->isAttributeKeySearchable()){
+            $akID = $ak->getAttributeKeyID();
+            $list[$akID]['name'] = $ak->getAttributeKeyName();
+            $db = \Database::connection();
+            $values = $db->GetAll("select akID, avID from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+            foreach ($values as $val) {
+              $value = $ak->getAttributeValue($val['avID']);
+              if(!empty($value)){
+                $list[$akID]['values'][$val['avID']] = $value;
               }
             }
           }
@@ -202,9 +207,5 @@ class StoreProductKey extends Key
       }
 
     }
-
-
-    //prepares attribute list for filter
-
 
 }

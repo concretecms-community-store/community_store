@@ -1108,7 +1108,7 @@ class Product
       $attributes = StoreProductKey::getAttributes($this->getID());
       foreach($attributes as $handle=>$value) {
           $ak = StoreProductKey::getByHandle($handle);
-          $display[$ak->akName] = $value;
+          $display[$ak->getAttributeKeyName()] = $value;
       }
       return $display;
     }
@@ -1132,9 +1132,9 @@ class Product
       $attributes =  StoreProductKey::getAttributeKeyList('store_product');
       $attrList = array();
       foreach($attributes as $attr){
-        $attrList[$attr->akHandle] = array(
+        $attrList[$attr->getAttributeKeyHandle()] = array(
           "default" => "",
-          "label" => $attr->akName
+          "label" => $attr->getAttributeKeyName()
         );
       }
       //page template

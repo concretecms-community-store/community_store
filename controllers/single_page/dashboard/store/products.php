@@ -298,13 +298,16 @@ class Products extends DashboardPageController
                 //save the product
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes
-                foreach($data['akID'] as $key => $value){
-                  $ak = StoreProductKey::getByID($key);
-                  if(!empty($value['value'])){
-                    $ak->saveAttribute($product,false,$value['value']);
-                  }
+                if(!empty($data['akID'])){
+                  foreach($data['akID'] as $key => $value){
+                    $ak = StoreProductKey::getByID($key);
+                    if(!empty($value['value'])){
+                      $ak->saveAttribute($product,false,$value['value']);
+                    }
 
+                  }
                 }
+
                 //save images
                 StoreProductImage::addImagesForProduct($data,$product);
 
