@@ -198,7 +198,8 @@ class StoreProductKey extends Key
     public function getAvIDbyValue($value, $akID){
       $nak = new self();
       $ak = $nak->getByID($akID);
-      $avIDs = $ak->getAttributeValueIDList();
+      $db = \Database::connection();
+      $avIDs = $db->GetCol("select distinct(avID) from CommunityStoreProductAttributeValues where akID = ?", array($akID));
       foreach($avIDs as $avID){
         $avalue = $ak->getAttributeValue($avID);
         if(!empty($avalue) && $avalue==$value){

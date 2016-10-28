@@ -41,11 +41,9 @@ class ProductImporter
                   if($ext == 'csv') {
                       $importer = new \Concrete\Core\File\Importer();
                       $result = $importer->import($file, $filename);
-                      if ($result instanceof \Concrete\Core\File\Version) {
+                      if ($result instanceof \Concrete\Core\File\Version || $result instanceof \Concrete\Core\Entity\File\Version) {
 
-                          $path = $result->getURL();
-                          $csv  = self::readCSV($path);
-
+                          $csv = self::readCSV($result);
                           $result->delete();
 
                           self::sendToQueue($csv, $post['column']);
@@ -70,6 +68,7 @@ class ProductImporter
       }
       $this->set('errorMessage', $error);
   }
+
   protected function sendToQueue($arr = '',$columns) {
 
       if(!empty($arr)) {
@@ -112,38 +111,38 @@ class ProductImporter
 
   }
   protected function readCSV($csvFile){
-      $file_handle = fopen($csvFile, 'r');
-      $delimiter   = self::getFileDelimiter($csvFile);
-      $ctr  = 0;
-      while(!feof($file_handle))
-      {
-          $rows = fgetcsv($file_handle, '', '\r\n','"');
-          $data = preg_split("/\r/is", $rows[0]);
-          if(count($data) > 1){ //excel
-              foreach($data as $d){
-                  $row = str_getcsv($d, ',', '"');
-                  $line_of_text[] = self::unfilterNewLines($row);
-              }
-          }else { //openoffice
-              if($delimiter == ';') {
-                  $rs = preg_split("/".$delimiter."/is", $data[0]);
-                  foreach($rs as $r){
-                       $line_of_text[$ctr][] = self::unfilterNewLines($r);
-                  }
-              }else {
-                  $rs = str_getcsv($data[0], ',', '"');
-                  foreach($rs as $r){
-                       $line_of_text[$ctr][] = self::unfilterNewLines($r);
-                  }
-              }
-
-              $ctr++;
+    $file = $csvFile->getFileResource();
+    $content = $file->read();
+    $rows = explode("\n",$content);
+    $delimiter   = self::getFileDelimiter($rows[0]);
+    $ctr = 0;
+    foreach($rows as $row){
+      $data = preg_split("/\r/is", $row);
+      if(count($data)>1){//excel
+        foreach($data as $d){
+          if(!empty($d)){
+            $row = str_getcsv($d, ',', '"');
+            $line_of_text[] = self::unfilterNewLines($row);
           }
-
-
+        }
+      }else{ //openoffice
+        if(!empty($data[0])){
+          if($delimiter == ';') {
+              $rs = preg_split("/".$delimiter."/is", $data[0]);
+              foreach($rs as $r){
+                  $line_of_text[$ctr][] = self::unfilterNewLines($r);
+              }
+          }else {
+              $rs = str_getcsv($data[0], ',', '"');
+              foreach($rs as $r){
+                  $line_of_text[$ctr][] = self::unfilterNewLines($r);
+              }
+          }
+          $ctr++;
+        }
       }
-      fclose($file_handle);
-      return $line_of_text;
+    }
+    return $line_of_text;
   }
 
   public function processQueue() {
@@ -177,7 +176,7 @@ class ProductImporter
                               $products  = unserialize($message->body);
                               $newProduct = array();
                               $pid = null;
-
+                              // print_r($products);
 
 
 
@@ -331,33 +330,27 @@ class ProductImporter
   }
 
   protected function getFileDelimiter($file, $checkLines = 2){
-      $file = new SplFileObject($file);
-      $delimiters = array(
-        ',',
-        '\t',
-        ';',
-        '|',
-        ':'
-      );
-      $results = array();
-      $i = 0;
-       while($file->valid() && $i <= $checkLines){
-          $line = $file->fgets();
-          foreach ($delimiters as $delimiter){
-              $regExp = '/['.$delimiter.']/';
-              $fields = preg_split($regExp, $line);
-              if(count($fields) > 1){
-                  if(!empty($results[$delimiter])){
-                      $results[$delimiter]++;
-                  } else {
-                      $results[$delimiter] = 1;
-                  }
-              }
-          }
-         $i++;
-      }
-      $results = array_keys($results, max($results));
-      return $results[0];
+    $delimiters = array(
+      ',',
+      '\t',
+      ';',
+      '|',
+      ':'
+    );
+    $results = array();
+        foreach ($delimiters as $delimiter){
+            $regExp = '/['.$delimiter.']/';
+            $fields = preg_split($regExp, $line);
+            if(count($fields) > 1){
+                if(!empty($results[$delimiter])){
+                    $results[$delimiter]++;
+                } else {
+                    $results[$delimiter] = 1;
+                }
+            }
+        }
+    $results = array_keys($results, max($results));
+    return $results[0];
   }
   protected function isCore($string) {
       return (bool) preg_match('/[A-Z]/', $string);
@@ -597,7 +590,7 @@ class ProductImporter
                     } else {
                         $resp = FileImporter::E_FILE_INVALID_EXTENSION;
                     }
-                    if (!($resp instanceof \Concrete\Core\File\Version)) {
+                    if (!($resp instanceof \Concrete\Core\File\Version || $resp instanceof \Concrete\Core\Entity\File\Version)) {
                         array_push($error,$fname . ': ' . FileImporter::getErrorMessage($resp));
                     } else {
                         $respf = $resp->getFile();
