@@ -32,7 +32,9 @@ class Controller extends BlockController
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
-        $this->set('groupfilters', array());
+        $this->set('groupfilters', $this->getGroupFilters());
+        $this->set("attributeList", $this->getAttributeKeyValueList());
+        $this->set('attributefilters',$this->getAttributeFilters());
     }
     public function edit()
     {
