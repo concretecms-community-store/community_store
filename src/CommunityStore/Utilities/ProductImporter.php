@@ -329,7 +329,7 @@ class ProductImporter
 
   }
 
-  protected function getFileDelimiter($file, $checkLines = 2){
+  protected function getFileDelimiter($line, $checkLines = 2){
     $delimiters = array(
       ',',
       '\t',

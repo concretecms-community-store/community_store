@@ -62,7 +62,11 @@ use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as Sto
                     <?= $form->label('groupMatchAny', t('Matching')); ?>
                     <?= $form->select('groupMatchAny', array('0' => t("All groups selected"), '1' => t('Any group selected')), $groupMatchAny); ?>
                 </div>
-
+                <style>
+                .select2-container {
+                  z-index: 2000;
+                }
+                </style>
             <?php } ?>
 
 
