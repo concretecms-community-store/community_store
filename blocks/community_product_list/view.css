@@ -1,3 +1,32 @@
 .store-original-price {
     text-decoration: line-through;
 }
+
+.min-max-values {
+  border:0;
+  color:#f6931f;
+  font-weight:bold;
+  width: 100%;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 10px;
+}
+#filter-area {
+  margin-top: 20px;
+}
+#filter-area .filter-container {
+  padding: 20px;
+  display: block;
+}
+
+#filter-area .slider {
+  margin: 0 10px;
+}
+#filter-area .slider.ui-slider .ui-slider-range {
+  transition: none;
+}
+
+#filter-area .filter-container .list-area {
+  max-height: 250px;
+  overflow-y: scroll;
+}

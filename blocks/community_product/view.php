@@ -74,7 +74,15 @@ if (is_object($product) && $product->isActive()) {
                             <span class="store-product-featured"><?= t("Featured Item") ?></span>
                         <?php }
                     } ?>
-
+                    <?php if(is_array($product->getAttributes())) :
+                        foreach($product->getAttributes() as $aName => $value){ ?>
+                          <div class="store-product-attributes">
+                            <strong><?= t($aName) ?>:</strong>
+                            <?= $value ?>
+                          </div>
+                    <?php   }
+                          endif;
+                    ?>
                     <div class="store-product-options" id="product-options-<?= $bID; ?>">
                         <?php if ($product->allowQuantity() && $showQuantity) { ?>
                             <div class="store-product-quantity form-group">

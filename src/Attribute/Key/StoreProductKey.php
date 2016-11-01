@@ -73,17 +73,20 @@ class StoreProductKey extends Key
         return parent::getList('store_product');
     }
 
-    public function saveAttribute($product, $value = false)
+    public function saveAttribute($product, $value = false, $newAvID = false)
     {
-        $av = $product->getAttributeValueObject($this, true);
-        parent::saveAttribute($av, $value);
+        $av = $product->getAttributeValueObject($this, true, $newAvID);
+        //saves new attribute value
+        if(!is_numeric($newAvID)){
+          parent::saveAttribute($av, $newAvID);
+        }
         $db = \Database::connection();
-        $v = array($product->getID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CommunityStoreProductAttributeValues', array(
             'pID' => $product->getID(),
             'akID' => $this->getAttributeKeyID(),
             'avID' => $av->getAttributeValueID(),
         ), array('pID', 'akID'));
+
         unset($av);
     }
 
@@ -122,4 +125,74 @@ class StoreProductKey extends Key
         }
         $db->query('delete from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
+
+    //gets the product pIDs where product has an attribute value = $keyword
+    public function filterAttributeValuesByKeyword($keyword){
+      $nak = new self();
+      $keys = $nak->getList();
+      $validPIDs = Array();
+      foreach ($keys as $ak) {
+        if($ak->isAttributeKeySearchable()){
+          $akID = $ak->getAttributeKeyID();
+          $db = \Database::connection();
+          $avIDs = $db->GetCol("select distinct(avID) from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+          foreach($avIDs as $avID){
+            $av = $ak->getAttributeValue($avID);
+            if(  stripos($av, $keyword) !== false){
+              $db = \Database::connection();
+              $r = $db->fetchAll('select p.pID as pID from CommunityStoreProductAttributeValues av right join CommunityStoreProducts p on av.pID = p.pID where avID = ? and p.pActive = 1', array($avID) );
+              foreach($r as $val){
+                $validPIDs[] = $val['pID'];
+              }
+
+            }
+          }
+        }
+      }
+      return $validPIDs;
+    }
+
+    public function getAttributeKeyValueList($akIDs = array()){
+
+      $list = Array();
+      if(!empty($akIDs)){
+        //prepares attribute list for filter
+        foreach($akIDs as $id){
+          $nak = new self();
+          $ak = $nak->getByID($id);
+          if($ak->isAttributeKeySearchable()){
+            $akID = $ak->getAttributeKeyID();
+            $list[$akID]['name'] = $ak->getAttributeKeyName();
+            $db = \Database::connection();
+            $values = $db->GetAll("select akID, avID from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+            foreach ($values as $val) {
+              $value = $ak->getAttributeValue($val['avID']);
+              if(!empty($value)){
+                $list[$akID]['values'][$val['avID']] = $value;
+              }
+            }
+          }
+        }
+      }else{
+        //prepares attribute list for selectable attribute
+        $nak = new self();
+        $keys = $nak->getList();
+        foreach ($keys as $ak) {
+          if($ak->isAttributeKeySearchable()){
+            $akID = $ak->getAttributeKeyID();
+            $list[$akID]['name'] = $ak->getAttributeKeyName();
+            $db = \Database::connection();
+            $values = $db->GetAll("select akID, avID from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+            foreach ($values as $val) {
+              $value = $ak->getAttributeValue($val['avID']);
+              if(!empty($value)){
+                $list[$akID]['values'][$val['avID']] = $value;
+              }
+            }
+          }
+        }
+      }
+      return $list;
+    }
+
 }

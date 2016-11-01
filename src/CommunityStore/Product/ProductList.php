@@ -6,6 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 class ProductList extends AttributedItemList
 {
@@ -95,7 +96,45 @@ class ProductList extends AttributedItemList
     {
         $this->search = $search;
     }
+    public function setGroupSearch($search)
+    {
+        $this->groupSearch = $search;
+    }
+    public function setAttributeSearch($search)
+    {
+        $this->attributeSearch = $search;
+    }
 
+    public function setMinPrice($price){
+        $this->minPrice = $price;
+    }
+    public function setMaxPrice($price){
+        $this->maxPrice = $price;
+    }
+
+    public function setMinWidth($width){
+        $this->minWidth = $width;
+    }
+    public function setMaxWidth($width){
+        $this->maxWidth = $width;
+    }
+
+    public function setMinHeight($height){
+        $this->minHeight = $height;
+    }
+    public function setMaxHeight($height){
+        $this->maxHeight = $height;
+    }
+    public function setMinLength($length){
+        $this->minLength = $length;
+    }
+    public function setMaxLength($length){
+        $this->maxLength = $length;
+    }
+    public function setAttributeVals($attributes)
+    {
+        $this->attributeVals = $attributes;
+    }
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $paramcount = 0;
@@ -199,10 +238,67 @@ class ProductList extends AttributedItemList
 
         $query->groupBy('p.pID');
 
-        if ($this->search) {
-            $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+        //for price range filter
+        if($this->minPrice){
+          $query->andWhere('pPrice >= ? OR pSalePrice >= ?')->setParameter($paramcount++,$this->minPrice)->setParameter($paramcount++,$this->minPrice);
+        }
+        if($this->maxPrice){
+          $query->andWhere('pPrice <= ? OR pSalePrice <= ?')->setParameter($paramcount++,$this->maxPrice)->setParameter($paramcount++,$this->maxPrice);
+        }
+        //for width filter
+        if($this->minWidth){
+          $query->andWhere('pWidth >= ?')->setParameter($paramcount++,$this->minWidth);
+        }
+        if($this->maxWidth){
+          $query->andWhere('pWidth <= ?')->setParameter($paramcount++,$this->maxWidth);
+        }
+        //for height filter
+        if($this->minHeight){
+          $query->andWhere('pHeight >= ?')->setParameter($paramcount++,$this->minHeight);
+        }
+        if($this->maxHeight){
+          $query->andWhere('pHeight <= ?')->setParameter($paramcount++,$this->maxHeight);
         }
 
+        //for length filter
+        if($this->minLength){
+          $query->andWhere('pLength >= ?')->setParameter($paramcount++,$this->minLength);
+        }
+        if($this->maxLength){
+          $query->andWhere('pLength <= ?')->setParameter($paramcount++,$this->maxLength);
+        }
+
+
+
+        if ($this->search) {
+            $query->andWhere('pName like ? OR pDesc like ? OR pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%')->setParameter($paramcount++, '%'. $this->search. '%')->setParameter($paramcount++, '%'. $this->search. '%');
+        }
+        if($this->groupSearch){
+          //search through groupNames
+            $query->leftJoin('p', 'CommunityStoreProductGroups', 'pg', 'p.pID = pg.pID');
+            $query->leftJoin('pg', 'CommunityStoreGroups', 'g', 'pg.gID = g.gID');
+            $query->orWhere('g.groupName like ?')->setParameter($paramcount++, '%'. $this->groupSearch. '%');
+        }
+        //attributeVals filter
+        if (!empty($this->attributeVals)) {
+          $aks = array();
+          $avs = array();
+          foreach($this->attributeVals as $ak => $av){
+            $aks[] = $ak;
+            foreach($av as $avID){
+              $avs[] = $avID;
+            }
+          }
+          $query->leftJoin('p', 'CommunityStoreProductAttributeValues', 'av', 'p.pID = av.pID');
+          $query->andWhere('av.akID in('. implode(',', $aks) .') and av.avID in('. implode(',', $avs).')');
+
+        }
+        if($this->attributeSearch){
+            //search attributes
+            $validPIDs = StoreProductKey::filterAttributeValuesByKeyword($this->attributeSearch);
+            if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
+
+        }
         return $query;
     }
 
