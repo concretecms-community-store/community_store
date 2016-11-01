@@ -357,6 +357,11 @@ class Cart
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
                 $product = StoreProduct::getByID($item['product']['pID']);
+
+                if ($item['product']['variation']) {
+                    $product->setVariation($item['product']['variation']);
+                }
+
                 if ($product->isShippable()) {
                     $totalProductWeight = $product->getWeight() * $item['product']['qty'];
                     $totalWeight = $totalWeight + $totalProductWeight;
