@@ -322,12 +322,15 @@ class ProductList extends AttributedItemList
             $rangePIDs = call_user_func_array('array_intersect',$temp);
             if(!empty($validPIDs)) $validPIDs = array_intersect($validPIDs, $rangePIDs);
         }
-        if($this->attributeSearch && $this->attributeRange){
-          $query->andWhere('p.pID in ('. implode(',', $validPIDs).')');
-        }else if($this->attributeSearch){
-          $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
-        }else if($this->attributeRange){
-          $query->andWhere('p.pID in ('. implode(',', $rangePIDs).')');
+        
+        if(!empty($validPIDs)){
+          if($this->attributeSearch && $this->attributeRange){
+            $query->andWhere('p.pID in ('. implode(',', $validPIDs).')');
+          }else if($this->attributeSearch){
+            $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
+          }else if($this->attributeRange){
+            $query->andWhere('p.pID in ('. implode(',', $rangePIDs).')');
+          }
         }
 
         return $query;
