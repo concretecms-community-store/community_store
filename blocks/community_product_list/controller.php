@@ -154,11 +154,41 @@ class Controller extends BlockController
         }else {
           $filters['attribute-filter'] = Array();
         }
+
         if(!empty($this->getAttributeFilters())){
-          $this->set('akvList',$this->getAttributeKeyValueList($this->getAttributeFilters()));
+          $akvList = $this->getAttributeKeyValueList($this->getAttributeFilters());
+          $this->set('akvList',$akvList);
+          foreach($akvList as $id => $akv){
+            if (is_array($akv['values']) || is_object($akv['values']))            {
+              $ak = StoreProductKey::getByID($id);
+              $type = $ak->getAttributeType();
+              $atHandle  = $type->getAttributeTypeHandle();
+              if ($atHandle == "number" && $ak->getEnableNumericSlider($id)){
+                $minVar = "min".$akv['name'];
+                $maxVar = "max".$akv['name'];
+                //setting minimum and maximum range of var
+                $maxMinVar = $this->getMaxMinVar($akv['values']);
+                $this->set($maxVar, $maxMinVar['max']);
+                $this->set($minVar, $maxMinVar['min']);
+              }
+            }
+          }
         }
 
-
+        //attribute-range
+        if(!empty($this->get('attribute-range'))){
+          $products->setAttributeRange($this->get('attribute-range'));
+          foreach($this->get('attribute-range') as $akID => $vals){
+            $tempAk = StoreProductKey::getByID($akID);
+            $minVar = "min".$tempAk->getAttributeKeyName();
+            $maxVar = "max".$tempAk->getAttributeKeyName();
+            $filters[$minVar] = $vals['min'];
+            $filters[$maxVar] = $vals['max'];
+          }
+          $filters['attribute-range'] = $this->get('attribute-range');
+        }else {
+          $filters['attribute-range'] = Array();
+        }
 
         //keyword filter
         if($this->get('keywords')){
@@ -394,5 +424,11 @@ class Controller extends BlockController
             }
         }
         return $list;
+    }
+
+    public function getMaxMinVar($akvValues){
+      $max = max($akvValues);
+      $min = min($akvValues);
+      return array('max' => $max, 'min' => $min);
     }
 }

@@ -1088,7 +1088,7 @@ class Product
             }
         }
     }
-    public function getAttributeValueObject($ak, $createIfNotFound = false, $newAvID = false)
+    public function getAttributeValueObject($ak, $createIfNotFound = false, $newAvID = false, $isNew = false)
     {
         $db = \Database::connection();
         $av = false;
@@ -1108,7 +1108,9 @@ class Product
             // if (is_object($av)) {
                 // $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreProductAttributeValues WHERE avID=?", $av->getAttributeValueID());
             // }
-            $newAv = StoreProductValue::getByID($newAvID);
+            if(!$isNew){
+              $newAv = StoreProductValue::getByID($newAvID);
+            }
             //create new attrib value in AttributeValues table first if there is no spav set for product
             if ((!is_object($newAv))) {
               //adds new av and assign as current av

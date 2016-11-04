@@ -918,6 +918,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     ?>
                       <label for="<?php echo $akv['name']?>" class="control-label"><?php echo $akv['name']?>:</label>
                       <input name="akID[<?php echo $id; ?>][value]" class="attribute-select<?php echo $id; ?>" tabindex="-1" title="" value="" type="hidden" style="width: 100%" >
+                      <input type="hidden" name="newAv<?php echo $id; ?>" id="newAv<?php echo $id; ?>" value="false"/>
                   </div>
 
                   <script type="text/javascript">
@@ -942,8 +943,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             tags: preload<?php echo $id; ?>,
                             allowClear: true,
                             maximumSelectionSize: 1
+                          }).on('change', function(e){
+                            if(e.added != null){
+                              if($.inArray(e.added, preload<?php echo $id; ?>) <0){
+                                $('#newAv<?php echo $id; ?>').val("true");
+                              }else{
+                                $('#newAv<?php echo $id; ?>').val("false");
+                              }
+                            }
                           });
                           $('.attribute-select<?php echo $id; ?>').select2("val", []);
+                          $('#newAv<?php echo $id; ?>').val("false");
                       });
                   </script>
 

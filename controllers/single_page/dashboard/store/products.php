@@ -299,7 +299,11 @@ class Products extends DashboardPageController
                   foreach($data['akID'] as $key => $value){
                     $ak = StoreProductKey::getByID($key);
                     if(!empty($value['value'])){
-                      $ak->saveAttribute($product,false,$value['value']);
+                      if($data['newAv'.$key] == "true"){
+                        $ak->saveAttribute($product,false,$value['value'],true);
+                      }else{
+                        $ak->saveAttribute($product,false,$value['value']);
+                      }
                     }
                   }
                 }

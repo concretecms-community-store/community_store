@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as StoreProductValue;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 $c = Page::getCurrentPage();
 ?>
 <?php
@@ -34,21 +35,55 @@ $c = Page::getCurrentPage();
         <div class="form-group">
           <?php foreach($akvList as $id => $akv):?>
             <label for="<?php echo $akv['name']?>"><?php echo $akv['name']?>:</label>
-            <div class="list-area">
+
               <?php
               if (is_array($akv['values']) || is_object($akv['values']))
               {
-                foreach($akv['values'] as $key => $val){?>
-                  <?php $attrNumProducts = StoreProductValue::getNumProducts($id,$key);?>
-                  <div class="checkbox">
-                      <label>
-                        <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> >
-                        <?php echo "{$val} ({$attrNumProducts})"; ?>
-                      </label>
+                $ak = StoreProductKey::getByID($id);
+                $type = $ak->getAttributeType();
+                $atHandle  = $type->getAttributeTypeHandle();
+                if ($atHandle == "number" && $ak->getEnableNumericSlider($id)){ ?>
+                  <div class="form-group">
+                  <span id="<?php echo $akv['name']?>-range" class="min-max-values"></span>
+                  <?php $minVar = "min".$akv['name'];
+                        $maxVar = "max".$akv['name']; ?>
+                  <input type="hidden" id="min<?php echo $akv['name']?>-filter" name="attribute-range[<?php echo $id; ?>][min]" class="lower-value" value="<?php echo $filters[$minVar]!=null ? $filters[$minVar] : $$minVar; ?>">
+                  <input type="hidden" id="max<?php echo $akv['name']?>-filter" name="attribute-range[<?php echo $id; ?>][max]" class="higher-value" value="<?php echo $filters[$maxVar]!=null ? $filters[$maxVar] : $$maxVar; ?>">
+                  <div id="slider-<?php echo $akv['name']?>-range" class="slider"></div>
+                  </div>
+                  <script>
+                  $( function() {
+                    $( "#slider-<?php echo $akv['name']?>-range" ).slider({
+                      range: true,
+                      step: <?php echo $ak->getSliderStepValue($id) ? $ak->getSliderStepValue($id) : ($$maxVar - $$minVar) / 5  ?>,
+                      min: <?php echo $$minVar; ?>,
+                      max:  <?php echo $$maxVar; ?>,
+                      values: [ <?php echo $filters[$minVar]!=null ? $filters[$minVar] : $$minVar; ?>, <?php echo $filters[$maxVar]!=null ? $filters[$maxVar] : $$maxVar; ?> ],
+                      slide: function( event, ui ) {
+                        $( "#<?php echo $akv['name']?>-range" ).text(  ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+                        $("#min<?php echo $akv['name']?>-filter").val(ui.values[ 0 ]);
+                        $("#max<?php echo $akv['name']?>-filter").val(ui.values[ 1 ]);
+                      }
+                    });
+                    $( "#<?php echo $akv['name']?>-range" ).text( $( "#slider-<?php echo $akv['name']?>-range" ).slider( "values", 0 ) +
+                      " - " + $( "#slider-<?php echo $akv['name']?>-range" ).slider( "values", 1 ) );
+                  });
+                  </script>
+                <?php }else { ?>
+                  <div class="list-area">
+                  <?php foreach($akv['values'] as $key => $val){?>
+                    <?php $attrNumProducts = StoreProductValue::getNumProducts($id,$key);?>
+                    <div class="checkbox">
+                        <label>
+                          <input name="attribute-filter[<?php echo $id; ?>][]" type="checkbox" id="attribute_<?php echo $id; ?>" value="<?php echo $key?>" <?php echo is_array($filters['attribute-filter'][$id]) && in_array($key,$filters['attribute-filter'][$id]) ? 'checked' : ''; ?> >
+                          <?php echo "{$val} ({$attrNumProducts})"; ?>
+                        </label>
+                    </div>
+                  <?php } ?>
                   </div>
                 <?php }
               } ?>
-            </div>
+
           <?php endforeach;?>
         </div>
       <?php endif; ?> <!-- END OF GROUP FILTER -->

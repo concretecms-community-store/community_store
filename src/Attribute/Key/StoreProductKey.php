@@ -73,11 +73,11 @@ class StoreProductKey extends Key
         return parent::getList('store_product');
     }
 
-    public function saveAttribute($product, $value = false, $newAvID = false)
+    public function saveAttribute($product, $value = false, $newAvID = false, $isNew = false)
     {
-        $av = $product->getAttributeValueObject($this, true, $newAvID);
+        $av = $product->getAttributeValueObject($this, true, $newAvID,$isNew);
         //saves new attribute value
-        if(!is_numeric($newAvID)){
+        if($isNew){
           parent::saveAttribute($av, $newAvID);
         }
         $db = \Database::connection();
@@ -96,9 +96,17 @@ class StoreProductKey extends Key
 
         extract($args);
 
-        $v = array($ak->getAttributeKeyID());
+        $enableNumericSlider = (isset($enableNumericSlider)) ? 1 : 0;
+
         $db = \Database::connection();
-        $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
+        if(isset($enableNumericSlider) && isset($sliderStepValue)){
+          $v = array($ak->getAttributeKeyID(), $enableNumericSlider, $sliderStepValue );
+          $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID,enableNumericSlider,sliderStepValue) VALUES (?,?,?)', $v);
+        }else{
+          $v = array($ak->getAttributeKeyID());
+          $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
+        }
+
 
         $nak = new self();
         $nak->load($ak->getAttributeKeyID());
@@ -194,5 +202,36 @@ class StoreProductKey extends Key
       }
       return $list;
     }
+    public function getEnableNumericSlider($akID){
+      $db = \Database::connection();
+      $enableNumericSlider = $db->GetCol("select enableNumericSlider from CommunityStoreProductAttributeKeys where akID = ?", array($akID));
+      return $enableNumericSlider[0];
+    }
+    public function getSliderStepValue($akID){
+      $db = \Database::connection();
+      $sliderStepValue = $db->GetCol("select sliderStepValue from CommunityStoreProductAttributeKeys where akID = ?", array($akID));
+      return $sliderStepValue[0];
+    }
 
+    //gets the product pIDs where product has an attribute value >= min and value <= max
+    public function filterAttributeValuesByMinMax($akID, $min, $max){
+      $validPIDs = Array();
+      $ak = StoreProductKey::getByID($akID);
+      if($ak->getEnableNumericSlider($akID)){
+        $db = \Database::connection();
+        $avIDs = $db->GetCol("select distinct(avID) from CommunityStoreProductAttributeValues where akID = ?", array($akID));
+        foreach($avIDs as $avID){
+          $av = $ak->getAttributeValue($avID);
+          if($av >= $min && $av <= $max){
+            $db = \Database::connection();
+            $r = $db->fetchAll('select p.pID as pID from CommunityStoreProductAttributeValues av right join CommunityStoreProducts p on av.pID = p.pID where avID = ? and p.pActive = 1', array($avID) );
+            foreach($r as $val){
+              $validPIDs[] = $val['pID'];
+            }
+
+          }
+        }
+      }
+      return $validPIDs;
+    }
 }

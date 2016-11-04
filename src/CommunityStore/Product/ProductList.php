@@ -135,6 +135,10 @@ class ProductList extends AttributedItemList
     {
         $this->attributeVals = $attributes;
     }
+    public function setAttributeRange($attributes)
+    {
+        $this->attributeRange = $attributes;
+    }
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $paramcount = 0;
@@ -293,12 +297,39 @@ class ProductList extends AttributedItemList
           $query->andWhere('av.akID in('. implode(',', $aks) .') and av.avID in('. implode(',', $avs).')');
 
         }
+
+        $validPIDs = array();
         if($this->attributeSearch){
             //search attributes
-            $validPIDs = StoreProductKey::filterAttributeValuesByKeyword($this->attributeSearch);
-            if(!empty($validPIDs)) $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
-
+            $searchPIDs = StoreProductKey::filterAttributeValuesByKeyword($this->attributeSearch);
+            if(!empty($searchPIDs)){
+              foreach($searchPIDs as $pid){
+                array_push($validPIDs, $pid);
+              }
+            }
         }
+
+        if($this->attributeRange){
+            //search attributeRange
+            $rangePIDs = array();
+            $temp = array();
+            foreach($this->attributeRange as $akID => $vals){
+              $validRangePIDs = StoreProductKey::filterAttributeValuesByMinMax($akID, $vals['min'],$vals['max']);
+              if(!empty($validRangePIDs)){
+                array_push($temp,$validRangePIDs);
+              }
+            }
+            $rangePIDs = call_user_func_array('array_intersect',$temp);
+            if(!empty($validPIDs)) $validPIDs = array_intersect($validPIDs, $rangePIDs);
+        }
+        if($this->attributeSearch && $this->attributeRange){
+          $query->andWhere('p.pID in ('. implode(',', $validPIDs).')');
+        }else if($this->attributeSearch){
+          $query->orWhere('p.pID in ('. implode(',', $validPIDs).')');
+        }else if($this->attributeRange){
+          $query->andWhere('p.pID in ('. implode(',', $rangePIDs).')');
+        }
+
         return $query;
     }
 
