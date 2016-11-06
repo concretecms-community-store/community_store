@@ -231,13 +231,13 @@ class ProductOption
                     $option = self::getByID($data['poID'][$i]);
 
                     if ($option) {
-                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poRequired'][$i], $data['poHandle'][$i]);
+                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
                     }
                 }
 
                 if (!$option) {
                     if ($data['poName'][$i]) {
-                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poRequired'][$i], $data['poHandle'][$i]);
+                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
                         $product->getOptions()->add($option);
                     }
                 }

@@ -426,7 +426,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div id="product-options-container"></div>
 
                 <div class="clearfix">
-                    <span class="btn btn-primary" id="btn-add-option-group"><?= t('Add Option Group')?></span>
+                    <span class="btn btn-primary" id="btn-add-option-group"><?= t('Add Option List')?></span>
                     <span class="btn btn-primary" id="btn-add-text"><?= t('Add Text Entry')?></span>
                     <span class="btn btn-primary" id="btn-add-textarea"><?= t('Add Text Area')?></span>
                     <span class="btn btn-primary" id="btn-add-hidden"><?= t('Add Hidden Value')?></span>
@@ -436,21 +436,46 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <script type="text/template" id="option-group-template">
                     <div class="panel panel-default option-group clearfix" data-order="<%=sort%>">
                         <div class="panel-heading">
+
                             <div class="row">
-                                <div class="col-xs-3 label-shell">
-                                    <label for="poName<%=sort%>" class="text-right"><i class="fa fa-arrows drag-handle pull-left"></i> <span class="hidden-xs"><%=poLabel%></span></label>
-                                </div>
                                 <div class="col-xs-6">
-                                    <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
+                                    <h3 class="panel-title"><i class="fa fa-arrows drag-handle"></i> <%=poLabel%></h3>
                                 </div>
-                                <div class="col-xs-3 text-right">
-                                     <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-delete-item btn-danger"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group')?>" class="fa fa-trash"></i></a>
+                                <div class="col-xs-6 text-right">
+                                     <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-sm btn-delete-item btn-danger"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group')?>" class="fa fa-times"></i> Remove</a>
                                 </div>
                             </div>
                         </div>
                         <div class="panel-body">
-                            <div data-group="<%=sort%>" class="option-group-item-container"></div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label for="poName<%=sort%>" ><?= t('Option Name');?></label>
+                                        <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label><?= t('Option Handle');?></label>
+                                        <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional');?>" value="<%=poHandle%>">
+                                    </div>
+                                </div>
+                                <% if (poType != 'select') { %>
+                                <div class="col-xs-2">
+                                    <div class="form-group">
+                                        <label><?= t('Required');?></label>
+                                        <select class="form-control" name="poRequired[]"><option value="0"><?= t('No');?></option><option value="1" <% if (poRequired) { %>selected="selected"<% } %>><?= t('Yes');?></option></select>
+                                    </div>
+                                </div>
+                                <% } else {  %>
+                                    <input type="hidden" value="0" name="poRequired[]" />
+                                <% } %>
+                            </div>
+
                             <% if (poType == 'select') { %>
+                            <hr />
+                            <div data-group="<%=sort%>" class="option-group-item-container"></div>
                             <a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default"><?= t('Add Option')?></a>
                             <% } %>
                          </div>
@@ -497,17 +522,20 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             foreach ($options as $option) {
 
                             $type = $option->getType();
-                            $label = t('Group Name:');
+                            $handle = $option->getHandle();
+                            $required = $option->getRequired();
 
                             $labels = array();
-                            $labels['select'] = t('Group Name:');
-                            $labels['text'] = t('Text Input Name:');
-                            $labels['textarea'] = t('Text Area Name:');
-                            $labels['hidden'] = t('Hidden Value Name:');
+                            $labels['select'] = t('Option List');
+                            $labels['text'] = t('Text Input');
+                            $labels['textarea'] = t('Text Area Input');
+                            $labels['hidden'] = t('Hidden Value');
 
                             if (!$type) {
                                 $type = 'select';
                             }
+
+                            $label = $labels[$type];
 
                         ?>
                         optionsContainer.append(optionsTemplate({
@@ -515,6 +543,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poID: '<?= $option->getID()?>',
                             poType: '<?= $type ?>',
                             poLabel: '<?= $label; ?>',
+                            poHandle: '<?= $handle; ?>',
+                            poRequired: '<?= $required; ?>',
                             sort: '<?= $option->getSort() ?>'
                         }));
                         <?php
@@ -534,6 +564,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poID: '',
                                 poType: 'select',
                                 poLabel: '<?= $labels['select']; ?>',
+                                poHandle: '',
+                                poRequired: '',
                                 sort: temp
                             }));
 
@@ -557,6 +589,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poID: '',
                                 poType: 'text',
                                 poLabel: '<?= $labels['text']; ?>',
+                                poHandle: '',
+                                poRequired: '',
                                 sort: temp
                             }));
 
@@ -575,6 +609,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poID: '',
                                 poType: 'textarea',
                                 poLabel: '<?= $labels['textarea']; ?>',
+                                poHandle: '',
+                                poRequired: '',
                                 sort: temp
                             }));
 
@@ -593,6 +629,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poID: '',
                                 poType: 'hidden',
                                 poLabel: '<?= $labels['hidden']; ?>',
+                                poHandle: '',
+                                poRequired: '',
                                 sort: temp
                             }));
 
@@ -607,7 +645,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <div class="option-item clearfix form-horizontal" data-order="<%=sort%>" data-option-group="<%=optGroup%>">
                         <div class="form-group">
                             <div class="col-sm-3 text-right">
-                                <label class="grabme"><i class="fa fa-arrows drag-handle pull-left"></i><?= t('Option')?>:</label>
+                                <label class="grabme"><i class="fa fa-arrows drag-handle pull-left"></i><?= t('Option')?></label>
                             </div>
                             <div class="col-sm-7">
                                 <div class="input-group">
@@ -621,7 +659,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
                             </div>
                             <div class="col-sm-2">
-                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>);" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>);" class="btn btn-danger"><i class="fa fa-times"></i></a>
                             </div>
                         </div>
                         <input type="hidden" name="optGroup<%=optGroup%>[]" class="optGroupID" value="">
