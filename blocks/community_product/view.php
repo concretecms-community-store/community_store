@@ -88,9 +88,10 @@ if (is_object($product) && $product->isActive()) {
 
                         foreach ($product->getOptions() as $option) {
                             $optionItems = $option->getOptionItems();
-
+                            $optionType = $option->getType();
                             ?>
-                            <?php if (!empty($optionItems)) { ?>
+
+                            <?php if (!$optionType || $optionType == 'select') { ?>
                                 <div class="store-product-option-group form-group">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                     <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
@@ -104,8 +105,20 @@ if (is_object($product) && $product->isActive()) {
                                         <?php } ?>
                                     </select>
                                 </div>
-                            <?php }
-                        } ?>
+                            <?php } elseif ($optionType == 'text') { ?>
+                                <div class="store-product-option-group form-group">
+                                    <label class="store-product-option-group-label"><?= $option->getName() ?></label>
+                                    <input class="store-product-option-entry form-control" name="pd<?= $option->getID() ?>" />
+                                </div>
+                            <?php } elseif ($optionType == 'textarea') { ?>
+                                <div class="store-product-option-group form-group">
+                                    <label class="store-product-option-group-label"><?= $option->getName() ?></label>
+                                    <textarea class="store-product-option-entry form-control" name="pd<?= $option->getID() ?>"></textarea>
+                                </div>
+                            <?php } elseif ($optionType == 'hidden') { ?>
+                                    <input type="hidden" class="store-product-option-hidden form-control" name="pd<?= $option->getID() ?>" />
+                            <?php } ?>
+                        <?php } ?>
                     </div>
 
                     <?php if ($showCartButton) { ?>

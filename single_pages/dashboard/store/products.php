@@ -427,14 +427,18 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <div class="clearfix">
                     <span class="btn btn-primary" id="btn-add-option-group"><?= t('Add Option Group')?></span>
+                    <span class="btn btn-primary" id="btn-add-text"><?= t('Add Text Entry')?></span>
+                    <span class="btn btn-primary" id="btn-add-textarea"><?= t('Add Text Area')?></span>
+                    <span class="btn btn-primary" id="btn-add-hidden"><?= t('Add Hidden Value')?></span>
                 </div>
+
                 <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
                 <script type="text/template" id="option-group-template">
                     <div class="panel panel-default option-group clearfix" data-order="<%=sort%>">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3 label-shell">
-                                    <label for="poName<%=sort%>" class="text-right"><i class="fa fa-arrows drag-handle pull-left"></i> <span class="hidden-xs"><?= t('Group Name:')?></span></label>
+                                    <label for="poName<%=sort%>" class="text-right"><i class="fa fa-arrows drag-handle pull-left"></i> <span class="hidden-xs"><%=poLabel%></span></label>
                                 </div>
                                 <div class="col-xs-6">
                                     <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
@@ -446,11 +450,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                         <div class="panel-body">
                             <div data-group="<%=sort%>" class="option-group-item-container"></div>
-
+                            <% if (poType == 'select') { %>
                             <a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default"><?= t('Add Option')?></a>
-
-                                </div>
+                            <% } %>
+                         </div>
                             <input type="hidden" name="poID[]" value="<%=poID%>">
+                            <input type="hidden" name="poType[]" value="<%=poType%>">
                             <input type="hidden" name="poSort[]" value="<%=sort%>" class="option-group-sort">
                         </div>
 
@@ -485,12 +490,31 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         //load up existing option groups
                         <?php
+
+
+
                         if($options) {
                             foreach ($options as $option) {
+
+                            $type = $option->getType();
+                            $label = t('Group Name:');
+
+                            $labels = array();
+                            $labels['select'] = t('Group Name:');
+                            $labels['text'] = t('Text Input Name:');
+                            $labels['textarea'] = t('Text Area Name:');
+                            $labels['hidden'] = t('Hidden Value Name:');
+
+                            if (!$type) {
+                                $type = 'select';
+                            }
+
                         ?>
                         optionsContainer.append(optionsTemplate({
                             poName: '<?= $option->getName() ?>',
                             poID: '<?= $option->getID()?>',
+                            poType: '<?= $type ?>',
+                            poLabel: '<?= $label; ?>',
                             sort: '<?= $option->getSort() ?>'
                         }));
                         <?php
@@ -508,6 +532,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 //vars to pass to the template
                                 poName: '',
                                 poID: '',
+                                poType: 'select',
+                                poLabel: '<?= $labels['select']; ?>',
                                 sort: temp
                             }));
 
@@ -516,6 +542,62 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                             $('#variationshider').addClass('hidden');
                             $('#changenotice').removeClass('hidden');
+                        });
+
+
+
+                        $('#btn-add-text').click(function(){
+
+                            //Use the template to create a new item.
+                            var temp = $(".option-group").length;
+                            temp = (temp);
+                            optionsContainer.append(optionsTemplate({
+                                //vars to pass to the template
+                                poName: '',
+                                poID: '',
+                                poType: 'text',
+                                poLabel: '<?= $labels['text']; ?>',
+                                sort: temp
+                            }));
+
+                            //Init Index
+                            indexOptionGroups();
+                        });
+
+                        $('#btn-add-textarea').click(function(){
+
+                            //Use the template to create a new item.
+                            var temp = $(".option-group").length;
+                            temp = (temp);
+                            optionsContainer.append(optionsTemplate({
+                                //vars to pass to the template
+                                poName: '',
+                                poID: '',
+                                poType: 'textarea',
+                                poLabel: '<?= $labels['textarea']; ?>',
+                                sort: temp
+                            }));
+
+                            //Init Index
+                            indexOptionGroups();
+                        });
+
+                        $('#btn-add-hidden').click(function(){
+
+                            //Use the template to create a new item.
+                            var temp = $(".option-group").length;
+                            temp = (temp);
+                            optionsContainer.append(optionsTemplate({
+                                //vars to pass to the template
+                                poName: '',
+                                poID: '',
+                                poType: 'hidden',
+                                poLabel: '<?= $labels['hidden']; ?>',
+                                sort: temp
+                            }));
+
+                            //Init Index
+                            indexOptionGroups();
                         });
                     });
 

@@ -53,17 +53,28 @@ if ($cart) {
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-item-attributes">
                                 <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {
-                                    $groupID = str_replace("po", "", $groupID);
+
+                                    if (substr($groupID, 0, 2) == 'po') {
+                                        $groupID = str_replace("po", "", $groupID);
+                                        $optionvalue = StoreProductOptionItem::getByID($valID);
+
+                                        if ($optionvalue) {
+                                            $optionvalue = $optionvalue->getName();
+                                        }
+                                    } elseif (substr($groupID, 0, 2) == 'pd')  {
+                                        $groupID = str_replace("pd", "", $groupID);
+                                        $optionvalue = $valID;
+                                    }
+
                                     $optiongroup = StoreProductOption::getByID($groupID);
-                                    $optionvalue = StoreProductOptionItem::getByID($valID);
 
                                     ?>
                                     <div class="store-cart-list-item-attribute">
                                         <span
-                                            class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '') ?>
+                                            class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($optiongroup->getName()) : '') ?>
                                             :</span>
                                         <span
-                                            class="store-cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName() : '') ?></span>
+                                            class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '') ?></span>
                                     </div>
                                 <?php } ?>
                             </div>
