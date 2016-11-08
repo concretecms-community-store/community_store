@@ -10,7 +10,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
         <?php if (isset($actiondata) and !empty($actiondata)) { ?>
-            <?php if($actiondata['action'] == 'add') { ?>
+            <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
                 <p class="alert alert-success"><strong><?= $actiondata['product']['pName']; ?></strong> <?= t('has been added to your cart');?></p>
             <?php } ?>
 
@@ -26,8 +26,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                 <p class="alert alert-warning"><?= t('Item removed');?></p>
             <?php } ?>
 
-            <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
+            <?php if($actiondata['quantity'] != $actiondata['added'] && !$actiondata['error']) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
+            <?php } ?>
+
+            <?php if($actiondata['error']) { ?>
+                <p class="alert alert-warning"><?= t('An issue has occured adding the product to the cart. You may be missing required information.');?></p>
             <?php } ?>
         <?php } ?>
 
