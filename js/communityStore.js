@@ -72,6 +72,20 @@ var communityStore = {
         } else {
             form = $('#store-form-add-to-cart-' + pID);
         }
+
+        var valid = true;
+
+        $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField){
+            if($(requiredField).val()=='') {
+                $(requiredField).focus();
+                valid = false;
+            }
+        });
+
+        if (!valid) {
+            return false;
+        }
+
         var qty = $(form).find('.store-product-qty').val();
         if (qty > 0) {
             var serial = $(form).serialize();

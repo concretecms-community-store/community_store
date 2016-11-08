@@ -61,8 +61,14 @@ if ($cart) {
                                         if ($optionvalue) {
                                             $optionvalue = $optionvalue->getName();
                                         }
-                                    } elseif (substr($groupID, 0, 2) == 'pd')  {
-                                        $groupID = str_replace("pd", "", $groupID);
+                                    } elseif (substr($groupID, 0, 2) == 'pt')  {
+                                        $groupID = str_replace("pt", "", $groupID);
+                                        $optionvalue = $valID;
+                                    } elseif (substr($groupID, 0, 2) == 'pa')  {
+                                        $groupID = str_replace("pa", "", $groupID);
+                                        $optionvalue = $valID;
+                                    } elseif (substr($groupID, 0, 2) == 'ph')  {
+                                        $groupID = str_replace("ph", "", $groupID);
                                         $optionvalue = $valID;
                                     }
 
@@ -70,11 +76,8 @@ if ($cart) {
 
                                     ?>
                                     <div class="store-cart-list-item-attribute">
-                                        <span
-                                            class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($optiongroup->getName()) : '') ?>
-                                            :</span>
-                                        <span
-                                            class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '') ?></span>
+                                        <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($optiongroup->getName()) : '') ?>:</span>
+                                        <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '') ?></span>
                                     </div>
                                 <?php } ?>
                             </div>

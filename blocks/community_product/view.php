@@ -89,10 +89,17 @@ if (is_object($product) && $product->isActive()) {
                         foreach ($product->getOptions() as $option) {
                             $optionItems = $option->getOptionItems();
                             $optionType = $option->getType();
+                            $required = $option->getRequired();
+
+                            $requiredAttr = '';
+
+                            if ($required) {
+                                $requiredAttr = ' required="required" placeholder="'.t('Required').'" ';
+                            }
                             ?>
 
                             <?php if (!$optionType || $optionType == 'select') { ?>
-                                <div class="store-product-option-group form-group">
+                                <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                     <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
                                         <?php
@@ -106,17 +113,17 @@ if (is_object($product) && $product->isActive()) {
                                     </select>
                                 </div>
                             <?php } elseif ($optionType == 'text') { ?>
-                                <div class="store-product-option-group form-group">
+                                <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                    <input class="store-product-option-entry form-control" name="pd<?= $option->getID() ?>" />
+                                    <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID() ?>" />
                                 </div>
                             <?php } elseif ($optionType == 'textarea') { ?>
-                                <div class="store-product-option-group form-group">
+                                <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                    <textarea class="store-product-option-entry form-control" name="pd<?= $option->getID() ?>"></textarea>
+                                    <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID() ?>"></textarea>
                                 </div>
                             <?php } elseif ($optionType == 'hidden') { ?>
-                                    <input type="hidden" class="store-product-option-hidden form-control" name="pd<?= $option->getID() ?>" />
+                                    <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
                             <?php } ?>
                         <?php } ?>
                     </div>

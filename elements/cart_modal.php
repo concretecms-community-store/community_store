@@ -83,7 +83,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
                                         <?php foreach($cartItem['productAttributes'] as $groupID => $valID){
-                                            $groupID = str_replace("po","",$groupID);
 
                                             if (substr($groupID, 0, 2) == 'po') {
                                                 $groupID = str_replace("po", "", $groupID);
@@ -92,8 +91,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                                 if ($optionvalue) {
                                                     $optionvalue = $optionvalue->getName();
                                                 }
-                                            } elseif (substr($groupID, 0, 2) == 'pd')  {
-                                                $groupID = str_replace("pd", "", $groupID);
+                                            } elseif (substr($groupID, 0, 2) == 'pt')  {
+                                                $groupID = str_replace("pt", "", $groupID);
+                                                $optionvalue = $valID;
+                                            } elseif (substr($groupID, 0, 2) == 'pa')  {
+                                                $groupID = str_replace("pa", "", $groupID);
+                                                $optionvalue = $valID;
+                                            } elseif (substr($groupID, 0, 2) == 'ph')  {
+                                                $groupID = str_replace("ph", "", $groupID);
                                                 $optionvalue = $valID;
                                             }
 
