@@ -109,10 +109,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                             $optiongroup = StoreProductOption::getByID($groupID);
 
                                             ?>
+                                            <?php if ($optionvalue) { ?>
                                             <div class="store-cart-list-item-attribute">
                                                 <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '')?>:</span>
                                                 <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '')?></span>
                                             </div>
+                                            <?php } ?>
                                         <?php }  ?>
                                     </div>
                                 <?php } ?>
