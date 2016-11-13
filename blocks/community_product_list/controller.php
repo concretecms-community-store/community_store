@@ -165,6 +165,11 @@ class Controller extends BlockController
         $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
+        $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
+
+        if ($args['filter'] != 'related_product') {
+            $args['relatedPID'] = 0;
+        }
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
