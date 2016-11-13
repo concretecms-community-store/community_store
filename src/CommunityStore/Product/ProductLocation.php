@@ -32,6 +32,11 @@ class ProductLocation
      */
     protected $cID;
 
+    /**
+     * @Column(type="integer", nullable=true)
+     */
+    protected $sortOrder;
+
     private function setProductID($pID)
     {
         $this->pID = $pID;
@@ -102,6 +107,10 @@ class ProductLocation
         foreach ($existingLocations as $location) {
             $location->delete();
         }
+    }
+
+    public static function getLocationPages() {
+
     }
 
     public static function add($product, $cID)
