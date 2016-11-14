@@ -907,24 +907,61 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <?php
 
                 if (count($attribs) > 0) {
-                    foreach($attribs as $ak) {
-                        if (is_object($product)) {
-                            $caValue = $product->getAttributeValueObject($ak);
-                        }
+                  foreach($attribs as $id => $akv): ?>
+
+                  <div class="form-group">
+                  <?php
+                    if (is_object($product)) {
+                        $caValue = $product->getAttributeValueByID($id);
+                        $caValue = $caValue!=null ? $caValue->getValue() : '';
+                    }
+                    ?>
+                      <label for="<?php echo $akv['name']?>" class="control-label"><?php echo $akv['name']?>:</label>
+                      <input name="akID[<?php echo $id; ?>][value]" class="attribute-select<?php echo $id; ?>" tabindex="-1" title="" value="" type="hidden" style="width: 100%" >
+                      <input type="hidden" name="newAv<?php echo $id; ?>" id="newAv<?php echo $id; ?>" value="false"/>
+                  </div>
+
+                  <script type="text/javascript">
+                      $(document).ready(function() {
+                        var preload<?php echo $id; ?> = [];
+                        var selected<?php echo $id; ?> = [];
+                        <?php if (count($akv['values']) > 0) {
+                                foreach($akv['values'] as $key => $val){ ?>
+                                    var obj<?php echo $id; ?> = {id: <?= $key ?>, text: <?= '"' . $val . '"' ?> };
+                                    <?php if(strcmp($val,$caValue)==0){ ?>
+                                      selected<?php echo $id; ?>.push(obj<?php echo $id; ?>);
+                                    <?php } ?>
+                                    preload<?php echo $id; ?>.push(obj<?php echo $id; ?>);
+                        <?php   }
+                              }
                         ?>
-                        <div class="clearfix">
-                            <?= $ak->render('label');?>
-                            <div class="input">
-                                <?= $ak->render('composer', $caValue, true)?>
-                            </div>
-                        </div>
-                    <?php  } ?>
+                          $('.attribute-select<?php echo $id; ?>').select2({
+                            initSelection : function (element, callback) {
+                              callback(selected<?php echo $id; ?>);
+                            },
+                            placeholder: 'select or create new value',
+                            tags: preload<?php echo $id; ?>,
+                            allowClear: true,
+                            maximumSelectionSize: 1
+                          }).on('change', function(e){
+                            if(e.added != null){
+                              if($.inArray(e.added, preload<?php echo $id; ?>) <0){
+                                $('#newAv<?php echo $id; ?>').val("true");
+                              }else{
+                                $('#newAv<?php echo $id; ?>').val("false");
+                              }
+                            }
+                          });
+                          $('.attribute-select<?php echo $id; ?>').select2("val", []);
+                          $('#newAv<?php echo $id; ?>').val("false");
+                      });
+                  </script>
+
+                  <?php endforeach;?>
 
                 <?php  } else {?>
                     <em><?= t('You haven\'t created product attributes')?></em>
-
                 <?php }?>
-
             </div>
 
             <div class="col-sm-9 store-pane" id="product-digital">

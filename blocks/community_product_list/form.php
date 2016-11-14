@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue as StoreProductValue; ?>
 
 <div class="row">
 
@@ -43,13 +45,9 @@
         <fieldset>
             <legend><?= t('Filtering') ?></legend>
 
-            <?php
-            foreach ($grouplist as $productgroup) {
-                $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
-            }
-            ?>
 
-            <?php if (!empty($productgroups)) { ?>
+
+            <?php if (!empty($grouplist)) { ?>
 
                 <div class="form-group">
                     <?= $form->label('gID', t('Filter by Product Groups')); ?>
@@ -57,9 +55,9 @@
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <select multiple="multiple" name="filtergroups[]" id="groups-select"
                                 class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Groups') ?>">
-                            <?php foreach ($productgroups as $pgkey => $pglabel) { ?>
+                            <?php foreach ($grouplist as $productgroup) { ?>
                                 <option
-                                    value="<?= $pgkey; ?>" <?= (in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''); ?>><?= $pglabel; ?></option>
+                                    value="<?= $productgroup->getGroupID(); ?>" <?= (in_array($productgroup->getGroupID(), $groupfilters) ? 'selected="selected"' : ''); ?>><?php echo $productgroup->getGroupName()." (".$productgroup->getNumProducts().")"; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -70,15 +68,77 @@
                     <?= $form->label('groupMatchAny', t('Matching')); ?>
                     <?= $form->select('groupMatchAny', array('0' => t("All groups selected"), '1' => t('Any group selected')), $groupMatchAny); ?>
                 </div>
-
+                <style>
+                .select2-container {
+                  z-index: 2000;
+                }
+                </style>
             <?php } ?>
 
+
+            <?php
+            if(!empty($attributeList)){
+              foreach ($attributeList as $key => $val) {
+                  $attributes[$key] = $val['name'];
+              }
+            }
+            ?>
+            <?php if (!empty($attributes)) { ?>
+                <?= $form->label('attributes', t('Filter by Product Attributes')); ?>
+                <div class="form-group">
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <select multiple="multiple" name="filterattributes[]" id="attributes-select"
+                                class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Attributes') ?>">
+                            <?php foreach ($attributes as $akey => $alabel) { ?>
+                                <option
+                                    value="<?= $akey; ?>" <?= (in_array($akey, $attributefilters) ? 'selected="selected"' : ''); ?>><?= $alabel; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <style>
+                .select2-container {
+                  z-index: 2000;
+                }
+                </style>
+
+            <?php } ?>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
-                    <?= t('Include Featured Only') ?>
+                    <?= $form->checkbox('showWidthFilter', 1, $showWidthFilter); ?>
+                    <?= t('Show Width Filter') ?>
                 </label>
             </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showHeightFilter', 1, $showHeightFilter); ?>
+                    <?= t('Show Height Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showLengthFilter', 1, $showLengthFilter); ?>
+                    <?= t('Show Length Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showPriceFilter', 1, $showPriceFilter); ?>
+                    <?= t('Show Price Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showKeywordFilter', 1, $showKeywordFilter); ?>
+                    <?= t('Show Keyword Filter') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                 <label>
+                    <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
+                    <?= t('Include Featured Only') ?>
+                 </label>
+             </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->checkbox('showSale', 1, $showSale); ?>
@@ -212,6 +272,7 @@ if ($relatedProduct) {
 
 
         $('#groups-select').select2();
+        $('#attributes-select').select2();
 
         var initfilter = $('#filter');
 
@@ -264,6 +325,3 @@ if ($relatedProduct) {
         });
     });
 </script>
-
-
-

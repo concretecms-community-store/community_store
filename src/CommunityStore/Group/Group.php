@@ -2,16 +2,16 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
 use Database;
-
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 /**
  * @Entity
  * @Table(name="CommunityStoreGroups")
  */
 class Group
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $gID;
 
@@ -79,5 +79,12 @@ class Group
         $em = \Database::connection()->getEntityManager();
         $em->remove($this);
         $em->flush();
+    }
+    public function getNumProducts(){
+        $products = new StoreProductList();
+        $products->setGroupIDs(array($this->gID));
+        $products->setActiveOnly(true);
+        $productCount = $products->get();
+        return count($productCount);
     }
 }

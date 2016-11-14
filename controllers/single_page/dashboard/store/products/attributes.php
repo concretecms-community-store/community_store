@@ -12,7 +12,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 class Attributes extends DashboardPageController
 {
-    
+
     public function view() {
         $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
         $attrTypes = AttributeType::getList('store_product');
@@ -25,18 +25,18 @@ class Attributes extends DashboardPageController
         $this->set('types', $types);
         $this->set('pageTitle', t('Product Attributes'));
     }
-    
+
     public function update_attributes() {
         $uats = $_REQUEST['akID'];
         StoreProductKey::updateAttributesDisplayOrder($uats);
         exit;
     }
-        
+
     public function removed() {
         $this->set('message', t('Attribute Deleted.'));
         $this->view();
     }
-    
+
     public function success() {
         $this->set('message', t('Attribute Created.'));
         $this->view();
@@ -46,11 +46,11 @@ class Attributes extends DashboardPageController
         $this->set('message', t('Attribute Updated.'));
         $this->view();
     }
-    
+
     public function delete($akID, $token = null){
         try {
             $ak = StoreProductKey::getByID($akID);
-                
+
             if(!($ak instanceof StoreProductKey)) {
                 throw new Exception(t('Invalid attribute ID.'));
             }
@@ -60,9 +60,9 @@ class Attributes extends DashboardPageController
             if (!$valt->validate('delete_attribute', $token)) {
                 throw new Exception($valt->getErrorMessage());
             }
-            
+
             $ak->delete();
-            
+
             $this->redirect("/dashboard/store/products/attributes", 'removed');
         } catch (Exception $e) {
             $this->set('error', $e);
@@ -76,7 +76,7 @@ class Attributes extends DashboardPageController
         $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
         $this->set('pageTitle', t('Create Product Attribute'));
     }
-    
+
     public function add() {
         $this->select_type();
         $type = $this->get('type');
@@ -90,17 +90,21 @@ class Attributes extends DashboardPageController
             $this->redirect('/dashboard/store/products/attributes/', 'success');
         }
     }
-    
+
     public function edit($akID = 0) {
         if ($this->post('akID')) {
             $akID = $this->post('akID');
         }
         $key = StoreProductKey::getByID($akID);
         $type = $key->getAttributeType();
+        $enableNumericSlider = $key->getEnableNumericSlider($akID);
+        $sliderStepValue = $key->getSliderStepValue($akID);
+        $this->set('enableNumericSlider',$enableNumericSlider);
+        $this->set('sliderStepValue',$sliderStepValue);
         $this->set('key', $key);
         $this->set('type', $type);
         $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
-        
+
         if ($this->post()) {
             $cnt = $type->getController();
             $cnt->setAttributeKey($key);

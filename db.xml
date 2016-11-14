@@ -19,6 +19,8 @@
     </table>
     <table name="CommunityStoreProductAttributeKeys">
         <field name="akID" type="integer"><unsigned/><key/></field>
+    		<field name="enableNumericSlider" type="boolean"></field>
+        <field name="sliderStepValue" type="boolean"></field>
     </table>
     <table name="CommunityStoreProductAttributeValues">
         <field name="pID" type="integer"><unsigned/><key/></field>

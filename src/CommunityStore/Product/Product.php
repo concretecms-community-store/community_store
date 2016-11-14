@@ -32,9 +32,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StoreP
  */
 class Product
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $pID;
 
@@ -491,7 +491,6 @@ class Product
         } else {
             $product->setHasVariations($data['pVariations']);
         }
-
         $product->save();
         if (!$data['pID']) {
             $product->generatePage($data['selectPageTemplate']);
@@ -959,9 +958,11 @@ class Product
         $attributes = StoreProductKey::getAttributes($this->getID());
         foreach($attributes as $handle=>$value) {
             $spk = StoreProductKey::getByHandle($handle);
-            $spk->saveAttribute($newproduct, $value);
+            $akID = $spk->getAttributeKeyID();
+            $db = \Database::connection();
+            $avID = $db->GetOne("select distinct(avID) from CommunityStoreProductAttributeValues where akID = ? and pID = ?", array($akID,$this->getID()));
+            $spk->saveAttribute($newproduct, false, $avID);
         }
-
 
         $variations = $this->getVariations();
         $newvariations = array();
@@ -1087,7 +1088,7 @@ class Product
             }
         }
     }
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
+    public function getAttributeValueObject($ak, $createIfNotFound = false, $newAvID = false, $isNew = false)
     {
         $db = \Database::connection();
         $av = false;
@@ -1101,19 +1102,48 @@ class Product
             }
         }
 
+
         if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreProductAttributeValues WHERE avID=?", $av->getAttributeValueID());
+            // Removed since identifier to add new av is not the cnt
+            // if (is_object($av)) {
+                // $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreProductAttributeValues WHERE avID=?", $av->getAttributeValueID());
+            // }
+            if(!$isNew){
+              $newAv = StoreProductValue::getByID($newAvID);
             }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $av = $ak->addAttributeValue();
+            //create new attrib value in AttributeValues table first if there is no spav set for product
+            if ((!is_object($newAv))) {
+              //adds new av and assign as current av
+              $av = $ak->addAttributeValue();
+            }else {
+              //assign new av to as current av
+              $av = $newAv;
             }
         }
-
         return $av;
     }
+
+    public function getAttributes(){
+      $attributes = StoreProductKey::getAttributes($this->getID());
+      foreach($attributes as $handle=>$value) {
+          $ak = StoreProductKey::getByHandle($handle);
+          $display[$ak->getAttributeKeyName()] = $value;
+      }
+      return $display;
+    }
+
+    public function getAttributeValueByID($akID)
+    {
+      $db = \Database::connection();
+      $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", Array($this->getID(),$akID));
+      if ($avID > 0) {
+          $av = StoreProductValue::getByID($avID);
+          if (is_object($av)) {
+              $av->setProduct($this);
+              $av->setAttributeKey(StoreProductKey::getInstanceByID($akID));
+          }
+      }
+      return $av;
+    }
+
 }

@@ -61,13 +61,13 @@ class Products extends DashboardPageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist",$grouplist);
-        
+
     }
     public function success(){
         $this->set("success",t("Product Added"));
         $this->view();
     }
-    
+
     public function updated()
     {
         $this->set("success",t("Product Updated"));
@@ -81,7 +81,7 @@ class Products extends DashboardPageController
     {
         $this->loadFormAssets();
         $this->set("actionType",t("Add"));
-        
+
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist",$grouplist);
         foreach($grouplist as $productgroup){
@@ -121,7 +121,7 @@ class Products extends DashboardPageController
 
         $this->loadFormAssets();
         $this->set("actionType",t("Update"));
-        
+
         //get the product
         $product = StoreProduct::getByID($pID);
 
@@ -254,19 +254,17 @@ class Products extends DashboardPageController
         $this->requireAsset('core/sitemap');
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
-        
+
         $this->set('fp',FilePermissions::getGlobal());
         $this->set('tp', new TaskPermission());
         $this->set('al', Core::make('helper/concrete/asset_library'));
 
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
 
-        $attrList = StoreProductKey::getList();
+        $attrList = StoreProductKey::getAttributeKeyValueList();
         $this->set('attribs',$attrList);
-        
+
         $pageType = PageType::getByHandle("store_product");
         $pageTemplates = $pageType->getPageTypePageTemplateObjects();
         $templates = array();
@@ -293,29 +291,38 @@ class Products extends DashboardPageController
             $this->error = null; //clear errors
             $this->error = $errors;
             if (!$errors->has()) {
-                    
+
                 //save the product
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes
-                $aks = StoreProductKey::getList();
-                foreach($aks as $uak) {
-                    $uak->saveAttributeForm($product);
+                if(!empty($data['akID'])){
+                  foreach($data['akID'] as $key => $value){
+                    $ak = StoreProductKey::getByID($key);
+                    if(!empty($value['value'])){
+                      if($data['newAv'.$key] == "true"){
+                        $ak->saveAttribute($product,false,$value['value'],true);
+                      }else{
+                        $ak->saveAttribute($product,false,$value['value']);
+                      }
+                    }
+                  }
                 }
+
                 //save images
                 StoreProductImage::addImagesForProduct($data,$product);
-                
+
                 //save product groups
                 StoreProductGroup::addGroupsForProduct($data,$product);
-                
+
                 //save product user groups
                 StoreProductUserGroup::addUserGroupsForProduct($data,$product);
-                
+
                 //save product options
                 StoreProductOption::addProductOptions($data,$product);
-                
+
                 //save files
                 StoreProductFile::addFilesForProduct($data,$product);
-                
+
                 //save category locations
                 StoreProductLocation::addLocationsForProduct($data,$product);
 
@@ -336,7 +343,7 @@ class Products extends DashboardPageController
     public function validate($args)
     {
         $e = Core::make('helper/validation/error');
-        
+
         if($args['pName']==""){
             $e->add(t('Please enter a Product Name'));
         }
@@ -361,11 +368,11 @@ class Products extends DashboardPageController
         if(!is_numeric($args['pWeight'])){
             $e->add(t('The Product Weight must be a number'));
         }
-        
+
         return $e;
-        
+
     }
-    
+
     // GROUPS PAGE
     public function groups()
     {
@@ -397,7 +404,7 @@ class Products extends DashboardPageController
     public function validateGroup($args)
     {
         $e = Core::make('helper/validation/error');
-        
+
         if($args['groupName']==""){
             $e->add(t('Please enter a Group Name'));
         }
