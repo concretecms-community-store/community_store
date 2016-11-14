@@ -7,7 +7,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
 class Complete extends PageController
 {
     public function view()
