@@ -2,9 +2,8 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
 use PageController;
-use View;
 
-
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
@@ -25,6 +24,9 @@ class Complete extends PageController
         } else {
             $this->redirect("/cart");
         }
+
+        StoreCart::clear();
+
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
