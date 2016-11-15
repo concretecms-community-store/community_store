@@ -35,7 +35,12 @@ class ProductLocation
     /**
      * @Column(type="integer", nullable=true)
      */
-    protected $sortOrder;
+    protected $categorySortOrder;
+
+    /**
+     * @Column(type="integer", nullable=true)
+     */
+    protected $productSortOrder;
 
     private function setProductID($pID)
     {
@@ -109,8 +114,24 @@ class ProductLocation
         }
     }
 
+    // returns an associated array of pages, with the page name as the key, alphabetically sorted
+    // each value is an array that includes a page object and product count for that category
     public static function getLocationPages() {
+        $db = \Database::connection();
+        $query = $db->query('select count(*) as productCount, max(cID) as cID from CommunityStoreProductLocations group by cID');
 
+        $pages = array();
+        while($row = $query->fetchRow()) {
+           $page = \Page::getByID($row['cID']);
+
+            if ($page) {
+                $pages[$page->getCollectionName()] = array('page'=>$page, 'productCount' =>$row['productCount']);
+            }
+        }
+
+        ksort($pages);
+
+        return $pages;
     }
 
     public static function add($product, $cID)
