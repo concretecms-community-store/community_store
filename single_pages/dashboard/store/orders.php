@@ -468,10 +468,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <div class="form-group">
                 <div class="ccm-search-main-lookup-field">
                     <i class="fa fa-search"></i>
-                    <?= $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Search Orders')))?>
+                    <?= $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Search by Order Number')))?>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary pull-right"><?= t('Search')?></button>
+            <button type="submit" class="btn btn-default"><?= t('Search')?></button>
 
         </div>
 

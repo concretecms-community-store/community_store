@@ -200,7 +200,7 @@ class ProductList extends AttributedItemList
         $query->groupBy('p.pID');
 
         if ($this->search) {
-            $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
         }
 
         return $query;
