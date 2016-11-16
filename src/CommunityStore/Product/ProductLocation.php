@@ -42,6 +42,7 @@ class ProductLocation
      */
     protected $productSortOrder;
 
+
     private function setProductID($pID)
     {
         $this->pID = $pID;
@@ -76,6 +77,26 @@ class ProductLocation
         return $this->cID;
     }
 
+    public function getCategorySortOrder()
+    {
+        return $this->categorySortOrder;
+    }
+
+    public function setCategorySortOrder($categorySortOrder)
+    {
+        $this->categorySortOrder = $categorySortOrder;
+    }
+
+    public function getProductSortOrder()
+    {
+        return $this->productSortOrder;
+    }
+
+    public function setProductSortOrder($productSortOrder)
+    {
+        $this->productSortOrder = $productSortOrder;
+    }
+
     public static function getByID($cID)
     {
         $db = \Database::connection();
@@ -90,6 +111,14 @@ class ProductLocation
         $em = $db->getEntityManager();
 
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+    }
+
+    public static function getProductsForLocation($cID)
+    {
+        $db = \Database::connection();
+        $em = $db->getEntityManager();
+
+        return $em->getRepository(get_class())->findBy(array('cID' => $cID));
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)

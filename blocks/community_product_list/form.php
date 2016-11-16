@@ -35,7 +35,15 @@
 
             <div class="form-group">
                 <?= $form->label('sortOrder', t('Sort Order')); ?>
-                <?= $form->select('sortOrder', array('alpha' => t("Alphabetical"), 'date' => t('Date Added'),'price_asc' => t('Price Ascending'), 'price_desc' => t('Price Descending'), 'popular' => t('Best Sellers'), 'related' => t("Related Products Order"), ), $sortOrder); ?>
+                <?= $form->select('sortOrder', array(
+                    'alpha' => t("Alphabetical"),
+                    'date' => t('Date Added'),
+                    'price_asc' => t('Price Ascending'),
+                    'price_desc' => t('Price Descending'),
+                    'popular' => t('Best Sellers'),
+                    'related' => t("Related Products Order"),
+                    'category' => t("Category Sort Order"),
+                    ), $sortOrder); ?>
             </div>
 
         </fieldset>
