@@ -539,11 +539,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         ?>
                         optionsContainer.append(optionsTemplate({
-                            poName: '<?= $option->getName() ?>',
+                            poName: '<?= h($option->getName()) ?>',
                             poID: '<?= $option->getID()?>',
                             poType: '<?= $type ?>',
                             poLabel: '<?= $label; ?>',
-                            poHandle: '<?= $handle; ?>',
+                            poHandle: '<?= h($handle); ?>',
                             poRequired: '<?= $required; ?>',
                             sort: '<?= $option->getSort() ?>'
                         }));
