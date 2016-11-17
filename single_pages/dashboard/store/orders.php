@@ -138,7 +138,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 foreach($options as $option){
                                     echo "<li>";
                                     echo "<strong>".$option['oioKey'].": </strong>";
-                                    echo $option['oioValue'];
+                                    echo ($option['oioValue'] ? $option['oioValue'] : '<em>' .t('None') . '</em>');
                                     echo "</li>";
                                 }
                                 echo "</ul>";

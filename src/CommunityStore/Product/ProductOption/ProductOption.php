@@ -41,6 +41,21 @@ class ProductOption
     protected $poName;
 
     /**
+     * @Column(type="string", nullable=true)
+     */
+    protected $poType;
+
+    /**
+     * @Column(type="string", nullable=true)
+     */
+    protected $poHandle;
+
+    /**
+     * @Column(type="boolean", nullable=true)
+     */
+    protected $poRequired;
+
+    /**
      * @Column(type="integer")
      */
     protected $poSort;
@@ -80,7 +95,34 @@ class ProductOption
     {
         return $this->poSort;
     }
+    public function getType()
+    {
+        return $this->poType;
+    }
+    public function setType($type)
+    {
+        $this->poType = $type;
+    }
 
+    public function getHandle()
+    {
+        return $this->poHandle;
+    }
+
+    public function setHandle($poHandle)
+    {
+        $this->poHandle = $poHandle;
+    }
+
+    public function getRequired()
+    {
+        return $this->poRequired;
+    }
+
+    public function setRequired($poRequired)
+    {
+        $this->poRequired = $poRequired;
+    }
 
     public function __construct()
     {
@@ -122,23 +164,26 @@ class ProductOption
         }
     }
 
-    public static function add($product, $name, $sort)
+    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false)
     {
         $ProductOption = new self();
 
-        return self::addOrUpdate($product, $name, $sort, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $ProductOption);
     }
-    public function update($product, $name, $sort)
+    public function update($product, $name, $sort, $type = '', $handle = '', $required = false)
     {
         $ProductOption = $this;
 
-        return self::addOrUpdate($product, $name, $sort, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $ProductOption);
     }
-    public static function addOrUpdate($product, $name, $sort, $obj)
+    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $obj)
     {
         $obj->setProduct($product);
         $obj->setName($name);
         $obj->setSort($sort);
+        $obj->setType($type);
+        $obj->setHandle($handle);
+        $obj->setRequired($required);
         $obj->save();
         return $obj;
     }
@@ -186,13 +231,13 @@ class ProductOption
                     $option = self::getByID($data['poID'][$i]);
 
                     if ($option) {
-                        $option->update($product, $data['poName'][$i], $data['poSort'][$i]);
+                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
                     }
                 }
 
                 if (!$option) {
                     if ($data['poName'][$i]) {
-                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i]);
+                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
                         $product->getOptions()->add($option);
                     }
                 }

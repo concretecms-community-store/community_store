@@ -104,7 +104,9 @@ ob_start();
                         if ($options) {
                             $optionOutput = array();
                             foreach ($options as $option) {
-                                $optionOutput[] =  "<strong>" . $option['oioKey'] . ": </strong>" . $option['oioValue'];
+                                if ($option['oioValue']) {
+                                    $optionOutput[] = "<strong>" . $option['oioKey'] . ": </strong>" . $option['oioValue'];
+                                }
                             }
                             echo implode('<br>', $optionOutput);
                         }

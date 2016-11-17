@@ -27,7 +27,7 @@ class OrderItemOption
     protected $oioKey;
 
     /**
-     * @Column(type="string")
+     * @Column(type="text")
      */
     protected $oioValue;
 

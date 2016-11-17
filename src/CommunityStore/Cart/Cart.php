@@ -7,6 +7,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class Cart
@@ -16,7 +17,6 @@ class Cart
 
     public static function getCart()
     {
-
         // this acts as a singleton, in that it wil only fetch the cart from the session and check it for validity once per request
         if (!isset(self::$cart)) {
             $cart = Session::get('communitystore.cart');
@@ -98,11 +98,12 @@ class Cart
 
     public static function add($data)
     {
+        $error = false;
         Session::set('community_store.smID', false);
         $product = StoreProduct::getByID((int) $data['pID']);
 
         if (!$product) {
-            return false;
+            $error = true;
         }
 
         if ($product->isExclusive()) {
@@ -136,10 +137,34 @@ class Cart
 
         // search for product options, if found, collect the id
         foreach ($cartItem['productAttributes'] as $name => $value) {
+            $groupID = false;
+
             if (substr($name, 0, 2) == 'po') {
                 $optionItemIds[] = $value;
+                if (!$value) {
+                    $error = true;  // if we have select option but no value
+                }
+
+            } elseif (substr($name, 0, 2) == 'pt')  {
+                $groupID = str_replace("pt", "", $name);
+
+            } elseif (substr($name, 0, 2) == 'pa')  {
+                $groupID = str_replace("pa", "", $groupID);
+
+            } elseif (substr($name, 0, 2) == 'ph')  {
+                $groupID = str_replace("ph", "", $name);
+            }
+
+
+            // if there is a groupID, check to see if it's a required field, reject if no value
+            if ($groupID) {
+                $option = StoreProductOption::getByID($groupID);
+                if ($option->getRequired() && !$value) {
+                    $error = true;
+                }
             }
         }
+        
 
         if (!empty($optionItemIds) && $product->hasVariations()) {
             // find the variation via the ids of the options
@@ -152,59 +177,61 @@ class Cart
                     $product->setVariation($variation);
                     $cartItem['product']['variation'] = $variation->getID();
                 } else {
-                    return false;
+                    $error = true;
                 }
             } else {
-                return false; // variation not matched
+                $error = true; // variation not matched
             }
         } elseif ($product->hasVariations()) {
-            return false;  // if we have a product with variations, but no variation data was submitted, it's a broken add-to-cart form
+            $error = true;  // if we have a product with variations, but no variation data was submitted, it's a broken add-to-cart form
         }
 
-        $cart = self::getCart();
+        if (!$error) {
+            $cart = self::getCart();
 
-        $exists = self::checkForExistingCartItem($cartItem);
+            $exists = self::checkForExistingCartItem($cartItem);
 
-        if ($exists['exists'] === true) {
-            $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
+            if ($exists['exists'] === true) {
+                $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
-            //we have a match, update the qty
-            if ($product->allowQuantity()) {
-                $newquantity = $cart[$exists['cartItemKey']]['product']['qty'] + $cartItem['product']['qty'];
+                //we have a match, update the qty
+                if ($product->allowQuantity()) {
+                    $newquantity = $cart[$exists['cartItemKey']]['product']['qty'] + $cartItem['product']['qty'];
 
-                if (!$product->isUnlimited() &&  !$product->allowBackOrders() && $product->getQty() < max($newquantity, $existingproductcount)) {
+                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < max($newquantity, $existingproductcount)) {
+                        $newquantity = $product->getQty();
+                    }
+
+                    $added = $newquantity - $existingproductcount;
+                } else {
+                    $added = 1;
+                    $newquantity = 1;
+                }
+
+                $cart[$exists['cartItemKey']]['product']['qty'] = $newquantity;
+            } else {
+                $newquantity = $cartItem['product']['qty'];
+
+                if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
                     $newquantity = $product->getQty();
                 }
 
-                $added = $newquantity - $existingproductcount;
-            } else {
-                $added = 1;
-                $newquantity = 1;
+                $cartItem['product']['qty'] = $newquantity;
+
+                if ($product->isExclusive()) {
+                    $cart = array($cartItem);
+                } else {
+                    $cart[] = $cartItem;
+                }
+
+                $added = $newquantity;
             }
 
-            $cart[$exists['cartItemKey']]['product']['qty'] = $newquantity;
-        } else {
-            $newquantity = $cartItem['product']['qty'];
-
-            if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
-                $newquantity = $product->getQty();
-            }
-
-            $cartItem['product']['qty'] = $newquantity;
-
-            if ($product->isExclusive()) {
-                $cart = array($cartItem);
-            } else {
-                $cart[] = $cartItem;
-            }
-
-            $added = $newquantity;
+            self::$cart = $cart;
+            Session::set('communitystore.cart', $cart);
         }
 
-        self::$cart = $cart;
-        Session::set('communitystore.cart', $cart);
-
-        return array('added' => $added, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive);
+        return array('added' => $added, 'error'=>$error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive);
     }
 
     public function checkForExistingCartItem($cartItem)

@@ -5,6 +5,8 @@ use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
 /**
  * @Entity
@@ -254,14 +256,36 @@ class OrderItem
 
         $orderItem->save();
 
-        foreach ($data['productAttributes'] as $optionGroup => $selectedOption) {
-            $optionGroupID = str_replace("po", "", $optionGroup);
-            $optionGroupName = self::getProductOptionNameByID($optionGroupID);
-            $optionValue = self::getProductOptionValueByID($selectedOption);
+        foreach ($data['productAttributes'] as $groupID => $valID) {
+
+            if (substr($groupID, 0, 2) == 'po') {
+                $groupID = str_replace("po", "", $groupID);
+                $optionvalue = StoreProductOptionItem::getByID($valID);
+
+                if ($optionvalue) {
+                    $optionvalue = $optionvalue->getName();
+                }
+            } elseif (substr($groupID, 0, 2) == 'pt')  {
+                $groupID = str_replace("pt", "", $groupID);
+                $optionvalue = $valID;
+            } elseif (substr($groupID, 0, 2) == 'pa')  {
+                $groupID = str_replace("pa", "", $groupID);
+                $optionvalue = $valID;
+            } elseif (substr($groupID, 0, 2) == 'ph')  {
+                $groupID = str_replace("ph", "", $groupID);
+                $optionvalue = $valID;
+            }
+
+            $optionGroupName = '';
+
+            $optiongroup = StoreProductOption::getByID($groupID);
+            if ($optiongroup) {
+                $optionGroupName = $optiongroup->getName();
+            }
 
             $orderItemOption = new StoreOrderItemOption();
             $orderItemOption->setOrderItemOptionKey($optionGroupName);
-            $orderItemOption->setOrderItemOptionValue($optionValue);
+            $orderItemOption->setOrderItemOptionValue($optionvalue);
             $orderItemOption->setOrderItem($orderItem);
             $orderItemOption->save();
         }
@@ -287,20 +311,7 @@ class OrderItem
     {
         return \Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
-    public function getProductOptionNameByID($id)
-    {
-        $db = \Database::connection();
-        $optionGroup = $db->GetRow("SELECT * FROM CommunityStoreProductOptions WHERE poID=?", $id);
 
-        return $optionGroup['poName'];
-    }
-    public function getProductOptionValueByID($id)
-    {
-        $db = \Database::connection();
-        $optionItem = $db->GetRow("SELECT * FROM CommunityStoreProductOptionItems WHERE poiID=?", $id);
-
-        return $optionItem['poiName'];
-    }
     public function getProductObject()
     {
         return StoreProduct::getByID($this->getProductID());

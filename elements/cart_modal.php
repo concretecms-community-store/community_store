@@ -10,7 +10,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
         <?php if (isset($actiondata) and !empty($actiondata)) { ?>
-            <?php if($actiondata['action'] == 'add') { ?>
+            <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
                 <p class="alert alert-success"><strong><?= $actiondata['product']['pName']; ?></strong> <?= t('has been added to your cart');?></p>
             <?php } ?>
 
@@ -26,8 +26,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                 <p class="alert alert-warning"><?= t('Item removed');?></p>
             <?php } ?>
 
-            <?php if($actiondata['quantity'] != $actiondata['added']) { ?>
+            <?php if($actiondata['quantity'] != $actiondata['added'] && !$actiondata['error']) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
+            <?php } ?>
+
+            <?php if($actiondata['error']) { ?>
+                <p class="alert alert-warning"><?= t('An issue has occured adding the product to the cart. You may be missing required information.');?></p>
             <?php } ?>
         <?php } ?>
 
@@ -83,15 +87,34 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
                                         <?php foreach($cartItem['productAttributes'] as $groupID => $valID){
-                                            $groupID = str_replace("po","",$groupID);
+
+                                            if (substr($groupID, 0, 2) == 'po') {
+                                                $groupID = str_replace("po", "", $groupID);
+                                                $optionvalue = StoreProductOptionItem::getByID($valID);
+
+                                                if ($optionvalue) {
+                                                    $optionvalue = $optionvalue->getName();
+                                                }
+                                            } elseif (substr($groupID, 0, 2) == 'pt')  {
+                                                $groupID = str_replace("pt", "", $groupID);
+                                                $optionvalue = $valID;
+                                            } elseif (substr($groupID, 0, 2) == 'pa')  {
+                                                $groupID = str_replace("pa", "", $groupID);
+                                                $optionvalue = $valID;
+                                            } elseif (substr($groupID, 0, 2) == 'ph')  {
+                                                $groupID = str_replace("ph", "", $groupID);
+                                                $optionvalue = $valID;
+                                            }
+
                                             $optiongroup = StoreProductOption::getByID($groupID);
-                                            $optionvalue = StoreProductOptionItem::getByID($valID);
 
                                             ?>
+                                            <?php if ($optionvalue) { ?>
                                             <div class="store-cart-list-item-attribute">
                                                 <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '')?>:</span>
-                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? $optionvalue->getName(): '')?></span>
+                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '')?></span>
                                             </div>
+                                            <?php } ?>
                                         <?php }  ?>
                                     </div>
                                 <?php } ?>
