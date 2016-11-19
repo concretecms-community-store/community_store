@@ -76,17 +76,13 @@ class ProductImage
 
     public static function getByID($piID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $piID);
     }
 
     public static function getImagesForProduct(StoreProduct $product)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
@@ -139,14 +135,14 @@ class ProductImage
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -49,7 +49,8 @@ class Controller extends BlockController
 
     public function getGroupFilters()
     {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", array($this->bID));
 
         $list = array();
@@ -174,7 +175,8 @@ class Controller extends BlockController
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $vals = array($this->bID);
         $db->query("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 

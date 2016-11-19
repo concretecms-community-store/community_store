@@ -87,8 +87,10 @@ if(in_array($controller->getTask(),$addViews)){
 		<?php foreach($methodTypes as $methodType){?>
 			<table class="table table-striped">
 				<thead>
-					<th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName())?></th>
-					<th class="text-right"><?= t("Actions")?></th>
+					<tr>
+                        <th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName())?></th>
+					    <th class="text-right"><?= t("Actions")?></th>
+                    </tr>
 				</thead>
 				<tbody>
 					<?php foreach(StoreShippingMethod::getAvailableMethods($methodType->getShippingMethodTypeID()) as $method){ ?>

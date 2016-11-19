@@ -62,17 +62,13 @@ class ProductFile
 
     public static function getByID($id)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $id);
     }
 
     public static function getFilesForProduct(StoreProduct $product)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
@@ -130,14 +126,14 @@ class ProductFile
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

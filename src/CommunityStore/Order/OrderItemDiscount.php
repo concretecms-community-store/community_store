@@ -53,14 +53,14 @@ class OrderItemDiscount
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

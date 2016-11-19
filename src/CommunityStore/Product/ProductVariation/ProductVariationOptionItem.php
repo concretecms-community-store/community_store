@@ -54,7 +54,7 @@ class ProductVariationOptionItem
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }

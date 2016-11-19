@@ -10,7 +10,7 @@ class Tax
 {
     public static function getTaxRates()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $taxRates = $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
 
         return $taxRates;
@@ -52,7 +52,7 @@ class Tax
         return $taxes;
     }
 
-    public function getTaxForProduct($cartItem)
+    public static function getTaxForProduct($cartItem)
     {
         $product = StoreProduct::getByID($cartItem['product']['pID']);
         $qty = $cartItem['product']['qty'];

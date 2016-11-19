@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
 use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Utility\Service\Text as TextHelper;
-use Database;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @Entity
@@ -44,8 +44,9 @@ class OrderStatus extends Object
 
     public static function getByID($osID)
     {
-        $db = \Database::connection();
-        $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE osID=?", $osID);
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $data = $db->GetRow("SELECT * FROM CommunityStoreOrderStatuses WHERE osID=?", $osID);
         $orderStatus = null;
         if (!empty($data)) {
             $orderStatus = new self();
@@ -57,16 +58,18 @@ class OrderStatus extends Object
 
     public static function getByHandle($osHandle)
     {
-        $db = \Database::connection();
-        $data = $db->GetRow("SELECT osID FROM " . self::getTableName() . " WHERE osHandle=?", $osHandle);
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $data = $db->GetRow("SELECT osID FROM CommunityStoreOrderStatuses WHERE osHandle=?", $osHandle);
 
         return self::getByID($data['osID']);
     }
 
     public static function getAll()
     {
-        $db = \Database::connection();
-        $rows = $db->GetAll("SELECT osID FROM " . self::getTableName() . " ORDER BY osSortOrder ASC, osID ASC");
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $rows = $db->GetAll("SELECT osID FROM CommunityStoreOrderStatuses ORDER BY osSortOrder ASC, osID ASC");
         $statuses = array();
         if (count($rows) > 0) {
             foreach ($rows as $row) {
@@ -93,8 +96,9 @@ class OrderStatus extends Object
             $textHelper = new TextHelper();
             $osName = $textHelper->unhandle($osHandle);
         }
-        $db = \Database::connection();
-        $sql = "INSERT INTO " . self::getTableName() . " (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $sql = "INSERT INTO CommunityStoreOrderStatuses (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
         $values = array(
             $osHandle,
             $osName,
@@ -186,8 +190,10 @@ class OrderStatus extends Object
 
     private function setColumn($column, $value)
     {
-        $sql = "UPDATE " . self::getTableName() . " SET " . $column . "=? WHERE osID=?";
-        \Database::connection()->Execute($sql, array($column, $value));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $sql = "UPDATE CommunityStoreOrderStatuses SET " . $column . "=? WHERE osID=?";
+        $db->Execute($sql, array($column, $value));
     }
 
     public static function setNewStartingStatus($osHandle = null)
@@ -195,9 +201,10 @@ class OrderStatus extends Object
         if ($osHandle) {
             $currentStartingStatus = self::getByHandle($osHandle);
             if ($currentStartingStatus) {
-                $db = \Database::connection();
-                $db->query("UPDATE " . self::getTableName() . " SET osIsStartingStatus=0 WHERE 1=1");
-                $db->query("UPDATE " . self::getTableName() . " SET osIsStartingStatus=1 WHERE osHandle=?", array($osHandle));
+                $app = Application::getFacadeApplication();
+                $db = $app->make('database')->connection();
+                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=0 WHERE 1=1");
+                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=1 WHERE osHandle=?", array($osHandle));
             }
         }
     }
@@ -220,7 +227,9 @@ class OrderStatus extends Object
             $columnPhrase = implode('=?, ', array_keys($orderStatusUpdateColumns)) . "=?";
             $values = array_values($orderStatusUpdateColumns);
             $values[] = $this->osID;
-            \Database::connection()->Execute("UPDATE " . self::getTableName() . " SET " . $columnPhrase . " WHERE osID=?", $values);
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $db->Execute("UPDATE CommunityStoreOrderStatuses SET " . $columnPhrase . " WHERE osID=?", $values);
             if ($startingStatusHandle) {
                 self::setNewStartingStatus($startingStatusHandle);
             }

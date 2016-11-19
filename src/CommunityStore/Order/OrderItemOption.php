@@ -89,22 +89,20 @@ class OrderItemOption
 
     public static function getByID($oioID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $oioID);
     }
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -180,7 +180,7 @@ if($products){
 
                                 $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
                                     ar.push($(this).val());
-                                })
+                                });
 
                                 ar.sort(communityStore.sortNumber);
 

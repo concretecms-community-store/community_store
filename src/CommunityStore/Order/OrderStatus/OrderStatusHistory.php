@@ -114,7 +114,8 @@ class OrderStatusHistory extends Object
 
     private static function getByID($oshID)
     {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE oshID=?", $oshID);
         $history = null;
         if (!empty($data)) {
@@ -173,14 +174,14 @@ class OrderStatusHistory extends Object
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

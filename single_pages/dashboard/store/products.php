@@ -396,7 +396,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             var options = {
                                 multipleSelection: true,
                                 filters : [{ field : 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
-                            }
+                            };
 
                             ConcreteFileManager.launchDialog(function (data) {
                                 ConcreteFileManager.getFileDetails(data.fID, function(r) {
@@ -499,7 +499,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 $(this).attr("data-order",i);
                                 $(this).find('.optGroupID').attr("name","optGroup"+i+"[]");
                             });
-                        };
+                        }
 
                         //Make items sortable. If we re-sort them, re-index them.
                         $("#product-options-container").sortable({
@@ -659,7 +659,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
                             </div>
                             <div class="col-sm-2">
-                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>);" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>)" class="btn btn-danger"><i class="fa fa-times"></i></a>
                             </div>
                         </div>
                         <input type="hidden" name="optGroup<%=optGroup%>[]" class="optGroupID" value="">
@@ -682,7 +682,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             });
                         });
 
-                    };
+                    }
+
                     function addOptionItem(group){
                         var optItemsTemplate = _.template($('#option-item-template').html());
                         var optItemsContainer = $(".option-group-item-container[data-group='"+group+"']");
@@ -979,7 +980,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 quietMillis: 250,
                                 data: function (term, page) {
                                     return {
-                                        q: term, // search term
+                                        q: term // search term
                                     };
                                 },
                                 results: function (data) {
@@ -999,7 +1000,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             minimumInputLength: 2,
                             initSelection: function(element, callback) {
                                 callback({});
-                            },
+                            }
                         }).select2('val', []);
 
                         $('#product-select').on("change", function(e) {
@@ -1215,14 +1216,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
         <table class="ccm-search-results-table">
             <thead>
-            <th><a><?= t('Primary Image')?></a></th>
-            <th><a href="<?=  $productList->getSortURL('alpha');?>"><?= t('Product Name')?></a></th>
-            <th><a href="<?=  $productList->getSortURL('active');?>"><?= t('Active')?></a></th>
-            <th><a><?= t('Stock Level')?></a></th>
-            <th><a href="<?=  $productList->getSortURL('price');?>"><?= t('Price')?></a></th>
-            <th><a><?= t('Featured')?></a></th>
-            <th><a><?= t('Groups')?></a></th>
-            <th><a><?= t('Actions')?></a></th>
+                <tr>
+                    <th><a><?= t('Primary Image')?></a></th>
+                    <th><a href="<?=  $productList->getSortURL('alpha');?>"><?= t('Product Name')?></a></th>
+                    <th><a href="<?=  $productList->getSortURL('active');?>"><?= t('Active')?></a></th>
+                    <th><a><?= t('Stock Level')?></a></th>
+                    <th><a href="<?=  $productList->getSortURL('price');?>"><?= t('Price')?></a></th>
+                    <th><a><?= t('Featured')?></a></th>
+                    <th><a><?= t('Groups')?></a></th>
+                    <th><a><?= t('Actions')?></a></th>
+                </tr>
             </thead>
             <tbody>
 

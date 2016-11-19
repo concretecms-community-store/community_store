@@ -1,8 +1,10 @@
 var communityStore = {
 
     openModal: function (content, animatecart) {
-        if ($(".store-whiteout").length) {
-            $(".store-whiteout").empty().html(content);
+        var whiteout = $(".store-whiteout");
+
+        if (whiteout.length) {
+            whiteout.empty().html(content);
         } else {
             $("body").append("<div class='store-whiteout'>" + content + "</div>");
 
@@ -10,7 +12,7 @@ var communityStore = {
                 $('.store-cart-modal').addClass('store-cart-modal-active');
             }, 10);
 
-            $(".store-whiteout").click(function (e) {
+            whiteout.click(function (e) {
                 if (e.target != this) return;  // only allow the actual whiteout background to close the dialog
                 communityStore.exitModal();
             });
@@ -186,14 +188,14 @@ var communityStore = {
         $.ajax({
             url: CARTURL + '/getCartSummary',
             success: function (response) {
-                values = $.parseJSON(response);
-                itemCount = values.itemCount;
-                subTotal = values.subTotal;
-                total = values.total;
-                totalCents = values.totalCents;
-                taxes = values.taxes;
-                shippingTotal = values.shippingTotal;
-                shippingTotalRaw = values.shippingTotalRaw;
+                var values = $.parseJSON(response);
+                var itemCount = values.itemCount;
+                var subTotal = values.subTotal;
+                var total = values.total;
+                var totalCents = values.totalCents;
+                var taxes = values.taxes;
+                var shippingTotal = values.shippingTotal;
+                var shippingTotalRaw = values.shippingTotalRaw;
 
 
                 if (itemCount == 0) {
@@ -367,7 +369,7 @@ $(document).ready(function () {
             var value = $(el).find(".form-control").val();
             $('.store-summary-order-choices-' + akID).html(value.replace(/[\n\r]/g, '<br>'));
             $('#store-checkout-form-group-payment').append('<input name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
-        });;
+        });
 
         communityStore.waiting();
         var obj = $(this);
@@ -523,13 +525,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-btn-add-to-cart', function(e) {
-        communityStore.addToCart($(this).data('product-id'),$(this).data('add-type'))
+        communityStore.addToCart($(this).data('product-id'),$(this).data('add-type'));
         e.preventDefault();
     });
 
 
     $(document).on('click', '.store-btn-cart-list-remove', function(e) {
-        communityStore.removeItem($(this).data('instance-id'),$(this).data('modal'))
+        communityStore.removeItem($(this).data('instance-id'),$(this).data('modal'));
         e.preventDefault();
     });
 

@@ -107,7 +107,7 @@ if ($product->hasVariations()) {
 
                 $('#form-add-to-cart-modal-<?= $product->getID()?> select').each(function(){
                     ar.push($(this).val());
-                })
+                });
 
                 ar.sort();
 

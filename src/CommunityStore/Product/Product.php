@@ -419,29 +419,23 @@ class Product
 
     public static function getByID($pID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $pID);
     }
 
     public static function getBySKU($pSKU)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findOneBy(array('pSKU' => $pSKU));
     }
 
     public static function getByCollectionID($cID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
     }
 
-    public function saveProduct($data)
+    public static function saveProduct($data)
     {
         if ($data['pID']) {
             //if we know the pID, we're updating.
@@ -835,13 +829,13 @@ class Product
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete() {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -1062,7 +1056,7 @@ class Product
      */
     public function getTotalSold()
     {
-        $db = \Database::connection();
+        $db = $this->app->make('database')->connection();
         $results = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE pID = ?", $this->pID);
 
         return count($results);
@@ -1089,7 +1083,7 @@ class Product
     }
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = \Database::connection();
+        $db = $this->app->make('database')->connection();
         $av = false;
         $v = array($this->getID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);

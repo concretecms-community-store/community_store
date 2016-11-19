@@ -68,17 +68,13 @@ class ProductLocation
 
     public static function getByID($cID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $cID);
     }
 
     public static function getLocationsForProduct(StoreProduct $product)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
@@ -123,14 +119,14 @@ class ProductLocation
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

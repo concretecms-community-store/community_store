@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Database;
 use Controller;
 
 abstract class ShippingMethodTypeMethod extends Controller
@@ -55,7 +54,7 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public static function getByID($smtmID)
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         return $em->getRepository(get_called_class())->find($smtmID);
     }
 
@@ -65,13 +64,13 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

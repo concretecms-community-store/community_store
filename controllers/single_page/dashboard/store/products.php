@@ -4,10 +4,6 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
-use View;
-use FilePermissions;
-use TaskPermission;
-use File;
 use PageType;
 use GroupList;
 
@@ -254,9 +250,7 @@ class Products extends DashboardPageController
         $this->requireAsset('core/sitemap');
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
-        
-        $this->set('fp',FilePermissions::getGlobal());
-        $this->set('tp', new TaskPermission());
+
         $this->set('al', Core::make('helper/concrete/asset_library'));
 
         $this->requireAsset('css', 'communityStoreDashboard');

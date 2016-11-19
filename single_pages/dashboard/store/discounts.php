@@ -24,13 +24,15 @@ $currencySymbol = Config::get('community_store.symbol');
     <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
             <thead>
-                <th><a><?= t('Name')?></a></th>
-                <th><a><?= t('Display')?></a></th>
-                <th><a><?= t('Discount')?></a></th>
-                <th><a><?= t('Applies')?></a></th>
-                <th><a><?= t('Availability')?></a></th>
-                <th><a><?= t('Enabled')?></a></th>
-                <th><a><?= t('Actions')?></a></th>
+                <tr>
+                    <th><a><?= t('Name')?></a></th>
+                    <th><a><?= t('Display')?></a></th>
+                    <th><a><?= t('Discount')?></a></th>
+                    <th><a><?= t('Applies')?></a></th>
+                    <th><a><?= t('Availability')?></a></th>
+                    <th><a><?= t('Enabled')?></a></th>
+                    <th><a><?= t('Actions')?></a></th>
+                </tr>
             </thead>
             <tbody>
 
@@ -369,7 +371,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
                         <?php if ($code->isUsed()) { ?>
                             <tr>
-                                <td><strike><?= $code->getCode(); ?></strike></td>
+                                <td><del><?= $code->getCode(); ?></del></td>
                                 <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>

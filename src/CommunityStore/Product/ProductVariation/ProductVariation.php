@@ -6,8 +6,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Doctrine\Common\Collections\ArrayCollection;
-use Database;
 use File;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @Entity
@@ -447,7 +447,8 @@ class ProductVariation
             }
         }
 
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         if (!empty($variationIDs)) {
             $options = implode(',', $variationIDs);
@@ -468,17 +469,13 @@ class ProductVariation
 
     public static function getByID($pvID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $pvID);
     }
 
     public static function getBySKU($pvSKU)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findOneBy(array('pvSKU' => $pvSKU));
     }
 
@@ -504,7 +501,8 @@ class ProductVariation
 
     public static function getByOptionItemIDs(array $optionids)
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         if (is_array($optionids) && !empty($optionids)) {
             $options = implode(',', $optionids);
@@ -519,22 +517,20 @@ class ProductVariation
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public static function getVariationsForProduct(StoreProduct $product)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

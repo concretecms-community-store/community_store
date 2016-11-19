@@ -29,7 +29,7 @@ class Price
         return $price;
     }
 
-    public function getFloat($price)
+    public static function getFloat($price)
     {
         $symbol = Config::get('community_store.symbol');
         $wholeSep = Config::get('community_store.whole');

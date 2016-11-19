@@ -6,8 +6,8 @@
     
     <form method="post" action="<?= $this->action('edit')?>" id="ccm-attribute-key-form">
     
-        <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-        <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('key' => $key, 'groups' => $groups, 'groupList' => $groupList)); ?>
+        <?php \View::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+        <?php \View::element("attribute/type_form_order_groups", array('key' => $key, 'groups' => $groups, 'groupList' => $groupList),'community_store'); ?>
     
     </form>
 
@@ -15,14 +15,14 @@
 
     <?php  if (isset($type)) { ?>
         <form method="post" action="<?= $this->action('add')?>" id="ccm-attribute-key-form">
-            <?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
-            <?php Loader::packageElement("attribute/type_form_order_groups", 'community_store', array('key' => $key, 'groups' => $groups, 'groupList' => $groupList)); ?>
+            <?php \View::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+            <?php \View::element("attribute/type_form_order_groups", array('key' => $key, 'groups' => $groups, 'groupList' => $groupList),'community_store'); ?>
         </form> 
     <?php  } ?>
     
 <?php  } else {
 
-    Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/orders/attributes')); ?>
+    \View::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/orders/attributes')); ?>
 
     <form method="get" class="form-horizontal" action="<?= $this->action('select_type')?>" id="ccm-attribute-type-form">
         

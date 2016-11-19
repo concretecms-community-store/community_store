@@ -393,7 +393,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <form action="<?=URL::to("/dashboard/store/orders/markpaid",$order->getOrderID())?>" method="post">
                        <div class="form-group">
                        <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
-                       <input type="text" class="form-control ccm-input-text" name="transactionReference" />
+                       <input type="text" class="form-control ccm-input-text" id="transactionReference" name="transactionReference" />
                        </div>
                         <input type="submit" class="btn btn-default" value="<?= t("Mark Paid")?>">
                     </form>
@@ -401,7 +401,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <form action="<?=URL::to("/dashboard/store/orders/markrefunded",$order->getOrderID())?>" method="post">
                            <div class="form-group">
                            <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
-                           <input type="text" class="form-control ccm-input-text" name="oRefundReason" />
+                           <input type="text" class="form-control ccm-input-text" id="oRefundReason" name="oRefundReason" />
                            </div>
                             <input type="submit" class="btn btn-default" value="<?= t("Mark Refunded")?>">
                         </form>
@@ -479,13 +479,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <table class="ccm-search-results-table">
         <thead>
-            <th><a><?= t("Order %s","#")?></a></th>
-            <th><a><?= t("Customer Name")?></a></th>
-            <th><a><?= t("Order Date")?></a></th>
-            <th><a><?= t("Total")?></a></th>
-            <th><a><?= t("Payment")?></a></th>
-            <th><a><?= t("Fulfilment")?></a></th>
-            <th><a><?= t("View")?></a></th>
+            <tr>
+                <th><a><?= t("Order %s","#")?></a></th>
+                <th><a><?= t("Customer Name")?></a></th>
+                <th><a><?= t("Order Date")?></a></th>
+                <th><a><?= t("Total")?></a></th>
+                <th><a><?= t("Payment")?></a></th>
+                <th><a><?= t("Fulfilment")?></a></th>
+                <th><a><?= t("View")?></a></th>
+            </tr>
         </thead>
         <tbody>
             <?php
@@ -495,8 +497,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 $canstart = '';
                 $canend = '';
                 if ($cancelled) {
-                    $canstart = '<strike>';
-                    $canend = '</strike>';
+                    $canstart = '<del>';
+                    $canend = '</del>';
                 }
             ?>
                 <tr class="danger">

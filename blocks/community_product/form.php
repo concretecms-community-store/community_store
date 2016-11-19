@@ -98,7 +98,7 @@
         } else {
             $("#product-search").show();
         }
-    };
+    }
     updateProductLocation();
 
     $(document).ready(function () {
@@ -110,7 +110,7 @@
                 quietMillis: 250,
                 data: function (term, page) {
                     return {
-                        q: term, // search term
+                        q: term // search term
                     };
                 },
                 results: function (data) {
@@ -130,7 +130,7 @@
             minimumInputLength: 2,
             initSelection: function(element, callback) {
                 callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? $product->getName() : '');?>' });
-            },
-        }).select2('val', []);;
+            }
+        }).select2('val', []);
     });
 </script>

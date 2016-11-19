@@ -124,9 +124,7 @@ class Method extends Controller
 
     public static function getByID($pmID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         $method = $em->find(get_class(), $pmID);
 
         if ($method) {
@@ -138,9 +136,7 @@ class Method extends Controller
 
     public static function getByHandle($pmHandle)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         $method = $em->getRepository(get_class())->findOneBy(array('pmHandle' => $pmHandle));
 
         if ($method) {
@@ -199,9 +195,7 @@ class Method extends Controller
 
     public static function getMethods($enabled = false)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         if ($enabled) {
             $methods = $em->getRepository(get_class())->findBy(array('pmEnabled' => 1), array('pmSortOrder'=>'ASC'));
         } else {
@@ -261,7 +255,7 @@ class Method extends Controller
 
     public function save(array $data = [])
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -273,7 +267,7 @@ class Method extends Controller
 
     public function remove()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

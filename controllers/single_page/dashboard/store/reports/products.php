@@ -68,7 +68,7 @@ class Products extends DashboardPageController
 
 
         if ($productid) {
-            $db = \Database::connection();
+            $db = $this->app->make('database')->connection();
 
             $sql = 'SELECT csoi.oiID from CommunityStoreOrderItems csoi, CommunityStoreOrders cso
                     WHERE cso.oID = csoi.oID AND csoi.pID = ?

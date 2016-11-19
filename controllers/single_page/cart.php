@@ -68,7 +68,7 @@ class Cart extends PageController
             if ($this->post('action') == 'remove') {
                 $data = $this->post();
                 if (isset($data['instance'])) {
-                    $result = StoreCart::remove($data['instance']);
+                    StoreCart::remove($data['instance']);
                     $returndata = array('success' => true, 'action' => 'remove');
                 }
             }

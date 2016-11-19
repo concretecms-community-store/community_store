@@ -142,7 +142,7 @@
                     <script>
                         $(function(){
                             $('.paymentMethodEnabled SELECT').on('change',function(){
-                                $this = $(this);
+                                var $this = $(this);
                                 if ($this.val()==1) {
                                     $this.parent().next().slideDown();
                                 } else {

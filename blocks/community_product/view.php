@@ -226,7 +226,7 @@ if (is_object($product) && $product->isActive()) {
 
                 $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input:checked').each(function () {
                     ar.push($(this).val());
-                })
+                });
 
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');

@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
+use Concrete\Core\Support\Facade\Application;
 
 class OrderList  extends AttributedItemList
 {
@@ -31,7 +31,8 @@ class OrderList  extends AttributedItemList
         }
 
         if (isset($this->status)) {
-            $db = \Database::connection();
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
             $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrderStatusHistories t1
                                             WHERE oshStatus = ? and
                                                 t1.oshDate = (SELECT MAX(t2.oshDate)
@@ -142,7 +143,8 @@ class OrderList  extends AttributedItemList
 
     public static function getDateOfFirstOrder()
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $date = $db->GetRow("SELECT * FROM CommunityStoreOrders ORDER BY oDate ASC LIMIT 1");
 
         return $date['oDate'];
@@ -151,7 +153,8 @@ class OrderList  extends AttributedItemList
     {
         $orders = $this->getResults();
         $orderItems = array();
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         foreach ($orders as $order) {
             $oID = $order->getOrderID();
             $OrderOrderItems = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $oID);

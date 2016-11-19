@@ -224,7 +224,6 @@ class Installer
                     'uakProfileEdit' => true,
                     'uakProfileEditRequired' => false,
                     'uakRegisterEdit' => false,
-                    'uakProfileEditRequired' => false,
                     'akCheckedByDefault' => true,
                 );
             }
@@ -304,7 +303,8 @@ class Installer
     public static function installOrderStatuses($pkg)
     {
         $table = StoreOrderStatus::getTableName();
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $statuses = array(
             array('osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1),
             array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),

@@ -1,17 +1,18 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\Attribute\Key;
 
-use Database;
 use AttributeSet;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
 use Concrete\Core\Attribute\Key\Key as Key;
+use Concrete\Core\Support\Facade\Application;
 
 class StoreOrderKey extends Key
 {
     public function getAttributes($oID, $method = 'getValue')
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $values = $db->GetAll("select akID, avID from CommunityStoreOrderAttributeValues where oID = ?", array($oID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
@@ -28,7 +29,8 @@ class StoreOrderKey extends Key
     public function load($akID, $loadBy = 'akID')
     {
         parent::load($akID);
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $row = $db->GetRow("select * from CommunityStoreOrderAttributeKeys where akID = ?", array($akID));
         $this->setPropertiesFromArray($row);
     }
@@ -43,7 +45,8 @@ class StoreOrderKey extends Key
 
     public function getAttributeGroups()
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $groups = array();
         $allGroups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", array($this->akID));
         foreach ($allGroups as $group) {
@@ -63,7 +66,8 @@ class StoreOrderKey extends Key
 
     public static function getByHandle($akHandle)
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $q = "SELECT ak.akID
             FROM AttributeKeys ak
             INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
@@ -113,7 +117,8 @@ class StoreOrderKey extends Key
     {
         $av = $order->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $v = array($order->getOrderID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CommunityStoreOrderAttributeValues', array(
             'oID' => $order->getOrderID(),
@@ -130,7 +135,8 @@ class StoreOrderKey extends Key
         extract($args);
 
         $akID = $ak->getAttributeKeyID();
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
         if (is_array($groups) && !empty($groups)) {
@@ -151,7 +157,8 @@ class StoreOrderKey extends Key
         extract($args);
         
         $akID = $ak->getAttributeKeyID();
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
 
         $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
@@ -165,7 +172,8 @@ class StoreOrderKey extends Key
     public function delete()
     {
         parent::delete();
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $r = $db->query('select avID from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
             $db->query('delete from AttributeValues where avID = ?', array($row['avID']));

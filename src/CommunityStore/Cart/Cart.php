@@ -346,7 +346,7 @@ class Cart
         return $total;
     }
 
-    public function isShippable()
+    public static function isShippable()
     {
         $shippableItems = self::getShippableItems();
         $shippingMethods = StoreShippingMethod::getAvailableMethods();
@@ -361,7 +361,7 @@ class Cart
         }
     }
 
-    public function getShippableItems()
+    public static function getShippableItems()
     {
         $shippableItems = array();
         //go through items
@@ -378,7 +378,7 @@ class Cart
         return $shippableItems;
     }
 
-    public function getCartWeight()
+    public static function getCartWeight()
     {
         $totalWeight = 0;
         if (self::getCart()) {

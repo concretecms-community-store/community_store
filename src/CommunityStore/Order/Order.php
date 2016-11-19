@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
 use User;
 use Core;
 use Concrete\Core\Mail\Service as MailService;
@@ -26,6 +25,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePa
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @Entity
@@ -371,17 +371,13 @@ class Order
 
     public static function getByID($oID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $oID);
     }
 
     public function getCustomersMostRecentOrderByCID($cID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
     }
 
@@ -393,7 +389,7 @@ class Order
      *
      * @return Order
      */
-    public function add($data, $pm, $transactionReference = '', $status = null)
+    public static function add($data, $pm, $transactionReference = '', $status = null)
     {
         $customer = new StoreCustomer();
         $now = new \DateTime();
@@ -599,7 +595,8 @@ class Order
                     $newusername .= rand(0, 9);
                 }
 
-                $user = UserInfo::add(array('uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password));
+                $userRegistrationService = \Core::make('Concrete\Core\User\RegistrationServiceInterface');
+                $user = $userRegistrationService->create(array('uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password));
 
                 if (Config::get('concrete.user.registration.email_registration')) {
                     $mh->addParameter('username', trim($email));
@@ -783,21 +780,22 @@ class Order
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public function remove()
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
         foreach ($rows as $row) {
             $db->query("DELETE FROM CommunityStoreOrderItemOptions WHERE oiID=?", array($row['oiID']));
@@ -875,7 +873,8 @@ class Order
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $av = false;
         $v = array($this->getOrderID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
@@ -905,7 +904,8 @@ class Order
 
     public function addDiscount($discount, $code = '')
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         //add the discount
         $vals = array($this->oID, $discount->drName, $discount->getDisplay(), $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code);
@@ -914,7 +914,8 @@ class Order
 
     public function getAppliedDiscounts()
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderDiscounts WHERE oID=?", $this->oID);
 
         return $rows;

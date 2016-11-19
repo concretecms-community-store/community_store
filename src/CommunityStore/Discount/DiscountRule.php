@@ -392,15 +392,14 @@ class DiscountRule
 
     public static function getByID($drID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->find(get_class(), $drID);
     }
 
     public static function discountsWithCodesExist()
     {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
 
         return $data['codecount'] > 0;
@@ -408,7 +407,8 @@ class DiscountRule
 
     public static function findAutomaticDiscounts($user = null, $productlist = array())
     {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
               WHERE drEnabled = 1
               AND drDeleted IS NULL
@@ -428,7 +428,7 @@ class DiscountRule
 
     public function retrieveStatistics()
     {
-        $db = \Database::connection();
+        $db = $this->app->make('database')->connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", array($this->drID));
         $r = $r->fetchRow();
         $this->totalCodes = $r['total'];
@@ -439,7 +439,8 @@ class DiscountRule
 
     public static function findDiscountRuleByCode($code, $user = null)
     {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
         LEFT JOIN CommunityStoreDiscountRules as dr on dc.drID = dr.drID
@@ -475,7 +476,7 @@ class DiscountRule
         if ($data['drDeductType'] == 'percentage') {
             $data['drValue'] = null;
         } else {
-            $data['drPercentage'] == null;
+            $data['drPercentage'] = null;
         }
 
         $discountRule->setEnabled($data['drEnabled'] ? true : false);
@@ -507,14 +508,14 @@ class DiscountRule
 
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

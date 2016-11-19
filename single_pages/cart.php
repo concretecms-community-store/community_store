@@ -54,7 +54,7 @@ if ($cart) {
                         <?php $thumb = $product->getImageThumb(); ?>
                         <?php if ($thumb) { ?>
                         <td class="store-cart-list-thumb">
-                            <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                            <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                                 <?=  $product->getImageThumb() ?>
                             </a>
                         </td>
@@ -62,7 +62,7 @@ if ($cart) {
                         <?php } else { ?>
                         <td class="store-cart-product-name" colspan="2">
                         <?php } ?>
-                        <a href="<?= URL::page(Page::getByID($product->getPageID())) ?>">
+                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
                             <?= $product->getName() ?>
                         </a>
 
@@ -122,7 +122,7 @@ if ($cart) {
                                 1
                             <?php } ?>
 
-                            <a name="action" value="remove" data-instance="<?= $k ?>"
+                            <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
                                     class="fa fa-remove"></i><?php //echo t("Remove")
                                 ?></a>

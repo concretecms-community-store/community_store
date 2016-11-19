@@ -21,7 +21,7 @@ class ProductFinder extends Controller
             exit;
         } else {
             $query = $_GET['q'];
-            $db = \Database::connection();
+            $db = $this->app->make('database')->connection();
             $results = $db->query('SELECT * FROM CommunityStoreProducts WHERE pName LIKE ? OR pSKU LIKE ? ', array('%'. $query . '%','%'. $query . '%'));
             $resultsArray = array();
 

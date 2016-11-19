@@ -1,5 +1,5 @@
 {
-  "name": "mesuva/community_store",
+  "name": "concrete5-community-store/community_store",
   "type": "concrete5-package",
   "require": {
     "php": ">=5.4",
@@ -8,8 +8,6 @@
   "minimum-stability": "dev",
   "support": {
     "source": "https://github.com/concrete5-community-store/community_store/src"
-  },
-  "require": {
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\Attribute\Value;
 
-use Database;
 use Concrete\Core\Attribute\Value\Value as Value;
+use Concrete\Core\Support\Facade\Application;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class StoreOrderValue extends Value
@@ -23,7 +23,8 @@ class StoreOrderValue extends Value
 
     public function delete()
     {
-        $db = \Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $db->query('delete from CommunityStoreOrderAttributeValues where oID = ? and akID = ? and avID = ?', array(
             $this->order->getOrderID(),
             $this->attributeKey->getAttributeKeyID(),

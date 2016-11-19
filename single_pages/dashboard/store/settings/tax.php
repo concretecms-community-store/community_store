@@ -111,9 +111,11 @@ if(in_array($controller->getTask(),$addViews)){
 	
 	<table class="table table-striped">
         <thead>
-            <th><?= t("Tax Class")?></th>
-            <th><?= t("Associated Tax Rates")?></th>
-            <th class="text-right"><?= t("Actions")?></th>
+            <tr>
+                <th><?= t("Tax Class")?></th>
+                <th><?= t("Associated Tax Rates")?></th>
+                <th class="text-right"><?= t("Actions")?></th>
+            </tr>
         </thead>
         <tbody>
             <?php if(count($taxClasses)>0){?>
@@ -144,10 +146,12 @@ if(in_array($controller->getTask(),$addViews)){
 	
 	<table class="table table-striped">
 		<thead>
-			<th><?= t("Tax Rate")?></th>
-			<th><?= t("Rate")?></th>
-			<th><?= t("Enabled")?></th>
-			<th class="text-right"><?= t("Actions")?></th>
+			<tr>
+                <th><?= t("Tax Rate")?></th>
+                <th><?= t("Rate")?></th>
+                <th><?= t("Enabled")?></th>
+                <th class="text-right"><?= t("Actions")?></th>
+            </tr>
 		</thead>
 		<tbody>
 		    <?php if(count($taxRates)>0){?>

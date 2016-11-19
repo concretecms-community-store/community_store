@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Database;
 use Package;
 use View;
 use Illuminate\Filesystem\Filesystem;
@@ -131,9 +130,7 @@ class ShippingMethod
         $ident = explode('_', $smID);
         $smID = $ident[0];
 
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         $method =  $em->find(get_called_class(), $smID);
 
         if ($method) {
@@ -148,7 +145,7 @@ class ShippingMethod
 
     public static function getAvailableMethods($methodTypeID = null)
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         if ($methodTypeID) {
             $methods = $em->getRepository(get_called_class())->findBy(array('smtID' => $methodTypeID, 'smEnabled'=>'1'));
         } else {
@@ -191,14 +188,14 @@ class ShippingMethod
     }
     public function save()
     {
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
     public function delete()
     {
         $this->getShippingMethodTypeMethod()->delete();
-        $em = \Database::connection()->getEntityManager();
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

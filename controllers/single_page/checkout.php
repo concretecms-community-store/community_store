@@ -59,7 +59,7 @@ class Checkout extends PageController
 
         $allcountries = Core::make('helper/lists/countries')->getCountries();
 
-        $db = \Database::connection();
+        $db = $this->app->make('database')->connection();
 
         $ak = UserAttributeKey::getByHandle('billing_address');
         $aktype = $ak->getAttributeKeyType();

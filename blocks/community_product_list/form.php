@@ -185,7 +185,7 @@ if ($relatedProduct) {
                     quietMillis: 250,
                     data: function (term, page) {
                         return {
-                            q: term, // search term
+                            q: term // search term
                         };
                     },
                     results: function (data) {
@@ -205,7 +205,7 @@ if ($relatedProduct) {
                 minimumInputLength: 2,
                 initSelection: function(element, callback) {
                     callback({text:<?php echo json_encode($relatedProductName);?>,id:'<?= $relatedPID; ?>'});
-                },
+                }
             }).select2('val', []);
 
         });

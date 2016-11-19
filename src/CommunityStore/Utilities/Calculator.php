@@ -94,6 +94,8 @@ class Calculator
         $adjustedShippingTotal = $shippingTotal;
 		$discountRatio = 1;
         $discountShippingRatio = 1;
+
+        $formattedtaxes = array();
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
                 if ($discount->getDeductFrom() == 'subtotal') {
