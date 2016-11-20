@@ -6,6 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 
 class ProductList extends AttributedItemList
 {
@@ -182,6 +183,9 @@ class ProductList extends AttributedItemList
                 if (!empty($relatedids)) {
                     $query->addOrderBy('FIELD (pID, '. implode(',', $relatedids) .')');
                 }
+                break;
+            case "category":
+                $query->addOrderBy('categorySortOrder');
                 break;
         }
         if ($this->featuredOnly) {

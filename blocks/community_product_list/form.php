@@ -35,7 +35,15 @@
 
             <div class="form-group">
                 <?= $form->label('sortOrder', t('Sort Order')); ?>
-                <?= $form->select('sortOrder', array('alpha' => t("Alphabetical"), 'date' => t('Date Added'),'price_asc' => t('Price Ascending'), 'price_desc' => t('Price Descending'), 'popular' => t('Best Sellers'), 'related' => t("Related Products Order"), ), $sortOrder); ?>
+                <?= $form->select('sortOrder', array(
+                    'alpha' => t("Alphabetical"),
+                    'date' => t('Date Added'),
+                    'price_asc' => t('Price Ascending'),
+                    'price_desc' => t('Price Descending'),
+                    'popular' => t('Best Sellers'),
+                    'related' => t("Related Products Order"),
+                    'category' => t("Category Sort Order"),
+                    ), $sortOrder); ?>
             </div>
 
         </fieldset>
@@ -221,6 +229,12 @@ if ($relatedProduct) {
             $('#sortOrder option[value="related"]').prop('disabled', true);
         }
 
+        if (initfilter.val() == 'current' || initfilter.val() == 'page') {
+            $('#sortOrder option[value="category"]').prop('disabled', false);
+        } else {
+            $('#sortOrder option[value="category"]').prop('disabled', true);
+        }
+
         $('#filter').change(function () {
             if ($(this).val() == 'page' || $(this).val() == 'page_children') {
                 $('#pageselector>div').show();
@@ -244,6 +258,13 @@ if ($relatedProduct) {
                     $("#sortOrder").val($("#sortOrder option:first").val());
                 }
             }
+
+            if ($(this).val() == 'current' || $(this).val() == 'page') {
+                $('#sortOrder option[value="category"]').prop('disabled', false);
+            } else {
+                $('#sortOrder option[value="category"]').prop('disabled', true);
+            }
+
 
         });
 
