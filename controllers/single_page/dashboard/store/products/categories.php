@@ -36,7 +36,7 @@ class Categories extends DashboardPageController
         $this->set('products', $products->getResults());
         $this->set('page', $page);
         $this->set('cID', $cID);
-        $this->set('pageTitle', t('Manage Category: ', $page->getCollectionName()));
+        $this->set('pageTitle', t('Manage Category: ' . $page->getCollectionName()));
     }
 
     public function save($cID) {

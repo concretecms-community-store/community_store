@@ -4,7 +4,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 
 <?php if ($controller->getTask() == 'view') { ?>
-    <p><?php echo t('The following pages have been used to categorise products:'); ?></p>
+    <?php if (count($pages) > 0) { ?>
+    <p><?= t('The following pages have been used to categorise products:'); ?></p>
+    <?php }  else { ?>
+        <p class="alert alert-info"><?= t('No pages have been used to categorise products'); ?></p>
+    <?php } ?>
 
     <?php foreach ($pages as $key => $pageinfo) { ?>
         <p>
@@ -20,7 +24,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
     <ul class="list-group" id="product-list">
     <?php foreach($products as $product) { ?>
-        <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right"></i> <?= $product->getName(); ?>
+        <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right"></i>
+            <?= $product->getImageThumb();?>
+
+            <?= $product->getName(); ?>
         <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />
         </li>
     <?php } ?>
@@ -35,7 +42,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <a href="<?= \URL::to('/dashboard/store/products/')?>" class="btn btn-default pull-left"><?= t("Cancel")?></a>
+        <a href="<?= \URL::to('/dashboard/store/products/categories')?>" class="btn btn-default pull-left"><?= t("Cancel")?></a>
         <button class="pull-right btn btn-success"  type="submit" ><?= t('Save Category Product Order')?></button>
     </div>
 </div>

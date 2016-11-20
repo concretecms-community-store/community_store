@@ -110,7 +110,7 @@ class ProductLocation
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()), array('productSortOrder'=>'asc'));
     }
 
     public static function getProductsForLocation($cID)
@@ -118,18 +118,37 @@ class ProductLocation
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository(get_class())->findBy(array('cID' => $cID));
+        return $em->getRepository(get_class())->findBy(array('cID' => $cID), array('categorySortOrder'=>'asc'));
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)
     {
-        //clear out existing locations
-        self::removeLocationsForProduct($product);
+        $saveLocations = array();
+        $existingLocationID = array();
+
+        foreach($locations['cID'] as $cID) {
+            $saveLocations[] = $cID;
+        }
+
+        $existingLocations = self::getLocationsForProduct($product);
+
+        foreach($existingLocations as $existingLocation) {
+            if (!in_array($existingLocation->getCollectionID(), $saveLocations)) {
+                // no longer in list, so remove
+                $existingLocation->delete();
+            } else {
+                $arrayPosition = array_search($existingLocation->getCollectionID(), $saveLocations);
+                $existingLocation->setProductSortOrder($arrayPosition);
+                $existingLocation->save();
+                $existingLocationID[] = $existingLocation->getCollectionID();
+            }
+        }
+
         //add new ones.
         if (!empty($locations['cID'])) {
-            foreach ($locations['cID'] as $cID) {
-                if ($cID > 0) {
-                    self::add($product, $cID);
+            foreach ($locations['cID'] as $key=>$cID) {
+                if ($cID > 0 && !in_array($cID, $existingLocationID)) {
+                    self::add($product, $cID, $key);
                 }
             }
         }
@@ -163,11 +182,12 @@ class ProductLocation
         return $pages;
     }
 
-    public static function add($product, $cID)
+    public static function add($product, $cID, $productSortOrder = 0)
     {
         $location = new self();
         $location->setProduct($product);
         $location->setCollectionID($cID);
+        $location->setProductSortOrder($productSortOrder);
         $location->save();
 
         return $location;

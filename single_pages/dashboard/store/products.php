@@ -239,12 +239,18 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             foreach ($locationPages as $location) {
                                 if ($location) {
                                     $page = \Page::getByID($location->getCollectionID());
-                                    echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a> <i class="fa fa-arrows drag-handle pull-right"></i><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
                                 }
                             }
                         }
                         ?>
                     </ul>
+
+                    <script type="text/javascript">
+                        $(function() {
+                            $('#pagelocations').sortable({axis: 'y'});
+                        });
+                    </script>
 
                     <div class="page_picker">
                         <?= $ps->selectPage('noneselection'); ?>
