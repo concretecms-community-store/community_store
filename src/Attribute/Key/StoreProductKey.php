@@ -113,14 +113,16 @@ class StoreProductKey extends Key
         $ak = parent::update($args);
         extract($args);
         $v = array($ak->getAttributeKeyID());
-        $db = $this->app->make('database')->connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $db->query('REPLACE INTO CommunityStoreProductAttributeKeys (akID) VALUES (?)', $v);
     }
 
     public function delete()
     {
         parent::delete();
-        $db = $this->app->make('database')->connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $r = $db->query('select avID from CommunityStoreProductAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
             $db->query('delete from AttributeValues where avID = ?', array($row['avID']));

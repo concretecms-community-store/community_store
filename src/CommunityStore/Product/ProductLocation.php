@@ -105,23 +105,14 @@ class ProductLocation
 
     public static function getLocationsForProduct(StoreProduct $product)
     {
-<<<<<<< HEAD
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
-=======
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
         return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()), array('productSortOrder'=>'asc'));
     }
 
     public static function getProductsForLocation($cID)
     {
-        $db = \Database::connection();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager();
         return $em->getRepository(get_class())->findBy(array('cID' => $cID), array('categorySortOrder'=>'asc'));
->>>>>>> category-sorting
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)
@@ -168,7 +159,9 @@ class ProductLocation
     // returns an associated array of pages, with the page name as the key, alphabetically sorted
     // each value is an array that includes a page object and product count for that category
     public static function getLocationPages() {
-        $db = \Database::connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+
         $query = $db->query('select count(*) as productCount, max(cID) as cID from CommunityStoreProductLocations group by cID');
 
         $pages = array();

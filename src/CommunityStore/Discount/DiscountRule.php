@@ -428,7 +428,8 @@ class DiscountRule
 
     public function retrieveStatistics()
     {
-        $db = $this->app->make('database')->connection();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", array($this->drID));
         $r = $r->fetchRow();
         $this->totalCodes = $r['total'];

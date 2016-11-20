@@ -25,6 +25,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @Entity
@@ -1056,7 +1057,8 @@ class Product
      */
     public function getTotalSold()
     {
-        $db = $this->app->make('database')->connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $results = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE pID = ?", $this->pID);
 
         return count($results);
@@ -1083,7 +1085,8 @@ class Product
     }
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = $this->app->make('database')->connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $av = false;
         $v = array($this->getID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);
