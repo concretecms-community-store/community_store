@@ -28,7 +28,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
             <?= $product->getImageThumb();?>
 
             <?= $product->getName(); ?>
-        <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />
+            <?= ($product->isActive() ? '' : ' <span class="label label-default">' . t('Inactive'). '</span>'); ?>
+
+            <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />
         </li>
     <?php } ?>
     </ul>
