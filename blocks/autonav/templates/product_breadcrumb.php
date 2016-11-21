@@ -4,7 +4,7 @@ $c = Page::getCurrentPage();
 $product = \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product::getByCollectionID($c->getCollectionID());
 
 if ($product) {
-    $locations = $product->getLocations();
+    $locations = $product->getLocationPages();
 
     if ($locations[0]) {
         $first_location = $locations[0];

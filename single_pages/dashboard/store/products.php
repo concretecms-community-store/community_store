@@ -233,13 +233,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <div class="form-group" id="page_pickers">
 
-                    <ul class="list-group multi-select-list" id="pagelocations">
+                    <ul class="list-group multi-select-list multi-select-sortable" id="pagelocations">
                         <?php
                         if (!empty($locationPages)) {
                             foreach ($locationPages as $location) {
                                 if ($location) {
                                     $page = \Page::getByID($location->getCollectionID());
-                                    echo '<li class="list-group-item">' . $page->getCollectionName() . '<a><i class="pull-right fa fa-minus-circle"></i></a> <i class="fa fa-arrows drag-handle pull-right"></i><input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    echo '<li class="list-group-item">' . $page->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
                                 }
                             }
                         }
@@ -291,7 +291,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                                     //var existing = $('#pagelocations input[value=' + + ']').size();
                                     if($('#pagelocations input[value=' + data.cID + ']').size() == 0) {
-                                        $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
+                                        $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
                                     }
 
                                     $('.page_picker > div').hide();
@@ -1011,7 +1011,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         $('#product-select').on("change", function(e) {
                             var data = $(this).select2('data');
-                            $('#related-products').append('<li class="list-group-item">'+ data.text  +'<input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>');
+                            $('#related-products').append('<li class="list-group-item">'+ data.text  +'<a><i class="pull-right fa fa-minus-circle"></i> <input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /></a> </li>');
                             $(this).select2("val", []);
                         });
 
