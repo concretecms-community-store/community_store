@@ -33,6 +33,7 @@ class Orders extends DashboardPageController
         $this->set('pagination',$pagination);
         $this->set('paginator', $paginator);
         $this->set('orderStatuses', StoreOrderStatus::getList());
+        $this->set('status', $status);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('statuses', StoreOrderStatus::getAll());

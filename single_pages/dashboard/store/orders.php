@@ -455,9 +455,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <div class="ccm-search-fields-row">
             <?php if($statuses){?>
                 <ul id="group-filters" class="nav nav-pills">
-                    <li><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
-                    <?php foreach($statuses as $status){ ?>
-                        <li><a href="<?= \URL::to('/dashboard/store/orders/', $status->getHandle())?>"><?= t($status->getName());?></a></li>
+                    <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
+
+                    <?php foreach($statuses as $statusoption){ ?>
+                        <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle())?>"><?= t($statusoption->getName());?></a></li>
                     <?php } ?>
                 </ul>
             <?php } ?>
