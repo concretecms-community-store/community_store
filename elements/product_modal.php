@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 ?>
-<form class="store-product-modal" id="form-add-to-cart-modal-<?= $product->getID()?>">
+<form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID()?>">
 
     <div class="store-product-modal-info-shell">
 
@@ -24,9 +24,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
         </div>
         <div class="store-product-modal-options">
             <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
-            <div class="store-product-modal-quantiy form-group">
+            <div class="store-product-modal-quantity form-group">
                 <label class="store-option-group-label"><?= t('Quantity')?></label>
-                <input type="number" name="quantity" class="product-qty form-control" value="1" max="<?= $product->getQty()?>">
+                <input type="number" name="quantity" class="store-product-qty form-control" value="1" max="<?= $product->getQty()?>">
             </div>
             <?php } ?>
             <?php
@@ -53,7 +53,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
         <input type="hidden" name="pID" value="<?= $product->getID()?>">
         <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
         <div class="store-product-modal-buttons">
-            <p><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
+            <p><button data-add-type="modal" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
             <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
         </div>
         <?php } ?>
@@ -100,12 +100,12 @@ if ($product->hasVariations()) {
             } ?>
 
 
-            $('#form-add-to-cart-modal-<?= $product->getID()?> select').change(function(){
+            $('#store-form-add-to-cart-modal-<?= $product->getID()?> select').change(function(){
 
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#form-add-to-cart-modal-<?= $product->getID()?> select').each(function(){
+                $('#store-form-add-to-cart-modal-<?= $product->getID()?> select').each(function(){
                     ar.push($(this).val());
                 });
 
