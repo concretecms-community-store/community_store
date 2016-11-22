@@ -15,7 +15,7 @@
                             <li><a href="#settings-tax" data-pane-toggle><?= t('Tax')?></a></li>
                             <li><a href="#settings-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                             <li><a href="#settings-payments" data-pane-toggle><?= t('Payments')?></a></li>
-                            <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Order Statuses')?></a></li>
+                            <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses')?></a></li>
                             <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts')?></a></li>
                             <li><a href="#settings-products" data-pane-toggle><?= t('Products')?></a></li>
                             <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
@@ -154,7 +154,7 @@
                 </div><!-- #settings-payments -->
 
                 <div class="col-sm-9 store-pane" id="settings-order-statuses">
-                    <h3><?= t("Order Statuses")?></h3>
+                    <h3><?= t("Fulfilment Statuses")?></h3>
                     <?php
                     if(count($orderStatuses)>0){ ?>
                         <div class="panel panel-default">
@@ -200,7 +200,7 @@
 
                     <?php
                     } else {
-                        echo t("No Order Statuses are available");
+                        echo t("No Fulfilment Statuses are available");
                     }
                     ?>
 
