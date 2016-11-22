@@ -120,8 +120,11 @@ class ProductLocation
         $saveLocations = array();
         $existingLocationID = array();
 
-        foreach($locations['cID'] as $cID) {
-            $saveLocations[] = $cID;
+
+        if (!empty($locations['cID'])) {
+            foreach ($locations['cID'] as $cID) {
+                $saveLocations[] = $cID;
+            }
         }
 
         $existingLocations = self::getLocationsForProduct($product);
