@@ -28,6 +28,19 @@ class OrderList  extends AttributedItemList
 
         if (isset($this->search)) {
             $this->query->where('oID like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $matchingOrders = $db->query("SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?", array('%'.$this->search.'%'));
+
+            $orderIDs = array();
+            while ($value = $matchingOrders->fetchRow()) {
+                $orderIDs[] = $value['oID'];
+            }
+
+            if (!empty($orderIDs)) {
+               $this->query->orWhere('o.oID in ('.implode(',', $orderIDs).')');
+            }
         }
 
         if (isset($this->status)) {
