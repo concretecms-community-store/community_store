@@ -15,7 +15,7 @@ if ($cart) {
         <tr>
             <th colspan="2"><?= t('Product');?></th>
             <th><?= t('Price');?></th>
-            <th><?= t('Quantity');?></th>
+            <th class="text-center"><?= t('Quantity');?></th>
         </tr>
         </thead>
         <tbody>
