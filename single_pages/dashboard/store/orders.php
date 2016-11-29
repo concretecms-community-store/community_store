@@ -469,7 +469,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <div class="form-group">
                 <div class="ccm-search-main-lookup-field">
                     <i class="fa fa-search"></i>
-                    <?= $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Search by Order Number')))?>
+                    <?= $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Search Orders')))?>
                 </div>
             </div>
             <button type="submit" class="btn btn-default"><?= t('Search')?></button>
@@ -478,6 +478,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     </form>
 
+    <?php if (!empty($orderList)) { ?>
     <table class="ccm-search-results-table">
         <thead>
             <tr>
@@ -547,7 +548,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <?php } ?>
         </tbody>
     </table>
+    <?php } ?>
 </div>
+
+<?php if (empty($orderList)) { ?>
+<br /><p class="alert alert-info"><?= t('No Orders Found');?></p>
+<?php } ?>
 
 <?php if ($paginator->getTotalPages() > 1) { ?>
     <?= $pagination ?>
