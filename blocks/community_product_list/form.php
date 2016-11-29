@@ -125,6 +125,12 @@
             </div>
             <div class="form-group checkbox">
                 <label>
+                    <?= $form->checkbox('showName', 1, $showName); ?>
+                    <?= t('Display Name') ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
                     <?= $form->checkbox('showPrice', 1, $showPrice); ?>
                     <?= t('Display Price') ?>
                 </label>
