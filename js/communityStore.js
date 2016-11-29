@@ -6,7 +6,7 @@ var communityStore = {
         if (whiteout.length) {
             whiteout.empty().html(content);
         } else {
-            $("body").append("<div class='store-whiteout'>" + content + "</div>");
+            $(".ccm-page").append("<div class='store-whiteout'>" + content + "</div>");
 
             setTimeout(function () {
                 $('.store-cart-modal').addClass('store-cart-modal-active');
