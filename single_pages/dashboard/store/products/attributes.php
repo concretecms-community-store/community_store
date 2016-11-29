@@ -20,7 +20,7 @@ if (isset($key)) { ?>
 	
 <?php  } else {
 
-	View::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/products/attributes')); ?>
+	View::element('dashboard/attributes_table', array('category' => $category, 'sortable'=>true, 'attribs'=> $attrList, 'editURL' => '/dashboard/store/products/attributes')); ?>
 
 	<form method="get" class="form-horizontal" action="<?= $this->action('select_type')?>" id="ccm-attribute-type-form">
     	
