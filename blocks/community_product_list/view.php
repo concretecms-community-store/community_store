@@ -93,7 +93,7 @@ if($products){
                 <?php if($showAddToCart){ ?>
 
                 <?php if ($product->allowQuantity() && $showQuantity) { ?>
-                    <div class="store-product-quantity form-group <?= $option->getHandle() ?>">
+                    <div class="store-product-quantity form-group">
                         <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
                         <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
                     </div>
