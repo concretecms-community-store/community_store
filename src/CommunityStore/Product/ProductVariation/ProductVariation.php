@@ -57,22 +57,22 @@ class ProductVariation
     protected $pvQtyUnlim;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvWidth;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvHeight;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvLength;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvWeight;
 
@@ -271,7 +271,7 @@ class ProductVariation
     public function setVariationWidth($pvWidth)
     {
         if ($pvWidth != '') {
-            $this->pvWidth = (int)$pvWidth;
+            $this->pvWidth = (float)$pvWidth;
         } else {
             $this->pvWidth = null;
         }
@@ -291,7 +291,7 @@ class ProductVariation
     public function setVariationHeight($pvHeight)
     {
         if ($pvHeight != '') {
-            $this->pvHeight = (int)$pvHeight;
+            $this->pvHeight = (float)$pvHeight;
         } else {
             $this->pvHeight = null;
         }
@@ -311,7 +311,7 @@ class ProductVariation
     public function setVariationLength($pvLength)
     {
         if ($pvLength != '') {
-            $this->pvLength = (int)$pvLength;
+            $this->pvLength = (float)$pvLength;
         } else {
             $this->pvLength = null;
         }
@@ -331,7 +331,7 @@ class ProductVariation
     public function setVariationWeight($pvWeight)
     {
         if ($pvWeight != '') {
-            $this->pvWeight = (int)$pvWeight;
+            $this->pvWeight = (float)$pvWeight;
         } else {
             $this->pvWeight = null;
         }

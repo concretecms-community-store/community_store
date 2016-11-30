@@ -370,19 +370,19 @@ class Product
     }
     public function setWidth($width)
     {
-        $this->pWidth = $width;
+        $this->pWidth = (float)$width;
     }
     public function setHeight($height)
     {
-        $this->pHeight = $height;
+        $this->pHeight = (float)$height;
     }
     public function setLength($length)
     {
-        $this->pLength = $length;
+        $this->pLength = (float)$length;
     }
     public function setWeight($weight)
     {
-        $this->pWeight = $weight;
+        $this->pWeight = (float)$weight;
     }
     public function setNumberItems($number)
     {
