@@ -33,5 +33,9 @@ The store features two built in shipping methods, but like payment gateways thes
 An simple example shipping method has been created for reference and can be found at:
 https://github.com/concrete5-community-store/community_store_shipping_example
 
+## Translations
+The Community Store package has multiple translations available at http://concrete5.github.io/package-translations/
+Translations are not included within the package, these need to be manually installed.
+
 ## PHP Version
 This add-on is intended to support PHP5.4+ onwards, being 100% operational on PHP7.
