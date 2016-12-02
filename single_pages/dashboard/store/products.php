@@ -1039,7 +1039,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             $caValue = $product->getAttributeValueObject($ak);
                         }
                         ?>
-                        <div class="clearfix">
+                        <div class="form-group">
                             <?= $ak->render('label');?>
                             <div class="input">
                                 <?= $ak->render('composer', $caValue, true)?>
