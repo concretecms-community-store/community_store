@@ -68,6 +68,24 @@ class Controller extends BlockController
         $this->requireAsset('css', 'community-store');
         $this->requireAsset('core/lightbox');
     }
+
+    public function getSearchableContent()
+    {
+        if ($this->productLocation == 'page') {
+            $page = $this->getCollectionObject();
+            $cID = $page->getCollectionID();
+            $product = StoreProduct::getByCollectionID($cID);
+        } else {
+            $product = StoreProduct::getByID($this->pID);
+        }
+
+        if ($product) {
+            return $product->getName() . ' ' . $product->getDesc() . ' ' . $product->getDetail();
+        } else {
+            return '';
+        }
+    }
+
     public function save($args)
     {
         $args['showProductName'] = isset($args['showProductName']) ? 1 : 0;
