@@ -74,8 +74,8 @@ if($products){
                     <?php
                         $salePrice = $product->getSalePrice();
                         if(isset($salePrice) && $salePrice != ""){
-                            echo '<span class="sale-price">'.$product->getFormattedSalePrice().'</span>';
-                            echo ' ' . t('was') . ' ' . '<span class="original-price">'.$product->getFormattedOriginalPrice().'</span>';
+                            echo '<span class="store-sale-price">'.$product->getFormattedSalePrice().'</span>';
+                            echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$product->getFormattedOriginalPrice().'</span>';
                         } else {
                             echo $product->getFormattedPrice();
                         }
