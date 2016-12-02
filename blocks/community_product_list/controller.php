@@ -116,6 +116,14 @@ class Controller extends BlockController
             }
         }
 
+        if ($this->filter == 'random') {
+            $products->setSortBy('random');
+        }
+
+        if ($this->filter == 'random_daily') {
+            $products->setSortBy('random');
+            $products->setRandomSeed(date('z'));
+        }
 
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());

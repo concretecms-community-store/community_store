@@ -13,6 +13,7 @@ class ProductList extends AttributedItemList
     protected $gIDs = array();
     protected $groupMatchAny = false;
     protected $sortBy = "alpha";
+    protected $randomSeed = '';
     protected $sortByDirection = "desc";
     protected $featuredOnly = false;
     protected $saleOnly = false;
@@ -33,6 +34,10 @@ class ProductList extends AttributedItemList
     public function setSortBy($sort)
     {
         $this->sortBy = $sort;
+    }
+
+    public function setRandomSeed($seed = '') {
+        $this->randomSeed = $seed;
     }
 
     public function setSortByDirection($dir)
@@ -186,6 +191,9 @@ class ProductList extends AttributedItemList
                 break;
             case "category":
                 $query->addOrderBy('categorySortOrder');
+                break;
+            case "random":
+                $query->orderBy('RAND('. $this->randomSeed .')', null); break;
                 break;
         }
         if ($this->featuredOnly) {

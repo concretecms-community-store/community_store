@@ -16,7 +16,9 @@
                     'page' => t('Under a specified page'),
                     'page_children' => t('Under a specified page and child pages'),
                     'related' => t('Related to product displayed on this page'),
-                    'related_product' => t('Related to a specified product')
+                    'related_product' => t('Related to a specified product'),
+                    'random' => t('Random order, changing each display'),
+                    'random_daily' => t('Random order, changing each day')
                 ), $filter); ?>
             </div>
 
