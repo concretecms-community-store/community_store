@@ -78,6 +78,7 @@ class Attributes extends DashboardPageController
     }
     
     public function add() {
+        $pkg = \Package::getByHandle('community_store');
         $this->select_type();
         $type = $this->get('type');
         $cnt = $type->getController();
@@ -85,8 +86,8 @@ class Attributes extends DashboardPageController
         if ($e->has()) {
             $this->set('error', $e);
         } else {
-            $type = AttributeType::getByID($this->post('atID'));
-            StoreProductKey::add($type, $this->post());
+            $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
+            StoreProductKey::add('store_product',$type, $this->post(),$pkg);
             $this->redirect('/dashboard/store/products/attributes/', 'success');
         }
     }

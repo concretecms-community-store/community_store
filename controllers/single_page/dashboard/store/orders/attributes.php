@@ -92,7 +92,7 @@ class Attributes extends DashboardPageController {
             $this->set('error', $e);
         } else {
             $type = AttributeType::getByID($this->post('atID'));
-            StoreOrderKey::add($type, $this->post(), Package::getByHandle('community_store'));
+            StoreOrderKey::add('store_order',$type, $this->post(), Package::getByHandle('community_store'));
             $this->redirect('/dashboard/store/orders/attributes/', 'success');
         }
     }

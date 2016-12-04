@@ -273,7 +273,7 @@ class Installer
                     'akName' => t($name),
                 );
             }
-            StoreOrderKey::add($type, $data, $pkg)->setAttributeSet($set);
+            StoreOrderKey::add('store_order',$type, $data, $pkg)->setAttributeSet($set);
         }
     }
 
