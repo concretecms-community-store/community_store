@@ -131,6 +131,19 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
+                            <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice())?>
+                            <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
                             <?= $form->label("pTaxable", t("Taxable"));?>
                             <?= $form->select("pTaxable",array('1'=>t('Yes'),'0'=>t('No')), $product->isTaxable() ? '1' : '0');?>
                         </div>

@@ -115,9 +115,11 @@ class Cart
         $cartItem['product'] = array(
             "pID" => (int) $data['pID'],
             "qty" => (int) $data['quantity'],
+            "customerPrice" => (int) $data['customerPrice'],
         );
         unset($data['pID']);
         unset($data['quantity']);
+        unset($data['customerPrice']);
 
         //since we removed the ID/qty, we're left with just the attributes
         $cartItem['productAttributes'] = $data;
@@ -191,7 +193,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if ($exists['exists'] === true) {
+            if ($exists['exists'] === true && !isset($cartItem['product']['customerPrice'])) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty

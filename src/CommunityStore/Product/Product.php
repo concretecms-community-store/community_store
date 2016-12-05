@@ -77,6 +77,11 @@ class Product
     /**
      * @Column(type="boolean")
      */
+    protected $pCustomerPrice;
+
+    /**
+     * @Column(type="boolean")
+     */
     protected $pFeatured;
 
     /**
@@ -324,6 +329,9 @@ class Product
     {
         $this->pSalePrice = ($price != '' ? $price : null);
     }
+    public function setCustomerPrice($bool) {
+        $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
+    }
     public function setIsFeatured($bool)
     {
         $this->pFeatured = (!is_null($bool) ? $bool : false);
@@ -479,6 +487,7 @@ class Product
         $product->setNumberItems($data['pNumberItems']);
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
+        $product->setCustomerPrice($data['pCustomerPrice']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
@@ -631,6 +640,9 @@ class Product
     public function isShippable()
     {
         return (bool) $this->pShippable;
+    }
+    public function allowCustomerPrice() {
+        return (bool) $this->pCustomerPrice;
     }
 
     public function getDimensions($whl = null)

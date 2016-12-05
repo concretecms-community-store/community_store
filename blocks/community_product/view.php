@@ -16,7 +16,7 @@ if (is_object($product) && $product->isActive()) {
                         <meta itemprop="sku" content="<?= $product->getSKU() ?>" />
                     <?php } ?>
 
-                    <?php if ($showProductPrice) { ?>
+                    <?php if ($showProductPrice && !$product->allowCustomerPrice()) { ?>
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
@@ -32,6 +32,13 @@ if (is_object($product) && $product->isActive()) {
                         }
                         ?>
                         </p>
+                    <?php } ?>
+
+                    <?php if ($product->allowCustomerPrice()) { ?>
+                        <div class="store-product-customer-price-entry form-group">
+                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
+                            <input type="text" class="store-product-customer-price-entry form-control" name="customerPrice" />
+                        </div>
                     <?php } ?>
 
                     <meta itemprop="description" content="<?= strip_tags($product->getDesc()); ?>" />
