@@ -91,9 +91,9 @@ class StoreProductKey extends Key
         unset($av);
     }
 
-    public static function add($type, $args, $pkg = false)
+    public static function add($handle, $type, $args, $pkg = false)
     {
-        $ak = parent::add('store_product', $type, $args, $pkg);
+        $ak = parent::add($handle, $type, $args, $pkg);
 
         extract($args);
 
