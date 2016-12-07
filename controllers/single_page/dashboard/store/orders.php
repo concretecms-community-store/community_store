@@ -85,7 +85,7 @@ class Orders extends DashboardPageController
 
         $user = new \User();
 
-        $order->setPaid(new \DateTime());
+        $order->completePayment();
         $order->setPaidByUID($user->getUserID());
         $order->save();
 

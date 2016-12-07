@@ -389,7 +389,7 @@ class Order
      *
      * @return Order
      */
-    public static function add($data, $pm, $transactionReference = '', $status = null)
+    public static function add($pm, $transactionReference = '', $status = null)
     {
         $customer = new StoreCustomer();
         $now = new \DateTime();
@@ -474,7 +474,7 @@ class Order
         $order->addOrderItems(StoreCart::getCart(), $discountRatio);
 
         if (!$pm->getMethodController()->isExternal()) {
-            $order->completeOrder($transactionReference);
+            $order->completeOrder($transactionReference, true);
         }
 
         return $order;
@@ -510,7 +510,9 @@ class Order
         }
     }
 
-    public function completeOrder($transactionReference = null)
+    // if sameRequest = true, it's indicating that the same request used to place the order
+    // is also completing the order (i.e. the customer, not an external callback)
+    public function completeOrder($transactionReference = null, $sameRequest = false)
     {
         if ($transactionReference) {
             $this->setTransactionReference($transactionReference);
@@ -524,7 +526,7 @@ class Order
             if ($paymentMethodUsed) {
                 // if the payment method actually is a payment (as opposed to an invoice), mark order as paid
                 if ($paymentMethodUsed->getMethodController()->markPaid()) {
-                    $this->setPaid(new \DateTime());
+                   $this->completePayment($sameRequest);
                 }
             }
         }
@@ -532,18 +534,33 @@ class Order
         $this->setExternalPaymentRequested(null);
         $this->save();
 
-        $fromEmail = Config::get('community_store.emailalerts');
-        if (!$fromEmail) {
-            $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
-        }
+        // create order event and dispatch
+        $event = new StoreOrderEvent($this);
+        Events::dispatch('on_community_store_order', $event);
 
-        $fromName = Config::get('community_store.emailalertsname');
+        //receipt
+        $this->sendOrderReceipt();
 
-        $smID = \Session::get('community_store.smID');
+        // notifications
+        $this->sendNotifications();
+
+        return $this;
+    }
+
+    public function completePayment($sameRequest = false) {
+        $this->setPaid(new \DateTime());
+
+        // create payment event and dispatch
+        $event = new StoreOrderEvent($this);
+        Events::dispatch('on_community_store_payment_complete', $event);
+        $this->completePostPaymentProcesses($sameRequest);
+    }
+
+    public function completePostPaymentProcesses($sameRequest = false) {
         $groupstoadd = array();
         $createlogin = false;
         $orderItems = $this->getOrderItems();
-        $customer = new StoreCustomer();
+
         foreach ($orderItems as $orderItem) {
             $product = $orderItem->getProductObject();
             if ($product && $product->hasUserGroups()) {
@@ -558,7 +575,9 @@ class Order
             }
         }
 
-        if ($createlogin && $customer->isGuest()) {
+        $customer = new StoreCustomer($this->getCustomerID());
+
+        if ($createlogin && !$customer->getUserInfo()) {
             $email = $this->getAttribute('email');
             $user = UserInfo::getByEmail($email);
 
@@ -596,7 +615,7 @@ class Order
                 }
 
                 $userRegistrationService = \Core::make('Concrete\Core\User\RegistrationServiceInterface');
-                $user = $userRegistrationService->create(array('uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password));
+                $newuser = $userRegistrationService->create(array('uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password));
 
                 if (Config::get('concrete.user.registration.email_registration')) {
                     $mh->addParameter('username', trim($email));
@@ -609,8 +628,20 @@ class Order
 
                 $mh->load('new_user', 'community_store');
 
-                // login the newly created user
-                User::loginByUserID($user->getUserID());
+                $user = new User();
+
+                // login the newly created user if in same request as customer
+                if (!$user->isLoggedIn() && $sameRequest) {
+                    User::loginByUserID($newuser->getUserID());
+                }
+
+                $user = $newuser;
+
+                $fromName = Config::get('community_store.emailalertsname');
+                $fromEmail = Config::get('community_store.emailalerts');
+                if (!$fromEmail) {
+                    $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+                }
 
                 // new user password email
                 if ($fromName) {
@@ -669,22 +700,34 @@ class Order
                     $user->getUserObject()->enterGroup($g);
                 }
             }
-
-            $u = new \User();
-            $u->refreshUserGroups();
         }
+    }
 
-        StoreDiscountCode::clearCartCode();
-
-        // create order event and dispatch
-        $event = new StoreOrderEvent($this);
-        Events::dispatch('on_community_store_order', $event);
-
-        //send out the alerts
+    public function sendNotifications() {
         $mh = new MailService();
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
+        $validNotification = false;
+
+        $fromName = Config::get('community_store.emailalertsname');
+        $fromEmail = Config::get('community_store.emailalerts');
+        if (!$fromEmail) {
+            $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+        }
+
+        //order notification
+        if ($fromName) {
+            $mh->from($fromEmail, $fromName);
+        } else {
+            $mh->from($fromEmail);
+        }
+
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+
+        if (!is_array($orderChoicesAttList)) {
+            $orderChoicesAttList = array();
+        }
 
         // Create "on_before_community_store_order_notification_emails" event and dispatch
         $event = new StoreOrderEvent($this);
@@ -692,7 +735,31 @@ class Order
         $event = Events::dispatch('on_before_community_store_order_notification_emails', $event);
         $notificationEmails = $event->getNotificationEmails();
 
-        //receipt
+
+        foreach ($notificationEmails as $notificationEmail) {
+            if ($notificationEmail) {
+                $mh->to($notificationEmail);
+                $validNotification = true;
+            }
+        }
+
+        if ($validNotification) {
+            $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
+            $mh->addParameter("order", $this);
+            $mh->load("new_order_notification", "community_store");
+            $mh->sendMail();
+        }
+    }
+
+    public function sendOrderReceipt() {
+        $mh = new MailService();
+        $fromName = Config::get('community_store.emailalertsname');
+
+        $fromEmail = Config::get('community_store.emailalerts');
+        if (!$fromEmail) {
+            $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+        }
+
         if ($fromName) {
             $mh->from($fromEmail, $fromName);
         } else {
@@ -700,6 +767,12 @@ class Order
         }
 
         $mh->to($this->getAttribute('email'));
+
+        $pmID = $this->getPaymentMethodID();
+
+        if ($pmID) {
+            $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
+        }
 
         $paymentInstructions = '';
         if ($paymentMethodUsed) {
@@ -717,36 +790,6 @@ class Order
         $mh->addParameter("order", $this);
         $mh->load("order_receipt", "community_store");
         $mh->sendMail();
-
-        $validNotification = false;
-
-        //order notification
-        if ($fromName) {
-            $mh->from($fromEmail, $fromName);
-        } else {
-            $mh->from($fromEmail);
-        }
-
-        foreach ($notificationEmails as $notificationEmail) {
-            if ($notificationEmail) {
-                $mh->to($notificationEmail);
-                $validNotification = true;
-            }
-        }
-
-        if ($validNotification) {
-            $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
-            $mh->addParameter("order", $this);
-            $mh->load("new_order_notification", "community_store");
-            $mh->sendMail();
-        }
-
-        // unset the shipping type, as next order might be unshippable
-        \Session::set('community_store.smID', '');
-
-        StoreCart::clear();
-
-        return $this;
     }
 
     public function addOrderItems($cart, $discountRatio = 1)

@@ -14,11 +14,11 @@ class Customer
     {
         $u = new User();
 
-        if ($u->isLoggedIn()) {
-            $this->ui = UserInfo::getByID($u->getUserID());
-        } elseif ($uID) {
+        if (!is_null($uID)) {
             $this->ui = UserInfo::getByID($uID);
-        } else {
+        } elseif ($u->isLoggedIn()) {
+            $this->ui = UserInfo::getByID($u->getUserID());
+        }  else {
             $this->ui = null;
         }
     }

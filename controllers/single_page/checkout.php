@@ -214,7 +214,7 @@ class Checkout extends PageController
         }
 
         if($pm->getMethodController()->isExternal()){
-            $order = StoreOrder::add($data,$pm,null,'incomplete');
+            $order = StoreOrder::add($pm,null,'incomplete');
             Session::set('orderID',$order->getOrderID());
             $this->redirect('/checkout/external');
         } else {
@@ -225,7 +225,7 @@ class Checkout extends PageController
                 $this->redirect("/checkout/failed#payment");
             } else {
                 $transactionReference = $payment['transactionReference'];
-                $order = StoreOrder::add($data,$pm,$transactionReference);
+                $order = StoreOrder::add($pm,$transactionReference);
                 $this->redirect('/checkout/complete');
             }
         }
