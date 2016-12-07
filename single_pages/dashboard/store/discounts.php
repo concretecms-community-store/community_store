@@ -260,7 +260,7 @@ $currencySymbol = Config::get('community_store.symbol');
             <?= $form->textarea('drDescription', $discountRule->getDescription(), array('class' => 'span5'))?>
         </div>
 
-
+        <br /><br /><br /><br />
 
     </div>
 

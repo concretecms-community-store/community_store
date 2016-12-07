@@ -491,6 +491,21 @@ class DiscountRule
         $discountRule->setTrigger($data['drTrigger']);
         $discountRule->setDescription($data['drDescription']);
         $discountRule->setDateAdded(new \DateTime());
+
+        if ($data['validFrom'] == 1) {
+            $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m']. (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));
+            $discountRule->setValidFrom($from);
+        } else {
+            $discountRule->setValidFrom(null);
+        }
+
+        if ($data['validTo'] == 1) {
+            $to = new \DateTime($data['drValidTo_dt'] . ' ' . $data['drValidTo_h'] . ':' . $data['drValidTo_m']. (isset($data['drValidTo_a']) ? $data['drValidTo_a'] : ''));
+            $discountRule->setValidTo($to);
+        } else {
+            $discountRule->setValidTo(null);
+        }
+
     }
 
     public static function edit($drID, $data)
