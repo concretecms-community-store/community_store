@@ -575,9 +575,15 @@ class Order
             }
         }
 
-        $customer = new StoreCustomer($this->getCustomerID());
+        if($sameRequest) {
+            $customer = new StoreCustomer();  // fetch current customer
+        } else {
+            $customer = new StoreCustomer($this->getCustomerID()); // find customer from order as it's a remote call
+        }
 
-        if ($createlogin && !$customer->getUserInfo()) {
+        $user = $customer->getUserInfo();
+
+        if ($createlogin && !$user) {
             $email = $this->getAttribute('email');
             $user = UserInfo::getByEmail($email);
 
@@ -657,8 +663,6 @@ class Order
                 // earlier validation must have failed at this point, don't fetch the user
                 $user = null;
             }
-        } elseif ($createlogin) {  // or if we found a user (because they are logged in) and need to use it to create logins
-            $user = $customer->getUserInfo();
         }
 
         if ($user) {  // $user is going to either be the new one, or the user of the currently logged in customer
