@@ -16,11 +16,11 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '0.9.9.9';
+    protected $pkgVersion = '1.0';
 
     public function getPackageDescription()
     {
-        return t("Add a Store to your Site");
+        return t("Add a store to your site");
     }
 
     public function getPackageName()
