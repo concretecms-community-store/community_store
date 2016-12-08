@@ -103,9 +103,6 @@ class Orders extends DashboardPageController
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
-
-
-
     public function markrefunded($oID)
     {
         $order = StoreOrder::getByID($oID);
@@ -142,14 +139,22 @@ class Orders extends DashboardPageController
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
-
-
     public function reversecancel($oID)
     {
         $order = StoreOrder::getByID($oID);
         $order->setCancelled(null);
         $order->setCancelledByUID(null);
         $order->save();
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function resendinvoice($oID) {
+        $order = StoreOrder::getByID($oID);
+
+        if ($order){
+           $order->sendOrderReceipt($this->post('email'));
+        }
 
         $this->redirect('/dashboard/store/orders/order',$oID);
     }

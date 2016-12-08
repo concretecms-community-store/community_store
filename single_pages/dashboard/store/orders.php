@@ -307,8 +307,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <fieldset>
             <legend><?= t("Payment Status")?></legend>
 
-
-
             <?php  if($order->getTotal() == 0) { ?>
             <p><?= t('Free Order');?></p>
             <?php } else {
@@ -413,12 +411,25 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
              <?php } ?>
 
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><?= t("Resend Invoice Email")?></h4>
+                    </div>
+                    <div class="panel-body">
+                        <form action="<?=URL::to("/dashboard/store/orders/resendinvoice",$order->getOrderID())?>" method="post">
+                            <div class="form-group">
+                                <label for="email"><?= t('Email'); ?></label>
+                                <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo $order->getAttribute('email');?>" />
+                            </div>
+                            <input type="submit" class="btn btn-default" value="<?= t("Resend Invoice")?>">
+                        </form>
+                    </div>
+                </div>
+
              </fieldset>
         </div>
 
     </div>
-    </fieldset>
-
 
 
      <?php if (!$order->getCancelled()) { ?>

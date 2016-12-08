@@ -26,6 +26,11 @@ class Complete extends PageController
 
         if(is_object($order)){
             $this->set("order",$order);
+
+            if ($order->getExternalPaymentRequested() && !$order->getPaid()) {
+                $this->redirect("/checkout");
+            }
+
         } else {
             $this->redirect("/cart");
         }

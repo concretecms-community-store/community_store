@@ -755,7 +755,7 @@ class Order
         }
     }
 
-    public function sendOrderReceipt() {
+    public function sendOrderReceipt($email = '') {
         $mh = new MailService();
         $fromName = Config::get('community_store.emailalertsname');
 
@@ -770,7 +770,11 @@ class Order
             $mh->from($fromEmail);
         }
 
-        $mh->to($this->getAttribute('email'));
+        if ($email) {
+            $mh->to($email);
+        } else {
+            $mh->to($this->getAttribute('email'));
+        }
 
         $pmID = $this->getPaymentMethodID();
 

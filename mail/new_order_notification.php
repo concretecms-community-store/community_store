@@ -147,12 +147,27 @@ ob_start();
 
         <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
 
-        <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
-        <?php $transactionReference = $order->getTransactionReference();
-        if ($transactionReference) { ?>
-            <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
-        <?php } ?>
+        <?php if ($order->getTotal() > 0) { ?>
+            <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br />
 
+            <?php
+            $paid = $order->getPaid();
+
+            if ($paid) {
+                $status = t('Paid') . ' - ' . $dh->formatDateTime($paid);
+            } else {
+                $status = t('Unpaid');
+            }
+            ?>
+            <strong><?= t("Payment Status") ?>:</strong> <?= $status; ?><br>
+
+            <?php $transactionReference = $order->getTransactionReference();
+            if ($transactionReference) { ?>
+                <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?>
+            <?php } ?>
+        <?php } else { ?>
+            <strong><?=  t('Free Order') ?></strong>
+        <?php } ?>
     </p>
 
     <p><a href="<?= \URL::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>

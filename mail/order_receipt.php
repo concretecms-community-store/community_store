@@ -182,7 +182,35 @@ ob_start();
         <?php } ?>
 
         <strong class="text-large"><?= t("Total") ?>:</strong> <?= StorePrice::format($order->getTotal()) ?><br><br>
-        <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?>
+
+        <?php if ($order->getTotal() > 0) { ?>
+            <strong><?= t("Payment Method") ?>: </strong><?= $order->getPaymentMethodName() ?><br>
+        <?php } else { ?>
+            <strong><?=  t('Free Order') ?></strong><br>
+        <?php } ?>
+
+        <?php
+        $refunded = $order->getRefunded();
+        $paid = $order->getPaid();
+        $cancelled = $order->getCancelled();
+        $status = '';
+
+        if ($cancelled) {
+            echo '<br /><strong>' . t('Cancelled') . '</strong>';
+        } else {
+            if ($refunded) {
+                $status = t('Refunded');
+            } elseif ($paid) {
+                $status = t('Paid') . ' - ' . $dh->formatDateTime($paid);
+            } elseif ($order->getTotal() > 0) {
+                $status = t('Unpaid');
+            }
+        }
+        ?>
+
+        <?php if ($status) { ?>
+            <strong><?= t("Payment Status") ?>:</strong> <?= $status; ?>
+        <?php } ?>
     </p>
 
     <?php echo $paymentInstructions; ?>
