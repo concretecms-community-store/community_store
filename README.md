@@ -26,6 +26,9 @@ https://github.com/concrete5-community-store/community_store_paypal_standard
 ### Stripe
 https://github.com/concrete5-community-store/community_store_stripe
 
+### Pin Payments
+https://github.com/concrete5-community-store/community_store_pin_payments
+
 The use of the Ominpay library is encouraged to developed further payment add-ons (used by the Stripe add-on).
 
 ## Shipping Methods
