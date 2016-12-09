@@ -62,7 +62,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function setBaseRate($baseRate)
     {
-        $this->baseRate = $baseRate;
+        $this->baseRate = $baseRate > 0 ? $baseRate : 0;
     }
     public function setRateType($rateType)
     {
@@ -70,27 +70,27 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
     }
     public function setPerItemRate($perItemRate)
     {
-        $this->perItemRate = $perItemRate;
+        $this->perItemRate = $perItemRate > 0 ? $perItemRate : null;
     }
     public function setPerWeightRate($perWeightRate)
     {
-        $this->perWeightRate = $perWeightRate;
+        $this->perWeightRate = $perWeightRate > 0 ? $perWeightRate : null;
     }
     public function setMinimumAmount($minAmount)
     {
-        $this->minimumAmount = $minAmount;
+        $this->minimumAmount = $minAmount > 0 ? $minAmount : 0;
     }
     public function setMaximumAmount($maxAmount)
     {
-        $this->maximumAmount = $maxAmount;
+        $this->maximumAmount = $maxAmount > 0 ? $maxAmount : 0;
     }
     public function setMinimumWeight($minWeight)
     {
-        $this->minimumWeight = $minWeight;
+        $this->minimumWeight = $minWeight > 0 ? $minWeight : 0;
     }
     public function setMaximumWeight($maxWeight)
     {
-        $this->maximumWeight = $maxWeight;
+        $this->maximumWeight = $maxWeight > 0 ? $maxWeight : 0;
     }
     public function setCountries($countries)
     {
