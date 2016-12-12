@@ -431,6 +431,7 @@ $(document).ready(function () {
         var sCity = $("#store-checkout-shipping-city").val();
         var sState = $("#store-checkout-shipping-state").val();
         var sPostal = $("#store-checkout-shipping-zip").val();
+        var vat_number = $("#store-checkout-shipping-vat-number").val();
         $("#store-checkout-form-group-shipping .store-checkout-form-group-body .store-checkout-errors").remove();
 
         communityStore.waiting();
@@ -447,7 +448,8 @@ $(document).ready(function () {
                 count: sCountry,
                 city: sCity,
                 state: sState,
-                postal: sPostal
+                postal: sPostal,
+                vat_number: vat_number
             },
             //dataType: 'json',
             success: function (result) {
@@ -456,6 +458,12 @@ $(document).ready(function () {
                     $(".store-whiteout").remove();
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
+                    if (response.vat_number != '') {
+                        obj.find('.store-checkout-form-group-summary .store-summary-vat-number').html(response.vat_number);
+                    } else {
+                        obj.find('.store-checkout-form-group-summary .store-summary-vat-number').html('-');
+                    }
+
                     communityStore.nextPane(obj);
                     communityStore.showShippingMethods();
                     communityStore.refreshCartTotals();

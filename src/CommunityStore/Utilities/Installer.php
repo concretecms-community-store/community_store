@@ -211,6 +211,10 @@ class Installer
         self::installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
+        self::installUserAttribute('vat_number', $text, $pkg, $custSet, array(
+            'akHandle' => 'vat_number',
+            'akName' => t('VAT Number'),
+        ));
     }
     public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
     {
@@ -340,6 +344,8 @@ class Installer
         if ($singlePage->error) {
             self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         }
+
+        self::installUserAttributes($pkg);
 
         $oakc = AttributeKeyCategory::getByHandle('store_order');
         $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');

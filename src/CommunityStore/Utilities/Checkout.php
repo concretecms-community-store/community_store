@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Controller;
 use Core;
+use Config;
 use Session;
 use Illuminate\Filesystem\Filesystem;
 use View;
@@ -10,6 +11,7 @@ use User;
 use UserInfo;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use SoapClient;
 
 class Checkout extends Controller
 {
@@ -63,6 +65,15 @@ class Checkout extends Controller
                     $email = '';
                     $first_name = $customer->getValue('shipping_first_name');
                     $last_name = $customer->getValue('shipping_last_name');
+
+                    // VAT Number validation
+                    if (Config::get('community_store.vat_number')) {
+                        $vat_number = $customer->getValue('vat_number');
+                        $e = Checkout::validateVatNumber($vat_number);
+                        if ($e->has()) {
+                            echo $e->outputJSON(); return;
+                        }
+                    }
                 }
 
                 if (method_exists($addressraw, 'getDisplayValue')) {
@@ -71,10 +82,74 @@ class Checkout extends Controller
                     $address = nl2br(StoreCustomer::formatAddress($addressraw));  // force to string
                 }
 
-                echo json_encode(array('first_name' => $first_name, 'last_name' => $last_name, 'phone' => $phone, 'email' => $email, 'address' => $address, "error" => false));
+                // Results array
+                $results = array(
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'phone' => $phone,
+                    'email' => $email,
+                    'address' => $address,
+                    'error' => false
+                );
+
+                // If updating shipping method we need vat number
+                if ($data['adrType'] == 'shipping') {
+                    $results['vat_number'] = $vat_number;
+                }
+
+                // Return JSON with results
+                echo json_encode($results);
             }
         } else {
             echo "An error occured";
+        }
+    }
+
+    public static function validateVatNumber($vat_number)
+    {
+        $e = Core::make('helper/validation/error');
+        // Taken from: https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9781449327453/ch04s21.html
+        $regex = "/^((AT)?U[0-9]{8}|(BE)?0[0-9]{9}|(BG)?[0-9]{9,10}|(CY)?[0-9]{8}L|(CZ)?[0-9]{8,10}|(DE)?[0-9]{9}|(DK)?[0-9]{8}|(EE)?[0-9]{9}|(EL|GR)?[0-9]{9}|(ES)?[0-9A-Z][0-9]{7}[0-9A-Z]|(FI)?[0-9]{8}|(FR)?[0-9A-Z]{2}[0-9]{9}|(GB)?([0-9]{9}([0-9]{3})?|[A-Z]{2}[0-9]{3})|(HU)?[0-9]{8}|(IE)?[0-9]S[0-9]{5}L|(IT)?[0-9]{11}|(LT)?([0-9]{9}|[0-9]{12})|(LU)?[0-9]{8}|(LV)?[0-9]{11}|(MT)?[0-9]{8}|(NL)?[0-9]{9}B[0-9]{2}|(PL)?[0-9]{10}|(PT)?[0-9]{9}|(RO)?[0-9]{2,10}|(SE)?[0-9]{12}|(SI)?[0-9]{8}|(SK)?[0-9]{10})$/i";
+        if ($vat_number != '' && !preg_match($regex, $vat_number)) {
+            $e->add(t('You must enter a valid VAT Number'));
+            return $e; // Stop there for now to save SOAP request
+        }
+
+        $countryCode = substr($vat_number, 0, 2);
+        $vatNumber = substr($vat_number, 2);
+
+        // Building the xml as a string as it is faster than doing it the dom way
+        $xmlString = "";
+        $xmlString .= '<?xml version="1.0"?>';
+        $xmlString .= '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">';
+        $xmlString .= '<soap:Body>';
+        $xmlString .= '<m:checkVat xmlns:m="urn:ec.europa.eu:taxud:vies:services:checkVat:types">';
+        $xmlString .= '<m:countryCode>'.$countryCode.'</m:countryCode>';
+        $xmlString .= '<m:vatNumber>'.$vatNumber.'</m:vatNumber>';
+        $xmlString .= '</m:checkVat>';
+        $xmlString .= '</soap:Body>';
+        $xmlString .= '</soap:Envelope>';
+
+        // Create the request and send it
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: text/xml\r\n",
+                'method'  => 'POST',
+                'content' => $xmlString,
+                'ignore_errors' => true
+            ),
+        );
+        $context  = stream_context_create($options);
+        $result = file_get_contents("http://ec.europa.eu/taxation_customs/vies/services/checkVatService", false, $context);
+
+        // Verify response
+        // You can parse the xml and get more info but we are only looking for the string we need
+        if (strpos($result, "<valid>true</valid>")) {
+            return $e;
+        } else {
+            $e->add(t('That VAT Number was not valid.'));
+            return $e;
+
         }
     }
 
@@ -136,6 +211,8 @@ class Checkout extends Controller
         );
         $customer->setValue("shipping_address", $address);
         Session::set('shipping_address', $address);
+        $customer->setValue("vat_number", $data['vat_number']);
+        Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
     }
 

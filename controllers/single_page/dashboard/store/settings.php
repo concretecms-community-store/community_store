@@ -64,6 +64,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.taxrate',trim($args['taxRate']));
                 Config::save('community_store.taxName',trim($args['taxName']));
                 Config::save('community_store.calculation',trim($args['calculation']));
+                Config::save('community_store.vat_number',trim($args['vat_number']));
                 Config::save('community_store.shippingenabled',$args['shippingEnabled']);
                 Config::save('community_store.shippingbase',$args['shippingBasePrice']);
                 Config::save('community_store.shippingitem',$args['shippingItemPrice']);
