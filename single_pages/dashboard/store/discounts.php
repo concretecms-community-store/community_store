@@ -339,7 +339,7 @@ $currencySymbol = Config::get('community_store.symbol');
 <?php } ?>
 
 <?php if (isset($failedcodes) && count($failedcodes) > 0 ) { ?>
-    <p class="alert alert-warning"><?= t('The following codes are were invalid or are already active:')  ?><br />
+    <p class="alert alert-warning"><?= t('The following codes are invalid or are already active:')  ?><br />
         <strong><?= implode('<br />', $failedcodes); ?></strong>
     </p>
 <?php } ?>
