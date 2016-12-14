@@ -87,6 +87,14 @@ class OrderList  extends AttributedItemList
             }
         }
 
+        if (isset($this->refunded)) {
+            if ($this->refunded) {
+                $this->query->andWhere('o.oRefunded is not null');
+            } else {
+                $this->query->andWhere('o.oRefunded is null');
+            }
+        }
+
         if ($this->limit > 0) {
             $this->query->setMaxResults($this->limit);
         }
@@ -143,6 +151,11 @@ class OrderList  extends AttributedItemList
     public function setCancelled($bool)
     {
         $this->cancelled = $bool;
+    }
+
+    public function setRefunded($bool)
+    {
+        $this->refunded = $bool;
     }
 
     public function getResult($queryRow)
