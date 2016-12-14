@@ -71,7 +71,7 @@ class Products extends DashboardPageController
             $db = $this->app->make('database')->connection();
 
             $sql = 'SELECT csoi.oiID from CommunityStoreOrderItems csoi, CommunityStoreOrders cso
-                    WHERE cso.oID = csoi.oID AND csoi.pID = ?
+                    WHERE cso.oID = csoi.oID AND csoi.pID = ? and cso.oPaid is not null and cso.oCancelled is null
                     ORDER BY cso.oDate DESC';
             $result = $db->query($sql, array($productid));
 

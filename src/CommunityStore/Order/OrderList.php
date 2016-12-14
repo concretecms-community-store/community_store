@@ -79,6 +79,14 @@ class OrderList  extends AttributedItemList
             $this->query->andWhere('o.oRefunded is null');
         }
 
+        if (isset($this->cancelled)) {
+            if ($this->cancelled) {
+                $this->query->andWhere('o.oCancelled is not null');
+            } else {
+                $this->query->andWhere('o.oCancelled is null');
+            }
+        }
+
         if ($this->limit > 0) {
             $this->query->setMaxResults($this->limit);
         }
@@ -130,6 +138,11 @@ class OrderList  extends AttributedItemList
     public function setPaid($bool)
     {
         $this->paid = $bool;
+    }
+
+    public function setCancelled($bool)
+    {
+        $this->cancelled = $bool;
     }
 
     public function getResult($queryRow)

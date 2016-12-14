@@ -30,6 +30,7 @@ class ProductReport extends AbstractItemList
         $orders->setFromDate($from);
         $orders->setToDate($to);
         $orders->setPaid(true);
+        $orders->setCancelled(false);
         $this->orderItems = $orders->getOrderItems();
     }
 
