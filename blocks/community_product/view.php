@@ -37,7 +37,13 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($product->allowCustomerPrice()) { ?>
                         <div class="store-product-customer-price-entry form-group">
                             <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
-                            <input type="text" class="store-product-customer-price-entry form-control" name="customerPrice" />
+                            <?= $product->getPriceSuggestions(); ?>
+                            <?php $min = $product->getPriceMinimum(); ?>
+                            <?php $max = $product->getPriceMaximum(); ?>
+                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                                <div class="input-group-addon"><?= Config::get('community_store.symbol');?></div>
+                                <input type="text" <?= $min ? 'min="'.$min.'"' : ''; ?>  <?= $max ? 'max="'.$max.'"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                            </div>
                         </div>
                     <?php } ?>
 

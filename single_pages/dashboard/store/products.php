@@ -114,6 +114,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <?= $form->text("pPrice", $price?$price:'0');?>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice())?>
+                            <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
+                        </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -126,18 +130,35 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <?= $form->text("pSalePrice", $salePrice, array('placeholder'=>'No Sale Price Set'));?>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <?= $form->label('pPriceSuggestions', t('Price Suggestions'))?>
+                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions())?>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice())?>
-                            <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
+                            <?= $form->label("pPriceMinimum", t("Minimum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $minimumPrice = $product->getPriceMinimum(); ?>
+                                <?= $form->text("pPriceMinimum", $minimumPrice, array('placeholder'=>'No Minimum Price Set'));?>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-
+                            <?= $form->label("pPriceMaximum", t("Maximum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $maximumPrice = $product->getPriceMaximum(); ?>
+                                <?= $form->text("pPriceMaximum", $maximumPrice, array('placeholder'=>'No Maximum Price Set'));?>
+                            </div>
                         </div>
                     </div>
                 </div>

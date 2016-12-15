@@ -77,6 +77,21 @@ var communityStore = {
 
         var valid = true;
 
+
+        var priceinput = $(form).find('.store-product-customer-price-entry-field');
+
+        if (priceinput.length > 0) {
+            var max = priceinput.attr('max');
+            var min = priceinput.attr('min');
+            var customerprice = priceinput.val();
+
+            if (customerprice < min || customerprice > max) {
+                priceinput.focus();
+                valid = false;
+            }
+
+        }
+
         $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField){
             if($(requiredField).val()=='') {
                 $(requiredField).focus();

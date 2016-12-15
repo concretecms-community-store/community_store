@@ -80,6 +80,21 @@ class Product
     protected $pCustomerPrice;
 
     /**
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pPriceMaximum;
+
+    /**
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pPriceMinimum;
+
+    /**
+     * @Column(type="text",nullable=true)
+     */
+    protected $pPriceSuggestions;
+
+    /**
      * @Column(type="boolean")
      */
     protected $pFeatured;
@@ -332,6 +347,30 @@ class Product
     public function setCustomerPrice($bool) {
         $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
     }
+    public function getPriceMaximum()
+    {
+        return $this->pPriceMaximum;
+    }
+    public function setPriceMaximum($pPriceMaximum)
+    {
+        $this->pPriceMaximum = $pPriceMaximum;
+    }
+    public function getPriceMinimum()
+    {
+        return $this->pPriceMinimum;
+    }
+    public function setPriceMinimum($pPriceMinimum)
+    {
+        $this->pPriceMinimum = $pPriceMinimum;
+    }
+    public function getPriceSuggestions()
+    {
+        return $this->pPriceSuggestions;
+    }
+    public function setPriceSuggestions($priceSuggestions)
+    {
+        $this->pPriceSuggestions = $priceSuggestions;
+    }
     public function setIsFeatured($bool)
     {
         $this->pFeatured = (!is_null($bool) ? $bool : false);
@@ -488,6 +527,9 @@ class Product
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
         $product->setCustomerPrice($data['pCustomerPrice']);
+        $product->setPriceSuggestions($data['pPriceSuggestions']);
+        $product->setPriceMaximum($data['pPriceMaximum']);
+        $product->setPriceMinimum($data['pPriceMinimum']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
