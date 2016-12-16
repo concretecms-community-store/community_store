@@ -48,7 +48,9 @@ if($products){
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form   id="store-form-add-to-cart-list-<?= $product->getID()?>">
+		<?php if ($showName) { ?>
                 <h2 class="store-product-list-name"><?= $product->getName()?></h2>
+		<?php } ?>
                 <?php 
                     $imgObj = $product->getImageObj();
                     if(is_object($imgObj)){

@@ -165,6 +165,7 @@ class Controller extends BlockController
         $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
         $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
         $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
+        $args['showName'] = isset($args['showName']) ? 1 : 0;
         $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
         $args['showAddToCart'] = isset($args['showAddToCart']) ? 1 : 0;
         $args['showLink'] = isset($args['showLink']) ? 1 : 0;
