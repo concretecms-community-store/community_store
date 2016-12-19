@@ -353,7 +353,7 @@ class Product
     }
     public function setPriceMaximum($pPriceMaximum)
     {
-        $this->pPriceMaximum = $pPriceMaximum;
+        $this->pPriceMaximum = $pPriceMaximum != '' ? $pPriceMaximum : null;
     }
     public function getPriceMinimum()
     {
@@ -361,11 +361,15 @@ class Product
     }
     public function setPriceMinimum($pPriceMinimum)
     {
-        $this->pPriceMinimum = $pPriceMinimum;
+        $this->pPriceMinimum = $pPriceMinimum != '' ? $pPriceMinimum : null;
     }
     public function getPriceSuggestions()
     {
         return $this->pPriceSuggestions;
+    }
+    public function getPriceSuggestionsArray()
+    {
+        return array_filter(array_map('trim', explode(',', trim($this->pPriceSuggestions))));
     }
     public function setPriceSuggestions($priceSuggestions)
     {

@@ -81,9 +81,9 @@ var communityStore = {
         var priceinput = $(form).find('.store-product-customer-price-entry-field');
 
         if (priceinput.length > 0) {
-            var max = priceinput.attr('max');
-            var min = priceinput.attr('min');
-            var customerprice = priceinput.val();
+            var max = parseFloat(priceinput.attr('max'));
+            var min = parseFloat(priceinput.attr('min'));
+            var customerprice = parseFloat(priceinput.val());
 
             if (customerprice < min || customerprice > max) {
                 priceinput.focus();
@@ -541,6 +541,20 @@ $(document).ready(function () {
 
     $(document).on('click', '.store-btn-add-to-cart', function(e) {
         communityStore.addToCart($(this).data('product-id'),$(this).data('add-type'));
+        e.preventDefault();
+    });
+
+    $(document).on('submit', '.store-product-block', function(e) {
+        if ($(this).find('.store-btn-add-to-cart').size() > 0) {
+            communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
+        }
+        e.preventDefault();
+    });
+
+    $(document).on('click', '.store-price-suggestion', function(e) {
+        var productform = $(this).closest('form');
+        productform.find('.store-product-customer-price-entry-field').val($(this).data('suggestion-value'));
+        communityStore.addToCart(productform.data('product-id'),$(this).data('add-type'));
         e.preventDefault();
     });
 
