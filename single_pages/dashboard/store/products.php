@@ -121,7 +121,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                     <?=  Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $price = $product->getPrice(); ?>
-                                <?= $form->text("pPrice", $price?$price:'0');?>
+                                <?= $form->text("pPrice", $price, array('placeholder'=>($product->allowCustomerPrice() ? t('No Price Set') : '')));?>
                             </div>
                         </div>
                     </div>

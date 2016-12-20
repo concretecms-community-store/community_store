@@ -85,7 +85,7 @@ var communityStore = {
             var min = parseFloat(priceinput.attr('min'));
             var customerprice = parseFloat(priceinput.val());
 
-            if (customerprice < min || customerprice > max) {
+            if (customerprice < min || customerprice > max || !isFinite(customerprice)) {
                 priceinput.focus();
                 valid = false;
             }
@@ -552,9 +552,12 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-price-suggestion', function(e) {
+        console.log($(this));
+
         var productform = $(this).closest('form');
         productform.find('.store-product-customer-price-entry-field').val($(this).data('suggestion-value'));
         communityStore.addToCart(productform.data('product-id'),$(this).data('add-type'));
+        productform.find('.store-product-customer-price-entry-field').val('');
         e.preventDefault();
     });
 

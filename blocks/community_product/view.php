@@ -39,13 +39,15 @@ if (is_object($product) && $product->isActive()) {
                             <?php
                             $pricesuggestions = $product->getPriceSuggestionsArray();
                             if (!empty($pricesuggestions)) { ?>
-                                <div class="store-product-price-suggestions"><?php
+                                <p class="store-product-price-suggestions"><?php
                                 foreach($pricesuggestions as $suggestion) { ?>
-                                    <button class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></button>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
                                 <?php } ?>
-                            </div>
+                                </p>
+                                <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
+                            <?php } else { ?>
+                                <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
                             <?php } ?>
-                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
                             <div class="input-group col-md-6 col-sm-6 col-xs-6">

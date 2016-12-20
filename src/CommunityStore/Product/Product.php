@@ -65,7 +65,7 @@ class Product
     protected $pDetail;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2)
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pPrice;
 
@@ -338,7 +338,7 @@ class Product
     }
     public function setPrice($price)
     {
-        $this->pPrice = $price;
+        $this->pPrice = ($price != '' ? $price : null);
     }
     public function setSalePrice($price)
     {

@@ -110,7 +110,11 @@ class Cart
             $max = $product->getPriceMaximum();
             $min = $product->getPriceMinimum();
 
-            if ($customerPrice > $max || $customerPrice < $min) {
+            if (!is_null($min) && $customerPrice < (float)$min) {
+                $error = true;
+            }
+
+            if (!is_null($max) && $customerPrice > (float)$max) {
                 $error = true;
             }
         }
@@ -126,11 +130,20 @@ class Cart
 
             //now, build a nicer "cart item"
             $cartItem = array();
-            $cartItem['product'] = array(
-                "pID" => (int)$data['pID'],
-                "qty" => (int)$data['quantity'],
-                "customerPrice" => $customerPrice,
-            );
+
+            if ($customerPrice) {
+                $cartItem['product'] = array(
+                    "pID" => (int)$data['pID'],
+                    "qty" => (int)$data['quantity'],
+                    "customerPrice" => $customerPrice,
+                );
+            } else {
+                $cartItem['product'] = array(
+                    "pID" => (int)$data['pID'],
+                    "qty" => (int)$data['quantity']
+                );
+            }
+
             unset($data['pID']);
             unset($data['quantity']);
             unset($data['customerPrice']);
