@@ -144,7 +144,6 @@ if (is_object($product) && $product->isActive()) {
 
                 <?php if ($showImage) { ?>
                     <div class="store-product-image col-md-6">
-                        <p>
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
@@ -175,7 +174,6 @@ if (is_object($product) && $product->isActive()) {
                             echo '</div>';
                         }
                         ?>
-                        </p>
                     </div>
                 <?php } ?>
             </div>
