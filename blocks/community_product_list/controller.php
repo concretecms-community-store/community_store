@@ -72,6 +72,16 @@ class Controller extends BlockController
     public function view()
     {
         $products = new StoreProductList();
+
+        // checks in case sort order was inadvertantly set to an option that doesn't work with the current filter
+        if ($this->sortOrder == 'category' &&  !($this->filter == 'current' || $this->filter == 'page')) {
+            $this->sortOrder = 'alpha';
+        }
+
+        if ($this->sortOrder == 'related' &&  !($this->filter == 'related' || $this->filter == 'related_product')) {
+            $this->sortOrder = 'related';
+        }
+
         $products->setSortBy($this->sortOrder);
 
         if ($this->sortOrder == 'alpha') {
