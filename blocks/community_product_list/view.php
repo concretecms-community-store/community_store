@@ -244,5 +244,5 @@ if($products){
     
 } //if products
 elseif (is_object($c) && $c->isEditMode()) { ?>
-    <p class="alert alert-info"><?= t("Empty Product List")?></p>
+    <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List")?></div>
 <?php } ?>
