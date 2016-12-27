@@ -144,15 +144,15 @@ if (is_object($product) && $product->isActive()) {
 
                 <?php if ($showImage) { ?>
                     <div class="store-product-image col-md-6">
-                        <p>
+                        <div>&nbsp;</div>
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, 600, 600, true);
+                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, 720, 720, true);
                             ?>
-                            <div class="store-product-primary-image">
+                            <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
-                                   title="<?= h($product->getName()); ?>" class="store-product-thumb">
+                                   title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block">
                                     <img src="<?= $thumb->src ?>">
                                 </a>
                             </div>
@@ -161,21 +161,24 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $images = $product->getImagesObjects();
                         if (count($images) > 0) {
-                            echo '<div class="store-product-additional-images">';
+                            $loop = 1;
+                            echo '<div class="store-product-additional-images clearfix no-gutter">';
+
                             foreach ($images as $secondaryimage) {
                                 if (is_object($secondaryimage)) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, 300, 300, true);
+                                    $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, 720, 720, true);
                                     ?>
-                                    <a href="<?= $secondaryimage->getRelativePath() ?>"
-                                       title="<?= h($product->getName()); ?>" class="store-product-thumb"><img
-                                            src="<?= $thumb->src ?>"></a>
-
+                                    <div class="store-product-additional-image col-md-6 col-sm-6"><a href="<?= $secondaryimage->getRelativePath() ?>" title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block"><img src="<?= $thumb->src ?>" /></a></div>
                                 <?php }
+
+                                if ($loop > 0 && $loop % 2 == 0 && count($images) > $loop) {
+                                    echo '</div><div class="clearfix no-gutter">';
+                                }
+                                $loop++;
                             }
                             echo '</div>';
                         }
                         ?>
-                        </p>
                     </div>
                 <?php } ?>
             </div>
