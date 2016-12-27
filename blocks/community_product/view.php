@@ -1,5 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
+$defaultimagewidth = 720;
+$defaultimageheight = 720;
 
 if (is_object($product) && $product->isActive()) {
     ?>
@@ -148,7 +150,7 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, 720, 720, true);
+                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, true);
                             ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
@@ -166,7 +168,7 @@ if (is_object($product) && $product->isActive()) {
 
                             foreach ($images as $secondaryimage) {
                                 if (is_object($secondaryimage)) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, 720, 720, true);
+                                    $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, $defaultimagewidth, $defaultimageheight, true);
                                     ?>
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a href="<?= $secondaryimage->getRelativePath() ?>" title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block"><img src="<?= $thumb->src ?>" /></a></div>
                                 <?php }
@@ -204,13 +206,12 @@ if (is_object($product) && $product->isActive()) {
             $varationData = array();
             foreach($variationLookup as $key=>$variation) {
                 $product->setVariation($variation);
-
-                $imgObj = $variation->getVariationImageObj();
+                $imgObj = $product->getImageObj();
 
                 $thumb = false;
 
                 if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj,600,800,true);
+                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight,true);
                 }
 
                 $varationData[$key] = array(
@@ -218,7 +219,7 @@ if (is_object($product) && $product->isActive()) {
                 'saleprice'=>$product->getFormattedSalePrice(),
                 'available'=>($variation->isSellable()),
                 'imageThumb'=>$thumb ? $thumb->src : '',
-                'image'=>$imgObj ? $imgObj->getRelativePath() : ''
+                'image'=> $imgObj ? $imgObj->getRelativePath() : ''
 
                 );
             } ?>
