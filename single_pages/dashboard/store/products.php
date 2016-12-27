@@ -229,7 +229,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div><!-- #product-overview -->
 
             <div class="col-sm-9 store-pane" id="product-categories">
-                <label><?= t('Categorized under pages')?></label>
+                <?= $form->label('',t("Categorized under pages")); ?>
 
                 <div class="form-group" id="page_pickers">
 
@@ -257,7 +257,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     </div>
                 </div>
 
-                <label><?= t('In product groups')?></label>
+                <?= $form->label('',t("In product groups")); ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                     <select multiple="multiple" name="pProductGroups[]" class="existing-select2 select2-select" style="width: 100%"
                             placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
@@ -378,8 +378,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID):null); ?>
                 </div>
 
-
-                <label><?= t('Additional Images')?></label>
+                <?= $form->label('',t("Additional Images")); ?>
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
                     <?php  foreach ($product->getimagesobjects() as $file) {
@@ -428,7 +427,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-options">
 
-                <label><?= t('Options')?></label>
+                <?= $form->label('',t("Options")); ?>
                 <div id="product-options-container"></div>
 
                 <div class="clearfix">
@@ -763,7 +762,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <br />
             <div class="form-group">
-                <label><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
+                <label class="control-label"><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
                 <?= t('Options have different prices, SKUs or stock levels');?></label>
 
                 <?php if (!$pID) { ?>
@@ -959,7 +958,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-related">
 
-                <h4><?= t('Related Products')?></h4>
+                <?= $form->label("", t("Related Products")); ?>
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="related-products">
                     <?php
