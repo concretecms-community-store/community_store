@@ -47,7 +47,7 @@ if($products){
     ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-            <form   id="store-form-add-to-cart-list-<?= $product->getID()?>">
+            <form   id="store-form-add-to-cart-list-<?= $product->getID()?>" data-product-id="<?= $product->getID() ?>">
 		<?php if ($showName) { ?>
                 <h2 class="store-product-list-name"><?= $product->getName()?></h2>
 		<?php } ?>
@@ -84,6 +84,47 @@ if($products){
                     ?>
                 </p>
                 <?php } ?>
+
+                <?php if ($product->allowCustomerPrice()) { ?>
+                    <div class="store-product-customer-price-entry form-group">
+                        <?php
+                        $pricesuggestions = $product->getPriceSuggestionsArray();
+                        if (!empty($pricesuggestions)) { ?>
+                            <p class="store-product-price-suggestions"><?php
+                                foreach($pricesuggestions as $suggestion) { ?>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
+                                <?php } ?>
+                            </p>
+                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
+                        <?php } else { ?>
+                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
+                        <?php } ?>
+                        <?php $min = $product->getPriceMinimum(); ?>
+                        <?php $max = $product->getPriceMaximum(); ?>
+                        <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group-addon"><?= Config::get('community_store.symbol');?></div>
+                            <input type="number" <?= $min ? 'min="'.$min.'"' : ''; ?>  <?= $max ? 'max="'.$max.'"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                        </div>
+                        <?php if ($min >=0 || $max > 0) { ?>
+                            <span class="store-min-max help-block">
+                                    <?php
+                                    if (!is_null($min)) {
+                                        echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
+                                    }
+
+                                    if (!is_null($max)) {
+                                        if ($min >= 0) {
+                                            echo ', ';
+                                        }
+                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                                    }
+                                    ?>
+                                    </span>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+
+
                 <?php if($showDescription){ ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
