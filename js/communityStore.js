@@ -77,6 +77,21 @@ var communityStore = {
 
         var valid = true;
 
+
+        var priceinput = $(form).find('.store-product-customer-price-entry-field');
+
+        if (priceinput.length > 0) {
+            var max = parseFloat(priceinput.attr('max'));
+            var min = parseFloat(priceinput.attr('min'));
+            var customerprice = parseFloat(priceinput.val());
+
+            if (customerprice < min || customerprice > max || !isFinite(customerprice)) {
+                priceinput.focus();
+                valid = false;
+            }
+
+        }
+
         $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField){
             if($(requiredField).val()=='') {
                 $(requiredField).focus();
@@ -526,6 +541,23 @@ $(document).ready(function () {
 
     $(document).on('click', '.store-btn-add-to-cart', function(e) {
         communityStore.addToCart($(this).data('product-id'),$(this).data('add-type'));
+        e.preventDefault();
+    });
+
+    $(document).on('submit', '.store-product-block', function(e) {
+        if ($(this).find('.store-btn-add-to-cart').size() > 0) {
+            communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
+        }
+        e.preventDefault();
+    });
+
+    $(document).on('click', '.store-price-suggestion', function(e) {
+        console.log($(this));
+
+        var productform = $(this).closest('form');
+        productform.find('.store-product-customer-price-entry-field').val($(this).data('suggestion-value'));
+        communityStore.addToCart(productform.data('product-id'),$(this).data('add-type'));
+        productform.find('.store-product-customer-price-entry-field').val('');
         e.preventDefault();
     });
 

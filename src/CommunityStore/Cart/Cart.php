@@ -102,88 +102,118 @@ class Cart
         Session::set('community_store.smID', false);
         $product = StoreProduct::getByID((int) $data['pID']);
 
+        $customerPrice = false;
+
+        if ($product->allowCustomerPrice()) {
+            $customerPrice = (float)$data['customerPrice'];
+
+            $max = $product->getPriceMaximum();
+            $min = $product->getPriceMinimum();
+
+            if (!is_null($min) && $customerPrice < (float)$min) {
+                $error = true;
+            }
+
+            if (!is_null($max) && $customerPrice > (float)$max) {
+                $error = true;
+            }
+        }
+
         if (!$product) {
             $error = true;
         }
 
-        if ($product->isExclusive()) {
-            self::clear();
-        }
-
-        //now, build a nicer "cart item"
-        $cartItem = array();
-        $cartItem['product'] = array(
-            "pID" => (int) $data['pID'],
-            "qty" => (int) $data['quantity'],
-        );
-        unset($data['pID']);
-        unset($data['quantity']);
-
-        //since we removed the ID/qty, we're left with just the attributes
-        $cartItem['productAttributes'] = $data;
-
-        $removeexistingexclusive = false;
-
-        foreach (self::getCart() as $k => $cart) {
-            $cartproduct = StoreProduct::getByID((int) $cart['product']['pID']);
-
-            if ($cartproduct && $cartproduct->isExclusive()) {
-                self::remove($k);
-                $removeexistingexclusive = true;
-            }
-        }
-
-        $optionItemIds = array();
-
-        // search for product options, if found, collect the id
-        foreach ($cartItem['productAttributes'] as $name => $value) {
-            $groupID = false;
-
-            if (substr($name, 0, 2) == 'po') {
-                $optionItemIds[] = $value;
-                if (!$value) {
-                    $error = true;  // if we have select option but no value
-                }
-
-            } elseif (substr($name, 0, 2) == 'pt')  {
-                $groupID = str_replace("pt", "", $name);
-
-            } elseif (substr($name, 0, 2) == 'pa')  {
-                $groupID = str_replace("pa", "", $groupID);
-
-            } elseif (substr($name, 0, 2) == 'ph')  {
-                $groupID = str_replace("ph", "", $name);
+        if (!$error) {
+            if ($product->isExclusive()) {
+                self::clear();
             }
 
+            //now, build a nicer "cart item"
+            $cartItem = array();
 
-            // if there is a groupID, check to see if it's a required field, reject if no value
-            if ($groupID) {
-                $option = StoreProductOption::getByID($groupID);
-                if ($option->getRequired() && !$value) {
-                    $error = true;
-                }
-            }
-        }
-        
-
-        if (!empty($optionItemIds) && $product->hasVariations()) {
-            // find the variation via the ids of the options
-            $variation = StoreProductVariation::getByOptionItemIDs($optionItemIds);
-
-            // association the variation with the product
-            if ($variation) {
-                $options = $variation->getOptions();
-                if (count($options) == count($optionItemIds)) {  // check if we've matched to a variation with the correct number of options
-                    $product->setVariation($variation);
-                    $cartItem['product']['variation'] = $variation->getID();
-                } else {
-                    $error = true;
-                }
+            if ($customerPrice) {
+                $cartItem['product'] = array(
+                    "pID" => (int)$data['pID'],
+                    "qty" => (int)$data['quantity'],
+                    "customerPrice" => $customerPrice,
+                );
             } else {
-                $error = true; // variation not matched
+                $cartItem['product'] = array(
+                    "pID" => (int)$data['pID'],
+                    "qty" => (int)$data['quantity']
+                );
             }
-        } elseif ($product->hasVariations()) {
-            $error = true;  // if we have a product with variations, but no variation data was submitted, it's a broken add-to-cart form
+
+            unset($data['pID']);
+            unset($data['quantity']);
+            unset($data['customerPrice']);
+
+            //since we removed the ID/qty, we're left with just the attributes
+            $cartItem['productAttributes'] = $data;
+
+            $removeexistingexclusive = false;
+
+            foreach (self::getCart() as $k => $cart) {
+                $cartproduct = StoreProduct::getByID((int)$cart['product']['pID']);
+
+                if ($cartproduct && $cartproduct->isExclusive()) {
+                    self::remove($k);
+                    $removeexistingexclusive = true;
+                }
+            }
+
+            $optionItemIds = array();
+
+            // search for product options, if found, collect the id
+            foreach ($cartItem['productAttributes'] as $name => $value) {
+                $groupID = false;
+
+                if (substr($name, 0, 2) == 'po') {
+                    $optionItemIds[] = $value;
+                    if (!$value) {
+                        $error = true;  // if we have select option but no value
+                    }
+
+                } elseif (substr($name, 0, 2) == 'pt') {
+                    $groupID = str_replace("pt", "", $name);
+
+                } elseif (substr($name, 0, 2) == 'pa') {
+                    $groupID = str_replace("pa", "", $groupID);
+
+                } elseif (substr($name, 0, 2) == 'ph') {
+                    $groupID = str_replace("ph", "", $name);
+                }
+
+
+                // if there is a groupID, check to see if it's a required field, reject if no value
+                if ($groupID) {
+                    $option = StoreProductOption::getByID($groupID);
+                    if ($option->getRequired() && !$value) {
+                        $error = true;
+                    }
+                }
+            }
+
+
+            if (!empty($optionItemIds) && $product->hasVariations()) {
+                // find the variation via the ids of the options
+                $variation = StoreProductVariation::getByOptionItemIDs($optionItemIds);
+
+                // association the variation with the product
+                if ($variation) {
+                    $options = $variation->getOptions();
+                    if (count($options) == count($optionItemIds)) {  // check if we've matched to a variation with the correct number of options
+                        $product->setVariation($variation);
+                        $cartItem['product']['variation'] = $variation->getID();
+                    } else {
+                        $error = true;
+                    }
+                } else {
+                    $error = true; // variation not matched
+                }
+            } elseif ($product->hasVariations()) {
+                $error = true;  // if we have a product with variations, but no variation data was submitted, it's a broken add-to-cart form
+            }
         }
 
         if (!$error) {
@@ -191,7 +221,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if ($exists['exists'] === true) {
+            if ($exists['exists'] === true && !isset($cartItem['product']['customerPrice'])) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty

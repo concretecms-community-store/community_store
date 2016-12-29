@@ -121,7 +121,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                             </td>
 
                             <td class="store-cart-list-item-price col-xs-2">
-                                <?=StorePrice::format($product->getActivePrice())?>
+                                <?php if (isset($cartItem['product']['customerPrice'])) { ?>
+                                    <?=StorePrice::format($cartItem['product']['customerPrice'])?>
+                                <?php } else {  ?>
+                                    <?=StorePrice::format($product->getActivePrice())?>
+                                <?php } ?>
                             </td>
 
                             <td class="store-cart-list-product-qty col-xs-2">

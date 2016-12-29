@@ -102,14 +102,18 @@ if ($cart) {
                         <?php } ?>
                         </td>
                         <td class="store-cart-item-price">
-                            <?php
-                            $salePrice = $product->getSalePrice();
-                            if (isset($salePrice) && $salePrice != "") {
-                                echo '<span class="sale-price">' . StorePrice::format($salePrice) . '</span>';
-                            } else {
-                                echo StorePrice::format($product->getPrice());
-                            }
-                            ?>
+                            <?php if (isset($cartItem['product']['customerPrice'])) { ?>
+                                <?=StorePrice::format($cartItem['product']['customerPrice'])?>
+                            <?php } else {  ?>
+                                <?php
+                                $salePrice = $product->getSalePrice();
+                                if (isset($salePrice) && $salePrice != "") {
+                                    echo '<span class="sale-price">' . StorePrice::format($salePrice) . '</span>';
+                                } else {
+                                    echo StorePrice::format($product->getActivePrice());
+                                }
+                                ?>
+                            <?php } ?>
                         </td>
                         <td class="store-cart-product-qty text-right">
                             <?php if ($product->allowQuantity()) { ?>

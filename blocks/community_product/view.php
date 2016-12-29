@@ -6,7 +6,7 @@ $defaultimageheight = 720;
 if (is_object($product) && $product->isActive()) {
     ?>
 
-    <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
+    <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
         <div class="row">
             <?php if ($showImage){ ?>
             <div class="store-product-details col-md-6">
@@ -18,7 +18,7 @@ if (is_object($product) && $product->isActive()) {
                         <meta itemprop="sku" content="<?= $product->getSKU() ?>" />
                     <?php } ?>
 
-                    <?php if ($showProductPrice) { ?>
+                    <?php if ($showProductPrice && !$product->allowCustomerPrice()) { ?>
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
@@ -34,6 +34,45 @@ if (is_object($product) && $product->isActive()) {
                         }
                         ?>
                         </p>
+                    <?php } ?>
+
+                    <?php if ($product->allowCustomerPrice()) { ?>
+                        <div class="store-product-customer-price-entry form-group">
+                            <?php
+                            $pricesuggestions = $product->getPriceSuggestionsArray();
+                            if (!empty($pricesuggestions)) { ?>
+                                <p class="store-product-price-suggestions"><?php
+                                foreach($pricesuggestions as $suggestion) { ?>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
+                                <?php } ?>
+                                </p>
+                                <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
+                            <?php } else { ?>
+                                <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
+                            <?php } ?>
+                            <?php $min = $product->getPriceMinimum(); ?>
+                            <?php $max = $product->getPriceMaximum(); ?>
+                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                                <div class="input-group-addon"><?= Config::get('community_store.symbol');?></div>
+                                <input type="number" <?= $min ? 'min="'.$min.'"' : ''; ?>  <?= $max ? 'max="'.$max.'"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                            </div>
+                            <?php if ($min >=0 || $max > 0) { ?>
+                                <span class="store-min-max help-block">
+                                    <?php
+                                    if (!is_null($min)) {
+                                        echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
+                                    }
+
+                                    if (!is_null($max)) {
+                                        if ($min >= 0) {
+                                            echo ', ';
+                                        }
+                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                                    }
+                                    ?>
+                                    </span>
+                            <?php } ?>
+                        </div>
                     <?php } ?>
 
                     <meta itemprop="description" content="<?= strip_tags($product->getDesc()); ?>" />

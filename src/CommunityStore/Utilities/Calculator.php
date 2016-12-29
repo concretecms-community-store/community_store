@@ -19,7 +19,14 @@ class Calculator
                 $product = $cartItem['product']['object'];
 
                 if (is_object($product)) {
-                    $productSubTotal = $product->getActivePrice() * $qty;
+
+                    if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
+                        $price = $cartItem['product']['customerPrice'];
+                    } else {
+                        $price = $product->getActivePrice();
+                    }
+
+                    $productSubTotal = $price * $qty;
                     $subtotal = $subtotal + $productSubTotal;
                 }
             }

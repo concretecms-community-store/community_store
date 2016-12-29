@@ -105,29 +105,93 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pPrice", t("Price"));?>
+                            <?php
+                            $priceclass = 'nonpriceentry';
+                            $defaultpriceclass = 'priceentry';
+                            if ($product->allowCustomerPrice()) {
+                                $priceclass .= ' hidden';
+                            } else {
+                                $defaultpriceclass .= ' hidden';
+                            }
+                            ?>
+                            <?= $form->label("pPrice", t("Price"), array('class'=>$priceclass));?>
+                            <?= $form->label("pPrice", t("Default Price"), array('class'=>$defaultpriceclass));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?=  Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $price = $product->getPrice(); ?>
-                                <?= $form->text("pPrice", $price?$price:'0');?>
+                                <?= $form->text("pPrice", $price, array('placeholder'=>($product->allowCustomerPrice() ? t('No Price Set') : '')));?>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pSalePrice", t("Sale Price"));?>
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
+                            <?= $form->label("pSalePrice", t("Sale Price"), array('class'=>$priceclass));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <?=  Config::get('community_store.symbol');?>
+                                    <?= Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $salePrice = $product->getSalePrice(); ?>
                                 <?= $form->text("pSalePrice", $salePrice, array('placeholder'=>'No Sale Price Set'));?>
                             </div>
                         </div>
+                        <div class="form-group priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden');?>">
+                            <?= $form->label('pPriceSuggestions', t('Price Suggestions'))?>
+                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), array('placeholder'=>'e.g. 10,20,30'))?>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(document).ready(function(){
+                            $('#pCustomerPrice').change(function(){
+                                if ($(this).prop('checked')) {
+                                    $('.priceentry').removeClass('hidden');
+                                    $('.nonpriceentry').addClass('hidden');
+                                } else {
+                                    $('.priceentry').addClass('hidden');
+                                    $('.nonpriceentry').removeClass('hidden');
+                                }
+                            });
+                        });
+                    </script>
+
+                </div>
+                <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden');?>">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMinimum", t("Minimum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $minimumPrice = $product->getPriceMinimum(); ?>
+                                <?= $form->text("pPriceMinimum", $minimumPrice, array('placeholder'=>'No Minimum Price Set'));?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMaximum", t("Maximum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $maximumPrice = $product->getPriceMaximum(); ?>
+                                <?= $form->text("pPriceMaximum", $maximumPrice, array('placeholder'=>'No Maximum Price Set'));?>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice())?>
+                            <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
