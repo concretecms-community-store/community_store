@@ -220,7 +220,7 @@ class OrderItem
 
         $productName = $product->getName();
         
-        if (($data['product']['customerPrice']!== false)) {
+        if (isset($data['product']['customerPrice'])) {
             $productPrice = $data['product']['customerPrice'];
         } else {
             $productPrice = $product->getActivePrice();

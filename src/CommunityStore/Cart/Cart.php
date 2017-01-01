@@ -408,7 +408,7 @@ class Cart
         return $shippableItems;
     }
 
-    public static function getCartWeight()
+    public static function getCartWeight($unit = '')
     {
         $totalWeight = 0;
         if (self::getCart()) {
@@ -425,6 +425,41 @@ class Cart
                 }
             }
         }
+
+        if ($unit) {
+            $storeweightunit = \Config::get('community_store.weightUnit');
+
+            if ($storeweightunit != $unit) {
+                // convert to grams first
+                if ($storeweightunit == 'kg') {
+                    $totalWeight *= 1000;
+                }
+
+                if ($storeweightunit =='oz') {
+                    $totalWeight *= 28.3495;
+                }
+
+                if ($storeweightunit =='lb') {
+                    $totalWeight *= 453.592;
+                }
+                // end convert to grams
+
+
+                if ($unit == 'kg') {
+                    $totalWeight *= 0.001;
+                }
+
+                if ($unit == 'oz') {
+                    $totalWeight *= 0.035274;
+                }
+
+                if ($unit == 'lb') {
+                    $totalWeight *= 0.00220462;
+                }
+            }
+        }
+
+
         //only returns weight of shippable items.
         return $totalWeight;
     }

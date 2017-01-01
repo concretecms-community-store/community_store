@@ -92,7 +92,7 @@ if($products){
                         if (!empty($pricesuggestions)) { ?>
                             <p class="store-product-price-suggestions"><?php
                                 foreach($pricesuggestions as $suggestion) { ?>
-                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion;?></a>
                                 <?php } ?>
                             </p>
                             <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
