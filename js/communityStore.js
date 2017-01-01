@@ -320,11 +320,23 @@ var communityStore = {
         }
     },
 
-    showShippingMethods: function () {
+    showShippingMethods: function (callback) {
         $.ajax({
             url: CHECKOUTURL + "/getShippingMethods",
             success: function (html) {
                 $("#store-checkout-shipping-method-options").html(html);
+                $('.store-whiteout').remove();
+
+                if (callback) {
+                    callback();
+                }
+            },
+            failure: function() {
+                $('.store-whiteout').remove();
+
+                if (callback) {
+                    callback();
+                }
             }
         });
     },
@@ -468,12 +480,12 @@ $(document).ready(function () {
             success: function (result) {
                 var response = JSON.parse(result);
                 if (response.error == false) {
-                    $(".store-whiteout").remove();
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
-                    communityStore.nextPane(obj);
-                    communityStore.showShippingMethods();
-                    communityStore.refreshCartTotals();
+                    communityStore.showShippingMethods(function(){
+                        communityStore.refreshCartTotals();
+                        communityStore.nextPane(obj);
+                    });
                 } else {
                     $("#store-checkout-form-group-shipping .store-checkout-form-group-body").prepend('<div class="store-checkout-errors"><div class="alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-shipping .alert").html(response.errors.join('<br>'));
