@@ -69,7 +69,7 @@
                             <div class="form-group">
                                 <?= $form->label('weightUnit',t('Units for Weight'));?>
                                 <?php // do not add other units to this list. these are specific to making calculated shipping work ?>
-                                <?= $form->select('weightUnit',array('lb'=>t('lb'),'kg'=>t('kg'),'g'=>t('g')),Config::get('community_store.weightUnit'));?>
+                                <?= $form->select('weightUnit',array('oz'=>t('oz'),'lb'=>t('lb'),'kg'=>t('kg'),'g'=>t('g')),Config::get('community_store.weightUnit'));?>
                             </div>
                         </div>
                         <div class="col-xs-6">
