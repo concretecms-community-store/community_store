@@ -41,17 +41,17 @@ class Shipping extends DashboardPageController
     public function success()
     {
         $this->view();
-        $this->set("message",t("Successfully added a new Shipping Method"));
+        $this->set("message",t("Shipping method created"));
     }
     public function updated()
     {
         $this->view();
-        $this->set("message",t("Successfully updated"));
+        $this->set("message",t("Shipping method updated"));
     }
     public function removed()
     {
         $this->view();
-        $this->set("message",t("Successfully removed"));
+        $this->set("message",t("Shipping method removed"));
     }
     public function add_method()
     {
