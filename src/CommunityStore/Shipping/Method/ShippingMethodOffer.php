@@ -10,6 +10,7 @@ class ShippingMethodOffer
     private $offerLabel;
     private $offerDetails;
     private $rate;
+    private $quoteID;
 
     /**
      * @return mixed
@@ -125,6 +126,21 @@ class ShippingMethodOffer
         $this->rate = $rate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getQuoteID()
+    {
+        return $this->quoteID;
+    }
+
+    /**
+     * @param mixed $quoteID
+     */
+    public function setQuoteID($quoteID)
+    {
+        $this->quoteID = $quoteID;
+    }
 
 
 }
