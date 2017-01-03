@@ -701,19 +701,32 @@ class Product
 
         switch ($whl) {
             case "w":
-                return $source->pWidth;
+                return $source->getWidth();
                 break;
             case "h":
-                return $source->pHeight;
+                return $source->getHeight();
                 break;
             case "l":
-                return $source->pLength;
+                return $source->getLength();
                 break;
             default:
-                return $source->pLength."x".$source->pWidth."x".$source->pHeight;
+                return $source->getLength()."x".$source->getWidth()."x".$source->getHeight();
                 break;
         }
     }
+
+    public function getWidth() {
+        return $this->pWidth;
+    }
+
+    public function getHeight() {
+        return $this->pHeight;
+    }
+
+    public function getLength() {
+        return $this->pLength;
+    }
+
     public function getWeight()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
