@@ -57,6 +57,9 @@ class Order
     /** @Column(type="text",nullable=true) */
     protected $sInstructions;
 
+    /** @Column(type="text",nullable=true) */
+    protected $sQuoteID;
+
     /** @Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
 
@@ -142,6 +145,10 @@ class Order
     public function setShippingInstructions($sInstructions)
     {
         $this->sInstructions = $sInstructions;
+    }
+
+    public function setShippingQuoteID($quoteID) {
+        $this->sQuoteID = $quoteID;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -285,6 +292,10 @@ class Order
         return $this->sInstructions;
     }
 
+    public function getShippingQuoteID() {
+        return $this->sQuoteID;
+    }
+
     public function getShippingTotal()
     {
         return $this->oShippingTotal;
@@ -394,6 +405,7 @@ class Order
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
+        $sQuoteID = StoreShippingMethod::getActiveShippingQuoteID();
         $sInstructions = StoreCart::getShippingInstructions();
         $totals = StoreCalculator::getTotals();
         StoreCart::getShippingInstructions('');
@@ -432,6 +444,7 @@ class Order
         $order->setPaymentMethodName($pmDisplayName ? $pmDisplayName : $pmName);
         $order->setPaymentMethodID($pm->getID());
         $order->setShippingMethodName($smName);
+        $order->setShippingQuoteID($sQuoteID);
         $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxTotal);

@@ -258,6 +258,19 @@ class ShippingMethod
        return '';
     }
 
+    public static function getActiveShippingQuoteID() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getQuoteID();
+            }
+        }
+
+       return '';
+    }
+
     public function getPackageHandle() {
         return Package::getByID($this->getShippingMethodType()->getPackageID())->getPackageHandle();
     }
