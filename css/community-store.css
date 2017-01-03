@@ -78,7 +78,7 @@
     margin-left: -14px;
     font-size: 36px;
     line-height: 16px;
-    font-family: arial, san-serif; /* Non animation fallback */
+    font-family: arial, sans-serif; /* Non animation fallback */
 }
 
 .store-spinner:not(:required):before {
