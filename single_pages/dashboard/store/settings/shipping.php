@@ -78,7 +78,7 @@ if(in_array($controller->getTask(),$addViews)){
         </ul>
     </div>
     <?php } ?>
-    <a href="<?= \URL::to('/dashboard/store/settings')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
+    <a href="<?= \URL::to('/dashboard/store/settings#settings-shipping')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
 </div>
 
 <div class="dashboard-shipping-methods">
