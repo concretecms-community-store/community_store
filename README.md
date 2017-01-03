@@ -31,7 +31,11 @@ https://github.com/concrete5-community-store/community_store_stripe
 ### Pin Payments
 https://github.com/concrete5-community-store/community_store_pin_payments
 
-The use of the Ominpay library is encouraged to developed further payment add-ons (used by the Stripe add-on).
+### Square
+https://github.com/Babinsky/community_store_square
+
+### Authorize.Net
+Built, will be released shortly
 
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
