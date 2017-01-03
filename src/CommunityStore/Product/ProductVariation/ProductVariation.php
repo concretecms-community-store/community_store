@@ -265,10 +265,6 @@ class ProductVariation
         return $this->pvWidth;
     }
 
-    public function getWidth() {
-        return $this->getVariationWidth();
-    }
-
     /**
      * @param mixed $pWidth
      */
@@ -289,10 +285,6 @@ class ProductVariation
         return $this->pvHeight;
     }
 
-    public function getHeight() {
-        return $this->getVariationHeight();
-    }
-
     /**
      * @param mixed $pvHeight
      */
@@ -311,10 +303,6 @@ class ProductVariation
     public function getVariationLength()
     {
         return $this->pvLength;
-    }
-
-    public function getLength() {
-        return $this->getVariationLength();
     }
 
     /**

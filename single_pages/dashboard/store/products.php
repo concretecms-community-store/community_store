@@ -406,7 +406,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pLength", t("Length"));?>
                                 <div class="input-group" >
-                                    <?php $length = $product->getDimensions('l'); ?>
+                                    <?php $length = $product->getLength(); ?>
                                     <?= $form->text('pLength',$length?$length:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
@@ -414,7 +414,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pWidth", t("Width"));?>
                                 <div class="input-group" >
-                                    <?php $width = $product->getDimensions('w'); ?>
+                                    <?php $width = $product->getWidth(); ?>
                                     <?= $form->text('pWidth',$width?$width:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
@@ -422,7 +422,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pHeight", t("Height"));?>
                                 <div class="input-group">
-                                    <?php $height = $product->getDimensions('h'); ?>
+                                    <?php $height = $product->getHeight(); ?>
                                     <?= $form->text('pHeight',$height?$height:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
