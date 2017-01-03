@@ -19,6 +19,12 @@ $(function(){
         $(this).parent().addClass("active");
         localStorage.setItem("selectedTab", paneTarget);
         localStorage.setItem("selectedTabIndex",  $(this).parent().index());
+        if(history.pushState) {
+            history.pushState(null, null, '#'+paneTarget);
+        }
+        else {
+            location.hash = '#'+paneTarget;
+        }
     });
     $(".btn-delete-group").click(function(){
         var groupID = $(this).parent().attr("data-group-id");
@@ -89,22 +95,39 @@ $(function(){
             window.location = url+'/'+pageTemplate;        
         }
     });
+    
+    window.addEventListener('popstate', function(e) {
+        if ($('a[data-pane-toggle]').length > 0) {
+            updateActiveTab(true);
+        }
+    });
 
 });
-var url = window.location.pathname.toString();
-var urlArray = url.split('/');
-var saveSuccess = urlArray[urlArray.length - 1];
-if(saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added" || isNaN(parseInt(localStorage.getItem("selectedTabIndex")))){
-    localStorage.removeItem("selectedTab");
-    localStorage.removeItem("selectedTabIndex");
-}
-else{
-    $(".store-pane").removeClass('active'); 
-     $('a[data-pane-toggle]').parent().removeClass('active');
-     var paneTarget = localStorage.getItem("selectedTab");
-     var paneTargetIndex = parseInt(localStorage.getItem("selectedTabIndex"));
-     $('#'+paneTarget).addClass("active");
-     $('a[data-pane-toggle]:eq('+paneTargetIndex+')').parent().addClass("active");
+function updateActiveTab(historyPopEvent = false) {
+    var url = window.location.pathname.toString();
+    var hash = window.location.hash;
+    var urlArray = url.split('/');
+    var saveSuccess = urlArray[urlArray.length - 1];
+    var hashArray = saveSuccess.split('#');
+
+    if(!historyPopEvent && saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added" && hash == "" || isNaN(parseInt(localStorage.getItem("selectedTabIndex")))){
+        localStorage.removeItem("selectedTab");
+        localStorage.removeItem("selectedTabIndex");
+    }
+    else{
+        $(".store-pane").removeClass('active'); 
+        $('a[data-pane-toggle]').parent().removeClass('active');
+        if (typeof hash != "undefined" && hash != null && hash != "") {
+            var link = $('a[data-pane-toggle][href="'+hash+'"]');
+            var paneTarget = hash.replace('#','');  
+            var paneTargetIndex = $('a[data-pane-toggle]').index( link );
+        } else {
+            var paneTarget = historyPopEvent ? $('a[data-pane-toggle]').eq(0).attr('href').replace('#','') : localStorage.getItem("selectedTab");
+            var paneTargetIndex = historyPopEvent ? 0 : parseInt(localStorage.getItem("selectedTabIndex"));
+        }
+        $('#'+paneTarget).addClass("active");
+        $('a[data-pane-toggle]:eq('+paneTargetIndex+')').parent().addClass("active");
+    }
 }
 
 function updateTaxStates(){
@@ -125,5 +148,8 @@ function updateTaxStates(){
            }
        } 
     });
+}
+if ($('a[data-pane-toggle]').length > 0) {
+    updateActiveTab();
 }
 updateTaxStates();
