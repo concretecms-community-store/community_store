@@ -51,12 +51,8 @@ class Controller extends Package
 
     public function install()
     {
-        if (!class_exists("SOAPClient")) {
-            throw new ErrorException(t('This package requires that the SOAP client for PHP is installed'));
-        } else {
-            parent::install();
-            $this->installStore();
-        }
+        parent::install();
+        $this->installStore();
     }
 
     public function upgrade()

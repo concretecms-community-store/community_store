@@ -693,41 +693,108 @@ class Product
 
     public function getDimensions($whl = null)
     {
-        $source = $this;
+        $width = $this->getWidth();
+        $height = $this->getHeight();
+        $length = $this->getWidth();
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-            $source = $variation;
+
+            $varWidth = $variation->getVariationWidth();
+            $varHeight = $variation->getVariationHeight();
+            $varLength = $variation->getVariationLength();
+
+            if ($varWidth != '') {
+                $width = $varWidth;
+            }
+
+            if ($varHeight != '') {
+                $height = $varHeight;
+            }
+
+            if ($varLength != '') {
+                $length = $varLength;
+            }
         }
 
         switch ($whl) {
             case "w":
-                return $source->pWidth;
+                return $width;
                 break;
             case "h":
-                return $source->pHeight;
+                return $height;
                 break;
             case "l":
-                return $source->pLength;
+                return $length;
                 break;
             default:
-                return $source->pLength."x".$source->pWidth."x".$source->pHeight;
+                return $length."x".$width."x".$height;
                 break;
         }
     }
+
+    public function getWidth() {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+          $width = $variation->getVariationWidth();
+
+            if ($width) {
+                return $width;
+            }
+        }
+
+        return $this->pWidth;
+    }
+
+    public function getHeight() {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            $height = $variation->getVariationHeight();
+
+            if ($height) {
+                return $height;
+            }
+        }
+
+        return $this->pHeight;
+    }
+
+    public function getLength() {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            $length = $variation->getVariationLength();
+
+            if ($length) {
+                return $length;
+            }
+        }
+
+        return $this->pLength;
+    }
+
     public function getWeight()
     {
+        $weight = $this->pWeight;
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->getVariationWeight();
-        } else {
-            return $this->pWeight;
+            $varWeight = $variation->getVariationWeight();
+            if ($varWeight) {
+                return $varWeight;
+            }
         }
+
+        return $weight;
     }
     public function getNumberItems()
     {
+        $numberItems = $this->pNumberItems;
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->getVariationNumberItems();
+            $varNumberItems = $variation->getVariationNumberItems();
+
+            if ($varNumberItems) {
+                return $varNumberItems;
+            } else {
+                return $numberItems;
+            }
         } else {
-            return $this->pNumberItems;
+            return $numberItems;
         }
     }
 
