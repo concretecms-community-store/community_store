@@ -60,6 +60,12 @@ class Order
     /** @Column(type="text",nullable=true) */
     protected $sQuoteID;
 
+    /** @Column(type="text",nullable=true) */
+    protected $sTrackingID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sTrackingURL;
+
     /** @Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
 
@@ -147,8 +153,28 @@ class Order
         $this->sInstructions = $sInstructions;
     }
 
-    public function setShippingQuoteID($quoteID) {
+    public function setShippingQuoteID($quoteID)
+    {
         $this->sQuoteID = $quoteID;
+    }
+
+    public function getShippingTrackingID(){
+        return $this->sTrackingID;
+    }
+
+    public function setShippingTrackingID($sTrackingID)
+    {
+        $this->sTrackingID = $sTrackingID;
+    }
+
+    public function getShippingTrackingURL()
+    {
+        return $this->sTrackingURL;
+    }
+
+    public function setShippingTrackingURL($sTrackingURL)
+    {
+        $this->sTrackingURL = $sTrackingURL;
     }
 
     public function setShippingTotal($shippingTotal)
