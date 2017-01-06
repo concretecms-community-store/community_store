@@ -35,7 +35,7 @@ https://github.com/concrete5-community-store/community_store_pin_payments
 https://github.com/Babinsky/community_store_square
 
 ### Authorize.Net
-Built, will be released shortly
+https://github.com/concrete5-community-store/community_store_authorize_net
 
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
