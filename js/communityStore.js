@@ -270,16 +270,18 @@ var communityStore = {
     updateBillingStates: function (load) {
         var countryCode = $("#store-checkout-billing-country").val();
         var selectedState;
+        var classList = $("#store-checkout-billing-state").attr('class').toString();
+        var dataList = JSON.stringify($("#store-checkout-billing-state").data());
         if (load) {
             selectedState = $("#store-checkout-saved-billing-state").val();
         } else {
             selectedState = '';
         }
-
+        
         $.ajax({
             url: CHECKOUTURL + "/getstates",
             type: 'post',
-            data: {country: countryCode, selectedState: selectedState, type: "billing"},
+            data: {country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList},
             success: function (states) {
                 $("#store-checkout-billing-state").replaceWith(states);
             }
