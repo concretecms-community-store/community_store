@@ -228,12 +228,29 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
         </p>
 
+
+
+        <?php
+        $trackingURL = $order->getTrackingURL();
+        $trackingCode = $order->getTrackingCode();
+        $carrier = $order->getCarrier();
+
+        if ($carrier) { ?>
+            <p><strong><?= t("Carrier") ?>: </strong><?= $carrier ?></p>
+        <?php }
+
+        if ($trackingCode) { ?>
+            <p><strong><?= t("Tracking Code") ?>: </strong><?= $trackingCode ?> </p>
+        <?php }
+
+        if ($trackingURL) { ?>
+        <p><a target="_blank" href="<?= $trackingURL; ?>"><?= t('View shipment tracking');?></a></p>
+        <?php } ?>
+
         <?php
         $shippingInstructions = $order->getShippingInstructions();
         if ($shippingInstructions) { ?>
-            <p>
-                <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?>
-            </p>
+            <p><strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?></p>
         <?php } ?>
 
     <?php } ?>

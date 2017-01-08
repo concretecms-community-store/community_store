@@ -87,6 +87,14 @@ class OrderList  extends AttributedItemList
             }
         }
 
+        if (isset($this->shippable)) {
+            if ($this->shippable) {
+                $this->query->andWhere('o.smName <> ""');
+            } else {
+                $this->query->andWhere('o.smName = ""');
+            }
+        }
+
         if (isset($this->refunded)) {
             if ($this->refunded) {
                 $this->query->andWhere('o.oRefunded is not null');
@@ -156,6 +164,10 @@ class OrderList  extends AttributedItemList
     public function setRefunded($bool)
     {
         $this->refunded = $bool;
+    }
+
+    public function setIsShippable($bool){
+        $this->shippable = $bool;
     }
 
     public function getResult($queryRow)

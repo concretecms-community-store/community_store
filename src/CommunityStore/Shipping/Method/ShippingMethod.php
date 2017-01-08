@@ -258,6 +258,32 @@ class ShippingMethod
        return '';
     }
 
+    public static function getActiveShipmentID() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getShipmentID();
+            }
+        }
+
+       return '';
+    }
+
+    public static function getActiveRateID() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getRateID();
+            }
+        }
+
+        return '';
+    }
+
     public function getPackageHandle() {
         return Package::getByID($this->getShippingMethodType()->getPackageID())->getPackageHandle();
     }
