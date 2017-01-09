@@ -336,22 +336,27 @@ class Installer
 
     public static function upgrade($pkg)
     {
-        $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
-        if ($singlePage->error) {
-            self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
-        }
 
-        $oakc = AttributeKeyCategory::getByHandle('store_order');
-        $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
-        if (!($orderChoiceSet instanceof \Concrete\Core\Attribute\Set)) {
-            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
-        }
+        if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
+            // skip this for version 8, these items would have already been installed historically
+        } else {
+            $singlePage = Page::getByPath('/dashboard/store/orders/attributes');
+            if ($singlePage->error) {
+                self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+            }
 
-        // now we refresh all blocks
-        $items = $pkg->getPackageItems();
-        if (is_array($items['block_types'])) {
-            foreach ($items['block_types'] as $item) {
-                $item->refresh();
+            $oakc = AttributeKeyCategory::getByHandle('store_order');
+            $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
+            if (!($orderChoiceSet instanceof \Concrete\Core\Attribute\Set)) {
+                $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+            }
+
+            // now we refresh all blocks
+            $items = $pkg->getPackageItems();
+            if (is_array($items['block_types'])) {
+                foreach ($items['block_types'] as $item) {
+                    $item->refresh();
+                }
             }
         }
         Localization::clearCache();
