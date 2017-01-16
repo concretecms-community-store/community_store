@@ -105,29 +105,93 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pPrice", t("Price"));?>
+                            <?php
+                            $priceclass = 'nonpriceentry';
+                            $defaultpriceclass = 'priceentry';
+                            if ($product->allowCustomerPrice()) {
+                                $priceclass .= ' hidden';
+                            } else {
+                                $defaultpriceclass .= ' hidden';
+                            }
+                            ?>
+                            <?= $form->label("pPrice", t("Price"), array('class'=>$priceclass));?>
+                            <?= $form->label("pPrice", t("Default Price"), array('class'=>$defaultpriceclass));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?=  Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $price = $product->getPrice(); ?>
-                                <?= $form->text("pPrice", $price?$price:'0');?>
+                                <?= $form->text("pPrice", $price, array('placeholder'=>($product->allowCustomerPrice() ? t('No Price Set') : '')));?>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pSalePrice", t("Sale Price"));?>
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
+                            <?= $form->label("pSalePrice", t("Sale Price"), array('class'=>$priceclass));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <?=  Config::get('community_store.symbol');?>
+                                    <?= Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $salePrice = $product->getSalePrice(); ?>
                                 <?= $form->text("pSalePrice", $salePrice, array('placeholder'=>'No Sale Price Set'));?>
                             </div>
                         </div>
+                        <div class="form-group priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden');?>">
+                            <?= $form->label('pPriceSuggestions', t('Price Suggestions'))?>
+                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), array('placeholder'=>'e.g. 10,20,30'))?>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(document).ready(function(){
+                            $('#pCustomerPrice').change(function(){
+                                if ($(this).prop('checked')) {
+                                    $('.priceentry').removeClass('hidden');
+                                    $('.nonpriceentry').addClass('hidden');
+                                } else {
+                                    $('.priceentry').addClass('hidden');
+                                    $('.nonpriceentry').removeClass('hidden');
+                                }
+                            });
+                        });
+                    </script>
+
+                </div>
+                <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden');?>">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMinimum", t("Minimum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $minimumPrice = $product->getPriceMinimum(); ?>
+                                <?= $form->text("pPriceMinimum", $minimumPrice, array('placeholder'=>'No Minimum Price Set'));?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMaximum", t("Maximum Price"));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?=  Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $maximumPrice = $product->getPriceMaximum(); ?>
+                                <?= $form->text("pPriceMaximum", $maximumPrice, array('placeholder'=>'No Maximum Price Set'));?>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice())?>
+                            <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -229,7 +293,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div><!-- #product-overview -->
 
             <div class="col-sm-9 store-pane" id="product-categories">
-                <label><?= t('Categorized under pages')?></label>
+                <?= $form->label('',t("Categorized under pages")); ?>
 
                 <div class="form-group" id="page_pickers">
 
@@ -257,7 +321,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     </div>
                 </div>
 
-                <label><?= t('In product groups')?></label>
+                <?= $form->label('',t("In product groups")); ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                     <select multiple="multiple" name="pProductGroups[]" class="existing-select2 select2-select" style="width: 100%"
                             placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
@@ -342,7 +406,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pLength", t("Length"));?>
                                 <div class="input-group" >
-                                    <?php $length = $product->getDimensions('l'); ?>
+                                    <?php $length = $product->getLength(); ?>
                                     <?= $form->text('pLength',$length?$length:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
@@ -350,7 +414,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pWidth", t("Width"));?>
                                 <div class="input-group" >
-                                    <?php $width = $product->getDimensions('w'); ?>
+                                    <?php $width = $product->getWidth(); ?>
                                     <?= $form->text('pWidth',$width?$width:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
@@ -358,7 +422,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <div class="form-group">
                                 <?= $form->label("pHeight", t("Height"));?>
                                 <div class="input-group">
-                                    <?php $height = $product->getDimensions('h'); ?>
+                                    <?php $height = $product->getHeight(); ?>
                                     <?= $form->text('pHeight',$height?$height:'0')?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
                                 </div>
@@ -378,8 +442,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID):null); ?>
                 </div>
 
-
-                <label><?= t('Additional Images')?></label>
+                <?= $form->label('',t("Additional Images")); ?>
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
                     <?php  foreach ($product->getimagesobjects() as $file) {
@@ -428,7 +491,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-options">
 
-                <label><?= t('Options')?></label>
+                <?= $form->label('',t("Options")); ?>
                 <div id="product-options-container"></div>
 
                 <div class="clearfix">
@@ -763,7 +826,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <br />
             <div class="form-group">
-                <label><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
+                <label class="control-label"><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
                 <?= t('Options have different prices, SKUs or stock levels');?></label>
 
                 <?php if (!$pID) { ?>
@@ -959,7 +1022,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-related">
 
-                <h4><?= t('Related Products')?></h4>
+                <?= $form->label("", t("Related Products")); ?>
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="related-products">
                     <?php

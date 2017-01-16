@@ -41,17 +41,17 @@ class Shipping extends DashboardPageController
     public function success()
     {
         $this->view();
-        $this->set("message",t("Successfully added a new Shipping Method"));
+        $this->set("message",t("Shipping method created"));
     }
     public function updated()
     {
         $this->view();
-        $this->set("message",t("Successfully updated"));
+        $this->set("message",t("Shipping method updated"));
     }
     public function removed()
     {
         $this->view();
-        $this->set("message",t("Successfully removed"));
+        $this->set("message",t("Shipping method removed"));
     }
     public function add_method()
     {
@@ -63,10 +63,14 @@ class Shipping extends DashboardPageController
             if($this->post('shippingMethodID')){
                 //update
                 $shippingMethod = StoreShippingMethod::getByID($this->post('shippingMethodID'));
-                $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
-                $shippingMethodTypeMethod->update($this->post());
-                $shippingMethod->update($this->post('methodName'),$this->post('methodEnabled'),$this->post('methodDetails'));
-                $this->redirect('/dashboard/store/settings/shipping/updated');
+                if ($shippingMethod) {
+                    $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
+                    $shippingMethodTypeMethod->update($this->post());
+                    $shippingMethod->update($this->post('methodName'),$this->post('methodEnabled'),$this->post('methodDetails'));
+                    $this->redirect('/dashboard/store/settings/shipping/updated');
+                } else {
+                    $this->redirect('/dashboard/store/settings/shipping');
+                }
             } else {
                 //first we send the data to the shipping method type.
                 $shippingMethodType = StoreShippingMethodType::getByID($this->post('shippingMethodTypeID'));

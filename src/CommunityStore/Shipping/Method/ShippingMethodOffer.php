@@ -10,6 +10,8 @@ class ShippingMethodOffer
     private $offerLabel;
     private $offerDetails;
     private $rate;
+    private $shipmentID;
+    private $rateID;
 
     /**
      * @return mixed
@@ -117,14 +119,29 @@ class ShippingMethodOffer
         return max(($this->rate * $percentage) - $deduct, 0);
     }
 
-    /**
-     * @param mixed $rate
-     */
     public function setRate($rate)
     {
         $this->rate = $rate;
     }
 
+    public function getShipmentID()
+    {
+        return $this->shipmentID;
+    }
 
+    public function setShipmentID($shipmentID)
+    {
+        $this->shipmentID = $shipmentID;
+    }
+
+    public function getRateID()
+    {
+        return $this->rateID;
+    }
+
+    public function setRateID($rateID)
+    {
+        $this->rateID = $rateID;
+    }
 
 }

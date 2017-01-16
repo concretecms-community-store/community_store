@@ -79,6 +79,30 @@ class OrderList  extends AttributedItemList
             $this->query->andWhere('o.oRefunded is null');
         }
 
+        if (isset($this->cancelled)) {
+            if ($this->cancelled) {
+                $this->query->andWhere('o.oCancelled is not null');
+            } else {
+                $this->query->andWhere('o.oCancelled is null');
+            }
+        }
+
+        if (isset($this->shippable)) {
+            if ($this->shippable) {
+                $this->query->andWhere('o.smName <> ""');
+            } else {
+                $this->query->andWhere('o.smName = ""');
+            }
+        }
+
+        if (isset($this->refunded)) {
+            if ($this->refunded) {
+                $this->query->andWhere('o.oRefunded is not null');
+            } else {
+                $this->query->andWhere('o.oRefunded is null');
+            }
+        }
+
         if ($this->limit > 0) {
             $this->query->setMaxResults($this->limit);
         }
@@ -130,6 +154,20 @@ class OrderList  extends AttributedItemList
     public function setPaid($bool)
     {
         $this->paid = $bool;
+    }
+
+    public function setCancelled($bool)
+    {
+        $this->cancelled = $bool;
+    }
+
+    public function setRefunded($bool)
+    {
+        $this->refunded = $bool;
+    }
+
+    public function setIsShippable($bool){
+        $this->shippable = $bool;
     }
 
     public function getResult($queryRow)

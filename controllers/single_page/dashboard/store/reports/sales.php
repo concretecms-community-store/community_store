@@ -15,7 +15,6 @@ class Sales extends DashboardPageController
     {
         $sr = new StoreSalesReport();
         $this->set('sr',$sr);
-        $pkg = Package::getByHandle('community_store');
         $this->requireAsset('chartist');
         $today = date('Y-m-d');
         $thirtyDaysAgo = date('Y-m-d', strtotime('-30 days'));
@@ -36,6 +35,8 @@ class Sales extends DashboardPageController
         $orders->setFromDate($dateFrom);
         $orders->setToDate($dateTo);
         $orders->setItemsPerPage(10);
+        $orders->setPaid(true);
+        $orders->setCancelled(false);
 
         $paginator = $orders->getPagination();
         $pagination = $paginator->renderDefaultView();

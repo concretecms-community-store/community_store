@@ -1,5 +1,7 @@
 # Community Store add-on for concrete5
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+
 An open, free and community developed eCommerce system for concrete5
 
 Please refer to the project wiki for more extended details - https://github.com/concrete5-community-store/community_store/wiki
@@ -29,7 +31,11 @@ https://github.com/concrete5-community-store/community_store_stripe
 ### Pin Payments
 https://github.com/concrete5-community-store/community_store_pin_payments
 
-The use of the Ominpay library is encouraged to developed further payment add-ons (used by the Stripe add-on).
+### Square
+https://github.com/Babinsky/community_store_square
+
+### Authorize.Net
+https://github.com/concrete5-community-store/community_store_authorize_net
 
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 

@@ -57,6 +57,24 @@ class Order
     /** @Column(type="text",nullable=true) */
     protected $sInstructions;
 
+    /** @Column(type="text",nullable=true) */
+    protected $sShipmentID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sRateID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sCarrier;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sTrackingID;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sTrackingCode;
+
+    /** @Column(type="text",nullable=true) */
+    protected $sTrackingURL;
+
     /** @Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
 
@@ -142,6 +160,65 @@ class Order
     public function setShippingInstructions($sInstructions)
     {
         $this->sInstructions = $sInstructions;
+    }
+
+    public function setShipmentID($shipmentID)
+    {
+        $this->sShipmentID = $shipmentID;
+    }
+
+    public function getShipmentID(){
+        return $this->sShipmentID;
+    }
+
+    public function getRateID()
+    {
+        return $this->sRateID;
+    }
+
+    public function setRateID($sRateID)
+    {
+        $this->sRateID = $sRateID;
+    }
+
+    public function getCarrier()
+    {
+        return $this->sCarrier;
+    }
+
+    public function setCarrier($sCarrier)
+    {
+        $this->sCarrier = $sCarrier;
+    }
+
+    public function getTrackingID()
+    {
+        return $this->sTrackingID;
+    }
+
+    public function setTrackingID($sTrackingID)
+    {
+        $this->sTrackingID = $sTrackingID;
+    }
+
+    public function getTrackingCode()
+    {
+        return $this->sTrackingCode;
+    }
+
+    public function setTrackingCode($sTrackingCode)
+    {
+        $this->sTrackingCode = $sTrackingCode;
+    }
+
+    public function getTrackingURL()
+    {
+        return $this->sTrackingURL;
+    }
+
+    public function setTrackingURL($sTrackingURL)
+    {
+        $this->sTrackingURL = $sTrackingURL;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -285,6 +362,10 @@ class Order
         return $this->sInstructions;
     }
 
+    public function getShippingQuoteID() {
+        return $this->sQuoteID;
+    }
+
     public function getShippingTotal()
     {
         return $this->oShippingTotal;
@@ -394,6 +475,8 @@ class Order
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
+        $sShipmentID = StoreShippingMethod::getActiveShipmentID();
+        $sRateID = StoreShippingMethod::getActiveRateID();
         $sInstructions = StoreCart::getShippingInstructions();
         $totals = StoreCalculator::getTotals();
         StoreCart::getShippingInstructions('');
@@ -432,6 +515,8 @@ class Order
         $order->setPaymentMethodName($pmDisplayName ? $pmDisplayName : $pmName);
         $order->setPaymentMethodID($pm->getID());
         $order->setShippingMethodName($smName);
+        $order->setShipmentID($sShipmentID);
+        $order->setRateID($sRateID);
         $order->setShippingInstructions($sInstructions);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxTotal);

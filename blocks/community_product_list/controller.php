@@ -72,6 +72,16 @@ class Controller extends BlockController
     public function view()
     {
         $products = new StoreProductList();
+
+        // checks in case sort order was inadvertantly set to an option that doesn't work with the current filter
+        if ($this->sortOrder == 'category' &&  !($this->filter == 'current' || $this->filter == 'page')) {
+            $this->sortOrder = 'alpha';
+        }
+
+        if ($this->sortOrder == 'related' &&  !($this->filter == 'related' || $this->filter == 'related_product')) {
+            $this->sortOrder = 'related';
+        }
+
         $products->setSortBy($this->sortOrder);
 
         if ($this->sortOrder == 'alpha') {
@@ -165,7 +175,9 @@ class Controller extends BlockController
         $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
         $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
         $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
+        $args['showName'] = isset($args['showName']) ? 1 : 0;
         $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
+        $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
         $args['showAddToCart'] = isset($args['showAddToCart']) ? 1 : 0;
         $args['showLink'] = isset($args['showLink']) ? 1 : 0;
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;

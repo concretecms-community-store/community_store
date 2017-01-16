@@ -219,7 +219,13 @@ class OrderItem
         $product = $data['product']['object'];
 
         $productName = $product->getName();
-        $productPrice = $product->getActivePrice();
+        
+        if (isset($data['product']['customerPrice'])) {
+            $productPrice = $data['product']['customerPrice'];
+        } else {
+            $productPrice = $product->getActivePrice();
+        }
+
         $sku = $product->getSKU();
         $qty = $data['product']['qty'];
 

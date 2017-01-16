@@ -87,7 +87,11 @@ if ($cart) {
                     </td>
 
                     <td class="store-cart-item-price">
-                        <?= StorePrice::format($product->getActivePrice()) ?>
+                        <?php if (isset($cartItem['product']['customerPrice'])) { ?>
+                            <?=StorePrice::format($cartItem['product']['customerPrice'])?>
+                        <?php } else {  ?>
+                            <?=StorePrice::format($product->getActivePrice())?>
+                        <?php } ?>
                     </td>
 
                     <td class="store-cart-product-qty text-center">

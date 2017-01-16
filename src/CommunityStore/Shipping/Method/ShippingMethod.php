@@ -155,6 +155,18 @@ class ShippingMethod
         return $methods;
     }
 
+    public static function getMethods($methodTypeID = null)
+    {
+        $em = \ORM::entityManager();
+        if ($methodTypeID) {
+            $methods = $em->getRepository(get_called_class())->findBy(array('smtID' => $methodTypeID));
+        } else {
+            $methods = $em->createQuery('select sm from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod sm')->getResult();
+        }
+
+        return $methods;
+    }
+
     /**
      * @param StoreShippingMethodTypeMethod $smtm
      * @param StoreShippingMethodType $smt
@@ -244,6 +256,32 @@ class ShippingMethod
         }
 
        return '';
+    }
+
+    public static function getActiveShipmentID() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getShipmentID();
+            }
+        }
+
+       return '';
+    }
+
+    public static function getActiveRateID() {
+        $activeShippingMethod = self::getActiveShippingMethod();
+
+        if ($activeShippingMethod) {
+            $currentOffer = $activeShippingMethod->getCurrentOffer();
+            if ($currentOffer) {
+                return $currentOffer->getRateID();
+            }
+        }
+
+        return '';
     }
 
     public function getPackageHandle() {

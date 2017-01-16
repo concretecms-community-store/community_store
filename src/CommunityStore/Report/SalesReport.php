@@ -12,6 +12,8 @@ class SalesReport extends StoreOrderList
         $this->setToDate();
         $this->setLimit(0);
         $this->setPaid(true);
+        $this->setCancelled(false);
+        $this->setRefunded(false);
     }
     public static function getTotalsByRange($from, $to, $limit = 0)
     {

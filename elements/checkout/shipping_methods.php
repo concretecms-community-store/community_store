@@ -30,8 +30,11 @@ $foundOffer = false;
                             <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
                             <div class="store-shipping-details">
                                 <?php $rate = $offer->getDiscountedRate(); ?>
-                                <p><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
-                                <?= $offer->getOfferDetails(); ?>
+                                <p class="store-shipping-details-label"><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                                <?php $details = $offer->getOfferDetails();
+                                if ($details) { ?>
+                                <p  class="store-shipping-details-details"><?= $details; ?></p>
+                                <?php } ?>
                             </div>
                         </label>
                     </div>
