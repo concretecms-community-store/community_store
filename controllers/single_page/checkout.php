@@ -64,9 +64,10 @@ class Checkout extends PageController
         $ak = UserAttributeKey::getByHandle('billing_address');
 
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
-            $defaultBillingCountry = $ak->akDefaultCountry;
-            $hasCustomerBillingCountries = $ak->akHasCustomCountries;
-            $availableBillingCountries = $ak->akCustomCountries;
+            $keysettings =  $ak->getController()->getAttributeKeySettings();
+            $defaultBillingCountry = $keysettings->getDefaultCountry();
+            $hasCustomerBillingCountries = $keysettings->hasCustomCountries();
+            $availableBillingCountries = $keysettings->getCustomCountries();
         } else {
             $row = $db->GetRow(
                 'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
@@ -94,10 +95,10 @@ class Checkout extends PageController
         $ak = UserAttributeKey::getByHandle('shipping_address');
         
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
-            $defaultShippingCountry = $ak->akDefaultCountry;
-            $hasCustomerShippingCountries = $ak->akHasCustomCountries;
-            $availableShippingCountries = $ak->akCustomCountries;
-
+            $keysettings =  $ak->getController()->getAttributeKeySettings();
+            $defaultShippingCountry = $keysettings->getDefaultCountry();
+            $hasCustomerShippingCountries = $keysettings->hasCustomCountries();
+            $availableShippingCountries = $keysettings->getCustomCountries();
         } else {
             $row = $db->GetRow(
                 'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
