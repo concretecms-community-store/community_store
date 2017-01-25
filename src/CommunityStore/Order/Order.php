@@ -362,10 +362,6 @@ class Order
         return $this->sInstructions;
     }
 
-    public function getShippingQuoteID() {
-        return $this->sQuoteID;
-    }
-
     public function getShippingTotal()
     {
         return $this->oShippingTotal;
@@ -756,13 +752,13 @@ class Order
             $this->setCustomerID($user->getUserID());
             $this->save();
 
-            $billing_first_name = $customer->getValue("billing_first_name");
-            $billing_last_name = $customer->getValue("billing_last_name");
-            $billing_address = $customer->getValueArray("billing_address");
-            $billing_phone = $customer->getValue("billing_phone");
-            $shipping_first_name = $customer->getValue("shipping_first_name");
-            $shipping_last_name = $customer->getValue("shipping_last_name");
-            $shipping_address = $customer->getValueArray("shipping_address");
+            $billing_first_name = $this->getAttribute("billing_first_name");
+            $billing_last_name = $this->getAttribute("billing_last_name");
+            $billing_address = $this->getAttribute("billing_address");
+            $billing_phone = $this->getAttribute("billing_phone");
+            $shipping_first_name = $this->getAttribute("shipping_first_name");
+            $shipping_last_name = $this->getAttribute("shipping_last_name");
+            $shipping_address = $this->getAttribute("shipping_address");
 
             // update the  user's attributes
             $customer = new StoreCustomer($user->getUserID());
