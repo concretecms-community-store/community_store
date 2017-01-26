@@ -630,11 +630,11 @@ class Order
 
     public function completePayment($sameRequest = false) {
         $this->setPaid(new \DateTime());
+        $this->completePostPaymentProcesses($sameRequest);
 
         // create payment event and dispatch
         $event = new StoreOrderEvent($this);
         Events::dispatch('on_community_store_payment_complete', $event);
-        $this->completePostPaymentProcesses($sameRequest);
     }
 
     public function completePostPaymentProcesses($sameRequest = false) {
