@@ -17,6 +17,33 @@ if($products){
     if ($productsPerRow == 4) {
         $columnClass = 'col-md-3';
     }
+    ?>
+
+
+    <?php if ($showSortOption) { ?>
+    <div class="store-product-list-sort form-inline text-right pull-right">
+        <?= $form->label('sort' . $bID,  t('Sort by')); ?>
+        <?= $form->select('sort' . $bID,
+            array(
+            '0' => '',
+            'price_asc' => t('price, lowest to highest'),
+            'price_desc' => t('price, highest to lowest'),
+            ));
+        ?>
+    </div>
+
+    <script type="text/javascript">
+    $(function () {
+        $('#sort<?= $bID;?>').change(function(){
+            var sortstring = '<?php echo \Core::make('helper/url')->setVariable(array('sort'. $bID=>'%sort%'));?>';
+            window.location.href=  sortstring.replace('%sort%', $(this).val());
+        });
+    });
+    </script>
+    <?php } ?>
+
+
+    <?php
 
     echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
 

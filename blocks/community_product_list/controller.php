@@ -82,7 +82,15 @@ class Controller extends BlockController
             $this->sortOrder = 'related';
         }
 
-        $products->setSortBy($this->sortOrder);
+        $usersort = $this->get('sort' . $this->bID);
+
+        if ($usersort && $usersort != '0') {
+            $products->setSortBy($usersort);
+            $this->set('usersort', $usersort);
+        } else {
+            $products->setSortBy($this->sortOrder);
+            $this->set('usersort', '');
+        }
 
         if ($this->sortOrder == 'alpha') {
             $products->setSortByDirection('asc');
@@ -175,6 +183,7 @@ class Controller extends BlockController
         $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
         $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
         $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
+        $args['showSortOption'] = isset($args['showSortOption']) ? 1 : 0;
         $args['showName'] = isset($args['showName']) ? 1 : 0;
         $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
         $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
