@@ -21,15 +21,19 @@ if($products){
 
 
     <?php if ($showSortOption) { ?>
-    <div class="store-product-list-sort form-inline text-right pull-right">
-        <?= $form->label('sort' . $bID,  t('Sort by')); ?>
-        <?= $form->select('sort' . $bID,
-            array(
-            '0' => '',
-            'price_asc' => t('price, lowest to highest'),
-            'price_desc' => t('price, highest to lowest'),
-            ));
-        ?>
+    <div class="store-product-list-sort row">
+        <div class="col-md-12 form-inline text-right pull-right">
+            <div class="form-group">
+                <?= $form->label('sort' . $bID,  t('Sort by')); ?>
+                <?= $form->select('sort' . $bID,
+                    array(
+                    '0' => '',
+                    'price_asc' => t('price, lowest to highest'),
+                    'price_desc' => t('price, highest to lowest'),
+                    ));
+                ?>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
