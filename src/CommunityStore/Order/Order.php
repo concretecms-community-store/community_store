@@ -739,10 +739,6 @@ class Order
 
                 $mh->to($email);
                 $mh->sendMail();
-            } else {
-                // we're attempting to create a new user with an email that has already been used
-                // earlier validation must have failed at this point, don't fetch the user
-                $user = null;
             }
         }
 
