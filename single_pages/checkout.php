@@ -104,7 +104,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
                                     <?php $country = $customer->getAddressValue('billing_address', 'country') ?>
-                                    <?= $form->select('store-checkout-billing-country', $billingCountries, $country ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
+                                    <?= $form->select('store-checkout-billing-country', $billingCountries, $country && array_key_exists($country, $billingCountries) ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
                                 </div>
                             </div>
                         </div>
@@ -233,16 +233,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
                                         <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
-                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
+                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
                                     </div>
-
-                                    <?php if (Config::get('community_store.vat_number')) { ?>
-                                    <div class="form-group">
-                                        <label for="store-checkout-shipping-vat-number"><?= t("VAT Number") ?></label>
-                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), array('placeholder'=>t('VAT Number'))); ?>
-                                    </div>
-                                    <?php } ?>
-
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
@@ -266,13 +258,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                                     <p class="store-summary-address"><?= nl2br($customer->getAddress('shipping_address')); ?></p>
                                 </div>
-
-                                <div class="col-sm-6">
-                                    <label><?= t('VAT Number'); ?></label>
-                                    <p class="store-summary-vat-number"><?= $customer->getValue('vat_number'); ?></p>
-                                </div>
-
-
                             </div>
                         </div>
                     </form>
