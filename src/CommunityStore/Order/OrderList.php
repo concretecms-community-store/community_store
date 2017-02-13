@@ -112,6 +112,10 @@ class OrderList  extends AttributedItemList
             $this->query->andWhere('o.externalPaymentRequested is null');
         }
 
+        if (isset($this->cID)) {
+            $this->query->andWhere('cID = ?')->setParameter($paramcount++, $this->cID);
+        }
+
         $this->query->orderBy('oID', 'DESC');
 
         return $this->query;
@@ -173,6 +177,11 @@ class OrderList  extends AttributedItemList
     public function getResult($queryRow)
     {
         return StoreOrder::getByID($queryRow['oID']);
+    }
+
+    public function setCustomerID($cID)
+    {
+        $this->cID = $cID;
     }
 
     protected function createPaginationObject()

@@ -362,10 +362,6 @@ class Order
         return $this->sInstructions;
     }
 
-    public function getShippingQuoteID() {
-        return $this->sQuoteID;
-    }
-
     public function getShippingTotal()
     {
         return $this->oShippingTotal;
@@ -634,11 +630,11 @@ class Order
 
     public function completePayment($sameRequest = false) {
         $this->setPaid(new \DateTime());
+        $this->completePostPaymentProcesses($sameRequest);
 
         // create payment event and dispatch
         $event = new StoreOrderEvent($this);
         Events::dispatch('on_community_store_payment_complete', $event);
-        $this->completePostPaymentProcesses($sameRequest);
     }
 
     public function completePostPaymentProcesses($sameRequest = false) {
@@ -743,10 +739,6 @@ class Order
 
                 $mh->to($email);
                 $mh->sendMail();
-            } else {
-                // we're attempting to create a new user with an email that has already been used
-                // earlier validation must have failed at this point, don't fetch the user
-                $user = null;
             }
         }
 
@@ -756,13 +748,13 @@ class Order
             $this->setCustomerID($user->getUserID());
             $this->save();
 
-            $billing_first_name = $customer->getValue("billing_first_name");
-            $billing_last_name = $customer->getValue("billing_last_name");
-            $billing_address = $customer->getValueArray("billing_address");
-            $billing_phone = $customer->getValue("billing_phone");
-            $shipping_first_name = $customer->getValue("shipping_first_name");
-            $shipping_last_name = $customer->getValue("shipping_last_name");
-            $shipping_address = $customer->getValueArray("shipping_address");
+            $billing_first_name = $this->getAttribute("billing_first_name");
+            $billing_last_name = $this->getAttribute("billing_last_name");
+            $billing_address = $this->getAttribute("billing_address");
+            $billing_phone = $this->getAttribute("billing_phone");
+            $shipping_first_name = $this->getAttribute("shipping_first_name");
+            $shipping_last_name = $this->getAttribute("shipping_last_name");
+            $shipping_address = $this->getAttribute("shipping_address");
 
             // update the  user's attributes
             $customer = new StoreCustomer($user->getUserID());

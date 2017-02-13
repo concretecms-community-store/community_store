@@ -25,6 +25,7 @@
 		<field name="showPrice" type="boolean"><default value="1"/></field>
 		<field name="showQuickViewLink" type="boolean"></field>
 		<field name="showPageLink" type="boolean"><default value="1"/></field>
+		<field name="showSortOption" type="boolean"><default value="0"/></field>
 		<field name="pageLinkText" type="string" size="255"></field>
 		<field name="showAddToCart" type="boolean"><default value="1"/></field>
 		<field name="btnText" type="string" size="255"></field>

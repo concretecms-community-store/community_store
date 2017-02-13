@@ -1,3 +1,7 @@
 .store-original-price {
     text-decoration: line-through;
 }
+
+.store-product-list-sort {
+    margin-top: 15px;
+}

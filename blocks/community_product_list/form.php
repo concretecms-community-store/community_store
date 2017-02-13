@@ -49,6 +49,13 @@
                     ), $sortOrder); ?>
             </div>
 
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('showSortOption', 1, $showSortOption); ?>
+                    <?= t('Display Sort Option') ?>
+                </label>
+            </div>
+
         </fieldset>
 
         <fieldset>
