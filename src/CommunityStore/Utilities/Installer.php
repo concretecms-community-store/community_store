@@ -340,8 +340,7 @@ class Installer
 
     public static function upgrade($pkg)
     {
-  
-        self::installUserAttributes($pkg);
+
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically
         } else {

@@ -44,11 +44,11 @@ class Settings extends DashboardPageController
     {
         $this->view();
         $args = $this->post();
-        
+
         if ($args) {
             $errors = $this->validate($args);
             $this->error = $errors;
-            
+
             if (!$errors->has()) {
                 Config::save('community_store.symbol',$args['symbol']);
                 Config::save('community_store.currency',$args['currency']);
@@ -179,7 +179,7 @@ class Settings extends DashboardPageController
         if (!isset($args['osName'])) {
             $e->add(t('You must have at least one Order Status.'));
         }
-        
+
         //before changing tax settings to "Extract", make sure there's only one rate per class
         $taxClasses = StoreTaxClass::getTaxClasses();
         foreach($taxClasses as $taxClass){
@@ -188,9 +188,9 @@ class Settings extends DashboardPageController
                 $e->add(t("The %s Tax Class can't contain more than 1 Tax Rate if you change how the taxes are calculated",$taxClass->getTaxClassName()));
             }
         }
-        
+
         return $e;
-        
+
     }
 
 }

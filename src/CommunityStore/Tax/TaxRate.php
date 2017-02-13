@@ -106,8 +106,6 @@ class TaxRate
     {
         $this->taxVatExclude = $exclude;
     }
-
-
     public function getTaxRateID()
     {
         return $this->trID;
@@ -148,7 +146,6 @@ class TaxRate
     {
         return $this->taxVatExclude;
     }
-
     public static function getByID($trID)
     {
         $em = \ORM::entityManager();
@@ -163,7 +160,6 @@ class TaxRate
         $taxCity = strtolower(trim($this->getTaxCity()));
         $taxVatExclude = $this->getTaxVatExclude() == 1 ? true : false ;
         $taxSettingEnabled = Config::get('community_store.vat_number') == '1' ? true : false ;
-
         $customer = new StoreCustomer();
         $customerIsTaxable = false;
 
@@ -300,7 +296,6 @@ class TaxRate
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
         $tr->setTaxVatExclude($data['taxVatExclude']);
-
         $tr->save();
 
         return $tr;

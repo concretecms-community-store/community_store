@@ -15,96 +15,95 @@ if(in_array($controller->getTask(),$addViews)){
         <div class="col-xs-12 col-md-12">
             <input type="hidden" name="taxRateID" value="<?= $taxRate->getTaxRateID()?>">
             <div class="row">
-                <div class="col-xs-12 col-sm-4">
-                    <div class="form-group">
-                        <?= $form->label('taxEnabled',t('Enable Tax Rate')); ?>
-                        <?= $form->select('taxEnabled',array(false=>t('No'),true=>t('Yes')),$taxRate->isEnabled()); ?>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-4">
-                    <div class="form-group">
-                        <?= $form->label('taxLabel',t('Tax Label')); ?>
-                        <?= $form->text('taxLabel',$taxRate->getTaxLabel());?>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-4">
-                    <div class="form-group">
-                        <?= $form->label('taxRate',t('Tax Rate %')); ?>
-                        <div class="input-group">
-                            <?= $form->text('taxRate',$taxRate->getTaxRate()); ?>
-                            <div class="input-group-addon">%</div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <?= $form->label('taxEnabled',t('Enable Tax Rate')); ?>
+                                <?= $form->select('taxEnabled',array(false=>t('No'),true=>t('Yes')),$taxRate->isEnabled()); ?>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <?= $form->label('taxLabel',t('Tax Label')); ?>
+                                <?= $form->text('taxLabel',$taxRate->getTaxLabel());?>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <?= $form->label('taxRate',t('Tax Rate %')); ?>
+                                <div class="input-group">
+                                    <?= $form->text('taxRate',$taxRate->getTaxRate()); ?>
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="taxBased"><?= t("Tax is Based on the")?></label>
-                <?= $form->select('taxBased',array('subtotal'=>t("Product Total"),'grandtotal'=>t("Product Total + Shipping")),$taxRate->getTaxBasedOn()); ?>
-            </div>
-
-            <h3><?= t("When to Charge Tax")?></h3>
-
-            <div class="row">
-
-                <div class="col-sm-5">
 
                     <div class="form-group">
-                        <label for="taxAddress" class="control-label"><?= t("If the Customers...")?></label>
-                        <?= $form->select('taxAddress',array('shipping'=>t("Shipping Address"),'billing'=>t("Billing Address")),$taxRate->getTaxAddress()); ?>
+                        <label for="taxBased"><?= t("Tax is Based on the")?></label>
+                        <?= $form->select('taxBased',array('subtotal'=>t("Product Total"),'grandtotal'=>t("Product Total + Shipping")),$taxRate->getTaxBasedOn()); ?>
                     </div>
 
-                </div>
+                    <h3><?= t("When to Charge Tax")?></h3>
 
-                <div class="col-sm-7">
-                <div class="form-horizontal">
-                    <p><strong><?= t("Matches...")?></strong></p>
-                    <div class="form-group">
-                        <label for="taxCountry" class="col-sm-5 control-label"><?= t("Country")?> <small class="text-muted"><?= t("Required")?></small></label>
+
+                    <div class="row">
+
+                        <div class="col-sm-5">
+
+                            <div class="form-group">
+                                <label for="taxAddress" class="control-label"><?= t("If the Customers...")?></label>
+                                <?= $form->select('taxAddress',array('shipping'=>t("Shipping Address"),'billing'=>t("Billing Address")),$taxRate->getTaxAddress()); ?>
+                            </div>
+
+                        </div>
+
                         <div class="col-sm-7">
-                            <?php $country = $taxRate->getTaxCountry(); ?>
-                            <?= $form->select('taxCountry',$countries,$country?$country:'US',array("onchange"=>"updateTaxStates()")); ?>
+                        <div class="form-horizontal">
+                            <p><strong><?= t("Matches...")?></strong></p>
+                            <div class="form-group">
+                                <label for="taxCountry" class="col-sm-5 control-label"><?= t("Country")?> <small class="text-muted"><?= t("Required")?></small></label>
+                                <div class="col-sm-7">
+                                    <?php $country = $taxRate->getTaxCountry(); ?>
+                                    <?= $form->select('taxCountry',$countries,$country?$country:'US',array("onchange"=>"updateTaxStates()")); ?>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="taxState" class="col-sm-5 control-label"><?= t("Region")?> <small class="text-muted"><?= t("Optional")?></small></label>
+                                <div class="col-sm-7">
+                                    <?php $state = $taxRate->getTaxState(); ?>
+                                    <?= $form->select('taxState',$states,$state?$state:""); ?>
+                                    <?= $form->hidden("savedTaxState",$state); ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="taxState" class="col-sm-5 control-label"><?= t("City")?> <small class="text-muted"><?= t("Optional")?></small></label>
+                                <div class="col-sm-7">
+                                    <?= $form->text('taxCity',$taxRate->getTaxCity());?>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
 
-
-                    <div class="form-group">
-                        <label for="taxState" class="col-sm-5 control-label"><?= t("Region")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                        <div class="col-sm-7">
-                            <?php $state = $taxRate->getTaxState(); ?>
-                            <?= $form->select('taxState',$states,$state?$state:""); ?>
-                            <?= $form->hidden("savedTaxState",$state); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="taxState" class="col-sm-5 control-label"><?= t("City")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                        <div class="col-sm-7">
-                            <?= $form->text('taxCity',$taxRate->getTaxCity());?>
+                <?php if (Config::get('community_store.vat_number')) { ?>
+                <h4><?= t("VAT Number Options")?></h4>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                            <label for="taxVatExclude" class="control-label">
+                                <?= $form->checkbox('taxVatExclude', 1, $taxRate->getTaxVatExclude()); ?>
+                                <strong><?= t("If the EU VAT Number attribute is empty or invalid.")?></strong>
+                            </label>
+                            <p class="help-block"><?= t("If the customer has entered a valid VAT Number then this tax will not be applied in checkout.")?></p>
                         </div>
                     </div>
                 </div>
-                </div>
-            </div>
+                <?php } ?>
 
-            <h4><?= t("VAT Number Options")?></h4>
-            <div class="row">
-
-                <div class="col-sm-12">
-
-                    <?php if (Config::get('community_store.vat_number')) { ?>
-                    <div class="form-group">
-                        <div class="checkbox">
-                        <label for="taxVatExclude" class="control-label">
-                            <?= $form->checkbox('taxVatExclude', 1, $taxRate->getTaxVatExclude()); ?>
-                            <strong><?= t("If the EU VAT Number attribute is empty or invalid.")?></strong>
-                        </label>
-                        <p class="help-block"><?= t("If the customer has entered a valid VAT Number then this tax will not be applied in checkout.")?></p>
-                    </div>
-                    <?php } ?>
-
-                </div>
-            </div>
         </div>
     </div>
 
