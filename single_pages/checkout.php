@@ -315,7 +315,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-button-previous-pane button secondary"><?= t("Previous") ?></a>
+                                <a href="#" class="store-btn-previous-pane button secondary"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-button-next-pane button secondary pull-right" value="<?= t("Next") ?>">
                             </div>
                         </div>

@@ -572,7 +572,7 @@ $(document).ready(function () {
 
         }
     });
-    $(".store-button-previous-pane").click(function (e) {
+    $(".store-btn-previous-pane").click(function (e) {
         //hide the body of the current pane, go to the next pane, show that body.
         var pane = $(this).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().prev();
         $('.store-active-form-group').removeClass('store-active-form-group');
