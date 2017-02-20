@@ -144,45 +144,10 @@ class Checkout extends Controller
 
         if ($vat_number != '' && !preg_match($regex, $vat_number)) {
             $e->add(t('You must enter a valid VAT Number'));
-            return $e; // Stop there for now to save SOAP request
         }
 
-        $countryCode = substr($vat_number, 0, 2);
-        $vatNumber = substr($vat_number, 2);
+        return $e;
 
-        // Building the xml as a string as it is faster than doing it the dom way
-        $xmlString = "";
-        $xmlString .= '<?xml version="1.0"?>';
-        $xmlString .= '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">';
-        $xmlString .= '<soap:Body>';
-        $xmlString .= '<m:checkVat xmlns:m="urn:ec.europa.eu:taxud:vies:services:checkVat:types">';
-        $xmlString .= '<m:countryCode>'.$countryCode.'</m:countryCode>';
-        $xmlString .= '<m:vatNumber>'.$vatNumber.'</m:vatNumber>';
-        $xmlString .= '</m:checkVat>';
-        $xmlString .= '</soap:Body>';
-        $xmlString .= '</soap:Envelope>';
-
-        // Create the request and send it
-        $options = array(
-            'http' => array(
-                'header'  => "Content-type: text/xml\r\n",
-                'method'  => 'POST',
-                'content' => $xmlString,
-                'ignore_errors' => true
-            ),
-        );
-        $context  = stream_context_create($options);
-        $result = file_get_contents("http://ec.europa.eu/taxation_customs/vies/services/checkVatService", false, $context);
-
-        // Verify response
-        // You can parse the xml and get more info but we are only looking for the string we need
-        if (strpos($result, "<valid>true</valid>")) {
-            return $e;
-        } else {
-            $e->add(t('The VAT Number entered was not valid.'));
-            return $e;
-
-        }
     }
 
     private function validateAccountEmail($email)
