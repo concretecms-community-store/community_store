@@ -295,7 +295,7 @@ class TaxRate
         $tr->setTaxCountry($data['taxCountry']);
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
-        $tr->setTaxVatExclude($data['taxVatExclude']);
+        $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0 );
         $tr->save();
 
         return $tr;
