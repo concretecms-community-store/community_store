@@ -43,7 +43,7 @@ if (is_object($product) && $product->isActive()) {
                             if (!empty($pricesuggestions)) { ?>
                                 <p class="store-product-price-suggestions"><?php
                                 foreach($pricesuggestions as $suggestion) { ?>
-                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-add-type="list" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-add-type="none" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
                                 <?php } ?>
                                 </p>
                                 <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
