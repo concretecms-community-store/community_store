@@ -52,13 +52,12 @@ if($products){
     echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
 
     $i=1;
+    
     foreach($products as $product){
-
         $options = $product->getOptions();
 
         if ($product->hasVariations()) {
             $variations = StoreProductVariation::getVariationsForProduct($product);
-
             $variationLookup = array();
 
             if (!empty($variations)) {
@@ -69,7 +68,35 @@ if($products){
                 }
             }
         }
+        // This determines which is the first available (not out of stock) option
+        $firstAvailableVariation = false;
+        if (count($variations)) {
+            $availableOptionsids = false;
+            foreach ($variations as $variation) {
+                $isAvailable = false;
+                if ($variation->isSellable()) {
+                    $variationOptions = $variation->getOptions();
 
+                    foreach ($variationOptions as $variationOption) {
+                        $opt = $variationOption->getOption();
+                        if ($opt->isHidden()) {
+                            $isAvailable = false;
+                            break;
+                        } else {
+                            $isAvailable = true;
+                        }
+                    }
+                    if ($isAvailable) {
+                        $availableOptionsids = $variation->getOptionItemIDs();
+                        $firstAvailableVariation = $variation;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
+ 
         //this is done so we can get a type of active class if there's a product list on the product page
         if($c->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
@@ -104,15 +131,18 @@ if($products){
                 ?>
                 <?php if ($showPrice) { ?>
                 <p class="store-product-list-price">
-                    <?php
-                        $salePrice = $product->getSalePrice();
-                        if(isset($salePrice) && $salePrice != ""){
-                            echo '<span class="store-sale-price">'.$product->getFormattedSalePrice().'</span>';
-                            echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$product->getFormattedOriginalPrice().'</span>';
-                        } else {
-                            echo $product->getFormattedPrice();
-                        }
-                    ?>
+		            <?php
+                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+		                if(isset($salePrice) && $salePrice != ""){
+                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+		                    echo '<span class="store-sale-price">'.$formattedSalePrice.'</span>';
+		                    echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$formattedOriginalPrice.'</span>';
+		                } else {
+                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+		                    echo $formattedPrice; 
+		                }
+		            ?>
                 </p>
                 <?php } ?>
 
@@ -191,11 +221,25 @@ if($products){
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                 <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
                                     <?php
+                                    $firstAvailableVariation = false;
+                                    $variation = false;
                                     foreach ($optionItems as $optionItem) {
-                                        if (!$optionItem->isHidden()) { ?>
-                                            <option value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() ?></option>
+                                        if (!$optionItem->isHidden()) {
+                                           $variation = $variationLookup[$optionItem->getID()];
+                                            if (!empty($variation)) {
+                                                $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
+                                                $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                                $outOfStock = $variation->isSellable() ? '' : ' ('.t('out of stock').')';
+                                            }
+                                            $selected = '';
+                                            if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                $selected = 'selected="selected"';
+                                            }
+                                            ?>
+                                            <option <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName().$outOfStock ?></option>
                                         <?php }
                                         // below is an example of a radio button, comment out the <select> and <option> tags to use instead
+                                        // Make sure to add the $disabled and $selected variables here and make $selected use "checked" instead
                                         //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
                                     <?php } ?>
                                 </select>
@@ -218,9 +262,8 @@ if($products){
 
                 <input type="hidden" name="pID" value="<?= $product->getID()?>">
 
-
-                <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
-                <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
+                <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
+                <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
 
                 <?php } ?>
 
