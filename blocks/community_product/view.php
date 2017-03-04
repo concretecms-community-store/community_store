@@ -1,9 +1,54 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
 if (is_object($product) && $product->isActive()) {
+    // This determines which is the first available (not out of stock) option
+    // also adds the code for $VariationLookup taken from the product list block and added here.
+    $options = $product->getOptions();
+
+        if ($product->hasVariations()) {
+            $variations = StoreProductVariation::getVariationsForProduct($product);
+
+            $variationLookup = array();
+
+            if (!empty($variations)) {
+                foreach ($variations as $variation) {
+                    // returned pre-sorted
+                    $ids = $variation->getOptionItemIDs();
+                    $variationLookup[implode('_', $ids)] = $variation;
+                }
+            }
+        }
+        
+        $firstAvailableVariation = false;
+        if (count($variations)) {
+            $availableOptionsids = false;
+            foreach ($variations as $variation) {
+                $isAvailable = false;
+                if ($variation->isSellable()) {
+                    $variationOptions = $variation->getOptions();
+
+                    foreach ($variationOptions as $variationOption) {
+                        $opt = $variationOption->getOption();
+                        if ($opt->isHidden()) {
+                            $isAvailable = false;
+                            break;
+                        } else {
+                            $isAvailable = true;
+                        }
+                    }
+                    if ($isAvailable) {
+                        $availableOptionsids = $variation->getOptionItemIDs();
+                        $firstAvailableVariation = $variation;
+                        break;
+                    }
+                }
+            }
+        }
+        $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
     ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
@@ -22,16 +67,23 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        $salePrice = $product->getSalePrice();
-                        if (isset($salePrice) && $salePrice != "") {
-                            echo '<span class="store-sale-price">' . t("On Sale: ") . $product->getFormattedSalePrice() . '</span>';
+                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+		                if(isset($salePrice) && $salePrice != ""){
+                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+		                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
                             echo '&nbsp;'.t('was').'&nbsp;';
-                            echo '<span class="store-original-price">' . $product->getFormattedOriginalPrice() . '</span>';
-                            echo '<meta itemprop="price" content="' . $product->getSalePrice() .'" />';
-                        } else {
-                            echo $product->getFormattedPrice();
-                            echo '<meta itemprop="price" content="' . $product->getPrice() .'" />';
-                        }
+                            echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+                            echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
+
+		                } else {
+                            $price = !$firstAvailableVariation ? $product->getPrice() : $firstAvailableVariation->getVariationPrice();
+
+                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+
+		                    echo $formattedPrice;
+                            echo '<meta itemprop="price" content="' . $price .'" />';
+		                }
                         ?>
                         </p>
                     <?php } ?>
@@ -144,11 +196,26 @@ if (is_object($product) && $product->isActive()) {
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                     <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
                                         <?php
+                                        $firstAvailableVariation = false;
+                                        $variation = false;
                                         foreach ($optionItems as $optionItem) {
-                                            if (!$optionItem->isHidden()) { ?>
-                                            <option value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() ?></option>
+                                            if (!$optionItem->isHidden()) {
+                                                $variation = $variationLookup[$optionItem->getID()];
+                                                if (!empty($variation)) {
+                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
+                                                    $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                                    $outOfStock = $variation->isSellable() ? '' : ' ('.t('out of stock').')';
+                                                }
+                                                $selected = '';
+                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                    $selected = 'selected="selected"';
+                                                }
+                                            
+                                            ?>
+                                            <option <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName().$outOfStock ?></option>
                                             <?php }
                                             // below is an example of a radio button, comment out the <select> and <option> tags to use instead
+                                            // Make sure to add the disabled and selected variables to it and make selected use "checked" instead
                                             //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
                                         <?php } ?>
                                     </select>
@@ -172,12 +239,11 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showCartButton) { ?>
                         <p class="store-product-button">
                             <input type="hidden" name="pID" value="<?= $product->getID() ?>">
-
-                            <span><button data-add-type="none" data-product-id="<?= $product->getID() ?>"
-                                  class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></button>
+                             <span><button data-add-type="none" data-product-id="<?= $product->getID() ?>"
+                                  class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></button>
                             </span>
                             <span
-                                class="store-out-of-stock-label <?= ($product->isSellable() ? 'hidden' : ''); ?>"><?= t("Out of Stock") ?></span>
+                                class="store-out-of-stock-label <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock") ?></span>
                         </p>
                     <?php } ?>
 
