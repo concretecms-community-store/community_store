@@ -121,6 +121,20 @@ class Controller extends Package
         if (is_object($shippingMethodType)) {
             $shippingMethodType->delete();
         }
+
+        // change existing product pages back to standard page type to prevent broken pages
+        $list = new \Concrete\Core\Page\PageList();
+        $list->filterByPageTypeHandle('store_product');
+        $pages = $list->getResults();
+
+        $pageType = \PageType::getByHandle('page');
+
+        if ($pageType) {
+            foreach ($pages as $page) {
+                $page->setPageType($pageType);
+            }
+        }
+
         parent::uninstall();
     }
 
