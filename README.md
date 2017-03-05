@@ -37,6 +37,9 @@ https://github.com/Babinsky/community_store_square
 ### Authorize.Net
 https://github.com/concrete5-community-store/community_store_authorize_net
 
+### SOFORT
+https://github.com/concrete5-community-store/community_store_sofort
+
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
 An simple example shipping method has been created for reference and can be found at:
