@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
@@ -64,6 +65,11 @@ class TaxRate
      */
     protected $taxCity;
 
+    /**
+     * @Column(type="boolean")
+     */
+    protected $taxVatExclude;
+
     public function setEnabled($enabled)
     {
         $this->taxEnabled = $enabled;
@@ -96,7 +102,10 @@ class TaxRate
     {
         $this->taxCity = $city;
     }
-
+    public function setTaxVatExclude($exclude)
+    {
+        $this->taxVatExclude = $exclude;
+    }
     public function getTaxRateID()
     {
         return $this->trID;
@@ -133,7 +142,10 @@ class TaxRate
     {
         return $this->taxCity;
     }
-
+    public function getTaxVatExclude()
+    {
+        return $this->taxVatExclude;
+    }
     public static function getByID($trID)
     {
         $em = \ORM::entityManager();
@@ -146,9 +158,17 @@ class TaxRate
         $taxCountry = strtolower($this->getTaxCountry());
         $taxState = strtolower(trim($this->getTaxState()));
         $taxCity = strtolower(trim($this->getTaxCity()));
-
+        $taxVatExclude = $this->getTaxVatExclude() == 1 ? true : false ;
+        $taxSettingEnabled = Config::get('community_store.vat_number') == '1' ? true : false ;
         $customer = new StoreCustomer();
         $customerIsTaxable = false;
+
+        // If they have a vat_number check if it's valid and if so, don't apply tax
+        $vatIsValid = false;
+        $vat_number = $customer->getValue("vat_number");
+        if (!empty($vat_number) && StoreCheckout::validateVatNumber($vat_number)) {
+            $vatIsValid = true;
+        }
 
         switch ($taxAddress) {
             case "billing":
@@ -174,6 +194,9 @@ class TaxRate
                 if ($userCity != $taxCity) {
                     $customerIsTaxable = false;
                 }
+            }
+            if ($taxSettingEnabled && $vatIsValid && $taxVatExclude) {
+                $customerIsTaxable = false;
             }
         }
 
@@ -272,6 +295,7 @@ class TaxRate
         $tr->setTaxCountry($data['taxCountry']);
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
+        $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0 );
         $tr->save();
 
         return $tr;

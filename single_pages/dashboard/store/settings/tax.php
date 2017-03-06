@@ -1,14 +1,14 @@
-<?php 
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $listViews = array('view','success','updated','removed','class_deleted','class_updated','class_added');
 $addViews = array('add','add_rate','edit');
 $addClassViews = array('add_class','edit_class','save_class');
 
 if(in_array($controller->getTask(),$addViews)){
-/// Add Tax Method View    
+/// Add Tax Method View
 ?>
-    
-    
+
+
 <form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','add_rate')?>" method="post" data-states-utility="<?=URL::to('/checkout/getstates')?>">
 
     <div class="row">
@@ -37,69 +37,85 @@ if(in_array($controller->getTask(),$addViews)){
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="taxBased"><?= t("Tax is Based on the")?></label>
                         <?= $form->select('taxBased',array('subtotal'=>t("Product Total"),'grandtotal'=>t("Product Total + Shipping")),$taxRate->getTaxBasedOn()); ?>
                     </div>
-                    
+
                     <h3><?= t("When to Charge Tax")?></h3>
-                    
-                    
+
+
                     <div class="row">
-                        
+
                         <div class="col-sm-5">
-                   
+
                             <div class="form-group">
                                 <label for="taxAddress" class="control-label"><?= t("If the Customers...")?></label>
                                 <?= $form->select('taxAddress',array('shipping'=>t("Shipping Address"),'billing'=>t("Billing Address")),$taxRate->getTaxAddress()); ?>
                             </div>
-                        
+
                         </div>
-                        
+
                         <div class="col-sm-7">
                         <div class="form-horizontal">
                             <p><strong><?= t("Matches...")?></strong></p>
                             <div class="form-group">
                                 <label for="taxCountry" class="col-sm-5 control-label"><?= t("Country")?> <small class="text-muted"><?= t("Required")?></small></label>
-                                <div class="col-sm-7">    
+                                <div class="col-sm-7">
                                     <?php $country = $taxRate->getTaxCountry(); ?>
                                     <?= $form->select('taxCountry',$countries,$country?$country:'US',array("onchange"=>"updateTaxStates()")); ?>
                                 </div>
                             </div>
-                            
-                            
+
+
                             <div class="form-group">
                                 <label for="taxState" class="col-sm-5 control-label"><?= t("Region")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                                <div class="col-sm-7"> 
+                                <div class="col-sm-7">
                                     <?php $state = $taxRate->getTaxState(); ?>
                                     <?= $form->select('taxState',$states,$state?$state:""); ?>
                                     <?= $form->hidden("savedTaxState",$state); ?>
                                 </div>
                             </div>
-        
+
                             <div class="form-group">
                                 <label for="taxState" class="col-sm-5 control-label"><?= t("City")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                                <div class="col-sm-7"> 
+                                <div class="col-sm-7">
                                     <?= $form->text('taxCity',$taxRate->getTaxCity());?>
                                 </div>
                             </div>
                         </div>
                         </div>
                     </div>
-            
+
+                <?php if (Config::get('community_store.vat_number')) { ?>
+                <h4><?= t("VAT Number Options")?></h4>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                            <label for="taxVatExclude" class="control-label">
+                                <?= $form->checkbox('taxVatExclude', 1, $taxRate->getTaxVatExclude()); ?>
+                                <strong><?= t("Do not apply this Tax Rate to orders with a valid VAT number")?></strong>
+                            </label>
+                            <p class="help-block"><?= t("If the customer has entered a valid VAT Number then this tax will not be applied in checkout.")?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+
         </div>
     </div>
 
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-success" type="submit" ><?= t('%s Tax Rate',$task)?></button>
         </div>
     </div>
-    
+
 </form>
-     
+
 <?php } elseif(in_array($controller->getTask(),$listViews)) { ?>
 <div class="ccm-dashboard-header-buttons">
     <a href="<?= \URL::to('/dashboard/store/settings/tax','add')?>" class="btn btn-primary"><?= t("Add Tax Rate")?></a>
@@ -108,7 +124,7 @@ if(in_array($controller->getTask(),$addViews)){
 </div>
 
 <div class="dashboard-tax-rates">
-	
+
 	<table class="table table-striped">
         <thead>
             <tr>
@@ -143,7 +159,7 @@ if(in_array($controller->getTask(),$addViews)){
             <?php } ?>
         </tbody>
     </table>
-	
+
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -169,7 +185,7 @@ if(in_array($controller->getTask(),$addViews)){
 			<?php } ?>
 		</tbody>
 	</table>
-	
+
 </div>
 
 <?php } elseif(in_array($controller->getTask(),$addClassViews)){ ?>
@@ -182,7 +198,7 @@ if(in_array($controller->getTask(),$addViews)){
             <div class="form-group">
                 <?= $form->label('taxClassName',t("Tax Class Name")); ?>
                 <?= $form->text('taxClassName',$tc->getTaxClassName()); ?>
-            </div>  
+            </div>
             <?php if(Config::get("communitystore.calculation")=="extract"){?>
                 <div class="alert alert-info">
                     <?= t("Since you're prices INCLUDE Tax, you can only specify one tax rate per class. If you need more, you must change this setting in the %stax setting here%s",'<a href="'.URL::to('/dashboard/store/settings').'">','</a>')?>
@@ -192,14 +208,14 @@ if(in_array($controller->getTask(),$addViews)){
                 <?= $form->label('taxClassRates[]',t("Select Tax Class Rates")); ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                 <select name="taxClassRates[]" class="taxclassRates select2-select" multiple="multiple" style="width: 100%;">
-                    <?php 
+                    <?php
                         $selectedTaxRates = $tc->getTaxClassRateIDs();
                         if(count($taxRates)){
                             foreach($taxRates as $taxRate){?>
                                 <option value="<?= $taxRate->getTaxRateID()?>" <?php if(in_array($taxRate->getTaxRateID(), $selectedTaxRates)){echo "selected";}?>><?= $taxRate->getTaxLabel()?></option>
-                    <?php 
+                    <?php
                             }
-                        } 
+                        }
                     ?>
                 </select>
                 </div>
@@ -210,17 +226,17 @@ if(in_array($controller->getTask(),$addViews)){
                     });
                 </script>
 
-            </div>          
+            </div>
         </div>
     </div>
 
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-success" type="submit" ><?= t('%s Tax Rate',$task)?></button>
         </div>
     </div>
-    
+
 </form>
 
 <?php } ?>

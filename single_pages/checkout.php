@@ -302,6 +302,38 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     </form>
                 <?php } ?>
 
+                <?php if (Config::get('community_store.vat_number')) { ?>
+                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-vat">
+                        <div class="store-checkout-form-group-body">
+                            <h2><?= t("VAT Number") ?></h2>
+                            <div class="row">
+                                <div class="columns medium-6">
+                                    <div class="form-group">
+                                        <label for="store-checkout-shipping-vat-number"><?= t("VAT Number (if applicable)") ?></label>
+                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), array('placeholder'=>t('VAT Number'))); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="store-checkout-form-group-buttons">
+                                <a href="#" class="store-btn-previous-pane button secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-button-next-pane button secondary pull-right" value="<?= t("Next") ?>">
+                            </div>
+                        </div>
+
+                        <div class="store-checkout-form-group-summary panel panel-default ">
+                        <div class="panel-heading">
+                            <?=t('VAT Number'); ?>
+                        </div>
+                        <div class="row panel-body">
+                            <div class="columns small-6">
+                                <label><?=t('Applied VAT Number'); ?></label>
+                                <p class="store-summary-vat-number" data-vat-blank="<?=t('Not entered'); ?>"><?= $customer->getValue('vat_number'); ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                <?php } ?>
+
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
                       action="<?= \URL::to('/checkout/submit') ?>">
 
