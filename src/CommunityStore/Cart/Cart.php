@@ -14,6 +14,7 @@ class Cart
 {
     protected static $cart = null;
     protected static $discounts = null;
+    protected static $hasChanged = false;
 
     public static function getCart()
     {
@@ -33,7 +34,7 @@ class Cart
 
                 if ($product) {
                     // check that we dont have a non-quantity product in cart with a quantity > 1
-                    if (!$product->allowQuantity() && $cartitem['product']['qty'] > 0) {
+                    if (!$product->allowQuantity() && $cartitem['product']['qty'] > 1) {
                         $cartitem['product']['qty'] = 1;
                         $update = true;
                     }
@@ -43,11 +44,22 @@ class Cart
                     if ($cartitem['product']['variation']) {
                         if (!StoreProductVariation::getByID($cartitem['product']['variation'])) {
                             $include = false;
+                            $update = true;
                         } else {
                             $product->shallowClone = true;
                             $product = clone $product;
                             $product->setVariation($cartitem['product']['variation']);
                         }
+                    }
+
+                    // if the cart has greater stock than available
+                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $cartitem['product']['qty'] > $product->getQty()) {
+                        if ($product->getQty() > 0) {
+                            $cartitem['product']['qty'] = $product->getQty(); // set to how many are left
+                        } else {
+                            $include = false; // otherwise none left, remove from cart
+                        }
+                        $update = true;  
                     }
 
                     if ($include) {
@@ -61,6 +73,7 @@ class Cart
 
             if ($update) {
                 Session::set('communitystore.cart', $checkeditems);
+                self::$hasChanged = true;
             }
 
             self::$discounts = array();
@@ -85,6 +98,10 @@ class Cart
         }
 
         return self::$cart;
+    }
+
+    public static function hasChanged() {
+        return self::$hasChanged;
     }
 
     public static function getDiscounts()

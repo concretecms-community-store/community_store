@@ -52,6 +52,12 @@ class Checkout extends PageController
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
         $this->set('requiresLogin', StoreCart::requiresLogin());
 
+        $cart = StoreCart::getCart();
+
+        if (StoreCart::hasChanged()) {
+            $this->redirect("/cart/changed");
+        }
+
         if(StoreCart::getTotalItemsInCart() == 0){
             $this->redirect("/cart/");
         }
@@ -124,8 +130,7 @@ class Checkout extends PageController
         $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
 
         $this->set("discountsWithCodesExist",$discountsWithCodesExist);
-
-        $this->set('cart', StoreCart::getCart());
+        $this->set('cart', $cart);
         $this->set('discounts', StoreCart::getDiscounts());
         $this->set('hasCode', StoreDiscountCode::hasCartCode());
 

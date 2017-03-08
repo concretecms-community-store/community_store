@@ -13,6 +13,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
         <p class="alert alert-success"><?= t('Your cart has been updated'); ?></p>
     <?php } ?>
 
+    <?php if ($actiondata['action'] == 'changed') { ?>
+        <p class="alert alert-success"><?= t('Your cart has been updated due to changes in stock levels'); ?></p>
+    <?php } ?>
+
     <?php if ($actiondata['action'] == 'clear') { ?>
         <p class="alert alert-warning"><?= t('Your cart has been cleared'); ?></p>
     <?php } ?>
@@ -32,7 +36,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 if ($cart) {
     $i = 1;
     ?>
-    <form method="post" class="form-inline">
+    <form method="post" class="form-inline" action="<?=  \URL::to("/cart/"); ?>" >
         <table id="store-cart" class="store-cart-table table table-hover table-condensed">
             <thead>
             <tr>
@@ -151,7 +155,7 @@ if ($cart) {
     </form>
 
     <!--    Hidden form for deleting-->
-    <form method="post" id="deleteform">
+    <form method="post" id="deleteform" action="<?=  \URL::to("/cart/"); ?>">
         <input type="hidden" name="instance" value=""/>
         <input type="hidden" name="action" value="remove" value=""/>
     </form>

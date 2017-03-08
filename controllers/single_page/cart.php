@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Cart extends PageController
 {
-    public function view()
+    public function view($action = '')
     {
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->redirect("/");
@@ -22,6 +22,8 @@ class Cart extends PageController
 
         $codeerror = false;
         $codesuccess = false;
+
+        $returndata = array();
 
         if ($this->post()) {
             if ($this->post('action') == 'code') {
@@ -72,6 +74,10 @@ class Cart extends PageController
                     $returndata = array('success' => true, 'action' => 'remove');
                 }
             }
+        }
+
+        if ($action) {
+            $returndata['action'] = $action;
         }
 
         $this->set('actiondata', $returndata);
