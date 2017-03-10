@@ -226,8 +226,10 @@ class ProductList extends AttributedItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct p.pID) c ');
-            $query->having('1 = 1');
+            $values = $query->execute()->fetchAll();
+            $count = count($values);
+
+            $query->resetQueryParts(array('groupBy', 'orderBy', 'having', 'join', 'where', 'from'))->from('DUAL')->select($count . ' c ');
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -237,7 +239,9 @@ class ProductList extends AttributedItemList
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
+        $values = $query->execute()->fetchAll();
+        $count = count($values);
 
-        return $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(array('groupBy', 'orderBy', 'having', 'join', 'where', 'from'))->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
     }
 }
