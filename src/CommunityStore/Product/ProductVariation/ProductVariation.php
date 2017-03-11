@@ -213,6 +213,11 @@ class ProductVariation
         return $this->pvSalePrice;
     }
 
+    public function getFormattedVariationSalePrice()
+    {
+        return StorePrice::format($this->pvSalePrice);
+    }
+
     /**
      * @param mixed $pvSalePrice
      */

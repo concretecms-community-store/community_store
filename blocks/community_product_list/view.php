@@ -134,7 +134,7 @@ if($products){
 		            <?php
                         $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getFormattedVariationSalePrice();
                             $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
 		                    echo '<span class="store-sale-price">'.$formattedSalePrice.'</span>';
 		                    echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$formattedOriginalPrice.'</span>';
