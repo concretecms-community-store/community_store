@@ -508,7 +508,7 @@ $(document).ready(function () {
     $("#store-checkout-form-group-vat").submit(function (e) {
         e.preventDefault();
         var vat_number = $("#store-checkout-shipping-vat-number").val();
-        $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
+        $("#store-checkout-form-group-vat .store-checkout-errors").remove();
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
@@ -530,6 +530,8 @@ $(document).ready(function () {
                     communityStore.nextPane(obj);
                     $('.store-whiteout').remove();
                 } else {
+
+
                     $("#store-checkout-form-group-vat .store-checkout-form-group-body ").prepend('<div class="store-checkout-errors"><div class="store-checkout-error alert alert-danger"></div></div>');
                     $("#store-checkout-form-group-vat .store-checkout-error").html(response.errors.join('<br>'));
                     $('.store-whiteout').remove();

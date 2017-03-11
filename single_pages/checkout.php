@@ -307,7 +307,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("VAT Number") ?></h2>
                             <div class="row">
-                                <div class="columns medium-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-vat-number"><?= t("VAT Number (if applicable)") ?></label>
                                         <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), array('placeholder'=>t('VAT Number'))); ?>
@@ -315,8 +315,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane button secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-button-next-pane button secondary pull-right" value="<?= t("Next") ?>">
+                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -325,7 +325,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             <?=t('VAT Number'); ?>
                         </div>
                         <div class="row panel-body">
-                            <div class="columns small-6">
+                            <div class="col-md-6">
                                 <label><?=t('Applied VAT Number'); ?></label>
                                 <p class="store-summary-vat-number" data-vat-blank="<?=t('Not entered'); ?>"><?= $customer->getValue('vat_number'); ?></p>
                             </div>
