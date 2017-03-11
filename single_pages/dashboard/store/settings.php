@@ -59,6 +59,11 @@
                         <?= $form->select('calculation',array('add'=>t("No, I will enter product prices EXCLUSIVE of tax"),'extract'=>t("Yes, I will enter product prices INCLUSIVE of tax")),Config::get('community_store.calculation')); ?>
                     </div>
 
+                    <div class="form-group">
+                        <label for="vat_number"><?= t("Enable EU VAT Number Options?")?></label>
+                        <?= $form->select('vat_number',array('0'=>t("No, I don't need this"),'1'=>t("Yes, enable VAT Number options")),Config::get('community_store.vat_number')); ?>
+                    </div>
+
                 </div>
 
                 <div class="col-sm-9 store-pane" id="settings-shipping">
