@@ -255,7 +255,7 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, true);
+                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false);
                             ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
@@ -316,7 +316,7 @@ if (is_object($product) && $product->isActive()) {
                 $thumb = false;
 
                 if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight,true);
+                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight,false);
                 }
 
                 $varationData[$key] = array(

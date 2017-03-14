@@ -282,9 +282,9 @@
                         <?php $guestCheckout =  Config::get('community_store.guestCheckout');
                         $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                         ?>
-                        <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />
-                        <label><?= $form->radio('guestCheckout','option',$guestCheckout == 'option'); ?> <?php  echo t('Offer as checkout option'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','always', $guestCheckout == 'always'); ?> <?php  echo t('Always (unless login required for products in cart)'); ?></label><br />
+                        <label><?= $form->radio('guestCheckout','option',$guestCheckout == 'option'); ?> <?php  echo t('Offer as checkout option'); ?></label><br />
+                        <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />
 
                     </div>
 

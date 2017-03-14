@@ -107,6 +107,7 @@ class Installer
         self::setConfigValue('community_store.taxName', t('Tax'));
         self::setConfigValue('community_store.sizeUnit', 'in');
         self::setConfigValue('community_store.weightUnit', 'lb');
+        self::setConfigValue('community_store.guestCheckout', 'always');
     }
     public static function setConfigValue($key, $value)
     {
