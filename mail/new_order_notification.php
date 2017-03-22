@@ -45,7 +45,7 @@ ob_start();
                         <?php $shippingaddress = StoreCustomer::formatAddress($order->getAttribute("shipping_address")); ?>
                         <?php if ($shippingaddress) {
                             $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
-                            echo nl2br($address);
+                            echo nl2br($shippingaddress);
                         }
                         ?>
                     </p>
