@@ -91,9 +91,12 @@ class ProductGroup
     public static function getGroupsForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        $groups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
-        foreach ($groups as $productGroup) {
-            $groups[] = $productGroup->getGroup();
+        $productGroups = $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        $groups = array();
+        if (count($productGroups)) {
+            foreach ($productGroups as $productGroup) {
+                $groups[] = $productGroup->getGroup();
+            }
         }
 
         return $groups;
