@@ -102,6 +102,20 @@ class ProductGroup
         return $groups;
     }
 
+    public static function isProductInGroup(StoreProduct $product, StoreGroup $group)
+    {
+        $em = \ORM::entityManager();
+        $gID = $group->getGroupID();
+        
+        $productGroup = $em->getRepository(get_class())->findBy(array('pID' => $product->getID(), 'gID' => $gID));
+        if (count($productGroup)) {
+            return true;
+        }
+
+
+        return false;
+    }
+    
     public static function getGroupIDsForProduct(StoreProduct $product)
     {
         $groups = self::getGroupsForProduct($product);
