@@ -106,8 +106,10 @@ class ProductGroup
     {
         $groups = self::getGroupsForProduct($product);
         $ids = array();
-        foreach ($groups as $g) {
-            $ids[] = $g->getGroupID();
+        if (count($groups)) {
+            foreach ($groups as $g) {
+                $ids[] = $g->getGroupID();
+            }
         }
 
         return $ids;
