@@ -20,6 +20,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pro
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
@@ -1111,6 +1112,15 @@ class Product
             }
         }
 
+        $relatedProducts = $this->getRelatedProducts();
+        if (count($relatedProducts)) {
+            $related = array();
+            foreach ($relatedProducts as $relatedProduct) {
+                $related[] = $relatedProduct->getRelatedProductID();
+            }
+            StoreProductRelated::addRelatedProducts(array('pRelatedProducts' => $related), $newproduct);
+        }
+        
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
         Events::dispatch('on_community_store_product_duplicate', $event);
