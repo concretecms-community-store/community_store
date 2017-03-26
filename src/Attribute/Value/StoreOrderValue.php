@@ -37,4 +37,10 @@ class StoreOrderValue extends Value
             parent::delete();
         }
     }
+    
+    public function getGenericValue()
+    {
+        return $this->getValueObject();
+    }
+    
 }
