@@ -233,8 +233,8 @@ if (is_object($product) && $product->isActive()) {
                             <?php } elseif ($optionType == 'checkbox') { ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label">
-                                        <input type="hidden" value="<?= t('No'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
-                                        <input type="checkbox" value="<?= t('Yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
+                                        <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
+                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
                                 </div>
                             <?php } elseif ($optionType == 'hidden') { ?>
                                     <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
