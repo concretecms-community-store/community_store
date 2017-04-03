@@ -495,11 +495,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div id="product-options-container"></div>
 
                 <div class="clearfix">
-                    <span class="btn btn-primary" id="btn-add-option-group"><?= t('Add Option List')?></span>
-                    <span class="btn btn-primary" id="btn-add-text"><?= t('Add Text Entry')?></span>
-                    <span class="btn btn-primary" id="btn-add-textarea"><?= t('Add Text Area')?></span>
-                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Add Checkbox Option')?></span>
-                    <span class="btn btn-primary" id="btn-add-hidden"><?= t('Add Hidden Value')?></span>
+                    <h4><?= t('Add'); ?></h4>
+                    <span class="btn btn-primary" id="btn-add-option-group"><?= t('Option List')?></span>
+                    <span class="btn btn-primary" id="btn-add-text"><?= t('Text Entry')?></span>
+                    <span class="btn btn-primary" id="btn-add-textarea"><?= t('Text Area')?></span>
+                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Checkbox Option')?></span>
+                    <span class="btn btn-primary" id="btn-add-hidden"><?= t('Hidden Value')?></span>
                 </div>
 
                 <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
@@ -531,7 +532,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional');?>" value="<%=poHandle%>">
                                     </div>
                                 </div>
-                                <% if (poType != 'select') { %>
+                                <% if (poType != 'select' && poType != 'checkbox') { %>
                                 <div class="col-xs-2">
                                     <div class="form-group">
                                         <label><?= t('Required');?></label>
@@ -599,7 +600,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             $labels['select'] = t('Option List');
                             $labels['text'] = t('Text Input');
                             $labels['textarea'] = t('Text Area Input');
+                            $labels['checkbox'] = t('Checkbox');
                             $labels['hidden'] = t('Hidden Value');
+
 
                             if (!$type) {
                                 $type = 'select';
@@ -698,7 +701,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poName: '',
                                 poID: '',
                                 poType: 'checkbox',
-                                poLabel: '<?= $labels['hidden']; ?>',
+                                poLabel: '<?= $labels['checkbox']; ?>',
                                 poHandle: '',
                                 poRequired: '',
                                 sort: temp

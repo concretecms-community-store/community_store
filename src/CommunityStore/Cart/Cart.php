@@ -193,12 +193,12 @@ class Cart
 
                 } elseif (substr($name, 0, 2) == 'pt') {
                     $groupID = str_replace("pt", "", $name);
-
                 } elseif (substr($name, 0, 2) == 'pa') {
                     $groupID = str_replace("pa", "", $groupID);
-
                 } elseif (substr($name, 0, 2) == 'ph') {
                     $groupID = str_replace("ph", "", $name);
+                } elseif (substr($name, 0, 2) == 'pc') {
+                    $groupID = str_replace("pc", "", $name);
                 }
 
 
