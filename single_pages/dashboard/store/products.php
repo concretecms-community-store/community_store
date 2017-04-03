@@ -498,6 +498,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <span class="btn btn-primary" id="btn-add-option-group"><?= t('Add Option List')?></span>
                     <span class="btn btn-primary" id="btn-add-text"><?= t('Add Text Entry')?></span>
                     <span class="btn btn-primary" id="btn-add-textarea"><?= t('Add Text Area')?></span>
+                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Add Checkbox Option')?></span>
                     <span class="btn btn-primary" id="btn-add-hidden"><?= t('Add Hidden Value')?></span>
                 </div>
 
@@ -678,6 +679,26 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poID: '',
                                 poType: 'textarea',
                                 poLabel: '<?= $labels['textarea']; ?>',
+                                poHandle: '',
+                                poRequired: '',
+                                sort: temp
+                            }));
+
+                            //Init Index
+                            indexOptionGroups();
+                        });
+
+                        $('#btn-add-checkbox').click(function(){
+
+                            //Use the template to create a new item.
+                            var temp = $(".option-group").length;
+                            temp = (temp);
+                            optionsContainer.append(optionsTemplate({
+                                //vars to pass to the template
+                                poName: '',
+                                poID: '',
+                                poType: 'checkbox',
+                                poLabel: '<?= $labels['hidden']; ?>',
                                 poHandle: '',
                                 poRequired: '',
                                 sort: temp
