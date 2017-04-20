@@ -88,7 +88,9 @@ if($products){
                     }
                     if ($isAvailable) {
                         $availableOptionsids = $variation->getOptionItemIDs();
-                        $firstAvailableVariation = $variation;
+                        $product->shallowClone = true;
+                        $firstAvailableVariation = clone $product;
+                        $firstAvailableVariation->setVariation($variation);
                         break;
                     }
                 }
@@ -132,14 +134,14 @@ if($products){
                 <?php if ($showPrice) { ?>
                 <p class="store-product-list-price">
 		            <?php
-                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getFormattedVariationSalePrice();
-                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getFormattedSalePrice();
+                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedPrice();
 		                    echo '<span class="store-sale-price">'.$formattedSalePrice.'</span>';
 		                    echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$formattedOriginalPrice.'</span>';
 		                } else {
-                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedPrice();
 		                    echo $formattedPrice; 
 		                }
 		            ?>

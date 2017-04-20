@@ -42,13 +42,17 @@ if (is_object($product) && $product->isActive()) {
                     }
                     if ($isAvailable) {
                         $availableOptionsids = $variation->getOptionItemIDs();
-                        $firstAvailableVariation = $variation;
+                        $product->shallowClone = true;
+                        $firstAvailableVariation = clone $product;
+                        $firstAvailableVariation->setVariation($variation);
+
                         break;
                     }
                 }
             }
         }
         $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
+
     ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
@@ -67,19 +71,19 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getVariationSalePrice();
-                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getSalePrice();
+                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedPrice();
 		                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
                             echo '&nbsp;'.t('was').'&nbsp;';
                             echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                             echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
 
 		                } else {
-                            $price = !$firstAvailableVariation ? $product->getPrice() : $firstAvailableVariation->getVariationPrice();
+                            $price = !$firstAvailableVariation ? $product->getPrice() : $firstAvailableVariation->getPrice();
 
-                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedPrice();
 
 		                    echo $formattedPrice;
                             echo '<meta itemprop="price" content="' . $price .'" />';
