@@ -130,20 +130,21 @@ class Products extends DashboardPageController
         $options  = $product->getOptions();
 
         $variations = $product->getVariations();
-        $variationLookup = array();
 
+        $variationLookup = array();
         $optionArrays = array();
         $optionLookup = array();
-
         $optionItems = array();
 
         foreach($options as $opt) {
-            $optionLookup[$opt->getID()] = $opt;
+            if ($opt->getIncludeVariations()) {
+                $optionLookup[$opt->getID()] = $opt;
 
-            foreach($opt->getOptionItems() as $optItem) {
-                $optionArrays[$opt->getID()][] = $optItem->getID();
-                $optionItemLookup[$optItem->getID()] = $optItem;
-                $optionItems[] = $optItem;
+                foreach($opt->getOptionItems() as $optItem) {
+                        $optionArrays[$opt->getID()][] = $optItem->getID();
+                        $optionItemLookup[$optItem->getID()] = $optItem;
+                        $optionItems[] = $optItem;
+                }
             }
         }
 
@@ -161,7 +162,7 @@ class Products extends DashboardPageController
             if (!is_array($option)) {
                 $checkedOptions[] = array($option);
             } else {
-                $checkedOptions[] =$option;
+                $checkedOptions[] = $option;
             }
         }
 

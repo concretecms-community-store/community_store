@@ -497,9 +497,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="clearfix">
                     <h4><?= t('Add'); ?></h4>
                     <span class="btn btn-primary" id="btn-add-option-group"><?= t('Option List')?></span>
-                    <span class="btn btn-primary" id="btn-add-text"><?= t('Text Entry')?></span>
+                    <span class="btn btn-primary" id="btn-add-text"><?= t('Text Field')?></span>
                     <span class="btn btn-primary" id="btn-add-textarea"><?= t('Text Area')?></span>
-                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Checkbox Option')?></span>
+                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Checkbox')?></span>
                     <span class="btn btn-primary" id="btn-add-hidden"><?= t('Hidden Value')?></span>
                 </div>
 
@@ -520,7 +520,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="panel-body">
 
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-5">
                                     <div class="form-group">
                                         <label for="poName<%=sort%>" ><?= t('Option Name');?></label>
                                         <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
@@ -532,8 +532,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional');?>" value="<%=poHandle%>">
                                     </div>
                                 </div>
+
+                                <% if (poType == 'select') { %>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label><?= t('Include In Variations');?></label>
+                                        <select class="form-control" name="poIncludeVariations[]"><option value="1" <% if (poIncludeVariations) { %>selected="selected"<% } %>><?= t('Yes');?></option><option value="0" <% if (!poIncludeVariations) { %>selected="selected"<% } %>><?= t('No');?></option></select>
+                                    </div>
+                                </div>
+                                <% } %>
                                 <% if (poType != 'select' && poType != 'checkbox') { %>
-                                <div class="col-xs-2">
+                                <div class="col-xs-3">
                                     <div class="form-group">
                                         <label><?= t('Required');?></label>
                                         <select class="form-control" name="poRequired[]"><option value="0"><?= t('No');?></option><option value="1" <% if (poRequired) { %>selected="selected"<% } %>><?= t('Yes');?></option></select>
@@ -595,6 +604,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             $type = $option->getType();
                             $handle = $option->getHandle();
                             $required = $option->getRequired();
+                            $includeVariations = $option->getIncludeVariations();
 
                             $labels = array();
                             $labels['select'] = t('Option List');
@@ -618,6 +628,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
                             poRequired: '<?= $required; ?>',
+                            poIncludeVariations: '<?= $includeVariations; ?>',
                             sort: '<?= $option->getSort() ?>'
                         }));
                         <?php
@@ -639,6 +650,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
                                 poRequired: '',
+                                poIncludeVariations: '1',
                                 sort: temp
                             }));
 
@@ -850,6 +862,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <br />
             <div class="form-group">
+                <h3><?= t('Variations');?></h3>
                 <label class="control-label"><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0')?>
                 <?= t('Options have different prices, SKUs or stock levels');?></label>
 
@@ -862,8 +875,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <?php if (!empty($comboOptions)) { ?>
             <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden');?>">
-
-                <label><?= t('Variations');?></label>
 
                 <?php if ($pID) { ?>
                     <p class="alert alert-info hidden" id="changenotice"><?= t('Product options have changed, update the product to configure updated variations') ?></p>

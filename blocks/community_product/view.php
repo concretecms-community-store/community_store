@@ -194,7 +194,7 @@ if (is_object($product) && $product->isActive()) {
                             <?php if (!$optionType || $optionType == 'select') { ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                    <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
+                                    <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> form-control" name="po<?= $option->getID() ?>">
                                         <?php
                                         $firstAvailableVariation = false;
                                         $variation = false;
@@ -234,7 +234,7 @@ if (is_object($product) && $product->isActive()) {
                                 <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
-                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
+                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
                                 </div>
                             <?php } elseif ($optionType == 'hidden') { ?>
                                     <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
@@ -339,7 +339,7 @@ if (is_object($product) && $product->isActive()) {
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input:checked').each(function () {
+                $('#product-options-<?= $bID; ?> select.store-product-variation').each(function () {
                     ar.push($(this).val());
                 });
 

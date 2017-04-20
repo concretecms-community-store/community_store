@@ -219,7 +219,7 @@ if($products){
                         <?php if (!$optionType || $optionType == 'select') { ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
+                                <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> form-control" name="po<?= $option->getID() ?>">
                                     <?php
                                     $firstAvailableVariation = false;
                                     $variation = false;
@@ -301,7 +301,7 @@ if($products){
                                 var variationdata = <?= json_encode($varationData); ?>;
                                 var ar = [];
 
-                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
+                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select.store-product-variation').each(function(){
                                     ar.push($(this).val());
                                 });
 

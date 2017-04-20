@@ -180,13 +180,15 @@ class Cart
             }
 
             $optionItemIds = array();
+            $optionsInVariations = array();
 
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
                 $groupID = false;
 
                 if (substr($name, 0, 2) == 'po') {
-                    $optionItemIds[] = $value;
+                    $groupID = str_replace("po", "", $name);;
+
                     if (!$value) {
                         $error = true;  // if we have select option but no value
                     }
@@ -201,10 +203,14 @@ class Cart
                     $groupID = str_replace("pc", "", $name);
                 }
 
-
                 // if there is a groupID, check to see if it's a required field, reject if no value
                 if ($groupID) {
                     $option = StoreProductOption::getByID($groupID);
+
+                    if ($option->getIncludeVariations()) {
+                        $optionsInVariations[] = $value;
+                    }
+
                     if ($option->getRequired() && !$value) {
                         $error = true;
                     }
@@ -212,14 +218,14 @@ class Cart
             }
 
 
-            if (!empty($optionItemIds) && $product->hasVariations()) {
+            if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options
-                $variation = StoreProductVariation::getByOptionItemIDs($optionItemIds);
+                $variation = StoreProductVariation::getByOptionItemIDs($optionsInVariations);
 
                 // association the variation with the product
                 if ($variation) {
                     $options = $variation->getOptions();
-                    if (count($options) == count($optionItemIds)) {  // check if we've matched to a variation with the correct number of options
+                    if (count($options) == count($optionsInVariations)) {  // check if we've matched to a variation with the correct number of options
                         $product->setVariation($variation);
                         $cartItem['product']['variation'] = $variation->getID();
                     } else {

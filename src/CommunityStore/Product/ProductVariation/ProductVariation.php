@@ -384,8 +384,10 @@ class ProductVariation
 
         if (!empty($options)) {
             foreach ($options as $option) {
-                foreach ($option->getOptionItems() as $optItem) {
-                    $optionArrays[$option->getID()][] = $optItem->getID();
+                if ($option->getIncludeVariations()) {
+                    foreach ($option->getOptionItems() as $optItem) {
+                        $optionArrays[$option->getID()][] = $optItem->getID();
+                    }
                 }
             }
         }
@@ -461,6 +463,7 @@ class ProductVariation
         } else {
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", array($product->getID()));
         }
+
 
         if (!empty($pvIDstoDelete)) {
             foreach ($pvIDstoDelete as $pvID) {
