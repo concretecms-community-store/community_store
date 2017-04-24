@@ -152,6 +152,10 @@ class TaxRate
         return $em->find(get_class(), $trID);
     }
 
+    public function isVatNumberEligible() {
+        return $this->getTaxVatExclude();
+    }
+
     public function isTaxable()
     {
         $taxAddress = $this->getTaxAddress();

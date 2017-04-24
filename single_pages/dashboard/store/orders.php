@@ -74,6 +74,12 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <h4><?= t("User")?></h4>
             <p><a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID());?>"><?= $ui->getUserName(); ?></a></p>
             <?php } ?>
+
+            <?php if (Config::get('community_store.vat_number')) { ?>
+                <?php $vat_number = $order->getAttribute('vat_number'); ?>
+                <h4><?= t("VAT Number")?></h4>
+                <p><?=$vat_number?></p>
+            <?php } ?>
         </div>
 
         <div class="col-sm-4">

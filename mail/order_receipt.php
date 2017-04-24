@@ -39,6 +39,11 @@ ob_start();
                     <?= nl2br($address); ?>
                     <br><br>
                     <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
+                    <?php
+                    $vat_number = $order->getAttribute("vat_number");
+                    if ($vat_number) { ?>
+                    <strong><?= t('VAT Number') ?></strong>: <?= $vat_number ?><br>
+                    <?php } ?>
                 </p>
             </td>
             <td style="vertical-align: top; padding: 0;">

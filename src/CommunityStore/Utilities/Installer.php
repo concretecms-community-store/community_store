@@ -265,6 +265,7 @@ class Installer
         self::installOrderAttribute('shipping_first_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_last_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_address', $address, $pkg, $orderCustSet);
+        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet);
     }
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
@@ -353,6 +354,14 @@ class Installer
             $orderChoiceSet = $oakc->getAttributeSetByHandle('order_choices');
             if (!($orderChoiceSet instanceof \Concrete\Core\Attribute\Set)) {
                 $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
+            }
+
+            // Install VAT Number order attribute
+            $attr = StoreOrderKey::getByHandle('vat_number');
+            if (!is_object($attr)) {
+                $orderCustSet = $oakc->getAttributeSetByHandle('order_customer');
+                $text = AttributeType::getByHandle('text');
+                self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet);
             }
 
             // now we refresh all blocks
