@@ -213,6 +213,13 @@ class TaxRate
                 $pID = $cartItem['product']['pID'];
                 $qty = $cartItem['product']['qty'];
                 $product = StoreProduct::getByID($pID);
+
+                if ($cartItem['product']['variation']) {
+                    $product->shallowClone = true;
+                    $product = clone $product;
+                    $product->setVariation($cartItem['product']['variation']);
+                }
+
                 if (is_object($product)) {
                     if ($product->isTaxable()) {
                         //if this tax rate is in the tax class associated with this product
