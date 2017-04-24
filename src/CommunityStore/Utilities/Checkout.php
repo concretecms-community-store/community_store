@@ -91,8 +91,6 @@ class Checkout extends Controller
                     $first_name = $customer->getValue('shipping_first_name');
                     $last_name = $customer->getValue('shipping_last_name');
 
-                    $taxVatExclude = 'aaa';
-
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
                         $vat_number = $customer->getValue('vat_number');
@@ -116,7 +114,6 @@ class Checkout extends Controller
                     'phone' => $phone,
                     'email' => $email,
                     'address' => $address,
-                    'taxVatExclude' => $taxVatExclude,
                     'error' => false
                 );
 
