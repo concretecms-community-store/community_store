@@ -255,8 +255,6 @@ class Products extends DashboardPageController
 
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
 
         $attrList = StoreProductKey::getList();
         $this->set('attribs',$attrList);
