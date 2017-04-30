@@ -392,7 +392,7 @@ class Order
         $taxes = $this->getTaxes();
         $taxTotal = 0;
         foreach ($taxes as $tax) {
-            $taxTotal = $taxTotal + $tax['amount'];
+            $taxTotal = $taxTotal + (float)$tax['amount'];
         }
 
         return $taxTotal;
@@ -403,7 +403,7 @@ class Order
         $taxes = $this->getTaxes();
         $taxTotal = 0;
         foreach ($taxes as $tax) {
-            $taxTotal = $taxTotal + $tax['amountIncluded'];
+            $taxTotal = $taxTotal + (float)$tax['amountIncluded'];
         }
 
         return $taxTotal;
