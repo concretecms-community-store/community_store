@@ -32,7 +32,7 @@ class Calculator
             }
         }
 
-        return max($subtotal, 0);
+        return round(max($subtotal, 0), 2);
     }
     public static function getShippingTotal($smID = null)
     {
@@ -55,7 +55,7 @@ class Calculator
             $shippingTotal = 0;
         }
 
-        return $shippingTotal;
+        return round($shippingTotal, 2);
     }
     public static function getTaxTotals()
     {
@@ -143,7 +143,7 @@ class Calculator
 
 
             foreach($taxes as $tax) {
-                $tax['taxamount'] =  ($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']);
+                $tax['taxamount'] =  round(($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']),2);
                 $formattedtaxes[] = $tax;
             }
 
@@ -161,6 +161,13 @@ class Calculator
 
         $total = $adjustedSubtotal + $adjustedShippingTotal + $addedTaxTotal + $addedShippingTaxTotal;
         $totalTax = $addedTaxTotal + $addedShippingTaxTotal + $includedTaxTotal + $includedShippingTaxTotal;
+
+        $adjustedSubtotal = round($adjustedSubtotal, 2);
+        $adjustedShippingTotal = round($adjustedShippingTotal, 2);
+        $addedTaxTotal = round($addedTaxTotal, 2);
+        $includedShippingTaxTotal = round($includedShippingTaxTotal, 2);
+        $totalTax = round($totalTax, 2);
+        $total = round($total, 2);
 
         return array('discountRatio'=>$discountRatio,'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $totalTax, 'addedTaxTotal'=>$addedTaxTotal + $addedShippingTaxTotal,'includeTaxTotal'=>$includedTaxTotal + $includedShippingTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total);
     }
