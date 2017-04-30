@@ -6,7 +6,7 @@ An open, free and community developed eCommerce system for concrete5
 
 Please refer to the project wiki for more extended details - https://github.com/concrete5-community-store/community_store/wiki
 
-The goal of this project is to provide a stable, feature rich, highly extensible and customizable 'shopping cart toolkit' for concrete5.7.
+The goal of this project is to provide a stable, feature rich, highly extensible and customizable 'shopping cart toolkit' for concrete5.7 and v8.
 
 At this point the add-on and it's associated payment and shipping methods are functioning well, but should still be considered beta.
 If you are not a concrete5 developer and wish to use the Community Store on a production site it is advised that you find a developer to assist you.
@@ -14,7 +14,7 @@ If you are not a concrete5 developer and wish to use the Community Store on a pr
 The add-on will work directly with a Bootstrap based theme, primarily Elemental, but is intended to be easily modified and overriden for a custom theme.
 
 ## Setup
-The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend concrete5' option within the dashboard. 
+The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend concrete5' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concrete5-community-store/community_store/releases
 
 ## Payment gateways
 To keep the 'core' store component as lightweight as possible it does not include a payment gateway other than the 'Invoice' type.
