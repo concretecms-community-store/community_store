@@ -38,6 +38,7 @@
                 <?= $form->label('sortOrder', t('Sort Order')); ?>
                 <?= $form->select('sortOrder', array(
                     'alpha' => t("Alphabetical"),
+                    'alpha_desc' => t("Alphabetical, reversed"),
                     'date' => t('Date Added'),
                     'price_asc' => t('Price Ascending'),
                     'price_desc' => t('Price Descending'),
