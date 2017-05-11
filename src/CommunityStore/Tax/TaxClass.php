@@ -28,7 +28,7 @@ class TaxClass
     protected $taxClassName;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @Column(type="text",nullable=true)
      */
     protected $taxClassRates;
 
@@ -50,6 +50,8 @@ class TaxClass
         if ($rates) {
             $rates = implode(',', $rates);
             $this->taxClassRates = $rates;
+        } else {
+            $this->taxClassRates = '';
         }
     }
     public function setTaxClassLock($locked)

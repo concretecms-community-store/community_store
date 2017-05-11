@@ -143,7 +143,7 @@ if(in_array($controller->getTask(),$addViews)){
                                 $taxClassRates = $tc->getTaxClassRates();
                                 if($taxClassRates){
                                     foreach($taxClassRates as $taxRate){
-                                        echo $taxRate->getTaxLabel()."<br>";
+                                        echo '<span class="label label-primary">' . $taxRate->getTaxLabel() . '</span> ';
                                     }
                                 }
                              ?>
@@ -205,9 +205,11 @@ if(in_array($controller->getTask(),$addViews)){
                 </div>
             <?php } ?>
             <div class="form-group">
-                <?= $form->label('taxClassRates[]',t("Select Tax Class Rates")); ?>
+                <?= $form->label('taxClassRates[]',t("Select Tax Class Rates"));
+                $sizeswap = 10;
+                ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
-                <select name="taxClassRates[]" class="taxclassRates select2-select" multiple="multiple" style="width: 100%;">
+                <select name="taxClassRates[]" class="taxclassRates select2-select <?= (count($taxRates) < $sizeswap ? '' : 'form-control');?>" multiple="multiple"  style="width: 100%; <?= (count($taxRates) < $sizeswap ? '' : 'height: 200px;');?>">
                     <?php
                         $selectedTaxRates = $tc->getTaxClassRateIDs();
                         if(count($taxRates)){
@@ -219,12 +221,13 @@ if(in_array($controller->getTask(),$addViews)){
                     ?>
                 </select>
                 </div>
-
+                <?php if(count($taxRates) < $sizeswap){ ?>
                 <script>
                     $(document).ready(function() {
                         $('.taxclassRates').select2();
                     });
                 </script>
+                <?php } ?>
 
             </div>
         </div>
@@ -233,6 +236,7 @@ if(in_array($controller->getTask(),$addViews)){
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
+            <a href="<?= \URL::to('/dashboard/store/settings/tax')?>" class="btn btn-default pull-left"><?= t("Cancel / View Taxes")?></a>
             <button class="pull-right btn btn-success" type="submit" ><?= t('%s Tax Rate',$task)?></button>
         </div>
     </div>
