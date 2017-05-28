@@ -131,7 +131,7 @@ class Order
     {
         $this->orderItems = new ArrayCollection();
     }
-    
+
     public function setCustomerID($cID)
     {
         $this->cID = $cID;
@@ -589,6 +589,12 @@ class Order
             $this->setAttribute("shipping_last_name", $shipping_last_name);
             $this->setAttribute("shipping_address", $shipping_address);
         }
+
+        if (Config::get('community_store.vat_number')) {
+            $vat_number = $customer->getValue("vat_number");
+            $this->setAttribute("vat_number", $vat_number);
+        }
+
     }
 
     // if sameRequest = true, it's indicating that the same request used to place the order

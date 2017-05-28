@@ -34,6 +34,11 @@ ob_start();
                     <br><br>
                     <strong><?= t('Email') ?></strong>: <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
                     <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?>
+                    <?php
+                    $vat_number = $order->getAttribute("vat_number");
+                    if ($vat_number) { ?>
+                    <br /><strong><?= t('VAT Number') ?></strong>: <?= $vat_number ?>
+                    <?php } ?>
                 </p>
             </td>
             <td style="vertical-align: top; padding: 0;">

@@ -22,7 +22,7 @@ class Checkout extends Controller
             $data = $_POST;
             // VAT Number validation
             if (Config::get('community_store.vat_number')) {
-                $vat_number = $data['vat_number'];
+                $vat_number = str_replace(' ', '', trim($data['vat_number']));
                 $e = Checkout::validateVatNumber($vat_number);
                 if ($e->has()) {
                     echo $e->outputJSON(); return;
@@ -140,49 +140,14 @@ class Checkout extends Controller
         if (empty($vat_number)) return $e;
 
         // Taken from: https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9781449327453/ch04s21.html
-        $regex = "/^((AT)?U[0-9]{8}|(BE)?0[0-9]{9}|(BG)?[0-9]{9,10}|(CY)?[0-9]{8}L|(CZ)?[0-9]{8,10}|(DE)?[0-9]{9}|(DK)?[0-9]{8}|(EE)?[0-9]{9}|(EL|GR)?[0-9]{9}|(ES)?[0-9A-Z][0-9]{7}[0-9A-Z]|(FI)?[0-9]{8}|(FR)?[0-9A-Z]{2}[0-9]{9}|(GB)?([0-9]{9}([0-9]{3})?|[A-Z]{2}[0-9]{3})|(HU)?[0-9]{8}|(IE)?[0-9]S[0-9]{5}L|(IT)?[0-9]{11}|(LT)?([0-9]{9}|[0-9]{12})|(LU)?[0-9]{8}|(LV)?[0-9]{11}|(MT)?[0-9]{8}|(NL)?[0-9]{9}B[0-9]{2}|(PL)?[0-9]{10}|(PT)?[0-9]{9}|(RO)?[0-9]{2,10}|(SE)?[0-9]{12}|(SI)?[0-9]{8}|(SK)?[0-9]{10})$/i";
+        $regex = "/^((AT)?U[0-9]{8}|(BE)?0[0-9]{9}|(BG)?[0-9]{9,10}|(CY)?[0-9]{8}L|(CZ)?[0-9]{8,10}|(DE)?[0-9]{9}|(DK)?[0-9]{8}|(EE)?[0-9]{9}|(EL|GR)?[0-9]{9}|(ES)?[0-9A-Z][0-9]{7}[0-9A-Z]|(FI)?[0-9]{8}|(FR)?[0-9A-Z]{2}[0-9]{9}|(GB)?([0-9]{9}([0-9]{3})?|[A-Z]{2}[0-9]{3})|(HU)?[0-9]{8}|(IE)?[0-9]S[0-9]{5}L|(IE)?[0-9]{7}[A-Z]*|(IT)?[0-9]{11}|(LT)?([0-9]{9}|[0-9]{12})|(LU)?[0-9]{8}|(LV)?[0-9]{11}|(MT)?[0-9]{8}|(NL)?[0-9]{9}B[0-9]{2}|(PL)?[0-9]{10}|(PT)?[0-9]{9}|(RO)?[0-9]{2,10}|(SE)?[0-9]{12}|(SI)?[0-9]{8}|(SK)?[0-9]{10})$/i";
 
         if ($vat_number != '' && !preg_match($regex, $vat_number)) {
             $e->add(t('You must enter a valid VAT Number'));
-            return $e; // Stop there for now to save SOAP request
         }
 
-        $countryCode = substr($vat_number, 0, 2);
-        $vatNumber = substr($vat_number, 2);
+        return $e;
 
-        // Building the xml as a string as it is faster than doing it the dom way
-        $xmlString = "";
-        $xmlString .= '<?xml version="1.0"?>';
-        $xmlString .= '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">';
-        $xmlString .= '<soap:Body>';
-        $xmlString .= '<m:checkVat xmlns:m="urn:ec.europa.eu:taxud:vies:services:checkVat:types">';
-        $xmlString .= '<m:countryCode>'.$countryCode.'</m:countryCode>';
-        $xmlString .= '<m:vatNumber>'.$vatNumber.'</m:vatNumber>';
-        $xmlString .= '</m:checkVat>';
-        $xmlString .= '</soap:Body>';
-        $xmlString .= '</soap:Envelope>';
-
-        // Create the request and send it
-        $options = array(
-            'http' => array(
-                'header'  => "Content-type: text/xml\r\n",
-                'method'  => 'POST',
-                'content' => $xmlString,
-                'ignore_errors' => true
-            ),
-        );
-        $context  = stream_context_create($options);
-        $result = file_get_contents("http://ec.europa.eu/taxation_customs/vies/services/checkVatService", false, $context);
-
-        // Verify response
-        // You can parse the xml and get more info but we are only looking for the string we need
-        if (strpos($result, "<valid>true</valid>")) {
-            return $e;
-        } else {
-            $e->add(t('The VAT Number entered was not valid.'));
-            return $e;
-
-        }
     }
 
     private function validateAccountEmail($email)

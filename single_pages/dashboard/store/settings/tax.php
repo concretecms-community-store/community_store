@@ -96,9 +96,9 @@ if(in_array($controller->getTask(),$addViews)){
                             <div class="checkbox">
                             <label for="taxVatExclude" class="control-label">
                                 <?= $form->checkbox('taxVatExclude', 1, $taxRate->getTaxVatExclude()); ?>
-                                <strong><?= t("Only apply tax if an EU VAT Number is not supplied or is invalid.")?></strong>
+                                <strong><?= t("Do not apply tax if a valid VAT number is supplied")?></strong>
                             </label>
-                            <p class="help-block"><?= t("If the customer has entered a valid VAT Number then this tax will not be applied in checkout.")?></p>
+                            <p class="help-block"><?= t("If the customer has entered a correctly formatted VAT Number then this tax will not be applied at checkout.")?></p>
                         </div>
                     </div>
                 </div>

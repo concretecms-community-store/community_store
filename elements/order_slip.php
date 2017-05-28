@@ -79,6 +79,14 @@ $dh = Core::make('helper/date');
                             <a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
                         </p>
                     <?php } ?>
+
+                    <?php
+                    $vat_number = $order->getAttribute("vat_number");
+                    if (Config::get('community_store.vat_number') && $vat_number) { ?>
+                        <h4><?= t("VAT Number")?></h4>
+                        <p><?=$vat_number?></p>
+                    <?php } ?>
+
                 </div>
 
                 <div class="col-xs-4">
