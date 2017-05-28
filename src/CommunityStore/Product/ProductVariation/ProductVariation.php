@@ -394,6 +394,7 @@ class ProductVariation
 
         $comboOptions = self::combinations(array_values($optionArrays));
 
+
         $variationIDs = array();
 
         if (!empty($comboOptions)) {
@@ -448,6 +449,16 @@ class ProductVariation
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->save();
+
+                    $options = $variation->getOptions();
+
+                    foreach($options as $opt) {
+                        if (!in_array($opt->getOption()->getID(), $optioncombo)) {
+                            $opt->delete();
+                        }
+                    }
+
+
                 }
 
                 $variationIDs[] = $variation->getID();
@@ -514,8 +525,9 @@ class ProductVariation
 
         if (is_array($optionids) && !empty($optionids)) {
             $options = implode(',', $optionids);
+
             $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ($options)
-                                 group by pvID having count(*) = ?", array(count($optionids)));
+                                 group by pvID having count(*) = ? ", array(count($optionids)));
 
             return self::getByID($pvID);
         }

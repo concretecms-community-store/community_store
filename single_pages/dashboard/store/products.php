@@ -536,8 +536,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <% if (poType == 'select') { %>
                                 <div class="col-xs-3">
                                     <div class="form-group">
-                                        <label><?= t('Include In Variations');?></label>
-                                        <select class="form-control" name="poIncludeVariations[]"><option value="1" <% if (poIncludeVariations) { %>selected="selected"<% } %>><?= t('Yes');?></option><option value="0" <% if (!poIncludeVariations) { %>selected="selected"<% } %>><?= t('No');?></option></select>
+                                        <label><?= t('In Variations');?></label>
+                                        <select class="form-control" name="poIncludeVariations[]"><option value="1" <% if (poIncludeVariations == 1) { %>selected="selected"<% } %>><?= t('Yes');?></option><option value="0" <% if (poIncludeVariations == 0) { %>selected="selected"<% } %>><?= t('No');?></option></select>
                                     </div>
                                 </div>
                                 <% } %>
@@ -568,11 +568,23 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </script>
                 <script type="text/javascript">
                     function deleteOptionGroup(id){
+                        var variationeffect = $(".option-group[data-order='"+id+"'] select[name=poIncludeVariations\\[\\]] option:selected");
+
+                        if (variationeffect && variationeffect.val() == 1) {
+                            $('#variationshider').addClass('hidden');
+                            $('#changenotice').removeClass('hidden');
+                        }
+
                         $(".option-group[data-order='"+id+"']").remove();
-                        $('#variationshider').addClass('hidden');
-                        $('#changenotice').removeClass('hidden');
+
                     }
                     $(function(){
+                        $(document).on('change','select[name=poIncludeVariations\\[\\]]', function(){
+                            $('#variationshider').addClass('hidden');
+                            $('#changenotice').removeClass('hidden');
+                            $('#changewarning').removeClass('hidden');
+                        });
+
                         function indexOptionGroups(){
                             $('#product-options-container .option-group').each(function(i) {
                                 $(this).find('.option-group-sort').val(i);
@@ -650,15 +662,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
                                 poRequired: '',
-                                poIncludeVariations: '1',
+                                poIncludeVariations: '0',
                                 sort: temp
                             }));
 
                             //Init Index
                             indexOptionGroups();
 
-                            $('#variationshider').addClass('hidden');
-                            $('#changenotice').removeClass('hidden');
+//                            $('#variationshider').addClass('hidden');
+//                            $('#changenotice').removeClass('hidden');
                         });
 
 
@@ -876,178 +888,186 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <?php if (!empty($comboOptions)) { ?>
             <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden');?>">
 
+                <p class="alert alert-danger hidden" id="changewarning"><?= t('Warning: Product options have changed that will create different variations - any existing variation data will be lost') ?></p>
+
                 <?php if ($pID) { ?>
                     <p class="alert alert-info hidden" id="changenotice"><?= t('Product options have changed, update the product to configure updated variations') ?></p>
                 <?php } ?>
 
-
                 <div id="variationshider">
 
                  <?php
-                $count = 0;
+                 if ($product->hasVariations()) {
+                     $count = 0;
 
-                foreach ($comboOptions as $combinedOptions) {
-                 ?>
-                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <?= t('Options') . ':'; ?>
-                        <?php
-                         $comboIDs = array();
-
-                         foreach ($combinedOptions as $optionItemID) {
-                             $comboIDs[] = $optionItemID;
-                             sort($comboIDs);
-                             $group = $optionLookup[$optionItemLookup[$optionItemID]->getOptionID()];
-                             echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
-                         }
-
+                     foreach ($comboOptions as $combinedOptions) {
                          ?>
-                        <button class="btn btn-xs btn-default pull-right variationdisplaybutton" type="button" data-toggle="collapse">
-                            <?= t('More options');?>
-                        </button>
-                    </div>
+                         <div class="panel panel-default">
+                             <div class="panel-heading">
+                                 <?= t('Options') . ':'; ?>
+                                 <?php
+                                 $comboIDs = array();
 
-                     <div class="panel-body">
-                         <input type="hidden" name="option_combo[]" value="<?= implode('_', $comboIDs); ?>"/>
+                                 foreach ($combinedOptions as $optionItemID) {
+                                     $comboIDs[] = $optionItemID;
+                                     sort($comboIDs);
+                                     $group = $optionLookup[$optionItemLookup[$optionItemID]->getOptionID()];
+                                     echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
+                                 }
 
-                         <?php if (isset($variationLookup[implode('_', $comboIDs)])) {
-                             $variation = $variationLookup[implode('_', $comboIDs)];
-                             $varid = $variation->getID();
-                         } else {
-                             $variation = null;
-                             $varid = '';
-                         } ?>
-
-                        <div class="row form-group">
-                         <div class="col-md-4">
-                             <?= $form->label("", t("SKU")); ?>
-                         </div>
-                         <div class="col-md-8">
-                            <?= $form->text("pvSKU[".$varid."]", $variation ? $variation->getVariationSKU() : '', array('placeholder' => t('Base SKU'))); ?>
-                         </div>
-                        </div>
-
-                         <div class="row form-group">
-                             <div class="col-md-4">
-                                 <?= $form->label("", t("Stock Level")); ?>
+                                 ?>
+                                 <button class="btn btn-xs btn-default pull-right variationdisplaybutton" type="button"
+                                         data-toggle="collapse">
+                                     <?= t('More options'); ?>
+                                 </button>
                              </div>
-                             <div class="col-md-8">
-                                 <div class="input-group">
-                                     <?php
-                                     if ($variation) {
-                                         echo $form->number("pvQty[".$varid."]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '')=>($variation->isUnlimited() ? 'readonly' : '')));
-                                     } else {
-                                         echo $form->number("pvQty[".$varid."]", '', array('readonly'=>'readonly'));
-                                     }
-                                     ?>
 
-                                     <div class="input-group-addon">
-                                         <label><?= $form->checkbox('pvQtyUnlim['.$varid.']', '1', $variation ? $variation->isUnlimited() : true) ?> <?= t('Unlimited'); ?></label>
+                             <div class="panel-body">
+                                 <input type="hidden" name="option_combo[]" value="<?= implode('_', $comboIDs); ?>"/>
+
+                                 <?php
+
+                                 if (isset($variationLookup[implode('_', $comboIDs)])) {
+                                     $variation = $variationLookup[implode('_', $comboIDs)];
+                                     $varid = $variation->getID();
+                                 } else {
+                                     $variation = null;
+                                     $varid = '';
+                                 } ?>
+
+                                 <div class="row form-group">
+                                     <div class="col-md-4">
+                                         <?= $form->label("", t("SKU")); ?>
+                                     </div>
+                                     <div class="col-md-8">
+                                         <?= $form->text("pvSKU[" . $varid . "]", $variation ? $variation->getVariationSKU() : '', array('placeholder' => t('Base SKU'))); ?>
+                                     </div>
+                                 </div>
+
+                                 <div class="row form-group">
+                                     <div class="col-md-4">
+                                         <?= $form->label("", t("Stock Level")); ?>
+                                     </div>
+                                     <div class="col-md-8">
+                                         <div class="input-group">
+                                             <?php
+                                             if ($variation) {
+                                                 echo $form->number("pvQty[" . $varid . "]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : '')));
+                                             } else {
+                                                 echo $form->number("pvQty[" . $varid . "]", '', array('readonly' => 'readonly'));
+                                             }
+                                             ?>
+
+                                             <div class="input-group-addon">
+                                                 <label><?= $form->checkbox('pvQtyUnlim[' . $varid . ']', '1', $variation ? $variation->isUnlimited() : true) ?> <?= t('Unlimited'); ?></label>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div class="row form-group">
+                                     <div class="col-md-4">
+                                         <?= $form->label("", t("Price")); ?>
+                                     </div>
+                                     <div class="col-md-8">
+                                         <div class="input-group">
+                                             <div class="input-group-addon">
+                                                 <?= Config::get('community_store.symbol'); ?>
+                                             </div>
+                                             <?= $form->text("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', array('placeholder' => t('Base Price'))); ?>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div class="extrafields hidden">
+
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("pvSalePrice[]", t("Sale Price")); ?>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <div class="input-group">
+                                                 <div class="input-group-addon">
+                                                     <?= Config::get('community_store.symbol'); ?>
+                                                 </div>
+                                                 <?= $form->text("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', array('placeholder' => t('Base Sale Price'))); ?>
+                                             </div>
+                                         </div>
+                                     </div>
+
+
+                                     <div class="row form-group">
+                                         <div class="col-md-12">
+                                             <?= $form->label('pfID[]', t("Primary Image")); ?>
+                                             <?php
+                                             $pvfID = null;
+                                             if ($variation) {
+                                                 $pvfID = $variation->getVariationImageID();
+                                             }
+                                             ?>
+                                             <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
+                                         </div>
+                                     </div>
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("", t("Weight")); ?>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <div class="input-group">
+                                                 <?= $form->text('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', array('placeholder' => t('Base Weight'))) ?>
+                                                 <div class="input-group-addon"><?= Config::get('community_store.weightUnit') ?></div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("", t("Number of Items")); ?>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <?= $form->text('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', array('min' => 0, 'step' => 1, 'placeholder' => t('Base Number Of Items'))) ?>
+                                         </div>
+                                     </div>
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("", t("Length")); ?>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <div class="input-group">
+                                                 <?= $form->text('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', array('placeholder' => t('Base Length'))) ?>
+                                                 <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("", t("Width")); ?>
+                                         </div>
+
+                                         <div class="col-md-8">
+                                             <div class="input-group">
+                                                 <?= $form->text('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', array('placeholder' => t('Base Width'))) ?>
+                                                 <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row form-group">
+                                         <div class="col-md-4">
+                                             <?= $form->label("", t("Height")); ?>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <div class="input-group">
+                                                 <?= $form->text('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', array('placeholder' => t('Base Height'))) ?>
+                                                 <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+                                             </div>
+                                         </div>
                                      </div>
                                  </div>
                              </div>
-                         </div>
 
-                         <div class="row form-group">
-                         <div class="col-md-4">
-                            <?= $form->label("", t("Price")); ?>
                          </div>
-                         <div class="col-md-8">
-                            <div class="input-group">
-                                 <div class="input-group-addon">
-                                     <?=  Config::get('community_store.symbol'); ?>
-                                 </div>
-                                 <?= $form->text("pvPrice[".$varid."]", $variation ? $variation->getVariationPrice() : '', array('placeholder' => t('Base Price'))); ?>
-                            </div>
-                        </div>
-                        </div>
-
-                         <div class="extrafields hidden">
-
-                         <div class="row form-group">
-                         <div class="col-md-4">
-                                <?= $form->label("pvSalePrice[]", t("Sale Price")); ?>
-                         </div>
-                         <div class="col-md-8">
-                             <div class="input-group">
-                                 <div class="input-group-addon">
-                                     <?=  Config::get('community_store.symbol'); ?>
-                                 </div>
-                                 <?= $form->text("pvSalePrice[".$varid."]", $variation ? $variation->getVariationSalePrice() : '', array('placeholder' => t('Base Sale Price'))); ?>
-                             </div>
-                         </div>
-                        </div>
-
-
-                         <div class="row form-group">
-                             <div class="col-md-12">
-                                 <?= $form->label('pfID[]',t("Primary Image")); ?>
-                                 <?php
-                                 $pvfID = null;
-                                 if ($variation) {
-                                     $pvfID = $variation->getVariationImageID();
-                                 }
-                                  ?>
-                                 <?= $al->image('ccm-image'.$count++, 'pvfID['.$varid.']', t('Choose Image'), $pvfID?File::getByID($pvfID):null); ?>
-                             </div>
-                         </div>
-                        <div class="row form-group">
-                        <div class="col-md-4">
-                            <?= $form->label("", t("Weight")); ?>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="input-group" >
-                                <?= $form->text('pvWeight['.$varid.']',$variation ? $variation->getVariationWeight() : '', array('placeholder'=>t('Base Weight')))?>
-                                <div class="input-group-addon"><?= Config::get('community_store.weightUnit')?></div>
-                            </div>
-                         </div>
-                        </div>
-                        <div class="row form-group">
-                        <div class="col-md-4">
-                            <?= $form->label("", t("Number of Items")); ?>
-                        </div>
-                        <div class="col-md-8">
-                             <?= $form->text('pvNumberItems['.$varid.']',$variation ? $variation->getVariationNumberItems() : '', array('min'=>0, 'step'=>1, 'placeholder'=>t('Base Number Of Items')))?>
-                         </div>
-                        </div>
-                        <div class="row form-group">
-                        <div class="col-md-4">
-                            <?= $form->label("", t("Length")); ?>
-                        </div>
-                        <div class="col-md-8">
-                             <div class="input-group" >
-                                 <?= $form->text('pvLength['.$varid.']',$variation ? $variation->getVariationLength() : '', array('placeholder'=>t('Base Length')))?>
-                                 <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
-                             </div>
-                        </div>
-                        </div>
-                        <div class="row form-group">
-                         <div class="col-md-4">
-                             <?= $form->label("", t("Width")); ?>
-                         </div>
-
-                         <div class="col-md-8">
-                             <div class="input-group" >
-                                     <?= $form->text('pvWidth['.$varid.']',$variation ? $variation->getVariationWidth() : '', array('placeholder'=>t('Base Width')))?>
-                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
-                             </div>
-                          </div>
-                        </div>
-                        <div class="row form-group">
-                         <div class="col-md-4">
-                             <?= $form->label("", t("Height")); ?>
-                        </div>
-                         <div class="col-md-8">
-                             <div class="input-group" >
-                                     <?= $form->text('pvHeight['.$varid.']',$variation ? $variation->getVariationHeight() : '', array('placeholder'=>t('Base Height')))?>
-                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit')?></div>
-                             </div>
-                         </div>
-                        </div>
-                    </div>
-                     </div>
-
-                 </div>
+                     <?php }
+                 } else { ?>
+                     <p class="alert alert-info"><?= t('Update the product to display variations') ?></p>
                  <?php } ?>
                 </div>
                 </div>

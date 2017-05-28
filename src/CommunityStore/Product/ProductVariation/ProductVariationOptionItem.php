@@ -58,4 +58,11 @@ class ProductVariationOptionItem
         $em->persist($this);
         $em->flush();
     }
+
+    public function delete()
+    {
+        $em = \ORM::entityManager();
+        $em->remove($this);
+        $em->flush();
+    }
 }
