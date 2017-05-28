@@ -116,23 +116,25 @@ class Cart extends PageController
 
     public function add()
     {
-        $data = $this->post();
-        $result = StoreCart::add($data);
+        if ($this->post()) {
+            $data = $this->post();
+            $result = StoreCart::add($data);
 
-        $added = $result['added'];
+            $added = $result['added'];
 
-        $error = 0;
+            $error = 0;
 
-        if ($result['error']) {
-            $error = 1;
+            if ($result['error']) {
+                $error = 1;
+            }
+
+            $product = StoreProduct::getByID($data['pID']);
+            $productdata['pAutoCheckout'] = $product->autoCheckout();
+            $productdata['pName'] = $product->getName();
+
+            $returndata = array('quantity' => (int)$data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error);
+            echo json_encode($returndata);
         }
-
-        $product = StoreProduct::getByID($data['pID']);
-        $productdata['pAutoCheckout'] = $product->autoCheckout();
-        $productdata['pName'] = $product->getName();
-
-        $returndata = array('quantity' => (int)$data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error'=>$error);
-        echo json_encode($returndata);
         exit();
 
     }
@@ -145,46 +147,52 @@ class Cart extends PageController
 
     public function update()
     {
-        $data = $this->post();
+        if ($this->post()) {
+            $data = $this->post();
 
-        if (is_array($data['instance'])) {
-            $result = StoreCart::updateMutiple($data);
-            $quantity = 0;
-            foreach($data['pQty'] as $q) {
-                $quantity +=  $q;
+            if (is_array($data['instance'])) {
+                $result = StoreCart::updateMutiple($data);
+                $quantity = 0;
+                foreach ($data['pQty'] as $q) {
+                    $quantity += $q;
+                }
+
+                $added = 0;
+                foreach ($result as $r) {
+                    $added += $r['added'];
+                }
+
+            } else {
+                $result = StoreCart::update($data);
+                $added = $result['added'];
+                $quantity = (int)$data['pQty'];
             }
 
-            $added = 0;
-            foreach($result as $r) {
-                $added += $r['added'];
-            }
+            $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
 
-        } else {
-            $result = StoreCart::update($data);
-            $added = $result['added'];
-            $quantity = (int)$data['pQty'];
+            echo json_encode($returndata);
         }
-
-        $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
-
-        echo json_encode($returndata);
         exit();
     }
 
     public function remove()
     {
-        $instanceID = $_POST['instance'];
-        StoreCart::remove($instanceID);
-        $returndata = array('success' => true, 'action' => 'remove');
-        echo json_encode($returndata);
+        if ($this->post()) {
+            $instanceID = $_POST['instance'];
+            StoreCart::remove($instanceID);
+            $returndata = array('success' => true, 'action' => 'remove');
+            echo json_encode($returndata);
+        }
         exit();
     }
 
     public function clear()
     {
-        StoreCart::clear();
-        $returndata = array('success' => true, 'action' => 'clear');
-        echo json_encode($returndata);
+        if ($this->post()) {
+            StoreCart::clear();
+            $returndata = array('success' => true, 'action' => 'clear');
+            echo json_encode($returndata);
+        }
         exit();
     }
 }
