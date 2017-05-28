@@ -203,7 +203,7 @@ $(function(){
 				<th><?= t("Shipping")?></th>
 				<th><?= t("Tax")?> <?= $extraTaxLable?></th>
 				<th><?= t("Total")?></th>
-				<!--<th><?= t("Export")?></th>-->
+				<th><?= t("Export")?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -212,7 +212,7 @@ $(function(){
 				<td><?=Price::format($ordersTotals['shippingTotal'])?></td>
 				<td><?=Price::format($ordersTotals[$taxValue])?></td>
 				<td><?=Price::format($ordersTotals['total'])?></td>
-				<!--<td><a href="<?=URL::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default"><?= t('Export to CSV')?></a></td>-->
+				<td><a href="<?=URL::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default"><?= t('Export to CSV')?></a></td>
 			</tr>
 		</tbody>
 	</table>
