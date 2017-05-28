@@ -1059,7 +1059,7 @@ class Order
     }
 
     public function getAddressValue($handle, $valuename) {
-        $att = $this->getValue($handle);
+        $att = $this->getAttribute($handle);
         return $this->returnAttributeValue($att,$valuename);
     }
 
