@@ -228,7 +228,11 @@ class Checkout extends PageController
             if($payment['error']==1){
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors',$errors);
-                $this->redirect("/checkout/failed#payment");
+                if ($_GET['guest'] == '1') {
+                    $this->redirect("/checkout/failed?guest=1#payment");
+                } else {
+                    $this->redirect("/checkout/failed#payment");
+                }
             } else {
                 $transactionReference = $payment['transactionReference'];
                 $order = StoreOrder::add($pm,$transactionReference);
