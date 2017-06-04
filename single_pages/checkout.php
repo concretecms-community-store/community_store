@@ -18,7 +18,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <div class="store-checkout-form-shell col-md-8">
 
             <?php
-            if ($customer->isGuest() && ($requiresLogin || $guestCheckout == 'off' || ($guestCheckout == 'option' && $_GET['guest'] != '1'))) {
+            if ($customer->isGuest() && ($requiresLogin || $guestCheckout == 'off' || ($guestCheckout == 'option' && !$guest))) {
                 ?>
                 <div class="store-checkout-form-group store-active-form-group" id="store-checkout-form-group-signin">
 
@@ -46,7 +46,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/checkout/?guest=1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= \URL::to('/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -335,7 +335,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <?php } ?>
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
-                      action="<?= \URL::to('/checkout/submit') ?>">
+                      action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
 
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Payment") ?></h2>

@@ -371,7 +371,7 @@ var communityStore = {
 };
 
 $(document).ready(function () {
-    if ($('.store-checkout-form-shell').size() > 0) {
+    if ($('.store-checkout-form-shell form').size() > 0) {
         communityStore.updateBillingStates(true);
         communityStore.updateShippingStates(true);
         communityStore.showShippingMethods();
@@ -450,6 +450,7 @@ $(document).ready(function () {
         });
 
     });
+
     $("#store-checkout-form-group-shipping").submit(function (e) {
         e.preventDefault();
         var sfName = $("#store-checkout-shipping-first-name").val();
@@ -544,7 +545,6 @@ $(document).ready(function () {
 
     });
 
-
     $("#store-checkout-form-group-shipping-method").submit(function (e) {
         e.preventDefault();
         communityStore.waiting();
@@ -574,6 +574,7 @@ $(document).ready(function () {
 
         }
     });
+
     $(".store-btn-previous-pane").click(function (e) {
         //hide the body of the current pane, go to the next pane, show that body.
         var pane = $(this).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().prev();

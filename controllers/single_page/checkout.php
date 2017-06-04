@@ -22,7 +22,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrde
 
 class Checkout extends PageController
 {
-    public function view()
+    public function view($guest = false)
     {
         if ($this->post()) {
             if ($this->post('action') == 'code') {
@@ -50,6 +50,7 @@ class Checkout extends PageController
         $this->set('customer', $customer);
         $guestCheckout = Config::get('community_store.guestCheckout');
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
+        $this->set('guest', isset($guest) && (bool)$guest);
         $this->set('requiresLogin', StoreCart::requiresLogin());
 
         $cart = StoreCart::getCart();
@@ -195,16 +196,16 @@ class Checkout extends PageController
         $this->set("enabledPaymentMethods",$availableMethods);
     }
 
-    public function failed()
+    public function failed($guest = false)
     {
         $this->set('shippingInstructions', StoreCart::getShippingInstructions());
         $this->set('paymentErrors',Session::get('paymentErrors'));
         $this->set('activeShippingLabel', StoreShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', StoreCalculator::getShippingTotal());
         $this->set('lastPaymentMethodHandle',Session::get('paymentMethod'));
-        $this->view();
+        $this->view($guest);
     }
-    public function submit()
+    public function submit($guest = false)
     {
         $data = $this->post();
         Session::set('paymentMethod',$data['payment-method']);
@@ -228,8 +229,8 @@ class Checkout extends PageController
             if($payment['error']==1){
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors',$errors);
-                if ($_GET['guest'] == '1') {
-                    $this->redirect("/checkout/failed?guest=1#payment");
+                if ($guest) {
+                    $this->redirect("/checkout/failed/1#payment");
                 } else {
                     $this->redirect("/checkout/failed#payment");
                 }
@@ -244,7 +245,15 @@ class Checkout extends PageController
     public function external()
     {
         $pmHandle = Session::get('paymentMethod');
-        $pm = StorePaymentMethod::getByHandle($pmHandle);
+        $pm = false;
+
+        if ($pmHandle) {
+            $pm = StorePaymentMethod::getByHandle($pmHandle);
+        }
+
+        if (!$pm) {
+            $this->redirect('/checkout');
+        }
 
         $this->set('pm',$pm);
         $this->set('action',$pm->getMethodController()->getAction());
