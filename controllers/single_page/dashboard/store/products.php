@@ -289,6 +289,21 @@ class Products extends DashboardPageController
             $this->error = $errors;
             if (!$errors->has()) {
                     
+                // if the save sent no options with variation inclusion, uncheck the variations box
+                if (isset($data['poIncludeVariations'])) {
+                    $allowVariations = false;
+
+                    foreach($data['poIncludeVariations'] as $variationInclude) {
+                        if ($variationInclude == 1) {
+                            $allowVariations = true;
+                        }
+                    }
+
+                    if (!$allowVariations) {
+                        $data['pVariations'] = 0;
+                    }
+                }
+
                 //save the product
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes

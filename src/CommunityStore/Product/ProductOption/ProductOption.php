@@ -58,7 +58,7 @@ class ProductOption
     /**
      * @Column(type="boolean", nullable=true)
      */
-    protected $poIncludeVariations = true;
+    protected $poIncludeVariations;
 
     /**
      * @Column(type="integer")
@@ -131,7 +131,7 @@ class ProductOption
 
     public function getIncludeVariations()
     {
-        return $this->poIncludeVariations;
+        return ( (int)$this->poIncludeVariations !== 0);
     }
 
     public function setIncludeVariations($poIncludeVariations)

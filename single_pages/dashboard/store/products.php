@@ -540,6 +540,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <select class="form-control" name="poIncludeVariations[]"><option value="1" <% if (poIncludeVariations == 1) { %>selected="selected"<% } %>><?= t('Yes');?></option><option value="0" <% if (poIncludeVariations == 0) { %>selected="selected"<% } %>><?= t('No');?></option></select>
                                     </div>
                                 </div>
+                                <% } else { %>
+                                    <input type="hidden" value="0" name="poIncludeVariations[]" />
                                 <% } %>
                                 <% if (poType != 'select' && poType != 'checkbox') { %>
                                 <div class="col-xs-3">
@@ -639,8 +641,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poType: '<?= $type ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
-                            poRequired: '<?= $required; ?>',
-                            poIncludeVariations: '<?= $includeVariations; ?>',
+                            poRequired: '<?= $required ? 1 : 0; ?>',
+                            poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                             sort: '<?= $option->getSort() ?>'
                         }));
                         <?php

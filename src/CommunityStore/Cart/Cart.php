@@ -185,8 +185,10 @@ class Cart
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
                 $groupID = false;
+                $isOptionList = false;
 
                 if (substr($name, 0, 2) == 'po') {
+                    $isOptionList = true;
                     $groupID = str_replace("po", "", $name);;
 
                     if (!$value) {
@@ -207,7 +209,7 @@ class Cart
                 if ($groupID) {
                     $option = StoreProductOption::getByID($groupID);
 
-                    if ($option->getIncludeVariations()) {
+                    if ($isOptionList && $option->getIncludeVariations()) {
                         $optionsInVariations[] = $value;
                     }
 
