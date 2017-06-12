@@ -202,6 +202,8 @@ if (is_object($product) && $product->isActive()) {
                                         <?php
                                         $firstAvailableVariation = false;
                                         $variation = false;
+                                        $disabled = false;
+                                        $outOfStock = false;
                                         foreach ($optionItems as $optionItem) {
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
