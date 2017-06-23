@@ -131,7 +131,7 @@ class ProductOption
 
     public function getIncludeVariations()
     {
-        return ( (int)$this->poIncludeVariations !== 0);
+        return (int)(is_null($this->poIncludeVariations) || $this->poIncludeVariations == 1);
     }
 
     public function setIncludeVariations($poIncludeVariations)
