@@ -90,6 +90,9 @@ if ($cart) {
                                     } elseif (substr($groupID, 0, 2) == 'ph')  {
                                         $groupID = str_replace("ph", "", $groupID);
                                         $optionvalue = $valID;
+                                    } elseif (substr($groupID, 0, 2) == 'pc')  {
+                                        $groupID = str_replace("pc", "", $groupID);
+                                        $optionvalue = $valID;
                                     }
 
                                     $optiongroup = StoreProductOption::getByID($groupID);

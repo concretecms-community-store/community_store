@@ -56,6 +56,11 @@ class ProductOption
     protected $poRequired;
 
     /**
+     * @Column(type="boolean", nullable=true)
+     */
+    protected $poIncludeVariations;
+
+    /**
      * @Column(type="integer")
      */
     protected $poSort;
@@ -124,6 +129,16 @@ class ProductOption
         $this->poRequired = $poRequired;
     }
 
+    public function getIncludeVariations()
+    {
+        return ( (int)$this->poIncludeVariations !== 0);
+    }
+
+    public function setIncludeVariations($poIncludeVariations)
+    {
+        $this->poIncludeVariations = $poIncludeVariations;
+    }
+
     public function __construct()
     {
         $this->optionItems = new ArrayCollection();
@@ -160,19 +175,19 @@ class ProductOption
         }
     }
 
-    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false)
+    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
     {
         $ProductOption = new self();
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
     }
-    public function update($product, $name, $sort, $type = '', $handle = '', $required = false)
+    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
     {
         $ProductOption = $this;
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
     }
-    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $obj)
+    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $obj)
     {
         $obj->setProduct($product);
         $obj->setName($name);
@@ -180,6 +195,7 @@ class ProductOption
         $obj->setType($type);
         $obj->setHandle($handle);
         $obj->setRequired($required);
+        $obj->setIncludeVariations($includeVariations);
         $obj->save();
         return $obj;
     }
@@ -227,13 +243,13 @@ class ProductOption
                     $option = self::getByID($data['poID'][$i]);
 
                     if ($option) {
-                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
+                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
                     }
                 }
 
                 if (!$option) {
                     if ($data['poName'][$i]) {
-                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i]);
+                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
                         $product->getOptions()->add($option);
                     }
                 }

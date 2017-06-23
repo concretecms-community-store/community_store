@@ -384,13 +384,16 @@ class ProductVariation
 
         if (!empty($options)) {
             foreach ($options as $option) {
-                foreach ($option->getOptionItems() as $optItem) {
-                    $optionArrays[$option->getID()][] = $optItem->getID();
+                if ($option->getIncludeVariations()) {
+                    foreach ($option->getOptionItems() as $optItem) {
+                        $optionArrays[$option->getID()][] = $optItem->getID();
+                    }
                 }
             }
         }
 
         $comboOptions = self::combinations(array_values($optionArrays));
+
 
         $variationIDs = array();
 
@@ -446,6 +449,16 @@ class ProductVariation
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->save();
+
+                    $options = $variation->getOptions();
+
+                    foreach($options as $opt) {
+                        if (!in_array($opt->getOption()->getID(), $optioncombo)) {
+                            $opt->delete();
+                        }
+                    }
+
+
                 }
 
                 $variationIDs[] = $variation->getID();
@@ -461,6 +474,7 @@ class ProductVariation
         } else {
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", array($product->getID()));
         }
+
 
         if (!empty($pvIDstoDelete)) {
             foreach ($pvIDstoDelete as $pvID) {
@@ -511,8 +525,9 @@ class ProductVariation
 
         if (is_array($optionids) && !empty($optionids)) {
             $options = implode(',', $optionids);
+
             $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ($options)
-                                 group by pvID having count(*) = ?", array(count($optionids)));
+                                 group by pvID having count(*) = ? ", array(count($optionids)));
 
             return self::getByID($pvID);
         }
