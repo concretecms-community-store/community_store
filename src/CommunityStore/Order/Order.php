@@ -3,7 +3,6 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use User;
 use Core;
-use Concrete\Core\Mail\Service as MailService;
 use Group;
 use Events;
 use Config;
@@ -791,7 +790,7 @@ class Order
     }
 
     public function sendNotifications() {
-        $mh = new MailService();
+        $mh = Core::make('mail');
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
@@ -839,7 +838,7 @@ class Order
     }
 
     public function sendOrderReceipt($email = '') {
-        $mh = new MailService();
+        $mh = Core::make('mail');
         $fromName = Config::get('community_store.emailalertsname');
 
         $fromEmail = Config::get('community_store.emailalerts');
