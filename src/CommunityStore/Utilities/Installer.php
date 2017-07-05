@@ -25,6 +25,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePa
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
@@ -298,6 +299,11 @@ class Installer
         }
     }
 
+	public static function addProductSearchIndexTable($pkg){
+		$spk = new StoreProductKey();
+		$spk->createIndexedSearchTable();
+	}
+
     public static function createDDFileset($pkg)
     {
         //create fileset to place digital downloads
@@ -374,5 +380,6 @@ class Installer
         }
         Localization::clearCache();
         self::installUserAttributes($pkg);
+		Installer::addProductSearchIndexTable($pkg);
     }
 }

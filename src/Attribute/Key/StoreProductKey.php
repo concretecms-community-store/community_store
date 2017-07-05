@@ -8,6 +8,21 @@ use Concrete\Core\Support\Facade\Application;
 
 class StoreProductKey extends Key
 {
+
+	protected $searchIndexFieldDefinition = array(
+		'columns' => array(
+			array('name' => 'pID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)),
+		),
+		'primary' => array('pID'),
+	);
+
+
+	public static function getDefaultIndexedSearchTable()
+	{
+		return 'CommunityStoreProductSearchIndexAttributes';
+	}
+
+
     public static function getAttributes($pID, $method = 'getValue')
     {
         $app = Application::getFacadeApplication();

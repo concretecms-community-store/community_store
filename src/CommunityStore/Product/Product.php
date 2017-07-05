@@ -961,6 +961,22 @@ class Product
         $em->flush();
     }
 
+	public function reindex()
+	{
+		$attribs = StoreProductKey::getAttributes(
+			$this->pID,
+			'getSearchIndexValue'
+		);
+		$app = Application::getFacadeApplication();
+		$db = $app->make('database')->connection();
+
+		$db->Execute('DELETE FROM CommunityStoreProductSearchIndexAttributes WHERE pID = ?', array($this->pID));
+		$searchableAttributes = array('pID' => $this->pID);
+
+		$key = new StoreProductKey();
+		$key->reindex('CommunityStoreProductSearchIndexAttributes', $searchableAttributes, $attribs);
+	}
+
     public function delete() {
         $em = \ORM::entityManager();
         $em->remove($this);
@@ -1120,7 +1136,9 @@ class Product
             }
             StoreProductRelated::addRelatedProducts(array('pRelatedProducts' => $related), $newproduct);
         }
-        
+
+		$newproduct->reindex();
+
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
         Events::dispatch('on_community_store_product_duplicate', $event);
@@ -1205,6 +1223,7 @@ class Product
             $ak = StoreProductKey::getByHandle($ak);
         }
         $ak->setAttribute($this, $value);
+		$this->reindex();
     }
     public function getAttribute($ak, $displayMode = false)
     {
