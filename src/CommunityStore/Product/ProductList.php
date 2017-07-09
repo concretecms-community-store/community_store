@@ -215,6 +215,8 @@ class ProductList extends AttributedItemList
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
         }
 
+		$query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
+
         return $query;
     }
 
