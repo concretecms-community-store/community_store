@@ -645,6 +645,7 @@ class Order
     public function completePostPaymentProcesses($sameRequest = false) {
         $groupstoadd = array();
         $createlogin = false;
+        $usercreated = false;
         $orderItems = $this->getOrderItems();
 
         foreach ($orderItems as $orderItem) {
@@ -708,6 +709,7 @@ class Order
 
                 $userRegistrationService = \Core::make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(array('uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password));
+                $usercreated = true;
 
                 if (Config::get('concrete.user.registration.email_registration')) {
                     $mh->addParameter('username', trim($email));
@@ -748,30 +750,34 @@ class Order
         }
 
         if ($user) {  // $user is going to either be the new one, or the user of the currently logged in customer
-
-            // update the order created with the user from the newly created user
+            // update the order created with the newly created user
             $this->setCustomerID($user->getUserID());
             $this->save();
 
-            $billing_first_name = $this->getAttribute("billing_first_name");
-            $billing_last_name = $this->getAttribute("billing_last_name");
-            $billing_address = $this->getAttribute("billing_address");
-            $billing_phone = $this->getAttribute("billing_phone");
-            $shipping_first_name = $this->getAttribute("shipping_first_name");
-            $shipping_last_name = $this->getAttribute("shipping_last_name");
-            $shipping_address = $this->getAttribute("shipping_address");
+            if ($usercreated) {
+                $billing_first_name = $this->getAttribute("billing_first_name");
+                $billing_last_name = $this->getAttribute("billing_last_name");
+                $billing_address = clone $this->getAttribute("billing_address");
+                $billing_phone = $this->getAttribute("billing_phone");
+                $shipping_first_name = $this->getAttribute("shipping_first_name");
+                $shipping_last_name = $this->getAttribute("shipping_last_name");
+                $shipping_address = $this->getAttribute("shipping_address");
 
-            // update the  user's attributes
-            $customer = new StoreCustomer($user->getUserID());
-            $customer->setValue('billing_first_name', $billing_first_name);
-            $customer->setValue('billing_last_name', $billing_last_name);
-            $customer->setValue('billing_address', $billing_address);
-            $customer->setValue('billing_phone', $billing_phone);
+                if ($shipping_address) {
+                    $shipping_address = clone $shipping_address;
+                }
 
-            if ($this->isShippable()) {
-                $customer->setValue('shipping_first_name', $shipping_first_name);
-                $customer->setValue('shipping_last_name', $shipping_last_name);
-                $customer->setValue('shipping_address', $shipping_address);
+                // update the  user's attributes
+                $user->setAttribute('billing_first_name', $billing_first_name);
+                $user->setAttribute('billing_last_name', $billing_last_name);
+                $user->setAttribute('billing_address', $billing_address);
+                $user->setAttribute('billing_phone', $billing_phone);
+
+                if ($this->isShippable()) {
+                    $user->setAttribute('shipping_first_name', $shipping_first_name);
+                    $user->setAttribute('shipping_last_name', $shipping_last_name);
+                    $user->setAttribute('shipping_address', $shipping_address);
+                }
             }
 
             //add user to Store Customers group
