@@ -757,23 +757,26 @@ class Order
             if ($usercreated) {
                 $billing_first_name = $this->getAttribute("billing_first_name");
                 $billing_last_name = $this->getAttribute("billing_last_name");
-                $billing_address = $this->getAttribute("billing_address");
+                $billing_address = clone $this->getAttribute("billing_address");
                 $billing_phone = $this->getAttribute("billing_phone");
                 $shipping_first_name = $this->getAttribute("shipping_first_name");
                 $shipping_last_name = $this->getAttribute("shipping_last_name");
                 $shipping_address = $this->getAttribute("shipping_address");
 
+                if ($shipping_address) {
+                    $shipping_address = clone $shipping_address;
+                }
+
                 // update the  user's attributes
-                $customer = new StoreCustomer($user->getUserID());
-                $customer->setValue('billing_first_name', $billing_first_name);
-                $customer->setValue('billing_last_name', $billing_last_name);
-                $customer->setValue('billing_address', $billing_address);
-                $customer->setValue('billing_phone', $billing_phone);
+                $user->setAttribute('billing_first_name', $billing_first_name);
+                $user->setAttribute('billing_last_name', $billing_last_name);
+                $user->setAttribute('billing_address', $billing_address);
+                $user->setAttribute('billing_phone', $billing_phone);
 
                 if ($this->isShippable()) {
-                    $customer->setValue('shipping_first_name', $shipping_first_name);
-                    $customer->setValue('shipping_last_name', $shipping_last_name);
-                    $customer->setValue('shipping_address', $shipping_address);
+                    $user->setAttribute('shipping_first_name', $shipping_first_name);
+                    $user->setAttribute('shipping_last_name', $shipping_last_name);
+                    $user->setAttribute('shipping_address', $shipping_address);
                 }
             }
 
