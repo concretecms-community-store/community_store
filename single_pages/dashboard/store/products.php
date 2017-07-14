@@ -233,8 +233,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                             }
                                         });
 
-                                        $('input[name="pvQtyUnlim[]"]').change(function(){
-                                            $(this).closest('.input-group').find('.ccm-input-text').prop('readonly',this.checked);
+                                        $('input[name^="pvQtyUnlim"]').change(function(){
+                                            $(this).closest('.input-group').find('.ccm-input-number').prop('readonly',this.checked);
                                         });
 
                                     });
