@@ -56,49 +56,12 @@ if($products){
     foreach($products as $product){
         $options = $product->getOptions();
 
-        if ($product->hasVariations()) {
-            $variations = StoreProductVariation::getVariationsForProduct($product);
-            $variationLookup = array();
-
-            if (!empty($variations)) {
-                foreach ($variations as $variation) {
-                    // returned pre-sorted
-                    $ids = $variation->getOptionItemIDs();
-                    $variationLookup[implode('_', $ids)] = $variation;
-                }
-            }
-        }
-        // This determines which is the first available (not out of stock) option
-        $firstAvailableVariation = false;
-        if (count($variations)) {
-            $availableOptionsids = false;
-            foreach ($variations as $variation) {
-                $isAvailable = false;
-                if ($variation->isSellable()) {
-                    $variationOptions = $variation->getOptions();
-
-                    foreach ($variationOptions as $variationOption) {
-                        $opt = $variationOption->getOption();
-                        if ($opt->isHidden()) {
-                            $isAvailable = false;
-                            break;
-                        } else {
-                            $isAvailable = true;
-                        }
-                    }
-                    if ($isAvailable) {
-                        $availableOptionsids = $variation->getOptionItemIDs();
-                        $product->shallowClone = true;
-                        $firstAvailableVariation = clone $product;
-                        $firstAvailableVariation->setVariation($variation);
-                        break;
-                    }
-                }
-            }
-        }
-        
+        $variationLookup = $product->getVariationLookup();
+        $variationData = $product->getVariationData();
+        $availableOptionsids = $variationData['availableOptionsids'];
+        $firstAvailableVariation = $variationData['firstAvailableVariation'];
         $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
- 
+        
         //this is done so we can get a type of active class if there's a product list on the product page
         if($c->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';

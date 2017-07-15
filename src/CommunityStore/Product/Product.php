@@ -1248,4 +1248,60 @@ class Product
 
         return $av;
     }
+
+    public function getVariationData() {
+        $firstAvailableVariation = false;
+
+        if ($this->hasVariations()) {
+            $availableOptionsids = false;
+            foreach ($this->getVariations() as $variation) {
+                $isAvailable = false;
+
+                if ($variation->isSellable()) {
+                    $variationOptions = $variation->getOptions();
+
+                    foreach ($variationOptions as $variationOption) {
+                        $opt = $variationOption->getOption();
+                        if ($opt->isHidden()) {
+                            $isAvailable = false;
+                            break;
+                        } else {
+                            $isAvailable = true;
+                        }
+                    }
+                    if ($isAvailable) {
+                        $availableOptionsids = $variation->getOptionItemIDs();
+                        $this->shallowClone = true;
+                        $firstAvailableVariation = clone $this;
+                        $firstAvailableVariation->setVariation($variation);
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return array('firstAvailableVariation'=>$firstAvailableVariation, 'availableOptionsids'=>$availableOptionsids);
+    }
+
+    // helper function for working with variation options
+    public function getVariationLookup() {
+        $variationLookup = array();
+
+        if ($this->hasVariations()) {
+            $variations = StoreProductVariation::getVariationsForProduct($this);
+
+            $variationLookup = array();
+
+            if (!empty($variations)) {
+                foreach ($variations as $variation) {
+                    // returned pre-sorted
+                    $ids = $variation->getOptionItemIDs();
+                    $variationLookup[implode('_', $ids)] = $variation;
+                }
+            }
+        }
+
+        return $variationLookup;
+    }
 }

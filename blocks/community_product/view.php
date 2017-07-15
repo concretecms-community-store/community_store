@@ -5,54 +5,12 @@ $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
 if (is_object($product) && $product->isActive()) {
-    // This determines which is the first available (not out of stock) option
-    // also adds the code for $VariationLookup taken from the product list block and added here.
     $options = $product->getOptions();
-
-        if ($product->hasVariations()) {
-            $variations = StoreProductVariation::getVariationsForProduct($product);
-
-            $variationLookup = array();
-
-            if (!empty($variations)) {
-                foreach ($variations as $variation) {
-                    // returned pre-sorted
-                    $ids = $variation->getOptionItemIDs();
-                    $variationLookup[implode('_', $ids)] = $variation;
-                }
-            }
-        }
-        
-        $firstAvailableVariation = false;
-        if (count($variations)) {
-            $availableOptionsids = false;
-            foreach ($variations as $variation) {
-                $isAvailable = false;
-                if ($variation->isSellable()) {
-                    $variationOptions = $variation->getOptions();
-
-                    foreach ($variationOptions as $variationOption) {
-                        $opt = $variationOption->getOption();
-                        if ($opt->isHidden()) {
-                            $isAvailable = false;
-                            break;
-                        } else {
-                            $isAvailable = true;
-                        }
-                    }
-                    if ($isAvailable) {
-                        $availableOptionsids = $variation->getOptionItemIDs();
-                        $product->shallowClone = true;
-                        $firstAvailableVariation = clone $product;
-                        $firstAvailableVariation->setVariation($variation);
-
-                        break;
-                    }
-                }
-            }
-        }
-        $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
-
+    $variationLookup = $product->getVariationLookup();
+    $variationData = $product->getVariationData();
+    $availableOptionsids = $variationData['availableOptionsids'];
+    $firstAvailableVariation = $variationData['firstAvailableVariation'];
+    $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
     ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
