@@ -5,50 +5,17 @@ $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
 if (is_object($product) && $product->isActive()) {
-    // This determines which is the first available (not out of stock) option
-    // also adds the code for $VariationLookup taken from the product list block and added here.
     $options = $product->getOptions();
+    $variationLookup = $product->getVariationLookup();
+    $variationData = $product->getVariationData();
+    $availableOptionsids = $variationData['availableOptionsids'];
+    $firstAvailableVariation = $variationData['firstAvailableVariation'];
 
-        if ($product->hasVariations()) {
-            $variations = StoreProductVariation::getVariationsForProduct($product);
+    if ($firstAvailableVariation) {
+        $product = $firstAvailableVariation;
+    }
 
-            $variationLookup = array();
-
-            if (!empty($variations)) {
-                foreach ($variations as $variation) {
-                    // returned pre-sorted
-                    $ids = $variation->getOptionItemIDs();
-                    $variationLookup[implode('_', $ids)] = $variation;
-                }
-            }
-        }
-        
-        $firstAvailableVariation = false;
-        if (count($variations)) {
-            $availableOptionsids = false;
-            foreach ($variations as $variation) {
-                $isAvailable = false;
-                if ($variation->isSellable()) {
-                    $variationOptions = $variation->getOptions();
-
-                    foreach ($variationOptions as $variationOption) {
-                        $opt = $variationOption->getOption();
-                        if ($opt->isHidden()) {
-                            $isAvailable = false;
-                            break;
-                        } else {
-                            $isAvailable = true;
-                        }
-                    }
-                    if ($isAvailable) {
-                        $availableOptionsids = $variation->getOptionItemIDs();
-                        $firstAvailableVariation = $variation;
-                        break;
-                    }
-                }
-            }
-        }
-        $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
+    $isSellable = $product->isSellable();
     ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
@@ -67,19 +34,19 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                        $salePrice = $product->getSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getVariationSalePrice();
-                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedSalePrice = $product->getFormattedSalePrice();
+                            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
 		                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
                             echo '&nbsp;'.t('was').'&nbsp;';
                             echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                             echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
 
 		                } else {
-                            $price = !$firstAvailableVariation ? $product->getPrice() : $firstAvailableVariation->getVariationPrice();
+                            $price = $product->getPrice();
 
-                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedPrice =  $product->getFormattedPrice();
 
 		                    echo $formattedPrice;
                             echo '<meta itemprop="price" content="' . $price .'" />';
@@ -194,10 +161,12 @@ if (is_object($product) && $product->isActive()) {
                             <?php if (!$optionType || $optionType == 'select') { ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                    <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
+                                    <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> form-control" name="po<?= $option->getID() ?>">
                                         <?php
                                         $firstAvailableVariation = false;
                                         $variation = false;
+                                        $disabled = false;
+                                        $outOfStock = false;
                                         foreach ($optionItems as $optionItem) {
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
@@ -229,6 +198,12 @@ if (is_object($product) && $product->isActive()) {
                                 <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                     <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID() ?>"></textarea>
+                                </div>
+                            <?php } elseif ($optionType == 'checkbox') { ?>
+                                <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
+                                    <label class="store-product-option-group-label">
+                                        <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
+                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
                                 </div>
                             <?php } elseif ($optionType == 'hidden') { ?>
                                     <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
@@ -333,7 +308,7 @@ if (is_object($product) && $product->isActive()) {
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input:checked').each(function () {
+                $('#product-options-<?= $bID; ?> select.store-product-variation').each(function () {
                     ar.push($(this).val());
                 });
 

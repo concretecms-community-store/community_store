@@ -56,47 +56,17 @@ if($products){
     foreach($products as $product){
         $options = $product->getOptions();
 
-        if ($product->hasVariations()) {
-            $variations = StoreProductVariation::getVariationsForProduct($product);
-            $variationLookup = array();
+        $variationLookup = $product->getVariationLookup();
+        $variationData = $product->getVariationData();
+        $availableOptionsids = $variationData['availableOptionsids'];
+        $firstAvailableVariation = $variationData['firstAvailableVariation'];
 
-            if (!empty($variations)) {
-                foreach ($variations as $variation) {
-                    // returned pre-sorted
-                    $ids = $variation->getOptionItemIDs();
-                    $variationLookup[implode('_', $ids)] = $variation;
-                }
-            }
+        if ($firstAvailableVariation) {
+            $product = $firstAvailableVariation;
         }
-        // This determines which is the first available (not out of stock) option
-        $firstAvailableVariation = false;
-        if (count($variations)) {
-            $availableOptionsids = false;
-            foreach ($variations as $variation) {
-                $isAvailable = false;
-                if ($variation->isSellable()) {
-                    $variationOptions = $variation->getOptions();
 
-                    foreach ($variationOptions as $variationOption) {
-                        $opt = $variationOption->getOption();
-                        if ($opt->isHidden()) {
-                            $isAvailable = false;
-                            break;
-                        } else {
-                            $isAvailable = true;
-                        }
-                    }
-                    if ($isAvailable) {
-                        $availableOptionsids = $variation->getOptionItemIDs();
-                        $firstAvailableVariation = $variation;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
- 
+        $isSellable = $product->isSellable();
+
         //this is done so we can get a type of active class if there's a product list on the product page
         if($c->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
@@ -132,14 +102,14 @@ if($products){
                 <?php if ($showPrice) { ?>
                 <p class="store-product-list-price">
 		            <?php
-                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getVariationSalePrice();
+                        $salePrice = $product->getSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getFormattedVariationSalePrice();
-                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedSalePrice = $product->getFormattedSalePrice();
+                            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
 		                    echo '<span class="store-sale-price">'.$formattedSalePrice.'</span>';
 		                    echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$formattedOriginalPrice.'</span>';
 		                } else {
-                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedVariationPrice();
+                            $formattedPrice = $product->getFormattedPrice();
 		                    echo $formattedPrice; 
 		                }
 		            ?>
@@ -219,10 +189,12 @@ if($products){
                         <?php if (!$optionType || $optionType == 'select') { ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
+                                <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> form-control" name="po<?= $option->getID() ?>">
                                     <?php
                                     $firstAvailableVariation = false;
                                     $variation = false;
+                                    $disabled = false;
+                                    $outOfStock = false;
                                     foreach ($optionItems as $optionItem) {
                                         if (!$optionItem->isHidden()) {
                                            $variation = $variationLookup[$optionItem->getID()];
@@ -253,6 +225,12 @@ if($products){
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                 <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID() ?>"></textarea>
+                            </div>
+                        <?php } elseif ($optionType == 'checkbox') { ?>
+                            <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
+                                <label class="store-product-option-group-label">
+                                    <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
+                                    <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
                             </div>
                         <?php } elseif ($optionType == 'hidden') { ?>
                             <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
@@ -295,7 +273,7 @@ if($products){
                                 var variationdata = <?= json_encode($varationData); ?>;
                                 var ar = [];
 
-                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select').each(function(){
+                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select.store-product-variation').each(function(){
                                     ar.push($(this).val());
                                 });
 
