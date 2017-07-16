@@ -221,9 +221,13 @@ class Checkout extends PageController
         }
 
         if($pm->getMethodController()->isExternal()){
-            $order = StoreOrder::add($pm,null,'incomplete');
-            Session::set('orderID',$order->getOrderID());
-            $this->redirect('/checkout/external');
+            if(StoreCart::getTotalItemsInCart() != 0){
+                $order = StoreOrder::add($pm,null,'incomplete');
+                Session::set('orderID',$order->getOrderID());
+                $this->redirect('/checkout/external');
+            }else{
+               $this->redirect("/cart/");   
+            }
         } else {
             $payment = $pm->submitPayment();
             if($payment['error']==1){
