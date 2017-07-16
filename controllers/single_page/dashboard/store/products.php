@@ -333,6 +333,8 @@ class Products extends DashboardPageController
                 // save related products
                 StoreProductRelated::addRelatedProducts($data, $product);
 
+				$product->reindex();
+
                 if($data['pID']){
                     $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
                 } else {

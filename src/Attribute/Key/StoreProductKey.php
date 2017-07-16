@@ -8,6 +8,40 @@ use Concrete\Core\Support\Facade\Application;
 
 class StoreProductKey extends Key
 {
+
+	protected $searchIndexFieldDefinition = array(
+		'columns' => array(
+			array('name' => 'pID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)),
+		),
+		'primary' => array('pID'),
+	);
+
+
+	public static function getDefaultIndexedSearchTable()
+	{
+		return 'CommunityStoreProductSearchIndexAttributes';
+	}
+
+	// required, because method does not exist in 5.8.
+	public function getIndexedSearchTable() {
+		return self::getDefaultIndexedSearchTable();
+	}
+
+	// required, because method does not exist in 5.8.
+	public function createIndexedSearchTable()
+	{
+		if ($this->getIndexedSearchTable() != false) {
+			$db = \Database::get();
+			$platform = $db->getDatabasePlatform();
+			$array[$this->getIndexedSearchTable()] = $this->searchIndexFieldDefinition;
+			$schema = \Concrete\Core\Database\Schema\Schema::loadFromArray($array, $db);
+			$queries = $schema->toSql($platform);
+			foreach ($queries as $query) {
+				$db->query($query);
+			}
+		}
+	}
+
     public static function getAttributes($pID, $method = 'getValue')
     {
         $app = Application::getFacadeApplication();
