@@ -1107,10 +1107,12 @@ class Product
             foreach ($variations as $variation) {
                 $cloneVariation = clone $variation;
                 $cloneVariation->setProductID($newproduct->getID());
-                $cloneVariation->save();
+                $cloneVariation->save(true);
                 $newvariations[] = $cloneVariation;
             }
         }
+
+
 
         $optionMap = array();
 
@@ -1124,7 +1126,7 @@ class Product
             foreach($variation->getOptions() as $option) {
                 $optionid = $option->getOption()->getID();
                 $option->setOption($optionMap[$optionid]);
-                $option->save();
+                $option->save(true);
             }
         }
 
@@ -1136,6 +1138,9 @@ class Product
             }
             StoreProductRelated::addRelatedProducts(array('pRelatedProducts' => $related), $newproduct);
         }
+
+        $em = \ORM::entityManager();
+        $em->flush();
 
 		$newproduct->reindex();
 

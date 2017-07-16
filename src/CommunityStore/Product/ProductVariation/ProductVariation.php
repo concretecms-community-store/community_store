@@ -562,11 +562,14 @@ class ProductVariation
         return false;
     }
 
-    public function save()
+    public function save($persistonly = false)
     {
         $em = \ORM::entityManager();
         $em->persist($this);
-        $em->flush();
+
+        if (!$persistonly) {
+            $em->flush();
+        }
     }
 
     public static function getVariationsForProduct(StoreProduct $product)
