@@ -339,7 +339,7 @@ class Product
     }
     public function setPrice($price)
     {
-        $this->pPrice = ($price != '' ? $price : null);
+        $this->pPrice = ($price != '' ? $price : 0);
     }
     public function setSalePrice($price)
     {

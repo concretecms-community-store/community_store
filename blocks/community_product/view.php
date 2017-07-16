@@ -10,7 +10,12 @@ if (is_object($product) && $product->isActive()) {
     $variationData = $product->getVariationData();
     $availableOptionsids = $variationData['availableOptionsids'];
     $firstAvailableVariation = $variationData['firstAvailableVariation'];
-    $isSellable = (!$firstAvailableVariation && !$product->isSellable()) ? false : true;
+
+    if ($firstAvailableVariation) {
+        $product = $firstAvailableVariation;
+    }
+
+    $isSellable = $product->isSellable();
     ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID() ?>" data-product-id="<?= $product->getID() ?>" itemscope itemtype="http://schema.org/Product">
@@ -29,19 +34,19 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        $salePrice = !$firstAvailableVariation ? $product->getSalePrice() : $firstAvailableVariation->getSalePrice();
+                        $salePrice = $product->getSalePrice();
 		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = !$firstAvailableVariation ? $product->getFormattedSalePrice() : $firstAvailableVariation->getSalePrice();
-                            $formattedOriginalPrice = !$firstAvailableVariation ? $product->getFormattedOriginalPrice() : $firstAvailableVariation->getFormattedPrice();
+                            $formattedSalePrice = $product->getFormattedSalePrice();
+                            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
 		                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
                             echo '&nbsp;'.t('was').'&nbsp;';
                             echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                             echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
 
 		                } else {
-                            $price = !$firstAvailableVariation ? $product->getPrice() : $firstAvailableVariation->getPrice();
+                            $price = $product->getPrice();
 
-                            $formattedPrice = !$firstAvailableVariation ? $product->getFormattedPrice() : $firstAvailableVariation->getFormattedPrice();
+                            $formattedPrice =  $product->getFormattedPrice();
 
 		                    echo $formattedPrice;
                             echo '<meta itemprop="price" content="' . $price .'" />';

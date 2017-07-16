@@ -82,6 +82,11 @@ class ProductVariation
     protected $pvNumberItems;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $pvSort;
+
+    /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
      */
     protected $options;
@@ -362,6 +367,22 @@ class ProductVariation
         }
     }
 
+    /**
+     * @return mixed
+     */
+    public function getVariationSort()
+    {
+        return $this->pvSort;
+    }
+
+    /**
+     * @param mixed $pvSort
+     */
+    public function setVariationSort($pvSort)
+    {
+        $this->pvSort = $pvSort;
+    }
+
     public function isUnlimited()
     {
         return $this->getVariationQtyUnlim();
@@ -398,6 +419,8 @@ class ProductVariation
         $variationIDs = array();
 
         if (!empty($comboOptions)) {
+            $sort = 0;
+
             foreach ($comboOptions as $key => $optioncombo) {
                 if (!is_array($optioncombo)) {
                     $optioncomboarray = array();
@@ -421,7 +444,8 @@ class ProductVariation
                         'pvNumberItems' => '',
                         'pvWidth' => '',
                         'pvHeight' => '',
-                        'pvLength' => '', )
+                        'pvLength' => '',
+                        'pvSort' => $sort)
                     );
 
                     foreach ($optioncombo as $optionvalue) {
@@ -448,6 +472,7 @@ class ProductVariation
                     $variation->setVariationWidth($data['pvWidth'][$key]);
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
+                    $variation->setVariationSort($sort);
                     $variation->save();
 
                     $options = $variation->getOptions();
@@ -462,6 +487,7 @@ class ProductVariation
                 }
 
                 $variationIDs[] = $variation->getID();
+                $sort++;
             }
         }
 
@@ -513,6 +539,7 @@ class ProductVariation
         $variation->setVariationHeight($data['pvHeight']);
         $variation->setVariationLength($data['pvLength']);
         $variation->setVariationWidth($data['pvWeight']);
+        $variation->setVariationSort($data['pvSort']);
         $variation->save();
 
         return $variation;
@@ -545,7 +572,7 @@ class ProductVariation
     public static function getVariationsForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()),array('pvSort'=>'asc'));
     }
 
     public function delete()

@@ -351,9 +351,6 @@ class Products extends DashboardPageController
         if(strlen($args['pName']) > 255){
             $e->add(t('The Product Name can not be greater than 255 Characters'));
         }
-        if(!is_numeric($args['pPrice']) && !$args['pCustomerPrice']){
-            $e->add(t('The Price must be set, and numeric'));
-        }
         if(!is_numeric($args['pQty']) && !$args['pQtyUnlim']){
             $e->add(t('The Quantity must be set, and numeric'));
         }
