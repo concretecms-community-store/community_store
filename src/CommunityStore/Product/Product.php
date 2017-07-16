@@ -1099,7 +1099,6 @@ class Product
             $spk->saveAttribute($newproduct, $value);
         }
 
-
         $variations = $this->getVariations();
         $newvariations = array();
 
@@ -1111,8 +1110,6 @@ class Product
                 $newvariations[] = $cloneVariation;
             }
         }
-
-
 
         $optionMap = array();
 
