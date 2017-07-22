@@ -547,7 +547,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label><?= t('Required');?></label>
-                                        <select class="form-control" name="poRequired[]"><option value="0"><?= t('No');?></option><option value="1" <% if (poRequired) { %>selected="selected"<% } %>><?= t('Yes');?></option></select>
+                                        <select class="form-control" name="poRequired[]"><option value="0"><?= t('No');?></option><option value="1" <% if (poRequired == 1) { %>selected="selected"<% } %>><?= t('Yes');?></option></select>
                                     </div>
                                 </div>
                                 <% } else {  %>
