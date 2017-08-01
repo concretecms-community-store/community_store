@@ -148,19 +148,7 @@ class Settings extends DashboardPageController
         if($args['symbol']==""){
             $e->add(t('You must set a currency symbol'));
         }
-        if($args['taxEnabled']=='yes'){
-            if(!is_numeric(trim($args['taxRate']))){
-                $e->add(t('Tax Rate must be set, and a number'));
-            }
-        }
-        if($args['shippingEnabled']=='yes'){
-            if(!is_numeric(trim($args['shippingBasePrice']))){
-                $e->add(t('Shipping Base Rate must be set, and a number'));
-            }
-            if(!is_numeric(trim($args['shippingItemPrice']))){
-                $e->add(t('Shipping Base Rate must be set, and a number (even if just zero)'));
-            }
-        }
+
         $paymentMethodsEnabled = 0;
         foreach($args['paymentMethodEnabled'] as $method){
             if($method==1){
@@ -181,11 +169,13 @@ class Settings extends DashboardPageController
         }
 
         //before changing tax settings to "Extract", make sure there's only one rate per class
-        $taxClasses = StoreTaxClass::getTaxClasses();
-        foreach($taxClasses as $taxClass){
-            $taxClassRates = $taxClass->getTaxClassRates();
-            if(count($taxClassRates)>1){
-                $e->add(t("The %s Tax Class can't contain more than 1 Tax Rate if you change how the taxes are calculated",$taxClass->getTaxClassName()));
+        if ($args['calculation'] == 'extract') {
+            $taxClasses = StoreTaxClass::getTaxClasses();
+            foreach ($taxClasses as $taxClass) {
+                $taxClassRates = $taxClass->getTaxClassRates();
+                if (count($taxClassRates) > 1) {
+                    $e->add(t("The %s Tax Class can't contain more than 1 Tax Rate if you change how the taxes are calculated", $taxClass->getTaxClassName()));
+                }
             }
         }
 
