@@ -317,7 +317,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
                         <div class="form-group">
-                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
+                            <?= $form->select("orderStatus",$orderStatuses,$order->getStatusHandle());?>
                         </div>
                         <input type="submit" class="btn btn-default" value="<?= t("Update")?>">
                     </form>
