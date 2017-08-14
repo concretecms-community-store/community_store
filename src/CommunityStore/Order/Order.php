@@ -601,7 +601,7 @@ class Order
 
         $pmID = $this->getPaymentMethodID();
 
-        $sendReceipt = false;
+        $sendReceipt = true;
         if ($pmID) {
             $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
 
