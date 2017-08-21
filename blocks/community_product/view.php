@@ -316,8 +316,9 @@ if (is_object($product) && $product->isActive()) {
                 var pdb = $(this).closest('.store-product-block');
 
                 if (variationdata[ar.join('_')]['saleprice']) {
-                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>' +
-                        '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] + '</span>';
+                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
+                        '<?php echo t('was'); ?>' +
+                        '&nbsp;<span class="store-original-price ">' + variationdata[ar.join('_')]['price'] + '</span>';
 
                     pdb.find('.store-product-price').html(pricing);
                 } else {

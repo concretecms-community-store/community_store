@@ -1,3 +1,7 @@
+.store-original-price {
+    text-decoration: line-through;
+}
+
 .no-gutter > [class*='col-'] {
     padding-right:0;
     padding-left:0;
