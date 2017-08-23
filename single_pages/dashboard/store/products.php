@@ -1068,7 +1068,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                          </div>
                      <?php }
-                 } else { ?>
+
+                     if ($comboOptions >= 50) { ?>
+                         <p class="alert alert-warning"><?= t('Maximum variations reached') ?></p>
+                     <?php } ?>
+
+                 <?php } else { ?>
                      <p class="alert alert-info"><?= t('Update the product to display variations') ?></p>
                  <?php } ?>
                 </div>
