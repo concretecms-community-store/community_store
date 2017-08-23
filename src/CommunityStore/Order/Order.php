@@ -606,6 +606,7 @@ class Order
 
         $pmID = $this->getPaymentMethodID();
 
+        $sendReceipt = true;
         if ($pmID) {
             $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
 
@@ -614,6 +615,7 @@ class Order
                 if ($paymentMethodUsed->getMethodController()->markPaid()) {
                    $this->completePayment($sameRequest);
                 }
+                $sendReceipt = $this->getMethodController()->sendReceipt();
             }
         }
 
@@ -625,7 +627,9 @@ class Order
         Events::dispatch('on_community_store_order', $event);
 
         //receipt
-        $this->sendOrderReceipt();
+        if ($sendReceipt) {
+            $this->sendOrderReceipt();
+        }
 
         // notifications
         $this->sendNotifications();

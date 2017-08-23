@@ -280,6 +280,10 @@ class Method extends Controller
         return true;
     }
 
+    public function sendReceipt() {
+        return true;
+    }
+
     // method stub
     public function redirectForm() {
     }
