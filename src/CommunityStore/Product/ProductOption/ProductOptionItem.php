@@ -124,24 +124,24 @@ class ProductOptionItem
         }
     }
 
-    public static function add($option, $name, $sort, $hidden = false)
+    public static function add($option, $name, $sort, $hidden = false, $persistonly = false)
     {
         $productOptionItem = new self();;
         $productOptionItem->setOption($option);
         $productOptionItem->setName($name);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
-        $productOptionItem->save();
+        $productOptionItem->save($persistonly);
 
         return $productOptionItem;
     }
 
-    public function update($name, $sort, $hidden = false)
+    public function update($name, $sort, $hidden = false, $persistonly = false)
     {
         $this->setName($name);
         $this->setSort($sort);
         $this->setHidden($hidden);
-        $this->save();
+        $this->save($persistonly);
 
         return $this;
     }
@@ -153,11 +153,14 @@ class ProductOptionItem
         }
     }
 
-    public function save()
+    public function save($persistonly = false)
     {
         $em = \ORM::entityManager();
         $em->persist($this);
-        $em->flush();
+
+        if (!$persistonly) {
+            $em->flush();
+        }
     }
 
     public function delete()

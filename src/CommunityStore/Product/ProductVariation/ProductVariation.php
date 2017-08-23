@@ -445,7 +445,8 @@ class ProductVariation
                         'pvWidth' => '',
                         'pvHeight' => '',
                         'pvLength' => '',
-                        'pvSort' => $sort)
+                        'pvSort' => $sort,
+                         true)
                     );
 
                     foreach ($optioncombo as $optionvalue) {
@@ -455,7 +456,7 @@ class ProductVariation
                             $variationoption = new StoreProductVariationOptionItem();
                             $variationoption->setOption($option);
                             $variationoption->setVariation($variation);
-                            $variationoption->save();
+                            $variationoption->save(true);
                         }
                     }
                 } else {
@@ -473,7 +474,7 @@ class ProductVariation
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->setVariationSort($sort);
-                    $variation->save();
+                    $variation->save(true);
 
                     $options = $variation->getOptions();
 
@@ -489,6 +490,9 @@ class ProductVariation
                 $variationIDs[] = $variation->getID();
                 $sort++;
             }
+
+            $em = \ORM::entityManager();
+            $em->flush();
         }
 
         $app = Application::getFacadeApplication();
@@ -524,7 +528,7 @@ class ProductVariation
         return $em->getRepository(get_class())->findOneBy(array('pvSKU' => $pvSKU));
     }
 
-    public static function add($productID, $data)
+    public static function add($productID, $data, $persistonly = false)
     {
         $variation = new self();
         $variation->setProductID($productID);
@@ -540,7 +544,7 @@ class ProductVariation
         $variation->setVariationLength($data['pvLength']);
         $variation->setVariationWidth($data['pvWeight']);
         $variation->setVariationSort($data['pvSort']);
-        $variation->save();
+        $variation->save($persistonly);
 
         return $variation;
     }
@@ -562,11 +566,14 @@ class ProductVariation
         return false;
     }
 
-    public function save()
+    public function save($persistonly = false)
     {
         $em = \ORM::entityManager();
         $em->persist($this);
-        $em->flush();
+
+        if (!$persistonly) {
+            $em->flush();
+        }
     }
 
     public static function getVariationsForProduct(StoreProduct $product)
@@ -618,6 +625,10 @@ class ProductVariation
                     array_merge(array($v), $t) :
                     array($v, $t);
             }
+        }
+
+        if (count($result) > 50) {
+            return array_slice($result, 0 , 50);
         }
 
         return $result;
