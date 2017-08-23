@@ -1069,7 +1069,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                          </div>
                      <?php }
 
-                     if ($comboOptions >= 50) { ?>
+                     if (count($comboOptions) >= 50) { ?>
                          <p class="alert alert-warning"><?= t('Maximum variations reached') ?></p>
                      <?php } ?>
 

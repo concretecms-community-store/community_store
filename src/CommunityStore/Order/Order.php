@@ -615,7 +615,7 @@ class Order
                 if ($paymentMethodUsed->getMethodController()->markPaid()) {
                    $this->completePayment($sameRequest);
                 }
-                $sendReceipt = $this->getMethodController()->sendReceipt();
+                $sendReceipt = $paymentMethodUsed->getMethodController()->sendReceipt();
             }
         }
 
