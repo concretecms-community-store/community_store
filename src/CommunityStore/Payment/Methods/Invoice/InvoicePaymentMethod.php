@@ -16,7 +16,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     {
         $this->set('form', Core::make("helper/form"));
         $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
-        $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
+        $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
         $this->set('paymentInstructions', Config::get('community_store.paymentInstructions'));
     }
 
