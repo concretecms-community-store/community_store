@@ -248,6 +248,7 @@ class Checkout extends PageController
     }
     public function external()
     {
+        $this->requireAsset('javascript', 'jquery');
         $pmHandle = Session::get('paymentMethod');
         $pm = false;
 
