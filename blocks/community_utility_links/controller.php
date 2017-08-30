@@ -28,12 +28,17 @@ class Controller extends BlockController
     }
     public function view()
     {
-        $this->set("itemCount", StoreCart::getTotalItemsInCart());
+        $itemcount = StoreCart::getTotalItemsInCart();
+        $this->set("itemCount", $itemcount);
 
-        $totals = StoreCalculator::getTotals();
+        if ($itemcount > 0) {
+            $totals = StoreCalculator::getTotals();
 
-        if ($totals['total']> 0) {
-            $this->set('total', StorePrice::format($totals['total']));
+            if ($totals['total'] > 0) {
+                $this->set('total', StorePrice::format($totals['total']));
+            } else {
+                $this->set('total', '');
+            }
         } else {
             $this->set('total', '');
         }
