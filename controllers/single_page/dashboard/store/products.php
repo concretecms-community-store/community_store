@@ -6,7 +6,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use PageType;
 use GroupList;
-
+use Events;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
@@ -21,6 +21,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGrou
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 
 class Products extends DashboardPageController
 {
@@ -286,8 +287,15 @@ class Products extends DashboardPageController
             $this->error = null; //clear errors
             $this->error = $errors;
             if (!$errors->has()) {
-                    
-                // if the save sent no options with variation inclusion, uncheck the variations box
+
+                $originalProduct = false;
+
+                if ($data['pID']) {
+                    $product = StoreProduct::getByID($data['pID']);
+                    $originalProduct = clone $product;
+                }
+
+                    // if the save sent no options with variation inclusion, uncheck the variations box
                 if (isset($data['poIncludeVariations'])) {
                     $allowVariations = false;
 
@@ -334,6 +342,15 @@ class Products extends DashboardPageController
                 StoreProductRelated::addRelatedProducts($data, $product);
 
 				$product->reindex();
+
+                // create product event and dispatch
+                if (!$originalProduct) {
+                    $event = new StoreProductEvent($product);
+                    Events::dispatch('on_community_store_product_add', $event);
+                } else {
+                    $event = new StoreProductEvent($originalProduct, $product);
+                    Events::dispatch('on_community_store_product_update', $event);
+                }
 
                 if($data['pID']){
                     $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
