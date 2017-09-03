@@ -50,7 +50,7 @@ The Community Store package has multiple translations available at http://concre
 Translations are not included within the package, these need to be manually installed.
 
 ## PHP Version
-This add-on is intended to support PHP5.4+ onwards, being 100% operational on PHP7.
+This add-on is intended to support PHP5.6+ onwards, being 100% operational on PHP7.
 
 ## Compatibility
 Community Store is designed to be  100% compatible with both version 5.7 and v8 of concrete5. Is is recommended that if you are starting a new project to use v8. 
