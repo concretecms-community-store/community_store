@@ -51,3 +51,19 @@ Translations are not included within the package, these need to be manually inst
 
 ## PHP Version
 This add-on is intended to support PHP5.4+ onwards, being 100% operational on PHP7.
+
+## Compatibility
+Community Store is designed to be  100% compatible with both version 5.7 and v8 of concrete5. Is is recommended that if you are starting a new project to use v8. 
+
+If you are adding Community Store to an exisiting 5.7 and you plan to also upgrade it to v8, upgrade concrete5 _before_ installing Community Store. 
+
+If you have an existing 5.7 site with Community Store and need to upgrade to v8, be aware that the upgrade _does_ work, but there is  one outstanding issue with concrete5's upgrade process that requires the following SQL command to be run on the DB to rectify:
+```sql
+REPLACE INTO LegacyAttributeKeys (
+	SELECT akID FROM Packages 
+	LEFT JOIN AttributeKeys
+	ON AttributeKeys.pkgID = Packages.pkgID
+	WHERE pkgHandle = 'community_store'
+	AND akCategory = 'legacykey'
+)
+```
