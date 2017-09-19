@@ -266,7 +266,10 @@ class Installer
         self::installOrderAttribute('shipping_first_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_last_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_address', $address, $pkg, $orderCustSet);
-        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet);
+        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet, array(
+            'akHandle' => 'vat_number',
+            'akName' => t('VAT Number'),
+        ));
     }
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
