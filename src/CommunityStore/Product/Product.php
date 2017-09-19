@@ -493,10 +493,8 @@ class Product
         if ($data['pID']) {
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
-            $originalProduct = clone $product;
 
             $product->setPageDescription($data['pDesc']);
-            $newproduct = false;
             if ($data['pDateAdded_dt']) {
                 $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m']));
             }
@@ -505,7 +503,6 @@ class Product
             $product = new self();
             $dt = Core::make('helper/date');
             $product->setDateAdded(new \DateTime());
-            $newproduct = true;
         }
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
@@ -546,15 +543,6 @@ class Product
         $product->save();
         if (!$data['pID']) {
             $product->generatePage($data['selectPageTemplate']);
-        }
-
-        // create product event and dispatch
-        if ($newproduct) {
-            $event = new StoreProductEvent($product);
-            Events::dispatch('on_community_store_product_add', $event);
-        } else {
-            $event = new StoreProductEvent($originalProduct, $product);
-            Events::dispatch('on_community_store_product_update', $event);
         }
 
         return $product;
