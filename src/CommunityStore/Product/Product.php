@@ -494,7 +494,8 @@ class Product
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
             $originalProduct = clone $product;
-
+            $originalProduct->setID($data['pID']);
+		
             $product->setPageDescription($data['pDesc']);
             $newproduct = false;
             if ($data['pDateAdded_dt']) {
