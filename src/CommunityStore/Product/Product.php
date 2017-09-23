@@ -493,7 +493,13 @@ class Product
         if ($data['pID']) {
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
+<<<<<<< HEAD
 
+=======
+            $originalProduct = clone $product;
+            $originalProduct->setID($data['pID']);
+		
+>>>>>>> 5da068ad3dd8f57519578dfde3126a7bff9c64ce
             $product->setPageDescription($data['pDesc']);
             if ($data['pDateAdded_dt']) {
                 $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m']));
