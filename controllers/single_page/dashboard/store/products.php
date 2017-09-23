@@ -293,6 +293,7 @@ class Products extends DashboardPageController
                 if ($data['pID']) {
                     $product = StoreProduct::getByID($data['pID']);
                     $originalProduct = clone $product;
+                    $originalProduct->setID($data['pID']);
                 }
 
                     // if the save sent no options with variation inclusion, uncheck the variations box
