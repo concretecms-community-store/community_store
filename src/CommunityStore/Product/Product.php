@@ -543,6 +543,8 @@ class Product
         $product->save();
         if (!$data['pID']) {
             $product->generatePage($data['selectPageTemplate']);
+        } else {
+            $product->updatePage();
         }
 
         return $product;
@@ -1168,6 +1170,16 @@ class Product
             }
         }
     }
+
+    public function updatePage() {
+        $page = Page::getByID($this->getPageID());
+
+        if($page && $page->getCollectionName() != $this->getName()) {
+            $currentPagePath = $page->getCollectionPathObject()->getPagePath();
+            $page->updateCollectionName($this->getName());
+        }
+    }
+
     public function setPageDescription($newDescription)
     {
         $productDescription = strip_tags(trim($this->getDesc()));
