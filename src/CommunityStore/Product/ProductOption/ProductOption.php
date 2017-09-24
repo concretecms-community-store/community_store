@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
-use Database;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
@@ -30,7 +29,7 @@ class ProductOption
     protected $product;
 
     /**
-     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"persist"})
+     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"all"}, orphanRemoval=true)
      * @OrderBy({"poiSort" = "ASC"})
      */
     protected $optionItems;
@@ -237,11 +236,12 @@ class ProductOption
     {
         self::removeOptionsForProduct($product, $data['poID']);
         StoreProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
-
+        
         $count = count($data['poSort']);
         $ii = 0;//set counter for items
+
         if ($count > 0) {
-            for ($i = 0;$i < count($data['poSort']);++$i) {
+            for ($i = 0;$i < $count ;++$i) {
                 if (isset($data['poID'][$i])) {
                     $option = self::getByID($data['poID'][$i]);
 

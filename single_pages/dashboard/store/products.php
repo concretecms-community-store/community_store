@@ -569,6 +569,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     </div><!-- .option-group -->
                 </script>
                 <script type="text/javascript">
+                    function indexOptionGroups(){
+                        $('#product-options-container .option-group').each(function(i) {
+                            $(this).find('.option-group-sort').val(i);
+                            $(this).attr("data-order",i);
+                            $(this).find('.optGroupID').attr("name","optGroup"+i+"[]");
+                        });
+                    }
+
+
                     function deleteOptionGroup(id){
                         var variationeffect = $(".option-group[data-order='"+id+"'] select[name=poIncludeVariations\\[\\]] option:selected");
 
@@ -579,21 +588,19 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                         $(".option-group[data-order='"+id+"']").remove();
 
+                        indexOptionGroups();
+
                     }
+
                     $(function(){
+
+
                         $(document).on('change','select[name=poIncludeVariations\\[\\]]', function(){
                             $('#variationshider').addClass('hidden');
                             $('#changenotice').removeClass('hidden');
                             $('#changewarning').removeClass('hidden');
                         });
 
-                        function indexOptionGroups(){
-                            $('#product-options-container .option-group').each(function(i) {
-                                $(this).find('.option-group-sort').val(i);
-                                $(this).attr("data-order",i);
-                                $(this).find('.optGroupID').attr("name","optGroup"+i+"[]");
-                            });
-                        }
 
                         //Make items sortable. If we re-sort them, re-index them.
                         $("#product-options-container").sortable({
@@ -613,6 +620,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
                         if($options) {
+                        $optionsort = 0;
                             foreach ($options as $option) {
 
                             $type = $option->getType();
@@ -643,9 +651,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poHandle: '<?= h($handle); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
                             poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
-                            sort: '<?= $option->getSort() ?>'
+                            sort: '<?= $optionsort ?>'
                         }));
                         <?php
+
+                        $optionsort++;
                             }
                         }
                         ?>
@@ -756,6 +766,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             //Init Index
                             indexOptionGroups();
                         });
+
+                        indexOptionGroups();
                     });
 
                 </script>
