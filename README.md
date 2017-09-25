@@ -22,25 +22,25 @@ Payment gateways are to be installed as additional add-ons.
 
 Additional gateways can be found at:
 
-### Paypal Standard (https://www.paypal.com)
+### Paypal Standard - https://www.paypal.com
 https://github.com/concrete5-community-store/community_store_paypal_standard
 
-### Stripe (https://stripe.com)
+### Stripe - https://stripe.com
 https://github.com/concrete5-community-store/community_store_stripe
 
-### Pin Payments (https://pin.net.au)
+### Pin Payments - https://pin.net.au
 https://github.com/concrete5-community-store/community_store_pin_payments
 
-### Square (https://squareup.com)
+### Square - https://squareup.com
 https://github.com/Babinsky/community_store_square
 
-### Authorize.Net (https://www.authorize.net)
+### Authorize.Net - https://www.authorize.net
 https://github.com/concrete5-community-store/community_store_authorize_net
 
-### SOFORT (https://www.sofort.com)
+### SOFORT - https://www.sofort.com
 https://github.com/concrete5-community-store/community_store_sofort
 
-### Mollie (https://www.mollie.com)
+### Mollie - https://www.mollie.com
 https://github.com/concrete5-community-store/community_store_mollie
 
 ## Shipping Methods
