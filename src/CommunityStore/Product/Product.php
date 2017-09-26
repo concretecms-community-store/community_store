@@ -299,11 +299,13 @@ class Product
             $optionkeys = array();
 
             foreach ($options as $option) {
-                $optionItems = $option->getOptionItems();
-                foreach ($optionItems as $optionItem) {
-                    if (!$optionItem->isHidden()) {
-                        $optionkeys[] = $optionItem->getID();
-                        break;
+                if ($option->getIncludeVariations()) {
+                    $optionItems = $option->getOptionItems();
+                    foreach ($optionItems as $optionItem) {
+                        if (!$optionItem->isHidden()) {
+                            $optionkeys[] = $optionItem->getID();
+                            break;
+                        }
                     }
                 }
             }

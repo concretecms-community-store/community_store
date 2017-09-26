@@ -273,10 +273,12 @@ class Cart
 
                 $cartItem['product']['qty'] = $newquantity;
 
-                if ($product->isExclusive()) {
-                    $cart = array($cartItem);
-                } else {
-                    $cart[] = $cartItem;
+                if ($cartItem['product']['qty'] > 0) {
+                    if ($product->isExclusive()) {
+                        $cart = array($cartItem);
+                    } else {
+                        $cart[] = $cartItem;
+                    }
                 }
 
                 $added = $newquantity;
