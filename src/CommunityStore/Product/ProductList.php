@@ -180,8 +180,9 @@ class ProductList extends AttributedItemList
                 foreach ($products as $product) {
                     $pIDs[] = $product['pID'];
                 }
+
                 foreach ($pIDs as $pID) {
-                    $query->addOrderBy("pID = ?", 'DESC')->setParameter($paramcount++, $pID);
+                    $query->addOrderBy("p.pID = ?", 'DESC')->setParameter($paramcount++, $pID);
                 }
                 break;
             case "related":

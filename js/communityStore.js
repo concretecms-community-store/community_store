@@ -395,9 +395,28 @@ $(document).ready(function () {
 
         $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
             var akID = $(el).data("akid");
-            var value = $(el).find(".form-control").val();
-            $('.store-summary-order-choices-' + akID).html(value.replace(/[\n\r]/g, '<br>'));
-            $('#store-checkout-form-group-payment').append('<input name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+            var field = $(el).find(".form-control");
+
+            var value = '0';
+
+            // look for checkbox
+            if (!field.length) {
+                var field = $(el).find(".ccm-input-checkbox").first();
+
+                if (field) {
+                    if (field.is(':checked')) {
+                        value = '1';
+                    }
+                }
+            } else {
+                value = field.val();
+            }
+
+            if (field.length) {
+                $('.store-summary-order-choices-' + akID).html(value.replace(/[\n\r]/g, '<br>'));
+                $('#akIDinput'+ akID).remove();
+                $('#store-checkout-form-group-payment').append('<input id="akIDinput'+ akID +'" name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+            }
         });
 
         communityStore.waiting();
