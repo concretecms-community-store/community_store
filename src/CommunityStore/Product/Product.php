@@ -1147,37 +1147,47 @@ class Product
         if ($targetCID > 0) {
             $parentPage = Page::getByID($targetCID);
             $pageType = PageType::getByHandle('store_product');
-            $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();
 
-            if ($parentPage && $pageType && $pageTemplate) {
-                if ($templateID) {
-                    $pt = PageTemplate::getByID($templateID);
-                    if (is_object($pt)) {
-                        $pageTemplate = $pt;
+            if ($pageType && $parentPage && !$parentPage->isError()) {
+                $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();
+
+                if ($pageTemplate) {
+                    if ($templateID) {
+                        $pt = PageTemplate::getByID($templateID);
+                        if (is_object($pt)) {
+                            $pageTemplate = $pt;
+                        }
                     }
-                }
-                $newProductPage = $parentPage->add(
-                    $pageType,
-                    array(
-                        'cName' => $this->getName(),
-                        'pkgID' => $pkg->getPackageID(),
-                    ),
-                    $pageTemplate
-                );
-                $newProductPage->setAttribute('exclude_nav', 1);
+                    $newProductPage = $parentPage->add(
+                        $pageType,
+                        array(
+                            'cName' => $this->getName(),
+                            'pkgID' => $pkg->getPackageID(),
+                        ),
+                        $pageTemplate
+                    );
+                    $newProductPage->setAttribute('exclude_nav', 1);
 
-                $this->savePageID($newProductPage->getCollectionID());
-                $this->setPageDescription($this->getDesc());
+                    $this->savePageID($newProductPage->getCollectionID());
+                    $this->setPageDescription($this->getDesc());
+
+                    return true;
+                }
             }
         }
+
+        return false;
     }
 
     public function updatePage() {
-        $page = Page::getByID($this->getPageID());
+        $pageID = $this->getPageID();
 
-        if($page && $page->getCollectionName() != $this->getName()) {
-            $currentPagePath = $page->getCollectionPathObject()->getPagePath();
-            $page->updateCollectionName($this->getName());
+        if ($pageID) {
+            $page = Page::getByID($pageID);
+
+            if ($page && !$page->isError() && $page->getCollectionName() != $this->getName()) {
+                $page->updateCollectionName($this->getName());
+            }
         }
     }
 

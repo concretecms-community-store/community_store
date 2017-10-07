@@ -99,6 +99,17 @@ class Products extends DashboardPageController
             }
         }
 
+        $targetCID = \Config::get('community_store.productPublishTarget');
+
+        $productPublishTarget = false;
+
+        if ($targetCID > 0) {
+            $parentPage = \Page::getByID($targetCID);
+            $productPublishTarget =  ($parentPage && !$parentPage->isError());
+        }
+
+        $this->set('productPublishTarget',$productPublishTarget);
+        $this->set('page',false);
         $this->set('pageTitle', t('Add Product'));
         $this->set('usergroups', $usergrouparray);
     }
@@ -211,6 +222,29 @@ class Products extends DashboardPageController
             }
         }
 
+        $targetCID = \Config::get('community_store.productPublishTarget');
+
+        $productPublishTarget = false;
+
+        if ($targetCID > 0) {
+            $parentPage = \Page::getByID($targetCID);
+            $productPublishTarget =  ($parentPage && !$parentPage->isError());
+        }
+
+        $this->set('productPublishTarget',$productPublishTarget);
+
+        $pageID = $product->getPageID();
+        $page = false;
+
+        if ($pageID) {
+            $page = \Page::getByID($pageID);
+
+            if ($page->isError()) {
+                $page = false;
+            }
+        }
+        $this->set('page', $page);
+
         $this->set('pageTitle', t('Edit Product'));
         $this->set('usergroups', $usergrouparray);
     }
@@ -262,10 +296,14 @@ class Products extends DashboardPageController
         $this->set('attribs',$attrList);
         
         $pageType = PageType::getByHandle("store_product");
-        $pageTemplates = $pageType->getPageTypePageTemplateObjects();
         $templates = array();
-        foreach($pageTemplates as $pt){
-            $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+
+        if ($pageType) {
+            $pageTemplates = $pageType->getPageTypePageTemplateObjects();
+
+            foreach ($pageTemplates as $pt) {
+                $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+            }
         }
         $this->set('pageTemplates',$templates);
         $taxClasses = array();

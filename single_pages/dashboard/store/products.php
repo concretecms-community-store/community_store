@@ -1255,41 +1255,36 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-page">
 
-                <?php if($product->getID()){ ?>
+                <?php if($page){ ?>
+                    <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
+                <?php } else { ?>
 
-                    <?php
-                    $page = Page::getByID($product->getPageID());
-                    if(!$page->isError()){ ?>
-                        <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
+                    <?php if ($product->getID()) { ?>
+                    <div class="alert alert-warning">
+                        <?= t("This product is missing a corresponding page in the sitemap")?>
+                    </div>
+                    <?php } ?>
 
-                    <?php } else { ?>
-
-                        <div class="alert alert-warning">
-                            <?= t("This product is missing a corresponding page in the sitemap")?>
-                        </div>
-
-                        <?php if (Config::get('community_store.productPublishTarget') > 0) { ?>
+                    <?php if ($productPublishTarget) { ?>
+                        <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
                         <div class="form-group">
                             <label><?= t("Page Template")?></label>
                             <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
                         </div>
 
+                        <?php if ($product->getID()) { ?>
                             <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?'));?>" href="<?= \URL::to('/dashboard/store/products/generate/',$product->getID())?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page")?></a>
+                        <?php } ?>
                         <?php } else { ?>
                             <div class="alert alert-warning">
-                                <?= t("No page is configured as the parent page for new products")?>
+                                <?= t("A Page Type with the handle store_product was not found")?>
                             </div>
                         <?php } ?>
-
+                    <?php } else { ?>
+                        <div class="alert alert-warning">
+                            <?= t("No page is configured as the parent page for new products")?>
+                        </div>
                     <?php } ?>
-
-                <?php } else { ?>
-
-                    <div class="form-group">
-                        <label><?= t("Page Template")?></label>
-                        <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
-                    </div>
-
 
                 <?php } ?>
 

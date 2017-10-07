@@ -20,8 +20,17 @@ class Settings extends DashboardPageController
        $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
        $this->set("installedPaymentMethods",StorePaymentMethod::getMethods());
        $this->set("orderStatuses",StoreOrderStatus::getAll());
-       $productPublishTarget = Config::get('community_store.productPublishTarget');
-       $this->set('productPublishTarget',$productPublishTarget);
+       $targetCID = Config::get('community_store.productPublishTarget');
+
+       if ($targetCID > 0) {
+           $parentPage = \Page::getByID($targetCID);
+
+           if (!$parentPage || $parentPage->isError()) {
+               $targetCID = false;
+           }
+       }
+
+       $this->set('productPublishTarget',$targetCID);
     }
     public function loadFormAssets()
     {
