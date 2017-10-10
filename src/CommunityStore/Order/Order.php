@@ -474,7 +474,6 @@ class Order
         $sRateID = StoreShippingMethod::getActiveRateID();
         $sInstructions = StoreCart::getShippingInstructions();
         $totals = StoreCalculator::getTotals();
-        StoreCart::getShippingInstructions('');
         $shippingTotal = $totals['shippingTotal'];
         $taxes = $totals['taxes'];
         $total = $totals['total'];
