@@ -23,7 +23,7 @@ class Calculator
                     if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
                         $price = $cartItem['product']['customerPrice'];
                     } else {
-                        $price = $product->getActivePrice();
+                        $price = $product->getActivePrice($qty);
                     }
 
                     $productSubTotal = $price * $qty;

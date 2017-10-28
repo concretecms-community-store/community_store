@@ -17,6 +17,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
@@ -379,6 +380,8 @@ class Products extends DashboardPageController
 
                 // save related products
                 StoreProductRelated::addRelatedProducts($data, $product);
+
+                StoreProductPriceTier::addPriceTiersForProduct($data, $product);
 
 				$product->reindex();
 

@@ -98,6 +98,11 @@ class Product
     /**
      * @Column(type="boolean")
      */
+    protected $pQuantityPrice;
+
+    /**
+     * @Column(type="boolean")
+     */
     protected $pFeatured;
 
     /**
@@ -260,6 +265,16 @@ class Product
         return $this->related;
     }
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product",cascade={"persist"}))
+     * @OrderBy({"ptFrom" = "ASC"})
+     */
+    protected $priceTiers;
+
+    public function getPriceTiers(){
+        return $this->priceTiers;
+    }
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -269,8 +284,8 @@ class Product
         $this->userGroups = new ArrayCollection();
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
+        $this->priceTiers = new ArrayCollection();
     }
-
 
     public function setVariation($variation)
     {
@@ -533,6 +548,7 @@ class Product
         $product->setPriceSuggestions($data['pPriceSuggestions']);
         $product->setPriceMaximum($data['pPriceMaximum']);
         $product->setPriceMinimum($data['pPriceMinimum']);
+        $product->setQuantityPrice($data['pQuantityPrice']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
@@ -593,7 +609,7 @@ class Product
     {
         return $this->pDetail;
     }
-    public function getPrice()
+    public function getPrice($qty = 1)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -602,13 +618,28 @@ class Product
                 if ($varprice) {
                     return $varprice;
                 } else {
-                    return $this->pPrice;
+                    return $this->getQuantityAdjustedPrice();
                 }
             }
         } else {
-            return $this->pPrice;
+            return $this->getQuantityAdjustedPrice();
         }
     }
+
+    private function getQuantityAdjustedPrice($qty =1 ) {
+        if ($this->hasQuantityPrice()) {
+            $priceTiers = $this->getPriceTiers();
+
+            foreach($priceTiers as $pt) {
+                if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
+                    return $pt->getPrice();
+                }
+            }
+        }
+
+        return $this->pPrice;
+    }
+
     public function getFormattedOriginalPrice()
     {
         return StorePrice::format($this->getPrice());
@@ -642,18 +673,19 @@ class Product
         }
     }
 
-    public function getActivePrice()
+    public function getActivePrice($qty = 1)
     {
         $salePrice = $this->getSalePrice();
         if ($salePrice != "") {
             return $salePrice;
         } else {
-            return $this->getPrice();
+            return $this->getPrice($qty);
         }
+
     }
-    public function getFormattedActivePrice()
+    public function getFormattedActivePrice($qty = 1)
     {
-        return StorePrice::format($this->getActivePrice());
+        return StorePrice::format($this->getActivePrice($qty));
     }
     public function getTaxClassID()
     {
@@ -681,6 +713,18 @@ class Product
     }
     public function allowCustomerPrice() {
         return (bool) $this->pCustomerPrice;
+    }
+
+    public function hasQuantityPrice() {
+        return (bool) $this->pQuantityPrice;
+    }
+
+    public function getQuantityPrice() {
+        return $this->pQuantityPrice;
+    }
+
+    public function setQuantityPrice($pQuantityPrice) {
+        $this->pQuantityPrice = $pQuantityPrice;
     }
 
     public function getDimensions($whl = null)
