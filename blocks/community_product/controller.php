@@ -80,7 +80,8 @@ class Controller extends BlockController
         }
 
         if ($product) {
-            return $product->getName() . ' ' . $product->getDesc() . ' ' . $product->getDetail();
+            $sku = $product->getSKU();
+            return $product->getName() . ($sku ? ' (' .$sku. ')' : '') . ' ' . $product->getDesc() . ' ' . $product->getDetail();
         } else {
             return '';
         }
