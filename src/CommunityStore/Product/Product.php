@@ -618,15 +618,15 @@ class Product
                 if ($varprice) {
                     return $varprice;
                 } else {
-                    return $this->getQuantityAdjustedPrice();
+                    return $this->getQuantityAdjustedPrice($qty);
                 }
             }
         } else {
-            return $this->getQuantityAdjustedPrice();
+            return $this->getQuantityAdjustedPrice($qty);
         }
     }
 
-    private function getQuantityAdjustedPrice($qty =1 ) {
+    private function getQuantityAdjustedPrice($qty = 1) {
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
