@@ -8,6 +8,8 @@ use Session;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use GroupList;
 
 class Discounts extends DashboardPageController
 {
@@ -25,15 +27,65 @@ class Discounts extends DashboardPageController
     }
 
     public function add() {
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
         $this->set('pageTitle', t('Add Discount Rule'));
+
+        $grouplist = StoreGroupList::getGroupList();
+        $this->set("grouplist",$grouplist);
+        foreach($grouplist as $productgroup){
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
+        }
+        $this->set("productgroups",$productgroups);
+
+        $gl = new GroupList();
+        $gl->setItemsPerPage(1000);
+        $gl->filterByAssignable();
+        $usergroups = $gl->get();
+
+        $usergrouparray = array();
+
+        foreach($usergroups as $ug) {
+            if ( $ug->gName != 'Administrators') {
+                $usergrouparray[$ug->gID] = $ug->gName;
+            }
+        }
+
+        $this->set('usergroups', $usergrouparray);
     }
 
     public function edit($drID) {
-
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
         $discountRule = StoreDiscountRule::getByID($drID);
 
         $this->set('discountRule', $discountRule);
         $this->set('pageTitle', t('Edit Discount Rule'));
+
+        $grouplist = StoreGroupList::getGroupList();
+        $this->set("grouplist",$grouplist);
+        foreach($grouplist as $productgroup){
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
+        }
+        $this->set("productgroups",$productgroups);
+
+        $gl = new GroupList();
+        $gl->setItemsPerPage(1000);
+        $gl->filterByAssignable();
+        $usergroups = $gl->get();
+
+        $usergrouparray = array();
+
+        foreach($usergroups as $ug) {
+            if ( $ug->gName != 'Administrators') {
+                $usergrouparray[$ug->gID] = $ug->gName;
+            }
+        }
+
+        $this->set('selectedproductgroups', $discountRule->getProductGroups());
+        $this->set('selectedusergroups',$discountRule->getUserGroups());
+
+        $this->set('usergroups', $usergrouparray);
     }
 
     public function codes($drID, $successcount = null) {
