@@ -16,3 +16,11 @@ $form = Core::make('helper/form');
     </script>
 
 </div>
+
+<div class="form-group">
+    <label class="control-label"><?= t('Required');?></label>
+        <div class="checkbox">
+            <label><?= $form->checkbox('required', '1', $key->required)?> <?= t('Required in checkout');?></label>
+        </div>
+</div>
+

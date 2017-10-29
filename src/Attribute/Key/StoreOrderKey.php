@@ -137,7 +137,7 @@ class StoreOrderKey extends Key
         $akID = $ak->getAttributeKeyID();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', array($akID, $required));
 
         if (is_array($groups) && !empty($groups)) {
             foreach ($groups as $gID) {
@@ -159,7 +159,7 @@ class StoreOrderKey extends Key
         $akID = $ak->getAttributeKeyID();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID) VALUES (?)', array($akID));
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', array($akID, $required));
 
         $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
         if (is_array($groups) && !empty($groups)) {
@@ -179,5 +179,9 @@ class StoreOrderKey extends Key
             $db->query('delete from AttributeValues where avID = ?', array($row['avID']));
         }
         $db->query('delete from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+    }
+
+    public function isRequired() {
+        return (bool)$this->required;
     }
 }
