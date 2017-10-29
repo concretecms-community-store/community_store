@@ -301,7 +301,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                <?php print $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
+                                <?= t('For users in groups');?> <?php print $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
                             </div>
                         </div>
                     </div>
@@ -318,7 +318,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                <?php print $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
+                                <?= t('For users in groups');?> <?php print $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
                             </div>
                         </div>
                     </div>

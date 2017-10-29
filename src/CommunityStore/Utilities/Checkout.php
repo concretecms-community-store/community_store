@@ -76,20 +76,20 @@ class Checkout extends Controller
                 $customer = new StoreCustomer();
                 if ($data['adrType'] == 'billing') {
                     $this->updateBilling($data);
-                    $addressraw = $customer->getValue('billing_address');
-                    $phone = $customer->getValue('billing_phone');
-                    $first_name = $customer->getValue('billing_first_name');
-                    $last_name = $customer->getValue('billing_last_name');
+                    $address = Session::get('billing_address');
+                    $phone = Session::get('billing_phone');
+                    $first_name = Session::get('billing_first_name');
+                    $last_name = Session::get('billing_last_name');
                     $email = $customer->getEmail();
                 }
 
                 if ($data['adrType'] == 'shipping') {
                     $this->updateShipping($data);
-                    $addressraw = $customer->getValue('shipping_address');
+                    $address = Session::get('shipping_address');
                     $phone = '';
                     $email = '';
-                    $first_name = $customer->getValue('shipping_first_name');
-                    $last_name = $customer->getValue('shipping_last_name');
+                    $first_name = Session::get('shipping_first_name');
+                    $last_name = Session::get('shipping_last_name');
 
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
@@ -101,11 +101,7 @@ class Checkout extends Controller
                     }
                 }
 
-                if (method_exists($addressraw, 'getDisplayValue')) {
-                    $address = $addressraw->getDisplayValue();
-                } else {
-                    $address = nl2br(StoreCustomer::formatAddress($addressraw));  // force to string
-                }
+                $address = nl2br(StoreCustomer::formatAddressArray($address));
 
                 // Results array
                 $results = array(
@@ -174,12 +170,18 @@ class Checkout extends Controller
             $customer->setEmail(trim($data['email']));
         } else {
             $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
-            $usergroups = $customer->getUserInfo()->getUserGroups();
-            $matchingGroups = array_intersect($noBillingSaveGroups, $usergroups);
+            $user = new User();
+            $usergroups = $user->getUserGroups();
 
-            if (!empty($noBillingSaveGroups) && empty($matchingGroups)) {
+            if (!is_array($usergroups)) {
+                $usergroups = array();
+            }
+
+            $matchingGroups = array_intersect(explode(',', $noBillingSaveGroups), $usergroups);
+            if ($noBillingSaveGroups && empty($matchingGroups)) {
                 $noBillingSave = false;
             }
+
         }
 
         $address = array(
@@ -190,7 +192,6 @@ class Checkout extends Controller
             "postal_code" => trim($data['postal']),
             "country" => trim($data['count']),
         );
-
 
         Session::set('billing_first_name', trim($data['fName']));
         Session::set('billing_last_name', trim($data['lName']));
@@ -207,17 +208,6 @@ class Checkout extends Controller
         Session::set('community_store.smID', false);
     }
 
-
-    private function updateVatNumber($data)
-    {
-        //update the users vat number
-        $customer = new StoreCustomer();
-        $customer->setValue("vat_number", trim($data['vat_number']));
-        Session::set('vat_number', trim($data['vat_number']));
-    }
-
-
-
     public function updateShipping($data)
     {
         //update the users shipping address
@@ -232,10 +222,16 @@ class Checkout extends Controller
             $customer->setEmail(trim($data['email']));
         } else {
             $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
-            $usergroups = $customer->getUserInfo()->getUserGroups();
-            $matchingGroups = array_intersect($noShippingSaveGroups, $usergroups);
+            $user = new User();
+            $usergroups = $user->getUserGroups();
 
-            if (!empty($noShippingSaveGroups) && empty($matchingGroups)) {
+            if (!is_array($usergroups)) {
+                $usergroups = array();
+            }
+
+            $matchingGroups = array_intersect(explode(',',$noShippingSaveGroups), $usergroups);
+
+            if ($noShippingSaveGroups && empty($matchingGroups)) {
                 $noShippingSave = false;
             }
         }
@@ -262,6 +258,14 @@ class Checkout extends Controller
         Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
 
+    }
+
+    private function updateVatNumber($data)
+    {
+        //update the users vat number
+        $customer = new StoreCustomer();
+        $customer->setValue("vat_number", trim($data['vat_number']));
+        Session::set('vat_number', trim($data['vat_number']));
     }
 
     public function validateAddress($data, $billing = null)
