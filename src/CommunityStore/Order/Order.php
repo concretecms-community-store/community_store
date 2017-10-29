@@ -770,13 +770,34 @@ class Order
                     $shipping_address = clone $shipping_address;
                 }
 
-                // update the  user's attributes
-                $user->setAttribute('billing_first_name', $billing_first_name);
-                $user->setAttribute('billing_last_name', $billing_last_name);
-                $user->setAttribute('billing_address', $billing_address);
-                $user->setAttribute('billing_phone', $billing_phone);
+                $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
+                $noBillingSave  = Config::get('community_store.noBillingSave');
 
-                if ($this->isShippable()) {
+                $usergroups = $user->getUserGroups();
+                $matchingGroups = array_intersect($noBillingSaveGroups, $usergroups);
+
+                if (!empty($noBillingSaveGroups) && empty($matchingGroups)) {
+                    $noBillingSave = false;
+                }
+
+                // update the  user's attributes
+                if (!$noBillingSave) {
+                    $user->setAttribute('billing_first_name', $billing_first_name);
+                    $user->setAttribute('billing_last_name', $billing_last_name);
+                    $user->setAttribute('billing_address', $billing_address);
+                    $user->setAttribute('billing_phone', $billing_phone);
+                }
+
+                $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
+                $noShippingSave = Config::get('community_store.noShippingSave');
+
+                $matchingGroups = array_intersect($noBillingSaveGroups, $usergroups);
+
+                if (!empty($noShippingSaveGroups)  &&empty($matchingGroups)) {
+                    $noShippingSave = false;
+                }
+
+                if ($this->isShippable() && !$noShippingSave) {
                     $user->setAttribute('shipping_first_name', $shipping_first_name);
                     $user->setAttribute('shipping_last_name', $shipping_last_name);
                     $user->setAttribute('shipping_address', $shipping_address);

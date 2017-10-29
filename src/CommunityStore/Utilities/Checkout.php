@@ -166,16 +166,22 @@ class Checkout extends Controller
         //update the users billing address
         $customer = new StoreCustomer();
 
-        if ($customer->isGuest()) {
+        $guest = $customer->isGuest();
+
+        $noBillingSave = Config::get('community_store.noBillingSave');
+
+        if ($guest) {
             $customer->setEmail(trim($data['email']));
+        } else {
+            $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
+            $usergroups = $customer->getUserInfo()->getUserGroups();
+            $matchingGroups = array_intersect($noBillingSaveGroups, $usergroups);
+
+            if (!empty($noBillingSaveGroups) && empty($matchingGroups)) {
+                $noBillingSave = false;
+            }
         }
 
-        $customer->setValue("billing_first_name", trim($data['fName']));
-        Session::set('billing_first_name', trim($data['fName']));
-        $customer->setValue("billing_last_name", trim($data['lName']));
-        Session::set('billing_last_name', trim($data['lName']));
-        $customer->setValue("billing_phone", trim($data['phone']));
-        Session::set('billing_phone', trim($data['phone']));
         $address = array(
             "address1" => trim($data['addr1']),
             "address2" => trim($data['addr2']),
@@ -184,8 +190,20 @@ class Checkout extends Controller
             "postal_code" => trim($data['postal']),
             "country" => trim($data['count']),
         );
-        $customer->setValue("billing_address", $address);
+
+
+        Session::set('billing_first_name', trim($data['fName']));
+        Session::set('billing_last_name', trim($data['lName']));
+        Session::set('billing_phone', trim($data['phone']));
         Session::set('billing_address', $address);
+
+        if ($guest || !$noBillingSave) {
+            $customer->setValue("billing_first_name", trim($data['fName']));
+            $customer->setValue("billing_last_name", trim($data['lName']));
+            $customer->setValue("billing_phone", trim($data['phone']));
+            $customer->setValue("billing_address", $address);
+        }
+
         Session::set('community_store.smID', false);
     }
 
@@ -205,10 +223,23 @@ class Checkout extends Controller
         //update the users shipping address
         $this->validateAddress($data);
         $customer = new StoreCustomer();
-        $customer->setValue("shipping_first_name", trim($data['fName']));
-        Session::set('shipping_first_name', trim($data['fName']));
-        $customer->setValue("shipping_last_name", trim($data['lName']));
-        Session::set('shipping_last_name', trim($data['lName']));
+
+        $guest = $customer->isGuest();
+
+        $noShippingSave = Config::get('community_store.noShippingSave');
+
+        if ($guest) {
+            $customer->setEmail(trim($data['email']));
+        } else {
+            $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
+            $usergroups = $customer->getUserInfo()->getUserGroups();
+            $matchingGroups = array_intersect($noShippingSaveGroups, $usergroups);
+
+            if (!empty($noShippingSaveGroups) && empty($matchingGroups)) {
+                $noShippingSave = false;
+            }
+        }
+
         $address = array(
             "address1" => trim($data['addr1']),
             "address2" => trim($data['addr2']),
@@ -217,11 +248,20 @@ class Checkout extends Controller
             "postal_code" => trim($data['postal']),
             "country" => trim($data['count']),
         );
-        $customer->setValue("shipping_address", $address);
+
+        if ($guest || !$noShippingSave) {
+            $customer->setValue("shipping_first_name", trim($data['fName']));
+            $customer->setValue("shipping_address", $address);
+            $customer->setValue("vat_number", $data['vat_number']);
+            $customer->setValue("shipping_last_name", trim($data['lName']));
+        }
+
+        Session::set('shipping_first_name', trim($data['fName']));
+        Session::set('shipping_last_name', trim($data['lName']));
         Session::set('shipping_address', $address);
-        $customer->setValue("vat_number", $data['vat_number']);
         Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
+
     }
 
     public function validateAddress($data, $billing = null)

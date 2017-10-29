@@ -288,6 +288,49 @@
 
                     </div>
 
+
+                    <h3><?= t('Billing Details');?></h3>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('noBillingSave', '1',Config::get('community_store.noBillingSave') ? '1' : '0')?>
+                                <?= t('Do no save billing details to user on order');?></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                <?php print $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <h3><?= t('Shipping Details');?></h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('noShippingSave', '1',Config::get('community_store.noShippingSave') ? '1' : '0')?>
+                                <?= t('Do no save shipping details to user on order');?></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                <?php print $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), array('class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups'))); ?>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <script>
+                        $(document).ready(function() {
+                            $('.existing-select2').select2();
+                        });
+                    </script>
+
+
                 </div>
 
             </div><!-- .row -->
