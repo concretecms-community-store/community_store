@@ -102,6 +102,25 @@ class DiscountRule
      */
     protected $drDeleted;
 
+    protected $applicableTotal;
+
+    /**
+     * @return mixed
+     */
+    public function getApplicableTotal()
+    {
+        return $this->applicableTotal;
+    }
+
+    /**
+     * @param mixed $applicableTotal
+     */
+    public function setApplicableTotal($applicableTotal)
+    {
+        $this->applicableTotal = $applicableTotal;
+    }
+
+
     /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
      */
@@ -118,6 +137,7 @@ class DiscountRule
     public function __construct()
     {
         $this->codes = new ArrayCollection();
+        $this->applicableTotal = false;
     }
 
     /**
@@ -380,7 +400,9 @@ class DiscountRule
      */
     public function setUserGroups($drUserGroups)
     {
-        $this->drUserGroups = implode(',',$drUserGroups);
+        if (is_array($drUserGroups)) {
+            $this->drUserGroups = implode(',',$drUserGroups);
+        }
     }
 
 

@@ -52,6 +52,8 @@ class Discounts extends DashboardPageController
         }
 
         $this->set('usergroups', $usergrouparray);
+        $this->set('selectedproductgroups', array());
+        $this->set('selectedusergroups', array());
     }
 
     public function edit($drID) {

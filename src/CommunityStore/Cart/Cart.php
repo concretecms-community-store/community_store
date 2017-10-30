@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class Cart
@@ -80,7 +81,35 @@ class Cart
 
             $rules = StoreDiscountRule::findAutomaticDiscounts();
             if (count($rules) > 0) {
-                self::$discounts = array_merge(self::$discounts, $rules);
+                foreach($rules as $rule) {
+                    $discountProductGroups = $rule->getProductGroups();
+                    $include = true;
+                    $matchingprods = array();
+
+                    if (!empty($discountProductGroups)) {
+
+                        $include = false;
+                        foreach($checkeditems as $cartitem) {
+                            $groupids = $cartitem['product']['object']->getGroupIDs();
+
+                            if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                                $include = true;
+
+                                $matchingprods[] = $cartitem;
+                            }
+                        }
+                    }
+
+                    if ($include) {
+
+                        if (!empty($matchingprods)) {
+                            $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
+                            $rule->setApplicableTotal($matchingTotal);
+                        }
+
+                        self::$discounts[] = $rule;
+                    }
+                }
             }
 
             $code = trim(Session::get('communitystore.code'));
@@ -88,7 +117,34 @@ class Cart
                 $rules = StoreDiscountRule::findDiscountRuleByCode($code);
 
                 if (count($rules) > 0) {
-                    self::$discounts = array_merge(self::$discounts, $rules);
+                    $discountProductGroups = $rule->getProductGroups();
+                    $include = true;
+                    $matchingprods = array();
+
+                    if (!empty($discountProductGroups)) {
+
+                        $include = false;
+                        foreach($checkeditems as $cartitem) {
+                            $groupids = $cartitem['product']['object']->getGroupIDs();
+
+                            if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                                $include = true;
+
+                                $matchingprods[] = $cartitem;
+                            }
+                        }
+                    }
+
+                    if ($include) {
+
+                        if (!empty($matchingprods)) {
+                            $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
+                            $rule->setApplicableTotal($matchingTotal);
+                        }
+
+                        self::$discounts[] = $rule;
+                    }
+
                 } else {
                     Session::set('communitystore.code', '');
                 }
