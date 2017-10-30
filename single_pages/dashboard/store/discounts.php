@@ -26,11 +26,10 @@ $currencySymbol = Config::get('community_store.symbol');
             <thead>
                 <tr>
                     <th><a><?= t('Name')?></a></th>
-                    <th><a><?= t('Display')?></a></th>
+                    <th><a><?= t('Displayed Text')?></a></th>
                     <th><a><?= t('Discount')?></a></th>
                     <th><a><?= t('Applies')?></a></th>
                     <th><a><?= t('Availability')?></a></th>
-                    <th><a><?= t('Enabled')?></a></th>
                     <th><a><?= t('Actions')?></a></th>
                 </tr>
             </thead>
@@ -38,15 +37,34 @@ $currencySymbol = Config::get('community_store.symbol');
 
                 <?php if(count($discounts)>0) {
                     foreach ($discounts as $discountRule) {
+
+                        $usergroups = $discountRule->getUserGroups();
+                        $productgroups = $discountRule->getProductGroups();
+                        $deducttype = $discountRule->getDeductType();
+
+                        $discountRuleDeduct = $discountRule->getDeductFrom();
+
+                        if (!empty($productgroups) && $deducttype == 'percentage' ) {
+                            $discountRuleDeduct = 'from matching products';  // translated on output
+                        }
+
                         ?>
                         <tr>
-                            <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong></td>
+                            <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong>
+                            <br />
+                                <?php if(!$discountRule->isEnabled()){ ?>
+                                    <span class="label label-danger"><?= t('Disabled')?></span>
+                                <?php } else { ?>
+                                    <span class="label label-success"><?= t('Enabled')?></span>
+                                <?php } ?>
+
+                            </td>
                             <td><?= h($discountRule->getDisplay()); ?></td>
                             <td>
-                                <?php if ($discountRule->getDeductType() == 'percentage') {
-                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . h($discountRule->getDeductFrom());
+                                <?php if ($deducttype == 'percentage') {
+                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . t($discountRuleDeduct);
                                 } else {
-                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . h($discountRule->getDeductFrom());
+                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . t($discountRuleDeduct);
                                 }
                                 ?>
                             </td>
@@ -64,8 +82,30 @@ $currencySymbol = Config::get('community_store.symbol');
                                     }
 
                                 }
+
+                                if (!empty($usergroups)) {
+                                    echo '<span class="label label-primary">' . t('to specific user groups'). '</span><br />';
+                                }
+
+
+                                if (!empty($productgroups)) {
+
+                                    echo '<span class="label label-primary">';
+
+                                    if ($deducttype == 'percentage') {
+                                       echo t('to specific product groups');
+                                    } else {
+                                        echo t('when product groups found in cart');
+                                    }
+
+                                    echo '</span><br />';
+                                }
+
+
                                  ?></td>
                             <td>
+
+
                                 <?php
                                 $restrictions = '';
 
@@ -88,13 +128,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
                             </td>
-                            <td>
-                                <?php if(!$discountRule->isEnabled()){ ?>
-                                    <span class="label label-danger"><?= t('Disabled')?></span>
-                                <?php } else { ?>
-                                    <span class="label label-success"><?= t('Enabled')?></span>
-                                <?php } ?>
-                            </td>
+
                             <td>
                                 <p><a class="btn btn-default" href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
                                 <?php

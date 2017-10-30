@@ -102,24 +102,18 @@ class DiscountRule
      */
     protected $drDeleted;
 
+    //  Used to temporarily store the calculated total of matching products (when product groups used)
     protected $applicableTotal;
 
-    /**
-     * @return mixed
-     */
     public function getApplicableTotal()
     {
         return $this->applicableTotal;
     }
 
-    /**
-     * @param mixed $applicableTotal
-     */
     public function setApplicableTotal($applicableTotal)
     {
         $this->applicableTotal = $applicableTotal;
     }
-
 
     /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
@@ -384,7 +378,9 @@ class DiscountRule
      */
     public function setProductGroups($drProductGroups)
     {
-        $this->drProductGroups = implode(',',$drProductGroups);
+        if (is_array($drProductGroups)) {
+            $this->drProductGroups = implode(',', $drProductGroups);
+        }
     }
 
     /**
