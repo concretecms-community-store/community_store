@@ -94,6 +94,27 @@ if (is_object($product) && $product->isActive()) {
                         </div>
                     <?php } ?>
 
+                    <?php
+                    $showTiers = false; // adjust to enable displaying pricing tiers below
+
+                    if ($showTiers && $product->getQuantityPrice()) {
+                        $pricetiers = $product->getPriceTiers();
+
+                        if (!empty($pricetiers)) {
+                            echo '<p class="store-product-price-tiers">';
+
+                            $pricetiersoutput = array();
+
+                            foreach($pricetiers as $pricetier) {
+                                $pricetiersoutput[] = $pricetier->getFrom() . ' '  . t('to') . ' ' . $pricetier->getTo() . ' - ' . Config::get('community_store.symbol') . $pricetier->getPrice();
+                            }
+
+                            echo implode('<br>', $pricetiersoutput);
+                            echo '</p>';
+                        }
+                    }
+                    ?>
+
                     <meta itemprop="description" content="<?= strip_tags($product->getDesc()); ?>" />
 
                     <?php if ($showProductDescription) { ?>
