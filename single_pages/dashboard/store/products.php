@@ -120,7 +120,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group-addon">
                                     <?=  Config::get('community_store.symbol');?>
                                 </div>
-                                <?php $price = $product->getPrice(); ?>
+                                <?php $price = $product->getBasePrice(); ?>
                                 <?= $form->text("pPrice", $price, array('placeholder'=>($product->allowCustomerPrice() ? t('No Price Set') : '')));?>
                             </div>
                         </div>

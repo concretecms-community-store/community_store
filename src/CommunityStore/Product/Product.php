@@ -609,6 +609,11 @@ class Product
     {
         return $this->pDetail;
     }
+
+    public function getBasePrice() {
+        return $this->pPrice;
+    }
+
     public function getPrice($qty = 1)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
