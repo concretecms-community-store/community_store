@@ -728,8 +728,8 @@ class Product
         return $this->pQuantityPrice;
     }
 
-    public function setQuantityPrice($pQuantityPrice) {
-        $this->pQuantityPrice = $pQuantityPrice;
+    public function setQuantityPrice($bool) {
+        $this->pQuantityPrice = (!is_null($bool) ? $bool : false);
     }
 
     public function getDimensions($whl = null)
