@@ -9,9 +9,12 @@ use Session;
 
 class Calculator
 {
-    public static function getSubTotal()
+    public static function getSubTotal($cart = false)
     {
-        $cart = StoreCart::getCart();
+
+        if (!$cart) {
+            $cart = StoreCart::getCart();
+        }
         $subtotal = 0;
         if ($cart) {
             foreach ($cart as $cartItem) {
@@ -111,7 +114,13 @@ class Calculator
                     }
 
                     if ($discount->getDeductType() == 'percentage') {
-                        $adjustedSubtotal -= ($discount->getPercentage() / 100 * $adjustedSubtotal);
+                        $applicableTotal = $discount->getApplicableTotal();
+
+                        if ($applicableTotal === false) {
+                            $applicableTotal = $adjustedSubtotal;
+                        }
+
+                        $adjustedSubtotal -= ($discount->getPercentage() / 100 * $applicableTotal);
                     }
                 } elseif($discount->getDeductFrom() == 'shipping') {
 
@@ -124,8 +133,6 @@ class Calculator
                     }
                 }
             }
-
-
 
             if ($subTotal > 0) {
                 $discountRatio = $adjustedSubtotal / $subTotal;

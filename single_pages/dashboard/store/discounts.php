@@ -26,11 +26,10 @@ $currencySymbol = Config::get('community_store.symbol');
             <thead>
                 <tr>
                     <th><a><?= t('Name')?></a></th>
-                    <th><a><?= t('Display')?></a></th>
+                    <th><a><?= t('Displayed Text')?></a></th>
                     <th><a><?= t('Discount')?></a></th>
                     <th><a><?= t('Applies')?></a></th>
                     <th><a><?= t('Availability')?></a></th>
-                    <th><a><?= t('Enabled')?></a></th>
                     <th><a><?= t('Actions')?></a></th>
                 </tr>
             </thead>
@@ -38,15 +37,34 @@ $currencySymbol = Config::get('community_store.symbol');
 
                 <?php if(count($discounts)>0) {
                     foreach ($discounts as $discountRule) {
+
+                        $usergroups = $discountRule->getUserGroups();
+                        $productgroups = $discountRule->getProductGroups();
+                        $deducttype = $discountRule->getDeductType();
+
+                        $discountRuleDeduct = $discountRule->getDeductFrom();
+
+                        if (!empty($productgroups) && $deducttype == 'percentage' ) {
+                            $discountRuleDeduct = 'from matching products';  // translated on output
+                        }
+
                         ?>
                         <tr>
-                            <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong></td>
+                            <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong>
+                            <br />
+                                <?php if(!$discountRule->isEnabled()){ ?>
+                                    <span class="label label-danger"><?= t('Disabled')?></span>
+                                <?php } else { ?>
+                                    <span class="label label-success"><?= t('Enabled')?></span>
+                                <?php } ?>
+
+                            </td>
                             <td><?= h($discountRule->getDisplay()); ?></td>
                             <td>
-                                <?php if ($discountRule->getDeductType() == 'percentage') {
-                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . h($discountRule->getDeductFrom());
+                                <?php if ($deducttype == 'percentage') {
+                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . t($discountRuleDeduct);
                                 } else {
-                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . h($discountRule->getDeductFrom());
+                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . t($discountRuleDeduct);
                                 }
                                 ?>
                             </td>
@@ -64,8 +82,30 @@ $currencySymbol = Config::get('community_store.symbol');
                                     }
 
                                 }
+
+                                if (!empty($usergroups)) {
+                                    echo '<span class="label label-primary">' . t('to specific user groups'). '</span><br />';
+                                }
+
+
+                                if (!empty($productgroups)) {
+
+                                    echo '<span class="label label-primary">';
+
+                                    if ($deducttype == 'percentage') {
+                                       echo t('to specific product groups');
+                                    } else {
+                                        echo t('when product groups found in cart');
+                                    }
+
+                                    echo '</span><br />';
+                                }
+
+
                                  ?></td>
                             <td>
+
+
                                 <?php
                                 $restrictions = '';
 
@@ -88,13 +128,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
                             </td>
-                            <td>
-                                <?php if(!$discountRule->isEnabled()){ ?>
-                                    <span class="label label-danger"><?= t('Disabled')?></span>
-                                <?php } else { ?>
-                                    <span class="label label-success"><?= t('Enabled')?></span>
-                                <?php } ?>
-                            </td>
+
                             <td>
                                 <p><a class="btn btn-default" href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
                                 <?php
@@ -224,34 +258,71 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <fieldset><legend><?= t('Restrictions');?></legend>
 
-        <div class="form-group">
+            <div class="form-group">
 
-            <?= $form->label('drValidFrom', t('Starts'))?>
-            <div class="row">
-                <div class="col-md-4">
-                    <?= $form->select('validFrom', array('0'=>t('Immedately'), '1'=>t('From a specified date')), ($discountRule->getValidFrom() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
+                <?= $form->label('drValidFrom', t('Starts'))?>
+                <div class="row">
+                    <div class="col-md-4">
+                        <?= $form->select('validFrom', array('0'=>t('Immedately'), '1'=>t('From a specified date')), ($discountRule->getValidFrom() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
+                    </div>
+                    <div class="col-md-8" id="fromdate" <?= ($discountRule->getValidFrom() ? '' : 'style="display: none;"'); ?>>
+                        <?= $date->datetime('drValidFrom', $discountRule->getValidFrom());?>
+                    </div>
                 </div>
-                <div class="col-md-8" id="fromdate" <?= ($discountRule->getValidFrom() ? '' : 'style="display: none;"'); ?>>
-                    <?= $date->datetime('drValidFrom', $discountRule->getValidFrom());?>
+
+            </div>
+
+            <div class="form-group">
+                <?= $form->label('drValidTo', t('Ends'))?>
+                <div class="row">
+                    <div class="col-md-4">
+                        <?= $form->select('validTo', array('0'=>t('Never'), '1'=>t('At a specified date')),  ($discountRule->getValidTo() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
+                    </div>
+                    <div class="col-md-8" id="todate" <?= ($discountRule->getValidTo() ? '' : 'style="display: none;"'); ?>>
+                         <?= $date->datetime('drValidTo', $discountRule->getValidTo())?>
+                    </div>
                 </div>
             </div>
 
-        </div>
-
-        <div class="form-group">
-            <?= $form->label('drValidTo', t('Ends'))?>
-            <div class="row">
-                <div class="col-md-4">
-                    <?= $form->select('validTo', array('0'=>t('Never'), '1'=>t('At a specified date')),  ($discountRule->getValidTo() > 0 ? '1' : '0'), array('class' => 'col-md-4'))?>
-                </div>
-                <div class="col-md-8" id="todate" <?= ($discountRule->getValidTo() ? '' : 'style="display: none;"'); ?>>
-                     <?= $date->datetime('drValidTo', $discountRule->getValidTo())?>
+            <div class="form-group">
+                <?= $form->label('drProductGroups', t('Product Groups'))?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ccm-search-field-content ccm-search-field-content-select2">
+                            <select multiple="multiple" name="drProductGroups[]" class="select2-select" style="width: 100%"
+                                    placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
+                                <?php
+                                if (!empty($productgroups)) {
+                                    foreach ($productgroups as $pgkey=>$pglabel) { ?>
+                                        <option value="<?= $pgkey;?>" <?= (in_array($pgkey, $selectedproductgroups) ? 'selected="selected"' : ''); ?>>  <?= $pglabel; ?></option>
+                                    <?php   }
+                                } ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-<!--        <h4>--><?php //echo t('Users / Groups');?><!--</h4>-->
-<!--        <p><em>To be implemented</em></p>-->
+            <div class="form-group">
+                <?= $form->label("usergroups", t("User Groups"));?>
+                <div class="ccm-search-field-content ccm-search-field-content-select2">
+                    <select multiple="multiple" name="drUserGroups[]" id="groupselect" class="select2-select" style="width: 100%;" placeholder="<?= t('Select User Groups');?>">
+                        <?php
+                        foreach ($usergroups as $ugkey=>$uglabel) { ?>
+                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+
+
+            <script>
+                $(document).ready(function() {
+                    $('.select2-select').select2();
+                });
+            </script>
+
+
 
         </fieldset>
 
