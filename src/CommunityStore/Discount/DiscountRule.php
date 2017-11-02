@@ -487,8 +487,8 @@ class DiscountRule
             if ($row['drUserGroups']) {
                 $discountusergroups = explode(',',$row['drUserGroups']);
 
-                $user = new User();
-                $usergroups = $user->getUserGroup();
+                $user = new \User();
+                $usergroups = $user->getUserGroups();
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 

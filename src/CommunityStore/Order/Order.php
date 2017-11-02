@@ -569,7 +569,7 @@ class Order
             $customer = new StoreCustomer();
         }
         $email = $customer->getEmail();
-        $billing_first_name = Session::get('billing_first_name');;
+        $billing_first_name = Session::get('billing_first_name');
         $billing_last_name = Session::get('billing_last_name');
         $billing_address = Session::get('billing_address');
         $billing_phone = Session::get('billing_phone');

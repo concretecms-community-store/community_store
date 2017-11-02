@@ -218,9 +218,7 @@ class Checkout extends Controller
 
         $noShippingSave = Config::get('community_store.noShippingSave');
 
-        if ($guest) {
-            $customer->setEmail(trim($data['email']));
-        } else {
+        if (!$guest) {
             $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
             $user = new User();
             $usergroups = $user->getUserGroups();
