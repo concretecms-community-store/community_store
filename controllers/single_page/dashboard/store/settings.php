@@ -13,42 +13,55 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StoreP
 
 class Settings extends DashboardPageController
 {
-    public function view(){
-       $this->loadFormAssets();
-       $this->set("pageSelector",Core::make('helper/form/page_selector'));
-       $this->set("countries",Core::make('helper/lists/countries')->getCountries());
-       $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
-       $this->set("installedPaymentMethods",StorePaymentMethod::getMethods());
-       $this->set("orderStatuses",StoreOrderStatus::getAll());
-       $targetCID = Config::get('community_store.productPublishTarget');
+    public function view()
+    {
+        $this->loadFormAssets();
+        $this->set("pageSelector", Core::make('helper/form/page_selector'));
+        $this->set("countries", Core::make('helper/lists/countries')->getCountries());
+        $this->set("states", Core::make('helper/lists/states_provinces')->getStates());
+        $this->set("installedPaymentMethods", StorePaymentMethod::getMethods());
+        $this->set("orderStatuses", StoreOrderStatus::getAll());
+        $targetCID = Config::get('community_store.productPublishTarget');
 
-       if ($targetCID > 0) {
-           $parentPage = \Page::getByID($targetCID);
+        if ($targetCID > 0) {
+            $parentPage = \Page::getByID($targetCID);
 
-           if (!$parentPage || $parentPage->isError()) {
-               $targetCID = false;
-           }
-       }
+            if (!$parentPage || $parentPage->isError()) {
+                $targetCID = false;
+            }
+        }
 
-       $this->set('productPublishTarget',$targetCID);
+        $groupList = array();
+
+        $gl = new \GroupList;
+        foreach ($gl->getResults() as $group) {
+            $groupList[$group->getGroupID()] = $group->getGroupName();
+        }
+
+        $this->set('groupList', $groupList);
+        $this->set('productPublishTarget', $targetCID);
     }
+
     public function loadFormAssets()
     {
         $pkg = Package::getByHandle('community_store');
         $pkgconfig = $pkg->getConfig();
-        $this->set('pkgconfig',$pkgconfig);
+        $this->set('pkgconfig', $pkgconfig);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
+
     public function success()
     {
-        $this->set('success',t('Settings Saved'));
+        $this->set('success', t('Settings Saved'));
         $this->view();
     }
+
     public function failed()
     {
         $this->view();
     }
+
     public function save()
     {
         $this->view();
@@ -59,58 +72,62 @@ class Settings extends DashboardPageController
             $this->error = $errors;
 
             if (!$errors->has()) {
-                Config::save('community_store.symbol',$args['symbol']);
-                Config::save('community_store.currency',$args['currency']);
-                Config::save('community_store.whole',$args['whole']);
-                Config::save('community_store.thousand',$args['thousand']);
-                Config::save('community_store.taxenabled',$args['taxEnabled']);
-                Config::save('community_store.taxcountry',$args['taxCountry']);
-                Config::save('community_store.taxstate',$args['taxState']);
-                Config::save('community_store.taxcity',trim($args['taxCity']));
-                Config::save('community_store.taxAddress',trim($args['taxAddress']));
-                Config::save('community_store.taxMatch',trim($args['taxMatch']));
-                Config::save('community_store.taxBased',trim($args['taxBased']));
-                Config::save('community_store.taxrate',trim($args['taxRate']));
-                Config::save('community_store.taxName',trim($args['taxName']));
-                Config::save('community_store.calculation',trim($args['calculation']));
-                Config::save('community_store.vat_number',trim($args['vat_number']));
-                Config::save('community_store.shippingenabled',$args['shippingEnabled']);
-                Config::save('community_store.shippingbase',$args['shippingBasePrice']);
-                Config::save('community_store.shippingitem',$args['shippingItemPrice']);
-                Config::save('community_store.weightUnit',$args['weightUnit']);
-                Config::save('community_store.sizeUnit',$args['sizeUnit']);
-                Config::save('community_store.deliveryInstructions',$args['deliveryInstructions']);
-                Config::save('community_store.notificationemails',$args['notificationEmails']);
-                Config::save('community_store.emailalerts',$args['emailAlert']);
-                Config::save('community_store.emailalertsname',$args['emailAlertName']);
-                Config::save('community_store.productPublishTarget',$args['productPublishTarget']);
-                Config::save('community_store.guestCheckout',$args['guestCheckout']);
-                Config::save('community_store.shoppingDisabled',trim($args['shoppingDisabled']));
-                Config::save('community_store.receiptHeader',trim($args['receiptHeader']));
-                Config::save('community_store.receiptFooter',trim($args['receiptFooter']));
+                Config::save('community_store.symbol', $args['symbol']);
+                Config::save('community_store.currency', $args['currency']);
+                Config::save('community_store.whole', $args['whole']);
+                Config::save('community_store.thousand', $args['thousand']);
+                Config::save('community_store.taxenabled', $args['taxEnabled']);
+                Config::save('community_store.taxcountry', $args['taxCountry']);
+                Config::save('community_store.taxstate', $args['taxState']);
+                Config::save('community_store.taxcity', trim($args['taxCity']));
+                Config::save('community_store.taxAddress', trim($args['taxAddress']));
+                Config::save('community_store.taxMatch', trim($args['taxMatch']));
+                Config::save('community_store.taxBased', trim($args['taxBased']));
+                Config::save('community_store.taxrate', trim($args['taxRate']));
+                Config::save('community_store.taxName', trim($args['taxName']));
+                Config::save('community_store.calculation', trim($args['calculation']));
+                Config::save('community_store.vat_number', trim($args['vat_number']));
+                Config::save('community_store.shippingenabled', $args['shippingEnabled']);
+                Config::save('community_store.shippingbase', $args['shippingBasePrice']);
+                Config::save('community_store.shippingitem', $args['shippingItemPrice']);
+                Config::save('community_store.weightUnit', $args['weightUnit']);
+                Config::save('community_store.sizeUnit', $args['sizeUnit']);
+                Config::save('community_store.deliveryInstructions', $args['deliveryInstructions']);
+                Config::save('community_store.notificationemails', $args['notificationEmails']);
+                Config::save('community_store.emailalerts', $args['emailAlert']);
+                Config::save('community_store.emailalertsname', $args['emailAlertName']);
+                Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
+                Config::save('community_store.guestCheckout', $args['guestCheckout']);
+                Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
+                Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
+                Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
+                Config::save('community_store.noBillingSave', trim($args['noBillingSave']));
+                Config::save('community_store.noShippingSave', trim($args['noShippingSave']));
+                Config::save('community_store.noBillingSaveGroups', is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');
+                Config::save('community_store.noShippingSaveGroups', is_array($args['noShippingSaveGroups']) ? implode(',', $args['noShippingSaveGroups']) : '');
 
                 //save payment methods
-                if($args['paymentMethodHandle']){
+                if ($args['paymentMethodHandle']) {
 
                     $paymentData = array();
 
-                    foreach($args['paymentMethodEnabled'] as $pmID=>$value){
+                    foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodEnabled'] = $value;
                     }
 
-                    foreach($args['paymentMethodDisplayName'] as $pmID=>$value){
+                    foreach ($args['paymentMethodDisplayName'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodDisplayName'] = $value;
                     }
 
-                    foreach($args['paymentMethodButtonLabel'] as $pmID=>$value){
+                    foreach ($args['paymentMethodButtonLabel'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodButtonLabel'] = $value;
                     }
 
-                    foreach($args['paymentMethodSortOrder'] as $pmID=>$value){
+                    foreach ($args['paymentMethodSortOrder'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodSortOrder'] = $value;
                     }
 
-                    foreach($paymentData as $pmID=>$data){
+                    foreach ($paymentData as $pmID => $data) {
                         $pm = StorePaymentMethod::getByID($pmID);
                         $pm->setEnabled($data['paymentMethodEnabled']);
                         $pm->setDisplayName($data['paymentMethodDisplayName']);
@@ -129,12 +146,13 @@ class Settings extends DashboardPageController
 
     }
 
-    private function saveOrderStatuses($data) {
+    private function saveOrderStatuses($data)
+    {
         if (isset($data['osID'])) {
             foreach ($data['osID'] as $key => $id) {
                 $orderStatus = StoreOrderStatus::getByID($id);
                 $orderStatusSettings = array(
-                    'osName' => ((isset($data['osName'][$key]) && $data['osName'][$key]!='') ?
+                    'osName' => ((isset($data['osName'][$key]) && $data['osName'][$key] != '') ?
                         $data['osName'][$key] : $orderStatus->getReadableHandle()),
                     'osInformSite' => isset($data['osInformSite'][$key]) ? 1 : 0,
                     'osInformCustomer' => isset($data['osInformCustomer'][$key]) ? 1 : 0,
@@ -150,27 +168,28 @@ class Settings extends DashboardPageController
             }
         }
     }
+
     public function validate($args)
     {
         $e = Core::make('helper/validation/error');
 
-        if($args['symbol']==""){
+        if ($args['symbol'] == "") {
             $e->add(t('You must set a currency symbol'));
         }
 
         $paymentMethodsEnabled = 0;
-        foreach($args['paymentMethodEnabled'] as $method){
-            if($method==1){
+        foreach ($args['paymentMethodEnabled'] as $method) {
+            if ($method == 1) {
                 $paymentMethodsEnabled++;
             }
         }
-        if($paymentMethodsEnabled==0){
+        if ($paymentMethodsEnabled == 0) {
             $e->add(t('At least one payment method must be enabled'));
         }
-        foreach($args['paymentMethodEnabled'] as $pmID=>$value){
+        foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
             $pm = StorePaymentMethod::getByID($pmID);
             $controller = $pm->getMethodController();
-            $e = $controller->validate($args,$e);
+            $e = $controller->validate($args, $e);
         }
 
         if (!isset($args['osName'])) {

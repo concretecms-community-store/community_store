@@ -569,13 +569,13 @@ class Order
             $customer = new StoreCustomer();
         }
         $email = $customer->getEmail();
-        $billing_first_name = $customer->getValue("billing_first_name");
-        $billing_last_name = $customer->getValue("billing_last_name");
-        $billing_address = $customer->getValueArray("billing_address");
-        $billing_phone = $customer->getValue("billing_phone");
-        $shipping_first_name = $customer->getValue("shipping_first_name");
-        $shipping_last_name = $customer->getValue("shipping_last_name");
-        $shipping_address = $customer->getValueArray("shipping_address");
+        $billing_first_name = Session::get('billing_first_name');;
+        $billing_last_name = Session::get('billing_last_name');
+        $billing_address = Session::get('billing_address');
+        $billing_phone = Session::get('billing_phone');
+        $shipping_first_name = Session::get('shipping_first_name');
+        $shipping_last_name = Session::get('shipping_last_name');
+        $shipping_address = Session::get('shipping_address');
 
         $this->setAttribute("email", $email);
         $this->setAttribute("billing_first_name", $billing_first_name);
@@ -770,13 +770,39 @@ class Order
                     $shipping_address = clone $shipping_address;
                 }
 
-                // update the  user's attributes
-                $user->setAttribute('billing_first_name', $billing_first_name);
-                $user->setAttribute('billing_last_name', $billing_last_name);
-                $user->setAttribute('billing_address', $billing_address);
-                $user->setAttribute('billing_phone', $billing_phone);
+                $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
+                $noBillingSave  = Config::get('community_store.noBillingSave');
 
-                if ($this->isShippable()) {
+                $usergroups = $user->getUserGroups();
+
+                if (!is_array($usergroups)) {
+                    $usergroups = array();
+                }
+
+                $matchingGroups = array_intersect(explode(',', $noBillingSaveGroups), $usergroups);
+
+                if ($noBillingSaveGroups && empty($matchingGroups)) {
+                    $noBillingSave = false;
+                }
+
+                // update the  user's attributes
+                if (!$noBillingSave) {
+                    $user->setAttribute('billing_first_name', $billing_first_name);
+                    $user->setAttribute('billing_last_name', $billing_last_name);
+                    $user->setAttribute('billing_address', $billing_address);
+                    $user->setAttribute('billing_phone', $billing_phone);
+                }
+
+                $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
+                $noShippingSave = Config::get('community_store.noShippingSave');
+
+                $matchingGroups = array_intersect(explode(',', $noBillingSaveGroups), $usergroups);
+
+                if ($noShippingSaveGroups  &&empty($matchingGroups)) {
+                    $noShippingSave = false;
+                }
+
+                if ($this->isShippable() && !$noShippingSave) {
                     $user->setAttribute('shipping_first_name', $shipping_first_name);
                     $user->setAttribute('shipping_last_name', $shipping_last_name);
                     $user->setAttribute('shipping_address', $shipping_address);

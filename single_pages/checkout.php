@@ -130,8 +130,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label>
-                                                     <?php $ak->getAttributeType()->render('form', $ak); ?>
+                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label><br />
+                                                     <?php
+                                                     $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
+                                                     if ($ak->isRequired()) {
+                                                        echo str_replace('<input ', '<input required="required"', $fieldoutput);
+                                                     } else {
+                                                        echo $fieldoutput;
+                                                     }
+                                                      ?>
                                                 </div>
                                             </div>
                                         </div>

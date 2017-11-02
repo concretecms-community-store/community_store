@@ -171,4 +171,47 @@ class Customer
         }
         return $ret;
     }
+
+    public static function formatAddressArray($address)
+    {
+        $ret = '';
+        $address1 = $address['address1'];
+        $address2 = $address['address2'];
+        $city = $address['city'];
+        $state_province = $address['state_province'];
+        $postal_code = $address['postal_code'];
+        $country = $address['country'];
+
+        if ($address1) {
+            $ret .= $address1 . "\n";
+        }
+        if ($address2) {
+            $ret .= $address2 . "\n";
+        }
+        if ($city) {
+            $ret .= $city;
+        }
+        if ($state_province) {
+            $ret .= ", ";
+        }
+        if ($state_province) {
+
+            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
+            if ($val == '') {
+                $ret .= $state_province;
+            } else {
+                $ret .= $val;
+            }
+        }
+        if ($postal_code) {
+            $ret .= " " . $postal_code;
+        }
+        if ($city || $state_province || $postal_code) {
+            $ret .= "\n";
+        }
+        if ($country) {
+            $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
+        }
+        return $ret;
+    }
 }
