@@ -551,10 +551,11 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                    $last = $order->getAttribute('billing_last_name');
                    $first = $order->getAttribute('billing_first_name');
 
-                   if ($last || $first ) {
-                    echo $last.", ".$first;
+                   $fullName = implode(', ', array_filter([$last, $first]));
+                   if (strlen($fullName) > 0) {
+                       echo h($fullName);
                    } else {
-                    echo '<em>' .t('Not found') . '</em>';
+                       echo '<em>' .t('Not found') . '</em>';
                    }
 
                     ?><?= $canend; ?></td>
