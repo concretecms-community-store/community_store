@@ -370,7 +370,7 @@ class DiscountRule
      */
     public function getProductGroups()
     {
-        return explode(',', $this->drProductGroups);
+        return $this->drProductGroups ? explode(',', $this->drProductGroups) : array();
     }
 
     /**
@@ -380,6 +380,8 @@ class DiscountRule
     {
         if (is_array($drProductGroups)) {
             $this->drProductGroups = implode(',', $drProductGroups);
+        } else {
+            $this->drProductGroups = '';
         }
     }
 
@@ -388,7 +390,7 @@ class DiscountRule
      */
     public function getUserGroups()
     {
-        return explode(',', $this->drUserGroups);
+        return $this->drUserGroups ? explode(',', $this->drUserGroups) : array();
     }
 
     /**
@@ -398,6 +400,8 @@ class DiscountRule
     {
         if (is_array($drUserGroups)) {
             $this->drUserGroups = implode(',',$drUserGroups);
+        } else {
+            $this->drUserGroups = '';
         }
     }
 
@@ -588,8 +592,8 @@ class DiscountRule
         $discountRule->setTrigger($data['drTrigger']);
         $discountRule->setDescription($data['drDescription']);
         $discountRule->setDateAdded(new \DateTime());
-        $discountRule->setProductGroups($data['drProductGroups']);
-        $discountRule->setUserGroups($data['drUserGroups']);
+        $discountRule->setProductGroups(isset($data['drProductGroups']) ? $data['drProductGroups'] : '');
+        $discountRule->setUserGroups(isset($data['drUserGroups']) ? $data['drUserGroups'] : '');
 
         if ($data['validFrom'] == 1) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m']. (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));

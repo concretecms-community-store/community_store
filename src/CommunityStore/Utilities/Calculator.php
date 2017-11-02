@@ -116,7 +116,7 @@ class Calculator
                     if ($discount->getDeductType() == 'percentage') {
                         $applicableTotal = $discount->getApplicableTotal();
 
-                        if ($applicableTotal === false) {
+                        if ($applicableTotal == false) {
                             $applicableTotal = $adjustedSubtotal;
                         }
 
