@@ -94,7 +94,6 @@ class Cart
 
                             if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
                                 $include = true;
-
                                 $matchingprods[] = $cartitem;
                             }
                         }
@@ -117,37 +116,39 @@ class Cart
                 $rules = StoreDiscountRule::findDiscountRuleByCode($code);
 
                 if (count($rules) > 0) {
-                    $discountProductGroups = $rule->getProductGroups();
-                    $include = true;
-                    $matchingprods = array();
+                    foreach($rules as $rule) {
+                        $discountProductGroups = $rule->getProductGroups();
+                        $include = true;
+                        $matchingprods = array();
 
-                    if (!empty($discountProductGroups)) {
+                        if (!empty($discountProductGroups)) {
 
-                        $include = false;
-                        foreach($checkeditems as $cartitem) {
-                            $groupids = $cartitem['product']['object']->getGroupIDs();
+                            $include = false;
+                            foreach ($checkeditems as $cartitem) {
+                                $groupids = $cartitem['product']['object']->getGroupIDs();
 
-                            if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
-                                $include = true;
+                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                    $include = true;
 
-                                $matchingprods[] = $cartitem;
+                                    $matchingprods[] = $cartitem;
+                                }
                             }
                         }
-                    }
 
-                    if ($include) {
+                        if ($include) {
 
-                        if (!empty($matchingprods)) {
-                            $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
-                            $rule->setApplicableTotal($matchingTotal);
+                            if (!empty($matchingprods)) {
+                                $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
+                                $rule->setApplicableTotal($matchingTotal);
+                            }
+
+                            self::$discounts[] = $rule;
                         }
-
-                        self::$discounts[] = $rule;
                     }
-
                 } else {
                     Session::set('communitystore.code', '');
                 }
+
             }
 
             self::$cart = $checkeditems;
