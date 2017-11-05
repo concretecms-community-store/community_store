@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 use Database;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 /**
  * @Entity
@@ -113,6 +114,35 @@ class DiscountRule
     public function setApplicableTotal($applicableTotal)
     {
         $this->applicableTotal = $applicableTotal;
+    }
+
+    public function returnDiscountedPrice() {
+        if ($this->getDeductFrom() == 'subtotal') {
+            if ($this->getDeductType() == 'percentage') {
+                $applicableTotal = $this->getApplicableTotal();
+
+                if ($applicableTotal != false) {
+                    return $applicableTotal - ($this->getPercentage() / 100 * $applicableTotal);
+                }
+            }
+
+            if ($this->getDeductType() == 'value_all') {
+                $applicableTotal = $this->getApplicableTotal();
+
+                if ($applicableTotal != false) {
+                    return $applicableTotal - $this->getValue();
+                }
+            }
+
+            if ($this->getDeductType() == 'fixed') {
+                return $this->getValue();
+            }
+        }
+        return false;
+    }
+
+    public function returnFormattedDiscountedPrice() {
+        return StorePrice::format($this->returnDiscountedPrice());
     }
 
     /**
@@ -482,6 +512,7 @@ class DiscountRule
               AND (drPercentage > 0 or drValue  > 0)
               AND (drValidFrom IS NULL OR drValidFrom <= NOW())
               AND (drValidTo IS NULL OR drValidTo > NOW())
+              ORDER BY drPercentage DESC, drValue DESC
               ");
 
         $discounts = array();
@@ -545,8 +576,8 @@ class DiscountRule
             if ($row['drUserGroups']) {
                 $discountusergroups = explode(',',$row['drUserGroups']);
 
-                $user = new User();
-                $usergroups = $user->getUserGroup();
+                $user = new \User();
+                $usergroups = $user->getUserGroups();
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 

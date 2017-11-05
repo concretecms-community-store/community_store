@@ -25,6 +25,8 @@ class Calculator
 
                     if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
                         $price = $cartItem['product']['customerPrice'];
+                    } elseif (isset($cartItem['product']['discountedPrice'])) {
+                        $price = $cartItem['product']['discountedPrice'];
                     } else {
                         $price = $product->getActivePrice($qty);
                     }
@@ -113,15 +115,6 @@ class Calculator
                         $adjustedSubtotal -= $discount->getValue();
                     }
 
-                    if ($discount->getDeductType() == 'percentage') {
-                        $applicableTotal = $discount->getApplicableTotal();
-
-                        if ($applicableTotal == false) {
-                            $applicableTotal = $adjustedSubtotal;
-                        }
-
-                        $adjustedSubtotal -= ($discount->getPercentage() / 100 * $applicableTotal);
-                    }
                 } elseif($discount->getDeductFrom() == 'shipping') {
 
                     if ($discount->getDeductType() == 'value') {

@@ -9,6 +9,7 @@ use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class Controller extends BlockController
 {
@@ -153,8 +154,22 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
-        foreach ($products as $product) {
-            $product->setInitialVariation();
+        $codediscounts = false;
+        $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
+        $code = trim(\Session::get('communitystore.code'));
+
+        if ($code) {
+            $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
+        }
+
+        foreach($products as $key=>$product) {
+            if (!empty($automaticdiscounts)) {
+                $products[$key]->addDiscountRules($automaticdiscounts);
+            }
+
+            if (!empty($codediscounts)) {
+                $products[$key]->addDiscountRules($codediscounts);
+            }
         }
 
         $this->set('products', $products);

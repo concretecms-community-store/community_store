@@ -6,6 +6,7 @@ use Config;
 use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends BlockController
@@ -50,6 +51,22 @@ class Controller extends BlockController
 
                 $product->setInitialVariation();
                 $this->set('variationLookup', $variationLookup);
+            }
+
+            $codediscounts = false;
+            $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
+            $code = trim(\Session::get('communitystore.code'));
+
+            if ($code) {
+                $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
+            }
+
+            if (!empty($automaticdiscounts)) {
+                $product->addDiscountRules($automaticdiscounts);
+            }
+
+            if (!empty($codediscounts)) {
+                $product->addDiscountRules($codediscounts);
             }
 
             $this->set('product', $product);

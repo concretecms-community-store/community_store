@@ -80,76 +80,47 @@ class Cart
             self::$discounts = array();
 
             $rules = StoreDiscountRule::findAutomaticDiscounts();
+
+            $code = trim(Session::get('communitystore.code'));
+            if ($code) {
+                $coderules = StoreDiscountRule::findDiscountRuleByCode($code);
+
+                if (count($coderules)) {
+                    $rules = array_merge($rules, $coderules);
+                } else {
+                    Session::set('communitystore.code', '');
+                }
+            }
+
             if (count($rules) > 0) {
                 foreach($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
                     $include = true;
                     $matchingprods = array();
 
-                    if (!empty($discountProductGroups)) {
+                    foreach($checkeditems as $key=>$cartitem) {
+                        $cartitem['product']['object']->addDiscountRules($rules);
+                    }
 
+                    if (!empty($discountProductGroups)) {
                         $include = false;
                         foreach($checkeditems as $cartitem) {
                             $groupids = $cartitem['product']['object']->getGroupIDs();
 
                             if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
                                 $include = true;
-                                $matchingprods[] = $cartitem;
                             }
                         }
                     }
 
                     if ($include) {
 
-                        if (!empty($matchingprods)) {
-                            $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
-                            $rule->setApplicableTotal($matchingTotal);
-                        }
-
                         self::$discounts[] = $rule;
                     }
                 }
             }
 
-            $code = trim(Session::get('communitystore.code'));
-            if ($code) {
-                $rules = StoreDiscountRule::findDiscountRuleByCode($code);
 
-                if (count($rules) > 0) {
-                    foreach($rules as $rule) {
-                        $discountProductGroups = $rule->getProductGroups();
-                        $include = true;
-                        $matchingprods = array();
-
-                        if (!empty($discountProductGroups)) {
-
-                            $include = false;
-                            foreach ($checkeditems as $cartitem) {
-                                $groupids = $cartitem['product']['object']->getGroupIDs();
-
-                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                    $include = true;
-
-                                    $matchingprods[] = $cartitem;
-                                }
-                            }
-                        }
-
-                        if ($include) {
-
-                            if (!empty($matchingprods)) {
-                                $matchingTotal = StoreCalculator::getSubTotal($matchingprods);
-                                $rule->setApplicableTotal($matchingTotal);
-                            }
-
-                            self::$discounts[] = $rule;
-                        }
-                    }
-                } else {
-                    Session::set('communitystore.code', '');
-                }
-
-            }
 
             self::$cart = $checkeditems;
         }

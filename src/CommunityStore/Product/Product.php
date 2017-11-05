@@ -275,6 +275,27 @@ class Product
         return $this->priceTiers;
     }
 
+    protected $discountRules;
+
+    public function addDiscountRules($rules) {
+        foreach($rules as $rule) {
+            $this->addDiscountRule($rule);
+        }
+    }
+
+
+    public function addDiscountRule($discountRule) {
+        if (!is_array($this->discountRules)) {
+            $this->discountRules = array();
+        }
+
+        $this->discountRules[] = $discountRule;
+    }
+
+    public function getDiscountRules() {
+        return is_array($this->discountRules) ? $this->discountRules : array();
+    }
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -621,14 +642,43 @@ class Product
                 $varprice = $variation->getVariationPrice();
 
                 if ($varprice) {
-                    return $varprice;
+                    $price =  $varprice;
                 } else {
-                    return $this->getQuantityAdjustedPrice($qty);
+                    $price =  $this->getQuantityAdjustedPrice($qty);
                 }
             }
         } else {
-            return $this->getQuantityAdjustedPrice($qty);
+            $price =  $this->getQuantityAdjustedPrice($qty);
         }
+
+        $discounts = $this->getDiscountRules();
+
+        if (!empty($discounts)) {
+            foreach($discounts as $discount) {
+
+                $discountProductGroups = $discount->getProductGroups();
+
+                if (!empty($discountProductGroups)) {
+                    $groupids = $this->getGroupIDs();
+                    if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                        $apply = true;
+                    }
+                } else {
+                    $apply = true;
+                }
+
+                if ($apply) {
+                    $discount->setApplicableTotal($price);
+                    $discountedprice = $discount->returnDiscountedPrice();
+
+                    if ($discountedprice !== false) {
+                        $price = $discountedprice;
+                    }
+                }
+            }
+        }
+
+        return $price;
     }
 
     private function getQuantityAdjustedPrice($qty = 1) {

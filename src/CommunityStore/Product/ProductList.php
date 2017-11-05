@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 
+
 class ProductList extends AttributedItemList
 {
     protected $gIDs = array();

@@ -48,6 +48,22 @@ $currencySymbol = Config::get('community_store.symbol');
                             $discountRuleDeduct = 'from matching products';  // translated on output
                         }
 
+                        if (!empty($productgroups) && $deducttype == 'value_all' ) {
+                            $discountRuleDeduct = 'from each matching product';  // translated on output
+                        }
+
+                        if (empty($productgroups) && $deducttype == 'value_all' ) {
+                            $discountRuleDeduct = 'from each product';  // translated on output
+                        }
+
+                        if (empty(!$productgroups) && $deducttype == 'fixed' ) {
+                            $discountRuleDeduct = 'set as price for all matching products';  // translated on output
+                        }
+
+                        if (empty($productgroups) && $deducttype == 'fixed' ) {
+                            $discountRuleDeduct = 'set as price for all products';  // translated on output
+                        }
+
                         ?>
                         <tr>
                             <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong>
@@ -62,9 +78,9 @@ $currencySymbol = Config::get('community_store.symbol');
                             <td><?= h($discountRule->getDisplay()); ?></td>
                             <td>
                                 <?php if ($deducttype == 'percentage') {
-                                   echo  h($discountRule->getPercentage()) . '% ' . t('from') . ' ' . t($discountRuleDeduct);
+                                   echo  h($discountRule->getPercentage()) . '% ' . t($discountRuleDeduct);
                                 } else {
-                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t('from') . ' ' . t($discountRuleDeduct);
+                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . t($discountRuleDeduct);
                                 }
                                 ?>
                             </td>
@@ -205,12 +221,14 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <div class="form-group">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <?= $form->label('drDeductType', t('Deduction Type'))?>
                     <div class="radio"><label><?= $form->radio('drDeductType', 'percentage', ($discountRule->getDeductType() == 'percentage'))?> <?= t('Percentage'); ?></label></div>
-                    <div class="radio"><label><?= $form->radio('drDeductType', 'value', ($discountRule->getDeductType() == 'value'))?> <?= t('Value'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('drDeductType', 'value', ($discountRule->getDeductType() == 'value'))?> <?= t('Deduct value once'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('drDeductType', 'value_all', ($discountRule->getDeductType() == 'value_all'))?> <?= t('Deduct value from each matching item'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('drDeductType', 'fixed', ($discountRule->getDeductType() == 'fixed'))?> <?= t('Change to value'); ?></label></div>
                 </div>
-                <div class="col-md-9 row">
+                <div class="col-md-8 row">
                     <div class="form-group col-md-4"  id="percentageinput"  <?= ($discountRule->getDeductType() == 'value' ? 'style="display: none;"' : ''); ?>>
                         <?= $form->label('drPercentage', t('Percentage Discount'))?>
                         <div class="input-group">
@@ -220,7 +238,7 @@ $currencySymbol = Config::get('community_store.symbol');
                     </div>
 
                     <div class="form-group col-md-4" id="valueinput" <?= ($discountRule->getDeductType() == 'percentage' ? 'style="display: none;"' : ''); ?>>
-                        <?= $form->label('drValue', t('Value Discount'))?>
+                        <?= $form->label('drValue', t('Value'))?>
                         <div class="input-group">
                             <div class="input-group-addon"><?= $currencySymbol; ?></div>
                             <?= $form->text('drValue', $discountRule->getValue(), array('class' => ''))?>
@@ -232,11 +250,11 @@ $currencySymbol = Config::get('community_store.symbol');
         </div>
 
         <div class="form-group">
-            <?= $form->label('drDeductFrom', t('Deduct From'))?>
+            <?= $form->label('drDeductFrom', t('Apply To'))?>
             <?php
             // commenting out following until product and product group matching is implemented
             //echo $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping'), 'product'=> t('Specific Product'), 'group'=> t('Products in Product Group')), $discountRule->drDeductFrom, array('class' => ''))?>
-            <?= $form->select('drDeductFrom', array('subtotal'=>t('Items Sub-total'), 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
+            <?= $form->select('drDeductFrom', array('subtotal'=>t('Items In Cart'), 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
         </div>
 
         <div class="form-group">
@@ -359,6 +377,20 @@ $currencySymbol = Config::get('community_store.symbol');
 
             $('#drDeductType2').click(function() {
                 if($('#drDeductType2').is(':checked')) {
+                    $('#percentageinput').hide();
+                    $('#valueinput').show();
+                }
+            });
+
+            $('#drDeductType3').click(function() {
+                if($('#drDeductType3').is(':checked')) {
+                    $('#percentageinput').hide();
+                    $('#valueinput').show();
+                }
+            });
+
+            $('#drDeductType4').click(function() {
+                if($('#drDeductType4').is(':checked')) {
                     $('#percentageinput').hide();
                     $('#valueinput').show();
                 }
