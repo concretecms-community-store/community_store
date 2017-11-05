@@ -254,7 +254,7 @@ $currencySymbol = Config::get('community_store.symbol');
                     <?php
                     $fieldrequired = array('required'=>'required');
                     $visibility = '';
-                    if($discountRule->getDeductType() == 'value') {
+                    if($discountRule->getDeductType() == 'value' || $discountRule->getDeductType() == 'value_all' || $discountRule->getDeductType() == 'fixed') {
                         $fieldrequired = array();
                         $visibility = 'style="display: none;"';
                     } ?>
