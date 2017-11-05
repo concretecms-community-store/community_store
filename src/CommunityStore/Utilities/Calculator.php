@@ -46,6 +46,8 @@ class Calculator
             return false;
         }
 
+        $discounts = StoreCart::getDiscounts();
+
         $existingShippingMethodID = Session::get('community_store.smID');
         if ($smID) {
             $shippingMethod = StoreShippingMethod::getByID($smID);
@@ -117,12 +119,16 @@ class Calculator
 
                 } elseif($discount->getDeductFrom() == 'shipping') {
 
-                    if ($discount->getDeductType() == 'value') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $adjustedShippingTotal -= $discount->getValue();
                     }
-
+                    
                     if ($discount->getDeductType() == 'percentage') {
                         $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
+                    }
+
+                    if ($discount->getDeductType() == 'fixed') {
+                        $adjustedShippingTotal = $discount->getValue();
                     }
                 }
             }
