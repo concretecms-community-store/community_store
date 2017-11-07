@@ -430,8 +430,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         if (!empty($locationPages)) {
                             foreach ($locationPages as $location) {
                                 if ($location) {
-                                    $page = \Page::getByID($location->getCollectionID());
-                                    echo '<li class="list-group-item">' . $page->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    $locationpage = \Page::getByID($location->getCollectionID());
+                                    if ($locationpage) {
+                                        echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    }
                                 }
                             }
                         }
