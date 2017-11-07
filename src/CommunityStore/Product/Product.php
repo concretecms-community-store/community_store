@@ -635,7 +635,8 @@ class Product
         return $this->pPrice;
     }
 
-    public function getPrice($qty = 1)
+    // set ignoreDiscounts to true to get the undiscounted price
+    public function getPrice($qty = 1, $ignoreDiscounts = false)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -653,26 +654,28 @@ class Product
 
         $discounts = $this->getDiscountRules();
 
-        if (!empty($discounts)) {
-            foreach($discounts as $discount) {
+        if (!$ignoreDiscounts) {
+            if (!empty($discounts)) {
+                foreach ($discounts as $discount) {
 
-                $discountProductGroups = $discount->getProductGroups();
+                    $discountProductGroups = $discount->getProductGroups();
 
-                if (!empty($discountProductGroups)) {
-                    $groupids = $this->getGroupIDs();
-                    if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                    if (!empty($discountProductGroups)) {
+                        $groupids = $this->getGroupIDs();
+                        if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                            $apply = true;
+                        }
+                    } else {
                         $apply = true;
                     }
-                } else {
-                    $apply = true;
-                }
 
-                if ($apply) {
-                    $discount->setApplicableTotal($price);
-                    $discountedprice = $discount->returnDiscountedPrice();
+                    if ($apply) {
+                        $discount->setApplicableTotal($price);
+                        $discountedprice = $discount->returnDiscountedPrice();
 
-                    if ($discountedprice !== false) {
-                        $price = $discountedprice;
+                        if ($discountedprice !== false) {
+                            $price = $discountedprice;
+                        }
                     }
                 }
             }
