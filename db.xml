@@ -6,6 +6,7 @@
 
     <table name="CommunityStoreOrderAttributeKeys">
         <field name="akID" type="integer"><unsigned/><key/></field>
+        <field name="required" type="boolean"></field>
     </table>
 
     <table name="CommunityStoreOrderAttributeValues">

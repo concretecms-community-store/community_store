@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 use Database;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 /**
  * @Entity
@@ -83,6 +84,16 @@ class DiscountRule
     protected $drValidTo;
 
     /**
+     * @Column(type="string",nullable=true)
+     */
+    protected $drProductGroups;
+
+    /**
+     * @Column(type="string",nullable=true)
+     */
+    protected $drUserGroups;
+
+    /**
      * @Column(type="datetime")
      */
     protected $drDateAdded;
@@ -91,6 +102,48 @@ class DiscountRule
      * @Column(type="datetime",nullable=true)
      */
     protected $drDeleted;
+
+    //  Used to temporarily store the calculated total of matching products (when product groups used)
+    protected $applicableTotal;
+
+    public function getApplicableTotal()
+    {
+        return $this->applicableTotal;
+    }
+
+    public function setApplicableTotal($applicableTotal)
+    {
+        $this->applicableTotal = $applicableTotal;
+    }
+
+    public function returnDiscountedPrice() {
+        if ($this->getDeductFrom() == 'subtotal') {
+            if ($this->getDeductType() == 'percentage') {
+                $applicableTotal = $this->getApplicableTotal();
+
+                if ($applicableTotal != false) {
+                    return $applicableTotal - ($this->getPercentage() / 100 * $applicableTotal);
+                }
+            }
+
+            if ($this->getDeductType() == 'value_all') {
+                $applicableTotal = $this->getApplicableTotal();
+
+                if ($applicableTotal != false) {
+                    return $applicableTotal - $this->getValue();
+                }
+            }
+
+            if ($this->getDeductType() == 'fixed') {
+                return $this->getValue();
+            }
+        }
+        return false;
+    }
+
+    public function returnFormattedDiscountedPrice() {
+        return StorePrice::format($this->returnDiscountedPrice());
+    }
 
     /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
@@ -108,6 +161,7 @@ class DiscountRule
     public function __construct()
     {
         $this->codes = new ArrayCollection();
+        $this->applicableTotal = false;
     }
 
     /**
@@ -342,6 +396,48 @@ class DiscountRule
     }
 
     /**
+     * @return array
+     */
+    public function getProductGroups()
+    {
+        return $this->drProductGroups ? explode(',', $this->drProductGroups) : array();
+    }
+
+    /**
+     * @param array $drProductGroups
+     */
+    public function setProductGroups($drProductGroups)
+    {
+        if (is_array($drProductGroups)) {
+            $this->drProductGroups = implode(',', $drProductGroups);
+        } else {
+            $this->drProductGroups = '';
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserGroups()
+    {
+        return $this->drUserGroups ? explode(',', $this->drUserGroups) : array();
+    }
+
+    /**
+     * @param array $drUserGroups
+     */
+    public function setUserGroups($drUserGroups)
+    {
+        if (is_array($drUserGroups)) {
+            $this->drUserGroups = implode(',',$drUserGroups);
+        } else {
+            $this->drUserGroups = '';
+        }
+    }
+
+
+
+    /**
      * @return mixed
      */
     public function getDateAdded()
@@ -405,7 +501,7 @@ class DiscountRule
         return $data['codecount'] > 0;
     }
 
-    public static function findAutomaticDiscounts($user = null, $productlist = array())
+    public static function findAutomaticDiscounts()
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
@@ -416,11 +512,30 @@ class DiscountRule
               AND (drPercentage > 0 or drValue  > 0)
               AND (drValidFrom IS NULL OR drValidFrom <= NOW())
               AND (drValidTo IS NULL OR drValidTo > NOW())
+              ORDER BY drPercentage DESC, drValue DESC
               ");
 
         $discounts = array();
         while ($row = $result->fetchRow()) {
-            $discounts[] = self::getByID($row['drID']);
+            $include = true;
+
+            if ($row['drUserGroups']) {
+                $discountusergroups = explode(',',$row['drUserGroups']);
+
+                $user = new \User();
+                $usergroups = $user->getUserGroups();
+
+                $matching = array_intersect($usergroups, $discountusergroups);
+
+                if (count($matching) == 0) {
+                    $include = false;
+                }
+
+            }
+
+            if ($include) {
+                $discounts[] = self::getByID($row['drID']);
+            }
         }
 
         return $discounts;
@@ -456,7 +571,24 @@ class DiscountRule
         $discounts = array();
 
         while ($row = $result->fetchRow()) {
-            $discounts[] = self::getByID($row['drID']);
+            $include = true;
+
+            if ($row['drUserGroups']) {
+                $discountusergroups = explode(',',$row['drUserGroups']);
+
+                $user = new \User();
+                $usergroups = $user->getUserGroups();
+
+                $matching = array_intersect($usergroups, $discountusergroups);
+
+                if (count($matching) == 0) {
+                    $include = false;
+                }
+            }
+
+            if ($include) {
+                $discounts[] = self::getByID($row['drID']);
+            }
         }
 
         return $discounts;
@@ -491,6 +623,8 @@ class DiscountRule
         $discountRule->setTrigger($data['drTrigger']);
         $discountRule->setDescription($data['drDescription']);
         $discountRule->setDateAdded(new \DateTime());
+        $discountRule->setProductGroups(isset($data['drProductGroups']) ? $data['drProductGroups'] : '');
+        $discountRule->setUserGroups(isset($data['drUserGroups']) ? $data['drUserGroups'] : '');
 
         if ($data['validFrom'] == 1) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m']. (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));

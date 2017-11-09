@@ -9,9 +9,12 @@ use Session;
 
 class Calculator
 {
-    public static function getSubTotal()
+    public static function getSubTotal($cart = false)
     {
-        $cart = StoreCart::getCart();
+
+        if (!$cart) {
+            $cart = StoreCart::getCart();
+        }
         $subtotal = 0;
         if ($cart) {
             foreach ($cart as $cartItem) {
@@ -22,8 +25,10 @@ class Calculator
 
                     if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
                         $price = $cartItem['product']['customerPrice'];
+                    } elseif (isset($cartItem['product']['discountedPrice'])) {
+                        $price = $cartItem['product']['discountedPrice'];
                     } else {
-                        $price = $product->getActivePrice();
+                        $price = $product->getActivePrice($qty);
                     }
 
                     $productSubTotal = $price * $qty;
@@ -40,6 +45,8 @@ class Calculator
         if (empty($cart)) {
             return false;
         }
+
+        $discounts = StoreCart::getDiscounts();
 
         $existingShippingMethodID = Session::get('community_store.smID');
         if ($smID) {
@@ -110,22 +117,21 @@ class Calculator
                         $adjustedSubtotal -= $discount->getValue();
                     }
 
-                    if ($discount->getDeductType() == 'percentage') {
-                        $adjustedSubtotal -= ($discount->getPercentage() / 100 * $adjustedSubtotal);
-                    }
                 } elseif($discount->getDeductFrom() == 'shipping') {
 
-                    if ($discount->getDeductType() == 'value') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $adjustedShippingTotal -= $discount->getValue();
                     }
-
+                    
                     if ($discount->getDeductType() == 'percentage') {
                         $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
                     }
+
+                    if ($discount->getDeductType() == 'fixed') {
+                        $adjustedShippingTotal = $discount->getValue();
+                    }
                 }
             }
-
-
 
             if ($subTotal > 0) {
                 $discountRatio = $adjustedSubtotal / $subTotal;

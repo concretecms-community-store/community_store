@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class Cart
@@ -79,20 +80,47 @@ class Cart
             self::$discounts = array();
 
             $rules = StoreDiscountRule::findAutomaticDiscounts();
-            if (count($rules) > 0) {
-                self::$discounts = array_merge(self::$discounts, $rules);
-            }
 
             $code = trim(Session::get('communitystore.code'));
             if ($code) {
-                $rules = StoreDiscountRule::findDiscountRuleByCode($code);
+                $coderules = StoreDiscountRule::findDiscountRuleByCode($code);
 
-                if (count($rules) > 0) {
-                    self::$discounts = array_merge(self::$discounts, $rules);
+                if (count($coderules)) {
+                    $rules = array_merge($rules, $coderules);
                 } else {
                     Session::set('communitystore.code', '');
                 }
             }
+
+            if (count($rules) > 0) {
+                foreach($rules as $rule) {
+                    $discountProductGroups = $rule->getProductGroups();
+                    $include = true;
+                    $matchingprods = array();
+
+                    foreach($checkeditems as $key=>$cartitem) {
+                        $cartitem['product']['object']->addDiscountRules($rules);
+                    }
+
+                    if (!empty($discountProductGroups)) {
+                        $include = false;
+                        foreach($checkeditems as $cartitem) {
+                            $groupids = $cartitem['product']['object']->getGroupIDs();
+
+                            if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                                $include = true;
+                            }
+                        }
+                    }
+
+                    if ($include) {
+
+                        self::$discounts[] = $rule;
+                    }
+                }
+            }
+
+
 
             self::$cart = $checkeditems;
         }

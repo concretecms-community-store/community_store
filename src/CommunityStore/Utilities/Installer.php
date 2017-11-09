@@ -365,14 +365,6 @@ class Installer
                 $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
             }
 
-            // Install VAT Number order attribute
-            $attr = StoreOrderKey::getByHandle('vat_number');
-            if (!is_object($attr)) {
-                $orderCustSet = $oakc->getAttributeSetByHandle('order_customer');
-                $text = AttributeType::getByHandle('text');
-                self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet);
-            }
-
             // now we refresh all blocks
             $items = $pkg->getPackageItems();
             if (is_array($items['block_types'])) {

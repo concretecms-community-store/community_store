@@ -98,6 +98,11 @@ class Product
     /**
      * @Column(type="boolean")
      */
+    protected $pQuantityPrice;
+
+    /**
+     * @Column(type="boolean")
+     */
     protected $pFeatured;
 
     /**
@@ -260,6 +265,44 @@ class Product
         return $this->related;
     }
 
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product",cascade={"persist"}))
+     * @OrderBy({"ptFrom" = "ASC"})
+     */
+    protected $priceTiers;
+
+    public function getPriceTiers(){
+        return $this->priceTiers;
+    }
+
+    protected $discountRules;
+
+    protected $discountRuleIDs;
+
+    public function addDiscountRules($rules) {
+        foreach($rules as $rule) {
+            $this->addDiscountRule($rule);
+        }
+    }
+
+
+    public function addDiscountRule($discountRule) {
+        if (!is_array($this->discountRules)) {
+            $this->discountRules = array();
+            $this->discountRuleIDs = array();
+        }
+
+        //add only if rule hasn't been added before
+        if (!in_array($discountRule->getID(), $this->discountRuleIDs)) {
+            $this->discountRules[] = $discountRule;
+            $this->discountRuleIDs[] = $discountRule->getID();
+        }
+    }
+
+    public function getDiscountRules() {
+        return is_array($this->discountRules) ? $this->discountRules : array();
+    }
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -269,8 +312,8 @@ class Product
         $this->userGroups = new ArrayCollection();
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
+        $this->priceTiers = new ArrayCollection();
     }
-
 
     public function setVariation($variation)
     {
@@ -533,6 +576,7 @@ class Product
         $product->setPriceSuggestions($data['pPriceSuggestions']);
         $product->setPriceMaximum($data['pPriceMaximum']);
         $product->setPriceMinimum($data['pPriceMinimum']);
+        $product->setQuantityPrice($data['pQuantityPrice']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
@@ -593,22 +637,74 @@ class Product
     {
         return $this->pDetail;
     }
-    public function getPrice()
+
+    public function getBasePrice() {
+        return $this->pPrice;
+    }
+
+    // set ignoreDiscounts to true to get the undiscounted price
+    public function getPrice($qty = 1, $ignoreDiscounts = false)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
                 $varprice = $variation->getVariationPrice();
 
                 if ($varprice) {
-                    return $varprice;
+                    $price =  $varprice;
                 } else {
-                    return $this->pPrice;
+                    $price =  $this->getQuantityAdjustedPrice($qty);
                 }
             }
         } else {
-            return $this->pPrice;
+            $price =  $this->getQuantityAdjustedPrice($qty);
         }
+
+        $discounts = $this->getDiscountRules();
+
+        if (!$ignoreDiscounts) {
+            if (!empty($discounts)) {
+                foreach ($discounts as $discount) {
+
+                    $discountProductGroups = $discount->getProductGroups();
+
+                    if (!empty($discountProductGroups)) {
+                        $groupids = $this->getGroupIDs();
+                        if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                            $apply = true;
+                        }
+                    } else {
+                        $apply = true;
+                    }
+
+                    if ($apply) {
+                        $discount->setApplicableTotal($price);
+                        $discountedprice = $discount->returnDiscountedPrice();
+
+                        if ($discountedprice !== false) {
+                            $price = $discountedprice;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $price;
     }
+
+    private function getQuantityAdjustedPrice($qty = 1) {
+        if ($this->hasQuantityPrice()) {
+            $priceTiers = $this->getPriceTiers();
+
+            foreach($priceTiers as $pt) {
+                if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
+                    return $pt->getPrice();
+                }
+            }
+        }
+
+        return $this->pPrice;
+    }
+
     public function getFormattedOriginalPrice()
     {
         return StorePrice::format($this->getPrice());
@@ -642,18 +738,19 @@ class Product
         }
     }
 
-    public function getActivePrice()
+    public function getActivePrice($qty = 1)
     {
         $salePrice = $this->getSalePrice();
         if ($salePrice != "") {
             return $salePrice;
         } else {
-            return $this->getPrice();
+            return $this->getPrice($qty);
         }
+
     }
-    public function getFormattedActivePrice()
+    public function getFormattedActivePrice($qty = 1)
     {
-        return StorePrice::format($this->getActivePrice());
+        return StorePrice::format($this->getActivePrice($qty));
     }
     public function getTaxClassID()
     {
@@ -681,6 +778,18 @@ class Product
     }
     public function allowCustomerPrice() {
         return (bool) $this->pCustomerPrice;
+    }
+
+    public function hasQuantityPrice() {
+        return (bool) $this->pQuantityPrice;
+    }
+
+    public function getQuantityPrice() {
+        return $this->pQuantityPrice;
+    }
+
+    public function setQuantityPrice($bool) {
+        $this->pQuantityPrice = (!is_null($bool) ? $bool : false);
     }
 
     public function getDimensions($whl = null)

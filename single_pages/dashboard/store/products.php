@@ -120,7 +120,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 <div class="input-group-addon">
                                     <?=  Config::get('community_store.symbol');?>
                                 </div>
-                                <?php $price = $product->getPrice(); ?>
+                                <?php $price = $product->getBasePrice(); ?>
                                 <?= $form->text("pPrice", $price, array('placeholder'=>($product->allowCustomerPrice() ? t('No Price Set') : '')));?>
                             </div>
                         </div>
@@ -190,7 +190,129 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label('pCustomerPrice', t('Allow customer to enter price'))?>
                         </div>
                     </div>
+
                 </div>
+
+                <div class="row">
+
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->checkbox('pQuantityPrice', '1', $product->hasQuantityPrice())?>
+                            <?= $form->label('pQuantityPrice', t('Quantity based pricing'))?>
+                        </div>
+
+                    </div>
+
+                    <div id="tieredoptionscontainer" class="col-xs-12  <?= $product->hasQuantityPrice() ? '' : 'hidden'?>">
+
+                        <div id="tierscontainer">
+                            <div class="row">
+                                <div class="col-xs-3"><strong><?= t('From');?></strong></div>
+                                <div class="col-xs-3"><strong><?= t('To');?></strong></div>
+                                <div class="col-xs-3"><strong><?= t('Price');?></strong></div>
+
+                                <th class="col-xs-3"></th>
+                            </div>
+                        </div>
+
+                        <p><a href="javascript:addtier()" class="btn btn-default"><?= t('Add Tier');?></a></p>
+
+
+                        <script type="text/template" id="price-tier-template">
+                            <div class="row" data-order="<%=sort%>">
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <input type="text" name="ptFrom[]" class="form-control ccm-input-text" value="<%=from%>">
+                                    </div>
+                                </div>
+
+                                <div  class="col-xs-3">
+                                    <div class="form-group">
+                                    <input type="text" name="ptTo[]" class="form-control ccm-input-text" value="<%=to%>">
+                                    </div>
+                                </div>
+                                <div  class="col-xs-5">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <?=  Config::get('community_store.symbol');?>
+                                            </div>
+                                            <input type="text" name="ptPrice[]" class="form-control ccm-input-text" value="<%=price%>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div  class="col-xs-1">
+                                    <a  href="javascript:deletetier(<%=sort%>)" class="btn btn-sm btn-danger remove"><i class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                        </script>
+
+                        <script type="text/javascript">
+                            $(function(){
+
+                                //Define container and items
+                                var tiersContainer = $('#tierscontainer');
+                                var tierTemplate = _.template($('#price-tier-template').html());
+
+                                //load up existing option groups
+                                <?php
+
+                                $priceTiers = $product->getPriceTiers();
+
+                                if($priceTiers) {
+                                $tiersort = 0;
+                                foreach ($priceTiers as $priceTier) {
+
+                                    ?>
+                                    tiersContainer.append(tierTemplate({
+                                        from: '<?= $priceTier->getFrom(); ?>',
+                                        to: '<?= $priceTier->getTo(); ?>',
+                                        price: '<?= $priceTier->getPrice(); ?>',
+                                        sort: '<?= $tiersort ?>'
+                                    }));
+                                    <?php
+
+                                    $tiersort++;
+                                    }
+                                }
+                                ?>
+
+                                if ($('#tierscontainer .row').size() == 1) {
+                                    addtier();
+                                }
+
+                            });
+
+                            function deletetier(id){
+                                $("#tierscontainer .row[data-order='"+id+"']").remove();
+
+                                if ($('#tierscontainer .row').size() == 1) {
+                                    addtier();
+                                }
+                            }
+
+                            function addtier(){
+                                var tiersContainer = $('#tierscontainer');
+                                var tierTemplate = _.template($('#price-tier-template').html());
+
+                                tiersContainer.append(tierTemplate({
+                                    from: '',
+                                    to: '',
+                                    price: '',
+                                    sort: $('#tierscontainer .row').size()
+                                }));
+
+                            }
+                        </script>
+
+
+                        <hr />
+                    </div>
+
+
+                </div>
+
 
                 <div class="row">
                     <div class="col-xs-6">
@@ -224,6 +346,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                             $('#pQty').prop('disabled',this.checked);
                                             $('#backorders').toggle();
                                         });
+
+
+                                        $('#pQuantityPrice').change(function(){
+                                            $('#tieredoptionscontainer').toggleClass('hidden');
+                                        });
+
 
                                         $('#pVariations').change(function(){
                                             if ($(this).prop('checked')) {
@@ -302,8 +430,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         if (!empty($locationPages)) {
                             foreach ($locationPages as $location) {
                                 if ($location) {
-                                    $page = \Page::getByID($location->getCollectionID());
-                                    echo '<li class="list-group-item">' . $page->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    $locationpage = \Page::getByID($location->getCollectionID());
+                                    if ($locationpage) {
+                                        echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                    }
                                 }
                             }
                         }

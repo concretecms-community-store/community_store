@@ -128,7 +128,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                     <?=StorePrice::format($cartItem['product']['customerPrice'])?>
                                 <?php } else {  ?>
-                                    <?=StorePrice::format($product->getActivePrice())?>
+                                    <?=StorePrice::format($product->getActivePrice($qty))?>
                                 <?php } ?>
                             </td>
 
