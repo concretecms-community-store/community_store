@@ -64,10 +64,13 @@ ob_start();
                     <h3><?= t("Other Choices")?></h3>
                     <?php foreach ($orderChoicesAttList as $ak) {
                         $orderOtherAtt = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
-                        if ($orderOtherAtt) { ?>
-                            <strong><?= $ak->getAttributeKeyDisplayName()?></strong>
-                            <p><?= str_replace("\r\n", "<br>", $orderOtherAtt->getValue('displaySanitized', 'display')); ?></p>
-                        <?php } ?>
+                        if ($orderOtherAtt) {
+                            $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
+                            if ($attvalue) { ?>
+                                <strong><?= $ak->getAttributeKeyDisplayName() ?></strong>
+                                <p><?= str_replace("\r\n", "<br>", $attvalue); ?></p>
+                            <?php }
+                        }?>
                     <?php } ?>
                 </td>
             </tr>
