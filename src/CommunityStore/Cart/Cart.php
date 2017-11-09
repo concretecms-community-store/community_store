@@ -17,10 +17,11 @@ class Cart
     protected static $discounts = null;
     protected static $hasChanged = false;
 
-    public static function getCart()
+    // if force set to true, will get cart details fresh, useful if programatically adding things to the cart
+    public static function getCart($force = false)
     {
         // this acts as a singleton, in that it wil only fetch the cart from the session and check it for validity once per request
-        if (!isset(self::$cart)) {
+        if (!isset(self::$cart) || $force) {
             $cart = Session::get('communitystore.cart');
             if (!is_array($cart)) {
                 Session::set('communitystore.cart', array());
