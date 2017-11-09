@@ -243,14 +243,14 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <div class="form-group">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <?= $form->label('drDeductType', t('Deduction Type'))?>
                     <div class="radio"><label><?= $form->radio('drDeductType', 'percentage', ($discountRule->getDeductType() == 'percentage'))?> <?= t('Percentage'); ?></label></div>
                     <div class="radio"><label><?= $form->radio('drDeductType', 'value', ($discountRule->getDeductType() == 'value'))?> <?= t('Deduct value once'); ?></label></div>
                     <div class="radio"><label><?= $form->radio('drDeductType', 'value_all', ($discountRule->getDeductType() == 'value_all'))?> <?= t('Deduct value from each matching item'); ?></label></div>
                     <div class="radio"><label><?= $form->radio('drDeductType', 'fixed', ($discountRule->getDeductType() == 'fixed'))?> <?= t('Change to value'); ?></label></div>
                 </div>
-                <div class="col-md-8 row">
+                <div class="col-md-7 row">
                     <?php
                     $fieldrequired = array('required'=>'required');
                     $visibility = '';
@@ -259,7 +259,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         $visibility = 'style="display: none;"';
                     } ?>
 
-                    <div class="form-group col-md-4"  id="percentageinput"  <?= $visibility; ?>>
+                    <div class="form-group col-md-8"  id="percentageinput"  <?= $visibility; ?>>
                         <?= $form->label('drPercentage', t('Percentage Discount'))?>
                         <div class="input-group">
                             <?= $form->text('drPercentage', $discountRule->getPercentage(), $fieldrequired)?>
@@ -275,7 +275,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         $visibility = 'style="display: none;"';
                     } ?>
 
-                    <div class="form-group col-md-4" id="valueinput" <?= $visibility; ?>>
+                    <div class="form-group col-md-8" id="valueinput" <?= $visibility; ?>>
                         <?= $form->label('drValue', t('Value'))?>
                         <div class="input-group">
                             <div class="input-group-addon"><?= $currencySymbol; ?></div>
