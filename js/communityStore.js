@@ -186,6 +186,8 @@ var communityStore = {
     clearCart: function (modal) {
         $.ajax({
             url: CARTURL + "/clear",
+            type: 'post',
+            data: {clear: 1},
             success: function (data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);

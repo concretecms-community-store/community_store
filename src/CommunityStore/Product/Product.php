@@ -277,6 +277,8 @@ class Product
 
     protected $discountRules;
 
+    protected $discountRuleIDs;
+
     public function addDiscountRules($rules) {
         foreach($rules as $rule) {
             $this->addDiscountRule($rule);
@@ -287,9 +289,14 @@ class Product
     public function addDiscountRule($discountRule) {
         if (!is_array($this->discountRules)) {
             $this->discountRules = array();
+            $this->discountRuleIDs = array();
         }
 
-        $this->discountRules[] = $discountRule;
+        //add only if rule hasn't been added before
+        if (!in_array($discountRule->getID(), $this->discountRuleIDs)) {
+            $this->discountRules[] = $discountRule;
+            $this->discountRuleIDs[] = $discountRule->getID();
+        }
     }
 
     public function getDiscountRules() {
