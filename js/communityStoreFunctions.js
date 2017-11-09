@@ -103,7 +103,8 @@ $(function(){
     });
 
 });
-function updateActiveTab(historyPopEvent = false) {
+function updateActiveTab(historyPopEvent) {
+    historyPopEvent = historyPopEvent || false;
     var url = window.location.pathname.toString();
     var hash = window.location.hash;
     var urlArray = url.split('/');
