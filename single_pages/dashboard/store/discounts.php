@@ -442,14 +442,14 @@ $currencySymbol = Config::get('community_store.symbol');
                 }
             });
 
-            $('#drTrigger3').click(function() {
-                if($('#drTrigger3').is(':checked')) {
+            $('#drTrigger5').click(function() {
+                if($('#drTrigger5').is(':checked')) {
                     $('#codefields').hide();
                 }
             });
 
-            $('#drTrigger4').click(function() {
-                if($('#drTrigger4').is(':checked')) {
+            $('#drTrigger6').click(function() {
+                if($('#drTrigger6').is(':checked')) {
                     $('#codefields').show();
                 }
             });

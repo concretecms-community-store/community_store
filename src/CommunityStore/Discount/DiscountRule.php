@@ -566,7 +566,7 @@ class DiscountRule
         AND  drEnabled = '1'
         AND drTrigger = 'code'
         AND (drValidFrom IS NULL OR drValidFrom <= NOW())
-        AND (drValidTo IS NULL OR drValidTo > NOW())", array($code));
+        AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", array($code));
 
         $discounts = array();
 
