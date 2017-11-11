@@ -49,6 +49,7 @@ class Settings extends DashboardPageController
         $this->set('pkgconfig', $pkgconfig);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('select2');
     }
 
     public function success()
