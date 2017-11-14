@@ -106,23 +106,30 @@ class Calculator
 
         $adjustedSubtotal = $subTotal;
         $adjustedShippingTotal = $shippingTotal;
-		$discountRatio = 1;
+        $discountRatio = 1;
         $discountShippingRatio = 1;
 
         $formattedtaxes = array();
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
                 if ($discount->getDeductFrom() == 'subtotal') {
-                    if ($discount->getDeductType() == 'value') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $adjustedSubtotal -= $discount->getValue();
                     }
 
+                    if ($discount->getDeductType() == 'percentage') {
+                        $adjustedSubtotal -= ($discount->getPercentage() / 100 * $adjustedSubtotal);
+                    }
+
+                    if ($discount->getDeductType() == 'fixed') {
+                        $adjustedSubtotal = $discount->getValue();
+                    }
                 } elseif($discount->getDeductFrom() == 'shipping') {
 
                     if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $adjustedShippingTotal -= $discount->getValue();
                     }
-                    
+
                     if ($discount->getDeductType() == 'percentage') {
                         $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
                     }
