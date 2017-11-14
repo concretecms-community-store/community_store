@@ -45,7 +45,7 @@ class Products extends DashboardPageController
 
 
         if ($this->get('keywords')) {
-            $products->setSearch($this->get('keywords'));
+            $products->setSearch(trim($this->get('keywords')));
         }
 
         $this->set('productList', $products);
