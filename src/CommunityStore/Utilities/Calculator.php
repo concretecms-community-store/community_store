@@ -46,8 +46,6 @@ class Calculator
             return false;
         }
 
-        $discounts = StoreCart::getDiscounts();
-
         $existingShippingMethodID = Session::get('community_store.smID');
         if ($smID) {
             $shippingMethod = StoreShippingMethod::getByID($smID);
