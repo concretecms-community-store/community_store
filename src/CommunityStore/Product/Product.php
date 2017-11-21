@@ -294,8 +294,22 @@ class Product
 
         //add only if rule hasn't been added before
         if (!in_array($discountRule->getID(), $this->discountRuleIDs)) {
-            $this->discountRules[] = $discountRule;
-            $this->discountRuleIDs[] = $discountRule->getID();
+            $discountProductGroups = $discountRule->getProductGroups();
+            $include = false;
+
+            if (!empty($discountProductGroups)) {
+                $groupids = $this->getGroupIDs();
+                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                    $include = true;
+                }
+            } else {
+                $include = true;
+            }
+
+            if ($include) {
+                $this->discountRules[] = $discountRule;
+                $this->discountRuleIDs[] = $discountRule->getID();
+            }
         }
     }
 
@@ -664,25 +678,11 @@ class Product
         if (!$ignoreDiscounts) {
             if (!empty($discounts)) {
                 foreach ($discounts as $discount) {
+                    $discount->setApplicableTotal($price);
+                    $discountedprice = $discount->returnDiscountedPrice();
 
-                    $discountProductGroups = $discount->getProductGroups();
-
-                    if (!empty($discountProductGroups)) {
-                        $groupids = $this->getGroupIDs();
-                        if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                            $apply = true;
-                        }
-                    } else {
-                        $apply = true;
-                    }
-
-                    if ($apply) {
-                        $discount->setApplicableTotal($price);
-                        $discountedprice = $discount->returnDiscountedPrice();
-
-                        if ($discountedprice !== false) {
-                            $price = $discountedprice;
-                        }
+                    if ($discountedprice !== false) {
+                        $price = $discountedprice;
                     }
                 }
             }

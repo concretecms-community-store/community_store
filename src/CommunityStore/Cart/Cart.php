@@ -99,10 +99,6 @@ class Cart
                     $include = true;
                     $matchingprods = array();
 
-                    foreach($checkeditems as $key=>$cartitem) {
-                        $cartitem['product']['object']->addDiscountRules($rules);
-                    }
-
                     if (!empty($discountProductGroups)) {
                         $include = false;
                         foreach($checkeditems as $cartitem) {
@@ -110,12 +106,16 @@ class Cart
 
                             if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
                                 $include = true;
+                                $cartitem['product']['object']->addDiscountRule($rule);
                             }
+                        }
+                    } else {
+                        foreach($checkeditems as $key=>$cartitem) {
+                            $cartitem['product']['object']->addDiscountRule($rule);
                         }
                     }
 
                     if ($include) {
-
                         self::$discounts[] = $rule;
                     }
                 }
