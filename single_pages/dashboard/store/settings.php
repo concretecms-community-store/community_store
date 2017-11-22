@@ -294,7 +294,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <label><?= $form->checkbox('noBillingSave', '1',Config::get('community_store.noBillingSave') ? '1' : '0')?>
-                                <?= t('Do no save billing details to user on order');?></label>
+                                <?= t('Do not save billing details to user on order');?></label>
                         </div>
                     </div>
 
@@ -311,7 +311,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <label><?= $form->checkbox('noShippingSave', '1',Config::get('community_store.noShippingSave') ? '1' : '0')?>
-                                <?= t('Do no save shipping details to user on order');?></label>
+                                <?= t('Do not save shipping details to user on order');?></label>
                         </div>
                     </div>
 
