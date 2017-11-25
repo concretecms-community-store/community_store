@@ -88,7 +88,6 @@ class ProductVariation
 
     /**
      * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
-     * @OrderBy({"poiSort" = "ASC"})
      */
     protected $options;
 

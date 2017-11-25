@@ -179,7 +179,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <tr>
                 <th><strong><?= t("Name")?></strong></th>
                 <th><?= t("Displayed")?></th>
-                <th><?= t("Deducted From")?></th>
+                <th><?= t("Discount")?></th>
                 <th><?= t("Amount")?></th>
                 <th><?= t("Triggered")?></th>
             </tr>
@@ -190,7 +190,39 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <tr>
                     <td><?= h($discount['odName']); ?></td>
                     <td><?= h($discount['odDisplay']); ?></td>
-                    <td><?= t(ucwords($discount['odDeductFrom'])); ?></td>
+                    <td>
+                        <?php
+                        $deducttype = $discount['odDeductType'];
+                        $deductfrom = $discount['odDeductFrom'];
+
+                        $discountRuleDeduct = $deductfrom;
+
+                        if ($deducttype == 'percentage') {
+                            $discountRuleDeduct = t('from products');
+                        }
+
+                        if ($deducttype == 'value_all') {
+                            $discountRuleDeduct = t('from each product');
+                        }
+
+                        if ($deducttype == 'percentage' && $deductfrom == 'shipping' ) {
+                            $discountRuleDeduct = t('from shipping');
+                        }
+
+                        if (($deducttype == 'value_all' || $deducttype == 'value') && $deductfrom == 'shipping') {
+                            $discountRuleDeduct = t('from shipping');
+                        }
+
+                        if ($deducttype == 'fixed' ) {
+                            $discountRuleDeduct = t('set as price');
+                        }
+
+                        if ($deducttype == 'fixed' && $deductfrom == 'shipping') {
+                            $discountRuleDeduct = t('set as price for shipping');
+                        }
+                        ?>
+                        <?= $discountRuleDeduct; ?>
+                    </td>
                     <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : $discount['odPercentage'] . '%' ); ?></td>
                     <td><?= ($discount['odCode'] ? t('by code'). ' <em>' .$discount['odCode'] .'</em>': t('Automatically') ); ?></td>
                 </tr>

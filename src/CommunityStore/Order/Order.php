@@ -539,6 +539,7 @@ class Order
                 }
             }
             $orderDiscount->setDisplay($discount->getDisplay());
+            $orderDiscount->setDeductType($discount->getDeductType());
             $orderDiscount->setName($discount->getName());
             $orderDiscount->setDeductFrom($discount->getDeductFrom());
             $orderDiscount->setPercentage($discount->getPercentage());

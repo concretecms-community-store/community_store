@@ -32,6 +32,11 @@ class OrderDiscount
     protected $odDisplay;
 
     /**
+     * @Column(type="string", nullable=true)
+     */
+    protected $odDeductType;
+
+    /**
      * @Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $odValue;
@@ -106,6 +111,23 @@ class OrderDiscount
     {
         $this->odDisplay = $odDisplay;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDeductType()
+    {
+        return $this->odDeductType;
+    }
+
+    /**
+     * @param mixed $odDeductType
+     */
+    public function setDeductType($odDeductType)
+    {
+        $this->odDeductType = $odDeductType;
+    }
+
 
     /**
      * @return mixed
