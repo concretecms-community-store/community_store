@@ -166,6 +166,7 @@ if(in_array($controller->getTask(),$addViews)){
                 <th><?= t("Tax Rate")?></th>
                 <th><?= t("Rate")?></th>
                 <th><?= t("Enabled")?></th>
+                <th><?= t('Applies To'); ?></th>
                 <th class="text-right"><?= t("Actions")?></th>
             </tr>
 		</thead>
@@ -176,6 +177,7 @@ if(in_array($controller->getTask(),$addViews)){
         				<td><?= $tr->getTaxLabel()?></td>
                         <td><?= $tr->getTaxRate()?>%</td>
                         <td><?= ($tr->isEnabled() ? t('Yes') : t('No'))?></td>
+                        <td><?= implode(", ", array_filter([$tr->getTaxCity(), $tr->getTaxState(), $tr->getTaxCountry()])); ?></td>
                         <td class="text-right">
         					<a href="<?=URL::to('/dashboard/store/settings/tax/edit',$tr->getTaxRateID())?>" class="btn btn-default"><?= t("Edit")?></a>
         					<a href="<?=URL::to('/dashboard/store/settings/tax/delete',$tr->getTaxRateID())?>" class="btn btn-danger"><?= t("Delete")?></a>
