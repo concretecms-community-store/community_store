@@ -501,8 +501,12 @@ class DiscountRule
         return $data['codecount'] > 0;
     }
 
-    public static function findAutomaticDiscounts()
+    public static function findAutomaticDiscounts($user = null)
     {
+        if ($user === null) {
+            $user = new \User;
+        }
+
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
@@ -522,7 +526,6 @@ class DiscountRule
             if ($row['drUserGroups']) {
                 $discountusergroups = explode(',',$row['drUserGroups']);
 
-                $user = new \User();
                 $usergroups = $user->getUserGroups();
 
                 $matching = array_intersect($usergroups, $discountusergroups);
@@ -555,6 +558,10 @@ class DiscountRule
 
     public static function findDiscountRuleByCode($code, $user = null)
     {
+        if ($user === null) {
+            $user = new \User;
+        }
+
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
@@ -576,7 +583,6 @@ class DiscountRule
             if ($row['drUserGroups']) {
                 $discountusergroups = explode(',',$row['drUserGroups']);
 
-                $user = new \User();
                 $usergroups = $user->getUserGroups();
 
                 $matching = array_intersect($usergroups, $discountusergroups);
