@@ -56,6 +56,7 @@ if ($products) {
     $i = 1;
 
     foreach ($products as $product) {
+        // Setting several variables that will be required multiple times below
         $options = $product->getOptions();
         $imgObj = $product->getImageObj();
         $imgSrc = null;
@@ -71,6 +72,17 @@ if ($products) {
             }
         }
         
+        $salePrice = $product->getSalePrice();
+        $formattedPrice = $product->getFormattedPrice();
+
+        $formattedSalePrice = '';
+        $formattedOriginalPrice = '';
+
+        if (isset($salePrice) && $salePrice != "") {
+            $formattedSalePrice = $product->getFormattedSalePrice();
+            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+        }
+
         $variationLookup = $product->getVariationLookup();
         $variationData = $product->getVariationData();
         $availableOptionsids = $variationData['availableOptionsids'];
@@ -124,14 +136,10 @@ if ($products) {
                     ?>
                 <p class="store-product-list-price">
 		            <?php
-                        $salePrice = $product->getSalePrice();
                     if (isset($salePrice) && $salePrice != "") {
-                        $formattedSalePrice = $product->getFormattedSalePrice();
-                        $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                         echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
                         echo ' ' . t('was') . ' ' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                     } else {
-                        $formattedPrice = $product->getFormattedPrice();
                         echo $formattedPrice;
                     } ?>
                 </p>
@@ -307,8 +315,8 @@ if ($products) {
                         $product->setVariation($variation);
 
                         $varationData[$key] = [
-                                'price' => $product->getFormattedOriginalPrice(),
-                                'saleprice' => $product->getFormattedSalePrice(),
+                                'price' => $formattedOriginalPrice(),
+                                'saleprice' => $formattedSalePrice(),
                                 'available' => ($variation->isSellable()),
                                 'imageThumb' => $imgSrc ? $imgSrc : '',
                                 'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
