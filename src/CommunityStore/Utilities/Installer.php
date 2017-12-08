@@ -238,6 +238,40 @@ class Installer
         }
     }
 
+    public static function installThumbnailTypes($pkg)
+    {
+        self::installUserAttribute('community_store_default_product_image', 400, 280, true, $pkg);
+    }
+
+    public static function installThumbnailType($handle, $width, $height, $crop, $pkg)
+    {
+        $type = ThumbnailType::getByHandle($handle);
+        
+        if (!is_object($type)) {
+            if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
+                $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
+            } else {
+                $type = new ThumbnailType();
+
+            }
+
+            if (!empty($height)) {
+                $type->setHeight($height);
+            }
+
+            if (!empty($width)) {
+                $type->setWidth($width);
+            }
+
+            $name = Core::make("helper/text")->unhandle($handle);
+            $type->setName($name);
+            $type->setHandle($handle);
+            $sizingMode = $crop ? 'exact' : 'proportional';
+            $type->setSizingMode($sizingMode);
+            $type->save();
+        }
+    }
+
     public static function installOrderAttributes($pkg)
     {
         //create custom attribute category for orders
@@ -375,6 +409,7 @@ class Installer
         }
         Localization::clearCache();
         self::installUserAttributes($pkg);
-		Installer::addProductSearchIndexTable($pkg);
+        self::installThumbnailTypes($pkg);
+		self::addProductSearchIndexTable($pkg);
     }
 }

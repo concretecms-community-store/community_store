@@ -39,6 +39,7 @@ class Controller extends Package
         Installer::installPaymentMethods($pkg);
         Installer::installShippingMethods($pkg);
         Installer::installBlocks($pkg);
+        Installer::installThumbnailTypes($pkg);
         Installer::setPageTypeDefaults($pkg);
         Installer::installCustomerGroups($pkg);
         Installer::installUserAttributes($pkg);
