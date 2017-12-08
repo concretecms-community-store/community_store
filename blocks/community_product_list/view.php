@@ -315,8 +315,8 @@ if ($products) {
                         $product->setVariation($variation);
 
                         $varationData[$key] = [
-                                'price' => $formattedOriginalPrice(),
-                                'saleprice' => $formattedSalePrice(),
+                                'price' => $formattedOriginalPrice,
+                                'saleprice' => $formattedSalePrice,
                                 'available' => ($variation->isSellable()),
                                 'imageThumb' => $imgSrc ? $imgSrc : '',
                                 'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
