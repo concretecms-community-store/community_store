@@ -57,7 +57,11 @@ if ($products) {
 
     foreach ($products as $product) {
         // Setting several variables that will be required multiple times below
+
+        // Getting prodyct options
         $options = $product->getOptions();
+
+        // Getting image file's URL if any
         $imgObj = $product->getImageObj();
         $imgSrc = null;
 
@@ -72,6 +76,7 @@ if ($products) {
             }
         }
         
+        // Getting formatted prices
         $salePrice = $product->getSalePrice();
         $formattedPrice = $product->getFormattedPrice();
 
