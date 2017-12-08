@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $c = Page::getCurrentPage();
 $currencySymbol = Config::get('community_store.symbol');
+$thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_image');
+
 if ($products) {
     $columnClass = 'col-md-12';
 
@@ -55,7 +57,20 @@ if ($products) {
 
     foreach ($products as $product) {
         $options = $product->getOptions();
+        $imgObj = $product->getImageObj();
+        $imgSrc = null;
 
+        if (is_object($imgObj)) {
+            if (is_object($thumbnailType)) {
+                $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
+            }
+        
+            if (empty($imgSrc)) {
+                $thumb = $ih->getThumbnail($imgObj, 400, 280, true);
+                $imgSrc = $thumb->src;
+            }
+        }
+        
         $variationLookup = $product->getVariationLookup();
         $variationData = $product->getVariationData();
         $availableOptionsids = $variationData['availableOptionsids'];
@@ -80,25 +95,24 @@ if ($products) {
 		<?php 
         } ?>
                 <?php 
-                    $imgObj = $product->getImageObj();
         if (is_object($imgObj)) {
-            $thumb = $ih->getThumbnail($imgObj, 400, 280, true); ?>
+        ?>
                         <p class="store-product-list-thumbnail">
                             <?php if ($showQuickViewLink) {
                 ?>
                                 <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
-                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                                    <img src="<?= $imgSrc?>" class="img-responsive">
                                 </a>
                             <?php 
             } elseif ($showPageLink) {
                 ?>
                                 <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
-                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                                    <img src="<?= $imgSrc?>" class="img-responsive">
                                 </a>
                             <?php 
             } else {
                 ?>
-                                <img src="<?= $thumb->src?>" class="img-responsive">
+                                <img src="<?= $imgSrc?>" class="img-responsive">
                             <?php 
             } ?>
                         </p>
@@ -292,17 +306,11 @@ if ($products) {
                     foreach ($variationLookup as $key => $variation) {
                         $product->setVariation($variation);
 
-                        $imgObj = $product->getImageObj();
-
-                        if ($imgObj) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, 400, 280, true);
-                        }
-
                         $varationData[$key] = [
                                 'price' => $product->getFormattedOriginalPrice(),
                                 'saleprice' => $product->getFormattedSalePrice(),
                                 'available' => ($variation->isSellable()),
-                                'imageThumb' => $thumb ? $thumb->src : '',
+                                'imageThumb' => $imgSrc ? $imgSrc : '',
                                 'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
                     } ?>
 
