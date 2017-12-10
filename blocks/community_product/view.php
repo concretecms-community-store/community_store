@@ -188,7 +188,7 @@ if (is_object($product) && $product->isActive()) {
                         <?php } ?>
                         <?php
 
-                        foreach ($product->getOptions() as $option) {
+                        foreach ($options as $option) {
                             $optionItems = $option->getOptionItems();
                             $optionType = $option->getType();
                             $required = $option->getRequired();
