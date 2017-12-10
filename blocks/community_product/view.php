@@ -15,20 +15,20 @@ if (is_object($product) && $product->isActive()) {
     $secondaryImages = $product->getImagesObjects();
 
     $primaryImgSrc = null;
+    $srcToTest = null;
 
     if (is_object($primaryImgObj)) {
         if (is_object($primaryThumbnailType)) {
             $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
+            // the image src obtained can be a relative path or a URL
+            if (strpos($primaryImgSrc, 'http') !== false) {
+                $srcToTest = $primaryImgSrc;
+            } else {
+                $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
+            }
         }
 
-        // the image src obtained can be a relative path or a URL
-        if (strpos($primaryImgSrc, 'http') !== false) {
-            $srcToTest = $primaryImgSrc;
-        } else {
-            $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
-        }
-
-        if (!$filesystem->exists($srcToTest)) {
+        if (empty($primaryImgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
             $thumb = $ih->getThumbnail($primaryImgObj, $defaultimagewidth, $defaultimageheight, false);
             $primaryImgSrc = $thumb->src;
         }
@@ -298,17 +298,17 @@ if (is_object($product) && $product->isActive()) {
                             foreach ($secondaryImages as $secondaryImage) {
                                 if (is_object($secondaryImage)) {
                                     $secondaryImgSrc = null;
+                                    $srcToTest = null;
                                     if (is_object($secondaryThumbnailType)) {
                                         $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
+                                        if (strpos($secondaryImgSrc, 'http') !== false) {
+                                            $srcToTest = $secondaryImgSrc;
+                                        } else {
+                                            $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
+                                        }
                                     }
 
-                                    if (strpos($secondaryImgSrc, 'http') !== false) {
-                                        $srcToTest = $secondaryImgSrc;
-                                    } else {
-                                        $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
-                                    }
-
-                                    if (!$filesystem->exists($srcToTest)) {
+                                    if (empty($secondaryImgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
                                         $thumb = $ih->getThumbnail($secondaryImage, $defaultimagewidth, $defaultimageheight, true);
                                         $secondaryImgSrc = $thumb->src;
                                     }

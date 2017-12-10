@@ -65,20 +65,20 @@ if ($products) {
         // Getting image file's URL if any
         $imgObj = $product->getImageObj();
         $imgSrc = null;
+        $srcToTest = null;
 
         if (is_object($imgObj)) {
             if (is_object($thumbnailType)) {
                 $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
+                if (strpos($imgSrc, 'http') !== false) {
+                    $srcToTest = $imgSrc;
+                } else {
+                    $srcToTest = DIR_BASE . '/' . $imgSrc;
+                }
             }
             
-            if (strpos($imgSrc, 'http') !== false) {
-                $srcToTest = $imgSrc;
-            } else {
-                $srcToTest = DIR_BASE . '/' . $imgSrc;
-            }
-
             // fallback to legacy thumbnailing
-            if (!$filesystem->exists($srcToTest)) {
+            if (empty($imgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
                 $thumb = $ih->getThumbnail($imgObj, 400, 280, true);
                 $imgSrc = $thumb->src;
             }
