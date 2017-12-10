@@ -240,7 +240,7 @@ class Installer
 
     public static function installThumbnailTypes($pkg)
     {
-        self::installUserAttribute('community_store_default_product_image', 400, 280, true, $pkg);
+        self::installUserAttribute('community_store_default_product_list_image', 400, 280, true, $pkg);
     }
 
     public static function installThumbnailType($handle, $width, $height, $crop, $pkg)

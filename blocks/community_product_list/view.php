@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $c = Page::getCurrentPage();
 $currencySymbol = Config::get('community_store.symbol');
-$thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_image');
+$thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_list_image');
 
 if ($products) {
     $columnClass = 'col-md-12';
