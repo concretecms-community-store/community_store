@@ -84,12 +84,6 @@ if ($product->hasVariations()) {
             foreach($variationLookup as $key=>$variation) {
                 $product->setVariation($variation);
 
-                $imgObj = $product->getImageObj();
-
-                if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj,560,999,false);
-                }
-
                 $varationData[$key] = array(
                 'price'=>$product->getFormattedOriginalPrice(),
                 'saleprice'=>$product->getFormattedSalePrice(),

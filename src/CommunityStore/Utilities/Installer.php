@@ -244,6 +244,8 @@ class Installer
         self::installThumbnailType('community_store_default_product_list_image', 400, 280, true, $pkg);
         self::installThumbnailType('community_store_default_single_product_primary_image', 720, 720, false, $pkg);
         self::installThumbnailType('community_store_default_single_product_secondary_image', 720, 720, true, $pkg);
+        self::installThumbnailType('community_store_default_product_modal_image', 560, null, false, $pkg);
+
     }
 
     public static function installThumbnailType($handle, $width, $height, $crop, $pkg)
