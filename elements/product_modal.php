@@ -1,5 +1,31 @@
 <?php defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+
+$thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_modal_image');
+$filesystem = new \Illuminate\Filesystem\Filesystem();
+
+$imgSrc = null;
+$srcToTest = null;
+$imgObj = $product->getImageObj();
+
+if (is_object($imgObj)) {
+    if (is_object($thumbnailType)) {
+        $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
+        // the image src obtained can be a relative path or a URL
+        if (strpos($imgSrc, 'http') !== false) {
+            $srcToTest = $imgSrc;
+        } else {
+            $srcToTest = DIR_BASE . '/' . $imgSrc;
+        }
+    }
+
+    if (empty($imgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
+        $ih = Core::make("helper/image");
+        $thumb = $ih->getThumbnail($imgObj, 560, 999, false);
+        $imgSrc = $thumb->src;
+    }
+}
+
 ?>
 <form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID()?>">
 
@@ -9,12 +35,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
         <h4 class="store-product-modal-title"><?= $product->getName()?></h4>
 
         <p class="store-product-modal-thumb">
-            <?php
-            $imgObj = $product->getImageObj();
-            $ih = Core::make("helper/image");
-            $thumb = $ih->getThumbnail($imgObj,560,999,false);
-            ?>
-            <img src="<?= $thumb->src?>">
+            <img src="<?= $imgSrc?>">
         </p>
 
 
@@ -88,7 +109,7 @@ if ($product->hasVariations()) {
                 'price'=>$product->getFormattedOriginalPrice(),
                 'saleprice'=>$product->getFormattedSalePrice(),
                 'available'=>($variation->isSellable()),
-                'imageThumb'=>$thumb ? $thumb->src : '',
+                'imageThumb'=>$imgSrc ? $imgSrc : '',
                 'image'=>$imgObj ? $imgObj->getRelativePath() : '');
 
             } ?>
