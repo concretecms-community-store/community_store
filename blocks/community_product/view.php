@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
+$currencySymbol = Config::get('community_store.symbol');
 
 if (is_object($product) && $product->isActive()) {
     // Getting image file's URL if any
@@ -82,7 +83,7 @@ if (is_object($product) && $product->isActive()) {
                             if (!empty($pricesuggestions)) { ?>
                                 <p class="store-product-price-suggestions"><?php
                                 foreach($pricesuggestions as $suggestion) { ?>
-                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-add-type="none" data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion;?></a>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-add-type="none" data-suggestion-value="<?= $suggestion; ?>"><?= $currencySymbol . $suggestion;?></a>
                                 <?php } ?>
                                 </p>
                                 <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
@@ -92,21 +93,21 @@ if (is_object($product) && $product->isActive()) {
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
                             <div class="input-group col-md-6 col-sm-6 col-xs-6">
-                                <div class="input-group-addon"><?= Config::get('community_store.symbol');?></div>
+                                <div class="input-group-addon"><?= $currencySymbol;?></div>
                                 <input type="number" <?= $min ? 'min="'.$min.'"' : ''; ?>  <?= $max ? 'max="'.$max.'"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
                             </div>
                             <?php if ($min >=0 || $max > 0) { ?>
                                 <span class="store-min-max help-block">
                                     <?php
                                     if (!is_null($min)) {
-                                        echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
+                                        echo t('minimum') . ' ' . $currencySymbol . $min;
                                     }
 
                                     if (!is_null($max)) {
                                         if ($min >= 0) {
                                             echo ', ';
                                         }
-                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                                        echo t('maximum') . ' ' . $currencySymbol . $max;
                                     }
                                     ?>
                                     </span>
@@ -126,7 +127,7 @@ if (is_object($product) && $product->isActive()) {
                             $pricetiersoutput = array();
 
                             foreach($pricetiers as $pricetier) {
-                                $pricetiersoutput[] = $pricetier->getFrom() . ' '  . t('to') . ' ' . $pricetier->getTo() . ' - ' . Config::get('community_store.symbol') . $pricetier->getPrice();
+                                $pricetiersoutput[] = $pricetier->getFrom() . ' '  . t('to') . ' ' . $pricetier->getTo() . ' - ' . $currencySymbol . $pricetier->getPrice();
                             }
 
                             echo implode('<br>', $pricetiersoutput);
