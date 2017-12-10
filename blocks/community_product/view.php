@@ -5,6 +5,26 @@ $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
 if (is_object($product) && $product->isActive()) {
+    // Getting image file's URL if any
+    $primaryThumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_single_product_primary_image');
+    $secondaryThumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_single_product_secondary_image');
+
+    $primaryImgObj = $product->getImageObj();
+    $secondaryImages = $product->getImagesObjects();
+
+    $primaryImgSrc = null;
+
+    if (is_object($primaryImgObj)) {
+        if (is_object($primaryThumbnailType)) {
+            $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
+        }
+
+        if (empty($primaryImgSrc)) {
+            $thumb = $ih->getThumbnail($primaryImgObj, $defaultimagewidth, $defaultimageheight, false);
+            $primaryImgSrc = $thumb->src;
+        }
+    }
+
     $options = $product->getOptions();
     $variationLookup = $product->getVariationLookup();
     $variationData = $product->getVariationData();
@@ -249,29 +269,37 @@ if (is_object($product) && $product->isActive()) {
                     <div class="store-product-image col-md-6">
                         <div>&nbsp;</div>
                         <?php
-                        $imgObj = $product->getImageObj();
-                        if (is_object($imgObj)) {
-                            $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false);
+                        
+                        if (is_object($primaryImgObj)) {
                             ?>
                             <div class="store-product-primary-image ">
-                                <a itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
+                                <a itemprop="image" href="<?= $primaryImgObj->getRelativePath() ?>"
                                    title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block">
-                                    <img src="<?= $thumb->src ?>">
+                                    <img src="<?= $primaryImgSrc ?>">
                                 </a>
                             </div>
                         <?php } ?>
 
                         <?php
-                        $images = $product->getImagesObjects();
-                        if (count($images) > 0) {
+                        
+                        if (count($secondaryImages) > 0) {
                             $loop = 1;
                             echo '<div class="store-product-additional-images clearfix no-gutter">';
 
-                            foreach ($images as $secondaryimage) {
-                                if (is_object($secondaryimage)) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, $defaultimagewidth, $defaultimageheight, true);
+                            foreach ($secondaryImages as $secondaryImage) {
+                                if (is_object($secondaryImage)) {
+                                    $secondaryImgSrc = null;
+                                    if (is_object($secondaryThumbnailType)) {
+                                        $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
+                                    }
+
+                                    if (empty($secondaryImgSrc)) {
+                                        $thumb = $ih->getThumbnail($secondaryImage, $defaultimagewidth, $defaultimageheight, true);
+                                        $secondaryImgSrc = $thumb->src;
+                                    }
+
                                     ?>
-                                    <div class="store-product-additional-image col-md-6 col-sm-6"><a href="<?= $secondaryimage->getRelativePath() ?>" title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block"><img src="<?= $thumb->src ?>" /></a></div>
+                                    <div class="store-product-additional-image col-md-6 col-sm-6"><a href="<?= $secondaryImage->getRelativePath() ?>" title="<?= h($product->getName()); ?>" class="store-product-thumb text-center center-block"><img src="<?= $secondaryImgSrc ?>" /></a></div>
                                 <?php }
 
                                 if ($loop > 0 && $loop % 2 == 0 && count($images) > $loop) {
@@ -307,20 +335,13 @@ if (is_object($product) && $product->isActive()) {
             $varationData = array();
             foreach($variationLookup as $key=>$variation) {
                 $product->setVariation($variation);
-                $imgObj = $product->getImageObj();
-
-                $thumb = false;
-
-                if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight,false);
-                }
 
                 $varationData[$key] = array(
                 'price'=>$product->getFormattedOriginalPrice(),
                 'saleprice'=>$product->getFormattedSalePrice(),
                 'available'=>($variation->isSellable()),
-                'imageThumb'=>$thumb ? $thumb->src : '',
-                'image'=> $imgObj ? $imgObj->getRelativePath() : ''
+                'imageThumb'=>$primaryImgSrc ? $primaryImgSrc : '',
+                'image'=> $primaryImgObj ? $primaryImgObj->getRelativePath() : ''
 
                 );
             } ?>

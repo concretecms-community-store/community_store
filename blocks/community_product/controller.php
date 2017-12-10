@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 use Concrete\Core\Block\BlockController;
 use Config;
 use Page;
+use Core;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -71,6 +72,8 @@ class Controller extends BlockController
 
             $this->set('product', $product);
         }
+
+        $this->set('ih', Core::make('helper/image'));
 
         if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('showCartButton', false);
