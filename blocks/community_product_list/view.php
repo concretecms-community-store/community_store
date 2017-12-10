@@ -78,6 +78,7 @@ if ($products) {
         
         // Getting formatted prices
         $salePrice = $product->getSalePrice();
+        $productPrice = $product->getPrice();
         $formattedPrice = $product->getFormattedPrice();
 
         $formattedSalePrice = '';
@@ -105,7 +106,7 @@ if ($products) {
         } ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-            <form   id="store-form-add-to-cart-list-<?= $product->getID()?>" data-product-id="<?= $product->getID() ?>">
+            <form id="store-form-add-to-cart-list-<?= $product->getID()?>" data-product-id="<?= $product->getID() ?>">
 		<?php if ($showName) {
             ?>
                 <h2 class="store-product-list-name"><?= $product->getName()?></h2>
@@ -176,7 +177,7 @@ if ($products) {
                         <?php $max = $product->getPriceMaximum(); ?>
                         <div class="input-group col-md-6 col-sm-6 col-xs-6">
                             <div class="input-group-addon"><?= $currencySymbol; ?></div>
-                            <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                            <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $productPrice; ?>" name="customerPrice" />
                         </div>
                         <?php if ($min >= 0 || $max > 0) {
                         ?>
