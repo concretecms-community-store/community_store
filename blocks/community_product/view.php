@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 $currencySymbol = Config::get('community_store.symbol');
