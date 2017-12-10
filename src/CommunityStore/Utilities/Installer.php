@@ -17,6 +17,7 @@ use Localization;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
@@ -240,10 +241,9 @@ class Installer
 
     public static function installThumbnailTypes($pkg)
     {
-        self::installUserAttribute('community_store_default_product_list_image', 400, 280, true, $pkg);
-        self::installUserAttribute('community_store_default_single_product_primary_image', 720, 720, false, $pkg);
-        self::installUserAttribute('community_store_default_single_product_secondary_image', 720, 720, true, $pkg);
-
+        self::installThumbnailType('community_store_default_product_list_image', 400, 280, true, $pkg);
+        self::installThumbnailType('community_store_default_single_product_primary_image', 720, 720, false, $pkg);
+        self::installThumbnailType('community_store_default_single_product_secondary_image', 720, 720, true, $pkg);
     }
 
     public static function installThumbnailType($handle, $width, $height, $crop, $pkg)

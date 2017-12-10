@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 $currencySymbol = Config::get('community_store.symbol');
+$filesystem = new \Illuminate\Filesystem\Filesystem();
 
 if (is_object($product) && $product->isActive()) {
     // Getting image file's URL if any
@@ -20,7 +21,14 @@ if (is_object($product) && $product->isActive()) {
             $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
         }
 
-        if (empty($primaryImgSrc)) {
+        // the image src obtained can be a relative path or a URL
+        if (strpos($primaryImgSrc, 'http') !== false) {
+            $srcToTest = $primaryImgSrc;
+        } else {
+            $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
+        }
+
+        if (!$filesystem->exists($srcToTest)) {
             $thumb = $ih->getThumbnail($primaryImgObj, $defaultimagewidth, $defaultimageheight, false);
             $primaryImgSrc = $thumb->src;
         }
@@ -294,7 +302,13 @@ if (is_object($product) && $product->isActive()) {
                                         $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
                                     }
 
-                                    if (empty($secondaryImgSrc)) {
+                                    if (strpos($secondaryImgSrc, 'http') !== false) {
+                                        $srcToTest = $secondaryImgSrc;
+                                    } else {
+                                        $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
+                                    }
+
+                                    if (!$filesystem->exists($srcToTest)) {
                                         $thumb = $ih->getThumbnail($secondaryImage, $defaultimagewidth, $defaultimageheight, true);
                                         $secondaryImgSrc = $thumb->src;
                                     }

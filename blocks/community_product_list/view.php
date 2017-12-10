@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getCurrentPage();
 $currencySymbol = Config::get('community_store.symbol');
 $thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_list_image');
+$filesystem = new \Illuminate\Filesystem\Filesystem();
 
 if ($products) {
     $columnClass = 'col-md-12';
@@ -69,8 +70,15 @@ if ($products) {
             if (is_object($thumbnailType)) {
                 $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
             }
-        
-            if (empty($imgSrc)) {
+            
+            if (strpos($imgSrc, 'http') !== false) {
+                $srcToTest = $imgSrc;
+            } else {
+                $srcToTest = DIR_BASE . '/' . $imgSrc;
+            }
+
+            // fallback to legacy thumbnailing
+            if (!$filesystem->exists($srcToTest)) {
                 $thumb = $ih->getThumbnail($imgObj, 400, 280, true);
                 $imgSrc = $thumb->src;
             }
