@@ -70,7 +70,7 @@ if ($products) {
         if (is_object($imgObj)) {
             if (is_object($thumbnailType)) {
                 $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
-                if (strpos($imgSrc, 'http') !== false) {
+                if (strpos($imgSrc, '://') !== false) {
                     $srcToTest = $imgSrc;
                 } else {
                     $srcToTest = DIR_BASE . '/' . $imgSrc;

@@ -21,7 +21,7 @@ if (is_object($product) && $product->isActive()) {
         if (is_object($primaryThumbnailType)) {
             $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
             // the image src obtained can be a relative path or a URL
-            if (strpos($primaryImgSrc, 'http') !== false) {
+            if (strpos($primaryImgSrc, '://') !== false) {
                 $srcToTest = $primaryImgSrc;
             } else {
                 $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
@@ -301,7 +301,7 @@ if (is_object($product) && $product->isActive()) {
                                     $srcToTest = null;
                                     if (is_object($secondaryThumbnailType)) {
                                         $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
-                                        if (strpos($secondaryImgSrc, 'http') !== false) {
+                                        if (strpos($secondaryImgSrc, '://') !== false) {
                                             $srcToTest = $secondaryImgSrc;
                                         } else {
                                             $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
