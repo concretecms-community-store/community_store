@@ -32,6 +32,7 @@ class Categories extends DashboardPageController
 
         $products->setSortBy('category');
         $products->setActiveOnly(false);
+        $products->setShowOutOfStock(true);
 
         $products->setCID($cID);
         $this->set('products', $products->getResults());
