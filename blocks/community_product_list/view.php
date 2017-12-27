@@ -4,7 +4,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getCurrentPage();
 $currencySymbol = Config::get('community_store.symbol');
 $thumbnailType = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('community_store_default_product_list_image');
-$filesystem = new \Illuminate\Filesystem\Filesystem();
+$concreteVersion = \Config::get('concrete.version');
+
+if (version_compare($concreteVersion, '8.0', '>=')) {
+    $filesystem = new \Illuminate\Filesystem\Filesystem();
+    $fileExistsFunc = 'exists';
+} else {
+    $fileExistsFunc = 'has';
+}
 
 if ($products) {
     $columnClass = 'col-md-12';
@@ -46,7 +53,7 @@ if ($products) {
         });
     });
     </script>
-    <?php 
+    <?php
     } ?>
 
 
@@ -69,21 +76,30 @@ if ($products) {
 
         if (is_object($imgObj)) {
             if (is_object($thumbnailType)) {
-                $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
-                if (strpos($imgSrc, '://') !== false) {
-                    $srcToTest = $imgSrc;
+                if (version_compare($concreteVersion, '8.0', '>=')) {
+                    $imgSrc = $imgObj->getThumbnailURL($thumbnailType->getBaseVersion());
+                    if (strpos($imgSrc, '://') !== false) {
+                        $srcToTest = $imgSrc;
+                    } else {
+                        $srcToTest = DIR_BASE . '/' . $imgSrc;
+                    }
                 } else {
-                    $srcToTest = DIR_BASE . '/' . $imgSrc;
+                    $type = $thumbnailType->getBaseVersion();
+                    $thumbnailPath = $type->getFilePath($imgObj->getApprovedVersion());
+                    $location = $imgObj->getFileStorageLocationObject();
+                    $configuration = $location->getConfigurationObject();
+                    $imgSrc = $configuration->getPublicURLToFile($thumbnailPath);
+                    $srcToTest = $thumbnailPath;
+                    $filesystem = $location->getFileSystemObject();
                 }
             }
-            
             // fallback to legacy thumbnailing
-            if (empty($imgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
+            if (empty($imgSrc) || (!empty($srcToTest) && !$filesystem->$fileExistsFunc($srcToTest))) {
                 $thumb = $ih->getThumbnail($imgObj, 400, 280, true);
                 $imgSrc = $thumb->src;
             }
         }
-        
+
         // Getting formatted prices
         $salePrice = $product->getSalePrice();
         $productPrice = $product->getPrice();
@@ -112,15 +128,15 @@ if ($products) {
         if ($c->getCollectionID() == $product->getPageID()) {
             $activeclass = 'on-product-page';
         } ?>
-    
+
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form id="store-form-add-to-cart-list-<?= $product->getID()?>" data-product-id="<?= $product->getID() ?>">
 		<?php if ($showName) {
             ?>
                 <h2 class="store-product-list-name"><?= $product->getName()?></h2>
-		<?php 
+		<?php
         } ?>
-                <?php 
+                <?php
         if (is_object($imgObj)) {
         ?>
                         <p class="store-product-list-thumbnail">
@@ -129,17 +145,17 @@ if ($products) {
                                 <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
                                     <img src="<?= $imgSrc?>" class="img-responsive">
                                 </a>
-                            <?php 
+                            <?php
             } elseif ($showPageLink) {
                 ?>
                                 <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
                                     <img src="<?= $imgSrc?>" class="img-responsive">
                                 </a>
-                            <?php 
+                            <?php
             } else {
                 ?>
                                 <img src="<?= $imgSrc?>" class="img-responsive">
-                            <?php 
+                            <?php
             } ?>
                         </p>
                 <?php
@@ -157,7 +173,7 @@ if ($products) {
                         echo $formattedPrice;
                     } ?>
                 </p>
-                <?php 
+                <?php
                 } ?>
 
                 <?php if ($product->allowCustomerPrice()) {
@@ -171,15 +187,15 @@ if ($products) {
                                 foreach ($pricesuggestions as $suggestion) {
                                     ?>
                                     <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= $currencySymbol . $suggestion; ?></a>
-                                <?php 
+                                <?php
                                 } ?>
                             </p>
                             <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
-                        <?php 
+                        <?php
                     } else {
                         ?>
                             <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
-                        <?php 
+                        <?php
                     } ?>
                         <?php $min = $product->getPriceMinimum(); ?>
                         <?php $max = $product->getPriceMaximum(); ?>
@@ -202,22 +218,22 @@ if ($products) {
                             echo t('maximum') . ' ' . $currencySymbol . $max;
                         } ?>
                                     </span>
-                        <?php 
+                        <?php
                     } ?>
                     </div>
-                <?php 
+                <?php
                 } ?>
 
 
                 <?php if ($showDescription) {
                     ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
-                <?php 
+                <?php
                 } ?>
                 <?php if ($showPageLink) {
                     ?>
                 <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
-                <?php 
+                <?php
                 } ?>
                 <?php if ($showAddToCart) {
                     ?>
@@ -228,11 +244,11 @@ if ($products) {
                         <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
                         <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
                     </div>
-                <?php 
+                <?php
                     } else {
                         ?>
                         <input type="hidden" name="quantity" class="store-product-qty" value="1">
-                <?php 
+                <?php
                     } ?>
 
                 <?php
@@ -270,30 +286,30 @@ if ($products) {
                                         $selected = 'selected="selected"';
                                     } ?>
                                             <option <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() . $outOfStock ?></option>
-                                        <?php 
+                                        <?php
                                 }
                                         // below is an example of a radio button, comment out the <select> and <option> tags to use instead
                                         // Make sure to add the $disabled and $selected variables here and make $selected use "checked" instead
                                         //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />';?>
-                                    <?php 
+                                    <?php
                             } ?>
                                 </select>
                             </div>
-                        <?php 
+                        <?php
                         } elseif ($optionType == 'text') {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                 <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID() ?>" />
                             </div>
-                        <?php 
+                        <?php
                         } elseif ($optionType == 'textarea') {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName() ?></label>
                                 <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID() ?>"></textarea>
                             </div>
-                        <?php 
+                        <?php
                         } elseif ($optionType == 'checkbox') {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
@@ -301,13 +317,13 @@ if ($products) {
                                     <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
                                     <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
                             </div>
-                        <?php 
+                        <?php
                         } elseif ($optionType == 'hidden') {
                             ?>
                             <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
-                        <?php 
+                        <?php
                         } ?>
-                    <?php 
+                    <?php
                     } ?>
 
 
@@ -316,7 +332,7 @@ if ($products) {
                 <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
                 <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock")?></p>
 
-                <?php 
+                <?php
                 } ?>
 
                 <?php if ($product->hasVariations() && !empty($variationLookup)) {
@@ -379,13 +395,13 @@ if ($products) {
                             });
                         });
                     </script>
-                <?php 
+                <?php
                 } ?>
 
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
-        
-        <?php 
+
+        <?php
             if ($i % $productsPerRow == 0) {
                 echo "</div>";
                 echo '<div class="store-product-list row store-product-list-per-row-' . $productsPerRow . '">';
@@ -406,5 +422,5 @@ if ($products) {
 elseif (is_object($c) && $c->isEditMode()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List")?></div>
-<?php 
+<?php
 } ?>

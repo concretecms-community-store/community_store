@@ -251,7 +251,7 @@ class Installer
     public static function installThumbnailType($handle, $width, $height, $crop, $pkg)
     {
         $type = ThumbnailType::getByHandle($handle);
-        
+
         if (!is_object($type)) {
             if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
                 $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
@@ -271,8 +271,11 @@ class Installer
             $name = Core::make("helper/text")->unhandle($handle);
             $type->setName($name);
             $type->setHandle($handle);
-            $sizingMode = $crop ? 'exact' : 'proportional';
-            $type->setSizingMode($sizingMode);
+            if (method_exists($type, 'setSizingMode')) {
+                $sizingMode = $crop ? 'exact' : 'proportional';
+                $type->setSizingMode($sizingMode);
+            }
+
             $type->save();
         }
     }

@@ -4,7 +4,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 $currencySymbol = Config::get('community_store.symbol');
-$filesystem = new \Illuminate\Filesystem\Filesystem();
+$concreteVersion = \Config::get('concrete.version');
+
+if (version_compare($concreteVersion, '8.0', '>=')) {
+    $filesystem = new \Illuminate\Filesystem\Filesystem();
+    $fileExistsFunc = 'exists';
+} else {
+    $fileExistsFunc = 'has';
+}
 
 if (is_object($product) && $product->isActive()) {
     // Getting image file's URL if any
@@ -19,19 +26,32 @@ if (is_object($product) && $product->isActive()) {
 
     if (is_object($primaryImgObj)) {
         if (is_object($primaryThumbnailType)) {
-            $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
-            // the image src obtained can be a relative path or a URL
-            if (strpos($primaryImgSrc, '://') !== false) {
-                $srcToTest = $primaryImgSrc;
-            } else {
-                $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
-            }
-        }
+            if (version_compare($concreteVersion, '8.0', '>=')) {
+                $primaryImgSrc = $primaryImgObj->getThumbnailURL($primaryThumbnailType->getBaseVersion());
+                // the image src obtained can be a relative path or a URL
+                if (strpos($primaryImgSrc, '://') !== false) {
+                    $srcToTest = $primaryImgSrc;
+                } else {
+                    $srcToTest = DIR_BASE . '/' . $primaryImgSrc;
+                }
 
-        if (empty($primaryImgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
+            } else {
+                $type = $primaryThumbnailType->getBaseVersion();
+                $thumbnailPath = $type->getFilePath($primaryImgObj->getApprovedVersion());
+                $location = $primaryImgObj->getFileStorageLocationObject();
+                $configuration = $location->getConfigurationObject();
+                $primaryImgSrc = $configuration->getPublicURLToFile($thumbnailPath);
+                $srcToTest = $thumbnailPath;
+                $filesystem = $location->getFileSystemObject();
+            }
+
+        }
+        if (empty($primaryImgSrc) || (!empty($srcToTest) && !$filesystem->$fileExistsFunc($srcToTest))) {
             $thumb = $ih->getThumbnail($primaryImgObj, $defaultimagewidth, $defaultimageheight, false);
             $primaryImgSrc = $thumb->src;
         }
+
+
     }
 
     $options = $product->getOptions();
@@ -229,7 +249,7 @@ if (is_object($product) && $product->isActive()) {
                                                 if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                                     $selected = 'selected="selected"';
                                                 }
-                                            
+
                                             ?>
                                             <option <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName().$outOfStock ?></option>
                                             <?php }
@@ -278,7 +298,7 @@ if (is_object($product) && $product->isActive()) {
                     <div class="store-product-image col-md-6">
                         <div>&nbsp;</div>
                         <?php
-                        
+
                         if (is_object($primaryImgObj)) {
                             ?>
                             <div class="store-product-primary-image ">
@@ -290,25 +310,36 @@ if (is_object($product) && $product->isActive()) {
                         <?php } ?>
 
                         <?php
-                        
+
                         if (count($secondaryImages) > 0) {
                             $loop = 1;
                             echo '<div class="store-product-additional-images clearfix no-gutter">';
+                            if (is_object($secondaryThumbnailType) && version_compare($concreteVersion, '8.0', '<')) {
+                                $type = $secondaryThumbnailType->getBaseVersion();
+                            }
 
                             foreach ($secondaryImages as $secondaryImage) {
                                 if (is_object($secondaryImage)) {
                                     $secondaryImgSrc = null;
                                     $srcToTest = null;
                                     if (is_object($secondaryThumbnailType)) {
-                                        $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
-                                        if (strpos($secondaryImgSrc, '://') !== false) {
-                                            $srcToTest = $secondaryImgSrc;
+                                        if (version_compare($concreteVersion, '8.0', '>=')) {
+                                            $secondaryImgSrc = $secondaryImage->getThumbnailURL($secondaryThumbnailType->getBaseVersion());
+                                            if (strpos($secondaryImgSrc, '://') !== false) {
+                                                $srcToTest = $secondaryImgSrc;
+                                            } else {
+                                                $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
+                                            }
                                         } else {
-                                            $srcToTest = DIR_BASE . '/' . $secondaryImgSrc;
+                                            $thumbnailPath = $type->getFilePath($secondaryImage->getApprovedVersion());
+                                            $location = $secondaryImage->getFileStorageLocationObject();
+                                            $configuration = $location->getConfigurationObject();
+                                            $secondaryImgSrc = $configuration->getPublicURLToFile($thumbnailPath);
+                                            $srcToTest = $thumbnailPath;
+                                            $filesystem = $location->getFileSystemObject();
                                         }
                                     }
-
-                                    if (empty($secondaryImgSrc) || (!empty($srcToTest) && !$filesystem->exists($srcToTest))) {
+                                    if (empty($secondaryImgSrc) || (!empty($srcToTest) && !$filesystem->$fileExistsFunc($srcToTest))) {
                                         $thumb = $ih->getThumbnail($secondaryImage, $defaultimagewidth, $defaultimageheight, true);
                                         $secondaryImgSrc = $thumb->src;
                                     }
