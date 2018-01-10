@@ -55,6 +55,12 @@ https://github.com/concrete5-community-store/community_store_shipping_example
 The Community Store package has multiple translations available at http://concrete5.github.io/package-translations/
 Translations are not included within the package, these need to be manually installed.
 
+## Addons
+
+### User Account Order History
+Show a user's order history as a single page /account/orders:
+https://github.com/JeRoNZ/community_store_order_history
+
 ## PHP Version
 This add-on is intended to support PHP5.6+ onwards, being 100% operational on PHP7.
 
