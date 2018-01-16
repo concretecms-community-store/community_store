@@ -188,7 +188,7 @@ class ProductList extends AttributedItemList
                 break;
             case "related":
                 if (!empty($relatedids)) {
-                    $query->addOrderBy('FIELD (pID, '. implode(',', $relatedids) .')');
+                    $query->addOrderBy('FIELD (p.pID, '. implode(',', $relatedids) .')');
                 }
                 break;
             case "category":
