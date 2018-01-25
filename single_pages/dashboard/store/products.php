@@ -1399,7 +1399,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
                         <div class="form-group">
                             <label><?= t("Page Template")?></label>
-                            <?= $form->select('selectPageTemplate',$pageTemplates,null);?>
+                            <?= $form->select('selectPageTemplate',$pageTemplates,$defaultTemplateID);?>
                         </div>
 
                         <?php if ($product->getID()) { ?>

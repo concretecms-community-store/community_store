@@ -299,14 +299,19 @@ class Products extends DashboardPageController
         $pageType = PageType::getByHandle("store_product");
         $templates = array();
 
+        $defaultTemplateID = 0;
+
         if ($pageType) {
             $pageTemplates = $pageType->getPageTypePageTemplateObjects();
 
             foreach ($pageTemplates as $pt) {
                 $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
             }
+
+            $defaultTemplateID = $pageType->getPageTypeDefaultPageTemplateID();
         }
         $this->set('pageTemplates',$templates);
+        $this->set('defaultTemplateID',$defaultTemplateID);
         $taxClasses = array();
         foreach(StoreTaxClass::getTaxClasses() as $taxClass){
             $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
