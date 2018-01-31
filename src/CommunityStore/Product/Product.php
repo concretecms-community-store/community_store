@@ -73,7 +73,7 @@ class Product
     /**
      * @Column(type="decimal", precision=10, scale=2, nullable=true)
      */
-    protected $pWholeSalePrice;
+    protected $pWholesalePrice;
 
     /**
      * @Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -405,6 +405,14 @@ class Product
     {
         $this->pPrice = ($price != '' ? $price : 0);
     }
+    public function setWholesalePrice($price)
+    {
+        $this->pWholesalePrice = ($price != '' ? $price : 0);
+    }
+    public function getWholesalePrice()
+    {
+        return $this->pWholesalePrice;
+    }
     public function setSalePrice($price)
     {
         $this->pSalePrice = ($price != '' ? $price : null);
@@ -572,6 +580,7 @@ class Product
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
+        $product->setWholesalePrice($data['pWholesalePrice']);
         $product->setSalePrice($data['pSalePrice']);
         $product->setIsFeatured($data['pFeatured']);
         $product->setQty($data['pQty']);

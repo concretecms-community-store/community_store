@@ -142,6 +142,19 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                     </div>
 
+                    <div class="col-xs-6">
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
+                            <?= $form->label("pWholesalePrice", t("Wholesale Price"), array('class'=>$priceclass));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?= Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $wholesalePrice = $product->getWholesalePrice(); ?>
+                                <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>'No Wholesale Price Set'));?>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
                         $(document).ready(function(){
                             $('#pCustomerPrice').change(function(){
