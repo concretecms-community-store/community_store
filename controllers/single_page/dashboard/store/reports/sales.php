@@ -7,6 +7,7 @@ use Package;
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport as StoreSalesReport;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 class Sales extends DashboardPageController
 {
