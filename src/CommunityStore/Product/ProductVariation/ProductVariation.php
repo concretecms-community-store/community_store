@@ -32,6 +32,11 @@ class ProductVariation
     protected $pvPrice;
 
     /**
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pvWholeSalePrice;
+
+    /**
      * @Column(type="string",nullable=true)
      */
     protected $pvSKU;

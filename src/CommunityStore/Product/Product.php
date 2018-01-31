@@ -73,6 +73,11 @@ class Product
     /**
      * @Column(type="decimal", precision=10, scale=2, nullable=true)
      */
+    protected $pWholeSalePrice;
+
+    /**
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
     protected $pSalePrice;
 
     /**
