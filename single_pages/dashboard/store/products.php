@@ -141,7 +141,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), array('placeholder'=>'e.g. 10,20,30'))?>
                         </div>
                     </div>
-
                     <div class="col-xs-6">
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
                             <?= $form->label("pWholesalePrice", t("Wholesale Price"), array('class'=>$priceclass));?>
