@@ -15,7 +15,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <div class="row">
 
-        <div class="store-checkout-form-shell col-md-8">
+        <div class="store-checkout-form-shell col-md-8 clearfix">
 
             <?php
             if ($customer->isGuest() && ($requiresLogin || $guestCheckout == 'off' || ($guestCheckout == 'option' && !$guest))) {
