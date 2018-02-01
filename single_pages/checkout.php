@@ -147,11 +147,11 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                             </div>
                         <?php } ?>
-
-                        <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                        <div class="row">
+                            <div class="store-checkout-form-group-buttons col-md-12">
+                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                            </div>
                         </div>
-
                     </div>
 
                     <div class="store-checkout-form-group-summary panel panel-default ">
