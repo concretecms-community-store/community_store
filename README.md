@@ -53,7 +53,7 @@ https://github.com/concrete5-community-store/community_store_shipping_example
 
 ## Translations
 The Community Store package has multiple translations available at http://concrete5.github.io/package-translations/
-Translations are not included within the package, these need to be manually installed.
+Translations are not managed with the master branch but are included within releases.
 
 ## Addons
 
