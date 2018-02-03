@@ -9,7 +9,7 @@ $task = $controller->getTask();
 
 <?php if ($task == 'view') { ?>
 <div class="ccm-dashboard-content-full">
-	<form action="<?=URL::to('/dashboard/store/reports/products')?>" method="post" class="form form-inline ccm-search-fields">
+	<form action="<?=URL::to('/dashboard/store/reports/products')?>" method="get" class="form form-inline ccm-search-fields">
 		<div class="ccm-search-fields-row">
 			<div class="form-group form-group-full">
         		<?= $form->label('dateFrom', t('From'))?>

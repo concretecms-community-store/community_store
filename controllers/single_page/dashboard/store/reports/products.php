@@ -15,8 +15,8 @@ class Products extends DashboardPageController
 
     public function view()
     {
-        $dateFrom = $this->post('dateFrom');
-        $dateTo = $this->post('dateTo');
+        $dateFrom = $this->get('dateFrom');
+        $dateTo = $this->get('dateTo');
         
         if(!$dateFrom){
             $dateFrom = StoreOrderList::getDateOfFirstOrder();
@@ -25,7 +25,7 @@ class Products extends DashboardPageController
             $dateTo = date('Y-m-d');
         }
         $pr = new StoreProductReport($dateFrom,$dateTo);
-        $orderBy = $this->post('orderBy');
+        $orderBy = $this->get('orderBy');
         if(!$orderBy){
             $orderBy = 'quantity';
         }
@@ -40,7 +40,7 @@ class Products extends DashboardPageController
         $this->set('dateFrom',$dateFrom);
         $this->set('dateTo',$dateTo);
         
-        $pr->setItemsPerPage(10);
+        $pr->setItemsPerPage(20);
 
         $paginator = $pr->getPagination();
         $pagination = $paginator->renderDefaultView();
