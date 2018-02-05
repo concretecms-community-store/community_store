@@ -728,6 +728,11 @@ class Product
         return StorePrice::format($this->getActivePrice());
     }
 
+    public function getFormattedWholesalePrice()
+    {
+        return StorePrice::format($this->getWholesalePrice());
+    }
+
     public function getSalePrice()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {

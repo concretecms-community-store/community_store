@@ -4,6 +4,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
+$user = new \User();
+$wholesale = Group::getByName('Wholesale Customer');
+$wholesaleCustomer = $user->inGroup($wholesale);
+
+
+echo $wholesaleCustomer;
+
+//print_r($user->getUserGroups());
+
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
     $variationLookup = $product->getVariationLookup();
@@ -34,23 +43,33 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        $salePrice = $product->getSalePrice();
-		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = $product->getFormattedSalePrice();
-                            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-		                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
-                            echo '&nbsp;'.t('was').'&nbsp;';
-                            echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
-                            echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
+                        if($wholesaleCustomer){
+                            $msrp = $product->getPrice();
+                            $wholesalePrice = $product->getWholesalePrice();
 
-		                } else {
-                            $price = $product->getPrice();
+                            $formattedWholesalePrice = $product->getFormattedWholesalePrice();
+                            echo "MSRP: ".$msrp."</br> Wholesale Price: ".$formattedWholesalePrice;
+                            echo '<meta itemprop="price" content="' . $wholesalePrice .'" />';
 
-                            $formattedPrice =  $product->getFormattedPrice();
+                        } else {
+                            $salePrice = $product->getSalePrice();
+                            if(isset($salePrice) && $salePrice != ""){
+                                $formattedSalePrice = $product->getFormattedSalePrice();
+                                $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+                                echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
+                                echo '&nbsp;'.t('was').'&nbsp;';
+                                echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+                                echo '<meta itemprop="price" content="' . $formattedSalePrice .'" />';
 
-		                    echo $formattedPrice;
-                            echo '<meta itemprop="price" content="' . $price .'" />';
-		                }
+                            } else {
+                                $price = $product->getPrice();
+
+                                $formattedPrice =  $product->getFormattedPrice();
+                                
+                                echo $formattedPrice;
+                                echo '<meta itemprop="price" content="' . $price .'" />';
+                            }
+                        }
                         ?>
                         </p>
                     <?php } ?>
