@@ -186,6 +186,11 @@ class Installer
         if (!$group || $group->getGroupID() < 1) {
             $group = Group::add('Store Customer', t('Registered Customer in your store'));
         }
+
+        $group = Group::getByName('Wholesale Customer');
+            if (!$group || $group->getGroupID() < 1) {
+              $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
+            }
     }
 
     public static function installUserAttributes($pkg)
