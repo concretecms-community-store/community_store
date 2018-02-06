@@ -334,6 +334,11 @@ if (is_object($product) && $product->isActive()) {
                 'image'=> $imgObj ? $imgObj->getRelativePath() : ''
 
                 );
+
+                if(Wholesale::isUserWholesale()){
+                    $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
+                }
+
             } ?>
 
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
@@ -347,14 +352,24 @@ if (is_object($product) && $product->isActive()) {
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
 
-                if (variationdata[ar.join('_')]['saleprice']) {
-                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
-                        '<?php echo t('was'); ?>' +
-                        '&nbsp;<span class="store-original-price ">' + variationdata[ar.join('_')]['price'] + '</span>';
-
-                    pdb.find('.store-product-price').html(pricing);
+                if(variationdata[ar.join('_')]['wholesalePrice']){
+                    console.log('wholesale');
+                    console.log(variationdata);
+                    pdb.find('.store-product-price').html(
+                        'MSRP: '+variationdata[ar.join('_')]['price']+
+                        '<br />Wholesale Price: '+variationdata[ar.join('_')]['wholesalePrice']);
                 } else {
-                    pdb.find('.store-product-price').html(variationdata[ar.join('_')]['price']);
+                    console.log('retail');
+                    console.log(variationdata);
+                    if (variationdata[ar.join('_')]['saleprice']) {
+                        var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
+                            '<?php echo t('was'); ?>' +
+                            '&nbsp;<span class="store-original-price ">' + variationdata[ar.join('_')]['price'] + '</span>';
+
+                        pdb.find('.store-product-price').html(pricing);
+                    } else {
+                        pdb.find('.store-product-price').html(variationdata[ar.join('_')]['price']);
+                    }
                 }
 
                 if (variationdata[ar.join('_')]['available']) {

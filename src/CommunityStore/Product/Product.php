@@ -410,10 +410,6 @@ class Product
     {
         $this->pWholesalePrice = ($price != '' ? $price : 0);
     }
-    public function getWholesalePrice()
-    {
-        return $this->pWholesalePrice;
-    }
     public function setSalePrice($price)
     {
         $this->pSalePrice = ($price != '' ? $price : null);
@@ -704,6 +700,20 @@ class Product
         }
 
         return $price;
+    }
+
+    public function getWholesalePrice($qty = 1)
+    {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            if ($variation) {
+                $varWholesalePrice = $variation->getVariationWholesalePrice();
+
+                if ($varWholesalePrice) {
+                    return $varWholesalePrice;
+                }
+            }
+        }
+        return $this->pWholesalePrice;
     }
 
     private function getQuantityAdjustedPrice($qty = 1) {
