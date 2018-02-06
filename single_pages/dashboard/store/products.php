@@ -1121,19 +1121,32 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                      </div>
                                  </div>
 
-                                 <div class="row form-group">
-                                     <div class="col-md-4">
-                                         <?= $form->label("", t("Price")); ?>
-                                     </div>
-                                     <div class="col-md-8">
-                                         <div class="input-group">
-                                             <div class="input-group-addon">
-                                                 <?= Config::get('community_store.symbol'); ?>
-                                             </div>
-                                             <?= $form->text("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', array('placeholder' => t('Base Price'))); ?>
-                                         </div>
-                                     </div>
-                                 </div>
+                                <div class="row form-group">
+                                    <div class="col-md-4">
+                                        <?= $form->label("", t("Price")); ?>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <?= Config::get('community_store.symbol'); ?>
+                                            </div>
+                                            <?= $form->text("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', array('placeholder' => t('Base Price'))); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                        <div class="col-md-4">
+                                            <?= $form->label("", t("Wholesale Price")); ?>
+                                        </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <?= Config::get('community_store.symbol'); ?>
+                                            </div>
+                                            <?= $form->text("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', array('placeholder' => t('Wholesale Price'))); ?>
+                                        </div>
+                                    </div>
+                                </div>
 
                                  <div class="extrafields hidden">
 
