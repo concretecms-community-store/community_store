@@ -1,17 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
-
-$user = new \User();
-$wholesale = Group::getByName('Wholesale Customer');
-$wholesaleCustomer = $user->inGroup($wholesale);
-
-
-echo $wholesaleCustomer;
-
-//print_r($user->getUserGroups());
 
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
@@ -43,7 +35,7 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency');?>" />
                         <?php
-                        if($wholesaleCustomer){
+                        if(Wholesale::isUserWholesale()){
                             $msrp = $product->getPrice();
                             $wholesalePrice = $product->getWholesalePrice();
 

@@ -26,6 +26,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
 use Concrete\Core\Support\Facade\Application;
 
 /**
@@ -758,11 +759,14 @@ class Product
     }
 
     public function getActivePrice($qty = 1)
-    {
-        $salePrice = $this->getSalePrice();
-        if ($salePrice != "") {
-            return $salePrice;
+    {   
+        if(Wholesale::isUserWholesale()){
+            return $this->getWholesalePrice();
         } else {
+            $salePrice = $this->getSalePrice();
+            if ($salePrice != "") {
+                return $salePrice;
+            }
             return $this->getPrice($qty);
         }
 
