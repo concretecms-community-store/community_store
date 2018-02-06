@@ -353,14 +353,10 @@ if (is_object($product) && $product->isActive()) {
                 var pdb = $(this).closest('.store-product-block');
 
                 if(variationdata[ar.join('_')]['wholesalePrice']){
-                    console.log('wholesale');
-                    console.log(variationdata);
                     pdb.find('.store-product-price').html(
                         'MSRP: '+variationdata[ar.join('_')]['price']+
                         '<br />Wholesale Price: '+variationdata[ar.join('_')]['wholesalePrice']);
                 } else {
-                    console.log('retail');
-                    console.log(variationdata);
                     if (variationdata[ar.join('_')]['saleprice']) {
                         var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
                             '<?php echo t('was'); ?>' +
