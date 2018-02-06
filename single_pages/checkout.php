@@ -2,8 +2,8 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
-
 ?>
+<div class="store-checkout-page">
 <?php if ($controller->getTask() == "view" || $controller->getTask() == "failed") { ?>
 
     <h1><?= t("Checkout") ?></h1>
@@ -13,7 +13,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
     $a->display();
     ?>
 
-    <div class="row">
+    <div class="store-checkout-form-row row">
 
         <div class="store-checkout-form-shell col-md-8 clearfix">
 
@@ -526,3 +526,4 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         }
     </style>
 <?php } ?>
+</div>
