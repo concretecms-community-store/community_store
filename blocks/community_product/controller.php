@@ -30,7 +30,7 @@ class Controller extends BlockController
     {
         $product = false;
 
-        if ($this->productLocation == 'page') {
+        if ($this->productLocation == 'page' || !$this->productLocation) {
             $cID = Page::getCurrentPage()->getCollectionID();
 
             if ($cID) {
