@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Utility\Service\Text as TextHelper;
 use Concrete\Core\Support\Facade\Application;
 
@@ -9,7 +8,7 @@ use Concrete\Core\Support\Facade\Application;
  * @Entity
  * @Table(name="CommunityStoreOrderStatuses")
  */
-class OrderStatus extends Object
+class OrderStatus
 {
     /**
      * @Id @Column(type="integer")
@@ -238,5 +237,12 @@ class OrderStatus extends Object
         }
 
         return false;
+    }
+
+    public function setPropertiesFromArray($arr)
+    {
+        foreach ($arr as $key => $prop) {
+            $this->{$key} = $prop;
+        }
     }
 }

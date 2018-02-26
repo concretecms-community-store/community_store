@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
-use Concrete\Core\Foundation\Object as Object;
-use Database;
 use Core;
 use Package;
 use Controller;
