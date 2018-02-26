@@ -46,6 +46,9 @@ https://github.com/concrete5-community-store/community_store_mollie
 ### DPS Payment Express - https://www.paymentexpress.com
 https://github.com/JeRoNZ/community_store_dps_pxpay
 
+### Worldpay - https://www.worldpay.com
+https://github.com/concrete5-community-store/community_store_worldpay_hosted
+
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
 An simple example shipping method has been created for reference and can be found at:
