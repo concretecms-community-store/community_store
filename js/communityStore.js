@@ -310,7 +310,7 @@ var communityStore = {
     },
 
     nextPane: function (obj) {
-        if ($(obj)[0].checkValidity()) {
+        if (typeof $(obj)[0].checkValidity === "undefined" || $(obj)[0].checkValidity()) {
             var pane = $(obj).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().next();
             $('.store-active-form-group').removeClass('store-active-form-group');
             pane.addClass('store-active-form-group');
