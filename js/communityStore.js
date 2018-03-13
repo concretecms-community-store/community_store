@@ -48,6 +48,8 @@ var communityStore = {
             url: PRODUCTMODAL,
             data: {pID: pID},
             type: 'get',
+            cache: false,
+            dataType : 'text',
             success: function (modalContent) {
                 communityStore.openModal(modalContent);
             }
@@ -57,6 +59,8 @@ var communityStore = {
     displayCart: function (res, animatecart) {
         $.ajax({
             type: "POST",
+            cache: false,
+            dataType : 'text',
             data: res,
             url: CARTURL + '/getmodal',
             success: function (data) {
@@ -111,6 +115,8 @@ var communityStore = {
                 url: CARTURL + "/add",
                 data: serial,
                 type: 'post',
+                cache: false,
+                dataType : 'text',
                 success: function (data) {
                     var res = jQuery.parseJSON(data);
 
@@ -136,6 +142,8 @@ var communityStore = {
             url: CARTURL + "/update",
             data: {instance: instanceID, pQty: qty},
             type: 'post',
+            cache: false,
+            dataType : 'text',
             success: function (data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
@@ -155,6 +163,8 @@ var communityStore = {
             url: CARTURL + "/update",
             data: {instance: instances, pQty: quantities},
             type: 'post',
+            cache: false,
+            dataType : 'text',
             success: function (data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
@@ -172,6 +182,8 @@ var communityStore = {
             url: CARTURL + "/remove",
             data: {instance: instanceID},
             type: 'post',
+            cache: false,
+            dataType : 'text',
             success: function (data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
@@ -187,6 +199,8 @@ var communityStore = {
         $.ajax({
             url: CARTURL + "/clear",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {clear: 1},
             success: function (data) {
                 if (modal) {
@@ -204,6 +218,8 @@ var communityStore = {
     refreshCartTotals: function(callback) {
         $.ajax({
             url: CARTURL + '/getCartSummary',
+            cache: false,
+            dataType : 'text',
             success: function (response) {
                 var values = $.parseJSON(response);
                 var itemCount = values.itemCount;
@@ -283,6 +299,8 @@ var communityStore = {
         $.ajax({
             url: CHECKOUTURL + "/getstates",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList},
             success: function (states) {
                 $("#store-checkout-billing-state").replaceWith(states);
@@ -302,6 +320,8 @@ var communityStore = {
         $.ajax({
             url: CHECKOUTURL + "/getstates",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {country: countryCode, selectedState: selectedState, type: "shipping"},
             success: function (states) {
                 $("#store-checkout-shipping-state").replaceWith(states);
@@ -327,6 +347,8 @@ var communityStore = {
     showShippingMethods: function (callback) {
         $.ajax({
             url: CHECKOUTURL + "/getShippingMethods",
+            cache: false,
+            dataType : 'text',
             success: function (html) {
                 $("#store-checkout-shipping-method-options").html(html);
                 $('.store-whiteout').remove();
@@ -426,6 +448,8 @@ $(document).ready(function () {
         $.ajax({
             url: CHECKOUTURL + "/updater",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {
                 adrType: 'billing',
                 email: email,
@@ -489,6 +513,8 @@ $(document).ready(function () {
         $.ajax({
             url: CHECKOUTURL + "/updater",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {
                 adrType: 'shipping',
                 fName: sfName,
@@ -536,6 +562,8 @@ $(document).ready(function () {
         $.ajax({
             url: CHECKOUTURL + "/setVatNumber",
             type: 'post',
+            cache: false,
+            dataType : 'text',
             data: {
                 vat_number: vat_number
             },
@@ -582,6 +610,8 @@ $(document).ready(function () {
 
             $.ajax({
                 type: 'post',
+                cache: false,
+                dataType : 'text',
                 data: { smID: smID,
                     sInstructions: sInstructions},
                 url: CHECKOUTURL + "/selectShipping",
