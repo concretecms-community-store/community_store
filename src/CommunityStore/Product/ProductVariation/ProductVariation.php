@@ -561,7 +561,7 @@ class ProductVariation
         $variation->setProductID($productID);
         $variation->setVariationSKU($data['pvSKU']);
         $variation->setVariationPrice($data['pvPrice']);
-        $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
+        $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
         $variation->setVariationQty($data['pvQty']);
         $variation->setVariationQtyUnlim($data['pvQtyUnlim']);
