@@ -167,7 +167,16 @@ if($products){
                 <?php if ($product->allowQuantity() && $showQuantity) { ?>
                     <div class="store-product-quantity form-group">
                         <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
-                        <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                        <?php if ($product->allowDecimalQuantity()) { ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" min="1" >
+                        <?php } else { ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                        <?php } ?>
+                        <?php $quantityLabel = $product->getQtyLabel();
+                        if ($quantityLabel) { ?>
+                            <span><?= $quantityLabel; ?></span>
+                        <?php } ?>
+
                     </div>
                 <?php } else { ?>
                         <input type="hidden" name="quantity" class="store-product-qty" value="1">

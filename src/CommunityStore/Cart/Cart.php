@@ -177,16 +177,20 @@ class Cart
             //now, build a nicer "cart item"
             $cartItem = array();
 
+            if (!$product->allowDecimalQuantity()) {
+                $data['quantity'] = (int)$data['quantity'];
+            }
+
             if ($customerPrice) {
                 $cartItem['product'] = array(
                     "pID" => (int)$data['pID'],
-                    "qty" => (int)$data['quantity'],
+                    "qty" => $data['quantity'],
                     "customerPrice" => $customerPrice,
                 );
             } else {
                 $cartItem['product'] = array(
                     "pID" => (int)$data['pID'],
-                    "qty" => (int)$data['quantity']
+                    "qty" => $data['quantity']
                 );
             }
 
@@ -373,10 +377,15 @@ class Cart
     {
         Session::set('community_store.smID', false);
         $instanceID = $data['instance'];
-        $qty = (int) $data['pQty'];
+        $qty = $data['pQty'];
+
         $cart = self::getCart();
 
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
+
+        if (!$product->allowDecimalQuantity()) {
+            $qty = (int)$data['pQty'];
+        }
 
         if ($qty > 0 && $product) {
             $newquantity = $qty;

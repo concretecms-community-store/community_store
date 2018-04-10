@@ -101,6 +101,10 @@ if ($cart) {
                         <?php if ($product->allowQuantity()) { ?>
                             <?= $qty ?>
                         <?php } ?>
+                        <?php $quantityLabel = $product->getQtyLabel(); ?>
+                        <?php  if ($quantityLabel) { ?>
+                            <span><?= $quantityLabel; ?></span>
+                        <?php } ?>
                     </td>
 
                 </tr>

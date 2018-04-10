@@ -382,6 +382,33 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pAllowDecimalQty", t("Allow Decimal Quantities"));?>
+                            <?= $form->select("pAllowDecimalQty",array('0'=>t('No, whole number quantities only'),'1'=>t('Yes')), $product->getAllowDecimalQty());?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pQtyLabel", t("Quantity Label"));?>
+                            <?= $form->text("pQtyLabel", $product->getQtyLabel(), array('placeholder'=>'e.g. linear metres'));?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pMaxQty", t("Maximum Quantity (as single cart item)"));?>
+                            <?= $form->number("pMaxQty", $product->getMaxQty(), array('min'=>0, 'step'=>0.01));?>
+                        </div>
+                    </div>
+
+                </div>
+
+
                 <?php if ($controller->getTask() == 'edit') { ?>
                 <div class="row">
                     <div class="col-xs-12">
@@ -394,9 +421,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 z-index: 100 !important;
                             }
                         </style>
-                    </div>
-                    <div class="col-xs-6">
-
                     </div>
                 </div>
                 <?php } ?>

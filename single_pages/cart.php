@@ -133,6 +133,11 @@ if ($cart) {
                                 1
                             <?php } ?>
 
+                            <?php $quantityLabel = $product->getQtyLabel(); ?>
+                            <?php if ($quantityLabel) { ?>
+                                <span><?= $quantityLabel; ?></span>
+                            <?php } ?>
+
                             <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
                                     class="fa fa-remove"></i><?php //echo t("Remove")

@@ -139,6 +139,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php }  else { ?>
                                 1
                             <?php } ?>
+                                <?php $quantityLabel = $product->getQtyLabel();
+                                if ($quantityLabel) { ?>
+                                    <span><?= $quantityLabel; ?></span>
+                                <?php } ?>
                             </td>
                             <td class="store-cart-list-remove-button col-xs-1 text-right">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
