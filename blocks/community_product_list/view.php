@@ -17,6 +17,10 @@ if($products){
     if ($productsPerRow == 4) {
         $columnClass = 'col-md-3';
     }
+
+    if ($productsPerRow == 6) {
+        $columnClass = 'col-md-2';
+    }
     ?>
 
 

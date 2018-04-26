@@ -132,7 +132,7 @@
 
             <div class="form-group">
                 <?= $form->label('productsPerRow', t('Products per Row')); ?>
-                <?= $form->select('productsPerRow', array(1 => 1, 2 => 2, 3 => 3, 4 => 4), $productsPerRow ? $productsPerRow : 1); ?>
+                <?= $form->select('productsPerRow', array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6), $productsPerRow ? $productsPerRow : 1); ?>
             </div>
             <div class="form-group checkbox">
                 <label>
