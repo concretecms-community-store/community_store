@@ -14,9 +14,9 @@ class States extends Controller
         $selectedState = $_POST['selectedState'];
         $type = $_POST['type'];
         $class = empty($_POST['class']) ? 'form-control' : $_POST['class'];
-        $dataList = Core::make('helper/json')->decode($_POST['data']);
+        $dataList = Core::make('helper/json')->decode($_POST['data'], true);
         $data = '';
-        if (count($dataList)) {
+        if (is_array($dataList) && count($dataList)) {
             foreach ($dataList as $name => $value) {
                 $data .= ' data-' . $name . '="' . $value . '"';
             }
