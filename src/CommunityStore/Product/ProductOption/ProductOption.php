@@ -259,7 +259,7 @@ class ProductOption
 
                 if ($option) {
                     //add option items
-                    $itemsInGroup = count($data['optGroup'.$i]);
+                    $itemsInGroup = is_array($data['optGroup'.$i]) ? count($data['optGroup'.$i]) : 0;
 
                     if ($itemsInGroup > 0) {
                         for ($gi = 0;$gi < $itemsInGroup;$gi++, $ii++) {
