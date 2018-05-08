@@ -80,7 +80,7 @@ class Cart
 
             self::$discounts = array();
 
-            $rules = StoreDiscountRule::findAutomaticDiscounts();
+            $rules = StoreDiscountRule::findAutomaticDiscounts(null, $checkeditems);
 
             $code = trim(Session::get('communitystore.code'));
             if ($code) {

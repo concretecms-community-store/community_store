@@ -121,11 +121,6 @@ $currencySymbol = Config::get('community_store.symbol');
 
                                 }
 
-                                if (!empty($usergroups)) {
-                                    echo '<span class="label label-primary">' . t('to specific user groups'). '</span><br />';
-                                }
-
-
                                 if (!empty($productgroups)) {
 
                                     echo '<span class="label label-primary">';
@@ -139,8 +134,16 @@ $currencySymbol = Config::get('community_store.symbol');
                                     echo '</span><br />';
                                 }
 
+                                if (!empty($usergroups)) {
+                                    echo '<span class="label label-primary">' . t('to specific user groups'). '</span><br />';
+                                }
 
-                                 ?></td>
+                                if ($discountRule->getQuantity() > 0) {
+                                    echo '<span class="label label-primary">' . t('when %s products in cart', $discountRule->getQuantity() + 0). '</span><br />';
+                                }
+
+
+                                ?></td>
                             <td>
 
 
@@ -377,6 +380,12 @@ $currencySymbol = Config::get('community_store.symbol');
                     $('.select2-select').select2();
                 });
             </script>
+
+
+            <div class="form-group">
+                <?= $form->label("drQuantity", t("Minimum Quantity in Cart"));?>
+                <?= $form->text('drQuantity', $discountRule->getQuantity(), array('class' => ''))?>
+            </div>
 
 
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Database;
@@ -94,6 +95,11 @@ class DiscountRule
     protected $drUserGroups;
 
     /**
+     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     */
+    protected $drQuantity;
+
+    /**
      * @Column(type="datetime")
      */
     protected $drDateAdded;
@@ -116,7 +122,8 @@ class DiscountRule
         $this->applicableTotal = $applicableTotal;
     }
 
-    public function returnDiscountedPrice() {
+    public function returnDiscountedPrice()
+    {
         if ($this->getDeductFrom() == 'subtotal') {
             if ($this->getDeductType() == 'percentage') {
                 $applicableTotal = $this->getApplicableTotal();
@@ -141,7 +148,8 @@ class DiscountRule
         return false;
     }
 
-    public function returnFormattedDiscountedPrice() {
+    public function returnFormattedDiscountedPrice()
+    {
         return StorePrice::format($this->returnDiscountedPrice());
     }
 
@@ -198,7 +206,7 @@ class DiscountRule
 
     public function isEnabled()
     {
-        return (bool) $this->drEnabled;
+        return (bool)$this->drEnabled;
     }
 
     /**
@@ -336,7 +344,7 @@ class DiscountRule
 
     public function isSingleUse()
     {
-        return (bool) $this->drSingleUseCodes;
+        return (bool)$this->drSingleUseCodes;
     }
 
     /**
@@ -400,7 +408,7 @@ class DiscountRule
      */
     public function getProductGroups()
     {
-        return $this->drProductGroups ? explode(',', $this->drProductGroups) : array();
+        return $this->drProductGroups ? explode(',', $this->drProductGroups) : [];
     }
 
     /**
@@ -420,7 +428,7 @@ class DiscountRule
      */
     public function getUserGroups()
     {
-        return $this->drUserGroups ? explode(',', $this->drUserGroups) : array();
+        return $this->drUserGroups ? explode(',', $this->drUserGroups) : [];
     }
 
     /**
@@ -429,13 +437,23 @@ class DiscountRule
     public function setUserGroups($drUserGroups)
     {
         if (is_array($drUserGroups)) {
-            $this->drUserGroups = implode(',',$drUserGroups);
+            $this->drUserGroups = implode(',', $drUserGroups);
         } else {
             $this->drUserGroups = '';
         }
     }
 
 
+    public function getQuantity()
+    {
+        return $this->drQuantity;
+    }
+
+
+    public function setQuantity($drQuantity)
+    {
+        $this->drQuantity = $drQuantity;
+    }
 
     /**
      * @return mixed
@@ -501,7 +519,7 @@ class DiscountRule
         return $data['codecount'] > 0;
     }
 
-    public static function findAutomaticDiscounts($user = null)
+    public static function findAutomaticDiscounts($user = null, $cartitems = false)
     {
         if ($user === null) {
             $user = new \User;
@@ -519,12 +537,12 @@ class DiscountRule
               ORDER BY drPercentage DESC, drValue DESC
               ");
 
-        $discounts = array();
+        $discounts = [];
         while ($row = $result->fetchRow()) {
             $include = true;
 
             if ($row['drUserGroups']) {
-                $discountusergroups = explode(',',$row['drUserGroups']);
+                $discountusergroups = explode(',', $row['drUserGroups']);
 
                 $usergroups = $user->getUserGroups();
 
@@ -534,6 +552,41 @@ class DiscountRule
                     $include = false;
                 }
 
+            }
+
+            if ($include) {
+                if ($row['drQuantity'] > 0) {
+                    $include = false;
+                    $count = 0;
+
+                    if (is_array($cartitems)) {
+                        $discountProductGroups = array();
+
+                        $dpg =  trim($row['drProductGroups']);
+
+                        if ($dpg) {
+                            $discountProductGroups = explode(',', $dpg);
+                        }
+
+                        if (!empty($discountProductGroups)) {
+                            foreach ($cartitems as $ci) {
+                                $groupids = $ci['product']['object']->getGroupIDs();
+                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                    $count += $ci['product']['qty'];
+                                }
+                            }
+                        } else {
+                            foreach ($cartitems as $ci) {
+                                $count += $ci['product']['qty'];
+                            }
+                        }
+                    }
+
+                    if ($count >= $row['drQuantity']) {
+                        $include = true;
+                    }
+
+                }
             }
 
             if ($include) {
@@ -548,7 +601,7 @@ class DiscountRule
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", array($this->drID));
+        $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", [$this->drID]);
         $r = $r->fetchRow();
         $this->totalCodes = $r['total'];
         $this->availableCodes = $r['available'];
@@ -573,15 +626,15 @@ class DiscountRule
         AND  drEnabled = '1'
         AND drTrigger = 'code'
         AND (drValidFrom IS NULL OR drValidFrom <= NOW())
-        AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", array($code));
+        AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", [$code]);
 
-        $discounts = array();
+        $discounts = [];
 
         while ($row = $result->fetchRow()) {
             $include = true;
 
             if ($row['drUserGroups']) {
-                $discountusergroups = explode(',',$row['drUserGroups']);
+                $discountusergroups = explode(',', $row['drUserGroups']);
 
                 $usergroups = $user->getUserGroups();
 
@@ -631,16 +684,17 @@ class DiscountRule
         $discountRule->setDateAdded(new \DateTime());
         $discountRule->setProductGroups(isset($data['drProductGroups']) ? $data['drProductGroups'] : '');
         $discountRule->setUserGroups(isset($data['drUserGroups']) ? $data['drUserGroups'] : '');
+        $discountRule->setQuantity($data['drQuantity'] ? $data['drQuantity'] : null);
 
         if ($data['validFrom'] == 1) {
-            $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m']. (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));
+            $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m'] . (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));
             $discountRule->setValidFrom($from);
         } else {
             $discountRule->setValidFrom(null);
         }
 
         if ($data['validTo'] == 1) {
-            $to = new \DateTime($data['drValidTo_dt'] . ' ' . $data['drValidTo_h'] . ':' . $data['drValidTo_m']. (isset($data['drValidTo_a']) ? $data['drValidTo_a'] : ''));
+            $to = new \DateTime($data['drValidTo_dt'] . ' ' . $data['drValidTo_h'] . ':' . $data['drValidTo_m'] . (isset($data['drValidTo_a']) ? $data['drValidTo_a'] : ''));
             $discountRule->setValidTo($to);
         } else {
             $discountRule->setValidTo(null);
