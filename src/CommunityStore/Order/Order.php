@@ -640,6 +640,7 @@ class Order
     public function completePayment($sameRequest = false) {
         $this->setPaid(new \DateTime());
         $this->completePostPaymentProcesses($sameRequest);
+        $this->save();
 
         // create payment event and dispatch
         $event = new StoreOrderEvent($this);
