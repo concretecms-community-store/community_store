@@ -134,7 +134,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
                                                      if ($ak->isRequired()) {
-                                                        echo str_replace('<input ', '<input required="required"', $fieldoutput);
+                                                         echo str_replace('<input', '<input required="required" ', $fieldoutput);
                                                      } else {
                                                         echo $fieldoutput;
                                                      }
