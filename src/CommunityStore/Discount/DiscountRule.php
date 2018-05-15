@@ -100,6 +100,11 @@ class DiscountRule
     protected $drQuantity;
 
     /**
+     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     */
+    protected $drMaximumQuantity;
+
+    /**
      * @Column(type="datetime")
      */
     protected $drDateAdded;
@@ -455,6 +460,17 @@ class DiscountRule
         $this->drQuantity = $drQuantity;
     }
 
+    public function getMaximumQuantity()
+    {
+        return $this->drMaximumQuantity;
+    }
+
+
+    public function setMaximumQuantity($drMaximumQuantity)
+    {
+        $this->drMaximumQuantity = $drMaximumQuantity;
+    }
+
     /**
      * @return mixed
      */
@@ -586,6 +602,10 @@ class DiscountRule
                         $include = true;
                     }
 
+                    if ($row['drMaximumQuantity'] && $count > $row['drMaximumQuantity']) {
+                        $include = false;
+                    }
+
                 }
             }
 
@@ -685,6 +705,7 @@ class DiscountRule
         $discountRule->setProductGroups(isset($data['drProductGroups']) ? $data['drProductGroups'] : '');
         $discountRule->setUserGroups(isset($data['drUserGroups']) ? $data['drUserGroups'] : '');
         $discountRule->setQuantity($data['drQuantity'] ? $data['drQuantity'] : null);
+        $discountRule->setMaximumQuantity($data['drMaximumQuantity'] ? $data['drMaximumQuantity'] : null);
 
         if ($data['validFrom'] == 1) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m'] . (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));

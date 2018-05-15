@@ -138,8 +138,16 @@ $currencySymbol = Config::get('community_store.symbol');
                                     echo '<span class="label label-primary">' . t('to specific user groups'). '</span><br />';
                                 }
 
-                                if ($discountRule->getQuantity() > 0) {
-                                    echo '<span class="label label-primary">' . t('when %s products in cart', $discountRule->getQuantity() + 0). '</span><br />';
+                                if ($discountRule->getQuantity() > 0 || $discountRule->getMaximumQuantity() > 0) {
+                                    echo '<span class="label label-primary">';
+
+                                    if ($discountRule->getMaximumQuantity() > 0) {
+                                        echo  t('when %s to %s products in cart', $discountRule->getQuantity() + 0, $discountRule->getMaximumQuantity() + 0);
+                                    } else {
+                                        echo  t('when %s or more products in cart', $discountRule->getQuantity() + 0);
+                                    }
+
+                                    echo '</span><br />';
                                 }
 
 
@@ -385,6 +393,12 @@ $currencySymbol = Config::get('community_store.symbol');
             <div class="form-group">
                 <?= $form->label("drQuantity", t("Minimum Quantity in Cart"));?>
                 <?= $form->text('drQuantity', $discountRule->getQuantity(), array('class' => ''))?>
+            </div>
+
+
+            <div class="form-group">
+                <?= $form->label("drMaximumQuantity", t("Maximum Quantity in Cart"));?>
+                <?= $form->text('drMaximumQuantity', $discountRule->getMaximumQuantity(), array('class' => ''))?>
             </div>
 
 
