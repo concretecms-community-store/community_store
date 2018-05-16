@@ -416,28 +416,54 @@ $(document).ready(function () {
         var bPostal = $("#store-checkout-billing-zip").val();
         $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
 
+        var novalue = $("#store-checkout-form-group-other-attributes").data('no-value');
+
+        if (!novalue) {
+            novalue = '';
+        }
 
         $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
             var akID = $(el).data("akid");
             var field = $(el).find(".form-control");
 
             var value = '0';
+            var displayvalue = '';
 
             // look for checkbox
             if (!field.length) {
-                var field = $(el).find(".ccm-input-checkbox").first();
+                field = $(el).find("[type=checkbox]").first();
+                var label = $(el).find(".checkbox label").first();
+
+                if (!label.text()) {
+                    label = $(field).next();
+                }
 
                 if (field) {
                     if (field.is(':checked')) {
                         value = '1';
+                        displayvalue = label.text().trim();
+                    } else {
+                        displayvalue = novalue;
                     }
                 }
             } else {
                 value = field.val();
+
+                if (field.is('select')) {
+                    displayvalue = field.children(':selected').text();
+                } else {
+                    displayvalue = value;
+                }
             }
 
             if (field.length) {
-                $('.store-summary-order-choices-' + akID).html(value.replace(/[\n\r]/g, '<br>'));
+                displayvalue = displayvalue.replace(/[\n\r]/g, '<br>').trim();
+
+                if (!displayvalue) {
+                    displayvalue = '-';
+                }
+
+                $('.store-summary-order-choices-' + akID).html(displayvalue);
                 $('#akIDinput'+ akID).remove();
                 $('#store-checkout-form-group-payment').append('<input id="akIDinput'+ akID +'" name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
             }
