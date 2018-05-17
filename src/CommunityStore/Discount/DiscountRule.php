@@ -571,7 +571,7 @@ class DiscountRule
             }
 
             if ($include) {
-                if ($row['drQuantity'] > 0) {
+                if ($row['drQuantity'] > 0 || $row['drMaximumQuantity'] > 0) {
                     $include = false;
                     $count = 0;
 
@@ -602,10 +602,9 @@ class DiscountRule
                         $include = true;
                     }
 
-                    if ($row['drMaximumQuantity'] && $count > $row['drMaximumQuantity']) {
+                    if ($row['drMaximumQuantity'] && ($count > $row['drMaximumQuantity'])) {
                         $include = false;
                     }
-
                 }
             }
 
