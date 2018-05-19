@@ -60,6 +60,8 @@ class Controller extends Package
         $pkg = Package::getByHandle('community_store');
         Installer::upgrade($pkg);
         parent::upgrade();
+        $cms = Core::make('app');
+        $cms->clearCaches();
     }
 
     public function registerRoutes()
