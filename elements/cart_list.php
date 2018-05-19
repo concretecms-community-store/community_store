@@ -103,7 +103,7 @@ if ($cart) {
                         <?php } ?>
                         <?php $quantityLabel = $product->getQtyLabel(); ?>
                         <?php  if ($quantityLabel) { ?>
-                            <span><?= $quantityLabel; ?></span>
+                            <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
                         <?php } ?>
                     </td>
 

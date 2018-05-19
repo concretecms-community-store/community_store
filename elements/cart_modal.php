@@ -1,6 +1,5 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
@@ -133,7 +132,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                             </td>
 
                             <td class="store-cart-list-product-qty col-xs-2">
-                                <?php if ($product->allowQuantity()) { ?>
+                                <?php
+                                $quantityLabel = $product->getQtyLabel();
+
+                                if ($product->allowQuantity()) { ?>
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
                                     <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
                                 <?php }  else { ?>
@@ -141,7 +143,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                             <?php } ?>
                                 <?php $quantityLabel = $product->getQtyLabel();
                                 if ($quantityLabel) { ?>
-                                    <span><?= $quantityLabel; ?></span>
+                                    <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
                                 <?php } ?>
                             </td>
                             <td class="store-cart-list-remove-button col-xs-1 text-right">

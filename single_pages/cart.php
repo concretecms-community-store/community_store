@@ -128,14 +128,14 @@ if ($cart) {
                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
                                 <input type="number" class="form-control" name="pQty[]"
                                        min="1" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
-                                       value="<?= $qty ?>" style="width: 50px;">
+                                       value="<?= $qty ?>" style="width: 80px;">
                             <?php } else { ?>
                                 1
                             <?php } ?>
 
                             <?php $quantityLabel = $product->getQtyLabel(); ?>
                             <?php if ($quantityLabel) { ?>
-                                <span><?= $quantityLabel; ?></span>
+                                 <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
                             <?php } ?>
 
                             <a name="action" data-instance="<?= $k ?>"

@@ -107,7 +107,8 @@ var communityStore = {
             return false;
         }
 
-        var qty = $(form).find('.store-product-qty').val();
+        var qtyfield = $(form).find('.store-product-qty')
+        var qty = qtyfield.val();
         if (qty > 0) {
             var serial = $(form).serialize();
             communityStore.waiting();
@@ -131,6 +132,7 @@ var communityStore = {
             });
         } else {
             alert(QTYMESSAGE);
+            qtyfield.focus();
         }
     },
 

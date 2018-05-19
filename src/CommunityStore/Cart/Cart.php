@@ -290,6 +290,12 @@ class Cart
                         $newquantity = $product->getQty();
                     }
 
+                    if ($product->getMaxQty() > 0) {
+                        if ($newquantity > $product->getMaxQty()) {
+                            $newquantity = $product->getMaxQty();
+                        }
+                    }
+
                     $added = $newquantity - $existingproductcount;
                 } else {
                     $added = 1;
@@ -304,6 +310,12 @@ class Cart
                     $newquantity = $product->getQty();
                 }
 
+                if ($product->getMaxQty() > 0) {
+                    if ($newquantity > $product->getMaxQty()) {
+                        $newquantity = $product->getMaxQty();
+                    }
+                }
+
                 $cartItem['product']['qty'] = $newquantity;
 
                 if ($cartItem['product']['qty'] > 0) {
@@ -316,6 +328,8 @@ class Cart
 
                 $added = $newquantity;
             }
+
+
 
             self::$cart = $cart;
             Session::set('communitystore.cart', $cart);
@@ -396,6 +410,12 @@ class Cart
 
             if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
                 $newquantity = $product->getQty();
+            }
+
+            if ($product->getMaxQty() > 0) {
+                if ($newquantity > $product->getMaxQty()) {
+                    $newquantity = $product->getMaxQty();
+                }
             }
 
             $cart[$instanceID]['product']['qty'] = $newquantity;

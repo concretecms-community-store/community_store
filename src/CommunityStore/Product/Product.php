@@ -504,7 +504,7 @@ class Product
 
     public function getAllowDecimalQty()
     {
-        return $this->pAllowDecimalQty;
+        return $this->pAllowDecimalQty == '1';
     }
 
     public function allowDecimalQuantity()

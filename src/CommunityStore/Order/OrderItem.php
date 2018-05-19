@@ -68,6 +68,11 @@ class OrderItem
     protected $oiQty;
 
     /**
+     * @Column(type="string",nullable=true)
+     */
+    protected $oiQtyLabel;
+
+    /**
      * @return mixed
      */
     public function getID()
@@ -187,6 +192,22 @@ class OrderItem
         $this->oiQty = $oiQty;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getQtyLabel()
+    {
+        return $this->oiQtyLabel;
+    }
+
+    /**
+     * @param mixed $oiQtyLabel
+     */
+    public function setQtyLabel($oiQtyLabel)
+    {
+        $this->oiQtyLabel = $oiQtyLabel;
+    }
+
 
     public function setProductID($productid) {
         $this->pID = $productid;
@@ -227,8 +248,9 @@ class OrderItem
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $sku = $product->getSKU();
+        $qtyLabel = $product->getQtyLabel();
 
+        $sku = $product->getSKU();
 
         $inStock = $product->getQty();
         $newStock = $inStock - $qty;
@@ -253,6 +275,7 @@ class OrderItem
         $orderItem->setTaxIncluded($taxIncluded);
         $orderItem->setTaxName($taxName);
         $orderItem->setQty($qty);
+        $orderItem->setQtyLabel($qtyLabel);
         $orderItem->setOrder($order);
 
         if ($product) {
