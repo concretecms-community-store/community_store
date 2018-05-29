@@ -39,6 +39,7 @@ class Installer
         self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
         self::installSinglePage('/dashboard/store/discounts/', $pkg);
+        self::installSinglePage('/dashboard/store/products/groups', $pkg);
         self::installSinglePage('/dashboard/store/products/categories', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
         self::installSinglePage('/dashboard/store/settings/', $pkg);
@@ -351,6 +352,12 @@ class Installer
 
     public static function upgrade($pkg)
     {
+        $path = '/dashboard/store/products/groups';
+        $page = Page::getByPath($path);
+        if (!is_object($page) || $page->isError()) {
+            SinglePage::add($path, $pkg);
+        }
+
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically
         } else {

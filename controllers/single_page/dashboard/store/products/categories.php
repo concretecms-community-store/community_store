@@ -12,7 +12,7 @@ class Categories extends DashboardPageController
 {
     public function view() {
         $pages = StoreProductLocation::getLocationPages();
-        $this->set('pageTitle', t('Categories'));
+        $this->set('pageTitle', t('Product Categories'));
         $this->set('pages', $pages);
     }
 

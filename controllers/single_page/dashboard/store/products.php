@@ -18,7 +18,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
@@ -59,6 +58,7 @@ class Products extends DashboardPageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist",$grouplist);
+        $this->set('gID', $gID);
         
     }
     public function success(){
@@ -436,49 +436,5 @@ class Products extends DashboardPageController
         return $e;
         
     }
-    
-    // GROUPS PAGE
-    public function groups()
-    {
-        $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
-        $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
-    }
-    public function groupadded()
-    {
-        $this->set('success',"Product Group Created");
-        $this->groups();
-    }
-    public function addgroup()
-    {
-        $this->groups();
-        $this->error = null; //clear errors
-        $errors = $this->validateGroup($this->post());
-        $this->error = $errors;
-        if (!$errors->has()) {
-            StoreGroup::add($this->post('groupName'));
-            $this->redirect('/dashboard/store/products/', 'groupadded');
-        }
-    }
-    public function editgroup($gID)
-    {
-        StoreGroup::getByID($gID)->update($this->post('gName'));
-    }
-    public function validateGroup($args)
-    {
-        $e = Core::make('helper/validation/error');
-        
-        if($args['groupName']==""){
-            $e->add(t('Please enter a Group Name'));
-        }
-        if(strlen($args['groupName']) > 100){
-            $e->add(t('A Group Name can not be more than 100 characters'));
-        }
-        return $e;
-    }
-    public function deletegroup($gID)
-    {
-        StoreGroup::getByID($gID)->delete();
-    }
+
 }
