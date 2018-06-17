@@ -236,51 +236,53 @@ class ProductOption
     {
         self::removeOptionsForProduct($product, $data['poID']);
         StoreProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
-        
-        $count = count($data['poSort']);
-        $ii = 0;//set counter for items
 
-        if ($count > 0) {
-            for ($i = 0;$i < $count ;++$i) {
-                if (isset($data['poID'][$i])) {
-                    $option = self::getByID($data['poID'][$i]);
+        if (is_array($data['poSort'])) {
+            $count = count($data['poSort']);
+            $ii = 0;//set counter for items
+
+            if ($count > 0) {
+                for ($i = 0; $i < $count; ++$i) {
+                    if (isset($data['poID'][$i])) {
+                        $option = self::getByID($data['poID'][$i]);
+
+                        if ($option) {
+                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                        }
+                    }
+
+                    if (!$option) {
+                        if ($data['poName'][$i]) {
+                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                            $product->getOptions()->add($option);
+                        }
+                    }
 
                     if ($option) {
-                        $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
-                    }
-                }
+                        //add option items
+                        $itemsInGroup = is_array($data['optGroup' . $i]) ? count($data['optGroup' . $i]) : 0;
 
-                if (!$option) {
-                    if ($data['poName'][$i]) {
-                        $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
-                        $product->getOptions()->add($option);
-                    }
-                }
-
-                if ($option) {
-                    //add option items
-                    $itemsInGroup = is_array($data['optGroup'.$i]) ? count($data['optGroup'.$i]) : 0;
-
-                    if ($itemsInGroup > 0) {
-                        for ($gi = 0;$gi < $itemsInGroup;$gi++, $ii++) {
-                            if ($data['poiID'][$ii] > 0) {
-                                $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
-                                if ($optionItem) {
-                                    $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
-                                }
-                            } else {
-                                if ($data['poiName'][$ii]) {
-                                    $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
-                                    $option->getOptionItems()->add($optionItem);
+                        if ($itemsInGroup > 0) {
+                            for ($gi = 0; $gi < $itemsInGroup; $gi++, $ii++) {
+                                if ($data['poiID'][$ii] > 0) {
+                                    $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
+                                    if ($optionItem) {
+                                        $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
+                                    }
+                                } else {
+                                    if ($data['poiName'][$ii]) {
+                                        $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
+                                        $option->getOptionItems()->add($optionItem);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            $em = \ORM::entityManager();
-            $em->flush();
+                $em = \ORM::entityManager();
+                $em->flush();
+            }
         }
     }
 }
