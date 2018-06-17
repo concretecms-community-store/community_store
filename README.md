@@ -46,7 +46,7 @@ https://github.com/concrete5-community-store/community_store_mollie
 ### DPS Payment Express - https://www.paymentexpress.com
 https://github.com/JeRoNZ/community_store_dps_pxpay
 
-### eway - https://eway.io
+### eWAY - https://eway.io
 https://github.com/JeRoNZ/community_store_eway
 
 ### Worldpay - https://www.worldpay.com
