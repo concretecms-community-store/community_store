@@ -32,6 +32,8 @@ class Cart
             $update = false;
             // loop through and check if product hasn't been deleted. Remove from cart session if not found.
             foreach ($cart as $cartitem) {
+                $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
+
                 $product = StoreProduct::getByID((int) $cartitem['product']['pID']);
 
                 if ($product) {
@@ -453,7 +455,7 @@ class Cart
         $total = 0;
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $subtotal = $item['product']['qty'];
+                $subtotal = min($item['product']['qty'], 1);
                 $total = $total + $subtotal;
             }
         }

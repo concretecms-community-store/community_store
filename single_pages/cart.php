@@ -127,8 +127,8 @@ if ($cart) {
 
                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
                                 <input type="number" class="form-control" name="pQty[]"
-                                       min="1" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
-                                       value="<?= $qty ?>" style="width: 80px;">
+                                        <?= ($product->allowDecimalQuantity() ? 'step="any" min="0.001"' : 'step="1" min="1"');?> <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
+                                       value="<?= $qty ?>" style="width: 90px;">
                             <?php } else { ?>
                                 1
                             <?php } ?>

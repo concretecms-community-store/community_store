@@ -137,7 +137,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
                                 if ($product->allowQuantity()) { ?>
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
-                                    <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
+                                    <input type="number" style="min-width: 85px;" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
                                 <?php }  else { ?>
                                 1
                             <?php } ?>

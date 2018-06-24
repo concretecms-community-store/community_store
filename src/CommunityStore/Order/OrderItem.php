@@ -63,7 +63,7 @@ class OrderItem
     protected $oiTaxName;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2)
+     * @Column(type="decimal", precision=12, scale=4)
      */
     protected $oiQty;
 
