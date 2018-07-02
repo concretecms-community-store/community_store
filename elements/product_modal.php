@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied."));
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 ?>
 <form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID()?>">

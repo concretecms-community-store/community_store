@@ -4,7 +4,6 @@ namespace Concrete\Package\CommunityStore\Src\Attribute\Value;
 use Concrete\Core\Attribute\Value\Value as Value;
 use Concrete\Core\Support\Facade\Application;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
 class StoreProductValue extends Value
 {
     public function setProduct($product)

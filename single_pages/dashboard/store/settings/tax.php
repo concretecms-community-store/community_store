@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $listViews = array('view','success','updated','removed','class_deleted','class_updated','class_added');
 $addViews = array('add','add_rate','edit');
 $addClassViews = array('add_class','edit_class','save_class');
