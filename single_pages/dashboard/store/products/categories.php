@@ -9,12 +9,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php }  else { ?>
         <p class="alert alert-info"><?= t('No pages have been used to categorise products'); ?></p>
     <?php } ?>
-
+    <ul class="list-group">
     <?php foreach ($pages as $key => $pageinfo) { ?>
-        <p>
+        <li class="list-group-item">
             <a href="<?= \URL::to('/dashboard/store/products/categories/manage/', $pageinfo['page']->getCollectionID()) ?>"><?= $key; ?></a>
-            - <?= t2('%d product', '%d products', $pageinfo['productCount'], $pageinfo['productCount']); ?></p>
+            - <?= t2('%d product', '%d products', $pageinfo['productCount'], $pageinfo['productCount']); ?></li>
     <?php } ?>
+    </ul>
 <?php } ?>
 
 

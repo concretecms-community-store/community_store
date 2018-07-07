@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $listViews = array('view','updated','removed','success');
 $addViews = array('add','edit','save');
-$groupViews = array('groups','groupadded','addgroup');
 $attributeViews = array('attributes','attributeadded','attributeremoved');
 $ps = Core::make('helper/form/page_selector');
 
@@ -1492,9 +1491,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <div class="ccm-search-fields-row">
                 <?php if($grouplist){?>
                     <ul id="group-filters" class="nav nav-pills">
-                        <li><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
+                        <li <?= (!$gID ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
                         <?php foreach($grouplist as $group){ ?>
-                            <li><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
+                            <li <?= ($gID == $group->getGroupID() ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
                         <?php } ?>
                     </ul>
                 <?php } ?>
@@ -1600,40 +1599,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
     </div>
 
-<?php } elseif (in_array($controller->getTask(),$groupViews)){ ?>
-
-    <?php if($grouplist){ ?>
-        <h3><?= t("Groups")?></h3>
-        <ul class="list-unstyled group-list" data-delete-url="<?= \URL::to('/dashboard/store/products/deletegroup')?>" data-save-url="<?= \URL::to('/dashboard/store/products/editgroup')?>">
-            <?php foreach($grouplist as $group){?>
-                <li data-group-id="<?= $group->getGroupID()?>">
-                    <span class="group-name"><?= $group->getGroupName()?></span>
-                    <input class="hideme edit-group-name" type="text" value="<?= $group->getGroupName()?>">
-                    <span class="btn btn-default btn-edit-group-name"><i class="fa fa-pencil"></i></span>
-                    <span class="hideme btn btn-default btn-cancel-edit"><i class="fa fa-ban"></i></span>
-                    <span class="hideme btn btn-warning btn-save-group-name"><i class="fa fa-save"></i></span>
-                    <span class="btn btn-danger btn-delete-group"><i class="fa fa-trash"></i></span>
-                </li>
-            <?php } ?>
-        </ul>
-
-    <?php } else { ?>
-
-        <div class="alert alert-info"><?= t("You have not added a group yet")?></div>
-
-    <?php } ?>
-    <form method="post" action="<?= $view->action('addgroup')?>">
-        <h4><?= t('Add a Group')?></h4>
-        <hr>
-        <div class="form-group">
-            <?= $form->label('groupName',t("Group Name")); ?>
-            <?= $form->text('groupName',null,array('style'=>'width:200px')); ?>
-        </div>
-        <input type="submit" class="btn btn-primary" value="<?= t('Add Group');?>">
-    </form>
-
-<?php }  ?>
-
+<?php } ?>
 
 <?php if ($controller->getTask() == 'duplicate') { ?>
     <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
