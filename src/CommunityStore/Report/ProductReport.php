@@ -40,8 +40,8 @@ class ProductReport extends AbstractItemList
         $products = array();
         foreach ($this->orderItems as $oi) {
             if (array_key_exists($oi->getProductID(), $products)) {
-                $products[$oi->getProductID()]['pricePaid'] = intval($products[$oi->getProductID()]['pricePaid']) + intval($oi->getPricePaid());
-                $products[$oi->getProductID()]['quantity'] = intval($products[$oi->getProductID()]['quantity']) + intval($oi->getQty());
+                $products[$oi->getProductID()]['pricePaid'] =  $products[$oi->getProductID()]['pricePaid'] + $oi->getPricePaid();
+                $products[$oi->getProductID()]['quantity'] =  $products[$oi->getProductID()]['quantity'] + $oi->getQty();
             } else {
                 //first figure out what the current product name is.
                     //if the product no longer exist, the OI name is fine.
@@ -58,8 +58,8 @@ class ProductReport extends AbstractItemList
                     $products[$oi->getProductID()] = array(
                             'name' => $name,
                             'pID' => $oi->getProductID(),
-                            'pricePaid' => intval($oi->getPricePaid()) * intval($oi->getQty()),
-                            'quantity' => intval($oi->getQty()),
+                            'pricePaid' => $oi->getPricePaid() * $oi->getQty(),
+                            'quantity' => $oi->getQty(),
                         );
                 }
             }

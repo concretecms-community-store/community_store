@@ -127,10 +127,15 @@ if ($cart) {
 
                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
                                 <input type="number" class="form-control" name="pQty[]"
-                                       min="1" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
-                                       value="<?= $qty ?>" style="width: 50px;">
+                                        <?= ($product->allowDecimalQuantity() ? 'step="any" min="0.001"' : 'step="1" min="1"');?> <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
+                                       value="<?= $qty ?>" style="width: 90px;">
                             <?php } else { ?>
                                 1
+                            <?php } ?>
+
+                            <?php $quantityLabel = $product->getQtyLabel(); ?>
+                            <?php if ($quantityLabel) { ?>
+                                 <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
                             <?php } ?>
 
                             <a name="action" data-instance="<?= $k ?>"

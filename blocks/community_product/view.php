@@ -160,7 +160,18 @@ if (is_object($product) && $product->isActive()) {
                         <?php if ($product->allowQuantity() && $showQuantity) { ?>
                             <div class="store-product-quantity form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
-                                <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+
+                                <?php $qtylabel = $product->getQtyLabel(); ?>
+
+                                <?php if ($qtylabel) { ?>
+                                <div class="input-group">
+                                    <input type="number" name="quantity" class="store-product-qty form-control" value="" min="1" step="1">
+                                    <div class="input-group-addon"><?= $product->getQtyLabel();?></div>
+                                </div>
+                                <?php } else { ?>
+                                    <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                                <?php } ?>
+
                             </div>
                         <?php } else { ?>
                             <input type="hidden" name="quantity" class="store-product-qty" value="1">

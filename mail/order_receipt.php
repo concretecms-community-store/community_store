@@ -120,7 +120,7 @@ ob_start();
                         }
                         ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?> <?= h($item->getQtyLabel());?></td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()) ?></td>
                     <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()) ?></td>
                 </tr>

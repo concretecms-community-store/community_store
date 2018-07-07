@@ -114,14 +114,31 @@ class Product
      * @Column(type="boolean",nullable=true)
      */
     protected $pQtyUnlim;
+
     /**
      * @Column(type="boolean",nullable=true)
      */
     protected $pBackOrder;
+
     /**
      * @Column(type="boolean")
      */
     protected $pNoQty;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $pAllowDecimalQty;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $pQtyLabel;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $pMaxQty;
 
     /**
      * @Column(type="integer",nullable=true)
@@ -380,137 +397,216 @@ class Product
     {
         $this->cID = $cID;
     }
+
     public function setName($name)
     {
         $this->pName = $name;
     }
+
     public function setSKU($sku)
     {
         $this->pSKU = $sku;
     }
+
     public function setDescription($description)
     {
         $this->pDesc = $description;
     }
+
     public function setDetail($detail)
     {
         $this->pDetail = $detail;
     }
+
     public function setPrice($price)
     {
         $this->pPrice = ($price != '' ? $price : 0);
     }
+
     public function setSalePrice($price)
     {
         $this->pSalePrice = ($price != '' ? $price : null);
     }
+
     public function setCustomerPrice($bool) {
         $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
     }
+
     public function getPriceMaximum()
     {
         return $this->pPriceMaximum;
     }
+
     public function setPriceMaximum($pPriceMaximum)
     {
         $this->pPriceMaximum = $pPriceMaximum != '' ? $pPriceMaximum : null;
     }
+
     public function getPriceMinimum()
     {
         return $this->pPriceMinimum;
     }
+
     public function setPriceMinimum($pPriceMinimum)
     {
         $this->pPriceMinimum = $pPriceMinimum != '' ? $pPriceMinimum : null;
     }
+
     public function getPriceSuggestions()
     {
         return $this->pPriceSuggestions;
     }
+
     public function getPriceSuggestionsArray()
     {
         return array_filter(array_map('trim', explode(',', trim($this->pPriceSuggestions))));
     }
+
     public function setPriceSuggestions($priceSuggestions)
     {
         $this->pPriceSuggestions = $priceSuggestions;
     }
+
     public function setIsFeatured($bool)
     {
         $this->pFeatured = (!is_null($bool) ? $bool : false);
     }
+
     public function setQty($qty)
     {
         $this->pQty = ($qty ? $qty : 0);
     }
+
     public function setIsUnlimited($bool)
     {
         $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
     }
+
     public function setAllowBackOrder($bool)
     {
         $this->pBackOrder = (!is_null($bool) ? $bool : false);
     }
+
     public function setNoQty($bool)
     {
         $this->pNoQty = $bool;
     }
+
+    public function getPID()
+    {
+        return $this->pID;
+    }
+
+    public function setPID($pID)
+    {
+        $this->pID = $pID;
+    }
+
+    public function getAllowDecimalQty()
+    {
+        return $this->pAllowDecimalQty == '1';
+    }
+
+    public function allowDecimalQuantity()
+    {
+        return $this->getAllowDecimalQty();
+    }
+
+    public function setAllowDecimalQty($pAllowDecimalQty)
+    {
+        $this->pAllowDecimalQty = $pAllowDecimalQty;
+    }
+
+    public function getQtyLabel()
+    {
+        return $this->pQtyLabel;
+    }
+
+    public function setQtyLabel($pQtyLabel)
+    {
+        $this->pQtyLabel = $pQtyLabel;
+    }
+
+    public function getMaxQty()
+    {
+        return $this->pMaxQty;
+    }
+
+    public function setMaxQty($pMaxQty)
+    {
+        $this->pMaxQty = $pMaxQty;
+    }
+
     public function setTaxClass($taxClass)
     {
         $this->pTaxClass = $taxClass;
     }
+
     public function setIsTaxable($bool)
     {
         $this->pTaxable = (!is_null($bool) ? $bool : false);
     }
+
     public function setImageID($fID)
     {
         $this->pfID = $fID;
     }
+
     public function setIsActive($bool)
     {
         $this->pActive = $bool;
     }
+
     public function setDateAdded($date)
     {
         $this->pDateAdded = $date;
     }
+
     public function setIsShippable($bool)
     {
         $this->pShippable = (!is_null($bool) ? $bool : false);
     }
+
     public function setWidth($width)
     {
         $this->pWidth = (float)$width;
     }
+
     public function setHeight($height)
     {
         $this->pHeight = (float)$height;
     }
+
     public function setLength($length)
     {
         $this->pLength = (float)$length;
     }
+
     public function setWeight($weight)
     {
         $this->pWeight = (float)$weight;
     }
+
     public function setNumberItems($number)
     {
         $this->pNumberItems = ($number != '' ? $number : null);
     }
+
     public function setCreatesUserAccount($bool)
     {
         $this->pCreateUserAccount = (!is_null($bool) ? $bool : false);
     }
+
     public function setAutoCheckout($bool)
     {
         $this->pAutoCheckout = (!is_null($bool) ? $bool : false);
     }
+
     public function setIsExclusive($bool)
     {
         $this->pExclusive = (!is_null($bool) ? $bool : false);
     }
+
     public function setHasVariations($bool)
     {
         $this->pVariations = (!is_null($bool) ? $bool : false);
@@ -591,6 +687,9 @@ class Product
         $product->setPriceMaximum($data['pPriceMaximum']);
         $product->setPriceMinimum($data['pPriceMinimum']);
         $product->setQuantityPrice($data['pQuantityPrice']);
+        $product->setAllowDecimalQty($data['pAllowDecimalQty']);
+        $product->setQtyLabel($data['pQtyLabel']);
+        $product->setMaxQty($data['pMaxQty']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {

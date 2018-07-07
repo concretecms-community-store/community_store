@@ -152,7 +152,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         ?>
                     </td>
                     <td><?=Price::format($item->getPricePaid())?></td>
-                    <td><?= $item->getQty()?></td>
+                    <td><?= $item->getQty()?> <?= h($item->getQtyLabel());?></td>
                     <td><?=Price::format($item->getSubTotal())?></td>
                 </tr>
               <?php

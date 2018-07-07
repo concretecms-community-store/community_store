@@ -132,7 +132,7 @@ class Cart extends PageController
             $productdata['pAutoCheckout'] = $product->autoCheckout();
             $productdata['pName'] = $product->getName();
 
-            $returndata = array('quantity' => (int)$data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error);
+            $returndata = array('quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error);
             echo json_encode($returndata);
         }
         exit();
