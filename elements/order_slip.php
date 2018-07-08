@@ -217,8 +217,6 @@ $dh = Core::make('helper/date');
 
 
         <?php } ?>
-        </p>
-
     </div>
 </div>
 </body>

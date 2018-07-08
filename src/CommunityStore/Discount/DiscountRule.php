@@ -518,6 +518,8 @@ class DiscountRule
                 return StorePrice::format($this->drValue) . ' ' . t('off');
             }
         }
+
+        return '';
     }
 
     public static function getByID($drID)

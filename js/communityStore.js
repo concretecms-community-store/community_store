@@ -107,7 +107,7 @@ var communityStore = {
             return false;
         }
 
-        var qtyfield = $(form).find('.store-product-qty')
+        var qtyfield = $(form).find('.store-product-qty');
         var qty = qtyfield.val();
         if (qty > 0) {
             var serial = $(form).serialize();

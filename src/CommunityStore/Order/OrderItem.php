@@ -181,7 +181,7 @@ class OrderItem
      */
     public function getQty()
     {
-        return $this->oiQty;
+        return round($this->oiQty, 4);
     }
 
     /**

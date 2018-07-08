@@ -56,7 +56,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle ><?= t('Overview')?></a></li>
-                    <li><a href="#product-categories" data-pane-toggle><?= t('Categories')?></a></li>
+                    <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups')?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images')?></a></li>
                     <li><a href="#product-options" data-pane-toggle><?= t('Options')?></a></li>
@@ -347,6 +347,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         });
 
 
+                                        $('#pAllowDecimalQty').change(function(){
+                                            $('#quantitystepscontainer').toggleClass('hidden');
+                                        });
+
                                         $('#pQuantityPrice').change(function(){
                                             $('#tieredoptionscontainer').toggleClass('hidden');
                                         });
@@ -354,9 +358,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         $('#pNoQty').change(function(){
                                             if ($(this).val() == '1') {
                                                 $('#quantityoptions').addClass('hidden');
+                                                $('#quantitystepscontainer').addClass('hidden');
                                             } else {
                                                 $('#quantityoptions').removeClass('hidden');
+
+                                                if ( $('#pAllowDecimalQty').val() == 1) {
+                                                    $('#quantitystepscontainer').removeClass('hidden');
+                                                } else {
+                                                    $('#quantitystepscontainer').addClass('hidden');
+                                                }
                                             }
+
                                         });
 
                                         $('#pVariations').change(function(){
@@ -409,6 +421,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="form-group">
                             <?= $form->label("pQtyLabel", t("Quantity Label"));?>
                             <?= $form->text("pQtyLabel", $product->getQtyLabel(), array('placeholder'=>'e.g. cm'));?>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 <?= ($product->getAllowDecimalQty() ? '' : 'hidden');?>" id="quantitystepscontainer">
+                        <div class="form-group">
+                            <?= $form->label("pQtySteps", t("Quantity Steps"));?>
+                            <?= $form->number("pQtySteps",  $product->getQtySteps() > 0  ? round($product->getQtySteps(), 4) : '', array('min'=>0,'step'=>0.001, 'placeholder'=>'e.g. 0.1'));?>
                         </div>
                     </div>
                 </div>

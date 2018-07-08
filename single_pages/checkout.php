@@ -387,7 +387,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
 
-                                </div></div>
+                                </div>
+                                </div>
 
                             <?php    }
                         } else {  //if payment methods

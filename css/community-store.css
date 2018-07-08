@@ -128,6 +128,10 @@
     display: none;
 }
 
+.store-cart-page .store-cart-product-qty input {
+    display: inline-block;
+}
+
 @media screen and (max-width: 768px) {
     .store-cart-page .store-cart-page-cart tbody td .form-control{
         width:20%;

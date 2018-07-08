@@ -1039,6 +1039,8 @@ class Order
                 return $av->getValue($displayMode);
             }
         }
+
+        return false;
     }
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)

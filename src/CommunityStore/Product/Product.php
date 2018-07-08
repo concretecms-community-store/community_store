@@ -131,6 +131,11 @@ class Product
     protected $pAllowDecimalQty;
 
     /**
+     * @Column(type="decimal", precision=5, scale=4, nullable=true)
+     */
+    protected $pQtySteps;
+
+    /**
      * @Column(type="string")
      */
     protected $pQtyLabel;
@@ -517,6 +522,16 @@ class Product
         $this->pAllowDecimalQty = $pAllowDecimalQty;
     }
 
+    public function getQtySteps()
+    {
+        return round($this->pQtySteps, 4);
+    }
+
+    public function setQtySteps($pQtySteps)
+    {
+        $this->pQtySteps = $pQtySteps;
+    }
+
     public function getQtyLabel()
     {
         return $this->pQtyLabel;
@@ -688,6 +703,7 @@ class Product
         $product->setPriceMinimum($data['pPriceMinimum']);
         $product->setQuantityPrice($data['pQuantityPrice']);
         $product->setAllowDecimalQty($data['pAllowDecimalQty']);
+        $product->setQtySteps($data['pQtySteps'] > 0 ? $data['pQtySteps'] : null);
         $product->setQtyLabel($data['pQtyLabel']);
         $product->setMaxQty($data['pMaxQty']);
 

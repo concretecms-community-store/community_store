@@ -522,7 +522,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 <p class="alert alert-info">
     <?php if ($discountRule->isSingleUse()) { ?>
-        <?= t('Single Use Codes'); ?></p>
+        <?= t('Single Use Codes'); ?>
     <?php } else { ?>
         <?= t('Codes can be repeatedly used'); ?>
     <?php } ?>
