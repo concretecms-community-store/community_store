@@ -391,6 +391,9 @@ var communityStore = {
 
     sortNumber: function(a,b) {
         return a - b;
+    },
+    hasFormValidation: function() {
+        return (typeof document.createElement( 'input' ).checkValidity == 'function');
     }
 
 
@@ -679,8 +682,30 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-btn-add-to-cart', function(e) {
-        communityStore.addToCart($(this).data('product-id'),$(this).data('add-type'));
-        e.preventDefault();
+        var add = false;
+
+        if ($(this).data('invalid') == '1') {
+            $(this).data('invalid', '0');
+        } else {
+
+            if (communityStore.hasFormValidation()) {
+                if (!$(this).closest('form')[0].checkValidity()) {
+
+                    $(this).data('invalid', '1');
+                    $(this).click();
+                } else {
+                    add = true;
+                }
+            } else {
+                add = true;
+            }
+
+            if (add) {
+                communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
+                e.preventDefault();
+            }
+        }
+
     });
 
     $(document).on('submit', '.store-product-block', function(e) {
@@ -738,4 +763,6 @@ $(document).ready(function () {
         e.preventDefault();
         communityStore.displayCart(false, true);
     });
+
+
 });
