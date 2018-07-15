@@ -19,6 +19,7 @@
                             <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts')?></a></li>
                             <li><a href="#settings-products" data-pane-toggle><?= t('Products')?></a></li>
                             <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
+                            <li><a href="#settings-orders" data-pane-toggle><?= t('Orders')?></a></li>
                         </ul>
 
                 </div>
@@ -330,6 +331,15 @@
                         });
                     </script>
 
+
+                </div>
+
+                <!-- #settings-orders -->
+                <div class="col-sm-9 store-pane" id="settings-orders">
+                    <h3><?= t('Orders');?></h3>
+                    <div class="form-group">
+                        <label><?= $form->checkbox('showUnpaidExternalPaymentOrders', '1',Config::get('community_store.showUnpaidExternalPaymentOrders') ? '1' : '0')?>
+                            <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions');?></label></div>
 
                 </div>
 

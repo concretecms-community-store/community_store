@@ -27,6 +27,10 @@ class Orders extends DashboardPageController
 
         $orderList->setItemsPerPage(20);
 
+        if (Config::get('community_store.showUnpaidExternalPaymentOrders') ) {
+            $orderList->setIncludeExternalPaymentRequested(true);
+        }
+
         $paginator = $orderList->getPagination();
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList',$paginator->getCurrentPageResults());
