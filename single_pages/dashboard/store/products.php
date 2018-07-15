@@ -1433,7 +1433,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
             <div class="col-sm-9 store-pane" id="product-page">
 
-                <?php if($page){ ?>
+                <?php if($page && !$page->isInTrash()){ ?>
                     <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
                 <?php } else { ?>
 

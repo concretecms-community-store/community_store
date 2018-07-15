@@ -76,6 +76,12 @@ if($products){
             $activeclass =  'on-product-page';
         }
 
+        $productPage = Page::getByID($product->getPageID());
+
+        if ($productPage->isError() || $productPage->isInTrash()) {
+            $productPage = false;
+        }
+
     ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
@@ -92,7 +98,7 @@ if($products){
                                 <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
                                     <img src="<?= $thumb->src?>" class="img-responsive">
                                 </a>
-                            <?php } elseif ($showPageLink) { ?>
+                            <?php } elseif ($showPageLink && $productPage) { ?>
                                 <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
                                     <img src="<?= $thumb->src?>" class="img-responsive">
                                 </a>
@@ -163,8 +169,8 @@ if($products){
                 <?php if($showDescription){ ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
-                <?php if($showPageLink){?>
-                <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
+                <?php if($showPageLink && $productPage) { ?>
+                    <p class="store-btn-more-details-container"><a href="<?= \URL::to($productPage) ?>"class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")) ?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){ ?>
 
