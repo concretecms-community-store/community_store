@@ -168,8 +168,8 @@ class Orders extends DashboardPageController
     public function remove($oID)
     {
         StoreOrder::getByID($oID)->remove();
-        $this->flash('success', t('Order Removed'));
-        $this->redirect('/dashboard/store/orders/removed');
+        $this->flash('success', t('Order Deleted'));
+        $this->redirect('/dashboard/store/orders');
     }
 
 }
