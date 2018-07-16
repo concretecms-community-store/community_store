@@ -34,7 +34,8 @@ class Tax extends DashboardPageController
     public function delete($trID)
     {
         StoreTaxRate::getByID($trID)->delete();
-        $this->redirect('/dashboard/store/settings/tax/removed');
+        $this->flash('success', t('Tax Rate Deleted'));
+        $this->redirect('/dashboard/store/settings/tax');
     }
     public function loadFormAssets()
     {
@@ -42,21 +43,7 @@ class Tax extends DashboardPageController
         $this->set("states",Core::make('helper/lists/states_provinces')->getStates());
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
-    public function success()
-    {
-        $this->view();
-        $this->set("message",t("Successfully added a new Tax Rate"));
-    }
-    public function updated()
-    {
-        $this->view();
-        $this->set("message",t("Successfully updated"));
-    }
-    public function removed()
-    {
-        $this->view();
-        $this->set("message",t("Successfully removed"));
-    }
+
     public function add_rate()
     {
         $data = $this->post();
@@ -67,11 +54,13 @@ class Tax extends DashboardPageController
             if($this->post('taxRateID')){
                 //update
                 StoreTaxRate::add($data);
-                $this->redirect('/dashboard/store/settings/tax/updated');
+                $this->flash('success', t('Tax Rate Updated'));
+                $this->redirect('/dashboard/store/settings/tax');
             } else {
                 //first we send the data to the shipping method type.
                 StoreTaxRate::add($data);
-                $this->redirect('/dashboard/store/settings/tax/success');
+                $this->flash('success', t('Tax Rate Added'));
+                $this->redirect('/dashboard/store/settings/tax');
             }
         } else {
             if($this->post('taxRateID')){
@@ -131,11 +120,13 @@ class Tax extends DashboardPageController
                 //update
                 $taxClass = StoreTaxClass::getByID($this->post('taxClassID'));
                 $taxClass->update($data);
-                $this->redirect('/dashboard/store/settings/tax/class_updated');
+                $this->flash('success', t('Tax Class Updated'));
+                $this->redirect('/dashboard/store/settings/tax');
             } else {
                 //add.
                 StoreTaxClass::add($data);
-                $this->redirect('/dashboard/store/settings/tax/class_added');
+                $this->flash('success', t('Tax Class Added'));
+                $this->redirect('/dashboard/store/settings/tax');
             }
         }
     }
@@ -159,23 +150,8 @@ class Tax extends DashboardPageController
     public function delete_class($tcID)
     {
         StoreTaxClass::getByID($tcID)->delete();
-        $this->redirect("/dashboard/store/settings/tax/class_deleted");   
+        $this->flash('success', t('Tax Class Deleted'));
+        $this->redirect("/dashboard/store/settings/tax");
     }
-    public function class_deleted()
-    {
-        $this->set("message",t("Tax Class removed"));
-        $this->view();
-    }
-    public function class_added()
-    {
-        $this->set("message",t("Tax Class Added"));
-        $this->view();
-    }
-    
-    public function class_updated()
-    {
-        $this->set("message",t("Tax Class updated"));
-        $this->view();
-    }
-    
+
 }

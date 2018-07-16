@@ -505,11 +505,6 @@ $currencySymbol = Config::get('community_store.symbol');
     <a href="<?= \URL::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
 </div>
 
-
-<?php if (isset($successCount)) { ?>
-<p class="alert alert-success"><?= $successCount . ' ' . ($successCount == 1 ? t('code added') : t('codes added')); ?></p>
-<?php } ?>
-
 <?php if (isset($failedcodes) && count($failedcodes) > 0 ) { ?>
     <p class="alert alert-warning"><?= t('The following codes are invalid or are already active:')  ?><br />
         <strong><?= implode('<br />', $failedcodes); ?></strong>

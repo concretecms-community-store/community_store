@@ -52,17 +52,6 @@ class Settings extends DashboardPageController
         $this->requireAsset('select2');
     }
 
-    public function success()
-    {
-        $this->set('success', t('Settings Saved'));
-        $this->view();
-    }
-
-    public function failed()
-    {
-        $this->view();
-    }
-
     public function save()
     {
         $this->view();
@@ -142,7 +131,8 @@ class Settings extends DashboardPageController
                 }
 
                 $this->saveOrderStatuses($args);
-                $this->redirect('/dashboard/store/settings/success');
+                $this->flash('success', t('Settings Saved'));
+                $this->redirect('/dashboard/store/settings');
             }
         }
 

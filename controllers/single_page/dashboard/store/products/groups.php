@@ -44,7 +44,7 @@ class Groups extends DashboardPageController
                 }
 
                 $this->flash('success', t('Product Group Added'));
-                $this->redirect('/dashboard/store/products/groups/');
+                $this->redirect('/dashboard/store/products/groups');
             }
         }
     }
@@ -77,7 +77,7 @@ class Groups extends DashboardPageController
                 }
 
                 $this->flash('success', t('Product Group Edited'));
-                $this->redirect('/dashboard/store/products/groups/');
+                $this->redirect('/dashboard/store/products/groups');
             }
         }
 

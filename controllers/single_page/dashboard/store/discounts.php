@@ -90,7 +90,7 @@ class Discounts extends DashboardPageController
         $this->set('usergroups', $usergrouparray);
     }
 
-    public function codes($drID, $successcount = null) {
+    public function codes($drID) {
         $discountRule = StoreDiscountRule::getByID($drID);
 
         $this->set('discountRule', $discountRule);
@@ -99,10 +99,6 @@ class Discounts extends DashboardPageController
         }
 
         $this->set('pageTitle', t('Codes for discount rule') . ': ' . $discountRule->getName());
-
-        if (!is_null($successcount)) {
-            $this->set('successCount', $successcount);
-        }
 
         if (is_array(Session::get('communitystore.failedcodes'))) {
             $this->set('failedcodes', Session::get('communitystore.failedcodes'));
@@ -118,10 +114,11 @@ class Discounts extends DashboardPageController
             if ($dr) {
                 $dr->delete();
             }
-            $this->redirect('/dashboard/store/discounts/', 'deleted');
+            $this->flash('success', t('Discount Rule Deleted'));
+            $this->redirect('/dashboard/store/discounts');
         }
 
-        $this->redirect('/dashboard/store/discounts/');
+        $this->redirect('/dashboard/store/discounts');
     }
 
     public function deletecode() {
@@ -136,7 +133,8 @@ class Discounts extends DashboardPageController
             }
         }
 
-        $this->redirect('/dashboard/store/discounts/');
+        $this->flash('success', t('Code Deleted'));
+        $this->redirect('/dashboard/store/discounts');
     }
 
     public function addcodes($drID) {
@@ -171,7 +169,8 @@ class Discounts extends DashboardPageController
             Session::set('communitystore.failedcodes', $failed);
         }
 
-        $this->redirect('/dashboard/store/discounts/codes/' . $drID, $successcount );
+        $this->flash('success', $successcount . ' ' . ($successcount == 1 ? t('Code Added') : t('Codes Added')));
+        $this->redirect('/dashboard/store/discounts/codes/' . $drID);
     }
 
     public function save()
@@ -187,13 +186,15 @@ class Discounts extends DashboardPageController
             if (!$errors->has()) {
                 if($data['drID']){
                     StoreDiscountRule::edit($data['drID'], $data);
-                    $this->redirect('/dashboard/store/discounts/', 'updated');
+                    $this->flash('success', t('Discount Rule Updated'));
+                    $this->redirect('/dashboard/store/discounts');
                 } else {
                     $discountrule = StoreDiscountRule::add($data);
                     if ( $discountrule->getTrigger() == 'code') {
                         $this->redirect('/dashboard/store/discounts/codes/'. $discountrule->getID());
                     } else {
-                        $this->redirect('/dashboard/store/discounts/', 'success');
+                        $this->flash('success', t('Discount Rule Added'));
+                        $this->redirect('/dashboard/store/discounts');
                     }
                 }
            } else {
@@ -201,20 +202,5 @@ class Discounts extends DashboardPageController
            }
            //if no errors
         } // if post
-    }
-
-    public function success() {
-        $this->set('success',t("Discount Rule Added"));
-        $this->view();
-    }
-
-    public function updated() {
-        $this->set('success',t("Discount Rule Updated"));
-        $this->view();
-    }
-
-    public function deleted() {
-        $this->set('success',t("Discount Rule Deleted"));
-        $this->view();
     }
 }

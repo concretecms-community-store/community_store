@@ -31,22 +31,7 @@ class Attributes extends DashboardPageController
         StoreProductKey::updateAttributesDisplayOrder($uats);
         exit;
     }
-        
-    public function removed() {
-        $this->set('message', t('Attribute Deleted.'));
-        $this->view();
-    }
-    
-    public function success() {
-        $this->set('message', t('Attribute Created.'));
-        $this->view();
-    }
 
-    public function updated() {
-        $this->set('message', t('Attribute Updated.'));
-        $this->view();
-    }
-    
     public function delete($akID, $token = null){
         try {
             $ak = StoreProductKey::getByID($akID);
@@ -62,8 +47,9 @@ class Attributes extends DashboardPageController
             }
             
             $ak->delete();
-            
-            $this->redirect("/dashboard/store/products/attributes", 'removed');
+
+            $this->flash('success', t('Attribute Deleted'));
+            $this->redirect("/dashboard/store/products/attributes");
         } catch (Exception $e) {
             $this->set('error', $e);
         }
@@ -88,7 +74,8 @@ class Attributes extends DashboardPageController
         } else {
             $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
             StoreProductKey::add('store_product',$type, $this->post(),$pkg);
-            $this->redirect('/dashboard/store/products/attributes/', 'success');
+            $this->flash('success', t('Attribute Created'));
+            $this->redirect('/dashboard/store/products/attributes');
         }
     }
     
@@ -110,7 +97,8 @@ class Attributes extends DashboardPageController
                 $this->set('error', $e);
             } else {
                 $key->update($this->post());
-                $this->redirect('/dashboard/store/products/attributes', 'updated');
+                $this->flash('success', t('Attribute Updated'));
+                $this->redirect('/dashboard/store/products/attributes');
             }
         }
     }

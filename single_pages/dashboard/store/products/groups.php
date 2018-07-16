@@ -67,7 +67,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
         <label><?= t('Products within group');?></label>
                 <?php $products = $group->getProducts(); ?>
-                <ul class="list-group multi-select-list multi-select-sortable <?= count($products) == 0 ? 'hidden' : ''; ?>" id="group-products">
+                <ul class="list-group multi-select-list <?= count($products) == 0 ? 'hidden' : ''; ?>" id="group-products">
                     <?php
 
                     if ($products && count($products) > 0) {
@@ -125,7 +125,6 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
                             $(this).parent().remove();
                         });
 
-                        $('#group-products').sortable({axis: 'y'});
 
                     });
 
