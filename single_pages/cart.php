@@ -43,6 +43,7 @@ if ($cart) {
                 <th colspan="2"><?= t('Product'); ?></th>
                 <th><?= t('Price'); ?></th>
                 <th class="text-right"><?= t('Quantity'); ?></th>
+                <th class="text-right"><?= t('Remove'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -122,25 +123,38 @@ if ($cart) {
                                 ?>
                             <?php } ?>
                         </td>
-                        <td class="store-cart-product-qty text-right">
-                            <?php if ($product->allowQuantity()) { ?>
+                        <td class="store-cart-product-qty">
+                            <?php $quantityLabel = $product->getQtyLabel(); ?>
 
-                                <input type="hidden" name="instance[]" value="<?= $k ?>"/>
-                                <input type="number" class="form-control" name="pQty[]"
-                                        <?= ($product->allowDecimalQuantity() ? 'step="any" min="0.001"' : 'step="1" min="1"');?> <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="' . $product->getQty() . '"'); ?>
-                                       value="<?= $qty ?>" style="width: 90px;">
+                            <span class="store-qty-container pull-right
+                            <?php if ($quantityLabel) { ?>input-group
+                                <?php } ?>
+                                ">
+                            <?php if ($product->allowQuantity()) { ?>
+                                <?php if ($product->allowDecimalQuantity()) {
+                                    $max = $product->getMaxCartQty();
+                                    ?>
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
+                                <?php } else { ?>
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
+                                <?php } ?>
+
+                                 <input type="hidden" name="instance[]" value="<?= $k ?>"/>
+
                             <?php } else { ?>
                                 1
                             <?php } ?>
 
-                            <?php $quantityLabel = $product->getQtyLabel(); ?>
                             <?php if ($quantityLabel) { ?>
-                                 <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
+                                <div class="store-cart-qty-label input-group-addon"><?= $quantityLabel; ?></div>
                             <?php } ?>
+                            </span>
 
+                        </td>
+                        <td class="text-right">
                             <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
-                                    class="fa fa-remove"></i><?php //echo t("Remove")
+                                        class="fa fa-remove"></i><?php //echo t("Remove")
                                 ?></a>
                         </td>
                     </tr>
@@ -151,7 +165,7 @@ if ($cart) {
 
             <tfoot>
             <tr>
-                <td colspan="4" class="text-right">
+                <td colspan="5" class="text-right">
                     <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-default"
                             type="submit"><?= t("Clear Cart") ?></button>
                     <button name="action" value="update" class="store-btn-cart-list-update btn btn-default"

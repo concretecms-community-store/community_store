@@ -750,12 +750,36 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.store-btn-cart-modal-update', function(e) {
-        var instances = $("#store-modal-cart input[name='instance[]']").map(function(){return $(this).val();}).get();
-        var pQty = $("#store-modal-cart input[name='pQty[]']").map(function(){return $(this).val();}).get();
+        var update = false;
 
-        communityStore.updateMultiple(instances,pQty,true);
-        $(this).addClass('disabled');
-        e.preventDefault();
+        if ($(this).data('invalid') == '1') {
+            $(this).data('invalid', '0');
+        } else {
+            if (communityStore.hasFormValidation()) {
+                if (!$(this).closest('form')[0].checkValidity()) {
+                    $(this).data('invalid', '1');
+                    $(this).click();
+                } else {
+                    update = true;
+                }
+            } else {
+                update = true;
+            }
+
+            if (update) {
+                var instances = $("#store-modal-cart input[name='instance[]']").map(function () {
+                    return $(this).val();
+                }).get();
+                var pQty = $("#store-modal-cart input[name='pQty[]']").map(function () {
+                    return $(this).val();
+                }).get();
+
+                communityStore.updateMultiple(instances, pQty, true);
+                $(this).addClass('disabled');
+                e.preventDefault();
+            }
+        }
+
     });
 
 

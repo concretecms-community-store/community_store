@@ -181,12 +181,14 @@ if($products){
 
                         <?php if ($quantityLabel) { ?>
                             <div class="input-group">
-                        <?php } ?>
+                        <?php }
+                        $max = $product->getMaxCartQty();
+                        ?>
 
                         <?php if ($product->allowDecimalQuantity()) { ?>
-                            <input type="number" name="quantity" class="store-product-qty form-control" min="1" step="<?= $product->getQtySteps();?>" >
+                            <input type="number" name="quantity" class="store-product-qty form-control" min="1" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
                         <?php } else { ?>
-                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
                         <?php } ?>
 
                        <?php if ($quantityLabel) { ?>

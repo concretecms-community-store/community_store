@@ -76,7 +76,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                     <?= $thumb ?>
                                 </a>
                             </td>
-                            <td class="checkout-cart-product-name col-xs-5">
+                            <td class="checkout-cart-product-name col-xs-4">
                                 <?php } else { ?>
                             <td colspan="2" class="checkout-cart-product-name">
                                 <?php } ?>
@@ -132,13 +132,29 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php } ?>
                             </td>
 
-                            <td class="store-cart-list-product-qty col-xs-2">
-                                <?php if ($product->allowQuantity()) { ?>
+                            <td class="store-cart-list-product-qty col-xs-3">
+                                <?php $quantityLabel = $product->getQtyLabel(); ?>
+                                <span class="store-qty-container
+                            <?php if ($quantityLabel) { ?>input-group
+                                <?php } ?>
+                                ">
+                                <?php if ($product->allowQuantity()) {
+                                    $max = $product->getMaxCartQty();
+                                    ?>
+                                    <?php if ($product->allowDecimalQuantity()) { ?>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                    <?php } else { ?>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                    <?php } ?>
+
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
-                                    <input type="number" name="pQty[]" class="form-control" <?= ($product->allowBackOrders() || $product->isUnlimited() ? '' : 'max="'.$product->getQty() . '"');?> min="1" value="<?= $qty?>">
                                 <?php }  else { ?>
                                 1
-                            <?php } ?>
+                                    <?php } ?>
+                                <?php if ($quantityLabel) { ?>
+                                        <div class="store-cart-qty-label input-group-addon"><?= $quantityLabel; ?></div>
+                                <?php } ?>
+                                </span>
                             </td>
                             <td class="store-cart-list-remove-button col-xs-1 text-right">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
@@ -159,7 +175,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                     <td></td>
                     <td colspan="2">
                         <?php if ($allowUpdate) { ?>
-                            <p class="text-right"><a class="store-btn-cart-modal-update btn btn-default" data-modal="true" href="#"><?= t("Update")?></a></p>
+                            <p class="text-right"><button type="submit" class="store-btn-cart-modal-update btn btn-default" data-modal="true" href="#"><?= t("Update")?></button></p>
                         <?php } ?>
 
                     </td>
@@ -200,10 +216,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
 
         <div class="store-cart-page-cart-links">
-            <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
-            <?php if ($cart  && !empty($cart)) { ?>
-            <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
-            <a class="store-btn-cart-modal-checkout btn btn-primary pull-right" href="<?= \URL::to('/checkout')?>"><?= t('Checkout')?></a>
+            <p class="pull-left">
+                <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
+                <?php if ($cart  && !empty($cart)) { ?>
+                <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
+            </p>
+            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= \URL::to('/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

@@ -1128,6 +1128,26 @@ class Product
         }
     }
 
+    public function getMaxCartQty() {
+        if ($this->allowBackOrders() ||  $this->isUnlimited()) {
+            $available = false;
+        } else {
+            $available = $this->getQty();
+        }
+
+        $maxcart = $this->getMaxQty();
+
+        if ($maxcart > 0) {
+            if ($available > 0) {
+                return min($maxcart, $available);
+            } else {
+                return $maxcart;
+            }
+        } else {
+            return $available;
+        }
+    }
+
     public function isSellable()
     {
         if (!$this->isActive()) {

@@ -128,8 +128,19 @@
     display: none;
 }
 
-.store-cart-page .store-cart-product-qty input {
+.store-cart-page .store-cart-product-qty input{
     display: inline-block;
+}
+
+.store-qty-container {
+    max-width: 120px;
+    min-width: 110px;
+}
+
+
+.store-qty-container input {
+    max-width: 120px;
+
 }
 
 @media screen and (max-width: 768px) {
