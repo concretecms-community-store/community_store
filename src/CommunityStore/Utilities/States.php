@@ -8,11 +8,11 @@ class States extends Controller
 {
     public function getStateList()
     {
-        $countryCode = $_POST['country'];
-        $selectedState = $_POST['selectedState'];
-        $type = $_POST['type'];
-        $class = empty($_POST['class']) ? 'form-control' : $_POST['class'];
-        $dataList = Core::make('helper/json')->decode($_POST['data'], true);
+        $countryCode = htmlspecialchars($_POST['country']);
+        $selectedState = htmlspecialchars($_POST['selectedState']);
+        $type = htmlspecialchars($_POST['type']);
+        $class = empty(htmlspecialchars($_POST['class'])) ? 'form-control' : htmlspecialchars($_POST['class']);
+        $dataList = Core::make('helper/json')->decode(htmlspecialchars($_POST['data']), true);
         $data = '';
         if (is_array($dataList) && count($dataList)) {
             foreach ($dataList as $name => $value) {
