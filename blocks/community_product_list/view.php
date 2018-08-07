@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 $c = Page::getCurrentPage();
 
@@ -16,6 +16,10 @@ if($products){
 
     if ($productsPerRow == 4) {
         $columnClass = 'col-md-3';
+    }
+
+    if ($productsPerRow == 6) {
+        $columnClass = 'col-md-2';
     }
     ?>
 

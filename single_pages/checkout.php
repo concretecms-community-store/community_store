@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 ?>
@@ -122,7 +122,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         </div>
 
                         <?php if ($orderChoicesEnabled) { ?>
-                            <div id="store-checkout-form-group-other-attributes" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
+                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
 
                                 <div class="">
                                     <h2><?= t("Other Choices") ?></h2>
@@ -134,7 +134,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
                                                      if ($ak->isRequired()) {
-                                                        echo str_replace('<input ', '<input required="required"', $fieldoutput);
+                                                         echo str_replace('<input', '<input required ', $fieldoutput);
                                                      } else {
                                                         echo $fieldoutput;
                                                      }

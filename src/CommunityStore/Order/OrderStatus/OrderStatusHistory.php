@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use Concrete\Core\Foundation\Object as Object;
-use Database;
 use Events;
 use User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
@@ -13,7 +11,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
  * @Entity
  * @Table(name="CommunityStoreOrderStatusHistories")
  */
-class OrderStatusHistory extends Object
+class OrderStatusHistory
 {
     /**
      * @Id @Column(type="integer")
@@ -184,5 +182,12 @@ class OrderStatusHistory extends Object
         $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    public function setPropertiesFromArray($arr)
+    {
+        foreach ($arr as $key => $prop) {
+            $this->{$key} = $prop;
+        }
     }
 }

@@ -11,11 +11,21 @@ class ProductModal extends Controller
     public function getProductModal()
     {
         $pID = $this->get('pID');
-        $product = StoreProduct::getByID($pID);
-        if (Filesystem::exists(DIR_BASE."/application/elements/product_modal.php")) {
-            View::element("product_modal", array("product" => $product));
-        } else {
-            View::element("product_modal", array("product" => $product), "community_store");
+
+        if ($pID) {
+            $product = StoreProduct::getByID($pID);
+
+            if ($product) {
+                if (Filesystem::exists(DIR_BASE . "/application/elements/product_modal.php")) {
+                    View::element("product_modal", ["product" => $product]);
+                    return;
+                } else {
+                    View::element("product_modal", ["product" => $product], "community_store");
+                    return;
+                }
+            }
         }
+
+        $this->redirect('/');
     }
 }

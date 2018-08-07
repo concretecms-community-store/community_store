@@ -102,8 +102,10 @@ class ProductImage
         self::removeImagesForProduct($product);
 
         //add new ones.
-        for ($i = 0;$i < count($images['pifID']);++$i) {
-            self::add($product, $images['pifID'][$i], $i);
+        if (is_array($images['pifID'])) {
+            for ($i = 0; $i < count($images['pifID']); ++$i) {
+                self::add($product, $images['pifID'][$i], $i);
+            }
         }
     }
 

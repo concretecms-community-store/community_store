@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Package;
 use BlockType;
 use BlockTypeSet;
 use SinglePage;
@@ -26,8 +25,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
-
-defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Installer
 {

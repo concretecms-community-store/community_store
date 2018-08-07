@@ -10,7 +10,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
 class Cart
 {
     protected static $cart = null;
@@ -80,7 +79,7 @@ class Cart
 
             self::$discounts = array();
 
-            $rules = StoreDiscountRule::findAutomaticDiscounts();
+            $rules = StoreDiscountRule::findAutomaticDiscounts(null, $checkeditems);
 
             $code = trim(Session::get('communitystore.code'));
             if ($code) {

@@ -28,11 +28,18 @@ class Controller extends BlockController
     }
     public function view()
     {
-        if ($this->productLocation == 'page') {
+        $product = false;
+
+        if ($this->productLocation == 'page' || !$this->productLocation) {
             $cID = Page::getCurrentPage()->getCollectionID();
-            $product = StoreProduct::getByCollectionID($cID);
+
+            if ($cID) {
+                $product = StoreProduct::getByCollectionID($cID);
+            }
         } else {
-            $product = StoreProduct::getByID($this->pID);
+            if ($this->pID) {
+                $product = StoreProduct::getByID($this->pID);
+            }
         }
 
         if ($product) {

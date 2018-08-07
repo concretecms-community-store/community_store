@@ -10,8 +10,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
-
 /**
  * @Entity
  * @Table(name="CommunityStoreTaxRates")

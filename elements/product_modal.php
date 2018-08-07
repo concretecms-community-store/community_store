@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied."));
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 ?>
 <form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID()?>">
@@ -25,8 +25,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
         <div class="store-product-modal-options">
             <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
             <div class="store-product-modal-quantity form-group">
-                <label class="store-option-group-label"><?= t('Quantity')?></label>
-                <input type="number" name="quantity" class="store-product-qty form-control" value="1" max="<?= $product->getQty()?>">
+                <?php if ($product->allowQuantity()) { ?>
+                    <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
+                    <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" max="<?= $product->getQty()?>">
+                <?php } else { ?>
+                    <input type="hidden" name="quantity" class="store-product-qty form-control" value="1">
+                <?php } ?>
             </div>
             <?php } ?>
             <?php

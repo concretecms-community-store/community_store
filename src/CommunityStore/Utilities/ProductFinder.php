@@ -3,9 +3,6 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Controller;
 use User;
-use Database;
-
-defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class ProductFinder extends Controller
 {

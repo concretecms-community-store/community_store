@@ -10,7 +10,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 class Cart extends PageController
 {
