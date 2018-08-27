@@ -826,7 +826,7 @@ class Order
         }
     }
 
-    public function sendNotifications() {
+    public function sendNotifications($email = '') {
         $mh = Core::make('mail');
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
@@ -858,6 +858,10 @@ class Order
         $event = Events::dispatch('on_before_community_store_order_notification_emails', $event);
         $notificationEmails = $event->getNotificationEmails();
 
+        if ($email) {
+            $notificationEmails = explode(",", trim($email));
+            $notificationEmails = array_map('trim', $notificationEmails);
+        }
 
         foreach ($notificationEmails as $notificationEmail) {
             if ($notificationEmail) {

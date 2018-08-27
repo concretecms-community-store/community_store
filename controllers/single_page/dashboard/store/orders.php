@@ -152,8 +152,23 @@ class Orders extends DashboardPageController
     public function resendinvoice($oID) {
         $order = StoreOrder::getByID($oID);
 
-        if ($order){
+        if ($order && $this->post('email')){
            $order->sendOrderReceipt($this->post('email'));
+            $this->flash('success', t('Receipt Email Resent to %s', $this->post('email')));
+        }
+
+        $this->redirect('/dashboard/store/orders/order',$oID);
+    }
+
+    public function resendnotification($oID) {
+        $order = StoreOrder::getByID($oID);
+        $emails = $this->post('email');
+
+        if ($order && $emails){
+            $order->sendNotifications($this->post('email'));
+            $notificationEmails = explode(",", trim($emails));
+            $notificationEmails = array_map('trim', $notificationEmails);
+            $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
         }
 
         $this->redirect('/dashboard/store/orders/order',$oID);
