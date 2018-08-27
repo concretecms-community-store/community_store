@@ -27,7 +27,8 @@ class OrderList  extends AttributedItemList
         $paramcount = 0;
 
         if (isset($this->search)) {
-            $this->query->where('oID like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $this->query->where('oID = ?')->setParameter($paramcount++, $this->search);
+            $this->query->orWhere('transactionReference = ?')->setParameter($paramcount++, $this->search);
 
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
@@ -123,7 +124,7 @@ class OrderList  extends AttributedItemList
 
     public function setSearch($search)
     {
-        $this->search = $search;
+        $this->search = trim($search);
     }
 
     public function setStatus($status)
