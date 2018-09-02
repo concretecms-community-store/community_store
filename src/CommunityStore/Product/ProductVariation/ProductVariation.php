@@ -248,7 +248,7 @@ class ProductVariation
      */
     public function setVariationQty($pvQty)
     {
-        $this->pvQty = $pvQty ? (int)$pvQty : 0;
+        $this->pvQty = $pvQty ? $pvQty : 0;
     }
 
     /**
