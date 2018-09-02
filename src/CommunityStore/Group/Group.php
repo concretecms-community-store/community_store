@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
-use Database;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -29,10 +29,31 @@ class Group
     {
         return $this->groupName;
     }
+
+    public function getID()
+    {
+        return $this->gID;
+    }
+
     public function getGroupID()
     {
         return $this->gID;
     }
+
+    /**
+     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
+     */
+    protected $products;
+
+    public function getProducts(){
+        return $this->products;
+    }
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
+
 
     public static function getByID($gID)
     {

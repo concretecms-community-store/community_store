@@ -36,22 +36,8 @@ class Shipping extends DashboardPageController
     {
         $sm = StoreShippingMethod::getByID($smID);
         $sm->delete();
-        $this->redirect('/dashboard/store/settings/shipping/removed');
-    }
-    public function success()
-    {
-        $this->view();
-        $this->set("message",t("Shipping method created"));
-    }
-    public function updated()
-    {
-        $this->view();
-        $this->set("message",t("Shipping method updated"));
-    }
-    public function removed()
-    {
-        $this->view();
-        $this->set("message",t("Shipping method removed"));
+        $this->flash('success', t('Shipping Method Deleted'));
+        $this->redirect('/dashboard/store/settings/shipping');
     }
     public function add_method()
     {
@@ -67,7 +53,8 @@ class Shipping extends DashboardPageController
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                     $shippingMethodTypeMethod->update($this->post());
                     $shippingMethod->update($this->post('methodName'),$this->post('methodEnabled'),$this->post('methodDetails'));
-                    $this->redirect('/dashboard/store/settings/shipping/updated');
+                    $this->flash('success', t('Shipping Method Updated'));
+                    $this->redirect('/dashboard/store/settings/shipping');
                 } else {
                     $this->redirect('/dashboard/store/settings/shipping');
                 }
@@ -77,7 +64,8 @@ class Shipping extends DashboardPageController
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->post());
                 //make a shipping method that correlates with it.
                 StoreShippingMethod::add($shippingMethodTypeMethod,$shippingMethodType,$this->post('methodName'),true, $this->post('methodDetails'));
-                $this->redirect('/dashboard/store/settings/shipping/success');
+                $this->flash('success', t('Shipping Method Created'));
+                $this->redirect('/dashboard/store/settings/shipping');
             }
         } else {
             if($this->post('shippingMethodID')){

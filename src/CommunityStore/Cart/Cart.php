@@ -31,6 +31,8 @@ class Cart
             $update = false;
             // loop through and check if product hasn't been deleted. Remove from cart session if not found.
             foreach ($cart as $cartitem) {
+                $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
+
                 $product = StoreProduct::getByID((int) $cartitem['product']['pID']);
 
                 if ($product) {
@@ -176,16 +178,20 @@ class Cart
             //now, build a nicer "cart item"
             $cartItem = array();
 
+            if (!$product->allowDecimalQuantity()) {
+                $data['quantity'] = (int)$data['quantity'];
+            }
+
             if ($customerPrice) {
                 $cartItem['product'] = array(
                     "pID" => (int)$data['pID'],
-                    "qty" => (int)$data['quantity'],
+                    "qty" => $data['quantity'],
                     "customerPrice" => $customerPrice,
                 );
             } else {
                 $cartItem['product'] = array(
                     "pID" => (int)$data['pID'],
-                    "qty" => (int)$data['quantity']
+                    "qty" => $data['quantity']
                 );
             }
 
@@ -285,6 +291,12 @@ class Cart
                         $newquantity = $product->getQty();
                     }
 
+                    if ($product->getMaxQty() > 0) {
+                        if ($newquantity > $product->getMaxQty()) {
+                            $newquantity = $product->getMaxQty();
+                        }
+                    }
+
                     $added = $newquantity - $existingproductcount;
                 } else {
                     $added = 1;
@@ -299,6 +311,12 @@ class Cart
                     $newquantity = $product->getQty();
                 }
 
+                if ($product->getMaxQty() > 0) {
+                    if ($newquantity > $product->getMaxQty()) {
+                        $newquantity = $product->getMaxQty();
+                    }
+                }
+
                 $cartItem['product']['qty'] = $newquantity;
 
                 if ($cartItem['product']['qty'] > 0) {
@@ -311,6 +329,8 @@ class Cart
 
                 $added = $newquantity;
             }
+
+
 
             self::$cart = $cart;
             Session::set('communitystore.cart', $cart);
@@ -372,10 +392,15 @@ class Cart
     {
         Session::set('community_store.smID', false);
         $instanceID = $data['instance'];
-        $qty = (int) $data['pQty'];
+        $qty = $data['pQty'];
+
         $cart = self::getCart();
 
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
+
+        if (!$product->allowDecimalQuantity()) {
+            $qty = (int)$data['pQty'];
+        }
 
         if ($qty > 0 && $product) {
             $newquantity = $qty;
@@ -386,6 +411,12 @@ class Cart
 
             if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
                 $newquantity = $product->getQty();
+            }
+
+            if ($product->getMaxQty() > 0) {
+                if ($newquantity > $product->getMaxQty()) {
+                    $newquantity = $product->getMaxQty();
+                }
             }
 
             $cart[$instanceID]['product']['qty'] = $newquantity;
@@ -423,7 +454,7 @@ class Cart
         $total = 0;
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $subtotal = $item['product']['qty'];
+                $subtotal = min($item['product']['qty'], 1);
                 $total = $total + $subtotal;
             }
         }

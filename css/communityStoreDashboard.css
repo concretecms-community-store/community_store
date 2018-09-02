@@ -18,7 +18,7 @@
 .ccm-ui .multi-select-list li:last-child {margin-bottom: 10px;}
 .multi-select-list img {max-width: 60px!important; display: inline!important; margin-right: 10px;}
 .multi-select-list .fa {cursor: pointer}
-.multi-select-list a:hover {color: red}
+.multi-select-list a:hover {color: red !important}
 
 /* Options */
 #product-options-container {  }

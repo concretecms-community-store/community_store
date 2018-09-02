@@ -31,7 +31,7 @@ ob_start();
 
     <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
-            <td width="50%" style="vertical-align: top; padding: 0; padding-right: 10px;">
+            <td width="50%" style="vertical-align: top; padding: 0 10px 0 0;">
                 <h3><?= t('Billing Information') ?></h3>
                 <p>
                     <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
@@ -120,7 +120,7 @@ ob_start();
                         }
                         ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?> <?= h($item->getQtyLabel());?></td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()) ?></td>
                     <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()) ?></td>
                 </tr>

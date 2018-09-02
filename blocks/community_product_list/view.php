@@ -67,6 +67,8 @@ if($products){
 
         if ($firstAvailableVariation) {
             $product = $firstAvailableVariation;
+        } else{
+            $product->setInitialVariation();
         }
 
         $isSellable = $product->isSellable();
@@ -74,6 +76,12 @@ if($products){
         //this is done so we can get a type of active class if there's a product list on the product page
         if($c->getCollectionID()==$product->getPageID()){
             $activeclass =  'on-product-page';
+        }
+
+        $productPage = Page::getByID($product->getPageID());
+
+        if ($productPage->isError() || $productPage->isInTrash()) {
+            $productPage = false;
         }
 
     ?>
@@ -92,7 +100,7 @@ if($products){
                                 <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
                                     <img src="<?= $thumb->src?>" class="img-responsive">
                                 </a>
-                            <?php } elseif ($showPageLink) { ?>
+                            <?php } elseif ($showPageLink && $productPage) { ?>
                                 <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
                                     <img src="<?= $thumb->src?>" class="img-responsive">
                                 </a>
@@ -163,15 +171,33 @@ if($products){
                 <?php if($showDescription){ ?>
                 <div class="store-product-list-description"><?= $product->getDesc()?></div>
                 <?php } ?>
-                <?php if($showPageLink){?>
-                <p class="store-btn-more-details-container"><a href="<?= \URL::to(Page::getByID($product->getPageID()))?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details"))?></a></p>
+                <?php if($showPageLink && $productPage) { ?>
+                    <p class="store-btn-more-details-container"><a href="<?= \URL::to($productPage) ?>"class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")) ?></a></p>
                 <?php } ?>
                 <?php if($showAddToCart){ ?>
 
                 <?php if ($product->allowQuantity() && $showQuantity) { ?>
                     <div class="store-product-quantity form-group">
                         <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
-                        <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1">
+                        <?php $quantityLabel = $product->getQtyLabel(); ?>
+
+                        <?php if ($quantityLabel) { ?>
+                            <div class="input-group">
+                        <?php }
+                        $max = $product->getMaxCartQty();
+                        ?>
+
+                        <?php if ($product->allowDecimalQuantity()) { ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps(): 0.001 ;?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001 ;?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                        <?php } else { ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                        <?php } ?>
+
+                       <?php if ($quantityLabel) { ?>
+                            <div class="input-group-addon"><?= $quantityLabel; ?></div>
+                                </div>
+                        <?php } ?>
+
                     </div>
                 <?php } else { ?>
                         <input type="hidden" name="quantity" class="store-product-qty" value="1">

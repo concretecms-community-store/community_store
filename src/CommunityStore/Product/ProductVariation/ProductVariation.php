@@ -47,7 +47,7 @@ class ProductVariation
     protected $pvfID;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="decimal", precision=12, scale=4)
      */
     protected $pvQty;
 

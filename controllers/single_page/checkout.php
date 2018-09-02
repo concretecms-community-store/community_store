@@ -60,7 +60,7 @@ class Checkout extends PageController
         }
 
         if(StoreCart::getTotalItemsInCart() == 0){
-            $this->redirect("/cart/");
+            $this->redirect("/cart");
         }
         $this->set('form',Core::make("helper/form"));
 
@@ -226,7 +226,7 @@ class Checkout extends PageController
                 Session::set('orderID',$order->getOrderID());
                 $this->redirect('/checkout/external');
             }else{
-               $this->redirect("/cart/");   
+               $this->redirect("/cart");
             }
         } else {
             $payment = $pm->submitPayment();

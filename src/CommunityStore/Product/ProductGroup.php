@@ -66,6 +66,11 @@ class ProductGroup
         return $this->product = $product;
     }
 
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
     public function getGroupID()
     {
         return $this->gID;
@@ -150,18 +155,34 @@ class ProductGroup
         }
     }
 
+    public static function removeProductsForGroup(StoreGroup $group)
+    {
+        $em = \ORM::entityManager();
+        $groups = $em->getRepository(get_class())->findBy(array('gID' => $group->getID()));
+        foreach ($groups as $productGroup) {
+            $productGroup->delete();
+        }
+    }
+
     public static function add($product, $gID)
     {
-
-        $group = StoreGroup::getByID($gID);
-        if ($group) {
-            $productGroup = new self();
-            $productGroup->setProduct($product);
-            $productGroup->setGroup($group);
-            $productGroup->save();
+        if (!is_object($product)) {
+            $product = Product::getByID($product);
         }
 
-        return $productGroup;
+        if ($product) {
+            $group = StoreGroup::getByID($gID);
+            if ($group) {
+                $productGroup = new self();
+                $productGroup->setProduct($product);
+                $productGroup->setGroup($group);
+                $productGroup->save();
+            }
+
+            return $productGroup;
+        }
+
+        return false;
     }
 
     public function __clone() {

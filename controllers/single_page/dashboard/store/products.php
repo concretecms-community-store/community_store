@@ -18,7 +18,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
@@ -59,22 +58,10 @@ class Products extends DashboardPageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist",$grouplist);
+        $this->set('gID', $gID);
         
     }
-    public function success(){
-        $this->set("success",t("Product Added"));
-        $this->view();
-    }
-    
-    public function updated()
-    {
-        $this->set("success",t("Product Updated"));
-        $this->view();
-    }
-    public function removed(){
-        $this->set("success",t("Product Removed"));
-        $this->view();
-    }
+
     public function add()
     {
         $this->loadFormAssets();
@@ -114,20 +101,8 @@ class Products extends DashboardPageController
         $this->set('pageTitle', t('Add Product'));
         $this->set('usergroups', $usergrouparray);
     }
-    public function edit($pID, $status = '')
+    public function edit($pID)
     {
-        if ($status == 'updated') {
-            $this->set("success",t("Product Updated"));
-        }
-
-        if ($status == 'added') {
-            $this->set("success",t("Product Added"));
-        }
-
-        if ($status == 'duplicated') {
-            $this->set("success",t("Product Duplicated"));
-        }
-
         $this->loadFormAssets();
         $this->set("actionType",t("Update"));
         
@@ -135,7 +110,7 @@ class Products extends DashboardPageController
         $product = StoreProduct::getByID($pID);
 
         if (!$product) {
-            $this->redirect('/dashboard/store/products/');
+            $this->redirect('/dashboard/store/products');
         }
 
         $this->set('product',$product);
@@ -265,7 +240,8 @@ class Products extends DashboardPageController
 
         if ($this->post()) {
             $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
-            $this->redirect('/dashboard/store/products/edit/'. $newproduct->getID().'/duplicated');
+            $this->flash('success', t('Product Duplicated'));
+            $this->redirect('/dashboard/store/products/edit/'. $newproduct->getID());
         }
 
         $this->set('pageTitle', t('Duplicate Product'));
@@ -279,7 +255,8 @@ class Products extends DashboardPageController
         if ($product) {
             $product->remove();
         }
-        $this->redirect('/dashboard/store/products/removed');
+        $this->flash('success', t('Product Removed'));
+        $this->redirect('/dashboard/store/products');
     }
     public function loadFormAssets()
     {
@@ -400,9 +377,11 @@ class Products extends DashboardPageController
                 }
 
                 if($data['pID']){
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'updated');
+                    $this->flash('success', t('Product Updated'));
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
                 } else {
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID(), 'added');
+                    $this->flash('success', t('Product Added'));
+                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
                 }
             }//if no errors
         }//if post
@@ -436,49 +415,5 @@ class Products extends DashboardPageController
         return $e;
         
     }
-    
-    // GROUPS PAGE
-    public function groups()
-    {
-        $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
-        $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
-    }
-    public function groupadded()
-    {
-        $this->set('success',"Product Group Created");
-        $this->groups();
-    }
-    public function addgroup()
-    {
-        $this->groups();
-        $this->error = null; //clear errors
-        $errors = $this->validateGroup($this->post());
-        $this->error = $errors;
-        if (!$errors->has()) {
-            StoreGroup::add($this->post('groupName'));
-            $this->redirect('/dashboard/store/products/', 'groupadded');
-        }
-    }
-    public function editgroup($gID)
-    {
-        StoreGroup::getByID($gID)->update($this->post('gName'));
-    }
-    public function validateGroup($args)
-    {
-        $e = Core::make('helper/validation/error');
-        
-        if($args['groupName']==""){
-            $e->add(t('Please enter a Group Name'));
-        }
-        if(strlen($args['groupName']) > 100){
-            $e->add(t('A Group Name can not be more than 100 characters'));
-        }
-        return $e;
-    }
-    public function deletegroup($gID)
-    {
-        StoreGroup::getByID($gID)->delete();
-    }
+
 }

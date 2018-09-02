@@ -12,22 +12,17 @@ class Categories extends DashboardPageController
 {
     public function view() {
         $pages = StoreProductLocation::getLocationPages();
-        $this->set('pageTitle', t('Categories'));
+        $this->set('pageTitle', t('Product Categories'));
         $this->set('pages', $pages);
     }
 
-    public function manage($cID, $status = '') {
-
-        if ($status == 'updated') {
-            $this->set("success",t("Category Order Updated"));
-        }
-
+    public function manage($cID) {
         $products = new StoreProductList();
 
         $page = \Page::getByID($cID);
 
         if (!$page) {
-            $this->redirect('/dashboard/store/products/categories/');
+            $this->redirect('/dashboard/store/products/categories');
         }
 
         $products->setSortBy('category');
@@ -59,7 +54,8 @@ class Categories extends DashboardPageController
             }
         }
 
-        $this->redirect('/dashboard/store/products/categories/manage/' . $cID, 'updated');
+        $this->flash('success', t('Category Order Updated'));
+        $this->redirect('/dashboard/store/products/categories/manage/' . $cID);
     }
 
 

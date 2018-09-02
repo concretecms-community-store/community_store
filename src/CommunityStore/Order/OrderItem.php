@@ -63,9 +63,14 @@ class OrderItem
     protected $oiTaxName;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=12, scale=4)
      */
     protected $oiQty;
+
+    /**
+     * @Column(type="string",nullable=true)
+     */
+    protected $oiQtyLabel;
 
     /**
      * @return mixed
@@ -176,7 +181,7 @@ class OrderItem
      */
     public function getQty()
     {
-        return $this->oiQty;
+        return round($this->oiQty, 4);
     }
 
     /**
@@ -185,6 +190,22 @@ class OrderItem
     public function setQty($oiQty)
     {
         $this->oiQty = $oiQty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQtyLabel()
+    {
+        return $this->oiQtyLabel;
+    }
+
+    /**
+     * @param mixed $oiQtyLabel
+     */
+    public function setQtyLabel($oiQtyLabel)
+    {
+        $this->oiQtyLabel = $oiQtyLabel;
     }
 
 
@@ -227,8 +248,9 @@ class OrderItem
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $sku = $product->getSKU();
+        $qtyLabel = $product->getQtyLabel();
 
+        $sku = $product->getSKU();
 
         $inStock = $product->getQty();
         $newStock = $inStock - $qty;
@@ -253,6 +275,7 @@ class OrderItem
         $orderItem->setTaxIncluded($taxIncluded);
         $orderItem->setTaxName($taxName);
         $orderItem->setQty($qty);
+        $orderItem->setQtyLabel($qtyLabel);
         $orderItem->setOrder($order);
 
         if ($product) {

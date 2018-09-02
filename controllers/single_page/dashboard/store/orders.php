@@ -27,6 +27,10 @@ class Orders extends DashboardPageController
 
         $orderList->setItemsPerPage(20);
 
+        if (Config::get('community_store.showUnpaidExternalPaymentOrders') ) {
+            $orderList->setIncludeExternalPaymentRequested(true);
+        }
+
         $paginator = $orderList->getPagination();
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList',$paginator->getCurrentPageResults());
@@ -63,11 +67,7 @@ class Orders extends DashboardPageController
 
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
     }
-    public function removed()
-    {
-        $this->set("success",t("Order Removed"));
-        $this->view();
-    }
+
     public function updatestatus($oID)
     {
         $data = $this->post();
@@ -89,6 +89,7 @@ class Orders extends DashboardPageController
         $order->setPaidByUID($user->getUserID());
         $order->save();
 
+        $this->flash('success', t('Order Marked As Paid'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -100,6 +101,7 @@ class Orders extends DashboardPageController
         $order->setTransactionReference(null);
         $order->save();
 
+        $this->flash('success', t('Order Payment Reversed'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -113,6 +115,7 @@ class Orders extends DashboardPageController
         $order->setRefundReason($this->post('oRefundReason'));
         $order->save();
 
+        $this->flash('success', t('Order Marked As Refunded'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -124,6 +127,7 @@ class Orders extends DashboardPageController
         $order->setRefundReason(null);
         $order->save();
 
+        $this->flash('success', t('Order Refund Reversed'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -136,6 +140,7 @@ class Orders extends DashboardPageController
         $order->setCancelledByUID($user->getUserID());
         $order->save();
 
+        $this->flash('success', t('Order Cancelled'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -146,6 +151,7 @@ class Orders extends DashboardPageController
         $order->setCancelledByUID(null);
         $order->save();
 
+        $this->flash('success', t('Order Cancellation Reversed'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
@@ -177,7 +183,8 @@ class Orders extends DashboardPageController
     public function remove($oID)
     {
         StoreOrder::getByID($oID)->remove();
-        $this->redirect('/dashboard/store/orders/removed');
+        $this->flash('success', t('Order Deleted'));
+        $this->redirect('/dashboard/store/orders');
     }
 
 }

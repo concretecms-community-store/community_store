@@ -329,11 +329,8 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
                 $totalQty = $totalQty + $item['product']['qty'];
             }
         }
-        if ($totalQty > 1) {
-            $shippingTotal = $baserate + (($totalQty - 1) * $peritemrate);
-        } elseif ($totalQty == 1) {
-            $shippingTotal = $baserate;
-        }
+
+        $shippingTotal = $baserate + ($totalQty * $peritemrate);
 
         return $shippingTotal;
     }
