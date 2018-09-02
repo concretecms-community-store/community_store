@@ -139,8 +139,18 @@ class Tax extends DashboardPageController
             $e->add(t("You need a name for this Tax Class"));
         }
         if(\Config::get('community_store.calculation')=="extract"){
-            if(count($data['taxClassRates'])>1){
-                $e->add(t("You can only have one tax rate with your current tax settings"));
+
+            $countries = array();
+
+            foreach($data['taxClassRates'] as $taxrateID) {
+                $taxrate = StoreTaxRate::getByID($taxrateID);
+
+                if (in_array($taxrate->getTaxCountry(), $countries)) {
+                    $e->add(t("You can only have one tax rate per country with your current tax settings"));
+                    break;
+                } else {
+                    $countries[] = $taxrate->getTaxCountry();
+                }
             }
         }
         
