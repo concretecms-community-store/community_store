@@ -72,6 +72,7 @@ class Orders extends DashboardPageController
     {
         $data = $this->post();
         StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
+        $this->flash('success', t('Fulfilment Status Updated'));
         $this->redirect('/dashboard/store/orders/order',$oID);
     }
 
