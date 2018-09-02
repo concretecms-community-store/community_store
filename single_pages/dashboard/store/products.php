@@ -1508,12 +1508,33 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <div class="ccm-dashboard-content-full">
         <form role="form" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
-                <?php if($grouplist){?>
+                <?php if($grouplist){
+                    $currentFilter = '';
+                    ?>
                     <ul id="group-filters" class="nav nav-pills">
                         <li <?= (!$gID ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
-                        <?php foreach($grouplist as $group){ ?>
-                            <li <?= ($gID == $group->getGroupID() ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
-                        <?php } ?>
+
+                        <li role="presentation" class="dropdown <?= ($gID ? 'active' : '');?>">
+                            <?php
+                            if ($gID) {
+                                foreach($grouplist as $group) {
+                                    if ($gID == $group->getGroupID()) {
+                                        $currentFilter = $group->getGroupName();
+                                    }
+                                }
+                            } ?>
+
+
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <?= $currentFilter ? t('Filtering By: %s', $currentFilter) : t('Filter By Product Group'); ?> <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <?php foreach($grouplist as $group){ ?>
+                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
                     </ul>
                 <?php } ?>
             </div>
