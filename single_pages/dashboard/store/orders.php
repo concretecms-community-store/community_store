@@ -604,9 +604,15 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             echo '<span class="label label-success">' . t('Paid') . '</span>';
                         } elseif ($order->getTotal() > 0) {
                             echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
+
+                            if ($order->getExternalPaymentRequested()) {
+                                echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
+                            }
                         } else {
                             echo '<span class="label label-default">' . t('Free Order') . '</span>';
                         }
+
+
                         ?>
                     </td>
                     <td><?=t(ucwords($order->getStatus()))?></td>

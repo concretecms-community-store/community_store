@@ -333,7 +333,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pQty", t("Stock Level"));?>
                             <?php $qty = $product->getQty(); ?>
                             <div class="input-group">
-                                <?= $form->number("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
+                                <?= $form->number("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : ''),'step'=>0.001));?>
                                 <div class="input-group-addon">
                                     <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited())?>
                                     <?= $form->label('pQtyUnlim', t('Unlimited'))?>
@@ -1144,9 +1144,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                          <div class="input-group">
                                              <?php
                                              if ($variation) {
-                                                 echo $form->number("pvQty[" . $varid . "]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : '')));
+                                                 echo $form->number("pvQty[" . $varid . "]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : ''),'step'=>0.001));
                                              } else {
-                                                 echo $form->number("pvQty[" . $varid . "]", '', array('readonly' => 'readonly'));
+                                                 echo $form->number("pvQty[" . $varid . "]", '', array('readonly' => 'readonly','step'=>0.001));
                                              }
                                              ?>
 

@@ -106,7 +106,7 @@ class Product
     protected $pFeatured;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="decimal", precision=12, scale=4)
      */
     protected $pQty;
 

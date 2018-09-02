@@ -339,7 +339,7 @@
                     <h3><?= t('Orders');?></h3>
                     <div class="form-group">
                         <label><?= $form->checkbox('showUnpaidExternalPaymentOrders', '1',Config::get('community_store.showUnpaidExternalPaymentOrders') ? '1' : '0')?>
-                            <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions');?></label></div>
+                            <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)');?></label></div>
 
                 </div>
 

@@ -178,7 +178,7 @@ if (is_object($product) && $product->isActive()) {
                                     $max = $product->getMaxCartQty();?>
 
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="quantity" class="store-product-qty form-control" min="1" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps(): 0.001 ;?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001 ;?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } else { ?>
                                         <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } ?>
