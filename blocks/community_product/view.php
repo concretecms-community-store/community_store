@@ -274,9 +274,8 @@ if (is_object($product) && $product->isActive()) {
                             <span><button data-add-type="none" data-product-id="<?= $product->getID() ?>"
                                           class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")) ?></button>
                             </span>
-                            <span
-                                    class="store-out-of-stock-label <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock") ?></span>
                         </p>
+                        <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock") ?></p>
                     <?php } ?>
 
                 </div>

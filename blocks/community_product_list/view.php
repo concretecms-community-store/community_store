@@ -67,6 +67,8 @@ if($products){
 
         if ($firstAvailableVariation) {
             $product = $firstAvailableVariation;
+        } else{
+            $product->setInitialVariation();
         }
 
         $isSellable = $product->isSellable();
