@@ -314,7 +314,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     <div class="row">
         <div class="col-sm-6">
-            <fieldset>
             <legend><?= t("Fulfilment")?></legend>
             <table class="table table-striped">
                 <thead>
@@ -357,25 +356,23 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </div>
             </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><?= t("Resend Notification Email")?></h4>
-                    </div>
-                    <div class="panel-body">
-                        <form action="<?=URL::to("/dashboard/store/orders/resendnotification",$order->getOrderID())?>" method="post">
-                            <div class="form-group">
-                                <label for="email"><?= t('Email'); ?></label>
-                                <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo Config::get('community_store.notificationemails');?>" />
-                            </div>
-                            <input type="submit" class="btn btn-default" value="<?= t("Resend Notification")?>">
-                        </form>
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><?= t("Resend Notification Email")?></h4>
                 </div>
-
-            </fieldset>
+                <div class="panel-body">
+                    <form action="<?=URL::to("/dashboard/store/orders/resendnotification",$order->getOrderID())?>" method="post">
+                        <div class="form-group">
+                            <label for="email"><?= t('Email'); ?></label>
+                            <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo Config::get('community_store.notificationemails');?>" />
+                        </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Resend Notification")?>">
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="col-sm-6">
-            <fieldset>
+
             <legend><?= t("Payment Status")?></legend>
 
             <?php  if($order->getTotal() == 0) { ?>
@@ -482,22 +479,20 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
              <?php } ?>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><?= t("Resend Invoice Email")?></h4>
-                    </div>
-                    <div class="panel-body">
-                        <form action="<?=URL::to("/dashboard/store/orders/resendinvoice",$order->getOrderID())?>" method="post">
-                            <div class="form-group">
-                                <label for="email"><?= t('Email'); ?></label>
-                                <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo $order->getAttribute('email');?>" />
-                            </div>
-                            <input type="submit" class="btn btn-default" value="<?= t("Resend Invoice")?>">
-                        </form>
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><?= t("Resend Invoice Email")?></h4>
                 </div>
-
-             </fieldset>
+                <div class="panel-body">
+                    <form action="<?=URL::to("/dashboard/store/orders/resendinvoice",$order->getOrderID())?>" method="post">
+                        <div class="form-group">
+                            <label for="email"><?= t('Email'); ?></label>
+                            <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo $order->getAttribute('email');?>" />
+                        </div>
+                        <input type="submit" class="btn btn-default" value="<?= t("Resend Invoice")?>">
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div>
