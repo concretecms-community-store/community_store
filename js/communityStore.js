@@ -342,7 +342,7 @@ var communityStore = {
                 scrollTop: pane.offset().top
             });
 
-            pane.find('input:first-child').focus();
+            pane.find('input').first().focus();
         }
     },
 

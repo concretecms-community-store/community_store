@@ -183,11 +183,14 @@ class Customer
         $country = $address['country'];
 
         if ($address1) {
-            $ret .= $address1 . "\n";
+            $ret .= $address1;
         }
         if ($address2) {
-            $ret .= $address2 . "\n";
+            $ret .= ", ". $address2;
         }
+
+        $ret .= "\n";
+
         if ($city) {
             $ret .= $city;
         }
