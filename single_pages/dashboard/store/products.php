@@ -578,6 +578,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pNumberItems", t("Number Of Items"));?>
                                 <?= $form->number('pNumberItems',$product->getNumberItems(), array('min'=>0, 'step'=>1))?>
                         </div>
+                        <div class="form-group">
+                            <?= $form->label("pSeperateShip", t("Product can be packaged with other items"));?>
+                            <?= $form->select("pSeperateShip",array('0'=>t('Yes'),'1'=>t('No, must be shipped as seperate package')), ($product->getSeperateShip() ? '1' : '0'));?>
+                        </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -607,7 +611,23 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $form->label("pPackageData", t("Or, Package(s) Data"));?>
+                            <?= $form->textarea('pPackageData',$product->getPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
+                            <span class="help-block">
+                                <?= t('Values entered will override individual set weights and sizes'); ?>
+                                <br />
+                                <?= t('Enter packages on new lines, using the format:');?>
+                                <br />
+                                <?= t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
+                                <br />
+                                <?= t('E.g. 10 4x6x8'); ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
             </div><!-- #product-shipping -->
@@ -1171,6 +1191,21 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                      </div>
                                  </div>
 
+                                 <div class="row form-group">
+                                     <div class="col-md-4">
+                                         <?= $form->label('pfID[]', t("Primary Image")); ?>
+                                     </div>
+                                     <?php
+                                     $pvfID = null;
+                                     if ($variation) {
+                                         $pvfID = $variation->getVariationImageID();
+                                     }
+                                     ?>
+                                     <div class="col-md-8">
+                                         <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
+                                     </div>
+                                 </div>
+
                                  <div class="extrafields hidden">
 
                                      <div class="row form-group">
@@ -1188,18 +1223,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                      </div>
 
 
-                                     <div class="row form-group">
-                                         <div class="col-md-12">
-                                             <?= $form->label('pfID[]', t("Primary Image")); ?>
-                                             <?php
-                                             $pvfID = null;
-                                             if ($variation) {
-                                                 $pvfID = $variation->getVariationImageID();
-                                             }
-                                             ?>
-                                             <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
-                                         </div>
-                                     </div>
                                      <div class="row form-group">
                                          <div class="col-md-4">
                                              <?= $form->label("", t("Weight")); ?>
@@ -1250,6 +1273,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                              <div class="input-group">
                                                  <?= $form->text('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', array('placeholder' => t('Base Height'))) ?>
                                                  <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div class="row">
+                                         <div class="form-group">
+                                             <div class="col-md-4">
+                                                <?= $form->label("pvPackageData", t("Or, Package(s) Data"));?>
+                                             </div>
+                                             <div class="col-md-8">
+                                                <?= $form->textarea('pvPackageData',$variation->getVariationPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
                                              </div>
                                          </div>
                                      </div>
