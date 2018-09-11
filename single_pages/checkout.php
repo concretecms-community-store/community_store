@@ -550,7 +550,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </ul>
 
                 <ul class="store-checkout-totals-line-items list-group">
-                    <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
+                    <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Total") ?>:</strong> <span
                             class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
                 </ul>
             </div>
