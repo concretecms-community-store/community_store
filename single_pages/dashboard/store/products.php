@@ -612,7 +612,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
                     <div class="col-xs-12">
                         <div class="form-group">
                             <?= $form->label("pPackageData", t("Or, Package(s) Data"));?>
@@ -1277,7 +1277,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                          </div>
                                      </div>
 
-                                     <div class="row">
+                                     <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
                                          <div class="form-group">
                                              <div class="col-md-4">
                                                 <?= $form->label("pvPackageData", t("Or, Package(s) Data"));?>

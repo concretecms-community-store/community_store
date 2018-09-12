@@ -94,6 +94,16 @@
                         </div>
                     </div>
 
+                    <h3><?= t("Multiple Packages Support")?></h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('multiplePackages', '1',Config::get('community_store.multiplePackages') ? '1' : '0')?>
+                                <?= t('Enable Package(s) Data fields');?></label>
+                            <span class="help-block">Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods</span>
+                        </div>
+                    </div>
+
+
 
                 </div><!-- #settings-shipping -->
 
@@ -332,6 +342,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                     <script>

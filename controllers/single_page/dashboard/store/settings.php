@@ -85,6 +85,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.weightUnit', $args['weightUnit']);
                 Config::save('community_store.sizeUnit', $args['sizeUnit']);
                 Config::save('community_store.deliveryInstructions', $args['deliveryInstructions']);
+                Config::save('community_store.multiplePackages', $args['multiplePackages']);
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
