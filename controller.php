@@ -81,11 +81,13 @@ class Controller extends Package
     {
         $this->registerRoutes();
 
+        $version = $this->getPackageVersion();
+
         $al = AssetList::getInstance();
-        $al->register('css', 'community-store', 'css/community-store.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
-        $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
-        $al->register('javascript', 'community-store', 'js/communityStore.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
-        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('css', 'community-store', 'css/community-store.css?v=' . $version, array('version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css?v=' . $version , array('version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'community-store', 'js/communityStore.js?v=' . $version, array('version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js?v=' .$version, array('version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
 
         $al->register('javascript', 'chartist', 'js/chartist.min.js', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
         $al->register('css', 'chartist', 'css/chartist.min.css', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
@@ -146,8 +148,9 @@ class Controller extends Package
         return "
         <script type=\"text/javascript\">
             var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
-            var CARTURL = '" . URL::to('/cart') . "';
-            var CHECKOUTURL = '" . URL::to('/checkout') . "';
+            var CARTURL = '" . rtrim(URL::to('/cart'), '/') . "';
+            var TRAILINGSLASH = '" . ((bool)\Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
+            var CHECKOUTURL = '" . rtrim(URL::to('/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";

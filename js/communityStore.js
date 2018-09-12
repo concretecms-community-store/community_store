@@ -62,7 +62,7 @@ var communityStore = {
             cache: false,
             dataType : 'text',
             data: res,
-            url: CARTURL + '/getmodal',
+            url: CARTURL + '/getmodal' + TRAILINGSLASH,
             success: function (data) {
                 communityStore.openModal(data, animatecart);
             }
@@ -113,7 +113,7 @@ var communityStore = {
             var serial = $(form).serialize();
             communityStore.waiting();
             $.ajax({
-                url: CARTURL + "/add",
+                url: CARTURL + "/add" + TRAILINGSLASH,
                 data: serial,
                 type: 'post',
                 cache: false,
@@ -141,7 +141,7 @@ var communityStore = {
         var qty = $("*[data-instance-id='" + instanceID + "']").find(".store-cart-list-product-qty .form-control").val();
         //communityStore.waiting();
         $.ajax({
-            url: CARTURL + "/update",
+            url: CARTURL + "/update" + TRAILINGSLASH,
             data: {instance: instanceID, pQty: qty},
             type: 'post',
             cache: false,
@@ -162,7 +162,7 @@ var communityStore = {
     updateMultiple: function (instances, quantities, modal) {
         //communityStore.waiting();
         $.ajax({
-            url: CARTURL + "/update",
+            url: CARTURL + "/update" + TRAILINGSLASH,
             data: {instance: instances, pQty: quantities},
             type: 'post',
             cache: false,
@@ -181,7 +181,7 @@ var communityStore = {
     removeItem: function (instanceID, modal) {
         //communityStore.waiting();
         $.ajax({
-            url: CARTURL + "/remove",
+            url: CARTURL + "/remove" + TRAILINGSLASH,
             data: {instance: instanceID},
             type: 'post',
             cache: false,
@@ -199,7 +199,7 @@ var communityStore = {
 
     clearCart: function (modal) {
         $.ajax({
-            url: CARTURL + "/clear",
+            url: CARTURL + "/clear" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -219,7 +219,7 @@ var communityStore = {
 
     refreshCartTotals: function(callback) {
         $.ajax({
-            url: CARTURL + '/getCartSummary',
+            url: CARTURL + '/getCartSummary' + TRAILINGSLASH,
             cache: false,
             dataType : 'text',
             success: function (response) {
@@ -299,7 +299,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates",
+            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -320,7 +320,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates",
+            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -348,7 +348,7 @@ var communityStore = {
 
     showShippingMethods: function (callback) {
         $.ajax({
-            url: CHECKOUTURL + "/getShippingMethods",
+            url: CHECKOUTURL + "/getShippingMethods" + TRAILINGSLASH,
             cache: false,
             dataType : 'text',
             success: function (html) {
@@ -477,7 +477,7 @@ $(document).ready(function () {
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
-            url: CHECKOUTURL + "/updater",
+            url: CHECKOUTURL + "/updater" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -542,7 +542,7 @@ $(document).ready(function () {
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
-            url: CHECKOUTURL + "/updater",
+            url: CHECKOUTURL + "/updater" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -591,7 +591,7 @@ $(document).ready(function () {
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
-            url: CHECKOUTURL + "/setVatNumber",
+            url: CHECKOUTURL + "/setVatNumber" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType : 'text',
@@ -645,7 +645,7 @@ $(document).ready(function () {
                 dataType : 'text',
                 data: { smID: smID,
                     sInstructions: sInstructions},
-                url: CHECKOUTURL + "/selectShipping",
+                url: CHECKOUTURL + "/selectShipping" + TRAILINGSLASH,
                 success: function (total) {
                     communityStore.refreshCartTotals(function() {
                         communityStore.nextPane(obj);
