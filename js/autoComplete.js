@@ -2,6 +2,7 @@ function initAutocomplete() {
     var input = document.getElementById('store-checkout-billing-address-1');
 
     var autocompletebilling = new google.maps.places.Autocomplete(input);
+    autocompletebilling.setFields(['address_components']);
     autocompletebilling.addListener('place_changed', function() {
         var place = autocompletebilling.getPlace();
         // console.log(place.address_components);
@@ -12,6 +13,7 @@ function initAutocomplete() {
 
     if (input) {
         var autocompleteshipping = new google.maps.places.Autocomplete(input);
+        autocompleteshipping.setFields(['address_components']);
         autocompleteshipping.addListener('place_changed', function () {
             var place = autocompleteshipping.getPlace();
             // console.log(place.address_components);
