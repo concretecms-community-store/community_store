@@ -78,6 +78,7 @@ class Checkout extends Controller
                     $this->updateBilling($data);
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
+                    $company = Session::get('billing_company');
                     $first_name = Session::get('billing_first_name');
                     $last_name = Session::get('billing_last_name');
                     $email = $customer->getEmail();
@@ -90,6 +91,7 @@ class Checkout extends Controller
                     $email = '';
                     $first_name = Session::get('shipping_first_name');
                     $last_name = Session::get('shipping_last_name');
+                    $company = Session::get('shipping_company');
 
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
@@ -108,6 +110,7 @@ class Checkout extends Controller
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'phone' => $phone,
+                    'comapny' => $company,
                     'email' => $email,
                     'address' => $address,
                     'error' => false
@@ -197,12 +200,14 @@ class Checkout extends Controller
         Session::set('billing_last_name', trim($data['lName']));
         Session::set('billing_phone', trim($data['phone']));
         Session::set('billing_address', $address);
+        Session::set('billing_company', trim($data['company']));
 
         if ($guest || !$noBillingSave) {
             $customer->setValue("billing_first_name", trim($data['fName']));
             $customer->setValue("billing_last_name", trim($data['lName']));
             $customer->setValue("billing_phone", trim($data['phone']));
             $customer->setValue("billing_address", $address);
+            $customer->setValue("billing_company", trim($data['company']));
         }
 
         Session::set('community_store.smID', false);
@@ -248,11 +253,13 @@ class Checkout extends Controller
             $customer->setValue("shipping_address", $address);
             $customer->setValue("vat_number", $data['vat_number']);
             $customer->setValue("shipping_last_name", trim($data['lName']));
+            $customer->setValue("shipping_company", trim($data['company']));
         }
 
         Session::set('shipping_first_name', trim($data['fName']));
         Session::set('shipping_last_name', trim($data['lName']));
         Session::set('shipping_address', $address);
+        Session::set('shipping_company', trim($data['company']));
         Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
 

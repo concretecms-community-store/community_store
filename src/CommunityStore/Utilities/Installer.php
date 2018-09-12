@@ -208,9 +208,11 @@ class Installer
         self::installUserAttribute('billing_last_name', $text, $pkg, $custSet);
         self::installUserAttribute('billing_address', $address, $pkg, $custSet);
         self::installUserAttribute('billing_phone', $text, $pkg, $custSet);
+        self::installUserAttribute('billing_company', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
+        self::installUserAttribute('shipping_company', $address, $pkg, $custSet);
         self::installUserAttribute('vat_number', $text, $pkg, $custSet, array(
             'akHandle' => 'vat_number',
             'akName' => t('VAT Number'),
@@ -261,9 +263,11 @@ class Installer
         self::installOrderAttribute('billing_last_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('billing_address', $address, $pkg, $orderCustSet);
         self::installOrderAttribute('billing_phone', $text, $pkg, $orderCustSet);
+        self::installOrderAttribute('billing_company', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_first_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_last_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_address', $address, $pkg, $orderCustSet);
+        self::installOrderAttribute('shipping_company', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet, array(
             'akHandle' => 'vat_number',
             'akName' => t('VAT Number'),
@@ -355,6 +359,11 @@ class Installer
             SinglePage::add($path, $pkg);
         }
 
+        // trigger a reinstall in case new fields have been added
+        self::installOrderAttributes($pkg);
+        self::installUserAttributes($pkg);
+
+
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically
         } else {
@@ -380,5 +389,8 @@ class Installer
         Localization::clearCache();
         self::installUserAttributes($pkg);
 		Installer::addProductSearchIndexTable($pkg);
+
     }
+
+
 }

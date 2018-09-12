@@ -52,6 +52,7 @@ class Checkout extends PageController
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
         $this->set('guest', isset($guest) && (bool)$guest);
         $this->set('requiresLogin', StoreCart::requiresLogin());
+        $this->set('companyField', Config::get('community_store.companyField'));
 
         $cart = StoreCart::getCart();
 

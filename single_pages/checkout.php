@@ -86,6 +86,22 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 </div>
                             </div>
                         </div>
+                        <?php if ($companyField == 'required' || $companyField == 'optional') {
+                            if ($companyField == 'required') {
+                                $companyOptions = array('required'=>'required','placeholder'=>t('Company'));
+                            } else {
+                                $companyOptions = array('placeholder'=>t('Company (optional)'));
+                            }
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="store-checkout-billing-company"><?= t("Company") ?></label>
+                                    <?= $form->text('store-checkout-billing-company', $customer->getValue('billing_company'), $companyOptions); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="store-checkout-billing-address-1"><?= t("Street Address") ?></label>
@@ -200,6 +216,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <label><?= t('Name'); ?></label>
                                 <p class="store-summary-name"><?= $customer->getValue('billing_first_name') . ' ' . $customer->getValue('billing_last_name'); ?></p>
 
+                                <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
+                                    <label><?= t('Company'); ?></label>
+                                    <p class="store-summary-company"><?= $customer->getValue('billing_company'); ?></p>
+                                <?php } ?>
                             </div>
                             <div class="col-sm-6">
                                 <label><?= t('Address'); ?></label>
@@ -247,6 +267,16 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                     </div>
                                 </div>
                             </div>
+                            <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="store-checkout-shipping-company"><?= t("Company") ?></label>
+                                            <?= $form->text('store-checkout-shipping-company', $customer->getValue('shipping_company'), $companyOptions); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="store-checkout-shipping-address-1"><?= t("Address") ?></label>

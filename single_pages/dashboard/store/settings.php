@@ -278,7 +278,7 @@
 
 
 
-                    <h3><?= t('Guest checkout');?></h3>
+                    <h3><?= t('Guest Checkout');?></h3>
                     <div class="form-group">
                         <?php $guestCheckout =  Config::get('community_store.guestCheckout');
                         $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
@@ -289,6 +289,15 @@
 
                     </div>
 
+                    <h3><?= t('Company Name');?></h3>
+                    <div class="form-group">
+                        <?php $companyField =  Config::get('community_store.companyField');
+                        $companyField = ($companyField ? $companyField : 'off');
+                        ?>
+                        <label><?= $form->radio('companyField','off', $companyField == 'off' || $companyField == '' ); ?> <?php  echo t('Hidden'); ?></label><br />
+                        <label><?= $form->radio('companyField','optional',$companyField == 'optional'); ?> <?php  echo t('Optional'); ?></label><br />
+                        <label><?= $form->radio('companyField','required',$companyField == 'required'); ?> <?php  echo t('Required'); ?></label><br />
+                    </div>
 
                     <h3><?= t('Billing Details');?></h3>
 
