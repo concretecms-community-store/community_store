@@ -286,8 +286,6 @@
                         <label><?= $form->radio('shoppingDisabled','all',$shoppingDisabled == 'all'); ?> <?php  echo t('Disabled (Catalog Mode)'); ?></label><br />
                     </div>
 
-
-
                     <h3><?= t('Guest Checkout');?></h3>
                     <div class="form-group">
                         <?php $guestCheckout =  Config::get('community_store.guestCheckout');
@@ -296,7 +294,12 @@
                         <label><?= $form->radio('guestCheckout','always', $guestCheckout == 'always'); ?> <?php  echo t('Always (unless login required for products in cart)'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','option',$guestCheckout == 'option'); ?> <?php  echo t('Offer as checkout option'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />
+                    </div>
 
+                    <h3><?= t('Address Auto-Complete');?></h3>
+                    <div class="form-group">
+                        <?= $form->label('placesAPIKey',t('Address Auto-Complete API Key (Google Places)')); ?>
+                        <?= $form->text('placesAPIKey',Config::get('community_store.placesAPIKey'));?>
                     </div>
 
                     <h3><?= t('Company Name');?></h3>

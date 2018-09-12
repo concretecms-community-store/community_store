@@ -195,6 +195,17 @@ class Checkout extends PageController
         }
 
         $this->set("enabledPaymentMethods",$availableMethods);
+
+        $apikey = \Config::get('community_store.placesAPIKey');
+
+        if ($apikey) {
+            $this->addFooterItem(
+                '<script src="https://maps.googleapis.com/maps/api/js?' . ($apikey ? '&key=' . $apikey : '') . '&libraries=places&callback=initAutocomplete" defer></script>'
+            );
+
+            $this->requireAsset('javascript', 'community-store-autocomplete');
+            $this->set('addressLookup', true);
+        }
     }
 
     public function failed($guest = false)

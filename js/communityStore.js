@@ -287,7 +287,7 @@ var communityStore = {
         }
     },
 
-    updateBillingStates: function (load) {
+    updateBillingStates: function (load, callback) {
         var countryCode = $("#store-checkout-billing-country").val();
         var selectedState;
         var classList = $("#store-checkout-billing-state").attr('class').toString();
@@ -306,11 +306,14 @@ var communityStore = {
             data: {country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList},
             success: function (states) {
                 $("#store-checkout-billing-state").replaceWith(states);
+                if (callback) {
+                    callback();
+                }
             }
         });
     },
 
-    updateShippingStates: function (load) {
+    updateShippingStates: function (load, callback) {
         var countryCode = $("#store-checkout-shipping-country").val();
         var selectedState;
         if (load) {
@@ -327,6 +330,9 @@ var communityStore = {
             data: {country: countryCode, selectedState: selectedState, type: "shipping"},
             success: function (states) {
                 $("#store-checkout-shipping-state").replaceWith(states);
+                if (callback) {
+                    callback();
+                }
             }
         });
     },

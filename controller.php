@@ -86,6 +86,7 @@ class Controller extends Package
         $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
         $al->register('javascript', 'community-store', 'js/communityStore.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
         $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'community-store-autocomplete', 'js/autoComplete.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
 
         $al->register('javascript', 'chartist', 'js/chartist.min.js', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
         $al->register('css', 'chartist', 'css/chartist.min.css', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
