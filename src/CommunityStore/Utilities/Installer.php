@@ -212,7 +212,7 @@ class Installer
         self::installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
-        self::installUserAttribute('shipping_company', $address, $pkg, $custSet);
+        self::installUserAttribute('shipping_company', $text, $pkg, $custSet);
         self::installUserAttribute('vat_number', $text, $pkg, $custSet, array(
             'akHandle' => 'vat_number',
             'akName' => t('VAT Number'),
@@ -254,6 +254,8 @@ class Installer
             $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
             $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
+
+        $orderCustSet = $oakc->getAttributeSetByHandle('order_customer');
 
         $text = AttributeType::getByHandle('text');
         $address = AttributeType::getByHandle('address');
