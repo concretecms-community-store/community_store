@@ -28,16 +28,19 @@ ob_start();
             <td width="50%" valign="top" style="vertical-align: top; padding: 0 10px 0 0;">
                 <h3><?= t('Billing Information') ?></h3>
                 <p>
-                    <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
+                    <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")) ?><br>
+                    <?php if ($order->getAttribute("billing_company")) { ?>
+                        <?= h($order->getAttribute("billing_company")) ?><br>
+                    <?php } ?>
                     <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
                     <?= nl2br($address); ?>
                     <br><br>
-                    <strong><?= t('Email') ?></strong>: <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
-                    <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?>
+                    <strong><?= t('Email') ?></strong>: <a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a><br>
+                    <strong><?= t('Phone') ?></strong>: <?= h($order->getAttribute("billing_phone")) ?>
                     <?php
                     $vat_number = $order->getAttribute("vat_number");
                     if ($vat_number) { ?>
-                    <br /><strong><?= t('VAT Number') ?></strong>: <?= $vat_number ?>
+                    <br /><strong><?= t('VAT Number') ?></strong>: <?= h($vat_number) ?>
                     <?php } ?>
                 </p>
             </td>
@@ -45,8 +48,10 @@ ob_start();
                 <?php if ($order->isShippable()) { ?>
                     <h3><?= t('Shipping Information') ?></h3>
                     <p>
-                        <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-                        <br />
+                        <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")) ?><br />
+                        <?php if ($order->getAttribute("shipping_company")) { ?>
+                            <?= h($order->getAttribute("shipping_company")) ?><br>
+                        <?php } ?>
                         <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                         <?php if ($shippingaddress) {
                             $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
