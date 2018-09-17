@@ -255,7 +255,16 @@ class Installer
             $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
         }
 
-        $orderCustSet = $oakc->getAttributeSetByHandle('order_customer');
+        if (!$orderCustSet) {
+            $oakc = AttributeKeyCategory::getByHandle('store_order');
+            $sets = $oakc->getAttributeSets();
+
+            foreach ($sets as $set) {
+                if ($set->getAttributeSetHandle() == 'order_customer') {
+                    $orderCustSet = $set;
+                }
+            }
+        }
 
         $text = AttributeType::getByHandle('text');
         $address = AttributeType::getByHandle('address');
