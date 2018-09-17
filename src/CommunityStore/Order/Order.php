@@ -574,19 +574,23 @@ class Order
         $billing_last_name = Session::get('billing_last_name');
         $billing_address = Session::get('billing_address');
         $billing_phone = Session::get('billing_phone');
+        $billing_company = Session::get('billing_company');
         $shipping_first_name = Session::get('shipping_first_name');
         $shipping_last_name = Session::get('shipping_last_name');
         $shipping_address = Session::get('shipping_address');
+        $shipping_company = Session::get('shipping_company');
 
         $this->setAttribute("email", $email);
         $this->setAttribute("billing_first_name", $billing_first_name);
         $this->setAttribute("billing_last_name", $billing_last_name);
         $this->setAttribute("billing_address", $billing_address);
         $this->setAttribute("billing_phone", $billing_phone);
+        $this->setAttribute("billing_company", $billing_company);
         if ($includeShipping) {
             $this->setAttribute("shipping_first_name", $shipping_first_name);
             $this->setAttribute("shipping_last_name", $shipping_last_name);
             $this->setAttribute("shipping_address", $shipping_address);
+            $this->setAttribute("shipping_company", $shipping_company);
         }
 
         if (Config::get('community_store.vat_number')) {
@@ -764,8 +768,10 @@ class Order
                 $billing_last_name = $this->getAttribute("billing_last_name");
                 $billing_address = clone $this->getAttribute("billing_address");
                 $billing_phone = $this->getAttribute("billing_phone");
+                $billing_company = $this->getAttribute("billing_company");
                 $shipping_first_name = $this->getAttribute("shipping_first_name");
                 $shipping_last_name = $this->getAttribute("shipping_last_name");
+                $shipping_company = $this->getAttribute("shipping_company");
                 $shipping_address = $this->getAttribute("shipping_address");
 
                 if ($shipping_address) {
@@ -793,6 +799,7 @@ class Order
                     $user->setAttribute('billing_last_name', $billing_last_name);
                     $user->setAttribute('billing_address', $billing_address);
                     $user->setAttribute('billing_phone', $billing_phone);
+                    $user->setAttribute('billing_company', $billing_company);
                 }
 
                 $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
@@ -808,6 +815,7 @@ class Order
                     $user->setAttribute('shipping_first_name', $shipping_first_name);
                     $user->setAttribute('shipping_last_name', $shipping_last_name);
                     $user->setAttribute('shipping_address', $shipping_address);
+                    $user->setAttribute('shipping_company', $shipping_company);
                 }
             }
 

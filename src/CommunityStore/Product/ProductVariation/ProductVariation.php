@@ -82,6 +82,11 @@ class ProductVariation
     protected $pvNumberItems;
 
     /**
+     * @Column(type="text",nullable=true)
+     */
+    protected $pvPackageData;
+
+    /**
      * @Column(type="integer")
      */
     protected $pvSort;
@@ -355,6 +360,14 @@ class ProductVariation
         return $this->pvNumberItems;
     }
 
+    public function getVariationPackageData() {
+        return $this->pvPackageData;
+    }
+
+
+    public function settVariationPackageData($data) {
+        return $this->pvPackageData  = trim($data);
+    }
     /**
      * @param mixed $pvNumberItems
      */
@@ -543,6 +556,7 @@ class ProductVariation
         $variation->setVariationHeight($data['pvHeight']);
         $variation->setVariationLength($data['pvLength']);
         $variation->setVariationWidth($data['pvWeight']);
+        $variation->setVariationPackageData($data['pvPackageData']);
         $variation->setVariationSort($data['pvSort']);
         $variation->save($persistonly);
 

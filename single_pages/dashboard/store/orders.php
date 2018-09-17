@@ -85,13 +85,21 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <div class="col-sm-4">
             <h4><?= t("Billing Address")?></h4>
             <p>
-                <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
+                <?= h($order->getAttribute("billing_first_name")). " " . h($order->getAttribute("billing_last_name")) ?><br>
                 <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
                 if ($billingaddress) {
                     echo $billingaddress->getValue('displaySanitized', 'display');
                 }
                 ?>
             </p>
+
+            <?php $billingcompany = $order->getAttribute("billing_company"); ?>
+            <?php if ($billingcompany) { ?>
+            <h4><?= t("Company")?></h4>
+            <p>
+                <?= h($billingcompany); ?>
+            </p>
+            <?php } ?>
         </div>
         <?php if ($order->isShippable()) { ?>
             <div class="col-sm-4">
@@ -105,6 +113,14 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         }
                         ?>
                     </p>
+
+                    <?php $shippingcompany = $order->getAttribute("shipping_company"); ?>
+                    <?php if ($shippingcompany) { ?>
+                    <h4><?= t("Company")?></h4>
+                    <p>
+                        <?= h($shippingcompany); ?>
+                    </p>
+                    <?php } ?>
                 <?php } ?>
             </div>
         <?php } ?>

@@ -20,12 +20,21 @@ class States extends Controller
                 $data .= ' data-' . $name . '="' . $value . '"';
             }
         }
+
+        $requiresstate = array('US', 'AU', 'CA', 'CN', 'MX', 'MY');
+
+        $required = '';
+
+        if (in_array($countryCode, $requiresstate)) {
+            $required = ' required="required" ';
+        }
+
         $list = Core::make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
         if ($list) {
             if ($type == "tax") {
                 echo "<select name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
-                echo "<select required='required' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
+                echo "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
             }
             echo '<option value=""></option>';
 

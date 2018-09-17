@@ -94,6 +94,16 @@
                         </div>
                     </div>
 
+                    <h3><?= t("Multiple Packages Support")?></h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('multiplePackages', '1',Config::get('community_store.multiplePackages') ? '1' : '0')?>
+                                <?= t('Enable Package(s) Data fields');?></label>
+                            <span class="help-block">Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods</span>
+                        </div>
+                    </div>
+
+
 
                 </div><!-- #settings-shipping -->
 
@@ -276,9 +286,7 @@
                         <label><?= $form->radio('shoppingDisabled','all',$shoppingDisabled == 'all'); ?> <?php  echo t('Disabled (Catalog Mode)'); ?></label><br />
                     </div>
 
-
-
-                    <h3><?= t('Guest checkout');?></h3>
+                    <h3><?= t('Guest Checkout');?></h3>
                     <div class="form-group">
                         <?php $guestCheckout =  Config::get('community_store.guestCheckout');
                         $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
@@ -286,9 +294,23 @@
                         <label><?= $form->radio('guestCheckout','always', $guestCheckout == 'always'); ?> <?php  echo t('Always (unless login required for products in cart)'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','option',$guestCheckout == 'option'); ?> <?php  echo t('Offer as checkout option'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />
-
                     </div>
 
+                    <h3><?= t('Address Auto-Complete');?></h3>
+                    <div class="form-group">
+                        <?= $form->label('placesAPIKey',t('Address Auto-Complete API Key (Google Places)')); ?>
+                        <?= $form->text('placesAPIKey',Config::get('community_store.placesAPIKey'));?>
+                    </div>
+
+                    <h3><?= t('Company Name');?></h3>
+                    <div class="form-group">
+                        <?php $companyField =  Config::get('community_store.companyField');
+                        $companyField = ($companyField ? $companyField : 'off');
+                        ?>
+                        <label><?= $form->radio('companyField','off', $companyField == 'off' || $companyField == '' ); ?> <?php  echo t('Hidden'); ?></label><br />
+                        <label><?= $form->radio('companyField','optional',$companyField == 'optional'); ?> <?php  echo t('Optional'); ?></label><br />
+                        <label><?= $form->radio('companyField','required',$companyField == 'required'); ?> <?php  echo t('Required'); ?></label><br />
+                    </div>
 
                     <h3><?= t('Billing Details');?></h3>
 
@@ -323,6 +345,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                     <script>

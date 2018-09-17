@@ -287,7 +287,7 @@ var communityStore = {
         }
     },
 
-    updateBillingStates: function (load) {
+    updateBillingStates: function (load, callback) {
         var countryCode = $("#store-checkout-billing-country").val();
         var selectedState;
         var classList = $("#store-checkout-billing-state").attr('class').toString();
@@ -306,11 +306,14 @@ var communityStore = {
             data: {country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList},
             success: function (states) {
                 $("#store-checkout-billing-state").replaceWith(states);
+                if (callback) {
+                    callback();
+                }
             }
         });
     },
 
-    updateShippingStates: function (load) {
+    updateShippingStates: function (load, callback) {
         var countryCode = $("#store-checkout-shipping-country").val();
         var selectedState;
         if (load) {
@@ -327,6 +330,9 @@ var communityStore = {
             data: {country: countryCode, selectedState: selectedState, type: "shipping"},
             success: function (states) {
                 $("#store-checkout-shipping-state").replaceWith(states);
+                if (callback) {
+                    callback();
+                }
             }
         });
     },
@@ -342,7 +348,7 @@ var communityStore = {
                 scrollTop: pane.offset().top
             });
 
-            pane.find('input:first-child').focus();
+            pane.find('input').first().focus();
         }
     },
 
@@ -380,6 +386,11 @@ var communityStore = {
         $("#store-checkout-shipping-last-name").val($("#store-checkout-billing-last-name").val());
         $("#store-checkout-shipping-email").val($("#store-checkout-billing-email").val());
         $("#store-checkout-shipping-phone").val($("#store-checkout-billing-phone").val());
+
+        if ($("#store-checkout-billing-company")) {
+            $("#store-checkout-shipping-company").val($("#store-checkout-billing-company").val());
+        }
+
         $("#store-checkout-shipping-address-1").val($("#store-checkout-billing-address-1").val());
         $("#store-checkout-shipping-address-2").val($("#store-checkout-billing-address-2").val());
         $("#store-checkout-shipping-country").val($("#store-checkout-billing-country").val());
@@ -413,6 +424,13 @@ $(document).ready(function () {
         var bfName = $("#store-checkout-billing-first-name").val();
         var blName = $("#store-checkout-billing-last-name").val();
         var bPhone = $("#store-checkout-billing-phone").val();
+
+        var bCompany = '';
+
+        if ($("#store-checkout-billing-company")) {
+            bCompany = $("#store-checkout-billing-company").val();
+        }
+
         var bAddress1 = $("#store-checkout-billing-address-1").val();
         var bAddress2 = $("#store-checkout-billing-address-2").val();
         var bCountry = $("#store-checkout-billing-country").val();
@@ -487,6 +505,7 @@ $(document).ready(function () {
                 fName: bfName,
                 lName: blName,
                 phone: bPhone,
+                company: bCompany,
                 addr1: bAddress1,
                 addr2: bAddress2,
                 count: bCountry,
@@ -511,6 +530,7 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-phone').html(response.phone);
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
+                    obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
                     communityStore.nextPane(obj);
                     communityStore.refreshCartTotals();
 
@@ -531,6 +551,12 @@ $(document).ready(function () {
         e.preventDefault();
         var sfName = $("#store-checkout-shipping-first-name").val();
         var slName = $("#store-checkout-shipping-last-name").val();
+        var sCompany = '';
+
+        if ($("#store-checkout-shipping-company")) {
+            sCompany = $("#store-checkout-shipping-company").val();
+        }
+
         var sAddress1 = $("#store-checkout-shipping-address-1").val();
         var sAddress2 = $("#store-checkout-shipping-address-2").val();
         var sCountry = $("#store-checkout-shipping-country").val();
@@ -550,6 +576,7 @@ $(document).ready(function () {
                 adrType: 'shipping',
                 fName: sfName,
                 lName: slName,
+                company: sCompany,
                 addr1: sAddress1,
                 addr2: sAddress2,
                 count: sCountry,
@@ -562,6 +589,7 @@ $(document).ready(function () {
                 if (response.error == false) {
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
+                    obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
                     if (response.vat_number != '') {
                         obj.find('.store-checkout-form-group-summary .store-summary-vat-number').html(response.vat_number);
                     } else {

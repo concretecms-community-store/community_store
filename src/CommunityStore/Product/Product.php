@@ -19,7 +19,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation a
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
@@ -27,6 +26,7 @@ use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
 
 /**
  * @Entity
@@ -34,9 +34,9 @@ use Concrete\Core\Support\Facade\Application;
  */
 class Product
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $pID;
 
@@ -199,6 +199,16 @@ class Product
      * @Column(type="integer",nullable=true)
      */
     protected $pNumberItems;
+
+    /**
+     * @Column(type="boolean",nullable=true)
+     */
+    protected $pSeperateShip;
+
+    /**
+     * @Column(type="text",nullable=true)
+     */
+    protected $pPackageData;
 
     /**
      * @Column(type="boolean")
@@ -582,6 +592,33 @@ class Product
         $this->pShippable = (!is_null($bool) ? $bool : false);
     }
 
+    public function setSeperateShip($bool)
+    {
+        $this->pSeperateShip = (!is_null($bool) ? $bool : false);
+    }
+
+    public function getPackageData() {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            return $variation->getVariationPackageData();
+        } else {
+            return $this->pPackageData;
+        }
+    }
+
+    public function setPackageData($pPackageData)
+    {
+        $this->pPackageData = trim($pPackageData);
+    }
+
+    public function getSeperateShip()
+    {
+        return $this->pSeperateShip;
+    }
+
+    public function isSeperateShip() {
+        return (bool)$this->getSeperateShip();
+    }
+
     public function setWidth($width)
     {
         $this->pWidth = (float)$width;
@@ -694,7 +731,9 @@ class Product
         $product->setHeight($data['pHeight']);
         $product->setLength($data['pLength']);
         $product->setWeight($data['pWeight']);
+        $product->setPackageData($data['pPackageData']);
         $product->setNumberItems($data['pNumberItems']);
+        $product->setSeperateShip($data['pSeperateShip']);
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
         $product->setCustomerPrice($data['pCustomerPrice']);
@@ -1013,6 +1052,42 @@ class Product
             return $numberItems;
         }
     }
+
+    public function getPackages() {
+        $packages = array();
+
+        $packagedata = $this->getPackageData();
+
+        if ($packagedata) {
+            $lines = explode("\n", $packagedata);
+
+            foreach($lines as $line) {
+                $line = strtolower($line);
+                $line = str_replace('x', '', $line);
+                $line = str_replace('-', '', $line);
+                $values = explode(' ', $line);
+
+                $package = new StorePackage();
+                $package->setWeight($values[0]);
+                $package->setWidth($values[1]);
+                $package->setHeight($values[2]);
+                $package->setLength($values[3]);
+
+                $packages[] = $package;
+            }
+        } else {
+            $package = new StorePackage();
+            $package->setWeight($this->getWeight());
+            $package->setWidth($this->getLength());
+            $package->setHeight($this->getWidth());
+            $package->setLength($this->getHeight());
+
+            $packages[] = $package;
+        }
+
+        return $packages;
+    }
+
 
     public function getImageID()
     {

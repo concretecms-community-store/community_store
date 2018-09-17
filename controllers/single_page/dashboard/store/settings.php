@@ -10,6 +10,8 @@ use Config;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 
 class Settings extends DashboardPageController
 {
@@ -30,7 +32,7 @@ class Settings extends DashboardPageController
                 $targetCID = false;
             }
         }
-
+        
         $groupList = array();
 
         $gl = new \GroupList;
@@ -83,12 +85,15 @@ class Settings extends DashboardPageController
                 Config::save('community_store.weightUnit', $args['weightUnit']);
                 Config::save('community_store.sizeUnit', $args['sizeUnit']);
                 Config::save('community_store.deliveryInstructions', $args['deliveryInstructions']);
+                Config::save('community_store.multiplePackages', $args['multiplePackages']);
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
+                Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
+                Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
                 Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
                 Config::save('community_store.noBillingSave', trim($args['noBillingSave']));
