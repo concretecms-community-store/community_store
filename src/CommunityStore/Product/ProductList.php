@@ -6,7 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 
 class ProductList extends AttributedItemList
@@ -21,6 +21,7 @@ class ProductList extends AttributedItemList
     protected $activeOnly = true;
     protected $cIDs = array();
     protected $relatedProduct = false;
+    protected $attFilters = array();
 
     public function setGroupID($gID)
     {
@@ -84,6 +85,61 @@ class ProductList extends AttributedItemList
     public function setRelatedProduct($product)
     {
         $this->relatedProduct = $product;
+    }
+
+    public function setAttributeFilters($filterArray) {
+        $this->attFilters = $filterArray;
+
+        if (!empty($this->attFilters)) {
+            foreach($this->attFilters as $handle=>$value) {
+                if ($handle == 'price') {
+                    $this->filterByPrice($value);
+                } else {
+                    if (is_object(StoreProductKey::getByHandle($handle))) {
+                        $this->filterByAttribute($handle, $value);
+                    }
+                }
+            }
+        }
+    }
+
+    public function processUrlFilters(\Concrete\Core\Http\Request $request) {
+        $service = \Core::make('helper/security');
+        $querystring = $request->getQueryString();
+
+        $params = explode('&', $querystring);
+
+        foreach($params as $param) {
+            $values = explode('=', $param);
+
+            if (isset($values[1])) {
+                $filter = $values[0];
+                $filter = $service->sanitizeString($filter);
+                $items = $service->sanitizeString($values[1]);
+
+                if($filter == 'price') {
+                    $this->filterByPrice($items);
+                } else {
+                    $items = str_replace('%7C', '%2C', $items);
+                    $items = explode('%2C', $items);
+
+                    if (is_object(StoreProductKey::getByHandle($filter))) {
+                        $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
+                    }
+                }
+            }
+        }
+    }
+
+    public function  filterByPrice($pricestring) {
+        $items = explode('-', $pricestring);
+        
+        if (count($items) > 1) {
+            $this->getQueryObject()->andWhere('pPrice <= '. (float)$items[1]);
+            $this->getQueryObject()->andWhere('pPrice >= '. (float)$items[0]);
+        } elseif (isset($items[0])) {  // if single price, treat as max
+            $this->getQueryObject()->andWhere('pPrice <= '. (float)$items[0]);
+        }
     }
 
     protected function getAttributeKeyClassName()
@@ -217,7 +273,7 @@ class ProductList extends AttributedItemList
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
         }
 
-		$query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
+        $query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
 
         return $query;
     }

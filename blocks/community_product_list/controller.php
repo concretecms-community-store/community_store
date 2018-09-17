@@ -5,11 +5,10 @@ use Concrete\Core\Block\BlockController;
 use Core;
 use Config;
 use Page;
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class Controller extends BlockController
 {
@@ -18,6 +17,7 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
+    protected $attFilters = array();
 
     public function getBlockTypeDescription()
     {
@@ -150,6 +150,17 @@ class Controller extends BlockController
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
+
+        if (!empty($this->attFilters)) {
+            $products->setAttributeFilters($this->attFilters);
+        }
+
+        $request = \Request::getInstance();
+
+        if ($request->getQueryString()) {
+            $products->processUrlFilters($request);
+        }
+
         $paginator = $products->getPagination();
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
@@ -184,6 +195,20 @@ class Controller extends BlockController
             $this->set('showAddToCart', false);
         }
     }
+
+    public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '') {
+
+        for($i = 1; $i < 4; $i++) {
+            $attitle = 'atthandle' . $i;
+            $atvalue = 'attvalue' . $i;
+            if ($$attitle) {
+                $this->attFilters[$$attitle] =  $$atvalue;
+            }
+        }
+
+        $this->view();
+    }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
