@@ -89,7 +89,7 @@ $task = $controller->getTask();
 			$order = $item->getOrder();
 			?>
 			<tr>
-				<td><?= $order->getOrderID(); ?></td>
+                <td><a href="<?php echo URL::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
 				<td><?= $order->getAttribute("billing_last_name");?></td>
 				<td><?= $order->getAttribute("billing_first_name"); ?></td>
 				<td><?= $order->getAttribute("email"); ?></td>
@@ -118,6 +118,34 @@ $task = $controller->getTask();
 				</td>
 				<td><?= $dh->formatDateTime($order->getOrderDate()); ?></td>
 				<td><?= $order->getStatus(); ?></td>
+
+                <td>
+                    <?php
+                    $paid = $order->getPaid();
+
+                    if ($paid) {
+                        $paidstatus = t('Paid');
+                    } elseif ($order->getTotal() > 0) {
+                        $paidstatus = t('Unpaid');
+
+                    if ($order->getExternalPaymentRequested()) {
+                        $paidstatus = t('Incomplete') ;
+                    }
+                    } else {
+                        $paidstatus = t('Free Order');
+                    }
+
+                    echo $paidstatus;
+                    ?>
+
+                </td>
+
+                <td>
+                     <?= $order->getPaymentMethodName(); ?>
+                </td>
+                <td>
+                     <?= Price::format($item->getPricePaid() * $item->getQty()); ?>
+                </td>
 
 			</tr>
 		<?php } ?>
