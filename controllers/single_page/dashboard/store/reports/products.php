@@ -63,6 +63,9 @@ class Products extends DashboardPageController
         $header[] = t("Options");
         $header[] = t("Order Date");
         $header[] = t("Order Status");
+        $header[] = t("Payment");
+        $header[] = t("Method");
+        $header[] = t("Amount");
 
         $this->set('reportHeader', $header);
 
@@ -71,7 +74,7 @@ class Products extends DashboardPageController
             $db = $this->app->make('database')->connection();
 
             $sql = 'SELECT csoi.oiID from CommunityStoreOrderItems csoi, CommunityStoreOrders cso
-                    WHERE cso.oID = csoi.oID AND csoi.pID = ? AND cso.oPaid IS NOT NULL AND cso.oCancelled IS NULL
+                    WHERE cso.oID = csoi.oID AND csoi.pID = ? AND cso.externalPaymentRequested is null AND cso.oCancelled IS NULL
                     AND cso.oRefunded IS NULL
                     ORDER BY cso.oDate DESC';
             $result = $db->query($sql, array($productid));
@@ -125,6 +128,25 @@ class Products extends DashboardPageController
                     $outputItem[] = implode(', ', $optionStrings);
                     $outputItem[] = $order->getOrderDate()->format('c');
                     $outputItem[] = $order->getStatus();
+
+                    $paidstatus = '';
+
+                    $paid = $order->getPaid();
+
+                    if ($paid) {
+                        $paidstatus = t('Paid');
+                    } elseif ($order->getTotal() > 0) {
+                        $paidstatus = t('Unpaid');
+
+                        if ($order->getExternalPaymentRequested()) {
+                            $paidstatus = t('Incomplete') ;
+                        }
+                    } else {
+                        $paidstatus = t('Free Order');
+                    }
+                    $outputItem[] = $paidstatus;
+                    $outputItem[] = $order->getPaymentMethodName();
+                    $outputItem[] = $item->getPricePaid() * $item->getQty();
 
                     fputcsv($fp, $outputItem);
                 }
