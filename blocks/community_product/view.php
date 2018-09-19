@@ -232,10 +232,18 @@ if (is_object($product) && $product->isActive()) {
                                                 ?>
                                                 <option
                                                     <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() . $outOfStock ?></option>
-                                            <?php }
+                                            <?php } ?>
+
+                                            <?php
                                             // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                                            // Make sure to add the disabled and selected variables to it and make selected use "checked" instead
-                                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
+                                            /* ?>
+                                            <div class="radio">
+                                                <label><input type="radio" class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
+                                                        <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
+                                            </div>
+                                             */
+                                            ?>
+
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -369,7 +377,7 @@ if (is_object($product) && $product->isActive()) {
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#product-options-<?= $bID; ?> select.store-product-variation').each(function () {
+                $('#product-options-<?= $bID; ?> select.store-product-variation, #product-options-<?= $bID; ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
                 });
 
