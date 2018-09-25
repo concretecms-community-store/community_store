@@ -1467,7 +1467,7 @@ class Product
             $parentPage = Page::getByID($targetCID);
             $pageType = PageType::getByHandle('store_product');
 
-            if ($pageType && $parentPage && !$parentPage->isError()) {
+            if ($pageType && $parentPage && !$parentPage->isError() && !$parentPage->isInTrash()) {
                 $pageTemplate = $pageType->getPageTypeDefaultPageTemplateObject();
 
                 if ($pageTemplate) {

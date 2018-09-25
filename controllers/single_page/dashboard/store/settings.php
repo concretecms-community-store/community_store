@@ -41,6 +41,15 @@ class Settings extends DashboardPageController
         }
 
         $this->set('groupList', $groupList);
+
+        if ($targetCID) {
+            $publishTarget = \Page::getByID($targetCID);
+
+            if (!$publishTarget || $publishTarget->isError() || $publishTarget->isInTrash()) {
+                $targetCID = false;
+            }
+        }
+
         $this->set('productPublishTarget', $targetCID);
     }
 

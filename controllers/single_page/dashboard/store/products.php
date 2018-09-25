@@ -93,7 +93,7 @@ class Products extends DashboardPageController
 
         if ($targetCID > 0) {
             $parentPage = \Page::getByID($targetCID);
-            $productPublishTarget =  ($parentPage && !$parentPage->isError());
+            $productPublishTarget =  ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
         }
 
         $this->set('productPublishTarget',$productPublishTarget);
@@ -204,7 +204,7 @@ class Products extends DashboardPageController
 
         if ($targetCID > 0) {
             $parentPage = \Page::getByID($targetCID);
-            $productPublishTarget =  ($parentPage && !$parentPage->isError());
+            $productPublishTarget = ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
         }
 
         $this->set('productPublishTarget',$productPublishTarget);
