@@ -365,9 +365,10 @@ class ProductVariation
     }
 
 
-    public function settVariationPackageData($data) {
-        return $this->pvPackageData  = trim($data);
+    public function setVariationPackageData($data) {
+        $this->pvPackageData = trim($data);
     }
+
     /**
      * @param mixed $pvNumberItems
      */
@@ -486,6 +487,7 @@ class ProductVariation
                     $variation->setVariationWidth($data['pvWidth'][$key]);
                     $variation->setVariationHeight($data['pvHeight'][$key]);
                     $variation->setVariationLength($data['pvLength'][$key]);
+                    $variation->setVariationPackageData($data['pvPackageData'][$key]);
                     $variation->setVariationSort($sort);
                     $variation->save(true);
 

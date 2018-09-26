@@ -1280,10 +1280,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                      <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
                                          <div class="form-group">
                                              <div class="col-md-4">
-                                                <?= $form->label("pvPackageData", t("Or, Package(s) Data"));?>
+                                                <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data"));?>
                                              </div>
                                              <div class="col-md-8">
-                                                <?= $form->textarea('pvPackageData',$variation->getVariationPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
+                                                 <?= $form->textarea('pvPackageData[' . $varid . ']',$variation->getVariationPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
                                              </div>
                                          </div>
                                      </div>

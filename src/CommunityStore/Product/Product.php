@@ -1063,9 +1063,9 @@ class Product
 
             foreach($lines as $line) {
                 $line = strtolower($line);
-                $line = str_replace('x', '', $line);
-                $line = str_replace('-', '', $line);
-                $values = explode(' ', $line);
+                $line = str_replace('x', ' ', $line);
+                $line = str_replace('-', ' ', $line);
+                $values = preg_split('/[\s]+/', $line);
 
                 $package = new StorePackage();
                 $package->setWeight($values[0]);
