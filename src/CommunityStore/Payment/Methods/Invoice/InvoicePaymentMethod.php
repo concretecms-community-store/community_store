@@ -9,7 +9,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
 {
     public function getName()
     {
-      return t('Invoice');
+        return t('Invoice');
     }
 
     public function dashboardForm()
@@ -18,6 +18,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
         $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
         $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
         $this->set('paymentInstructions', Config::get('community_store.paymentInstructions'));
+        $this->set('markPaid', Config::get('community_store.markPaid'));
     }
 
     public function save(array $data = [])
@@ -25,6 +26,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
         Config::save('community_store.invoiceMinimum', $data['invoiceMinimum']);
         Config::save('community_store.invoiceMaximum', $data['invoiceMaximum']);
         Config::save('community_store.paymentInstructions', $data['paymentInstructions']);
+        Config::save('community_store.markPaid', $data['markPaid']);
     }
     public function validate($args, $e)
     {
@@ -35,7 +37,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     public function checkoutForm()
     {
         $pmID = StorePaymentMethod::getByHandle('invoice')->getID();
-        
+
         $this->addFooterItem("
             <script type=\"text/javascript\">
                  $(function() {
@@ -50,7 +52,6 @@ class InvoicePaymentMethod extends StorePaymentMethod
 
     public function submitPayment()
     {
-
         //nothing to do except return success
         return array('error' => 0, 'transactionReference' => '');
     }
@@ -81,7 +82,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     }
 
     public function markPaid() {
-        return false;
+        return (bool)\Config::get('community_store.markPaid');
     }
 
     // to be overridden by individual payment methods
