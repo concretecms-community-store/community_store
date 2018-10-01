@@ -77,6 +77,16 @@ class Controller extends BlockController
             }
 
             $this->set('product', $product);
+            $this->set('showProductName', $this->showProductName);
+            $this->set('showProductPrice', $this->showProductPrice);
+            $this->set('showProductDescription', $this->showProductDescription);
+            $this->set('showDimensions', $this->showDimensions);
+            $this->set('showWeight', $this->showWeight);
+            $this->set('showGroups', $this->showGroups);
+            $this->set('showCartButton', $this->showCartButton);
+            $this->set('showImage', $this->showImage);
+            $this->set('showProductDetails', $this->showProductDetails);
+            $this->set('btnText', $this->btnText);
         }
 
         if (Config::get('community_store.shoppingDisabled') == 'all') {
