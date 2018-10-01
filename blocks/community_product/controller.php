@@ -6,7 +6,7 @@ use Config;
 use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends BlockController
@@ -26,11 +26,12 @@ class Controller extends BlockController
     {
         return t("Product");
     }
+
     public function view()
     {
         $product = false;
 
-        if ($this->productLocation == 'page' || !$this->productLocation) {
+        if ('page' == $this->productLocation || !$this->productLocation) {
             $cID = Page::getCurrentPage()->getCollectionID();
 
             if ($cID) {
@@ -46,7 +47,7 @@ class Controller extends BlockController
             if ($product->hasVariations()) {
                 $variations = StoreProductVariation::getVariationsForProduct($product);
 
-                $variationLookup = array();
+                $variationLookup = [];
 
                 if (!empty($variations)) {
                     foreach ($variations as $variation) {
@@ -89,10 +90,11 @@ class Controller extends BlockController
             $this->set('btnText', $this->btnText);
         }
 
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('showCartButton', false);
         }
     }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
@@ -105,7 +107,7 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
-        if ($this->productLocation == 'page') {
+        if ('page' == $this->productLocation) {
             $page = $this->getCollectionObject();
             $cID = $page->getCollectionID();
             $product = StoreProduct::getByCollectionID($cID);
@@ -115,7 +117,8 @@ class Controller extends BlockController
 
         if ($product) {
             $sku = $product->getSKU();
-            return $product->getName() . ($sku ? ' (' .$sku. ')' : '') . ' ' . $product->getDesc() . ' ' . $product->getDetail();
+
+            return $product->getName() . ($sku ? ' (' . $sku . ')' : '') . ' ' . $product->getDesc() . ' ' . $product->getDetail();
         } else {
             return '';
         }
@@ -133,7 +136,7 @@ class Controller extends BlockController
         $args['showIsFeatured'] = isset($args['showIsFeatured']) ? 1 : 0;
         $args['showGroups'] = isset($args['showGroups']) ? 1 : 0;
         $args['showDimensions'] = isset($args['showDimensions']) ? 1 : 0;
-        if ($args['productLocation'] == 'search') {
+        if ('search' == $args['productLocation']) {
             if (!is_numeric($args['pID']) || $args['pID'] < 1) {
                 $args['productLocation'] = "page";
             }
@@ -146,6 +149,7 @@ class Controller extends BlockController
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
     }
+
     public function edit()
     {
         $this->requireAsset('css', 'select2');

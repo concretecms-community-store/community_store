@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -10,9 +9,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
  */
 class ProductLocation
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $id;
 
@@ -42,11 +41,11 @@ class ProductLocation
      */
     protected $productSortOrder;
 
-
     private function setProductID($pID)
     {
         $this->pID = $pID;
     }
+
     private function setCollectionID($cID)
     {
         $this->cID = $cID;
@@ -100,26 +99,28 @@ class ProductLocation
     public static function getByID($cID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $cID);
     }
 
     public static function getLocationsForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()), array('productSortOrder'=>'asc'));
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
     }
 
     public static function getProductsForLocation($cID)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('cID' => $cID), array('categorySortOrder'=>'asc'));
+
+        return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)
     {
-        $saveLocations = array();
-        $existingLocationID = array();
-
+        $saveLocations = [];
+        $existingLocationID = [];
 
         if (!empty($locations['cID'])) {
             foreach ($locations['cID'] as $cID) {
@@ -129,7 +130,7 @@ class ProductLocation
 
         $existingLocations = self::getLocationsForProduct($product);
 
-        foreach($existingLocations as $existingLocation) {
+        foreach ($existingLocations as $existingLocation) {
             if (!in_array($existingLocation->getCollectionID(), $saveLocations)) {
                 // no longer in list, so remove
                 $existingLocation->delete();
@@ -143,7 +144,7 @@ class ProductLocation
 
         //add new ones.
         if (!empty($locations['cID'])) {
-            foreach ($locations['cID'] as $key=>$cID) {
+            foreach ($locations['cID'] as $key => $cID) {
                 if ($cID > 0 && !in_array($cID, $existingLocationID)) {
                     self::add($product, $cID, $key);
                 }
@@ -161,18 +162,19 @@ class ProductLocation
 
     // returns an associated array of pages, with the page name as the key, alphabetically sorted
     // each value is an array that includes a page object and product count for that category
-    public static function getLocationPages() {
+    public static function getLocationPages()
+    {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
         $query = $db->query('select count(*) as productCount, max(cID) as cID from CommunityStoreProductLocations group by cID');
 
-        $pages = array();
-        while($row = $query->fetchRow()) {
-           $page = \Page::getByID($row['cID']);
+        $pages = [];
+        while ($row = $query->fetchRow()) {
+            $page = \Page::getByID($row['cID']);
 
             if ($page) {
-                $pages[$page->getCollectionName()] = array('page'=>$page, 'productCount' =>$row['productCount']);
+                $pages[$page->getCollectionName()] = ['page' => $page, 'productCount' => $row['productCount']];
             }
         }
 
@@ -192,7 +194,8 @@ class ProductLocation
         return $location;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

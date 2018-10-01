@@ -17,10 +17,10 @@ class CartModal extends RouteController
 
         $total = $totals['subTotal'];
 
-        if (Filesystem::exists(DIR_BASE.'/application/elements/cart_modal.php')) {
-            View::element('cart_modal', array('cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post()));
+        if (Filesystem::exists(DIR_BASE . '/application/elements/cart_modal.php')) {
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post()]);
         } else {
-            View::element('cart_modal', array('cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post()), 'community_store');
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post()], 'community_store');
         }
     }
 }

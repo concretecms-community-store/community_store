@@ -53,7 +53,8 @@ class Method extends Controller
         return $this->pmHandle;
     }
 
-    public function setHandle($handle) {
+    public function setHandle($handle)
+    {
         $this->pmHandle = $handle;
     }
 
@@ -82,7 +83,8 @@ class Method extends Controller
         return $this->pkgID;
     }
 
-    public function setPackageID($pkgID) {
+    public function setPackageID($pkgID)
+    {
         $this->pkgID = $pkgID;
     }
 
@@ -98,7 +100,7 @@ class Method extends Controller
 
     public function getDisplayName()
     {
-        if ($this->pmDisplayName == "") {
+        if ("" == $this->pmDisplayName) {
             return $this->pmName;
         } else {
             return $this->pmDisplayName;
@@ -112,7 +114,7 @@ class Method extends Controller
 
     public function setEnabled($status)
     {
-        $this->pmEnabled = (bool)$status;
+        $this->pmEnabled = (bool) $status;
     }
 
     public function isEnabled()
@@ -135,7 +137,7 @@ class Method extends Controller
     public static function getByHandle($pmHandle)
     {
         $em = \ORM::entityManager();
-        $method = $em->getRepository(get_class())->findOneBy(array('pmHandle' => $pmHandle));
+        $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
             $method->setMethodController();
@@ -176,7 +178,7 @@ class Method extends Controller
      * @param string $pmDisplayName
      * @param bool $enabled
      */
-    public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel ='', $enabled = false)
+    public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel = '', $enabled = false)
     {
         $pm = self::getByHandle($pmHandle);
         if (!($pm instanceof self)) {
@@ -195,13 +197,14 @@ class Method extends Controller
     {
         $em = \ORM::entityManager();
         if ($enabled) {
-            $methods = $em->getRepository(get_class())->findBy(array('pmEnabled' => 1), array('pmSortOrder'=>'ASC'));
+            $methods = $em->getRepository(get_class())->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
         } else {
-            $methods = $em->getRepository(get_class())->findBy(array(), array('pmSortOrder'=> 'ASC'));
+            $methods = $em->getRepository(get_class())->findBy([], ['pmSortOrder' => 'ASC']);
         }
-        foreach($methods as $method) {
+        foreach ($methods as $method) {
             $method->setMethodController();
         }
+
         return $methods;
     }
 
@@ -215,7 +218,7 @@ class Method extends Controller
         $class = $this->getMethodController();
         $class->checkoutForm();
         $pkg = Package::getByID($this->pkgID);
-        View::element($this->pmHandle . '/checkout_form', array('vars' => $class->getSets()), $pkg->getPackageHandle());
+        View::element($this->pmHandle . '/checkout_form', ['vars' => $class->getSets()], $pkg->getPackageHandle());
     }
 
     public function renderDashboardForm()
@@ -223,7 +226,7 @@ class Method extends Controller
         $controller = $this->getMethodController();
         $controller->dashboardForm();
         $pkg = Package::getByID($this->pkgID);
-        View::element($this->pmHandle . '/dashboard_form', array('vars' => $controller->getSets()), $pkg->getPackageHandle());
+        View::element($this->pmHandle . '/dashboard_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
 
     public function renderRedirectForm()
@@ -231,13 +234,14 @@ class Method extends Controller
         $controller = $this->getMethodController();
         $controller->redirectForm();
         $pkg = Package::getByID($this->pkgID);
-        View::element($this->pmHandle . '/redirect_form', array('vars' => $controller->getSets()), $pkg->getPackageHandle());
+        View::element($this->pmHandle . '/redirect_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
 
     public function submitPayment()
     {
-        //load controller    
+        //load controller
         $class = $this->getMethodController();
+
         return $class->submitPayment();
     }
 
@@ -270,28 +274,34 @@ class Method extends Controller
         $em->flush();
     }
 
-    public function isExternal() {
+    public function isExternal()
+    {
         return false;
     }
 
-    public function markPaid() {
+    public function markPaid()
+    {
         return true;
     }
 
-    public function sendReceipt() {
+    public function sendReceipt()
+    {
         return true;
     }
 
     // method stub
-    public function redirectForm() {
+    public function redirectForm()
+    {
     }
 
     // method stub
-    public function checkoutForm() {
+    public function checkoutForm()
+    {
     }
 
     // method stub
-    public function getPaymentInstructions() {
+    public function getPaymentInstructions()
+    {
         return '';
     }
 }

@@ -1,63 +1,63 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+
 $c = Page::getCurrentPage();
 
-if($products){
+if ($products) {
     $columnClass = 'col-md-12';
 
-    if ($productsPerRow == 2) {
+    if (2 == $productsPerRow) {
         $columnClass = 'col-md-6';
     }
 
-    if ($productsPerRow == 3) {
+    if (3 == $productsPerRow) {
         $columnClass = 'col-md-4';
     }
 
-    if ($productsPerRow == 4) {
+    if (4 == $productsPerRow) {
         $columnClass = 'col-md-3';
     }
 
-    if ($productsPerRow == 6) {
+    if (6 == $productsPerRow) {
         $columnClass = 'col-md-2';
-    }
-    ?>
+    } ?>
 
 
-    <?php if ($showSortOption) { ?>
+    <?php if ($showSortOption) {
+        ?>
     <div class="store-product-list-sort row">
         <div class="col-md-12 form-inline text-right pull-right">
             <div class="form-group">
-                <?= $form->label('sort' . $bID,  t('Sort by')); ?>
+                <?= $form->label('sort' . $bID, t('Sort by')); ?>
                 <?= $form->select('sort' . $bID,
-                    array(
+                    [
                     '0' => '',
                     'price_asc' => t('price, lowest to highest'),
                     'price_desc' => t('price, highest to lowest'),
-                    ));
-                ?>
+                    ]); ?>
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
     $(function () {
-        $('#sort<?= $bID;?>').change(function(){
-            var sortstring = '<?php echo \Core::make('helper/url')->setVariable(array('sort'. $bID=>'%sort%'));?>';
+        $('#sort<?= $bID; ?>').change(function(){
+            var sortstring = '<?php echo \Core::make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
             window.location.href=  sortstring.replace('%sort%', $(this).val());
         });
     });
     </script>
-    <?php } ?>
+    <?php
+    } ?>
 
 
     <?php
 
-    echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
+    echo '<div class="store-product-list row store-product-list-per-row-' . $productsPerRow . '">';
 
-    $i=1;
-    
-    foreach($products as $product){
+    $i = 1;
+
+    foreach ($products as $product) {
         $options = $product->getOptions();
 
         $variationLookup = $product->getVariationLookup();
@@ -67,141 +67,172 @@ if($products){
 
         if ($firstAvailableVariation) {
             $product = $firstAvailableVariation;
-        } else{
+        } else {
             $product->setInitialVariation();
         }
 
         $isSellable = $product->isSellable();
 
         //this is done so we can get a type of active class if there's a product list on the product page
-        if($c->getCollectionID()==$product->getPageID()){
-            $activeclass =  'on-product-page';
+        if ($c->getCollectionID() == $product->getPageID()) {
+            $activeclass = 'on-product-page';
         }
 
         $productPage = Page::getByID($product->getPageID());
 
         if ($productPage->isError() || $productPage->isInTrash()) {
             $productPage = false;
-        }
-
-    ?>
+        } ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-            <form   id="store-form-add-to-cart-list-<?= $product->getID()?>" data-product-id="<?= $product->getID() ?>">
-		<?php if ($showName) { ?>
-                <h2 class="store-product-list-name"><?= $product->getName()?></h2>
-		<?php } ?>
-                <?php 
+            <form   id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
+		<?php if ($showName) {
+            ?>
+                <h2 class="store-product-list-name"><?= $product->getName(); ?></h2>
+		<?php
+        } ?>
+                <?php
                     $imgObj = $product->getImageObj();
-                    if(is_object($imgObj)){
-                        $thumb = $ih->getThumbnail($imgObj,400,280,true);?>
+        if (is_object($imgObj)) {
+            $thumb = $ih->getThumbnail($imgObj, 400, 280, true); ?>
                         <p class="store-product-list-thumbnail">
-                            <?php if($showQuickViewLink){ ?>
-                                <a class="store-product-quick-view" data-product-id="<?= $product->getID()?>" href="#">
-                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                            <?php if ($showQuickViewLink) {
+                ?>
+                                <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" href="#">
+                                    <img src="<?= $thumb->src; ?>" class="img-responsive">
                                 </a>
-                            <?php } elseif ($showPageLink && $productPage) { ?>
-                                <a href="<?= \URL::to(Page::getByID($product->getPageID()))?>">
-                                    <img src="<?= $thumb->src?>" class="img-responsive">
+                            <?php
+            } elseif ($showPageLink && $productPage) {
+                ?>
+                                <a href="<?= \URL::to(Page::getByID($product->getPageID())); ?>">
+                                    <img src="<?= $thumb->src; ?>" class="img-responsive">
                                 </a>
-                            <?php } else { ?>
-                                <img src="<?= $thumb->src?>" class="img-responsive">
-                            <?php } ?>
+                            <?php
+            } else {
+                ?>
+                                <img src="<?= $thumb->src; ?>" class="img-responsive">
+                            <?php
+            } ?>
                         </p>
                 <?php
-                    }// if is_obj
-                ?>
-                <?php if ($showPrice) { ?>
+        }// if is_obj ?>
+                <?php if ($showPrice) {
+            ?>
                 <p class="store-product-list-price">
 		            <?php
                         $salePrice = $product->getSalePrice();
-		                if(isset($salePrice) && $salePrice != ""){
-                            $formattedSalePrice = $product->getFormattedSalePrice();
-                            $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-		                    echo '<span class="store-sale-price">'.$formattedSalePrice.'</span>';
-		                    echo ' ' . t('was') . ' ' . '<span class="store-original-price">'.$formattedOriginalPrice.'</span>';
-		                } else {
-                            $formattedPrice = $product->getFormattedPrice();
-		                    echo $formattedPrice; 
-		                }
-		            ?>
+            if (isset($salePrice) && "" != $salePrice) {
+                $formattedSalePrice = $product->getFormattedSalePrice();
+                $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+                echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
+                echo ' ' . t('was') . ' ' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+            } else {
+                $formattedPrice = $product->getFormattedPrice();
+                echo $formattedPrice;
+            } ?>
                 </p>
-                <?php } ?>
+                <?php
+        } ?>
 
-                <?php if ($product->allowCustomerPrice()) { ?>
+                <?php if ($product->allowCustomerPrice()) {
+            ?>
                     <div class="store-product-customer-price-entry form-group">
                         <?php
                         $pricesuggestions = $product->getPriceSuggestionsArray();
-                        if (!empty($pricesuggestions)) { ?>
+            if (!empty($pricesuggestions)) {
+                ?>
                             <p class="store-product-price-suggestions"><?php
-                                foreach($pricesuggestions as $suggestion) { ?>
-                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion;?></a>
-                                <?php } ?>
+                                foreach ($pricesuggestions as $suggestion) {
+                                    ?>
+                                    <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
+                                <?php
+                                } ?>
                             </p>
-                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount') ?></label>
-                        <?php } else { ?>
-                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount') ?></label>
-                        <?php } ?>
+                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Enter Other Amount'); ?></label>
+                        <?php
+            } else {
+                ?>
+                            <label for="customerPrice" class="store-product-customer-price-label"><?= t('Amount'); ?></label>
+                        <?php
+            } ?>
                         <?php $min = $product->getPriceMinimum(); ?>
                         <?php $max = $product->getPriceMaximum(); ?>
                         <div class="input-group col-md-6 col-sm-6 col-xs-6">
-                            <div class="input-group-addon"><?= Config::get('community_store.symbol');?></div>
-                            <input type="number" <?= $min ? 'min="'.$min.'"' : ''; ?>  <?= $max ? 'max="'.$max.'"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                            <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
+                            <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
                         </div>
-                        <?php if ($min >=0 || $max > 0) { ?>
+                        <?php if ($min >= 0 || $max > 0) {
+                ?>
                             <span class="store-min-max help-block">
                                     <?php
                                     if (!is_null($min)) {
                                         echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
                                     }
 
-                                    if (!is_null($max)) {
-                                        if ($min >= 0) {
-                                            echo ', ';
-                                        }
-                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
-                                    }
-                                    ?>
+                if (!is_null($max)) {
+                    if ($min >= 0) {
+                        echo ', ';
+                    }
+                    echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                } ?>
                                     </span>
-                        <?php } ?>
+                        <?php
+            } ?>
                     </div>
-                <?php } ?>
+                <?php
+        } ?>
 
 
-                <?php if($showDescription){ ?>
-                <div class="store-product-list-description"><?= $product->getDesc()?></div>
-                <?php } ?>
-                <?php if($showPageLink && $productPage) { ?>
-                    <p class="store-btn-more-details-container"><a href="<?= \URL::to($productPage) ?>"class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")) ?></a></p>
-                <?php } ?>
-                <?php if($showAddToCart){ ?>
+                <?php if ($showDescription) {
+            ?>
+                <div class="store-product-list-description"><?= $product->getDesc(); ?></div>
+                <?php
+        } ?>
+                <?php if ($showPageLink && $productPage) {
+            ?>
+                    <p class="store-btn-more-details-container"><a href="<?= \URL::to($productPage); ?>"class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
+                <?php
+        } ?>
+                <?php if ($showAddToCart) {
+            ?>
 
-                <?php if ($product->allowQuantity() && $showQuantity) { ?>
+                <?php if ($product->allowQuantity() && $showQuantity) {
+                ?>
                     <div class="store-product-quantity form-group">
-                        <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
+                        <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
                         <?php $quantityLabel = $product->getQtyLabel(); ?>
 
-                        <?php if ($quantityLabel) { ?>
+                        <?php if ($quantityLabel) {
+                    ?>
                             <div class="input-group">
-                        <?php }
-                        $max = $product->getMaxCartQty();
-                        ?>
+                        <?php
+                }
+                $max = $product->getMaxCartQty(); ?>
 
-                        <?php if ($product->allowDecimalQuantity()) { ?>
-                            <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps(): 0.001 ;?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001 ;?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
-                        <?php } else { ?>
-                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
-                        <?php } ?>
+                        <?php if ($product->allowDecimalQuantity()) {
+                    ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                        <?php
+                } else {
+                    ?>
+                            <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                        <?php
+                } ?>
 
-                       <?php if ($quantityLabel) { ?>
+                       <?php if ($quantityLabel) {
+                    ?>
                             <div class="input-group-addon"><?= $quantityLabel; ?></div>
                                 </div>
-                        <?php } ?>
+                        <?php
+                } ?>
 
                     </div>
-                <?php } else { ?>
+                <?php
+            } else {
+                ?>
                         <input type="hidden" name="quantity" class="store-product-qty" value="1">
-                <?php } ?>
+                <?php
+            } ?>
 
                 <?php
                     foreach ($product->getOptions() as $option) {
@@ -212,98 +243,110 @@ if($products){
                         $requiredAttr = '';
 
                         if ($required) {
-                            $requiredAttr = ' required="required" placeholder="'.t('Required').'" ';
-                        }
-                        ?>
+                            $requiredAttr = ' required="required" placeholder="' . t('Required') . '" ';
+                        } ?>
 
-                        <?php if (!$optionType || $optionType == 'select') { ?>
-                            <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> form-control" name="po<?= $option->getID() ?>">
+                        <?php if (!$optionType || 'select' == $optionType) {
+                            ?>
+                            <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
                                     <?php
                                     $firstAvailableVariation = false;
-                                    $variation = false;
-                                    $disabled = false;
-                                    $outOfStock = false;
-                                    foreach ($optionItems as $optionItem) {
-                                        if (!$optionItem->isHidden()) {
-                                           $variation = $variationLookup[$optionItem->getID()];
-                                            if (!empty($variation)) {
-                                                $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
-                                                $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
-                                                $outOfStock = $variation->isSellable() ? '' : ' ('.t('out of stock').')';
-                                            }
-                                            $selected = '';
-                                            if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                $selected = 'selected="selected"';
-                                            }
-                                            ?>
-                                            <option <?= $disabled . ' ' . $selected ?>value="<?= $optionItem->getID() ?>"><?= $optionItem->getName().$outOfStock ?></option>
-                                        <?php }
-                                        // below is an example of a radio button, comment out the <select> and <option> tags to use instead
+                            $variation = false;
+                            $disabled = false;
+                            $outOfStock = false;
+                            foreach ($optionItems as $optionItem) {
+                                if (!$optionItem->isHidden()) {
+                                    $variation = $variationLookup[$optionItem->getID()];
+                                    if (!empty($variation)) {
+                                        $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
+                                        $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                        $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
+                                    }
+                                    $selected = '';
+                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                        $selected = 'selected="selected"';
+                                    } ?>
+                                            <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
+                                        <?php
+                                }
+                                // below is an example of a radio button, comment out the <select> and <option> tags to use instead
                                         // Make sure to add the $disabled and $selected variables here and make $selected use "checked" instead
-                                        //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
-                                    <?php } ?>
+                                        //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />';?>
+                                    <?php
+                            } ?>
                                 </select>
                             </div>
-                        <?php } elseif ($optionType == 'text') { ?>
-                            <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID() ?>" />
+                        <?php
+                        } elseif ('text' == $optionType) {
+                            ?>
+                            <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID(); ?>" />
                             </div>
-                        <?php } elseif ($optionType == 'textarea') { ?>
-                            <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                                <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID() ?>"></textarea>
+                        <?php
+                        } elseif ('textarea' == $optionType) {
+                            ?>
+                            <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID(); ?>"></textarea>
                             </div>
-                        <?php } elseif ($optionType == 'checkbox') { ?>
-                            <div class="store-product-option-group form-group <?= $option->getHandle() ?>">
+                        <?php
+                        } elseif ('checkbox' == $optionType) {
+                            ?>
+                            <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                 <label class="store-product-option-group-label">
-                                    <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" />
-                                    <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle() ?>" name="pc<?= $option->getID() ?>" /> <?= $option->getName() ?></label>
+                                    <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>" />
+                                    <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>" /> <?= $option->getName(); ?></label>
                             </div>
-                        <?php } elseif ($optionType == 'hidden') { ?>
-                            <input type="hidden" class="store-product-option-hidden <?= $option->getHandle() ?>" name="ph<?= $option->getID() ?>" />
-                        <?php } ?>
-                    <?php } ?>
+                        <?php
+                        } elseif ('hidden' == $optionType) {
+                            ?>
+                            <input type="hidden" class="store-product-option-hidden <?= $option->getHandle(); ?>" name="ph<?= $option->getID(); ?>" />
+                        <?php
+                        } ?>
+                    <?php
+                    } ?>
 
 
-                <input type="hidden" name="pID" value="<?= $product->getID()?>">
+                <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
 
-                <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
-                <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
+                <p class="store-btn-add-to-cart-container"><button data-add-type="list" data-product-id="<?= $product->getID(); ?>" class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t("Add to Cart")); ?></button></p>
+                <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock"); ?></p>
 
-                <?php } ?>
+                <?php
+        } ?>
 
-                <?php if ($product->hasVariations() && !empty($variationLookup)) {?>
+                <?php if ($product->hasVariations() && !empty($variationLookup)) {
+            ?>
                     <script>
                         $(function() {
                             <?php
-                            $varationData = array();
-                            foreach($variationLookup as $key=>$variation) {
-                                $product->setVariation($variation);
+                            $varationData = [];
+            foreach ($variationLookup as $key => $variation) {
+                $product->setVariation($variation);
 
-                                $imgObj = $product->getImageObj();
+                $imgObj = $product->getImageObj();
 
-                                if ($imgObj) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj,400,280,true);
-                                }
+                if ($imgObj) {
+                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, 400, 280, true);
+                }
 
-                                $varationData[$key] = array(
-                                'price'=>$product->getFormattedOriginalPrice(),
-                                'saleprice'=>$product->getFormattedSalePrice(),
-                                'available'=>($variation->isSellable()),
-                                'imageThumb'=>$thumb ? $thumb->src : '',
-                                'image'=>$imgObj ? $imgObj->getRelativePath() : '');
+                $varationData[$key] = [
+                                'price' => $product->getFormattedOriginalPrice(),
+                                'saleprice' => $product->getFormattedSalePrice(),
+                                'available' => ($variation->isSellable()),
+                                'imageThumb' => $thumb ? $thumb->src : '',
+                                'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
+            } ?>
 
-                            } ?>
 
-
-                            $('#store-form-add-to-cart-list-<?= $product->getID()?> select').change(function(){
+                            $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select').change(function(){
                                 var variationdata = <?= json_encode($varationData); ?>;
                                 var ar = [];
 
-                                $('#store-form-add-to-cart-list-<?= $product->getID()?> select.store-product-variation').each(function(){
+                                $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation').each(function(){
                                     ar.push($(this).val());
                                 });
 
@@ -313,7 +356,7 @@ if($products){
 
                                 if (variationdata[ar.join('_')]['saleprice']) {
                                     var pricing =  '<span class="store-sale-price">'+ variationdata[ar.join('_')]['saleprice']+'</span>' +
-                                        ' <?= t('was');?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
+                                        ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
 
                                     pli.find('.store-product-list-price').html(pricing);
 
@@ -341,31 +384,32 @@ if($products){
                             });
                         });
                     </script>
-                <?php } ?>
+                <?php
+        } ?>
 
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
         
-        <?php 
-            if($i%$productsPerRow==0){
+        <?php
+            if (0 == $i % $productsPerRow) {
                 echo "</div>";
-                echo '<div class="store-product-list row store-product-list-per-row-'. $productsPerRow .'">';
+                echo '<div class="store-product-list row store-product-list-per-row-' . $productsPerRow . '">';
             }
-        
-        $i++;
-    
-    }// foreach    
+
+        ++$i;
+    }// foreach
     echo "</div><!-- .product-list -->";
-    
-    if($showPagination){
+
+    if ($showPagination) {
         if ($paginator->getTotalPages() > 1) {
             echo '<div class="row">';
             echo $pagination;
             echo '</div>';
         }
     }
-    
 } //if products
-elseif (is_object($c) && $c->isEditMode()) { ?>
-    <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List")?></div>
-<?php } ?>
+elseif (is_object($c) && $c->isEditMode()) {
+    ?>
+    <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List"); ?></div>
+<?php
+} ?>

@@ -5,11 +5,8 @@ use PageController;
 use Core;
 use Session;
 use Config;
-use Database;
 use User;
 use UserAttributeKey;
-use Concrete\Core\Attribute\Type as AttributeType;
-
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
@@ -25,8 +22,7 @@ class Checkout extends PageController
     public function view($guest = false)
     {
         if ($this->post()) {
-            if ($this->post('action') == 'code') {
-
+            if ('code' == $this->post('action')) {
                 $codeerror = false;
                 $codesuccess = false;
 
@@ -42,7 +38,7 @@ class Checkout extends PageController
             $this->set('codesuccess', $codesuccess);
         }
 
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->redirect("/");
         }
 
@@ -50,7 +46,7 @@ class Checkout extends PageController
         $this->set('customer', $customer);
         $guestCheckout = Config::get('community_store.guestCheckout');
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
-        $this->set('guest', isset($guest) && (bool)$guest);
+        $this->set('guest', isset($guest) && (bool) $guest);
         $this->set('requiresLogin', StoreCart::requiresLogin());
         $this->set('companyField', Config::get('community_store.companyField'));
 
@@ -60,10 +56,10 @@ class Checkout extends PageController
             $this->redirect("/cart/changed");
         }
 
-        if(StoreCart::getTotalItemsInCart() == 0){
+        if (0 == StoreCart::getTotalItemsInCart()) {
             $this->redirect("/cart");
         }
-        $this->set('form',Core::make("helper/form"));
+        $this->set('form', Core::make("helper/form"));
 
         $allcountries = Core::make('helper/lists/countries')->getCountries();
 
@@ -72,19 +68,19 @@ class Checkout extends PageController
         $ak = UserAttributeKey::getByHandle('billing_address');
 
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
-            $keysettings =  $ak->getController()->getAttributeKeySettings();
+            $keysettings = $ak->getController()->getAttributeKeySettings();
             $defaultBillingCountry = $keysettings->getDefaultCountry();
             $hasCustomerBillingCountries = $keysettings->hasCustomCountries();
             $availableBillingCountries = $keysettings->getCustomCountries();
         } else {
             $row = $db->GetRow(
                 'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
-                array($ak->getAttributeKeyID())
+                [$ak->getAttributeKeyID()]
             );
 
             $availableBillingCountries = $db->GetCol(
                 'select country from atAddressCustomCountries where akID = ?',
-                array($ak->getAttributeKeyID())
+                [$ak->getAttributeKeyID()]
             );
 
             $defaultBillingCountry = $row['akDefaultCountry'];
@@ -92,37 +88,37 @@ class Checkout extends PageController
         }
 
         if ($hasCustomerBillingCountries) {
-            $billingCountries = array();
-            foreach($availableBillingCountries as $countrycode) {
+            $billingCountries = [];
+            foreach ($availableBillingCountries as $countrycode) {
                 $billingCountries[$countrycode] = $allcountries[$countrycode];
             }
         } else {
-            $billingCountries =  $allcountries;
+            $billingCountries = $allcountries;
         }
 
         $ak = UserAttributeKey::getByHandle('shipping_address');
-        
+
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
-            $keysettings =  $ak->getController()->getAttributeKeySettings();
+            $keysettings = $ak->getController()->getAttributeKeySettings();
             $defaultShippingCountry = $keysettings->getDefaultCountry();
             $hasCustomerShippingCountries = $keysettings->hasCustomCountries();
             $availableShippingCountries = $keysettings->getCustomCountries();
         } else {
             $row = $db->GetRow(
                 'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
-                array($ak->getAttributeKeyID())
+                [$ak->getAttributeKeyID()]
             );
             $defaultShippingCountry = $row['akDefaultCountry'];
             $hasCustomerShippingCountries = $row['akHasCustomCountries'];
             $availableShippingCountries = $db->GetCol(
                 'select country from atAddressCustomCountries where akID = ?',
-                array($ak->getAttributeKeyID())
+                [$ak->getAttributeKeyID()]
             );
         }
 
         if ($hasCustomerShippingCountries) {
-            $shippingCountries = array();
-            foreach($availableShippingCountries as $countrycode) {
+            $shippingCountries = [];
+            foreach ($availableShippingCountries as $countrycode) {
                 $shippingCountries[$countrycode] = $allcountries[$countrycode];
             }
         } else {
@@ -131,33 +127,33 @@ class Checkout extends PageController
 
         $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
 
-        $this->set("discountsWithCodesExist",$discountsWithCodesExist);
+        $this->set("discountsWithCodesExist", $discountsWithCodesExist);
         $this->set('cart', $cart);
         $this->set('discounts', StoreCart::getDiscounts());
         $this->set('hasCode', StoreDiscountCode::hasCartCode());
 
-        $this->set("billingCountries",$billingCountries);
-        $this->set("shippingCountries",$shippingCountries);
+        $this->set("billingCountries", $billingCountries);
+        $this->set("shippingCountries", $shippingCountries);
 
-        $this->set("defaultBillingCountry",$defaultBillingCountry);
-        $this->set("defaultShippingCountry",$defaultShippingCountry);
+        $this->set("defaultBillingCountry", $defaultBillingCountry);
+        $this->set("defaultShippingCountry", $defaultShippingCountry);
 
-        $statelist = array(''=>'');
+        $statelist = ['' => ''];
         $statelist = array_merge($statelist, Core::make('helper/lists/states_provinces')->getStates());
         $this->set("states", $statelist);
 
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User);
-        $this->set("orderChoicesEnabled", count($orderChoicesAttList)? true : false);
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+        $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
             $this->set("orderChoicesAttList", $orderChoicesAttList);
         }
 
         $totals = StoreCalculator::getTotals();
 
-        $this->set('subtotal',$totals['subTotal']);
-        $this->set('taxes',$totals['taxes']);
+        $this->set('subtotal', $totals['subTotal']);
+        $this->set('taxes', $totals['taxes']);
 
-        $this->set('taxtotal',$totals['taxTotal']);
+        $this->set('taxtotal', $totals['taxTotal']);
 
         if (\Session::get('community_store.smID')) {
             $this->set('shippingtotal', $totals['shippingTotal']);
@@ -165,7 +161,7 @@ class Checkout extends PageController
             $this->set('shippingtotal', false);
         }
 
-        $this->set('total',$totals['total']);
+        $this->set('total', $totals['total']);
         $this->set('shippingEnabled', StoreCart::isShippable());
         $this->set('shippingInstructions', StoreCart::getShippingInstructions());
 
@@ -184,17 +180,17 @@ class Checkout extends PageController
 
         $enabledMethods = StorePaymentMethod::getEnabledMethods();
 
-        $availableMethods = array();
+        $availableMethods = [];
 
-        foreach($enabledMethods as $em) {
+        foreach ($enabledMethods as $em) {
             $emmc = $em->getMethodController();
 
-            if ($totals['total'] >= $emmc->getPaymentMinimum() && $totals['total'] <=  $emmc->getPaymentMaximum()) {
+            if ($totals['total'] >= $emmc->getPaymentMinimum() && $totals['total'] <= $emmc->getPaymentMaximum()) {
                 $availableMethods[] = $em;
             }
         }
 
-        $this->set("enabledPaymentMethods",$availableMethods);
+        $this->set("enabledPaymentMethods", $availableMethods);
 
         $apikey = \Config::get('community_store.placesAPIKey');
 
@@ -211,40 +207,41 @@ class Checkout extends PageController
     public function failed($guest = false)
     {
         $this->set('shippingInstructions', StoreCart::getShippingInstructions());
-        $this->set('paymentErrors',Session::get('paymentErrors'));
+        $this->set('paymentErrors', Session::get('paymentErrors'));
         $this->set('activeShippingLabel', StoreShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', StoreCalculator::getShippingTotal());
-        $this->set('lastPaymentMethodHandle',Session::get('paymentMethod'));
+        $this->set('lastPaymentMethodHandle', Session::get('paymentMethod'));
         $this->view($guest);
     }
+
     public function submit($guest = false)
     {
         $data = $this->post();
-        Session::set('paymentMethod',$data['payment-method']);
+        Session::set('paymentMethod', $data['payment-method']);
 
         //process payment
         $pmHandle = $data['payment-method'];
         $pm = StorePaymentMethod::getByHandle($pmHandle);
 
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
-        if($pm === false || (StoreCart::isShippable() && !Session::get('community_store.smID'))){
+        if (false === $pm || (StoreCart::isShippable() && !Session::get('community_store.smID'))) {
             $this->redirect("/checkout");
             exit();
         }
 
-        if($pm->getMethodController()->isExternal()){
-            if(StoreCart::getTotalItemsInCart() != 0){
-                $order = StoreOrder::add($pm,null,'incomplete');
-                Session::set('orderID',$order->getOrderID());
+        if ($pm->getMethodController()->isExternal()) {
+            if (0 != StoreCart::getTotalItemsInCart()) {
+                $order = StoreOrder::add($pm, null, 'incomplete');
+                Session::set('orderID', $order->getOrderID());
                 $this->redirect('/checkout/external');
-            }else{
-               $this->redirect("/cart");
+            } else {
+                $this->redirect("/cart");
             }
         } else {
             $payment = $pm->submitPayment();
-            if($payment['error']==1){
+            if (1 == $payment['error']) {
                 $errors = $payment['errorMessage'];
-                Session::set('paymentErrors',$errors);
+                Session::set('paymentErrors', $errors);
                 if ($guest) {
                     $this->redirect("/checkout/failed/1#payment");
                 } else {
@@ -252,12 +249,12 @@ class Checkout extends PageController
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
-                $order = StoreOrder::add($pm,$transactionReference);
+                $order = StoreOrder::add($pm, $transactionReference);
                 $this->redirect('/checkout/complete');
             }
         }
-
     }
+
     public function external()
     {
         $this->requireAsset('javascript', 'jquery');
@@ -272,8 +269,7 @@ class Checkout extends PageController
             $this->redirect('/checkout');
         }
 
-        $this->set('pm',$pm);
-        $this->set('action',$pm->getMethodController()->getAction());
+        $this->set('pm', $pm);
+        $this->set('action', $pm->getMethodController()->getAction());
     }
-
 }

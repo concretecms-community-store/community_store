@@ -1,38 +1,36 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use PageType;
 use GroupList;
 use Events;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 
 class Products extends DashboardPageController
 {
-
-    public function view($gID=null){
+    public function view($gID = null)
+    {
         $products = new StoreProductList();
         $products->setItemsPerPage(20);
         $products->setGroupID($gID);
         $products->setActiveOnly(false);
         $products->setShowOutOfStock(true);
-
 
         if ($this->get('ccm_order_by')) {
             $products->setSortBy($this->get('ccm_order_by'));
@@ -42,7 +40,6 @@ class Products extends DashboardPageController
             $products->setSortByDirection('desc');
         }
 
-
         if ($this->get('keywords')) {
             $products->setSearch(trim($this->get('keywords')));
         }
@@ -50,150 +47,38 @@ class Products extends DashboardPageController
         $this->set('productList', $products);
         $paginator = $products->getPagination();
         $pagination = $paginator->renderDefaultView();
-        $this->set('products',$paginator->getCurrentPageResults());
-        $this->set('pagination',$pagination);
+        $this->set('products', $paginator->getCurrentPageResults());
+        $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
+        $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
-        
     }
 
     public function add()
     {
         $this->loadFormAssets();
-        $this->set("actionType",t("Add"));
-        
+        $this->set("actionType", t("Add"));
+
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
-        foreach($grouplist as $productgroup){
+        $this->set("grouplist", $grouplist);
+        foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
-        $this->set("productgroups",$productgroups);
+        $this->set("productgroups", $productgroups);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
         $gl->filterByAssignable();
         $usergroups = $gl->get();
 
-        $usergrouparray = array();
+        $usergrouparray = [];
 
-        foreach($usergroups as $ug) {
-            if ( $ug->gName != 'Administrators') {
-                $usergrouparray[$ug->gID] = $ug->gName;
-            }
-        }
-
-        $targetCID = \Config::get('community_store.productPublishTarget');
-
-        $productPublishTarget = false;
-
-        if ($targetCID > 0) {
-            $parentPage = \Page::getByID($targetCID);
-            $productPublishTarget =  ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
-        }
-
-        $this->set('productPublishTarget',$productPublishTarget);
-        $this->set('page',false);
-        $this->set('pageTitle', t('Add Product'));
-        $this->set('usergroups', $usergrouparray);
-    }
-    public function edit($pID)
-    {
-        $this->loadFormAssets();
-        $this->set("actionType",t("Update"));
-        
-        //get the product
-        $product = StoreProduct::getByID($pID);
-
-        if (!$product) {
-            $this->redirect('/dashboard/store/products');
-        }
-
-        $this->set('product',$product);
-
-        $options  = $product->getOptions();
-
-        $variations = $product->getVariations();
-
-        $variationLookup = array();
-        $optionArrays = array();
-        $optionLookup = array();
-        $optionItems = array();
-
-        foreach($options as $opt) {
-            if ($opt->getIncludeVariations()) {
-                $optionLookup[$opt->getID()] = $opt;
-
-                foreach($opt->getOptionItems() as $optItem) {
-                        $optionArrays[$opt->getID()][] = $optItem->getID();
-                        $optionItemLookup[$optItem->getID()] = $optItem;
-                        $optionItems[] = $optItem;
-                }
-            }
-        }
-
-        $this->set('optionItems', $optionItems);
-        $this->set('optionLookup', $optionLookup);
-        $this->set('optionItemLookup', $optionItemLookup);
-
-        $optionArrays = array_values($optionArrays);
-
-        $comboOptions = StoreProductVariation::combinations($optionArrays);
-
-        $checkedOptions = array();
-
-        foreach($comboOptions as $option) {
-            if (!is_array($option)) {
-                $checkedOptions[] = array($option);
-            } else {
-                $checkedOptions[] = $option;
-            }
-        }
-
-        $comboOptions = $checkedOptions;
-
-        $this->set('comboOptions', $comboOptions);
-        $this->set('optionItemLookup', $optionItemLookup);
-
-        foreach($variations as $variation) {
-            $options = $variation->getOptions();
-            $optionids = array();
-
-            foreach($options as $varoption) {
-                $option = $varoption->getOption();
-
-                if ($option) {
-                    $optionids[] = $option->getID();
-                }
-            }
-
-            sort($optionids);
-            $variationLookup[implode('_',$optionids)] = $variation;
-        }
-
-        $this->set('variations', $variations);
-        $this->set('variationLookup', $variationLookup);
-
-        //populate "Groups" select box options
-        $grouplist = StoreGroupList::getGroupList();
-        foreach($grouplist as $productgroup){
-            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
-        }
-        $this->set("productgroups",$productgroups);
-
-        $gl = new GroupList();
-        $gl->setItemsPerPage(1000);
-        $gl->filterByAssignable();
-        $usergroups = $gl->get();
-
-        $usergrouparray = array();
-
-        foreach($usergroups as $ug) {
-            if ( $ug->gName != 'Administrators') {
+        foreach ($usergroups as $ug) {
+            if ('Administrators' != $ug->gName) {
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
@@ -207,7 +92,119 @@ class Products extends DashboardPageController
             $productPublishTarget = ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
         }
 
-        $this->set('productPublishTarget',$productPublishTarget);
+        $this->set('productPublishTarget', $productPublishTarget);
+        $this->set('page', false);
+        $this->set('pageTitle', t('Add Product'));
+        $this->set('usergroups', $usergrouparray);
+    }
+
+    public function edit($pID)
+    {
+        $this->loadFormAssets();
+        $this->set("actionType", t("Update"));
+
+        //get the product
+        $product = StoreProduct::getByID($pID);
+
+        if (!$product) {
+            $this->redirect('/dashboard/store/products');
+        }
+
+        $this->set('product', $product);
+
+        $options = $product->getOptions();
+
+        $variations = $product->getVariations();
+
+        $variationLookup = [];
+        $optionArrays = [];
+        $optionLookup = [];
+        $optionItems = [];
+
+        foreach ($options as $opt) {
+            if ($opt->getIncludeVariations()) {
+                $optionLookup[$opt->getID()] = $opt;
+
+                foreach ($opt->getOptionItems() as $optItem) {
+                    $optionArrays[$opt->getID()][] = $optItem->getID();
+                    $optionItemLookup[$optItem->getID()] = $optItem;
+                    $optionItems[] = $optItem;
+                }
+            }
+        }
+
+        $this->set('optionItems', $optionItems);
+        $this->set('optionLookup', $optionLookup);
+        $this->set('optionItemLookup', $optionItemLookup);
+
+        $optionArrays = array_values($optionArrays);
+
+        $comboOptions = StoreProductVariation::combinations($optionArrays);
+
+        $checkedOptions = [];
+
+        foreach ($comboOptions as $option) {
+            if (!is_array($option)) {
+                $checkedOptions[] = [$option];
+            } else {
+                $checkedOptions[] = $option;
+            }
+        }
+
+        $comboOptions = $checkedOptions;
+
+        $this->set('comboOptions', $comboOptions);
+        $this->set('optionItemLookup', $optionItemLookup);
+
+        foreach ($variations as $variation) {
+            $options = $variation->getOptions();
+            $optionids = [];
+
+            foreach ($options as $varoption) {
+                $option = $varoption->getOption();
+
+                if ($option) {
+                    $optionids[] = $option->getID();
+                }
+            }
+
+            sort($optionids);
+            $variationLookup[implode('_', $optionids)] = $variation;
+        }
+
+        $this->set('variations', $variations);
+        $this->set('variationLookup', $variationLookup);
+
+        //populate "Groups" select box options
+        $grouplist = StoreGroupList::getGroupList();
+        foreach ($grouplist as $productgroup) {
+            $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
+        }
+        $this->set("productgroups", $productgroups);
+
+        $gl = new GroupList();
+        $gl->setItemsPerPage(1000);
+        $gl->filterByAssignable();
+        $usergroups = $gl->get();
+
+        $usergrouparray = [];
+
+        foreach ($usergroups as $ug) {
+            if ('Administrators' != $ug->gName) {
+                $usergrouparray[$ug->gID] = $ug->gName;
+            }
+        }
+
+        $targetCID = \Config::get('community_store.productPublishTarget');
+
+        $productPublishTarget = false;
+
+        if ($targetCID > 0) {
+            $parentPage = \Page::getByID($targetCID);
+            $productPublishTarget = ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
+        }
+
+        $this->set('productPublishTarget', $productPublishTarget);
 
         $pageID = $product->getPageID();
         $page = false;
@@ -225,12 +222,12 @@ class Products extends DashboardPageController
         $this->set('usergroups', $usergrouparray);
     }
 
-
-    public function generate($pID,$templateID=null)
+    public function generate($pID, $templateID = null)
     {
         StoreProduct::getByID($pID)->generatePage($templateID);
-        $this->redirect('/dashboard/store/products/edit',$pID);
+        $this->redirect('/dashboard/store/products/edit', $pID);
     }
+
     public function duplicate($pID)
     {
         $product = StoreProduct::getByID($pID);
@@ -241,13 +238,12 @@ class Products extends DashboardPageController
         if ($this->post()) {
             $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
             $this->flash('success', t('Product Duplicated'));
-            $this->redirect('/dashboard/store/products/edit/'. $newproduct->getID());
+            $this->redirect('/dashboard/store/products/edit/' . $newproduct->getID());
         }
 
         $this->set('pageTitle', t('Duplicate Product'));
         $this->set('product', $product);
     }
-
 
     public function delete($pID)
     {
@@ -258,6 +254,7 @@ class Products extends DashboardPageController
         $this->flash('success', t('Product Removed'));
         $this->redirect('/dashboard/store/products');
     }
+
     public function loadFormAssets()
     {
         $this->requireAsset('core/file-manager');
@@ -271,10 +268,10 @@ class Products extends DashboardPageController
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
         $attrList = StoreProductKey::getList();
-        $this->set('attribs',$attrList);
-        
+        $this->set('attribs', $attrList);
+
         $pageType = PageType::getByHandle("store_product");
-        $templates = array();
+        $templates = [];
 
         $defaultTemplateID = 0;
 
@@ -287,20 +284,21 @@ class Products extends DashboardPageController
 
             $defaultTemplateID = $pageType->getPageTypeDefaultPageTemplateID();
         }
-        $this->set('pageTemplates',$templates);
-        $this->set('defaultTemplateID',$defaultTemplateID);
-        $taxClasses = array();
-        foreach(StoreTaxClass::getTaxClasses() as $taxClass){
+        $this->set('pageTemplates', $templates);
+        $this->set('defaultTemplateID', $defaultTemplateID);
+        $taxClasses = [];
+        foreach (StoreTaxClass::getTaxClasses() as $taxClass) {
             $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
         }
-        $this->set('taxClasses',$taxClasses);
+        $this->set('taxClasses', $taxClasses);
     }
+
     public function save()
     {
         $data = $this->post();
-        if($data['pID']){
+        if ($data['pID']) {
             $this->edit($data['pID']);
-        } else{
+        } else {
             $this->add();
         }
         if ($this->post()) {
@@ -308,7 +306,6 @@ class Products extends DashboardPageController
             $this->error = null; //clear errors
             $this->error = $errors;
             if (!$errors->has()) {
-
                 $originalProduct = false;
 
                 if ($data['pID']) {
@@ -317,12 +314,12 @@ class Products extends DashboardPageController
                     $originalProduct->setID($data['pID']);
                 }
 
-                    // if the save sent no options with variation inclusion, uncheck the variations box
+                // if the save sent no options with variation inclusion, uncheck the variations box
                 if (isset($data['poIncludeVariations'])) {
                     $allowVariations = false;
 
-                    foreach($data['poIncludeVariations'] as $variationInclude) {
-                        if ($variationInclude == 1) {
+                    foreach ($data['poIncludeVariations'] as $variationInclude) {
+                        if (1 == $variationInclude) {
                             $allowVariations = true;
                         }
                     }
@@ -336,26 +333,26 @@ class Products extends DashboardPageController
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes
                 $aks = StoreProductKey::getList();
-                foreach($aks as $uak) {
+                foreach ($aks as $uak) {
                     $uak->saveAttributeForm($product);
                 }
                 //save images
-                StoreProductImage::addImagesForProduct($data,$product);
-                
+                StoreProductImage::addImagesForProduct($data, $product);
+
                 //save product groups
-                StoreProductGroup::addGroupsForProduct($data,$product);
-                
+                StoreProductGroup::addGroupsForProduct($data, $product);
+
                 //save product user groups
-                StoreProductUserGroup::addUserGroupsForProduct($data,$product);
-                
+                StoreProductUserGroup::addUserGroupsForProduct($data, $product);
+
                 //save product options
-                StoreProductOption::addProductOptions($data,$product);
-                
+                StoreProductOption::addProductOptions($data, $product);
+
                 //save files
-                StoreProductFile::addFilesForProduct($data,$product);
-                
+                StoreProductFile::addFilesForProduct($data, $product);
+
                 //save category locations
-                StoreProductLocation::addLocationsForProduct($data,$product);
+                StoreProductLocation::addLocationsForProduct($data, $product);
 
                 // save variations
                 StoreProductVariation::addVariations($data, $product);
@@ -365,7 +362,7 @@ class Products extends DashboardPageController
 
                 StoreProductPriceTier::addPriceTiersForProduct($data, $product);
 
-				$product->reindex();
+                $product->reindex();
 
                 // create product event and dispatch
                 if (!$originalProduct) {
@@ -376,7 +373,7 @@ class Products extends DashboardPageController
                     Events::dispatch('on_community_store_product_update', $event);
                 }
 
-                if($data['pID']){
+                if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
                     $this->redirect('/dashboard/store/products/edit/' . $product->getID());
                 } else {
@@ -386,34 +383,33 @@ class Products extends DashboardPageController
             }//if no errors
         }//if post
     }
+
     public function validate($args)
     {
         $e = Core::make('helper/validation/error');
-        
-        if($args['pName']==""){
+
+        if ("" == $args['pName']) {
             $e->add(t('Please enter a Product Name'));
         }
-        if(strlen($args['pName']) > 255){
+        if (strlen($args['pName']) > 255) {
             $e->add(t('The Product Name can not be greater than 255 Characters'));
         }
-        if(!is_numeric($args['pQty']) && !$args['pQtyUnlim']){
+        if (!is_numeric($args['pQty']) && !$args['pQtyUnlim']) {
             $e->add(t('The Quantity must be set, and numeric'));
         }
-        if(!is_numeric($args['pWidth'])){
+        if (!is_numeric($args['pWidth'])) {
             $e->add(t('The Product Width must be a number'));
         }
-        if(!is_numeric($args['pHeight'])){
+        if (!is_numeric($args['pHeight'])) {
             $e->add(t('The Product Height must be a number'));
         }
-        if(!is_numeric($args['pLength'])){
+        if (!is_numeric($args['pLength'])) {
             $e->add(t('The Product Length must be a number'));
         }
-        if(!is_numeric($args['pWeight'])){
+        if (!is_numeric($args['pWeight'])) {
             $e->add(t('The Product Weight must be a number'));
         }
-        
-        return $e;
-        
-    }
 
+        return $e;
+    }
 }

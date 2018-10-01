@@ -71,5 +71,4 @@ class Package
     {
         $this->height = $height;
     }
-
 }

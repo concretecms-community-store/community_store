@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -10,9 +9,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
  */
 class ProductFile
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $dfID;
 
@@ -51,10 +50,12 @@ class ProductFile
     {
         return $this->dfID;
     }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
     public function getFileID()
     {
         return $this->dffID;
@@ -63,19 +64,21 @@ class ProductFile
     public static function getByID($id)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $id);
     }
 
     public static function getFilesForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
     public static function getFileObjectsForProduct(StoreProduct $product)
     {
         $results = self::getFilesForProduct($product);
-        $fileObjects = array();
+        $fileObjects = [];
         foreach ($results as $result) {
             $fileObjects[] = \File::getByID($result->getFileID());
         }
@@ -117,7 +120,8 @@ class ProductFile
         return $productFile;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

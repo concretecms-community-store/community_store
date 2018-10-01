@@ -24,22 +24,21 @@ class StoreProductValue extends Value
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->query('delete from CommunityStoreProductAttributeValues where pID = ? and akID = ? and avID = ?', array(
+        $db->query('delete from CommunityStoreProductAttributeValues where pID = ? and akID = ? and avID = ?', [
             $this->product->getID(),
             $this->attributeKey->getAttributeKeyID(),
             $this->getAttributeValueID(),
-        ));
+        ]);
 
         // Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
-        $num = $db->GetOne('select count(avID) from CommunityStoreProductAttributeValues where avID = ?', array($this->getAttributeValueID()));
+        $num = $db->GetOne('select count(avID) from CommunityStoreProductAttributeValues where avID = ?', [$this->getAttributeValueID()]);
         if ($num < 1) {
             parent::delete();
         }
     }
-    
+
     public function getGenericValue()
     {
         return $this->getValueObject();
     }
-    
 }

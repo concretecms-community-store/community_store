@@ -1,22 +1,21 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-
 
 class Categories extends DashboardPageController
 {
-    public function view() {
+    public function view()
+    {
         $pages = StoreProductLocation::getLocationPages();
         $this->set('pageTitle', t('Product Categories'));
         $this->set('pages', $pages);
     }
 
-    public function manage($cID) {
+    public function manage($cID)
+    {
         $products = new StoreProductList();
 
         $page = \Page::getByID($cID);
@@ -36,7 +35,8 @@ class Categories extends DashboardPageController
         $this->set('pageTitle', t('Manage Category: ' . $page->getCollectionName()));
     }
 
-    public function save($cID) {
+    public function save($cID)
+    {
         if ($this->post()) {
             $data = $this->post();
 
@@ -47,9 +47,8 @@ class Categories extends DashboardPageController
             $productPositions = $data['products'];
             $productPositions = array_flip($productPositions);
 
-
-            foreach($productLocations as $productLocation) {
-                $productLocation->setCategorySortOrder( $productPositions[$productLocation->getProductID()]);
+            foreach ($productLocations as $productLocation) {
+                $productLocation->setCategorySortOrder($productPositions[$productLocation->getProductID()]);
                 $productLocation->save();
             }
         }
@@ -57,6 +56,4 @@ class Categories extends DashboardPageController
         $this->flash('success', t('Category Order Updated'));
         $this->redirect('/dashboard/store/products/categories/manage/' . $cID);
     }
-
-
 }

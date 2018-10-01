@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
 /**
  * @Entity
@@ -24,7 +23,6 @@ class OrderItem
      * @Column(type="integer")
      */
     protected $pID;
-
 
     /**
      * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
@@ -208,8 +206,8 @@ class OrderItem
         $this->oiQtyLabel = $oiQtyLabel;
     }
 
-
-    public function setProductID($productid) {
+    public function setProductID($productid)
+    {
         $this->pID = $productid;
     }
 
@@ -232,6 +230,7 @@ class OrderItem
     public static function getByID($oiID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $oiID);
     }
 
@@ -241,7 +240,7 @@ class OrderItem
 
         $productName = $product->getName();
         $qty = $data['product']['qty'];
-        
+
         if (isset($data['product']['customerPrice'])) {
             $productPrice = $data['product']['customerPrice'];
         } else {
@@ -285,24 +284,23 @@ class OrderItem
         $orderItem->save();
 
         foreach ($data['productAttributes'] as $groupID => $valID) {
-
-            if (substr($groupID, 0, 2) == 'po') {
+            if ('po' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("po", "", $groupID);
                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
                     $optionvalue = $optionvalue->getName();
                 }
-            } elseif (substr($groupID, 0, 2) == 'pt')  {
+            } elseif ('pt' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pt", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'pa')  {
+            } elseif ('pa' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pa", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'ph')  {
+            } elseif ('ph' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("ph", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'pc')  {
+            } elseif ('pc' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pc", "", $groupID);
                 $optionvalue = $valID;
             }

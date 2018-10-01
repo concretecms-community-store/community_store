@@ -21,7 +21,7 @@ class States extends Controller
             }
         }
 
-        $requiresstate = array('US', 'AU', 'CA', 'CN', 'MX', 'MY');
+        $requiresstate = ['US', 'AU', 'CA', 'CN', 'MX', 'MY'];
 
         $required = '';
 
@@ -31,7 +31,7 @@ class States extends Controller
 
         $list = Core::make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
         if ($list) {
-            if ($type == "tax") {
+            if ("tax" == $type) {
                 echo "<select name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
                 echo "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
@@ -47,10 +47,10 @@ class States extends Controller
             }
             echo "<select>";
         } else {
-            if ($type == "tax") {
+            if ("tax" == $type) {
                 echo "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
-                echo "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='".t('State / Province')."'>";
+                echo "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
             }
         }
     }

@@ -2,15 +2,15 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
 use PageController;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 
 class Complete extends PageController
 {
-    public function on_start() {
+    public function on_start()
+    {
         $u = new \User();
         $u->refreshUserGroups();
     }
@@ -24,8 +24,8 @@ class Complete extends PageController
             $order = StoreOrder::getByID($customer->getLastOrderID());
         }
 
-        if(is_object($order)){
-            $this->set("order",$order);
+        if (is_object($order)) {
+            $this->set("order", $order);
         } else {
             $this->redirect("/cart");
         }
@@ -42,6 +42,4 @@ class Complete extends PageController
         // unset the shipping type, as next order might be unshippable
         \Session::set('community_store.smID', '');
     }
-    
-
 }

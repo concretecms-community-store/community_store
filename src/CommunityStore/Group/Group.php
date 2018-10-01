@@ -9,9 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Group
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $gID;
 
@@ -45,7 +45,8 @@ class Group
      */
     protected $products;
 
-    public function getProducts(){
+    public function getProducts()
+    {
         return $this->products;
     }
 
@@ -54,17 +55,18 @@ class Group
         $this->products = new ArrayCollection();
     }
 
-
     public static function getByID($gID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_called_class(), $gID);
     }
 
     public static function getByName($gName)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('groupName' => $gName));
+
+        return $em->getRepository(get_class())->findOneBy(['groupName' => $gName]);
     }
 
     public static function add($groupName)

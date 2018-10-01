@@ -18,9 +18,11 @@ class ProductModal extends Controller
             if ($product) {
                 if (Filesystem::exists(DIR_BASE . "/application/elements/product_modal.php")) {
                     View::element("product_modal", ["product" => $product]);
+
                     return;
                 } else {
                     View::element("product_modal", ["product" => $product], "community_store");
+
                     return;
                 }
             }

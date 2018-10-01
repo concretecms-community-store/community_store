@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
@@ -12,7 +10,6 @@ use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrde
 
 class Orders extends DashboardPageController
 {
-
     public function view($status = '')
     {
         $orderList = new StoreOrderList();
@@ -27,14 +24,14 @@ class Orders extends DashboardPageController
 
         $orderList->setItemsPerPage(20);
 
-        if (Config::get('community_store.showUnpaidExternalPaymentOrders') ) {
+        if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
             $orderList->setIncludeExternalPaymentRequested(true);
         }
 
         $paginator = $orderList->getPagination();
         $pagination = $paginator->renderDefaultView();
-        $this->set('orderList',$paginator->getCurrentPageResults());
-        $this->set('pagination',$pagination);
+        $this->set('orderList', $paginator->getCurrentPageResults());
+        $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
         $this->set('orderStatuses', StoreOrderStatus::getList());
         $this->set('status', $status);
@@ -42,13 +39,14 @@ class Orders extends DashboardPageController
         $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('statuses', StoreOrderStatus::getAll());
 
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('shoppingDisabled', true);
         }
         $this->set('pageTitle', t('Orders'));
 
         $this->requireAsset('js', 'communityStoreDashboard');
     }
+
     public function order($oID)
     {
         $order = StoreOrder::getByID($oID);
@@ -60,7 +58,7 @@ class Orders extends DashboardPageController
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
                 $this->set("orderChoicesAttList", $orderChoicesAttList);
             } else {
-                $this->set("orderChoicesAttList", array());
+                $this->set("orderChoicesAttList", []);
             }
             $this->requireAsset('javascript', 'communityStoreFunctions');
         } else {
@@ -75,7 +73,7 @@ class Orders extends DashboardPageController
         $data = $this->post();
         StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
         $this->flash('success', t('Fulfilment Status Updated'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function markpaid($oID)
@@ -93,7 +91,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Marked As Paid'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function reversepaid($oID)
@@ -105,7 +103,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Payment Reversed'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function markrefunded($oID)
@@ -119,7 +117,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Marked As Refunded'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function reverserefund($oID)
@@ -131,7 +129,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Refund Reversed'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function markcancelled($oID)
@@ -144,7 +142,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Cancelled'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function reversecancel($oID)
@@ -155,32 +153,34 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Cancellation Reversed'));
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
-    public function resendinvoice($oID) {
+    public function resendinvoice($oID)
+    {
         $order = StoreOrder::getByID($oID);
 
-        if ($order && $this->post('email')){
-           $order->sendOrderReceipt($this->post('email'));
+        if ($order && $this->post('email')) {
+            $order->sendOrderReceipt($this->post('email'));
             $this->flash('success', t('Receipt Email Resent to %s', $this->post('email')));
         }
 
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
-    public function resendnotification($oID) {
+    public function resendnotification($oID)
+    {
         $order = StoreOrder::getByID($oID);
         $emails = $this->post('email');
 
-        if ($order && $emails){
+        if ($order && $emails) {
             $order->sendNotifications($this->post('email'));
             $notificationEmails = explode(",", trim($emails));
             $notificationEmails = array_map('trim', $notificationEmails);
             $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
         }
 
-        $this->redirect('/dashboard/store/orders/order',$oID);
+        $this->redirect('/dashboard/store/orders/order', $oID);
     }
 
     public function remove($oID)
@@ -189,5 +189,4 @@ class Orders extends DashboardPageController
         $this->flash('success', t('Order Deleted'));
         $this->redirect('/dashboard/store/orders');
     }
-
 }

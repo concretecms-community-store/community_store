@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
-
 /**
  * @Entity
  * @Table(name="CommunityStoreOrderDiscounts")
@@ -57,13 +55,13 @@ class OrderDiscount
     protected $odCode;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getID()
     {
         return $this->odID;
     }
-    
+
     /**
      * @return mixed
      */
@@ -127,7 +125,6 @@ class OrderDiscount
     {
         $this->odDeductType = $odDeductType;
     }
-
 
     /**
      * @return mixed

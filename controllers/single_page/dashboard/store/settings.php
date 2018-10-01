@@ -1,17 +1,13 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Package;
 use Core;
 use Config;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
-use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 
 class Settings extends DashboardPageController
 {
@@ -32,10 +28,10 @@ class Settings extends DashboardPageController
                 $targetCID = false;
             }
         }
-        
-        $groupList = array();
 
-        $gl = new \GroupList;
+        $groupList = [];
+
+        $gl = new \GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
@@ -113,8 +109,7 @@ class Settings extends DashboardPageController
 
                 //save payment methods
                 if ($args['paymentMethodHandle']) {
-
-                    $paymentData = array();
+                    $paymentData = [];
 
                     foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodEnabled'] = $value;
@@ -149,7 +144,6 @@ class Settings extends DashboardPageController
                 $this->redirect('/dashboard/store/settings');
             }
         }
-
     }
 
     private function saveOrderStatuses($data)
@@ -157,13 +151,13 @@ class Settings extends DashboardPageController
         if (isset($data['osID'])) {
             foreach ($data['osID'] as $key => $id) {
                 $orderStatus = StoreOrderStatus::getByID($id);
-                $orderStatusSettings = array(
-                    'osName' => ((isset($data['osName'][$key]) && $data['osName'][$key] != '') ?
+                $orderStatusSettings = [
+                    'osName' => ((isset($data['osName'][$key]) && '' != $data['osName'][$key]) ?
                         $data['osName'][$key] : $orderStatus->getReadableHandle()),
                     'osInformSite' => isset($data['osInformSite'][$key]) ? 1 : 0,
                     'osInformCustomer' => isset($data['osInformCustomer'][$key]) ? 1 : 0,
-                    'osSortOrder' => $key
-                );
+                    'osSortOrder' => $key,
+                ];
                 $orderStatus->update($orderStatusSettings);
             }
             if (isset($data['osIsStartingStatus'])) {
@@ -179,17 +173,17 @@ class Settings extends DashboardPageController
     {
         $e = Core::make('helper/validation/error');
 
-        if ($args['symbol'] == "") {
+        if ("" == $args['symbol']) {
             $e->add(t('You must set a currency symbol'));
         }
 
         $paymentMethodsEnabled = 0;
         foreach ($args['paymentMethodEnabled'] as $method) {
-            if ($method == 1) {
-                $paymentMethodsEnabled++;
+            if (1 == $method) {
+                ++$paymentMethodsEnabled;
             }
         }
-        if ($paymentMethodsEnabled == 0) {
+        if (0 == $paymentMethodsEnabled) {
             $e->add(t('At least one payment method must be enabled'));
         }
         foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
@@ -203,7 +197,7 @@ class Settings extends DashboardPageController
         }
 
         //before changing tax settings to "Extract", make sure there's only one rate per class
-        if ($args['calculation'] == 'extract') {
+        if ('extract' == $args['calculation']) {
             $taxClasses = StoreTaxClass::getTaxClasses();
             foreach ($taxClasses as $taxClass) {
                 $taxClassRates = $taxClass->getTaxClassRates();
@@ -214,7 +208,5 @@ class Settings extends DashboardPageController
         }
 
         return $e;
-
     }
-
 }

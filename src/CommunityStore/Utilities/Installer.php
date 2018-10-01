@@ -9,7 +9,6 @@ use Page;
 use PageTemplate;
 use PageType;
 use Group;
-use Database;
 use FileSet;
 use Config;
 use Localization;
@@ -52,6 +51,7 @@ class Installer
         Page::getByPath('/checkout/')->setAttribute('exclude_nav', 1);
         Page::getByPath('/checkout/complete')->setAttribute('exclude_nav', 1);
     }
+
     public static function installSinglePage($path, $pkg)
     {
         $page = Page::getByPath($path);
@@ -59,21 +59,23 @@ class Installer
             SinglePage::add($path, $pkg);
         }
     }
+
     public static function installProductParentPage($pkg)
     {
         $productParentPage = Page::getByPath('/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
             $productParentPage = Page::getByID(1)->add(
                 PageType::getByHandle('page'),
-                array(
+                [
                     'cName' => t('Products'),
                     'cHandle' => 'products',
                     'pkgID' => $pkg->getPackageID(),
-                )
+                ]
             );
         }
         $productParentPage->setAttribute('exclude_nav', 1);
     }
+
     public static function installStoreProductPageType($pkg)
     {
         //install product detail page type
@@ -81,15 +83,15 @@ class Installer
         if (!is_object($pageType)) {
             $template = PageTemplate::getByHandle('full');
             PageType::add(
-                array(
+                [
                     'handle' => 'store_product',
                     'name' => 'Product Page',
                     'defaultTemplate' => $template,
                     'allowedTemplates' => 'C',
-                    'templates' => array($template),
+                    'templates' => [$template],
                     'ptLaunchInComposer' => 0,
                     'ptIsFrequentlyAdded' => 0,
-                ),
+                ],
                 $pkg
             )->setConfiguredPageTypePublishTargetObject(new PageTypePublishTargetAllConfiguration(PageTypePublishTargetAllType::getByHandle('all')));
         }
@@ -108,6 +110,7 @@ class Installer
         self::setConfigValue('community_store.weightUnit', 'lb');
         self::setConfigValue('community_store.guestCheckout', 'always');
     }
+
     public static function setConfigValue($key, $value)
     {
         $config = Config::get($key);
@@ -115,17 +118,20 @@ class Installer
             Config::save($key, $value);
         }
     }
+
     public static function installPaymentMethods($pkg)
     {
         self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
     }
-    public static function installPaymentMethod($handle, $name, $pkg = null,$displayName = null, $enabled = true)
+
+    public static function installPaymentMethod($handle, $name, $pkg = null, $displayName = null, $enabled = true)
     {
         $pm = StorePaymentMethod::getByHandle($handle);
         if (!is_object($pm)) {
             StorePaymentMethod::add($handle, $name, $pkg, $displayName, $enabled);
         }
     }
+
     public static function installShippingMethods($pkg)
     {
         self::installShippingMethod('flat_rate', 'Flat Rate', $pkg);
@@ -150,6 +156,7 @@ class Installer
         self::installBlock('community_utility_links', $pkg);
         self::installBlock('community_product', $pkg);
     }
+
     public static function installBlock($handle, $pkg)
     {
         $blockType = BlockType::getByHandle($handle);
@@ -157,6 +164,7 @@ class Installer
             BlockType::installBlockType($handle, $pkg);
         }
     }
+
     public static function setPageTypeDefaults($pkg)
     {
         $pageType = PageType::getByHandle('store_product');
@@ -167,7 +175,7 @@ class Installer
         $blocks = $pageObj->getBlocks('Main');
         //only install blocks if there's none on there.
         if (count($blocks) < 1) {
-            $data = array(
+            $data = [
                 'productLocation' => 'page',
                 'showProductName' => 1,
                 'showProductDescription' => 1,
@@ -176,7 +184,7 @@ class Installer
                 'showImage' => 1,
                 'showCartButton' => 1,
                 'showGroups' => 1,
-            );
+            ];
             $pageObj->addBlock($bt, 'Main', $data);
         }
     }
@@ -213,18 +221,19 @@ class Installer
         self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
         self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
         self::installUserAttribute('shipping_company', $text, $pkg, $custSet);
-        self::installUserAttribute('vat_number', $text, $pkg, $custSet, array(
+        self::installUserAttribute('vat_number', $text, $pkg, $custSet, [
             'akHandle' => 'vat_number',
             'akName' => t('VAT Number'),
-        ));
+        ]);
     }
+
     public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
     {
         $attr = UserAttributeKey::getByHandle($handle);
         if (!is_object($attr)) {
             $name = Core::make("helper/text")->unhandle($handle);
             if (!$data) {
-                $data = array(
+                $data = [
                     'akHandle' => $handle,
                     'akName' => t($name),
                     'akIsSearchable' => false,
@@ -232,7 +241,7 @@ class Installer
                     'uakProfileEditRequired' => false,
                     'uakRegisterEdit' => false,
                     'akCheckedByDefault' => true,
-                );
+                ];
             }
             UserAttributeKey::add($type, $data, $pkg)->setAttributeSet($set);
         }
@@ -260,7 +269,7 @@ class Installer
             $sets = $oakc->getAttributeSets();
 
             foreach ($sets as $set) {
-                if ($set->getAttributeSetHandle() == 'order_customer') {
+                if ('order_customer' == $set->getAttributeSetHandle()) {
                     $orderCustSet = $set;
                 }
             }
@@ -279,10 +288,10 @@ class Installer
         self::installOrderAttribute('shipping_last_name', $text, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_address', $address, $pkg, $orderCustSet);
         self::installOrderAttribute('shipping_company', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet, array(
+        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet, [
             'akHandle' => 'vat_number',
             'akName' => t('VAT Number'),
-        ));
+        ]);
     }
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
@@ -291,12 +300,12 @@ class Installer
         if (!is_object($attr)) {
             $name = Core::make("helper/text")->unhandle($handle);
             if (!$data) {
-                $data = array(
+                $data = [
                     'akHandle' => $handle,
                     'akName' => t($name),
-                );
+                ];
             }
-            StoreOrderKey::add('store_order',$type, $data, $pkg)->setAttributeSet($set);
+            StoreOrderKey::add('store_order', $type, $data, $pkg)->setAttributeSet($set);
         }
     }
 
@@ -315,10 +324,11 @@ class Installer
         }
     }
 
-	public static function addProductSearchIndexTable($pkg){
-		$spk = new StoreProductKey();
-		$spk->createIndexedSearchTable();
-	}
+    public static function addProductSearchIndexTable($pkg)
+    {
+        $spk = new StoreProductKey();
+        $spk->createIndexedSearchTable();
+    }
 
     public static function createDDFileset($pkg)
     {
@@ -334,14 +344,14 @@ class Installer
         $table = StoreOrderStatus::getTableName();
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $statuses = array(
-            array('osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1),
-            array('osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0),
-            array('osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0),
-        );
+        $statuses = [
+            ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
+            ['osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+        ];
 
         $db->query("DELETE FROM " . $table);
 
@@ -354,10 +364,10 @@ class Installer
     {
         $defaultTaxClass = StoreTaxClass::getByHandle("default");
         if (!is_object($defaultTaxClass)) {
-            $data = array(
+            $data = [
                 'taxClassName' => t('Default'),
                 'taxClassLocked' => true,
-            );
+            ];
             $defaultTaxClass = StoreTaxClass::add($data);
         }
     }
@@ -373,7 +383,6 @@ class Installer
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
-
 
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically
@@ -399,9 +408,6 @@ class Installer
         }
         Localization::clearCache();
         self::installUserAttributes($pkg);
-		Installer::addProductSearchIndexTable($pkg);
-
+        Installer::addProductSearchIndexTable($pkg);
     }
-
-
 }

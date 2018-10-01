@@ -37,16 +37,16 @@ class ProductReport extends AbstractItemList
 
     public function setProducts()
     {
-        $products = array();
+        $products = [];
         foreach ($this->orderItems as $oi) {
             if (array_key_exists($oi->getProductID(), $products)) {
-                $products[$oi->getProductID()]['pricePaid'] =  $products[$oi->getProductID()]['pricePaid'] + $oi->getPricePaid();
-                $products[$oi->getProductID()]['quantity'] =  $products[$oi->getProductID()]['quantity'] + $oi->getQty();
+                $products[$oi->getProductID()]['pricePaid'] = $products[$oi->getProductID()]['pricePaid'] + $oi->getPricePaid();
+                $products[$oi->getProductID()]['quantity'] = $products[$oi->getProductID()]['quantity'] + $oi->getQty();
             } else {
                 //first figure out what the current product name is.
-                    //if the product no longer exist, the OI name is fine.
+                //if the product no longer exist, the OI name is fine.
 
-                    $pID = $oi->getProductID();
+                $pID = $oi->getProductID();
 
                 if ($pID) {
                     $product = StoreProduct::getByID($pID);
@@ -55,17 +55,18 @@ class ProductReport extends AbstractItemList
                     } else {
                         $name = $oi->getProductName();
                     }
-                    $products[$oi->getProductID()] = array(
+                    $products[$oi->getProductID()] = [
                             'name' => $name,
                             'pID' => $oi->getProductID(),
                             'pricePaid' => $oi->getPricePaid() * $oi->getQty(),
                             'quantity' => $oi->getQty(),
-                        );
+                        ];
                 }
             }
         }
         $this->products = $products;
     }
+
     public function sortByPopularity($direction = 'desc')
     {
         $products = $this->products;
@@ -78,10 +79,11 @@ class ProductReport extends AbstractItemList
 	            return 0;
 	        }
 	
-	        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
+	        return ($a ' . ('desc' == $direction ? '>' : '<') . ' $b) ? -1 : 1;
 	    '));
         $this->products = $products;
     }
+
     public function sortByTotal($direction = 'desc')
     {
         $products = $this->products;
@@ -94,7 +96,7 @@ class ProductReport extends AbstractItemList
 	            return 0;
 	        }
 	
-	        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
+	        return ($a ' . ('desc' == $direction ? '>' : '<') . ' $b) ? -1 : 1;
 	    '));
         $this->products = $products;
     }
@@ -103,6 +105,7 @@ class ProductReport extends AbstractItemList
     {
         return $this->orderItems;
     }
+
     public function getProducts()
     {
         return $this->products;
@@ -112,10 +115,12 @@ class ProductReport extends AbstractItemList
     {
         $this->query->orderBy($column, $direction);
     }
+
     public function executeGetResults()
     {
         //return $this->deliverQueryObject()->execute()->fetchAll();
     }
+
     public function debugStart()
     {
     }
@@ -123,16 +128,19 @@ class ProductReport extends AbstractItemList
     public function debugStop()
     {
     }
+
     protected function createPaginationObject()
     {
         $pagination = new Pagination($this, new ArrayAdapter($this->getProducts()));
 
         return $pagination;
     }
+
     public function getTotalResults()
     {
         return count($this->getProducts());
     }
+
     public function getResult($queryRow)
     {
         return $queryRow;

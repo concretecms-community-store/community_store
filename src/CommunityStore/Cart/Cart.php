@@ -2,13 +2,11 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
 use Session;
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 class Cart
 {
@@ -23,11 +21,11 @@ class Cart
         if (!isset(self::$cart) || $force) {
             $cart = Session::get('communitystore.cart');
             if (!is_array($cart)) {
-                Session::set('communitystore.cart', array());
-                $cart = array();
+                Session::set('communitystore.cart', []);
+                $cart = [];
             }
 
-            $checkeditems = array();
+            $checkeditems = [];
             $update = false;
             // loop through and check if product hasn't been deleted. Remove from cart session if not found.
             foreach ($cart as $cartitem) {
@@ -62,7 +60,7 @@ class Cart
                         } else {
                             $include = false; // otherwise none left, remove from cart
                         }
-                        $update = true;  
+                        $update = true;
                     }
 
                     if ($include) {
@@ -79,7 +77,7 @@ class Cart
                 self::$hasChanged = true;
             }
 
-            self::$discounts = array();
+            self::$discounts = [];
 
             $rules = StoreDiscountRule::findAutomaticDiscounts(null, $checkeditems);
 
@@ -95,23 +93,23 @@ class Cart
             }
 
             if (count($rules) > 0) {
-                foreach($rules as $rule) {
+                foreach ($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
                     $include = true;
-                    $matchingprods = array();
+                    $matchingprods = [];
 
                     if (!empty($discountProductGroups)) {
                         $include = false;
-                        foreach($checkeditems as $cartitem) {
+                        foreach ($checkeditems as $cartitem) {
                             $groupids = $cartitem['product']['object']->getGroupIDs();
 
-                            if (count(array_intersect($discountProductGroups,$groupids)) > 0) {
+                            if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
                                 $include = true;
                                 $cartitem['product']['object']->addDiscountRule($rule);
                             }
                         }
                     } else {
-                        foreach($checkeditems as $key=>$cartitem) {
+                        foreach ($checkeditems as $key => $cartitem) {
                             $cartitem['product']['object']->addDiscountRule($rule);
                         }
                     }
@@ -122,15 +120,14 @@ class Cart
                 }
             }
 
-
-
             self::$cart = $checkeditems;
         }
 
         return self::$cart;
     }
 
-    public static function hasChanged() {
+    public static function hasChanged()
+    {
         return self::$hasChanged;
     }
 
@@ -152,16 +149,16 @@ class Cart
         $customerPrice = false;
 
         if ($product->allowCustomerPrice()) {
-            $customerPrice = (float)$data['customerPrice'];
+            $customerPrice = (float) $data['customerPrice'];
 
             $max = $product->getPriceMaximum();
             $min = $product->getPriceMinimum();
 
-            if (!is_null($min) && $customerPrice < (float)$min) {
+            if (!is_null($min) && $customerPrice < (float) $min) {
                 $error = true;
             }
 
-            if (!is_null($max) && $customerPrice > (float)$max) {
+            if (!is_null($max) && $customerPrice > (float) $max) {
                 $error = true;
             }
         }
@@ -176,23 +173,23 @@ class Cart
             }
 
             //now, build a nicer "cart item"
-            $cartItem = array();
+            $cartItem = [];
 
             if (!$product->allowDecimalQuantity()) {
-                $data['quantity'] = (int)$data['quantity'];
+                $data['quantity'] = (int) $data['quantity'];
             }
 
             if ($customerPrice) {
-                $cartItem['product'] = array(
-                    "pID" => (int)$data['pID'],
+                $cartItem['product'] = [
+                    "pID" => (int) $data['pID'],
                     "qty" => $data['quantity'],
                     "customerPrice" => $customerPrice,
-                );
+                ];
             } else {
-                $cartItem['product'] = array(
-                    "pID" => (int)$data['pID'],
-                    "qty" => $data['quantity']
-                );
+                $cartItem['product'] = [
+                    "pID" => (int) $data['pID'],
+                    "qty" => $data['quantity'],
+                ];
             }
 
             unset($data['pID']);
@@ -205,7 +202,7 @@ class Cart
             $removeexistingexclusive = false;
 
             foreach (self::getCart() as $k => $cart) {
-                $cartproduct = StoreProduct::getByID((int)$cart['product']['pID']);
+                $cartproduct = StoreProduct::getByID((int) $cart['product']['pID']);
 
                 if ($cartproduct && $cartproduct->isExclusive()) {
                     self::remove($k);
@@ -213,29 +210,28 @@ class Cart
                 }
             }
 
-            $optionItemIds = array();
-            $optionsInVariations = array();
+            $optionItemIds = [];
+            $optionsInVariations = [];
 
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
                 $groupID = false;
                 $isOptionList = false;
 
-                if (substr($name, 0, 2) == 'po') {
+                if ('po' == substr($name, 0, 2)) {
                     $isOptionList = true;
-                    $groupID = str_replace("po", "", $name);;
+                    $groupID = str_replace("po", "", $name);
 
                     if (!$value) {
                         $error = true;  // if we have select option but no value
                     }
-
-                } elseif (substr($name, 0, 2) == 'pt') {
+                } elseif ('pt' == substr($name, 0, 2)) {
                     $groupID = str_replace("pt", "", $name);
-                } elseif (substr($name, 0, 2) == 'pa') {
+                } elseif ('pa' == substr($name, 0, 2)) {
                     $groupID = str_replace("pa", "", $name);
-                } elseif (substr($name, 0, 2) == 'ph') {
+                } elseif ('ph' == substr($name, 0, 2)) {
                     $groupID = str_replace("ph", "", $name);
-                } elseif (substr($name, 0, 2) == 'pc') {
+                } elseif ('pc' == substr($name, 0, 2)) {
                     $groupID = str_replace("pc", "", $name);
                 }
 
@@ -252,7 +248,6 @@ class Cart
                     }
                 }
             }
-
 
             if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options
@@ -280,7 +275,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if ($exists['exists'] === true && !isset($cartItem['product']['customerPrice'])) {
+            if (true === $exists['exists'] && !isset($cartItem['product']['customerPrice'])) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty
@@ -321,7 +316,7 @@ class Cart
 
                 if ($cartItem['product']['qty'] > 0) {
                     if ($product->isExclusive()) {
-                        $cart = array($cartItem);
+                        $cart = [$cartItem];
                     } else {
                         $cart[] = $cartItem;
                     }
@@ -330,13 +325,11 @@ class Cart
                 $added = $newquantity;
             }
 
-
-
             self::$cart = $cart;
             Session::set('communitystore.cart', $cart);
         }
 
-        return array('added' => $added, 'error'=>$error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive);
+        return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
     public function checkForExistingCartItem($cartItem)
@@ -344,12 +337,11 @@ class Cart
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.
             if ($cart['product']['pID'] == $cartItem['product']['pID']) {
-
                 // check if the number of attributes is the same
                 if (count($cart['productAttributes']) == count($cartItem['productAttributes'])) {
                     if (empty($cartItem['productAttributes'])) {
                         // if we have no attributes, it's a direct match
-                      return array('exists' => true, 'cartItemKey' => $k);
+                        return ['exists' => true, 'cartItemKey' => $k];
                     } else {
                         // otherwise loop through attributes
                         $attsmatch = true;
@@ -365,23 +357,23 @@ class Cart
                         }
 
                         if ($attsmatch) {
-                            return array('exists' => true, 'cartItemKey' => $k);
+                            return ['exists' => true, 'cartItemKey' => $k];
                         }
                     }
                 }
             }
         }
 
-        return array('exists' => false, 'cartItemKey' => null);
+        return ['exists' => false, 'cartItemKey' => null];
     }
 
     public static function updateMutiple($data)
     {
         Session::set('community_store.smID', false);
         $count = 0;
-        $multipleResult = array();
+        $multipleResult = [];
         foreach ($data['instance'] as $instance) {
-            $multipleResult[] = self::update(array('instance' => $instance, 'pQty' => $data['pQty'][$count]));
+            $multipleResult[] = self::update(['instance' => $instance, 'pQty' => $data['pQty'][$count]]);
             ++$count;
         }
 
@@ -399,7 +391,7 @@ class Cart
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
 
         if (!$product->allowDecimalQuantity()) {
-            $qty = (int)$data['pQty'];
+            $qty = (int) $data['pQty'];
         }
 
         if ($qty > 0 && $product) {
@@ -428,7 +420,7 @@ class Cart
         Session::set('communitystore.cart', $cart);
         self::$cart = null;
 
-        return array('added' => $added);
+        return ['added' => $added];
     }
 
     public static function remove($instanceID)
@@ -479,7 +471,7 @@ class Cart
 
     public static function getShippableItems()
     {
-        $shippableItems = array();
+        $shippableItems = [];
         //go through items
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
@@ -517,34 +509,32 @@ class Cart
 
             if ($storeweightunit != $unit) {
                 // convert to grams first
-                if ($storeweightunit == 'kg') {
+                if ('kg' == $storeweightunit) {
                     $totalWeight *= 1000;
                 }
 
-                if ($storeweightunit =='oz') {
+                if ('oz' == $storeweightunit) {
                     $totalWeight *= 28.3495;
                 }
 
-                if ($storeweightunit =='lb') {
+                if ('lb' == $storeweightunit) {
                     $totalWeight *= 453.592;
                 }
                 // end convert to grams
 
-
-                if ($unit == 'kg') {
+                if ('kg' == $unit) {
                     $totalWeight *= 0.001;
                 }
 
-                if ($unit == 'oz') {
+                if ('oz' == $unit) {
                     $totalWeight *= 0.035274;
                 }
 
-                if ($unit == 'lb') {
+                if ('lb' == $unit) {
                     $totalWeight *= 0.00220462;
                 }
             }
         }
-
 
         //only returns weight of shippable items.
         return $totalWeight;
@@ -584,11 +574,13 @@ class Cart
         return false;
     }
 
-    public static function setShippingInstructions($sInstructions) {
+    public static function setShippingInstructions($sInstructions)
+    {
         \Session::set('communitystore.sInstructions', $sInstructions);
     }
 
-    public static function getShippingInstructions() {
+    public static function getShippingInstructions()
+    {
         return  \Session::get('communitystore.sInstructions');
     }
 }

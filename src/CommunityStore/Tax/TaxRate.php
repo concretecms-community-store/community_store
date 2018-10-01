@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
-use Database;
 use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
@@ -72,85 +71,106 @@ class TaxRate
     {
         $this->taxEnabled = $enabled;
     }
+
     public function setTaxLabel($label)
     {
         $this->taxLabel = $label;
     }
+
     public function setTaxRate($rate)
     {
         $this->taxRate = $rate;
     }
+
     public function setTaxBasedOn($basedOn)
     {
         $this->taxBasedOn = $basedOn;
     }
+
     public function setTaxAddress($address)
     {
         $this->taxAddress = $address;
     }
+
     public function setTaxCountry($country)
     {
         $this->taxCountry = $country;
     }
+
     public function setTaxState($state)
     {
         $this->taxState = $state;
     }
+
     public function setTaxCity($city)
     {
         $this->taxCity = $city;
     }
+
     public function setTaxVatExclude($exclude)
     {
         $this->taxVatExclude = $exclude;
     }
+
     public function getTaxRateID()
     {
         return $this->trID;
     }
+
     public function isEnabled()
     {
         return $this->taxEnabled;
     }
+
     public function getTaxLabel()
     {
         return $this->taxLabel;
     }
+
     public function getTaxRate()
     {
         return $this->taxRate;
     }
+
     public function getTaxBasedOn()
     {
         return $this->taxBasedOn;
     }
+
     public function getTaxAddress()
     {
         return $this->taxAddress;
     }
+
     public function getTaxCountry()
     {
         return $this->taxCountry;
     }
+
     public function getTaxState()
     {
         return $this->taxState;
     }
+
     public function getTaxCity()
     {
         return $this->taxCity;
     }
+
     public function getTaxVatExclude()
     {
         return $this->taxVatExclude;
     }
+
     public static function getByID($trID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $trID);
     }
 
-    public function isVatNumberEligible() {
+    public function isVatNumberEligible()
+    {
         return $this->getTaxVatExclude();
     }
 
@@ -160,8 +180,8 @@ class TaxRate
         $taxCountry = strtolower($this->getTaxCountry());
         $taxState = strtolower(trim($this->getTaxState()));
         $taxCity = strtolower(trim($this->getTaxCity()));
-        $taxVatExclude = $this->getTaxVatExclude() == 1 ? true : false ;
-        $taxSettingEnabled = Config::get('community_store.vat_number') == '1' ? true : false ;
+        $taxVatExclude = 1 == $this->getTaxVatExclude() ? true : false;
+        $taxSettingEnabled = '1' == Config::get('community_store.vat_number') ? true : false;
         $customer = new StoreCustomer();
         $customerIsTaxable = false;
 
@@ -230,8 +250,8 @@ class TaxRate
                                 $taxCalc = Config::get('community_store.calculation');
                                 $productSubTotal = $product->getActivePrice($qty) * $qty;
 
-                                if ($taxCalc == 'extract') {
-                                    $taxrate =   1 + ($this->getTaxRate() / 100) ;
+                                if ('extract' == $taxCalc) {
+                                    $taxrate = 1 + ($this->getTaxRate() / 100);
                                     $tax = $productSubTotal - ($productSubTotal / $taxrate);
                                 } else {
                                     $taxrate = $this->getTaxRate() / 100;
@@ -246,20 +266,19 @@ class TaxRate
             }//foreach
         }//if cart
 
-        if ($this->getTaxBasedOn() =='grandtotal') {
+        if ('grandtotal' == $this->getTaxBasedOn()) {
             $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
 
-            if ($taxCalc == 'extract') {
-                $taxrate =   1 + ($this->getTaxRate() / 100) ;
+            if ('extract' == $taxCalc) {
+                $taxrate = 1 + ($this->getTaxRate() / 100);
                 $shippingtaxtotal = $shippingTotal - ($shippingTotal / $taxrate);
             } else {
                 $taxrate = $this->getTaxRate() / 100;
                 $shippingtaxtotal = $taxrate * $shippingTotal;
             }
-
         }
 
-        return array('producttax'=> $producttaxtotal, 'shippingtax' =>$shippingtaxtotal);
+        return ['producttax' => $producttaxtotal, 'shippingtax' => $shippingtaxtotal];
     }
 
     public function calculateProduct($productObj, $qty)
@@ -273,7 +292,7 @@ class TaxRate
                     $taxCalc = $taxCalc = Config::get('community_store.calculation');
                     $productSubTotal = $productObj->getActivePrice($qty) * $qty;
 
-                    if ($taxCalc == 'extract') {
+                    if ('extract' == $taxCalc) {
                         $taxrate = 1 + ($this->getTaxRate() / 100);
                         $tax = $productSubTotal - ($productSubTotal / $taxrate);
                     } else {
@@ -282,7 +301,6 @@ class TaxRate
                     }
 
                     $taxtotal = $taxtotal + $tax;
-
                 }//if in products tax class
             }//if product is taxable
         }//if obj
@@ -304,11 +322,12 @@ class TaxRate
         $tr->setTaxCountry($data['taxCountry']);
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
-        $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0 );
+        $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0);
         $tr->save();
 
         return $tr;
     }
+
     public function save()
     {
         $em = \ORM::entityManager();

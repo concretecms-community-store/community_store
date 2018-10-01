@@ -14,10 +14,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 
 class Checkout extends Controller
 {
-
     public function setVatNumber()
     {
-
         if (isset($_POST)) {
             $data = $_POST;
             // VAT Number validation
@@ -25,16 +23,17 @@ class Checkout extends Controller
                 $vat_number = str_replace(' ', '', trim($data['vat_number']));
                 $e = Checkout::validateVatNumber($vat_number);
                 if ($e->has()) {
-                    echo $e->outputJSON(); return;
+                    echo $e->outputJSON();
+
+                    return;
                 } else {
                     $this->updateVatNumber($data);
-                    echo json_encode(array(
+                    echo json_encode([
                         'vat_number' => $vat_number,
                         'error' => false,
-                    ));
+                    ]);
                 }
             }
-
         } else {
             echo "An error occured";
         }
@@ -45,7 +44,7 @@ class Checkout extends Controller
         if (isset($_POST)) {
             $data = $_POST;
             $billing = false;
-            if ($data['adrType'] == 'billing') {
+            if ('billing' == $data['adrType']) {
                 $billing = true;
 
                 $u = new User();
@@ -74,7 +73,7 @@ class Checkout extends Controller
                 echo $e->outputJSON();
             } else {
                 $customer = new StoreCustomer();
-                if ($data['adrType'] == 'billing') {
+                if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
@@ -84,7 +83,7 @@ class Checkout extends Controller
                     $email = $customer->getEmail();
                 }
 
-                if ($data['adrType'] == 'shipping') {
+                if ('shipping' == $data['adrType']) {
                     $this->updateShipping($data);
                     $address = Session::get('shipping_address');
                     $phone = '';
@@ -98,7 +97,9 @@ class Checkout extends Controller
                         $vat_number = $customer->getValue('vat_number');
                         $e = Checkout::validateVatNumber($vat_number);
                         if ($e->has()) {
-                            echo $e->outputJSON(); return;
+                            echo $e->outputJSON();
+
+                            return;
                         }
                     }
                 }
@@ -106,24 +107,23 @@ class Checkout extends Controller
                 $address = nl2br(StoreCustomer::formatAddressArray($address));
 
                 // Results array
-                $results = array(
+                $results = [
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'phone' => $phone,
                     'comapny' => $company,
                     'email' => $email,
                     'address' => $address,
-                    'error' => false
-                );
+                    'error' => false,
+                ];
 
                 // If updating shipping method we need vat number
-                if ($data['adrType'] == 'shipping') {
+                if ('shipping' == $data['adrType']) {
                     $results['vat_number'] = $vat_number;
                 }
 
                 // Return JSON with results
                 echo json_encode($results);
-
             }
         } else {
             echo "An error occured";
@@ -132,21 +132,21 @@ class Checkout extends Controller
 
     public static function validateVatNumber($vat_number)
     {
-
         $e = Core::make('helper/validation/error');
 
         // If not VAT number set, return empty errors
-        if (empty($vat_number)) return $e;
+        if (empty($vat_number)) {
+            return $e;
+        }
 
         // Taken from: https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9781449327453/ch04s21.html
         $regex = "/^((AT)?U[0-9]{8}|(BE)?0[0-9]{9}|(BG)?[0-9]{9,10}|(CY)?[0-9]{8}L|(CZ)?[0-9]{8,10}|(DE)?[0-9]{9}|(DK)?[0-9]{8}|(EE)?[0-9]{9}|(EL|GR)?[0-9]{9}|(ES)?[0-9A-Z][0-9]{7}[0-9A-Z]|(FI)?[0-9]{8}|(FR)?[0-9A-Z]{2}[0-9]{9}|(GB)?([0-9]{9}([0-9]{3})?|[A-Z]{2}[0-9]{3})|(HU)?[0-9]{8}|(IE)?[0-9]S[0-9]{5}L|(IE)?[0-9]{7}[A-Z]*|(IT)?[0-9]{11}|(LT)?([0-9]{9}|[0-9]{12})|(LU)?[0-9]{8}|(LV)?[0-9]{11}|(MT)?[0-9]{8}|(NL)?[0-9]{9}B[0-9]{2}|(PL)?[0-9]{10}|(PT)?[0-9]{9}|(RO)?[0-9]{2,10}|(SE)?[0-9]{12}|(SI)?[0-9]{8}|(SK)?[0-9]{10})$/i";
 
-        if ($vat_number != '' && !preg_match($regex, $vat_number)) {
+        if ('' != $vat_number && !preg_match($regex, $vat_number)) {
             $e->add(t('You must enter a valid VAT Number'));
         }
 
         return $e;
-
     }
 
     private function validateAccountEmail($email)
@@ -177,24 +177,23 @@ class Checkout extends Controller
             $usergroups = $user->getUserGroups();
 
             if (!is_array($usergroups)) {
-                $usergroups = array();
+                $usergroups = [];
             }
 
             $matchingGroups = array_intersect(explode(',', $noBillingSaveGroups), $usergroups);
             if ($noBillingSaveGroups && empty($matchingGroups)) {
                 $noBillingSave = false;
             }
-
         }
 
-        $address = array(
+        $address = [
             "address1" => trim($data['addr1']),
             "address2" => trim($data['addr2']),
             "city" => trim($data['city']),
             "state_province" => trim($data['state']),
             "postal_code" => trim($data['postal']),
             "country" => trim($data['count']),
-        );
+        ];
 
         Session::set('billing_first_name', trim($data['fName']));
         Session::set('billing_last_name', trim($data['lName']));
@@ -229,24 +228,24 @@ class Checkout extends Controller
             $usergroups = $user->getUserGroups();
 
             if (!is_array($usergroups)) {
-                $usergroups = array();
+                $usergroups = [];
             }
 
-            $matchingGroups = array_intersect(explode(',',$noShippingSaveGroups), $usergroups);
+            $matchingGroups = array_intersect(explode(',', $noShippingSaveGroups), $usergroups);
 
             if ($noShippingSaveGroups && empty($matchingGroups)) {
                 $noShippingSave = false;
             }
         }
 
-        $address = array(
+        $address = [
             "address1" => trim($data['addr1']),
             "address2" => trim($data['addr2']),
             "city" => trim($data['city']),
             "state_province" => trim($data['state']),
             "postal_code" => trim($data['postal']),
             "country" => trim($data['count']),
-        );
+        ];
 
         if ($guest || !$noShippingSave) {
             $customer->setValue("shipping_first_name", trim($data['fName']));
@@ -262,7 +261,6 @@ class Checkout extends Controller
         Session::set('shipping_company', trim($data['company']));
         Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
-
     }
 
     private function updateVatNumber($data)
@@ -329,7 +327,7 @@ class Checkout extends Controller
 
     public function getShippingMethods()
     {
-        if (Filesystem::exists(DIR_BASE."/application/elements/checkout/shipping_methods.php")) {
+        if (Filesystem::exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
             View::element("checkout/shipping_methods");
         } else {
             View::element("checkout/shipping_methods", null, "community_store");

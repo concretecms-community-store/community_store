@@ -3,12 +3,11 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
 use PageController;
 use Config;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -16,17 +15,17 @@ class Cart extends PageController
 {
     public function view($action = '')
     {
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->redirect("/");
         }
 
         $codeerror = false;
         $codesuccess = false;
 
-        $returndata = array();
+        $returndata = [];
 
         if ($this->post()) {
-            if ($this->post('action') == 'code') {
+            if ('code' == $this->post('action')) {
                 $codeerror = false;
                 $codesuccess = false;
 
@@ -38,40 +37,39 @@ class Cart extends PageController
                 }
             }
 
-            if ($this->post('action') == 'update') {
+            if ('update' == $this->post('action')) {
                 $data = $this->post();
 
                 if (is_array($data['instance'])) {
                     $result = StoreCart::updateMutiple($data);
                     $quantity = 0;
-                    foreach($data['pQty'] as $q) {
-                        $quantity +=  $q;
+                    foreach ($data['pQty'] as $q) {
+                        $quantity += $q;
                     }
 
                     $added = 0;
-                    foreach($result as $r) {
+                    foreach ($result as $r) {
                         $added += $r['added'];
                     }
-
                 } else {
                     $result = StoreCart::update($data);
                     $added = $result['added'];
-                    $quantity = (int)$data['pQty'];
+                    $quantity = (int) $data['pQty'];
                 }
 
-                $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
+                $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
             }
 
-            if ($this->post('action') == 'clear') {
+            if ('clear' == $this->post('action')) {
                 StoreCart::clear();
-                $returndata = array('success' => true, 'action' => 'clear');
+                $returndata = ['success' => true, 'action' => 'clear'];
             }
 
-            if ($this->post('action') == 'remove') {
+            if ('remove' == $this->post('action')) {
                 $data = $this->post();
                 if (isset($data['instance'])) {
                     StoreCart::remove($data['instance']);
-                    $returndata = array('success' => true, 'action' => 'remove');
+                    $returndata = ['success' => true, 'action' => 'remove'];
                 }
             }
         }
@@ -93,9 +91,9 @@ class Cart extends PageController
             $this->set('shippingEnabled', true);
 
             if (\Session::get('community_store.smID')) {
-                $this->set('shippingtotal',$totals['shippingTotal']);
+                $this->set('shippingtotal', $totals['shippingTotal']);
             } else {
-                $this->set('shippingtotal',false);
+                $this->set('shippingtotal', false);
             }
         } else {
             $this->set('shippingEnabled', false);
@@ -132,11 +130,10 @@ class Cart extends PageController
             $productdata['pAutoCheckout'] = $product->autoCheckout();
             $productdata['pName'] = $product->getName();
 
-            $returndata = array('quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error);
+            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error];
             echo json_encode($returndata);
         }
         exit();
-
     }
 
     public function code()
@@ -161,14 +158,13 @@ class Cart extends PageController
                 foreach ($result as $r) {
                     $added += $r['added'];
                 }
-
             } else {
                 $result = StoreCart::update($data);
                 $added = $result['added'];
-                $quantity = (int)$data['pQty'];
+                $quantity = (int) $data['pQty'];
             }
 
-            $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
+            $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
 
             echo json_encode($returndata);
         }
@@ -180,7 +176,7 @@ class Cart extends PageController
         if ($this->post()) {
             $instanceID = $_POST['instance'];
             StoreCart::remove($instanceID);
-            $returndata = array('success' => true, 'action' => 'remove');
+            $returndata = ['success' => true, 'action' => 'remove'];
             echo json_encode($returndata);
         }
         exit();
@@ -190,7 +186,7 @@ class Cart extends PageController
     {
         if ($this->post()) {
             StoreCart::clear();
-            $returndata = array('success' => true, 'action' => 'clear');
+            $returndata = ['success' => true, 'action' => 'clear'];
             echo json_encode($returndata);
         }
         exit();

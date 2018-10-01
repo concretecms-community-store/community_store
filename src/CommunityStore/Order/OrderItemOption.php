@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
-
 /**
  * @Entity
  * @Table(name="CommunityStoreOrderItemOptions")
@@ -90,6 +88,7 @@ class OrderItemOption
     public static function getByID($oioID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $oioID);
     }
 

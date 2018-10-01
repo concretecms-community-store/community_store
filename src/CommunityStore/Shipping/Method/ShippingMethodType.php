@@ -44,14 +44,17 @@ class ShippingMethodType
     {
         $this->smtHandle = $handle;
     }
+
     public function setName($name)
     {
         $this->smtName = $name;
     }
+
     public function setPackageID($pkgID)
     {
         $this->pkgID = $pkgID;
     }
+
     public function setMethodTypeController()
     {
         $package = Package::getByID($this->pkgID);
@@ -61,12 +64,13 @@ class ShippingMethodType
         }
 
         $th = Core::make("helper/text");
-        $namespace = "Concrete\\Package\\".$th->camelcase($package->getPackageHandle())."\\Src\\CommunityStore\\Shipping\\Method\\Types";
+        $namespace = "Concrete\\Package\\" . $th->camelcase($package->getPackageHandle()) . "\\Src\\CommunityStore\\Shipping\\Method\\Types";
 
-        $className = $th->camelcase($this->smtHandle)."ShippingMethod";
-        $obj = $namespace.'\\'.$className;
+        $className = $th->camelcase($this->smtHandle) . "ShippingMethod";
+        $obj = $namespace . '\\' . $className;
         $this->methodTypeController = new $obj();
     }
+
     public function hideFromAddMenu($bool = false)
     {
         $this->hideFromAddMenu = $bool;
@@ -76,22 +80,27 @@ class ShippingMethodType
     {
         return $this->hideFromAddMenu;
     }
+
     public function getShippingMethodTypeID()
     {
         return $this->smtID;
     }
+
     public function getHandle()
     {
         return $this->smtHandle;
     }
+
     public function getShippingMethodTypeName()
     {
         return $this->smtName;
     }
+
     public function getPackageID()
     {
         return $this->pkgID;
     }
+
     public function getMethodTypeController()
     {
         return $this->methodTypeController;
@@ -109,13 +118,14 @@ class ShippingMethodType
     public static function getByHandle($smtHandle)
     {
         $em = \ORM::entityManager();
-        $obj = $em->getRepository(get_called_class())->findOneBy(array('smtHandle' => $smtHandle));
+        $obj = $em->getRepository(get_called_class())->findOneBy(['smtHandle' => $smtHandle]);
         if (is_object($obj)) {
             $obj->setMethodTypeController();
 
             return $obj;
         }
     }
+
     public static function add($smtHandle, $smtName, $pkg, $hideFromAddMenu = false)
     {
         $smt = new self();
@@ -129,12 +139,14 @@ class ShippingMethodType
 
         return $smt;
     }
+
     public function save()
     {
         $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
+
     public function delete()
     {
         $methods = StoreShippingMethod::getAvailableMethods($this->getShippingMethodTypeID());
@@ -145,27 +157,30 @@ class ShippingMethodType
         $em->remove($this);
         $em->flush();
     }
+
     public static function getAvailableMethodTypes()
     {
         $em = \ORM::entityManager();
         $methodTypes = $em->createQuery('select smt from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType smt')->getResult();
 
-        $methodsWithControllers = array();
+        $methodsWithControllers = [];
 
-        foreach($methodTypes as $mt) {
+        foreach ($methodTypes as $mt) {
             $mt->setMethodTypeController();
             $methodsWithControllers[] = $mt;
         }
 
         return $methodsWithControllers;
     }
+
     public function renderDashboardForm($sm)
     {
         $controller = $this->getMethodTypeController();
         $controller->dashboardForm($sm);
         $pkg = Package::getByID($this->pkgID);
-        View::element('shipping_method_types/'.$this->smtHandle.'/dashboard_form', array('vars' => $controller->getSets()), $pkg->getPackageHandle());
+        View::element('shipping_method_types/' . $this->smtHandle . '/dashboard_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
+
     public function addMethod($data)
     {
         $sm = $this->getMethodTypeController()->addMethodTypeMethod($data);

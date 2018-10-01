@@ -5,9 +5,7 @@ use Package;
 use Page;
 use PageType;
 use PageTemplate;
-use Database;
 use File;
-use Core;
 use Config;
 use Events;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,7 +17,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation a
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
@@ -238,7 +236,8 @@ class Product
      */
     protected $locations;
 
-    public function getLocations(){
+    public function getLocations()
+    {
         return $this->locations;
     }
 
@@ -247,7 +246,8 @@ class Product
      */
     protected $groups;
 
-    public function getGroups(){
+    public function getGroups()
+    {
         return $this->groups;
     }
 
@@ -256,7 +256,8 @@ class Product
      */
     protected $files;
 
-    public function getFiles(){
+    public function getFiles()
+    {
         return $this->files;
     }
 
@@ -265,7 +266,8 @@ class Product
      */
     protected $images;
 
-    public function getImages(){
+    public function getImages()
+    {
         return $this->images;
     }
 
@@ -274,7 +276,8 @@ class Product
      */
     protected $userGroups;
 
-    public function getUserGroups(){
+    public function getUserGroups()
+    {
         return $this->userGroups;
     }
 
@@ -284,7 +287,8 @@ class Product
      */
     protected $options;
 
-    public function getOptions(){
+    public function getOptions()
+    {
         return $this->options;
     }
 
@@ -293,7 +297,8 @@ class Product
      */
     protected $related;
 
-    public function getRelatedProducts(){
+    public function getRelatedProducts()
+    {
         return $this->related;
     }
 
@@ -303,7 +308,8 @@ class Product
      */
     protected $priceTiers;
 
-    public function getPriceTiers(){
+    public function getPriceTiers()
+    {
         return $this->priceTiers;
     }
 
@@ -311,17 +317,18 @@ class Product
 
     protected $discountRuleIDs;
 
-    public function addDiscountRules($rules) {
-        foreach($rules as $rule) {
+    public function addDiscountRules($rules)
+    {
+        foreach ($rules as $rule) {
             $this->addDiscountRule($rule);
         }
     }
 
-
-    public function addDiscountRule($discountRule) {
+    public function addDiscountRule($discountRule)
+    {
         if (!is_array($this->discountRules)) {
-            $this->discountRules = array();
-            $this->discountRuleIDs = array();
+            $this->discountRules = [];
+            $this->discountRuleIDs = [];
         }
 
         //add only if rule hasn't been added before
@@ -345,8 +352,9 @@ class Product
         }
     }
 
-    public function getDiscountRules() {
-        return is_array($this->discountRules) ? $this->discountRules : array();
+    public function getDiscountRules()
+    {
+        return is_array($this->discountRules) ? $this->discountRules : [];
     }
 
     public function __construct()
@@ -385,7 +393,7 @@ class Product
     {
         if ($this->hasVariations()) {
             $options = $this->getOptions();
-            $optionkeys = array();
+            $optionkeys = [];
 
             foreach ($options as $option) {
                 if ($option->getIncludeVariations()) {
@@ -435,15 +443,16 @@ class Product
 
     public function setPrice($price)
     {
-        $this->pPrice = ($price != '' ? $price : 0);
+        $this->pPrice = ('' != $price ? $price : 0);
     }
 
     public function setSalePrice($price)
     {
-        $this->pSalePrice = ($price != '' ? $price : null);
+        $this->pSalePrice = ('' != $price ? $price : null);
     }
 
-    public function setCustomerPrice($bool) {
+    public function setCustomerPrice($bool)
+    {
         $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
     }
 
@@ -454,7 +463,7 @@ class Product
 
     public function setPriceMaximum($pPriceMaximum)
     {
-        $this->pPriceMaximum = $pPriceMaximum != '' ? $pPriceMaximum : null;
+        $this->pPriceMaximum = '' != $pPriceMaximum ? $pPriceMaximum : null;
     }
 
     public function getPriceMinimum()
@@ -464,7 +473,7 @@ class Product
 
     public function setPriceMinimum($pPriceMinimum)
     {
-        $this->pPriceMinimum = $pPriceMinimum != '' ? $pPriceMinimum : null;
+        $this->pPriceMinimum = '' != $pPriceMinimum ? $pPriceMinimum : null;
     }
 
     public function getPriceSuggestions()
@@ -519,7 +528,7 @@ class Product
 
     public function getAllowDecimalQty()
     {
-        return $this->pAllowDecimalQty == '1';
+        return '1' == $this->pAllowDecimalQty;
     }
 
     public function allowDecimalQuantity()
@@ -597,7 +606,8 @@ class Product
         $this->pSeperateShip = (!is_null($bool) ? $bool : false);
     }
 
-    public function getPackageData() {
+    public function getPackageData()
+    {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationPackageData();
         } else {
@@ -615,33 +625,34 @@ class Product
         return $this->pSeperateShip;
     }
 
-    public function isSeperateShip() {
-        return (bool)$this->getSeperateShip();
+    public function isSeperateShip()
+    {
+        return (bool) $this->getSeperateShip();
     }
 
     public function setWidth($width)
     {
-        $this->pWidth = (float)$width;
+        $this->pWidth = (float) $width;
     }
 
     public function setHeight($height)
     {
-        $this->pHeight = (float)$height;
+        $this->pHeight = (float) $height;
     }
 
     public function setLength($length)
     {
-        $this->pLength = (float)$length;
+        $this->pLength = (float) $length;
     }
 
     public function setWeight($weight)
     {
-        $this->pWeight = (float)$weight;
+        $this->pWeight = (float) $weight;
     }
 
     public function setNumberItems($number)
     {
-        $this->pNumberItems = ($number != '' ? $number : null);
+        $this->pNumberItems = ('' != $number ? $number : null);
     }
 
     public function setCreatesUserAccount($bool)
@@ -680,19 +691,22 @@ class Product
     public static function getByID($pID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $pID);
     }
 
     public static function getBySKU($pSKU)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('pSKU' => $pSKU));
+
+        return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
     }
 
     public static function getByCollectionID($cID)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('cID' => $cID));
+
+        return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
     }
 
     public static function saveProduct($data)
@@ -777,6 +791,7 @@ class Product
     {
         return $this->pName;
     }
+
     public function getSKU()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -793,20 +808,24 @@ class Product
             return $this->pSKU;
         }
     }
+
     public function getPageID()
     {
         return $this->cID;
     }
+
     public function getDesc()
     {
         return $this->pDesc;
     }
+
     public function getDetail()
     {
         return $this->pDetail;
     }
 
-    public function getBasePrice() {
+    public function getBasePrice()
+    {
         return $this->pPrice;
     }
 
@@ -818,13 +837,13 @@ class Product
                 $varprice = $variation->getVariationPrice();
 
                 if ($varprice) {
-                    $price =  $varprice;
+                    $price = $varprice;
                 } else {
-                    $price =  $this->getQuantityAdjustedPrice($qty);
+                    $price = $this->getQuantityAdjustedPrice($qty);
                 }
             }
         } else {
-            $price =  $this->getQuantityAdjustedPrice($qty);
+            $price = $this->getQuantityAdjustedPrice($qty);
         }
 
         $discounts = $this->getDiscountRules();
@@ -835,7 +854,7 @@ class Product
                     $discount->setApplicableTotal($price);
                     $discountedprice = $discount->returnDiscountedPrice();
 
-                    if ($discountedprice !== false) {
+                    if (false !== $discountedprice) {
                         $price = $discountedprice;
                     }
                 }
@@ -845,11 +864,12 @@ class Product
         return $price;
     }
 
-    private function getQuantityAdjustedPrice($qty = 1) {
+    private function getQuantityAdjustedPrice($qty = 1)
+    {
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
-            foreach($priceTiers as $pt) {
+            foreach ($priceTiers as $pt) {
                 if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
                     return $pt->getPrice();
                 }
@@ -863,6 +883,7 @@ class Product
     {
         return StorePrice::format($this->getPrice());
     }
+
     public function getFormattedPrice()
     {
         return StorePrice::format($this->getActivePrice());
@@ -883,11 +904,12 @@ class Product
             return $this->pSalePrice;
         }
     }
+
     public function getFormattedSalePrice()
     {
         $saleprice = $this->getSalePrice();
 
-        if ($saleprice != '') {
+        if ('' != $saleprice) {
             return StorePrice::format($saleprice);
         }
     }
@@ -895,54 +917,65 @@ class Product
     public function getActivePrice($qty = 1)
     {
         $salePrice = $this->getSalePrice();
-        if ($salePrice != "") {
+        if ("" != $salePrice) {
             return $salePrice;
         } else {
             return $this->getPrice($qty);
         }
-
     }
+
     public function getFormattedActivePrice($qty = 1)
     {
         return StorePrice::format($this->getActivePrice($qty));
     }
+
     public function getTaxClassID()
     {
         return $this->pTaxClass;
     }
+
     public function getTaxClass()
     {
         return StoreTaxClass::getByID($this->pTaxClass);
     }
+
     public function isTaxable()
     {
         return (bool) $this->pTaxable;
     }
+
     public function isFeatured()
     {
         return (bool) $this->pFeatured;
     }
+
     public function isActive()
     {
         return (bool) $this->pActive;
     }
+
     public function isShippable()
     {
         return (bool) $this->pShippable;
     }
-    public function allowCustomerPrice() {
+
+    public function allowCustomerPrice()
+    {
         return (bool) $this->pCustomerPrice;
     }
 
-    public function hasQuantityPrice() {
+    public function hasQuantityPrice()
+    {
         return (bool) $this->pQuantityPrice;
     }
 
-    public function getQuantityPrice() {
+    public function getQuantityPrice()
+    {
         return $this->pQuantityPrice;
     }
 
-    public function setQuantityPrice($bool) {
+    public function setQuantityPrice($bool)
+    {
         $this->pQuantityPrice = (!is_null($bool) ? $bool : false);
     }
 
@@ -953,20 +986,19 @@ class Product
         $length = $this->getWidth();
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-
             $varWidth = $variation->getVariationWidth();
             $varHeight = $variation->getVariationHeight();
             $varLength = $variation->getVariationLength();
 
-            if ($varWidth != '') {
+            if ('' != $varWidth) {
                 $width = $varWidth;
             }
 
-            if ($varHeight != '') {
+            if ('' != $varHeight) {
                 $height = $varHeight;
             }
 
-            if ($varLength != '') {
+            if ('' != $varLength) {
                 $length = $varLength;
             }
         }
@@ -982,14 +1014,15 @@ class Product
                 return $length;
                 break;
             default:
-                return $length."x".$width."x".$height;
+                return $length . "x" . $width . "x" . $height;
                 break;
         }
     }
 
-    public function getWidth() {
+    public function getWidth()
+    {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-          $width = $variation->getVariationWidth();
+            $width = $variation->getVariationWidth();
 
             if ($width) {
                 return $width;
@@ -999,7 +1032,8 @@ class Product
         return $this->pWidth;
     }
 
-    public function getHeight() {
+    public function getHeight()
+    {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $height = $variation->getVariationHeight();
 
@@ -1011,7 +1045,8 @@ class Product
         return $this->pHeight;
     }
 
-    public function getLength() {
+    public function getLength()
+    {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $length = $variation->getVariationLength();
 
@@ -1036,6 +1071,7 @@ class Product
 
         return $weight;
     }
+
     public function getNumberItems()
     {
         $numberItems = $this->pNumberItems;
@@ -1053,15 +1089,16 @@ class Product
         }
     }
 
-    public function getPackages() {
-        $packages = array();
+    public function getPackages()
+    {
+        $packages = [];
 
         $packagedata = $this->getPackageData();
 
         if ($packagedata) {
             $lines = explode("\n", $packagedata);
 
-            foreach($lines as $line) {
+            foreach ($lines as $line) {
                 $line = strtolower($line);
                 $line = str_replace('x', ' ', $line);
                 $line = str_replace('-', ' ', $line);
@@ -1088,7 +1125,6 @@ class Product
         return $packages;
     }
 
-
     public function getImageID()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -1102,6 +1138,7 @@ class Product
             return $this->pfID;
         }
     }
+
     public function getImageObj()
     {
         if ($this->getImageID()) {
@@ -1129,30 +1166,37 @@ class Product
     {
         return count($this->getDownloadFiles()) > 0 ? true : false;
     }
+
     public function getDownloadFiles()
     {
         return StoreProductFile::getFilesForProduct($this);
     }
+
     public function getDownloadFileObjects()
     {
         return StoreProductFile::getFileObjectsForProduct($this);
     }
+
     public function createsLogin()
     {
         return (bool) $this->pCreateUserAccount;
     }
+
     public function allowQuantity()
     {
         return !(bool) $this->pNoQty;
     }
+
     public function isExclusive()
     {
         return (bool) $this->pExclusive;
     }
+
     public function hasVariations()
     {
         return (bool) $this->pVariations;
     }
+
     public function isUnlimited()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -1161,14 +1205,17 @@ class Product
             return (bool) $this->pQtyUnlim;
         }
     }
+
     public function autoCheckout()
     {
         return (bool) $this->pAutoCheckout;
     }
+
     public function allowBackOrders()
     {
         return (bool) $this->pBackOrder;
     }
+
     public function hasUserGroups()
     {
         return count($this->getUserGroups()) > 0 ? true : false;
@@ -1183,14 +1230,15 @@ class Product
     {
         $fileObj = $this->getImageObj();
         if (is_object($fileObj)) {
-            return "<img src='".$fileObj->getRelativePath()."'>";
+            return "<img src='" . $fileObj->getRelativePath() . "'>";
         }
     }
+
     public function getImageThumb()
     {
         $fileObj = $this->getImageObj();
         if (is_object($fileObj)) {
-            return "<img src='".$fileObj->getThumbnailURL('file_manager_listing')."'>";
+            return "<img src='" . $fileObj->getThumbnailURL('file_manager_listing') . "'>";
         }
     }
 
@@ -1203,8 +1251,9 @@ class Product
         }
     }
 
-    public function getMaxCartQty() {
-        if ($this->allowBackOrders() ||  $this->isUnlimited()) {
+    public function getMaxCartQty()
+    {
+        if ($this->allowBackOrders() || $this->isUnlimited()) {
             $available = false;
         } else {
             $available = $this->getQty();
@@ -1248,19 +1297,24 @@ class Product
     {
         return StoreProductImage::getImageObjectsForProduct($this);
     }
+
     public function getLocationPages()
     {
         return StoreProductLocation::getLocationsForProduct($this);
     }
+
     public function getGroupIDs()
     {
         return StoreProductGroup::getGroupIDsForProduct($this);
     }
+
     public function getVariations()
     {
         return StoreProductVariation::getVariationsForProduct($this);
     }
-    public function getDateAdded(){
+
+    public function getDateAdded()
+    {
         return $this->pDateAdded;
     }
 
@@ -1271,23 +1325,24 @@ class Product
         $em->flush();
     }
 
-	public function reindex()
-	{
-		$attribs = StoreProductKey::getAttributes(
-			$this->pID,
-			'getSearchIndexValue'
-		);
-		$app = Application::getFacadeApplication();
-		$db = $app->make('database')->connection();
+    public function reindex()
+    {
+        $attribs = StoreProductKey::getAttributes(
+            $this->pID,
+            'getSearchIndexValue'
+        );
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
-		$db->Execute('DELETE FROM CommunityStoreProductSearchIndexAttributes WHERE pID = ?', array($this->pID));
-		$searchableAttributes = array('pID' => $this->pID);
+        $db->Execute('DELETE FROM CommunityStoreProductSearchIndexAttributes WHERE pID = ?', [$this->pID]);
+        $searchableAttributes = ['pID' => $this->pID];
 
-		$key = new StoreProductKey();
-		$key->reindex('CommunityStoreProductSearchIndexAttributes', $searchableAttributes, $attribs);
-	}
+        $key = new StoreProductKey();
+        $key->reindex('CommunityStoreProductSearchIndexAttributes', $searchableAttributes, $attribs);
+    }
 
-    public function delete() {
+    public function delete()
+    {
         $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
@@ -1315,7 +1370,8 @@ class Product
         }
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->shallowClone) {
             return;
         }
@@ -1326,7 +1382,7 @@ class Product
 
             $locations = $this->getLocations();
             $this->locations = new ArrayCollection();
-            if(count($locations) > 0){
+            if (count($locations) > 0) {
                 foreach ($locations as $loc) {
                     $cloneLocation = clone $loc;
                     $this->locations->add($cloneLocation);
@@ -1336,7 +1392,7 @@ class Product
 
             $groups = $this->getGroups();
             $this->groups = new ArrayCollection();
-            if(count($groups) > 0){
+            if (count($groups) > 0) {
                 foreach ($groups as $group) {
                     $cloneGroup = clone $group;
                     $this->groups->add($cloneGroup);
@@ -1346,7 +1402,7 @@ class Product
 
             $images = $this->getImages();
             $this->images = new ArrayCollection();
-            if(count($images) > 0){
+            if (count($images) > 0) {
                 foreach ($images as $image) {
                     $cloneImage = clone $image;
                     $this->images->add($cloneImage);
@@ -1356,7 +1412,7 @@ class Product
 
             $files = $this->getFiles();
             $this->files = new ArrayCollection();
-            if(count($files) > 0){
+            if (count($files) > 0) {
                 foreach ($files as $file) {
                     $cloneFile = clone $file;
                     $this->files->add($cloneFile);
@@ -1366,7 +1422,7 @@ class Product
 
             $userGroups = $this->getUserGroups();
             $this->userGroups = new ArrayCollection();
-            if(count($userGroups) > 0){
+            if (count($userGroups) > 0) {
                 foreach ($userGroups as $userGroup) {
                     $cloneUserGroup = clone $userGroup;
                     $this->userGroups->add($cloneUserGroup);
@@ -1376,7 +1432,7 @@ class Product
 
             $options = $this->getOptions();
             $this->options = new ArrayCollection();
-            if(count($options) > 0){
+            if (count($options) > 0) {
                 foreach ($options as $option) {
                     $cloneOption = clone $option;
                     $this->options->add($cloneOption);
@@ -1386,7 +1442,8 @@ class Product
         }
     }
 
-    public  function duplicate($newName, $newSKU = '') {
+    public function duplicate($newName, $newSKU = '')
+    {
         $newproduct = clone $this;
         $newproduct->setIsActive(false);
         $newproduct->setQty(0);
@@ -1395,7 +1452,7 @@ class Product
 
         $existingPageID = $this->getPageID();
         if ($existingPageID) {
-            $existinPage= Page::getByID($existingPageID);
+            $existinPage = Page::getByID($existingPageID);
             $pageTemplateID = $existinPage->getPageTemplateID();
             $newproduct->generatePage($pageTemplateID);
         }
@@ -1404,15 +1461,15 @@ class Product
         $newproduct->save();
 
         $attributes = StoreProductKey::getAttributes($this->getID());
-        foreach($attributes as $handle=>$value) {
+        foreach ($attributes as $handle => $value) {
             $spk = StoreProductKey::getByHandle($handle);
             $spk->saveAttribute($newproduct, $value);
         }
 
         $variations = $this->getVariations();
-        $newvariations = array();
+        $newvariations = [];
 
-        if(count($variations) > 0){
+        if (count($variations) > 0) {
             foreach ($variations as $variation) {
                 $cloneVariation = clone $variation;
                 $cloneVariation->setProductID($newproduct->getID());
@@ -1421,16 +1478,16 @@ class Product
             }
         }
 
-        $optionMap = array();
+        $optionMap = [];
 
-        foreach($newproduct->getOptions() as $newoption) {
-            foreach($newoption->getOptionItems() as $optionItem) {
+        foreach ($newproduct->getOptions() as $newoption) {
+            foreach ($newoption->getOptionItems() as $optionItem) {
                 $optionMap[$optionItem->originalID] = $optionItem;
             }
         }
 
-        foreach($newvariations as $variation) {
-            foreach($variation->getOptions() as $option) {
+        foreach ($newvariations as $variation) {
+            foreach ($variation->getOptions() as $option) {
                 $optionid = $option->getOption()->getID();
                 $option->setOption($optionMap[$optionid]);
                 $option->save(true);
@@ -1439,17 +1496,17 @@ class Product
 
         $relatedProducts = $this->getRelatedProducts();
         if (count($relatedProducts)) {
-            $related = array();
+            $related = [];
             foreach ($relatedProducts as $relatedProduct) {
                 $related[] = $relatedProduct->getRelatedProductID();
             }
-            StoreProductRelated::addRelatedProducts(array('pRelatedProducts' => $related), $newproduct);
+            StoreProductRelated::addRelatedProducts(['pRelatedProducts' => $related], $newproduct);
         }
 
         $em = \ORM::entityManager();
         $em->flush();
 
-		$newproduct->reindex();
+        $newproduct->reindex();
 
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
@@ -1479,10 +1536,10 @@ class Product
                     }
                     $newProductPage = $parentPage->add(
                         $pageType,
-                        array(
+                        [
                             'cName' => $this->getName(),
                             'pkgID' => $pkg->getPackageID(),
-                        ),
+                        ],
                         $pageTemplate
                     );
                     $newProductPage->setAttribute('exclude_nav', 1);
@@ -1498,7 +1555,8 @@ class Product
         return false;
     }
 
-    public function updatePage() {
+    public function updatePage()
+    {
         $pageID = $this->getPageID();
 
         if ($pageID) {
@@ -1519,12 +1577,13 @@ class Product
             if (is_object($productPage) && $productPage->getCollectionID() > 0) {
                 $pageDescription = trim($productPage->getAttribute('meta_description'));
                 // if it's the same as the current product description, it hasn't been updated independently of the product
-                if ($pageDescription == '' || $productDescription == $pageDescription) {
+                if ('' == $pageDescription || $productDescription == $pageDescription) {
                     $productPage->setAttribute('meta_description', strip_tags($newDescription));
                 }
             }
         }
     }
+
     public function setPageID($cID)
     {
         $this->setCollectionID($cID);
@@ -1555,8 +1614,9 @@ class Product
             $ak = StoreProductKey::getByHandle($ak);
         }
         $ak->setAttribute($this, $value);
-		$this->reindex();
+        $this->reindex();
     }
+
     public function getAttribute($ak, $displayMode = false)
     {
         if (!is_object($ak)) {
@@ -1569,12 +1629,13 @@ class Product
             }
         }
     }
+
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $av = false;
-        $v = array($this->getID(), $ak->getAttributeKeyID());
+        $v = [$this->getID(), $ak->getAttributeKeyID()];
         $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);
         if ($avID > 0) {
             $av = StoreProductValue::getByID($avID);
@@ -1600,7 +1661,8 @@ class Product
         return $av;
     }
 
-    public function getVariationData() {
+    public function getVariationData()
+    {
         $firstAvailableVariation = false;
 
         if ($this->hasVariations()) {
@@ -1632,17 +1694,18 @@ class Product
             }
         }
 
-        return array('firstAvailableVariation'=>$firstAvailableVariation, 'availableOptionsids'=>$availableOptionsids);
+        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids];
     }
 
     // helper function for working with variation options
-    public function getVariationLookup() {
-        $variationLookup = array();
+    public function getVariationLookup()
+    {
+        $variationLookup = [];
 
         if ($this->hasVariations()) {
             $variations = StoreProductVariation::getVariationsForProduct($this);
 
-            $variationLookup = array();
+            $variationLookup = [];
 
             if (!empty($variations)) {
                 foreach ($variations as $variation) {

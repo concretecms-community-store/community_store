@@ -3,7 +3,6 @@ namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
 use Concrete\Core\Block\BlockController;
 use Core;
-use Config;
 use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
@@ -26,6 +25,7 @@ class Controller extends BlockController
     {
         return t("Utility Links");
     }
+
     public function view()
     {
         $itemcount = StoreCart::getTotalItemsInCart();
@@ -49,17 +49,18 @@ class Controller extends BlockController
         $inCheckout = false;
         $inCart = false;
 
-        if ($path == '/checkout') {
+        if ('/checkout' == $path) {
             $inCheckout = true;
         }
 
-        if ($path == '/cart') {
+        if ('/cart' == $path) {
             $inCart = true;
         }
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
     }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
@@ -68,6 +69,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
     }
+
     public function save($args)
     {
         $args['showCartItems'] = isset($args['showCartItems']) ? 1 : 0;
@@ -78,10 +80,11 @@ class Controller extends BlockController
         $args['popUpCart'] = isset($args['popUpCart']) ? 1 : 0;
         parent::save($args);
     }
+
     public function validate($args)
     {
         $e = Core::make("helper/validation/error");
-        if ($args['cartLabel'] == "") {
+        if ("" == $args['cartLabel']) {
             $e->add(t('Cart Label must be set'));
         }
         if (strlen($args['cartLabel']) > 255) {

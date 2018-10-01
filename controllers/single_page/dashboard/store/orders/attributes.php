@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Orders;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -9,36 +8,37 @@ use Package;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Type as AttributeType;
 use GroupList;
-
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
 
-class Attributes extends DashboardPageController {
-    
-    public function view() {
-
+class Attributes extends DashboardPageController
+{
+    public function view()
+    {
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
         $attrTypes = AttributeType::getList('store_order');
-        $types = array();
-        foreach($attrTypes as $at) {
+        $types = [];
+        foreach ($attrTypes as $at) {
             $types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
         }
         $attrList = StoreOrderKey::getList();
-        $this->set('attrList',$attrList);
+        $this->set('attrList', $attrList);
         $this->set('types', $types);
         $this->set('pageTitle', t('Order Attributes'));
     }
-    
-    public function update_attributes() {
+
+    public function update_attributes()
+    {
         $uats = $_REQUEST['akID'];
         StoreProductKey::updateAttributesDisplayOrder($uats);
         exit;
     }
 
-    public function delete($akID, $token = null){
+    public function delete($akID, $token = null)
+    {
         try {
             $ak = StoreOrderKey::getByID($akID);
-                
-            if(!($ak instanceof StoreOrderKey)) {
+
+            if (!($ak instanceof StoreOrderKey)) {
                 throw new Exception(t('Invalid attribute ID.'));
             }
 
@@ -47,7 +47,7 @@ class Attributes extends DashboardPageController {
             if (!$valt->validate('delete_attribute', $token)) {
                 throw new Exception($valt->getErrorMessage());
             }
-            
+
             $ak->delete();
             $this->flash('success', t('Attribute Deleted'));
             $this->redirect("/dashboard/store/orders/attributes");
@@ -56,19 +56,21 @@ class Attributes extends DashboardPageController {
         }
     }
 
-    public function select_type() {
+    public function select_type()
+    {
         $atID = $this->request('atID');
         $at = AttributeType::getByID($atID);
         $this->set('type', $at);
         $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
         $this->set('pageTitle', t('Create Order Attribute'));
 
-        $this->set('ocGroups', array());
+        $this->set('ocGroups', []);
         $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
     }
-    
-    public function add() {
+
+    public function add()
+    {
         $this->select_type();
         $type = $this->get('type');
         $cnt = $type->getController();
@@ -77,13 +79,14 @@ class Attributes extends DashboardPageController {
             $this->set('error', $e);
         } else {
             $type = AttributeType::getByID($this->post('atID'));
-            StoreOrderKey::add('store_order',$type, $this->post(), Package::getByHandle('community_store'));
+            StoreOrderKey::add('store_order', $type, $this->post(), Package::getByHandle('community_store'));
             $this->flash('success', t('Attribute Created'));
             $this->redirect('/dashboard/store/orders/attributes');
         }
     }
-    
-    public function edit($akID = 0) {
+
+    public function edit($akID = 0)
+    {
         if ($this->post('akID')) {
             $akID = $this->post('akID');
         }
@@ -96,7 +99,7 @@ class Attributes extends DashboardPageController {
         $this->set('groups', $key->getAttributeGroups());
         $this->set('groupList', $this->getGroupList());
         $this->requireAsset('select2');
-        
+
         if ($this->post()) {
             $cnt = $type->getController();
             $cnt->setAttributeKey($key);
@@ -113,10 +116,11 @@ class Attributes extends DashboardPageController {
 
     public function getGroupList()
     {
-        $gl = new GroupList;
+        $gl = new GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
-        return (is_array($groupList))? $groupList : array();
+
+        return (is_array($groupList)) ? $groupList : [];
     }
 }

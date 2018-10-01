@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
-
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 
 class Groups extends DashboardPageController
 {
@@ -14,7 +12,7 @@ class Groups extends DashboardPageController
     {
         $this->set('pageTitle', t('Product Groups'));
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist",$grouplist);
+        $this->set("grouplist", $grouplist);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
@@ -38,7 +36,7 @@ class Groups extends DashboardPageController
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
 
-                    foreach($productids as $productid) {
+                    foreach ($productids as $productid) {
                         StoreProductGroup::add($productid, $newproductgroup->getID());
                     }
                 }
@@ -48,6 +46,7 @@ class Groups extends DashboardPageController
             }
         }
     }
+
     public function edit($gID)
     {
         $this->requireAsset('css', 'communityStoreDashboard');
@@ -71,7 +70,7 @@ class Groups extends DashboardPageController
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
 
-                    foreach($productids as $productid) {
+                    foreach ($productids as $productid) {
                         StoreProductGroup::add($productid, $group->getID());
                     }
                 }
@@ -83,18 +82,21 @@ class Groups extends DashboardPageController
 
         $this->set('group', $group);
     }
+
     public function validateGroup($args)
     {
         $e = \Core::make('helper/validation/error');
 
-        if($args['groupName']==""){
+        if ("" == $args['groupName']) {
             $e->add(t('Please enter a Group Name'));
         }
-        if(strlen($args['groupName']) > 100){
+        if (strlen($args['groupName']) > 100) {
             $e->add(t('A Group Name can not be more than 100 characters'));
         }
+
         return $e;
     }
+
     public function deletegroup($gID)
     {
         StoreGroup::getByID($gID)->delete();

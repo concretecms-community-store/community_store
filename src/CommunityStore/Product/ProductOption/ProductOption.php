@@ -11,9 +11,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pro
  */
 class ProductOption
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $poID;
 
@@ -78,6 +78,7 @@ class ProductOption
     {
         $this->poName = $name;
     }
+
     private function setSort($sort)
     {
         $this->poSort = $sort;
@@ -87,22 +88,27 @@ class ProductOption
     {
         return $this->poID;
     }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
     public function getName()
     {
         return $this->poName;
     }
+
     public function getSort()
     {
         return $this->poSort;
     }
+
     public function getType()
     {
         return $this->poType;
     }
+
     public function setType($type)
     {
         $this->poType = $type;
@@ -130,7 +136,7 @@ class ProductOption
 
     public function getIncludeVariations()
     {
-        return (int)(is_null($this->poIncludeVariations) || $this->poIncludeVariations == 1);
+        return (int) (is_null($this->poIncludeVariations) || 1 == $this->poIncludeVariations);
     }
 
     public function setIncludeVariations($poIncludeVariations)
@@ -143,26 +149,29 @@ class ProductOption
         $this->optionItems = new ArrayCollection();
     }
 
-    public function getOptionItems(){
+    public function getOptionItems()
+    {
         return $this->optionItems;
     }
 
     public static function getByID($id)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionsForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function removeOptionsForProduct(StoreProduct $product, $excluding = array())
+    public static function removeOptionsForProduct(StoreProduct $product, $excluding = [])
     {
         if (!is_array($excluding)) {
-            $excluding = array();
+            $excluding = [];
         }
 
         //clear out existing product option groups
@@ -180,12 +189,14 @@ class ProductOption
 
         return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
     }
+
     public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
     {
         $ProductOption = $this;
 
         return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
     }
+
     public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $obj)
     {
         $obj->setProduct($product);
@@ -196,16 +207,18 @@ class ProductOption
         $obj->setRequired($required);
         $obj->setIncludeVariations($includeVariations);
         $obj->save();
+
         return $obj;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         $this->setID(null);
         $this->setProduct(null);
 
         $optionItems = $this->getOptionItems();
         $this->optionItems = new ArrayCollection();
-        if(count($optionItems) > 0){
+        if (count($optionItems) > 0) {
             foreach ($optionItems as $optionItem) {
                 $cloneOptionItem = clone $optionItem;
                 $cloneOptionItem->originalID = $optionItem->getID();
@@ -239,7 +252,7 @@ class ProductOption
 
         if (is_array($data['poSort'])) {
             $count = count($data['poSort']);
-            $ii = 0;//set counter for items
+            $ii = 0; //set counter for items
 
             if ($count > 0) {
                 for ($i = 0; $i < $count; ++$i) {

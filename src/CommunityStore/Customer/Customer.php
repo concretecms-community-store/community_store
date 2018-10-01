@@ -4,7 +4,6 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 use Session;
 use User;
 use UserInfo;
-use Concrete\Attribute\Address\Value as AddressAttributeValue;
 
 class Customer
 {
@@ -18,7 +17,7 @@ class Customer
             $this->ui = UserInfo::getByID($uID);
         } elseif ($u->isLoggedIn()) {
             $this->ui = UserInfo::getByID($u->getUserID());
-        }  else {
+        } else {
             $this->ui = null;
         }
     }
@@ -37,21 +36,21 @@ class Customer
         }
     }
 
-    public function getAddress($handle) {
-
+    public function getAddress($handle)
+    {
         if ($this->isGuest()) {
-            $addressraw = Session::get('community_' .$handle);
+            $addressraw = Session::get('community_' . $handle);
+
             return self::formatAddress($addressraw);
         } else {
-            return (string)$this->ui->getAttribute($handle);
+            return (string) $this->ui->getAttribute($handle);
         }
-
     }
 
     public function getValue($handle)
     {
         if ($this->isGuest()) {
-            $val = Session::get('community_' .$handle);
+            $val = Session::get('community_' . $handle);
 
             if (is_array($val)) {
                 return (object) $val;
@@ -63,16 +62,20 @@ class Customer
         }
     }
 
-    public function getAddressValue($handle, $valuename) {
+    public function getAddressValue($handle, $valuename)
+    {
         $att = $this->getValue($handle);
-        return $this->returnAttributeValue($att,$valuename);
+
+        return $this->returnAttributeValue($att, $valuename);
     }
 
-    private static function returnAttributeValue($att, $valuename) {
+    private static function returnAttributeValue($att, $valuename)
+    {
         $valueCamel = camel_case($valuename);
 
-        if (method_exists($att, 'get' .$valueCamel)) {
-            $functionname = 'get'.$valueCamel;
+        if (method_exists($att, 'get' . $valueCamel)) {
+            $functionname = 'get' . $valueCamel;
+
             return $att->$functionname();
         } else {
             return $att->$valuename;
@@ -82,7 +85,7 @@ class Customer
     public function getValueArray($handle)
     {
         if ($this->isGuest()) {
-            $val = Session::get('community_' .$handle);
+            $val = Session::get('community_' . $handle);
 
             return $val;
         } else {
@@ -152,9 +155,8 @@ class Customer
             $ret .= ", ";
         }
         if ($state_province) {
-
             $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ($val == '') {
+            if ('' == $val) {
                 $ret .= $state_province;
             } else {
                 $ret .= $val;
@@ -169,6 +171,7 @@ class Customer
         if ($country) {
             $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
         }
+
         return $ret;
     }
 
@@ -186,7 +189,7 @@ class Customer
             $ret .= $address1;
         }
         if ($address2) {
-            $ret .= ", ". $address2;
+            $ret .= ", " . $address2;
         }
 
         $ret .= "\n";
@@ -198,9 +201,8 @@ class Customer
             $ret .= ", ";
         }
         if ($state_province) {
-
             $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ($val == '') {
+            if ('' == $val) {
                 $ret .= $state_province;
             } else {
                 $ret .= $val;
@@ -215,6 +217,7 @@ class Customer
         if ($country) {
             $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
         }
+
         return $ret;
     }
 }

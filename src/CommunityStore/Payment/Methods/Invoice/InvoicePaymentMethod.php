@@ -28,12 +28,13 @@ class InvoicePaymentMethod extends StorePaymentMethod
         Config::save('community_store.paymentInstructions', $data['paymentInstructions']);
         Config::save('community_store.markPaid', $data['markPaid']);
     }
+
     public function validate($args, $e)
     {
-
         //$e->add("error message");
         return $e;
     }
+
     public function checkoutForm()
     {
         $pmID = StorePaymentMethod::getByHandle('invoice')->getID();
@@ -41,8 +42,8 @@ class InvoicePaymentMethod extends StorePaymentMethod
         $this->addFooterItem("
             <script type=\"text/javascript\">
                  $(function() {
-                     $('div[data-payment-method-id=".$pmID."] .store-btn-complete-order').click(function(){
-                         $(this).attr({disabled: true}).val('" .  t('Processing...').  "');
+                     $('div[data-payment-method-id=" . $pmID . "] .store-btn-complete-order').click(function(){
+                         $(this).attr({disabled: true}).val('" . t('Processing...') . "');
                          $(this).closest('form').submit();
                      });
                  });
@@ -53,7 +54,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
     public function submitPayment()
     {
         //nothing to do except return success
-        return array('error' => 0, 'transactionReference' => '');
+        return ['error' => 0, 'transactionReference' => ''];
     }
 
     public function getPaymentMinimum()
@@ -62,7 +63,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
 
         $minconfig = trim(Config::get('community_store.invoiceMinimum'));
 
-        if ($minconfig == '') {
+        if ('' == $minconfig) {
             return $defaultMin;
         } else {
             return max($minconfig, $defaultMin);
@@ -74,15 +75,16 @@ class InvoicePaymentMethod extends StorePaymentMethod
         $defaultMax = 1000000000;
 
         $maxconfig = trim(Config::get('community_store.invoiceMaximum'));
-        if ($maxconfig == '') {
+        if ('' == $maxconfig) {
             return $defaultMax;
         } else {
             return min($maxconfig, $defaultMax);
         }
     }
 
-    public function markPaid() {
-        return (bool)\Config::get('community_store.markPaid');
+    public function markPaid()
+    {
+        return (bool) \Config::get('community_store.markPaid');
     }
 
     // to be overridden by individual payment methods
