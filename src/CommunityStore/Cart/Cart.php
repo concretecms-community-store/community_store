@@ -390,7 +390,7 @@ class Cart
 
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
 
-        if (!$product->allowDecimalQuantity()) {
+        if ($product && !$product->allowDecimalQuantity()) {
             $qty = (int) $data['pQty'];
         }
 
