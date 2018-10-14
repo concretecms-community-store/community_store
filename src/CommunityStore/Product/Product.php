@@ -983,7 +983,7 @@ class Product
     {
         $width = $this->getWidth();
         $height = $this->getHeight();
-        $length = $this->getWidth();
+        $length = $this->getLength();
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $varWidth = $variation->getVariationWidth();
