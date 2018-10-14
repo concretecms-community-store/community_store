@@ -101,6 +101,8 @@ class Cart extends PageController
 
         $this->set('total', $totals['total']);
         $this->set('subTotal', $totals['subTotal']);
+        $this->set('taxes', $totals['taxes']);
+        $this->set('taxtotal', $totals['taxTotal']);
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();

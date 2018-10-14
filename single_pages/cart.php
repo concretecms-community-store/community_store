@@ -203,6 +203,22 @@ if ($cart) {
     <p><?= t('Invalid code'); ?></p>
 <?php } ?>
 
+<?php if (!empty($discounts)) { ?>
+
+    <p class="store-cart-page-discounts text-right">
+        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
+            :</strong>
+        <?php
+        $discountstrings = array();
+        foreach ($discounts as $discount) {
+            $discountstrings[] = h($discount->getDisplay());
+        }
+        echo implode(', ', $discountstrings);
+        ?>
+    </p>
+
+<?php } ?>
+
 
 <?php if ($cart && !empty($cart)) { ?>
     <p class="store-cart-page-cart-total text-right">
@@ -217,21 +233,17 @@ if ($cart) {
         </span></p>
     <?php } ?>
 
-    <?php if (!empty($discounts)) { ?>
-
-        <p class="store-cart-page-discounts text-right">
-            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-                :</strong>
-            <?php
-            $discountstrings = array();
-            foreach ($discounts as $discount) {
-                $discountstrings[] = h($discount->getDisplay());
-            }
-            echo implode(', ', $discountstrings);
-            ?>
-        </p>
-
-    <?php } ?>
+    <?php
+    if ($taxtotal > 0) {
+        foreach ($taxes as $tax) {
+            if ($tax['taxamount'] > 0) { ?>
+                <p class="store-cart-page-tax text-right">
+                    <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                </p>
+            <?php }
+        }
+    }
+    ?>
 
     <p class="store-cart-page-cart-total text-right">
         <strong class="store-cart-grand-total-label"><?= t("Total") ?>:</strong>
