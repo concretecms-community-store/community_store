@@ -57,8 +57,8 @@ class Controller extends Package
     public function upgrade()
     {
         $pkg = Package::getByHandle('community_store');
-        Installer::upgrade($pkg);
         parent::upgrade();
+        Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();
     }
