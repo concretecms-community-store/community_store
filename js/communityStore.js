@@ -411,7 +411,7 @@ var communityStore = {
 };
 
 $(document).ready(function () {
-    if ($('.store-checkout-form-shell form').size() > 0) {
+    if ($('.store-checkout-form-shell form').length > 0) {
         communityStore.updateBillingStates(true);
         communityStore.updateShippingStates(true);
         communityStore.showShippingMethods();
@@ -737,7 +737,7 @@ $(document).ready(function () {
     });
 
     $(document).on('submit', '.store-product-block', function(e) {
-        if ($(this).find('.store-btn-add-to-cart').size() > 0) {
+        if ($(this).find('.store-btn-add-to-cart').length > 0) {
             communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
         }
         e.preventDefault();

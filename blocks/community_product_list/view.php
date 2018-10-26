@@ -22,6 +22,7 @@ if ($products) {
         $columnClass = 'col-md-2';
     } ?>
 
+<div class="store-product-list-block">
 
     <?php if ($showSortOption) {
         ?>
@@ -407,7 +408,10 @@ if ($products) {
             echo '</div>';
         }
     }
+
+    echo "</div><!-- .product-list-block -->";
 } //if products
+
 elseif (is_object($c) && $c->isEditMode()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List"); ?></div>
