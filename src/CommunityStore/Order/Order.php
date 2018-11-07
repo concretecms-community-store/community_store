@@ -632,13 +632,13 @@ class Order
         $event = new StoreOrderEvent($this);
         Events::dispatch('on_community_store_order', $event);
 
+        // notifications
+        $this->sendNotifications();
+
         //receipt
         if ($sendReceipt) {
             $this->sendOrderReceipt();
         }
-
-        // notifications
-        $this->sendNotifications();
 
         return $this;
     }
@@ -758,7 +758,12 @@ class Order
                 }
 
                 $mh->to($email);
-                $mh->sendMail();
+
+                try {
+                    $mh->sendMail();
+                } catch (\Exception $e) {
+                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', array(implode(', ', $notificationEmails))));
+                }
             }
         }
 
@@ -847,6 +852,7 @@ class Order
         $validNotification = false;
 
         $fromName = Config::get('community_store.emailalertsname');
+
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
             $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
@@ -887,7 +893,12 @@ class Order
             $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
             $mh->addParameter("order", $this);
             $mh->load("new_order_notification", "community_store");
-            $mh->sendMail();
+
+            try {
+                $mh->sendMail();
+            } catch (\Exception $e) {
+                \Log::addWarning(t('Community Store: a notification email failed sending to %s', array(implode(', ', $notificationEmails))));
+            }
         }
     }
 
@@ -907,11 +918,10 @@ class Order
             $mh->from($fromEmail);
         }
 
-        if ($email) {
-            $mh->to($email);
-        } else {
-            $mh->to($this->getAttribute('email'));
+        if (!$email) {
+            $email = $this->getAttribute('email');
         }
+        $mh->to($email);
 
         $pmID = $this->getPaymentMethodID();
 
@@ -934,7 +944,12 @@ class Order
         $mh->addParameter('paymentInstructions', $paymentInstructions);
         $mh->addParameter("order", $this);
         $mh->load("order_receipt", "community_store");
-        $mh->sendMail();
+
+        try {
+            $mh->sendMail();
+        } catch (\Exception $e) {
+            \Log::addWarning(t('Community Store: a receipt email failed sending to %s', array($email)));
+        }
     }
 
     public function addOrderItems($cart, $discountRatio = 1)
