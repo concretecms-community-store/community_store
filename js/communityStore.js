@@ -445,6 +445,12 @@ $(document).ready(function () {
             novalue = '';
         }
 
+        var yesvalue = $("#store-checkout-form-group-other-attributes").data('yes-value');
+
+        if (!yesvalue) {
+            yesvalue = 'Yes';
+        }
+
         $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
             var akID = $(el).data("akid");
             var field = $(el).find(".form-control");
@@ -464,7 +470,7 @@ $(document).ready(function () {
                 if (field) {
                     if (field.is(':checked')) {
                         value = '1';
-                        displayvalue = label.text().trim();
+                        displayvalue = yesvalue;
                     } else {
                         displayvalue = novalue;
                     }

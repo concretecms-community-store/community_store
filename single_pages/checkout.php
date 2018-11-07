@@ -70,7 +70,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <?php } ?>
 
 
-                        <h2><?= t("Billing Address") ?></h2>
+                        <h2><?= t("Billing Details") ?></h2>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -172,10 +172,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         </div>
 
                         <?php if ($orderChoicesEnabled) { ?>
-                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
+                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" data-yes-value="<?= t('Yes');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
 
                                 <div class="">
-                                    <h2><?= t("Other Choices") ?></h2>
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
@@ -206,7 +205,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <div class="store-checkout-form-group-summary panel panel-default ">
                         <div class="panel-heading">
-                            <?= t('Billing Address'); ?>
+                            <?= t('Billing Details'); ?>
                         </div>
                         <div class="row panel-body">
                             <div class="col-sm-6">
@@ -228,24 +227,24 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <label><?= t('Phone'); ?></label>
                                 <p class="store-summary-phone"><?= $customer->getValue('billing_phone'); ?></p>
                             </div>
-                        </div>
-                    </div>
 
-                    <?php if ($orderChoicesEnabled) { ?>
-                        <div class="store-checkout-form-group-summary <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?> panel panel-default ">
-                            <div class="panel-heading">
-                                <?= t('Other Choices'); ?>
-                            </div>
-                            <div class="row panel-body">
-                                <div class="col-md-12">
+                            <?php if ($orderChoicesEnabled) { ?>
+
+                                <div class="col-sm-12">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <label><?= $ak->getAttributeKeyDisplayName()?></label>
                                         <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
                                     <?php } ?>
                                 </div>
-                            </div>
+
+                            <?php } ?>
+
                         </div>
-                    <?php } ?>
+
+
+                    </div>
+
+
 
                 </form>
                 <?php if ($shippingEnabled) { ?>
