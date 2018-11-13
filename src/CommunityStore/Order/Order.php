@@ -29,8 +29,8 @@ use Concrete\Core\Support\Facade\Application;
 
 use \Concrete\Core\Attribute\ObjectTrait;
 
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
-use Concrete\Package\CommunityStore\Entity\Attribute\Value\OrderValue as StoreOrderValue;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Value\OrderValue as StoreOrderValue;
 
 /**
  * @ORM\Entity

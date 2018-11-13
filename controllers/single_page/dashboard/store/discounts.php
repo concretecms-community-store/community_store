@@ -118,10 +118,10 @@ class Discounts extends DashboardPageController
                 $dr->delete();
             }
             $this->flash('success', t('Discount Rule Deleted'));
-            \Redirect::to('/dashboard/store/discounts');
+            return \Redirect::to('/dashboard/store/discounts');
         }
 
-        \Redirect::to('/dashboard/store/discounts');
+        return \Redirect::to('/dashboard/store/discounts');
     }
 
     public function deletecode()
@@ -133,12 +133,12 @@ class Discounts extends DashboardPageController
             if ($dc) {
                 $ruleid = $dc->getDiscountRule()->getID();
                 $dc->delete();
-                \Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
+                return \Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
             }
         }
 
         $this->flash('success', t('Code Deleted'));
-        \Redirect::to('/dashboard/store/discounts');
+        return \Redirect::to('/dashboard/store/discounts');
     }
 
     public function addcodes($drID)
@@ -175,7 +175,7 @@ class Discounts extends DashboardPageController
         }
 
         $this->flash('success', $successcount . ' ' . (1 == $successcount ? t('Code Added') : t('Codes Added')));
-        \Redirect::to('/dashboard/store/discounts/codes/' . $drID);
+        return \Redirect::to('/dashboard/store/discounts/codes/' . $drID);
     }
 
     public function save()
@@ -192,14 +192,14 @@ class Discounts extends DashboardPageController
                 if ($data['drID']) {
                     StoreDiscountRule::edit($data['drID'], $data);
                     $this->flash('success', t('Discount Rule Updated'));
-                    \Redirect::to('/dashboard/store/discounts');
+                    return \Redirect::to('/dashboard/store/discounts');
                 } else {
                     $discountrule = StoreDiscountRule::add($data);
                     if ('code' == $discountrule->getTrigger()) {
-                        \Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
+                        return \Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
                     } else {
                         $this->flash('success', t('Discount Rule Added'));
-                        \Redirect::to('/dashboard/store/discounts');
+                        return \Redirect::to('/dashboard/store/discounts');
                     }
                 }
             } else {

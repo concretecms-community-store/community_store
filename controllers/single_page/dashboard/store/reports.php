@@ -7,6 +7,6 @@ class Reports extends DashboardPageController
 {
     public function view()
     {
-        \Redirect::to('/dashboard/store/reports/sales');
+        return \Redirect::to('/dashboard/store/reports/sales');
     }
 }

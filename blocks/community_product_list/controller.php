@@ -5,6 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Core;
 use Config;
 use Page;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
@@ -163,7 +164,9 @@ class Controller extends BlockController
             $products->processUrlFilters($request);
         }
 
-        $paginator = $products->getPagination();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $paginator = $factory->createPaginationObject($products, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 

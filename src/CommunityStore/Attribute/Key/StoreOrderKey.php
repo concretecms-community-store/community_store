@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
+namespace Concrete\Package\CommunityStore\Attribute\Key;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +15,25 @@ class StoreOrderKey extends Key
     public function getAttributeKeyCategoryHandle()
     {
         return 'store_order';
+    }
+
+    public function getIndexedSearchTable()
+    {
+        return 'CommunityStoreOrderSearchIndexAttributes';
+    }
+
+    public function getSearchIndexFieldDefinition()
+    {
+        return array(
+            'columns' => array(
+                array(
+                    'name' => 'oID',
+                    'type' => 'integer',
+                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
+                ),
+            ),
+            'primary' => array('oID'),
+        );
     }
 
     public static function getAttributeListBySet($set, $user = null)

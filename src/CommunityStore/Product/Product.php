@@ -20,15 +20,12 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pro
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
-//use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
-//use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
-
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey as StoreProductKey;
-use Concrete\Package\CommunityStore\Entity\Attribute\Value\ProductValue as StoreProductValue;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey as StoreProductKey;
+use Concrete\Package\CommunityStore\Attribute\Value\ProductValue as StoreProductValue;
 
 use \Concrete\Core\Attribute\ObjectTrait;
 

@@ -37,7 +37,7 @@ class Shipping extends DashboardPageController
         $sm = StoreShippingMethod::getByID($smID);
         $sm->delete();
         $this->flash('success', t('Shipping Method Deleted'));
-        \Redirect::to('/dashboard/store/settings/shipping');
+        return \Redirect::to('/dashboard/store/settings/shipping');
     }
 
     public function add_method()
@@ -55,9 +55,9 @@ class Shipping extends DashboardPageController
                     $shippingMethodTypeMethod->update($this->post());
                     $shippingMethod->update($this->post('methodName'), $this->post('methodEnabled'), $this->post('methodDetails'));
                     $this->flash('success', t('Shipping Method Updated'));
-                    \Redirect::to('/dashboard/store/settings/shipping');
+                    return \Redirect::to('/dashboard/store/settings/shipping');
                 } else {
-                    \Redirect::to('/dashboard/store/settings/shipping');
+                    return \Redirect::to('/dashboard/store/settings/shipping');
                 }
             } else {
                 //first we send the data to the shipping method type.
@@ -66,7 +66,7 @@ class Shipping extends DashboardPageController
                 //make a shipping method that correlates with it.
                 StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->post('methodName'), true, $this->post('methodDetails'));
                 $this->flash('success', t('Shipping Method Created'));
-                \Redirect::to('/dashboard/store/settings/shipping');
+                return \Redirect::to('/dashboard/store/settings/shipping');
             }
         } else {
             if ($this->post('shippingMethodID')) {

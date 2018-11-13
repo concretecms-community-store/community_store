@@ -28,6 +28,6 @@ class ProductModal extends Controller
             }
         }
 
-        \Redirect::to('/');
+        return \Redirect::to('/');
     }
 }

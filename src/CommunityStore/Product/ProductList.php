@@ -6,7 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey;
 
 class ProductList extends AttributedItemList
 {
@@ -101,7 +101,7 @@ class ProductList extends AttributedItemList
                 if ('price' == $handle) {
                     $this->filterByPrice($value);
                 } else {
-                    if (is_object(StoreStoreProductKey::getByHandle($handle))) {
+                    if (is_object(StoreProductKey::getByHandle($handle))) {
                         $this->filterByAttribute($handle, $value);
                     }
                 }
@@ -115,6 +115,9 @@ class ProductList extends AttributedItemList
         $querystring = $request->getQueryString();
 
         $params = explode('&', $querystring);
+
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         foreach ($params as $param) {
             $values = explode('=', $param);
@@ -130,7 +133,7 @@ class ProductList extends AttributedItemList
                     $items = str_replace('%7C', '%2C', $items);
                     $items = explode('%2C', $items);
 
-                    if (is_object(StoreStoreProductKey::getByHandle($filter))) {
+                    if (is_object($productCategory->getByHandle($filter))) {
                         $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
                     }
                 }
@@ -152,7 +155,7 @@ class ProductList extends AttributedItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreStoreProductKey';
+        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreProductKey';
     }
 
     public function createQuery()

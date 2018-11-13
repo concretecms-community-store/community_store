@@ -18,12 +18,13 @@ use Concrete\Core\Attribute\Type as AttributeType;
 use AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
+use Concrete\Core\Attribute\Key\Category;
 
 class Installer
 {
@@ -251,18 +252,22 @@ class Installer
     {
         //create custom attribute category for orders
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
 
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+        $orderCategory = Category::getByHandle('store_order');
 
-            $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
-            $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        if (!is_object($orderCategory)) {
+            $orderCategory = Category::add('store_order', 1, $pkg);
+        }
+
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+
+        $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
+        $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
 
 
         if (!$orderCustSet) {
@@ -297,32 +302,40 @@ class Installer
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $attr = StoreOrderKey::getByHandle($handle);
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+
+        $attr =  $orderCategory->getByHandle($handle);
+
         if (!is_object($attr)) {
+
             $name = Core::make("helper/text")->unhandle($handle);
-            if (!$data) {
-                $data = [
-                    'akHandle' => $handle,
-                    'akName' => t($name),
-                ];
-            }
-            StoreOrderKey::add('store_order', $type, $data, $pkg)->setAttributeSet($set);
+
+            $key = new StoreOrderKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName(t($name));
+            $key = $orderCategory->add($type, $key, null, $pkg);
+            $key->setAttributeSet($set);
         }
     }
 
     public static function installProductAttributes($pkg)
     {
         //create custom attribute category for products
-        $pakc = AttributeKeyCategory::getByHandle('store_product');
-        if (!is_object($pakc)) {
-            $pakc = AttributeKeyCategory::add('store_product', AttributeKeyCategory::ASET_ALLOW_SINGLE, $pkg);
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('text'));
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('number'));
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('address'));
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-            $pakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+        $productCategory = Category::getByHandle('store_product');
+
+        if (!is_object($productCategory)) {
+            $productCategory = Category::add('store_product', 1, $pkg);
         }
+
+
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+
     }
 
     public static function addProductSearchIndexTable($pkg)

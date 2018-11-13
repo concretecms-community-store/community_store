@@ -21,7 +21,7 @@ class Categories extends DashboardPageController
         $page = \Page::getByID($cID);
 
         if (!$page) {
-            \Redirect::to('/dashboard/store/products/categories');
+            return \Redirect::to('/dashboard/store/products/categories');
         }
 
         $products->setSortBy('category');
@@ -54,6 +54,6 @@ class Categories extends DashboardPageController
         }
 
         $this->flash('success', t('Category Order Updated'));
-        \Redirect::to('/dashboard/store/products/categories/manage/' . $cID);
+        return \Redirect::to('/dashboard/store/products/categories/manage/' . $cID);
     }
 }

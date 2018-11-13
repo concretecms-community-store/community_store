@@ -20,7 +20,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pro
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey as StoreProductKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey as StoreProductKey    ;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
@@ -110,7 +110,7 @@ class Products extends DashboardPageController
         $product = StoreProduct::getByID($pID);
 
         if (!$product) {
-            \Redirect::to('/dashboard/store/products');
+            return \Redirect::to('/dashboard/store/products');
         }
 
         $this->set('product', $product);
@@ -228,20 +228,20 @@ class Products extends DashboardPageController
     public function generate($pID, $templateID = null)
     {
         StoreProduct::getByID($pID)->generatePage($templateID);
-        \Redirect::to('/dashboard/store/products/edit', $pID);
+        return \Redirect::to('/dashboard/store/products/edit', $pID);
     }
 
     public function duplicate($pID)
     {
         $product = StoreProduct::getByID($pID);
         if (!$product) {
-            \Redirect::to('/dashboard/store/products');
+            return \Redirect::to('/dashboard/store/products');
         }
 
         if ($this->post()) {
             $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
             $this->flash('success', t('Product Duplicated'));
-            \Redirect::to('/dashboard/store/products/edit/' . $newproduct->getID());
+            return \Redirect::to('/dashboard/store/products/edit/' . $newproduct->getID());
         }
 
         $this->set('pageTitle', t('Duplicate Product'));
@@ -255,7 +255,7 @@ class Products extends DashboardPageController
             $product->remove();
         }
         $this->flash('success', t('Product Removed'));
-        \Redirect::to('/dashboard/store/products');
+        return \Redirect::to('/dashboard/store/products');
     }
 
     public function loadFormAssets()
@@ -337,9 +337,13 @@ class Products extends DashboardPageController
                 //save the product
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes
-                $aks = StoreProductKey::getList();
+                $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+                $aks = $productCategory->getList();
+
                 foreach ($aks as $uak) {
-                    $uak->saveAttributeForm($product);
+                    $controller = $uak->getController();
+                    $value = $controller->createAttributeValueFromRequest();
+                    $product->setAttribute($uak, $value);
                 }
                 //save images
                 StoreProductImage::addImagesForProduct($data, $product);
@@ -367,7 +371,7 @@ class Products extends DashboardPageController
 
                 StoreProductPriceTier::addPriceTiersForProduct($data, $product);
 
-                $product->reindex();
+                //$product->reindex();
 
                 // create product event and dispatch
                 if (!$originalProduct) {
@@ -380,10 +384,10 @@ class Products extends DashboardPageController
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-                    \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
+                    return \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));
-                    \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
+                    return \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 }
             }//if no errors
         }//if post

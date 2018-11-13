@@ -16,7 +16,7 @@ class Cart extends PageController
     public function view($action = '')
     {
         if ('all' == Config::get('community_store.shoppingDisabled')) {
-            \Redirect::to("/");
+            return \Redirect::to("/");
         }
 
         $codeerror = false;

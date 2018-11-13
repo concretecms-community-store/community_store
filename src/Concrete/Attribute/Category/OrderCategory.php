@@ -3,24 +3,24 @@ namespace Concrete\Package\CommunityStore\Attribute\Category;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Entity\Attribute\Value\ProductValue;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Value\OrderValue;
 
-class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
+class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
 {
     public function createAttributeKey()
     {
-        return new StoreProductKey();
+        return new StoreOrderKey();
     }
 
     public function getIndexedSearchTable()
     {
-        return 'CommunityStoreProductSearchIndexAttributes';
+        return 'CommunityStoreOrderSearchIndexAttributes';
     }
 
-    public function getIndexedSearchPrimaryKeyValue($product)
+    public function getIndexedSearchPrimaryKeyValue($order)
     {
-        return $product->getID();
+        return $order->getOrderID();
     }
 
     public function getSearchIndexFieldDefinition()
@@ -28,38 +28,38 @@ class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandard
         return array(
             'columns' => array(
                 array(
-                    'name' => 'pID',
+                    'name' => 'oID',
                     'type' => 'integer',
                     'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
                 ),
             ),
-            'primary' => array('pID'),
+            'primary' => array('oID'),
         );
     }
 
     public function getAttributeKeyRepository()
     {
-        return $this->entityManager->getRepository(StoreProductKey::class);
+        return $this->entityManager->getRepository(StoreOrderKey::class);
     }
 
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository(ProductValue::class);
+        return $this->entityManager->getRepository(OrderValue::class);
     }
 
-    public function getAttributeValues($product)
+    public function getAttributeValues($order)
     {
         $values = $this->getAttributeValueRepository()->findBy(array(
-            'product' => $product,
+            'order' => $order,
         ));
         return $values;
     }
 
-    public function getAttributeValue(Key $key, $product)
+    public function getAttributeValue(Key $key, $order)
     {
-        $r = $this->entityManager->getRepository(ProductValue::class);
+        $r = $this->entityManager->getRepository(OrderValue::class);
         $value = $r->findOneBy(array(
-            'product' => $product,
+            'order' => $order,
             'attribute_key' => $key,
         ));
 

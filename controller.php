@@ -29,7 +29,8 @@ class Controller extends Package
         'src/CommunityStore/Payment' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Payment',
         'src/CommunityStore/Shipping' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Shipping',
         'src/CommunityStore/Customer' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Customer',
-        'src/CommunityStore/Report' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Report'
+        'src/CommunityStore/Report' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Report',
+        'src/CommunityStore/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
     );
 
 
@@ -68,7 +69,6 @@ class Controller extends Package
     public function install()
     {
         parent::install();
-        $this->installContentFile('content.xml');
         $this->installStore();
     }
 

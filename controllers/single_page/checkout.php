@@ -15,7 +15,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Checkout extends PageController
 {
@@ -39,7 +39,7 @@ class Checkout extends PageController
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
-            \Redirect::to("/");
+            return \Redirect::to("/");
         }
 
         $customer = new StoreCustomer();
@@ -53,11 +53,11 @@ class Checkout extends PageController
         $cart = StoreCart::getCart();
 
         if (StoreCart::hasChanged()) {
-            \Redirect::to("/cart/changed");
+            return \Redirect::to("/cart/changed");
         }
 
         if (0 == StoreCart::getTotalItemsInCart()) {
-            \Redirect::to("/cart");
+            return \Redirect::to("/cart");
         }
         $this->set('form', Core::make("helper/form"));
 
@@ -225,7 +225,7 @@ class Checkout extends PageController
 
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
         if (false === $pm || (StoreCart::isShippable() && !Session::get('community_store.smID'))) {
-            \Redirect::to("/checkout");
+            return \Redirect::to("/checkout");
             exit();
         }
 
@@ -233,9 +233,9 @@ class Checkout extends PageController
             if (0 != StoreCart::getTotalItemsInCart()) {
                 $order = StoreOrder::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
-                \Redirect::to('/checkout/external');
+                return \Redirect::to('/checkout/external');
             } else {
-                \Redirect::to("/cart");
+                return \Redirect::to("/cart");
             }
         } else {
             $payment = $pm->submitPayment();
@@ -243,14 +243,14 @@ class Checkout extends PageController
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors', $errors);
                 if ($guest) {
-                    \Redirect::to("/checkout/failed/1#payment");
+                    return \Redirect::to("/checkout/failed/1#payment");
                 } else {
-                    \Redirect::to("/checkout/failed#payment");
+                    return \Redirect::to("/checkout/failed#payment");
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
                 $order = StoreOrder::add($pm, $transactionReference);
-                \Redirect::to('/checkout/complete');
+                return \Redirect::to('/checkout/complete');
             }
         }
     }
@@ -266,7 +266,7 @@ class Checkout extends PageController
         }
 
         if (!$pm) {
-            \Redirect::to('/checkout');
+            return \Redirect::to('/checkout');
         }
 
         $this->set('pm', $pm);

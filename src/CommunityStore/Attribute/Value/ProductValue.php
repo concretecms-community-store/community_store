@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Entity\Attribute\Value;
+namespace Concrete\Package\CommunityStore\Attribute\Value;
 
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ProductValue extends AbstractValue
 {
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product")
      * @ORM\JoinColumn(name="pID", referencedColumnName="pID")
      */
