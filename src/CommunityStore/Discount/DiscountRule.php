@@ -1,114 +1,115 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreDiscountRules")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreDiscountRules")
  */
 class DiscountRule
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $drID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $drName;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $drEnabled;
 
     /**
-     * @Column(type="string", length=255,nullable=true)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     protected $drDisplay;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $drDescription;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drDeductType;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $drValue;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drPercentage;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drDeductFrom;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drTrigger;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $drSingleUseCodes;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drCurrency;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drValidFrom;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drValidTo;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drProductGroups;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drUserGroups;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drQuantity;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drMaximumQuantity;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $drDateAdded;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drDeleted;
 
@@ -158,12 +159,12 @@ class DiscountRule
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
      */
     private $codes;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCodes()
     {
@@ -177,7 +178,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -185,7 +186,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getName()
     {
@@ -193,7 +194,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drName
+     * @ORM\param mixed $drName
      */
     public function setName($drName)
     {
@@ -201,7 +202,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getEnabled()
     {
@@ -214,7 +215,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drEnabled
+     * @ORM\param mixed $drEnabled
      */
     public function setEnabled($drEnabled)
     {
@@ -222,7 +223,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDisplay()
     {
@@ -230,7 +231,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDisplay
+     * @ORM\param mixed $drDisplay
      */
     public function setDisplay($drDisplay)
     {
@@ -238,7 +239,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDescription()
     {
@@ -246,7 +247,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDescription
+     * @ORM\param mixed $drDescription
      */
     public function setDescription($drDescription)
     {
@@ -254,7 +255,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductType()
     {
@@ -262,7 +263,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeductType
+     * @ORM\param mixed $drDeductType
      */
     public function setDeductType($drDeductType)
     {
@@ -270,7 +271,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValue()
     {
@@ -278,7 +279,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValue
+     * @ORM\param mixed $drValue
      */
     public function setValue($drValue)
     {
@@ -286,7 +287,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getPercentage()
     {
@@ -294,7 +295,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drPercentage
+     * @ORM\param mixed $drPercentage
      */
     public function setPercentage($drPercentage)
     {
@@ -302,7 +303,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductFrom()
     {
@@ -310,7 +311,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeductFrom
+     * @ORM\param mixed $drDeductFrom
      */
     public function setDeductFrom($drDeductFrom)
     {
@@ -318,7 +319,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getTrigger()
     {
@@ -326,7 +327,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drTrigger
+     * @ORM\param mixed $drTrigger
      */
     public function setTrigger($drTrigger)
     {
@@ -339,7 +340,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getSingleUseCodes()
     {
@@ -352,7 +353,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drSingleUseCodes
+     * @ORM\param mixed $drSingleUseCodes
      */
     public function setSingleUseCodes($drSingleUseCodes)
     {
@@ -360,7 +361,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCurrency()
     {
@@ -368,7 +369,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drCurrency
+     * @ORM\param mixed $drCurrency
      */
     public function setCurrency($drCurrency)
     {
@@ -376,7 +377,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValidFrom()
     {
@@ -384,7 +385,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValidFrom
+     * @ORM\param mixed $drValidFrom
      */
     public function setValidFrom($drValidFrom)
     {
@@ -392,7 +393,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValidTo()
     {
@@ -400,7 +401,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValidTo
+     * @ORM\param mixed $drValidTo
      */
     public function setValidTo($drValidTo)
     {
@@ -408,7 +409,7 @@ class DiscountRule
     }
 
     /**
-     * @return array
+     * @ORM\return array
      */
     public function getProductGroups()
     {
@@ -416,7 +417,7 @@ class DiscountRule
     }
 
     /**
-     * @param array $drProductGroups
+     * @ORM\param array $drProductGroups
      */
     public function setProductGroups($drProductGroups)
     {
@@ -428,7 +429,7 @@ class DiscountRule
     }
 
     /**
-     * @return array
+     * @ORM\return array
      */
     public function getUserGroups()
     {
@@ -436,7 +437,7 @@ class DiscountRule
     }
 
     /**
-     * @param array $drUserGroups
+     * @ORM\param array $drUserGroups
      */
     public function setUserGroups($drUserGroups)
     {
@@ -468,7 +469,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDateAdded()
     {
@@ -476,7 +477,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDateAdded
+     * @ORM\param mixed $drDateAdded
      */
     public function setDateAdded($drDateAdded)
     {
@@ -484,7 +485,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeleted()
     {
@@ -492,7 +493,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeleted
+     * @ORM\param mixed $drDeleted
      */
     public function setDeleted($drDeleted)
     {

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
+use Doctrine\ORM\Mapping as ORM;
 use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
@@ -10,60 +11,60 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as S
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreTaxRates")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreTaxRates")
  */
 class TaxRate
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $trID;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $taxEnabled;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxLabel;
 
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $taxRate;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxBasedOn;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxAddress;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxCountry;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxState;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxCity;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $taxVatExclude;
 

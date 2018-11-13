@@ -6,7 +6,7 @@ use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class Orders extends DashboardPageController
 {
@@ -62,7 +62,7 @@ class Orders extends DashboardPageController
             }
             $this->requireAsset('javascript', 'communityStoreFunctions');
         } else {
-            $this->redirect('/dashboard/store/orders');
+            \Redirect::to('/dashboard/store/orders');
         }
 
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
@@ -73,7 +73,7 @@ class Orders extends DashboardPageController
         $data = $this->post();
         StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
         $this->flash('success', t('Fulfilment Status Updated'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function markpaid($oID)
@@ -91,7 +91,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Marked As Paid'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function reversepaid($oID)
@@ -103,7 +103,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Payment Reversed'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function markrefunded($oID)
@@ -117,7 +117,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Marked As Refunded'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function reverserefund($oID)
@@ -129,7 +129,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Refund Reversed'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function markcancelled($oID)
@@ -142,7 +142,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Cancelled'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function reversecancel($oID)
@@ -153,7 +153,7 @@ class Orders extends DashboardPageController
         $order->save();
 
         $this->flash('success', t('Order Cancellation Reversed'));
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function resendinvoice($oID)
@@ -165,7 +165,7 @@ class Orders extends DashboardPageController
             $this->flash('success', t('Receipt Email Resent to %s', $this->post('email')));
         }
 
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function resendnotification($oID)
@@ -180,13 +180,13 @@ class Orders extends DashboardPageController
             $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
         }
 
-        $this->redirect('/dashboard/store/orders/order', $oID);
+        \Redirect::to('/dashboard/store/orders/order', $oID);
     }
 
     public function remove($oID)
     {
         StoreOrder::getByID($oID)->remove();
         $this->flash('success', t('Order Deleted'));
-        $this->redirect('/dashboard/store/orders');
+        \Redirect::to('/dashboard/store/orders');
     }
 }

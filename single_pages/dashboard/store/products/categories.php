@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 
-<?php if ($controller->getTask() == 'view') { ?>
+<?php if ($controller->getAction() == 'view') { ?>
     <?php if (count($pages) > 0) { ?>
     <p><?= t('The following pages have been used to categorise products:'); ?></p>
     <?php }  else { ?>
@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <?php } ?>
 
 
-<?php if ($controller->getTask() == 'manage') { ?>
+<?php if ($controller->getAction() == 'manage') { ?>
     <form method="post" action="<?= $view->action('save', $cID)?>">
     <p><?php echo t('Products within category'); ?></p>
 

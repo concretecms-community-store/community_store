@@ -1,37 +1,38 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
+use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Utility\Service\Text as TextHelper;
 use Concrete\Core\Support\Facade\Application;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreOrderStatuses")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrderStatuses")
  */
 class OrderStatus
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $osID;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $osHandle;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $osName;
 
-    /** @Column(type="boolean") */
+    /** @ORM\Column(type="boolean") */
     protected $osInformSite;
 
-    /** @Column(type="boolean") */
+    /** @ORM\Column(type="boolean") */
     protected $osInformCustomer;
 
-    /** @Column(type="boolean") */
+    /** @ORM\Column(type="boolean") */
     protected $osIsStartingStatus;
 
-    /** @Column(type="integer",nullable=true) */
+    /** @ORM\Column(type="integer",nullable=true) */
     protected $osSortOrder;
 
     protected static $table = "CommunityStoreOrderStatuses";

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
+use Doctrine\ORM\Mapping as ORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
@@ -10,94 +11,94 @@ use File;
 use Concrete\Core\Support\Facade\Application;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductVariations")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductVariations")
  */
 class ProductVariation
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pvID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pvPrice;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $pvSKU;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pvSalePrice;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $pvfID;
 
     /**
-     * @Column(type="decimal", precision=12, scale=4)
+     * @ORM\Column(type="decimal", precision=12, scale=4)
      */
     protected $pvQty;
 
     /**
-     * @Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pvQtyUnlim;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvWidth;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvHeight;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvLength;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pvWeight;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $pvNumberItems;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $pvPackageData;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pvSort;
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
      */
     protected $options;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationFID()
     {
@@ -105,7 +106,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvfID
+     * @ORM\param mixed $pvfID
      */
     public function setVariationFID($pvfID)
     {
@@ -152,7 +153,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -160,7 +161,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getProductID()
     {
@@ -168,7 +169,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationSKU()
     {
@@ -176,7 +177,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvSKU
+     * @ORM\param mixed $pvSKU
      */
     public function setVariationSKU($pvSKU)
     {
@@ -184,7 +185,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pID
+     * @ORM\param mixed $pID
      */
     public function setProductID($pID)
     {
@@ -192,7 +193,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationPrice()
     {
@@ -205,7 +206,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvPrice
+     * @ORM\param mixed $pvPrice
      */
     public function setVariationPrice($pvPrice)
     {
@@ -217,7 +218,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationSalePrice()
     {
@@ -230,7 +231,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvSalePrice
+     * @ORM\param mixed $pvSalePrice
      */
     public function setVariationSalePrice($pvSalePrice)
     {
@@ -242,7 +243,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationQty()
     {
@@ -250,7 +251,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvQty
+     * @ORM\param mixed $pvQty
      */
     public function setVariationQty($pvQty)
     {
@@ -258,7 +259,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationQtyUnlim()
     {
@@ -266,7 +267,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvQtyUnlim
+     * @ORM\param mixed $pvQtyUnlim
      */
     public function setVariationQtyUnlim($pvQtyUnlim)
     {
@@ -274,7 +275,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationWidth()
     {
@@ -282,7 +283,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pWidth
+     * @ORM\param mixed $pWidth
      */
     public function setVariationWidth($pvWidth)
     {
@@ -294,7 +295,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationHeight()
     {
@@ -302,7 +303,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvHeight
+     * @ORM\param mixed $pvHeight
      */
     public function setVariationHeight($pvHeight)
     {
@@ -314,7 +315,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationLength()
     {
@@ -322,7 +323,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvLength
+     * @ORM\param mixed $pvLength
      */
     public function setVariationLength($pvLength)
     {
@@ -334,7 +335,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationWeight()
     {
@@ -342,7 +343,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvWeight
+     * @ORM\param mixed $pvWeight
      */
     public function setVariationWeight($pvWeight)
     {
@@ -354,7 +355,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationNumberItems()
     {
@@ -372,7 +373,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvNumberItems
+     * @ORM\param mixed $pvNumberItems
      */
     public function setVariationNumberItems($pvNumberItems)
     {
@@ -384,7 +385,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getVariationSort()
     {
@@ -392,7 +393,7 @@ class ProductVariation
     }
 
     /**
-     * @param mixed $pvSort
+     * @ORM\param mixed $pvSort
      */
     public function setVariationSort($pvSort)
     {

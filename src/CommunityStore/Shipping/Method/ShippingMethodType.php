@@ -1,40 +1,41 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
+use Doctrine\ORM\Mapping as ORM;
 use Core;
 use Package;
 use View;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreShippingMethodTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreShippingMethodTypes")
  */
 class ShippingMethodType
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $smtID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $smtHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $smtName;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pkgID;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $hideFromAddMenu;
 

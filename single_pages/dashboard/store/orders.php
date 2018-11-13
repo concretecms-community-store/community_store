@@ -2,11 +2,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Core::make('helper/date');
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 ?>
 
-<?php if ($controller->getTask() == 'order'){ ?>
+<?php if ($controller->getAction() == 'order'){ ?>
 
     <div class="ccm-dashboard-header-buttons">
         <form action="<?=URL::to('/dashboard/store/orders/details/slip')?>" method="post" target="_blank">
@@ -86,7 +86,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             <h4><?= t("Billing Address")?></h4>
             <p>
                 <?= h($order->getAttribute("billing_first_name")). " " . h($order->getAttribute("billing_last_name")) ?><br>
-                <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
+                <?php $billingaddress = $order->getAttributeValueObject('billing_address');
                 if ($billingaddress) {
                     echo $billingaddress->getValue('displaySanitized', 'display');
                 }

@@ -4,7 +4,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 ?>
 
 <?php
-$task = $controller->getTask();
+$task = $controller->getAction();
 ?>
 
 <?php if ($task == 'view') { ?>

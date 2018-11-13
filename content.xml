@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<concrete5-cif version="1.0">
+    <attributecategories>
+        <category handle="store_order" allow-sets="1" package="community_store"/>
+        <category handle="store_product" allow-sets="1" package="community_store"/>
+    </attributecategories>
+</concrete5-cif>

@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $groupViews = ['view','groupadded'];
 $groupEdits = ['add','edit'];
 
-if (in_array($controller->getTask(),$groupViews)){ ?>
+if (in_array($controller->getAction(),$groupViews)){ ?>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?= \URL::to('/dashboard/store/products/groups/', 'add')?>" class="btn btn-primary"><?= t("Add Product Group")?></a>
@@ -57,8 +57,8 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
 <?php }  ?>
 
-<?php if (in_array($controller->getTask(),$groupEdits)){ ?>
-    <form method="post" action="<?= $view->action($controller->getTask())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+<?php if (in_array($controller->getAction(),$groupEdits)){ ?>
+    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
 
         <div class="form-group">
             <?= $form->label('groupName',t("Group Name")); ?>

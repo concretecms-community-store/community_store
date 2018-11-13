@@ -133,6 +133,6 @@ class Sales extends DashboardPageController
             die();
         }
         // redirect if no data to output
-        $this->redirect('/dashboard/store/reports/sales');
+        \Redirect::to('/dashboard/store/reports/sales');
     }
 }

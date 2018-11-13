@@ -5,7 +5,7 @@ $editViews = array('edit');
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 
-if(in_array($controller->getTask(),$addViews)){
+if(in_array($controller->getAction(),$addViews)){
 /// Add Shipping Method View
 ?>
 

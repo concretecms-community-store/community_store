@@ -10,7 +10,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 ?>
 
-<?php if (in_array($controller->getTask(),$addViews)){ //if adding or editing a product
+<?php if (in_array($controller->getAction(),$addViews)){ //if adding or editing a product
     if(!is_object($product)) {
         $product = new StoreProduct();
         $product->setIsUnlimited(true);
@@ -433,7 +433,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
 
 
-                <?php if ($controller->getTask() == 'edit') { ?>
+                <?php if ($controller->getAction() == 'edit') { ?>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group">
@@ -1531,7 +1531,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 
 
-<?php } elseif(in_array($controller->getTask(),$listViews)) { ?>
+<?php } elseif(in_array($controller->getAction(),$listViews)) { ?>
 
     <div class="ccm-dashboard-header-buttons">
         <!--<a href="<?= \URL::to('/dashboard/store/products/', 'attributes')?>" class="btn btn-dark"><?= t("Manage Attributes")?></a>-->
@@ -1675,7 +1675,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 <?php } ?>
 
-<?php if ($controller->getTask() == 'duplicate') { ?>
+<?php if ($controller->getAction() == 'duplicate') { ?>
     <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
 
         <div class="form-group">

@@ -14,8 +14,25 @@ use Core;
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
-    protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '1.4.2';
+    protected $appVersionRequired = '8.0';
+    protected $pkgVersion = '2.0';
+
+    protected $pkgAutoloaderRegistries = array(
+        'src/CommunityStore' => '\CommunityStore',
+        'src/CommunityStore/Product/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Product',
+        'src/CommunityStore/Group/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Group',
+        'src/CommunityStore/Tax/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Tax',
+        'src/CommunityStore/Cart/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Cart',
+        'src/CommunityStore/Utilities/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Utilities',
+        'src/CommunityStore/Discount/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Discount',
+        'src/CommunityStore/Order/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Order',
+        'src/CommunityStore/Payment' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Payment',
+        'src/CommunityStore/Shipping' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Shipping',
+        'src/CommunityStore/Customer' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Customer',
+        'src/CommunityStore/Report' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Report'
+    );
+
+
 
     public function getPackageDescription()
     {
@@ -51,6 +68,7 @@ class Controller extends Package
     public function install()
     {
         parent::install();
+        $this->installContentFile('content.xml');
         $this->installStore();
     }
 
@@ -110,6 +128,17 @@ class Controller extends Package
             } catch (Exception $e) {
             }
         }
+
+
+        $this->app['manager/attribute/category']->extend('store_product',
+            function($app) {
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+            });
+
+        $this->app['manager/attribute/category']->extend('store_order',
+            function($app) {
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+            });
     }
 
     public function uninstall()

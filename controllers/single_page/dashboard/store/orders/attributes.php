@@ -1,126 +1,59 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Orders;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use View;
-use Core;
-use Package;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Type as AttributeType;
-use GroupList;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Type;
+use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
-class Attributes extends DashboardPageController
+class Attributes extends DashboardAttributesPageController
 {
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('store_order');
+    }
+
     public function view()
     {
-        $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
-        $attrTypes = AttributeType::getList('store_order');
-        $types = [];
-        foreach ($attrTypes as $at) {
-            $types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
-        }
-        $attrList = StoreOrderKey::getList();
-        $this->set('attrList', $attrList);
-        $this->set('types', $types);
-        $this->set('pageTitle', t('Order Attributes'));
+        $this->renderList();
     }
 
-    public function update_attributes()
+    public function edit($akID = null)
     {
-        $uats = $_REQUEST['akID'];
-        StoreProductKey::updateAttributesDisplayOrder($uats);
-        exit;
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->renderEdit($key,
+            \URL::to('/dashboard/store/orders/attributes', 'view')
+        );
     }
 
-    public function delete($akID, $token = null)
+    public function update($akID = null)
     {
-        try {
-            $ak = StoreOrderKey::getByID($akID);
-
-            if (!($ak instanceof StoreOrderKey)) {
-                throw new Exception(t('Invalid attribute ID.'));
-            }
-
-            $valt = Core::make('helper/validation/token');
-
-            if (!$valt->validate('delete_attribute', $token)) {
-                throw new Exception($valt->getErrorMessage());
-            }
-
-            $ak->delete();
-            $this->flash('success', t('Attribute Deleted'));
-            $this->redirect("/dashboard/store/orders/attributes");
-        } catch (Exception $e) {
-            $this->set('error', $e);
-        }
+        $this->edit($akID);
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->executeUpdate($key,
+            \URL::to('/dashboard/store/orders/attributes', 'view')
+        );
     }
 
-    public function select_type()
+    public function select_type($type = null)
     {
-        $atID = $this->request('atID');
-        $at = AttributeType::getByID($atID);
-        $this->set('type', $at);
-        $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
-        $this->set('pageTitle', t('Create Order Attribute'));
-
-        $this->set('ocGroups', []);
-        $this->set('groupList', $this->getGroupList());
-        $this->requireAsset('select2');
+        $type = Type::getByID($type);
+        $this->renderAdd($type,
+            \URL::to('/dashboard/store/orders/attributes', 'view')
+        );
     }
 
-    public function add()
+    public function add($type = null)
     {
-        $this->select_type();
-        $type = $this->get('type');
-        $cnt = $type->getController();
-        $e = $cnt->validateKey($this->post());
-        if ($e->has()) {
-            $this->set('error', $e);
-        } else {
-            $type = AttributeType::getByID($this->post('atID'));
-            StoreOrderKey::add('store_order', $type, $this->post(), Package::getByHandle('community_store'));
-            $this->flash('success', t('Attribute Created'));
-            $this->redirect('/dashboard/store/orders/attributes');
-        }
+        $this->select_type($type);
+        $type = Type::getByID($type);
+        $this->executeAdd($type, \URL::to('/dashboard/store/orders/attributes', 'view'));
     }
 
-    public function edit($akID = 0)
+    public function delete($akID = null)
     {
-        if ($this->post('akID')) {
-            $akID = $this->post('akID');
-        }
-        $key = StoreOrderKey::getByID($akID);
-        $type = $key->getAttributeType();
-        $this->set('key', $key);
-        $this->set('type', $type);
-        $this->set('category', AttributeKeyCategory::getByHandle('store_order'));
-
-        $this->set('groups', $key->getAttributeGroups());
-        $this->set('groupList', $this->getGroupList());
-        $this->requireAsset('select2');
-
-        if ($this->post()) {
-            $cnt = $type->getController();
-            $cnt->setAttributeKey($key);
-            $e = $cnt->validateKey($this->post());
-            if ($e->has()) {
-                $this->set('error', $e);
-            } else {
-                $key->update($this->post());
-                $this->flash('success', t('Attribute Updated'));
-                $this->redirect('/dashboard/store/orders/attributes');
-            }
-        }
-    }
-
-    public function getGroupList()
-    {
-        $gl = new GroupList();
-        foreach ($gl->getResults() as $group) {
-            $groupList[$group->getGroupID()] = $group->getGroupName();
-        }
-
-        return (is_array($groupList)) ? $groupList : [];
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->executeDelete($key,
+            \URL::to('/dashboard/store/orders/attributes', 'view')
+        );
     }
 }

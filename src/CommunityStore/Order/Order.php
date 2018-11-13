@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Doctrine\ORM\Mapping as ORM;
 use User;
 use Core;
 use Group;
@@ -10,11 +11,11 @@ use Page;
 use UserInfo;
 use Session;
 use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
+//use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
+//use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
@@ -26,98 +27,105 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use Concrete\Core\Support\Facade\Application;
 
+use \Concrete\Core\Attribute\ObjectTrait;
+
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\OrderValue as StoreOrderValue;
+
 /**
- * @Entity
- * @Table(name="CommunityStoreOrders")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrders")
  */
 class Order
 {
+
+    use ObjectTrait;
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $oID;
 
-    /** @Column(type="integer",nullable=true) */
+    /** @ORM\Column(type="integer",nullable=true) */
     protected $cID;
 
-    /** @Column(type="datetime") */
+    /** @ORM\Column(type="datetime") */
     protected $oDate;
 
-    /** @Column(type="integer",nullable=true) */
+    /** @ORM\Column(type="integer",nullable=true) */
     protected $pmID;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $pmName;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $smName;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sInstructions;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sShipmentID;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sRateID;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sCarrier;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingID;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingCode;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingURL;
 
-    /** @Column(type="decimal", precision=10, scale=2) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2) * */
     protected $oShippingTotal;
 
-    /** @Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="text", nullable=true) * */
     protected $oTax;
 
-    /** @Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="text", nullable=true) * */
     protected $oTaxIncluded;
 
-    /** @Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="text", nullable=true) * */
     protected $oTaxName;
 
-    /** @Column(type="decimal", precision=10, scale=2) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2) * */
     protected $oTotal;
 
-    /** @Column(type="text", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $transactionReference;
 
-    /** @Column(type="datetime", nullable=true) */
+    /** @ORM\Column(type="datetime", nullable=true) */
     protected $oPaid;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $oPaidByUID;
 
-    /** @Column(type="datetime", nullable=true) */
+    /** @ORM\Column(type="datetime", nullable=true) */
     protected $oCancelled;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $oCancelledByUID;
 
-    /** @Column(type="datetime", nullable=true) */
+    /** @ORM\Column(type="datetime", nullable=true) */
     protected $oRefunded;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $oRefundedByUID;
 
-    /** @Column(type="text",nullable=true) */
+    /** @ORM\Column(type="text",nullable=true) */
     protected $oRefundReason;
 
-    /** @Column(type="datetime", nullable=true) */
+    /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
      */
     protected $orderItems;
 
@@ -461,12 +469,12 @@ class Order
     }
 
     /**
-     * @param array $data
-     * @param StorePaymentMethod $pm
-     * @param string $transactionReference
-     * @param bool $status
+     * @ORM\param array $data
+     * @ORM\param StorePaymentMethod $pm
+     * @ORM\param string $transactionReference
+     * @ORM\param bool $status
      *
-     * @return Order
+     * @ORM\return Order
      */
     public static function add($pm, $transactionReference = '', $status = null)
     {
@@ -564,8 +572,8 @@ class Order
     }
 
     /**
-     * @param StoreCustomer $customer
-     * @param bool $includeShipping
+     * @ORM\param StoreCustomer $customer
+     * @ORM\param bool $includeShipping
      */
     public function addCustomerAddress($customer = null, $includeShipping = true)
     {
@@ -747,7 +755,7 @@ class Order
                 $fromName = Config::get('community_store.emailalertsname');
                 $fromEmail = Config::get('community_store.emailalerts');
                 if (!$fromEmail) {
-                    $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+                    $fromEmail = "store" . $_SERVER['SERVER_NAME'];
                 }
 
                 // new user password email
@@ -762,7 +770,7 @@ class Order
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', array(implode(', ', $notificationEmails))));
+                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', array($email)));
                 }
             }
         }
@@ -855,7 +863,7 @@ class Order
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
-            $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+            $fromEmail = "store" . $_SERVER['SERVER_NAME'];
         }
 
         //order notification
@@ -1052,58 +1060,87 @@ class Order
         }
     }
 
-    public function setAttribute($ak, $value)
+//    public function setAttribute($ak, $value)
+//    {
+//        if (!is_object($ak)) {
+//            $ak = StoreOrderKey::getByHandle($ak);
+//        }
+//        $ak->setAttribute($this, $value);
+//    }
+//
+//    public function getAttribute($ak, $displayMode = false)
+//    {
+//        if (!is_object($ak)) {
+//            $ak = StoreOrderKey::getByHandle($ak);
+//        }
+//        if (is_object($ak)) {
+//            $av = $this->getAttributeValueObject($ak);
+//            if (is_object($av)) {
+//                return $av->getValue($displayMode);
+//            }
+//        }
+//
+//        return false;
+//    }
+//
+//    public function getAttributeValueObject($ak, $createIfNotFound = false)
+//    {
+//        $app = Application::getFacadeApplication();
+//        $db = $app->make('database')->connection();
+//        $av = false;
+//        $v = [$this->getOrderID(), $ak->getAttributeKeyID()];
+//        $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
+//        if ($avID > 0) {
+//            $av = StoreOrderValue::getByID($avID);
+//            if (is_object($av)) {
+//                $av->setOrder($this);
+//                $av->setAttributeKey($ak);
+//            }
+//        }
+//
+//        if ($createIfNotFound) {
+//            $cnt = 0;
+//
+//            // Is this avID in use ?
+//            if (is_object($av)) {
+//                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreOrderAttributeValues WHERE avID = ?", $av->getAttributeValueID());
+//            }
+//
+//            if ((!is_object($av)) || ($cnt > 1)) {
+//                $av = $ak->addAttributeValue();
+//            }
+//        }
+//
+//        return $av;
+//    }
+
+
+    public function getObjectAttributeCategory()
     {
-        if (!is_object($ak)) {
-            $ak = StoreOrderKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
+        return \Core::make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
     }
 
-    public function getAttribute($ak, $displayMode = false)
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
+        $category = $this->getObjectAttributeCategory();
+
         if (!is_object($ak)) {
-            $ak = StoreOrderKey::getByHandle($ak);
+            $ak = $category->getByHandle($ak);
         }
+
+        $value = false;
         if (is_object($ak)) {
-            $av = $this->getAttributeValueObject($ak);
-            if (is_object($av)) {
-                return $av->getValue($displayMode);
-            }
+            $value = $category->getAttributeValue($ak, $this);
         }
 
-        return false;
-    }
-
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $av = false;
-        $v = [$this->getOrderID(), $ak->getAttributeKeyID()];
-        $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
-        if ($avID > 0) {
-            $av = StoreOrderValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setOrder($this);
-                $av->setAttributeKey($ak);
-            }
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
+            $attributeValue = new StoreOrderValue();
+            $attributeValue->setOrder($this);
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
         }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreOrderAttributeValues WHERE avID = ?", $av->getAttributeValueID());
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $av = $ak->addAttributeValue();
-            }
-        }
-
-        return $av;
     }
 
     public function addDiscount($discount, $code = '')

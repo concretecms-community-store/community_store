@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Attribute\Category\ProductCategory;
 use Core;
 use PageType;
 use GroupList;
@@ -18,7 +19,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey as StoreProductKey;
+
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 
@@ -107,7 +110,7 @@ class Products extends DashboardPageController
         $product = StoreProduct::getByID($pID);
 
         if (!$product) {
-            $this->redirect('/dashboard/store/products');
+            \Redirect::to('/dashboard/store/products');
         }
 
         $this->set('product', $product);
@@ -225,20 +228,20 @@ class Products extends DashboardPageController
     public function generate($pID, $templateID = null)
     {
         StoreProduct::getByID($pID)->generatePage($templateID);
-        $this->redirect('/dashboard/store/products/edit', $pID);
+        \Redirect::to('/dashboard/store/products/edit', $pID);
     }
 
     public function duplicate($pID)
     {
         $product = StoreProduct::getByID($pID);
         if (!$product) {
-            $this->redirect('/dashboard/store/products');
+            \Redirect::to('/dashboard/store/products');
         }
 
         if ($this->post()) {
             $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
             $this->flash('success', t('Product Duplicated'));
-            $this->redirect('/dashboard/store/products/edit/' . $newproduct->getID());
+            \Redirect::to('/dashboard/store/products/edit/' . $newproduct->getID());
         }
 
         $this->set('pageTitle', t('Duplicate Product'));
@@ -252,7 +255,7 @@ class Products extends DashboardPageController
             $product->remove();
         }
         $this->flash('success', t('Product Removed'));
-        $this->redirect('/dashboard/store/products');
+        \Redirect::to('/dashboard/store/products');
     }
 
     public function loadFormAssets()
@@ -267,7 +270,9 @@ class Products extends DashboardPageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
-        $attrList = StoreProductKey::getList();
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+
+        $attrList = $productCategory->getList();
         $this->set('attribs', $attrList);
 
         $pageType = PageType::getByHandle("store_product");
@@ -375,10 +380,10 @@ class Products extends DashboardPageController
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
+                    \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
+                    \Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 }
             }//if no errors
         }//if post

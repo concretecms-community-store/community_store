@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
+use Doctrine\ORM\Mapping as ORM;
 use Core;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -9,34 +10,34 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreFreeShippingMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreFreeShippingMethods")
  */
 class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumAmount;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumAmount;
 
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumWeight;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumWeight;
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $countries;
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $countriesSelected;
 

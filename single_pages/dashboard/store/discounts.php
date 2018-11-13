@@ -15,7 +15,7 @@ $currencySymbol = Config::get('community_store.symbol');
 ?>
 
 
-<?php if (in_array($controller->getTask(), $listViews)){ ?>
+<?php if (in_array($controller->getAction(), $listViews)){ ?>
     <div class="ccm-dashboard-header-buttons">
         <a href="<?= \URL::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t("Add Discount Rule")?></a>
 	</div>
@@ -211,9 +211,9 @@ $currencySymbol = Config::get('community_store.symbol');
 
 <?php } ?>
 
-<?php if (in_array($controller->getTask(), $addViews)){ ?>
+<?php if (in_array($controller->getAction(), $addViews)){ ?>
 
-    <?php if ($controller->getTask() == 'edit') { ?>
+    <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
             <form method="post" id="deleterule" action="<?= \URL::to('/dashboard/store/discounts/delete/')?>">
                 <input type="hidden" name="drID" value="<?= $discountRule->getID(); ?>" />
@@ -500,7 +500,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
 
-<?php if (in_array($controller->getTask(), $codeViews)){ ?>
+<?php if (in_array($controller->getAction(), $codeViews)){ ?>
 <div class="ccm-dashboard-header-buttons">
     <a href="<?= \URL::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
 </div>

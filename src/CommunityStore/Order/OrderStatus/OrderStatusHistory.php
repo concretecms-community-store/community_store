@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
+use Doctrine\ORM\Mapping as ORM;
 use Events;
 use User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
@@ -8,30 +9,30 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreOrderStatusHistories")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrderStatusHistories")
  */
 class OrderStatusHistory
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $oshID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order",  cascade={"persist"})
-     * @JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order",  cascade={"persist"})
+     * @ORM\JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
     protected $order;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $oshStatus;
 
-    /** @Column(type="datetime") */
+    /** @ORM\Column(type="datetime") */
     protected $oshDate;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $uID;
 
     public static $table = 'CommunityStoreOrderStatusHistories';

@@ -12,7 +12,7 @@ class OrderList extends AttributedItemList
 {
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreOrderKey';
+        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreStoreOrderKey';
     }
 
     public function createQuery()

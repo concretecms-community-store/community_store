@@ -1,22 +1,23 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreGroups")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreGroups")
  */
 class Group
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $gID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $groupName;
 
@@ -41,7 +42,7 @@ class Group
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
      */
     protected $products;
 

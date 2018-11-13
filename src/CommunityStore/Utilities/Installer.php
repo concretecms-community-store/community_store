@@ -18,12 +18,12 @@ use Concrete\Core\Attribute\Type as AttributeType;
 use AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
 
 class Installer
 {
@@ -250,23 +250,24 @@ class Installer
     public static function installOrderAttributes($pkg)
     {
         //create custom attribute category for orders
-        $oakc = AttributeKeyCategory::getByHandle('store_order');
-        if (!is_object($oakc)) {
-            $oakc = AttributeKeyCategory::add('store_order', AttributeKeyCategory::ASET_ALLOW_SINGLE, $pkg);
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('text'));
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('number'));
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('address'));
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-            $oakc->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
-            $orderCustSet = $oakc->addSet('order_customer', t('Store Customer Info'), $pkg);
-            $orderChoiceSet = $oakc->addSet('order_choices', t('Other Customer Choices'), $pkg);
-        }
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+            $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+
+            $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
+            $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
+
 
         if (!$orderCustSet) {
-            $oakc = AttributeKeyCategory::getByHandle('store_order');
-            $sets = $oakc->getAttributeSets();
+
+            $sets = $orderCategory->getAttributeSets();
 
             foreach ($sets as $set) {
                 if ('order_customer' == $set->getAttributeSetHandle()) {
@@ -326,7 +327,7 @@ class Installer
 
     public static function addProductSearchIndexTable($pkg)
     {
-        $spk = new StoreProductKey();
+        $spk = new StoreStoreProductKey();
         $spk->createIndexedSearchTable();
     }
 

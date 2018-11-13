@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
+use Doctrine\ORM\Mapping as ORM;
 use Package;
 use View;
 use Illuminate\Filesystem\Filesystem;
@@ -8,36 +9,36 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreShippingMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreShippingMethods")
  */
 class ShippingMethod
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
+    /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $smID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smtID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smtmID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $smName;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $smDetails;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smEnabled;
 
@@ -183,12 +184,12 @@ class ShippingMethod
     }
 
     /**
-     * @param StoreShippingMethodTypeMethod $smtm
-     * @param StoreShippingMethodType $smt
-     * @param string $smName
-     * @param bool $smEnabled
+     * @ORM\param StoreShippingMethodTypeMethod $smtm
+     * @ORM\param StoreShippingMethodType $smt
+     * @ORM\param string $smName
+     * @ORM\param bool $smEnabled
      *
-     * @return ShippingMethod
+     * @ORM\return ShippingMethod
      */
     public static function add($smtm, $smt, $smName, $smEnabled, $smDetails)
     {

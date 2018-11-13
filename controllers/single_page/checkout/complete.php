@@ -27,7 +27,7 @@ class Complete extends PageController
         if (is_object($order)) {
             $this->set("order", $order);
         } else {
-            $this->redirect("/cart");
+            \Redirect::to("/cart");
         }
 
         StoreCart::clear();

@@ -1,43 +1,45 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
+use Doctrine\ORM\Mapping as ORM;
 use Core;
 use Package;
 use Controller;
 use View;
 
 /**
- * @Entity
- * @Table(name="CommunityStorePaymentMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStorePaymentMethods")
  */
 class Method extends Controller
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pmID;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $pmHandle;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $pmName;
 
-    /** @Column(type="text", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $pmDisplayName;
 
-    /** @Column(type="text", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $pmButtonLabel;
 
-    /** @Column(type="boolean") */
+    /** @ORM\Column(type="boolean") */
     protected $pmEnabled;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $pmSortOrder;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pkgID;
 
@@ -172,11 +174,11 @@ class Method extends Controller
     }
 
     /*
-     * @param string $pmHandle
-     * @param string $pmName
-     * @pkg Package Object
-     * @param string $pmDisplayName
-     * @param bool $enabled
+     * @ORM\param string $pmHandle
+     * @ORM\param string $pmName
+     * @ORM\pkg Package Object
+     * @ORM\param string $pmDisplayName
+     * @ORM\param bool $enabled
      */
     public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel = '', $enabled = false)
     {

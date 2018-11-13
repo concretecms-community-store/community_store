@@ -1,36 +1,38 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="CommunityStoreOrderItemOptions")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrderItemOptions")
  */
 class OrderItemOption
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $oioID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem")
-     * @JoinColumn(name="oiID", referencedColumnName="oiID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem")
+     * @ORM\JoinColumn(name="oiID", referencedColumnName="oiID", onDelete="CASCADE")
      */
     protected $orderItem;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $oioKey;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $oioValue;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -38,7 +40,7 @@ class OrderItemOption
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOrderItem()
     {
@@ -46,7 +48,7 @@ class OrderItemOption
     }
 
     /**
-     * @param mixed $orderItem
+     * @ORM\param mixed $orderItem
      */
     public function setOrderItem(OrderItem $orderItem)
     {
@@ -54,7 +56,7 @@ class OrderItemOption
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOrderItemOptionKey()
     {
@@ -62,7 +64,7 @@ class OrderItemOption
     }
 
     /**
-     * @param mixed $oioKey
+     * @ORM\param mixed $oioKey
      */
     public function setOrderItemOptionKey($oioKey)
     {
@@ -70,7 +72,7 @@ class OrderItemOption
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOrderItemOptionValue()
     {
@@ -78,7 +80,7 @@ class OrderItemOption
     }
 
     /**
-     * @param mixed $oioValue
+     * @ORM\param mixed $oioValue
      */
     public function setOrderItemOptionValue($oioValue)
     {

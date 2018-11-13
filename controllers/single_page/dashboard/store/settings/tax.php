@@ -36,7 +36,7 @@ class Tax extends DashboardPageController
     {
         StoreTaxRate::getByID($trID)->delete();
         $this->flash('success', t('Tax Rate Deleted'));
-        $this->redirect('/dashboard/store/settings/tax');
+        \Redirect::to('/dashboard/store/settings/tax');
     }
 
     public function loadFormAssets()
@@ -57,12 +57,12 @@ class Tax extends DashboardPageController
                 //update
                 StoreTaxRate::add($data);
                 $this->flash('success', t('Tax Rate Updated'));
-                $this->redirect('/dashboard/store/settings/tax');
+                \Redirect::to('/dashboard/store/settings/tax');
             } else {
                 //first we send the data to the shipping method type.
                 StoreTaxRate::add($data);
                 $this->flash('success', t('Tax Rate Added'));
-                $this->redirect('/dashboard/store/settings/tax');
+                \Redirect::to('/dashboard/store/settings/tax');
             }
         } else {
             if ($this->post('taxRateID')) {
@@ -126,12 +126,12 @@ class Tax extends DashboardPageController
                 $taxClass = StoreTaxClass::getByID($this->post('taxClassID'));
                 $taxClass->update($data);
                 $this->flash('success', t('Tax Class Updated'));
-                $this->redirect('/dashboard/store/settings/tax');
+                \Redirect::to('/dashboard/store/settings/tax');
             } else {
                 //add.
                 StoreTaxClass::add($data);
                 $this->flash('success', t('Tax Class Added'));
-                $this->redirect('/dashboard/store/settings/tax');
+                \Redirect::to('/dashboard/store/settings/tax');
             }
         }
     }
@@ -166,6 +166,6 @@ class Tax extends DashboardPageController
     {
         StoreTaxClass::getByID($tcID)->delete();
         $this->flash('success', t('Tax Class Deleted'));
-        $this->redirect("/dashboard/store/settings/tax");
+        \Redirect::to("/dashboard/store/settings/tax");
     }
 }

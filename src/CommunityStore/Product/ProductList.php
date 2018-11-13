@@ -6,7 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
 
 class ProductList extends AttributedItemList
 {
@@ -101,7 +101,7 @@ class ProductList extends AttributedItemList
                 if ('price' == $handle) {
                     $this->filterByPrice($value);
                 } else {
-                    if (is_object(StoreProductKey::getByHandle($handle))) {
+                    if (is_object(StoreStoreProductKey::getByHandle($handle))) {
                         $this->filterByAttribute($handle, $value);
                     }
                 }
@@ -130,7 +130,7 @@ class ProductList extends AttributedItemList
                     $items = str_replace('%7C', '%2C', $items);
                     $items = explode('%2C', $items);
 
-                    if (is_object(StoreProductKey::getByHandle($filter))) {
+                    if (is_object(StoreStoreProductKey::getByHandle($filter))) {
                         $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
                     }
                 }
@@ -152,7 +152,7 @@ class ProductList extends AttributedItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreProductKey';
+        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreStoreProductKey';
     }
 
     public function createQuery()

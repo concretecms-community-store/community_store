@@ -141,7 +141,7 @@ class Settings extends DashboardPageController
 
                 $this->saveOrderStatuses($args);
                 $this->flash('success', t('Settings Saved'));
-                $this->redirect('/dashboard/store/settings');
+                \Redirect::to('/dashboard/store/settings');
             }
         }
     }
