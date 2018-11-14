@@ -18,18 +18,7 @@ class Controller extends Package
     protected $pkgVersion = '2.0';
 
     protected $pkgAutoloaderRegistries = array(
-        'src/CommunityStore' => '\CommunityStore',
-        'src/CommunityStore/Product/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Product',
-        'src/CommunityStore/Group/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Group',
-        'src/CommunityStore/Tax/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Tax',
-        'src/CommunityStore/Cart/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Cart',
-        'src/CommunityStore/Utilities/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Utilities',
-        'src/CommunityStore/Discount/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Discount',
-        'src/CommunityStore/Order/' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Order',
-        'src/CommunityStore/Payment' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Payment',
-        'src/CommunityStore/Shipping' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Shipping',
-        'src/CommunityStore/Customer' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Customer',
-        'src/CommunityStore/Report' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Report',
+        'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
     );
 
