@@ -1,5 +1,7 @@
 # Community Store add-on for concrete5
 
+## !! THIS IS A WORK IN PROGRESS FOR A VERSION 8+ ONLY VERSION - AVOID USE !! ##
+
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 An open, free and community developed eCommerce system for concrete5

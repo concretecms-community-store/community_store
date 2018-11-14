@@ -341,8 +341,8 @@ class Installer
 
     public static function addProductSearchIndexTable($pkg)
     {
-        $spk = new StoreStoreProductKey();
-        $spk->createIndexedSearchTable();
+//        $spk = new StoreStoreProductKey();
+//        $spk->createIndexedSearchTable();
     }
 
     public static function createDDFileset($pkg)
@@ -389,18 +389,11 @@ class Installer
 
     public static function upgrade($pkg)
     {
-        $path = '/dashboard/store/products/groups';
-        $page = Page::getByPath($path);
-        if (!is_object($page) || $page->isError()) {
-            SinglePage::add($path, $pkg);
-        }
-
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
 
         Localization::clearCache();
-        self::installUserAttributes($pkg);
-        Installer::addProductSearchIndexTable($pkg);
+        //Installer::addProductSearchIndexTable($pkg);
     }
 }
