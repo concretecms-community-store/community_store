@@ -762,7 +762,7 @@ class Order
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', array(implode(', ', $notificationEmails))));
+                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', $email));
                 }
             }
         }
