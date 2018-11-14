@@ -6,7 +6,7 @@ use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
 
 class Orders extends DashboardPageController
 {

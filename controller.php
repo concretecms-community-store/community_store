@@ -30,7 +30,7 @@ class Controller extends Package
         'src/CommunityStore/Shipping' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Shipping',
         'src/CommunityStore/Customer' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Customer',
         'src/CommunityStore/Report' => 'Concrete\Package\CommunityStore\Src\CommunityStore\Report',
-        'src/CommunityStore/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
+        'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
     );
 
 

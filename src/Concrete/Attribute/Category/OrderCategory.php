@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Attribute\Category;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Attribute\Value\OrderValue;
+use Concrete\Package\CommunityStore\Attribute\Value\StoreOrderValue;
 
 class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
 {
@@ -44,7 +44,7 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
 
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository(OrderValue::class);
+        return $this->entityManager->getRepository(StoreOrderValue::class);
     }
 
     public function getAttributeValues($order)
@@ -57,7 +57,7 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
 
     public function getAttributeValue(Key $key, $order)
     {
-        $r = $this->entityManager->getRepository(OrderValue::class);
+        $r = $this->entityManager->getRepository(StoreOrderValue::class);
         $value = $r->findOneBy(array(
             'order' => $order,
             'attribute_key' => $key,

@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
 
 $dh = Core::make('helper/date');
 

@@ -1,7 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-
 ?>
 <div class="store-checkout-page">
 <?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>
@@ -453,7 +452,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             foreach ($enabledPaymentMethods as $pm) {
                                 echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
                                  if ($pm->getHandle() == $lastPaymentMethodHandle) { ?>
-                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getAction() == 'view') {
+                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getTask() == 'view') {
                                 echo "hidden";
                             } ?>"><?= $paymentErrors ?></div>
                                 <?php }
@@ -587,7 +586,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
     </div>
 
-<?php } elseif ($controller->getAction() == "external") { ?>
+<?php } elseif ($controller->getTask() == "external") { ?>
     <form id="store-checkout-redirect-form" action="<?= $action ?>" method="post">
         <?php
         $pm->renderRedirectForm(); ?>

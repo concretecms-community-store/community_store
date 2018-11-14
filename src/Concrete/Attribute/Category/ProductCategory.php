@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Attribute\Category;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Attribute\Value\ProductValue;
+use Concrete\Package\CommunityStore\Attribute\Value\StoreProductValue;
 
 class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
 {
@@ -44,7 +44,7 @@ class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandard
 
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository(ProductValue::class);
+        return $this->entityManager->getRepository(StoreProductValue::class);
     }
 
     public function getAttributeValues($product)
@@ -57,7 +57,7 @@ class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandard
 
     public function getAttributeValue(Key $key, $product)
     {
-        $r = $this->entityManager->getRepository(ProductValue::class);
+        $r = $this->entityManager->getRepository(StoreProductValue::class);
         $value = $r->findOneBy(array(
             'product' => $product,
             'attribute_key' => $key,

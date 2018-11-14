@@ -13,7 +13,6 @@ use FileSet;
 use Config;
 use Localization;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
@@ -23,10 +22,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePa
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Entity\Attribute\Key\Settings as AttributeSettings;
+
 
 class Installer
 {
@@ -337,12 +335,6 @@ class Installer
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
-    }
-
-    public static function addProductSearchIndexTable($pkg)
-    {
-//        $spk = new StoreStoreProductKey();
-//        $spk->createIndexedSearchTable();
     }
 
     public static function createDDFileset($pkg)

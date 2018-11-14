@@ -15,7 +15,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
 
 class Checkout extends PageController
 {

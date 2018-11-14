@@ -11,11 +11,9 @@ use Page;
 use UserInfo;
 use Session;
 use Doctrine\Common\Collections\ArrayCollection;
-//use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-//use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreOrderValue as StoreOrderValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
@@ -30,7 +28,7 @@ use Concrete\Core\Support\Facade\Application;
 use \Concrete\Core\Attribute\ObjectTrait;
 
 use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
-use Concrete\Package\CommunityStore\Attribute\Value\OrderValue as StoreOrderValue;
+use Concrete\Package\CommunityStore\Attribute\Value\StoreOrderValue as StoreOrderValue;
 
 /**
  * @ORM\Entity

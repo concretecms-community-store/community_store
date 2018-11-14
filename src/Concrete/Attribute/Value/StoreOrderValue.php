@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="CommunityStoreOrderAttributeValues"
  * )
  */
-class OrderValue extends AbstractValue
+class StoreOrderValue extends AbstractValue
 {
     /**
      * @ORM\Id
