@@ -131,7 +131,7 @@ class ProductReport extends AbstractItemList
                 return ($a < $b) ? -1 : 1;
             };
         }
-        
+
         usort($products,$func);
 
         $this->products = $products;

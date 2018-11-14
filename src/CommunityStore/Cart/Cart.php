@@ -332,7 +332,7 @@ class Cart
         return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
-    public function checkForExistingCartItem($cartItem)
+    public static function checkForExistingCartItem($cartItem)
     {
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.

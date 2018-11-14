@@ -226,7 +226,6 @@ class Checkout extends PageController
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
         if (false === $pm || (StoreCart::isShippable() && !Session::get('community_store.smID'))) {
             return \Redirect::to("/checkout");
-            exit();
         }
 
         if ($pm->getMethodController()->isExternal()) {

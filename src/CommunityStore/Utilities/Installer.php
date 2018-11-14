@@ -24,7 +24,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreStoreProductKey;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Entity\Attribute\Key\Settings as AttributeSettings;
 
 class Installer
 {
@@ -209,6 +211,7 @@ class Installer
         if (!is_object($custSet)) {
             $custSet = $uakc->addSet('customer_info', t('Store Customer Info'), $pkg);
         }
+
         $text = AttributeType::getByHandle('text');
         $address = AttributeType::getByHandle('address');
 
@@ -230,28 +233,28 @@ class Installer
 
     public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $attr = UserAttributeKey::getByHandle($handle);
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
+        $categoryEntity = $service->getByHandle('user');
+        $category = $categoryEntity->getController();
+
+        $attr =  $category->getByHandle($handle);
+
         if (!is_object($attr)) {
             $name = Core::make("helper/text")->unhandle($handle);
-            if (!$data) {
-                $data = [
-                    'akHandle' => $handle,
-                    'akName' => t($name),
-                    'akIsSearchable' => false,
-                    'uakProfileEdit' => true,
-                    'uakProfileEditRequired' => false,
-                    'uakRegisterEdit' => false,
-                    'akCheckedByDefault' => true,
-                ];
-            }
-            UserAttributeKey::add($type, $data, $pkg)->setAttributeSet($set);
+
+            $key = new UserKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName(t($name));
+            $key = $category->add($type, $key, null, $pkg);
+
+            $key->setAttributeSet($set);
         }
     }
 
     public static function installOrderAttributes($pkg)
     {
         //create custom attribute category for orders
-
 
         $orderCategory = Category::getByHandle('store_order');
 
