@@ -5,6 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport as StoreSalesReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Sales extends DashboardPageController
 {
@@ -32,14 +33,16 @@ class Sales extends DashboardPageController
         $ordersTotals = $sr::getTotalsByRange($dateFrom, $dateTo);
         $this->set('ordersTotals', $ordersTotals);
 
-        $orders = new StoreOrderList();
-        $orders->setFromDate($dateFrom);
-        $orders->setToDate($dateTo);
-        $orders->setItemsPerPage(10);
-        $orders->setPaid(true);
-        $orders->setCancelled(false);
+        $orderList = new StoreOrderList();
+        $orderList->setFromDate($dateFrom);
+        $orderList->setToDate($dateTo);
+        $orderList->setItemsPerPage(10);
+        $orderList->setPaid(true);
+        $orderList->setCancelled(false);
 
-        $paginator = $orders->getPagination();
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($orderList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('orders', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

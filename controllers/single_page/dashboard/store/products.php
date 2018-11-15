@@ -19,36 +19,38 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-
-use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey as StoreProductKey    ;
-
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
+
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Products extends DashboardPageController
 {
     public function view($gID = null)
     {
-        $products = new StoreProductList();
-        $products->setItemsPerPage(20);
-        $products->setGroupID($gID);
-        $products->setActiveOnly(false);
-        $products->setShowOutOfStock(true);
+        $productsList = new StoreProductList();
+        $productsList->setItemsPerPage(20);
+        $productsList->setGroupID($gID);
+        $productsList->setActiveOnly(false);
+        $productsList->setShowOutOfStock(true);
 
         if ($this->get('ccm_order_by')) {
-            $products->setSortBy($this->get('ccm_order_by'));
-            $products->setSortByDirection($this->get('ccm_order_by_direction'));
+            $productsList->setSortBy($this->get('ccm_order_by'));
+            $productsList->setSortByDirection($this->get('ccm_order_by_direction'));
         } else {
-            $products->setSortBy('date');
-            $products->setSortByDirection('desc');
+            $productsList->setSortBy('date');
+            $productsList->setSortByDirection('desc');
         }
 
         if ($this->get('keywords')) {
-            $products->setSearch(trim($this->get('keywords')));
+            $productsList->setSearch(trim($this->get('keywords')));
         }
 
-        $this->set('productList', $products);
-        $paginator = $products->getPagination();
+        $this->set('productList', $productsList);
+
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($productsList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('products', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

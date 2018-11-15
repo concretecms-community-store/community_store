@@ -7,6 +7,7 @@ use Core;
 use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Store extends DashboardPageController
 {
@@ -36,12 +37,14 @@ class Store extends DashboardPageController
         $ordersTotals = $sr::getTotalsByRange($dateFrom, $dateTo);
         $this->set('ordersTotals', $ordersTotals);
 
-        $orders = new OrderList();
-        $orders->setFromDate($dateFrom);
-        $orders->setToDate($dateTo);
-        $orders->setItemsPerPage(10);
+        $orderList = new OrderList();
+        $orderList->setFromDate($dateFrom);
+        $orderList->setToDate($dateTo);
+        $orderList->setItemsPerPage(10);
 
-        $paginator = $orders->getPagination();
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($orderList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('orders', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

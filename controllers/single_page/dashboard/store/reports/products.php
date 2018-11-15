@@ -6,6 +6,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreO
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Products extends DashboardPageController
 {
@@ -38,7 +39,9 @@ class Products extends DashboardPageController
 
         $pr->setItemsPerPage(20);
 
-        $paginator = $pr->getPagination();
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($pr);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('products', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

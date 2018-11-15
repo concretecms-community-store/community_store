@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use GroupList;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Discounts extends DashboardPageController
 {
@@ -16,7 +17,9 @@ class Discounts extends DashboardPageController
         $discountRuleList = new StoreDiscountRuleList();
         $discountRuleList->setItemsPerPage(10);
 
-        $paginator = $discountRuleList->getPagination();
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($discountRuleList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('discounts', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

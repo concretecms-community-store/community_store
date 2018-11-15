@@ -452,7 +452,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             foreach ($enabledPaymentMethods as $pm) {
                                 echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
                                  if ($pm->getHandle() == $lastPaymentMethodHandle) { ?>
-                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getTask() == 'view') {
+                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getAction() == 'view') {
                                 echo "hidden";
                             } ?>"><?= $paymentErrors ?></div>
                                 <?php }
@@ -586,7 +586,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
     </div>
 
-<?php } elseif ($controller->getTask() == "external") { ?>
+<?php } elseif ($controller->getAction() == "external") { ?>
     <form id="store-checkout-redirect-form" action="<?= $action ?>" method="post">
         <?php
         $pm->renderRedirectForm(); ?>

@@ -7,6 +7,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Orders extends DashboardPageController
 {
@@ -28,7 +29,9 @@ class Orders extends DashboardPageController
             $orderList->setIncludeExternalPaymentRequested(true);
         }
 
-        $paginator = $orderList->getPagination();
+        $factory = new PaginationFactory(\Request::getInstance());
+        $paginator = $factory->createPaginationObject($orderList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
