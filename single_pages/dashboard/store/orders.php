@@ -656,7 +656,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 <?php } ?>
 
 <?php if ($paginator->getTotalPages() > 1) { ?>
-    <?= $pagination ?>
+<div class="ccm-search-results-pagination">
+        <?= $pagination ?>
+</div>
 <?php } ?>
 
 <?php } ?>

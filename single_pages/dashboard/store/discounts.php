@@ -194,7 +194,9 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
+        <div class="ccm-search-results-pagination">
             <?= $pagination ?>
+        </div>
         <?php } ?>
 
     </div>
