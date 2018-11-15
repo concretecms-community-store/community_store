@@ -12,6 +12,16 @@ use AttributeSet;
 class StoreOrderKey extends Key
 {
 
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $akUserGroups;
+
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    protected $akRequired;
+
     public function getAttributeKeyCategoryHandle()
     {
         return 'store_order';
@@ -47,16 +57,51 @@ class StoreOrderKey extends Key
         }
 
         $akList = [];
-//        foreach (parent::getList('store_order') as $ak) {
-//            if (in_array($set, $ak->getAttributeSets())) {
-//                $attributeGroups = $ak->getAttributeGroups();
-//
-//                if (is_null($user) || (empty($attributeGroups) || array_intersect($ak->getAttributeGroups(), $uGroupIDs))) {
-//                    $akList[] = $ak;
-//                }
-//            }
-//        }
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+        $attlist = $orderCategory->getList();
+
+
+        foreach ($attlist as $ak) {
+            if (in_array($set, $ak->getAttributeSets())) {
+                $attributeGroups = $ak->getAttributeUserGroups();
+
+                if (is_null($user) || (empty($attributeGroups) || array_intersect($attributeGroups, $uGroupIDs))) {
+                    $akList[] = $ak;
+                }
+            }
+        }
 
         return $akList;
     }
+
+    public function isRequired()
+    {
+        return (bool)$this->akRequired;
+    }
+
+    public function setRequired($required)
+    {
+        $this->akRequired = $required;
+    }
+
+    public function getAttributeUserGroups()
+    {
+        $groupids = trim($this->akUserGroups);
+        if (!$groupids) {
+            return array();
+        }
+
+        return explode(',', $this->akUserGroups);
+    }
+
+    public function setAttributeUserGroups($groupids)
+    {
+        if ($groupids && is_array($groupids))  {
+            $this->akUserGroups = implode(',', $groupids);
+        } else {
+            $this->akUserGroups = '';
+        }
+    }
+
 }

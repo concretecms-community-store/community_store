@@ -313,8 +313,11 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
         <?php if (!empty($orderChoicesAttList)) { ?>
             <div class="col-sm-12">
                 <h4><?= t("Other Choices")?></h4>
-                <?php foreach ($orderChoicesAttList as $ak) {
-                    $attValue = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                <?php
+                foreach ($orderChoicesAttList as $ak) {
+                    $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
+                    $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+
                     if ($attValue) {  ?>
                     <label><?= $ak->getAttributeKeyDisplayName()?></label>
                     <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>

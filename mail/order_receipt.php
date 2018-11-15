@@ -73,7 +73,7 @@ ob_start();
                 <td colspan="2">
                     <h3><?= t("Other Choices")?></h3>
                     <?php foreach ($orderChoicesAttList as $ak) {
-                        $orderOtherAtt = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                        $orderOtherAtt = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
                         if ($orderOtherAtt) {
                             $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
                             if ($attvalue) { ?>

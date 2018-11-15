@@ -5,6 +5,8 @@ use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterfac
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Attribute\Value\StoreOrderValue;
+use Concrete\Core\Entity\Attribute\Type;
+use Symfony\Component\HttpFoundation\Request;
 
 class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
 {
@@ -64,5 +66,26 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
         ));
 
         return $value;
+    }
+
+    protected function saveFromRequest(Key $key, Request $request)
+    {
+        $key->setRequired($request->request->get('required') ? '1' : '0');
+        $key->setAttributeUserGroups($request->request->get('groups'));
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+        return $key;
+    }
+
+    public function addFromRequest(Type $type, Request $request)
+    {
+        $key = parent::addFromRequest($type, $request);
+        return $this->saveFromRequest($key, $request);
+    }
+
+    public function updateFromRequest(Key $key, Request $request)
+    {
+        $key = parent::updateFromRequest($key, $request);
+        return $this->saveFromRequest($key, $request);
     }
 }

@@ -1162,10 +1162,12 @@ class Order
 
     public function saveOrderChoices($order)
     {
-        //save product attributes
-        $akList = StoreOrderKey::getAttributeListBySet('order_choices');
-        foreach ($akList as $ak) {
-            $ak->saveAttributeForm($order);
+        $aks = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+
+        foreach ($aks as $uak) {
+            $controller = $uak->getController();
+            $value = $controller->createAttributeValueFromRequest();
+            $order->setAttribute($uak, $value);
         }
     }
 

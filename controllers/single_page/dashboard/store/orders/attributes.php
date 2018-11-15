@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
+
 class Attributes extends DashboardAttributesPageController
 {
     protected function getCategoryObject()
@@ -19,6 +20,8 @@ class Attributes extends DashboardAttributesPageController
 
     public function edit($akID = null)
     {
+        $this->requireAsset('select2');
+
         $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->renderEdit($key,
             \URL::to('/dashboard/store/orders/attributes', 'view')
@@ -36,6 +39,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function select_type($type = null)
     {
+        $this->requireAsset('select2');
         $type = Type::getByID($type);
         $this->renderAdd($type,
             \URL::to('/dashboard/store/orders/attributes', 'view')
@@ -44,6 +48,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function add($type = null)
     {
+        $this->requireAsset('select2');
         $this->select_type($type);
         $type = Type::getByID($type);
         $this->executeAdd($type, \URL::to('/dashboard/store/orders/attributes', 'view'));

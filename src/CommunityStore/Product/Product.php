@@ -1330,22 +1330,6 @@ class Product
         $em->flush();
     }
 
-//    public function reindex()
-//    {
-//        $attribs = StoreProductKey::getAttributes(
-//            $this->pID,
-//            'getSearchIndexValue'
-//        );
-//        $app = Application::getFacadeApplication();
-//        $db = $app->make('database')->connection();
-//
-//        $db->Execute('DELETE FROM CommunityStoreProductSearchIndexAttributes WHERE pID = ?', [$this->pID]);
-//        $searchableAttributes = ['pID' => $this->pID];
-//
-//        $key = new StoreProductKey();
-//        $key->reindex('CommunityStoreProductSearchIndexAttributes', $searchableAttributes, $attribs);
-//    }
-
     public function delete()
     {
         $em = \ORM::entityManager();
@@ -1612,59 +1596,6 @@ class Product
 
         return count($results);
     }
-
-//    public function setAttribute($ak, $value)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreProductKey::getByHandle($ak);
-//        }
-//        $ak->setAttribute($this, $value);
-//        $this->reindex();
-//    }
-//
-//    public function getAttribute($ak, $displayMode = false)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreProductKey::getByHandle($ak);
-//        }
-//        if (is_object($ak)) {
-//            $av = $this->getAttributeValueObject($ak);
-//            if (is_object($av)) {
-//                return $av->getValue($displayMode);
-//            }
-//        }
-//    }
-//
-//    public function getAttributeValueObject($ak, $createIfNotFound = false)
-//    {
-//        $app = Application::getFacadeApplication();
-//        $db = $app->make('database')->connection();
-//        $av = false;
-//        $v = [$this->getID(), $ak->getAttributeKeyID()];
-//        $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);
-//        if ($avID > 0) {
-//            $av = StoreProductValue::getByID($avID);
-//            if (is_object($av)) {
-//                $av->setProduct($this);
-//                $av->setAttributeKey($ak);
-//            }
-//        }
-//
-//        if ($createIfNotFound) {
-//            $cnt = 0;
-//
-//            // Is this avID in use ?
-//            if (is_object($av)) {
-//                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreProductAttributeValues WHERE avID=?", $av->getAttributeValueID());
-//            }
-//
-//            if ((!is_object($av)) || ($cnt > 1)) {
-//                $av = $ak->addAttributeValue();
-//            }
-//        }
-//
-//        return $av;
-//    }
 
     public function getObjectAttributeCategory()
     {
