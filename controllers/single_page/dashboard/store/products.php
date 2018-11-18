@@ -235,7 +235,7 @@ class Products extends DashboardPageController
             $this->redirect('/dashboard/store/products');
         }
 
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
             $this->flash('success', t('Product Duplicated'));
             $this->redirect('/dashboard/store/products/edit/' . $newproduct->getID());
@@ -247,12 +247,14 @@ class Products extends DashboardPageController
 
     public function delete($pID)
     {
-        $product = StoreProduct::getByID($pID);
-        if ($product) {
-            $product->remove();
+        if ($this->token->validate('community_store')) {
+            $product = StoreProduct::getByID($pID);
+            if ($product) {
+                $product->remove();
+            }
+            $this->flash('success', t('Product Removed'));
+            $this->redirect('/dashboard/store/products');
         }
-        $this->flash('success', t('Product Removed'));
-        $this->redirect('/dashboard/store/products');
     }
 
     public function loadFormAssets()
@@ -301,7 +303,7 @@ class Products extends DashboardPageController
         } else {
             $this->add();
         }
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $errors = $this->validate($data);
             $this->error = null; //clear errors
             $this->error = $errors;

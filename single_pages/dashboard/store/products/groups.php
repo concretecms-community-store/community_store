@@ -59,7 +59,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
 <?php if (in_array($controller->getTask(),$groupEdits)){ ?>
     <form method="post" action="<?= $view->action($controller->getTask())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
-
+        <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('groupName',t("Group Name")); ?>
             <?= $form->text('groupName',$group->getGroupName(), array('required'=>'required')); ?>

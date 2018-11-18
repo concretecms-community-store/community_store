@@ -19,6 +19,7 @@ if (is_object($product) && $product->isActive()) {
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID(); ?>"
           data-product-id="<?= $product->getID(); ?>" itemscope itemtype="http://schema.org/Product">
+        <?= $token->output('community_store'); ?>
         <div class="row">
             <?php if ($showImage) {
         ?>

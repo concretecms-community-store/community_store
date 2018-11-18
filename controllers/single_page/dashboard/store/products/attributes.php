@@ -33,25 +33,27 @@ class Attributes extends DashboardPageController
 
     public function delete($akID, $token = null)
     {
-        try {
-            $ak = StoreProductKey::getByID($akID);
+        if ($this->token->validate('community_store')) {
+            try {
+                $ak = StoreProductKey::getByID($akID);
 
-            if (!($ak instanceof StoreProductKey)) {
-                throw new Exception(t('Invalid attribute ID.'));
+                if (!($ak instanceof StoreProductKey)) {
+                    throw new Exception(t('Invalid attribute ID.'));
+                }
+
+                $valt = Core::make('helper/validation/token');
+
+                if (!$valt->validate('delete_attribute', $token)) {
+                    throw new Exception($valt->getErrorMessage());
+                }
+
+                $ak->delete();
+
+                $this->flash('success', t('Attribute Deleted'));
+                $this->redirect("/dashboard/store/products/attributes");
+            } catch (Exception $e) {
+                $this->set('error', $e);
             }
-
-            $valt = Core::make('helper/validation/token');
-
-            if (!$valt->validate('delete_attribute', $token)) {
-                throw new Exception($valt->getErrorMessage());
-            }
-
-            $ak->delete();
-
-            $this->flash('success', t('Attribute Deleted'));
-            $this->redirect("/dashboard/store/products/attributes");
-        } catch (Exception $e) {
-            $this->set('error', $e);
         }
     }
 
@@ -66,42 +68,46 @@ class Attributes extends DashboardPageController
 
     public function add()
     {
-        $pkg = \Package::getByHandle('community_store');
-        $this->select_type();
-        $type = $this->get('type');
-        $cnt = $type->getController();
-        $e = $cnt->validateKey($this->post());
-        if ($e->has()) {
-            $this->set('error', $e);
-        } else {
-            $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
-            StoreProductKey::add('store_product', $type, $this->post(), $pkg);
-            $this->flash('success', t('Attribute Created'));
-            $this->redirect('/dashboard/store/products/attributes');
+        if ($this->token->validate('community_store')) {
+            $pkg = \Package::getByHandle('community_store');
+            $this->select_type();
+            $type = $this->get('type');
+            $cnt = $type->getController();
+            $e = $cnt->validateKey($this->post());
+            if ($e->has()) {
+                $this->set('error', $e);
+            } else {
+                $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
+                StoreProductKey::add('store_product', $type, $this->post(), $pkg);
+                $this->flash('success', t('Attribute Created'));
+                $this->redirect('/dashboard/store/products/attributes');
+            }
         }
     }
 
     public function edit($akID = 0)
     {
-        if ($this->post('akID')) {
-            $akID = $this->post('akID');
-        }
-        $key = StoreProductKey::getByID($akID);
-        $type = $key->getAttributeType();
-        $this->set('key', $key);
-        $this->set('type', $type);
-        $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
+        if ($this->token->validate('community_store')) {
+            if ($this->post('akID')) {
+                $akID = $this->post('akID');
+            }
+            $key = StoreProductKey::getByID($akID);
+            $type = $key->getAttributeType();
+            $this->set('key', $key);
+            $this->set('type', $type);
+            $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
 
-        if ($this->post()) {
-            $cnt = $type->getController();
-            $cnt->setAttributeKey($key);
-            $e = $cnt->validateKey($this->post());
-            if ($e->has()) {
-                $this->set('error', $e);
-            } else {
-                $key->update($this->post());
-                $this->flash('success', t('Attribute Updated'));
-                $this->redirect('/dashboard/store/products/attributes');
+            if ($this->post()) {
+                $cnt = $type->getController();
+                $cnt->setAttributeKey($key);
+                $e = $cnt->validateKey($this->post());
+                if ($e->has()) {
+                    $this->set('error', $e);
+                } else {
+                    $key->update($this->post());
+                    $this->flash('success', t('Attribute Updated'));
+                    $this->redirect('/dashboard/store/products/attributes');
+                }
             }
         }
     }

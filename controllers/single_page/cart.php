@@ -24,7 +24,9 @@ class Cart extends PageController
 
         $returndata = [];
 
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->post() && $token->validate('community_store')) {
             if ('code' == $this->post('action')) {
                 $codeerror = false;
                 $codesuccess = false;
@@ -112,11 +114,15 @@ class Cart extends PageController
 
         $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
         $this->set("discountsWithCodesExist", $discountsWithCodesExist);
+
+        $this->set('token', $this->app->make('token'));
     }
 
     public function add()
     {
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->post() && $token->validate('community_store')) {
             $data = $this->post();
             $result = StoreCart::add($data);
 
@@ -140,13 +146,20 @@ class Cart extends PageController
 
     public function code()
     {
-        StoreDiscountCode::storeCartCode($this->post('code'));
+        $token = $this->app->make('token');
+
+        if ($token->validate('community_store')) {
+            StoreDiscountCode::storeCartCode($this->post('code'));
+        }
+
         exit();
     }
 
     public function update()
     {
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->post() && $token->validate('community_store')) {
             $data = $this->post();
 
             if (is_array($data['instance'])) {
@@ -175,7 +188,9 @@ class Cart extends PageController
 
     public function remove()
     {
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->post() && $token->validate('community_store')) {
             $instanceID = $_POST['instance'];
             StoreCart::remove($instanceID);
             $returndata = ['success' => true, 'action' => 'remove'];
@@ -186,7 +201,9 @@ class Cart extends PageController
 
     public function clear()
     {
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->post() && $token->validate('community_store')) {
             StoreCart::clear();
             $returndata = ['success' => true, 'action' => 'clear'];
             echo json_encode($returndata);

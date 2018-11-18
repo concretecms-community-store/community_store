@@ -110,7 +110,7 @@ class Discounts extends DashboardPageController
 
     public function delete()
     {
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $data = $this->post();
             $dr = StoreDiscountRule::getByID($data['drID']);
 
@@ -126,7 +126,7 @@ class Discounts extends DashboardPageController
 
     public function deletecode()
     {
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $data = $this->post();
             $dc = StoreDiscountCode::getByID($data['dcID']);
 
@@ -143,7 +143,7 @@ class Discounts extends DashboardPageController
 
     public function addcodes($drID)
     {
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $data = $this->post();
 
             $codes = trim($data['codes']);
@@ -180,7 +180,7 @@ class Discounts extends DashboardPageController
 
     public function save()
     {
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $data = $this->post();
 
             if ($data['drID']) {

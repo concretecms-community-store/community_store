@@ -202,6 +202,8 @@ class Checkout extends PageController
             $this->requireAsset('javascript', 'community-store-autocomplete');
             $this->set('addressLookup', true);
         }
+
+        $this->set('token', $this->app->make('token'));
     }
 
     public function failed($guest = false)
@@ -216,6 +218,12 @@ class Checkout extends PageController
 
     public function submit($guest = false)
     {
+        $token = $this->app->make('token');
+
+        if (!$token->validate('community_store'))  {
+            $this->redirect("/checkout");
+        }
+
         $data = $this->post();
         Session::set('paymentMethod', $data['payment-method']);
 

@@ -37,6 +37,7 @@ if ($cart) {
     $i = 1;
     ?>
     <form method="post" class="form-inline" action="<?=  \URL::to("/cart/"); ?>" >
+        <?= $token->output('community_store'); ?>
         <table id="store-cart" class="store-cart-table table table-hover table-condensed">
             <thead>
             <tr>
@@ -178,6 +179,7 @@ if ($cart) {
 
     <!--    Hidden form for deleting-->
     <form method="post" id="deleteform" action="<?=  \URL::to("/cart/"); ?>">
+        <?= $token->output('community_store'); ?>
         <input type="hidden" name="instance" value=""/>
         <input type="hidden" name="action" value="remove" value=""/>
     </form>
@@ -187,6 +189,7 @@ if ($cart) {
 <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code'); ?></h3>
     <form method="post" action="<?= \URL::to('/cart/'); ?>" class="form-inline">
+        <?= $token->output('community_store'); ?>
         <div class="form-group">
             <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
         </div>

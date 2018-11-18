@@ -10,16 +10,20 @@ class CartTotal extends RouteController
 {
     public function getShippingTotal()
     {
-        $smID = $_POST['smID'];
-        $sInstructions = $_POST['sInstructions'];
+        $token = $this->app->make('token');
 
-        StoreCart::setShippingInstructions($sInstructions);
+        if (!empty($_POST) && $token->validate('community_store')) {
+            $smID = $_POST['smID'];
+            $sInstructions = $_POST['sInstructions'];
 
-        $total = StoreCalculator::getShippingTotal($smID);
-        if ($total > 0) {
-            echo StorePrice::format($total);
-        } else {
-            echo 0;
+            StoreCart::setShippingInstructions($sInstructions);
+
+            $total = StoreCalculator::getShippingTotal($smID);
+            if ($total > 0) {
+                echo StorePrice::format($total);
+            } else {
+                echo 0;
+            }
         }
     }
 
