@@ -56,6 +56,10 @@ class Groups extends DashboardPageController
 
         $group = StoreGroup::getByID($gID);
 
+        if (!$group) {
+            $this->redirect('/dashboard/store/products/groups');
+        }
+
         if ($this->post() && $this->token->validate('community_store')) {
             $this->error = null; //clear errors
             $errors = $this->validateGroup($this->post());
@@ -97,10 +101,13 @@ class Groups extends DashboardPageController
         return $e;
     }
 
-    public function deletegroup($gID)
+    public function delete()
     {
         if ($this->token->validate('community_store')) {
-            StoreGroup::getByID($gID)->delete();
+            $data = $this->post();
+            StoreGroup::getByID($data['grID'])->delete();
+            $this->flash('success', t('Product Group Deleted'));
+            $this->redirect('/dashboard/store/products/groups');
         }
     }
 }
