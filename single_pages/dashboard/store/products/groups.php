@@ -57,9 +57,20 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
 <?php }  ?>
 
-<?php if (in_array($controller->getAction(),$groupEdits)){ ?>
-    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+<?php if (in_array($controller->getTask(),$groupEdits)){ ?>
 
+    <?php if ($controller->getTask() == 'edit') { ?>
+        <div class="ccm-dashboard-header-buttons">
+            <form method="post" id="deletegroup" action="<?= \URL::to('/dashboard/store/products/groups/delete/')?>">
+                <?= $token->output('community_store'); ?>
+                <input type="hidden" name="grID" value="<?= $group->getGroupID(); ?>" />
+                <button class="btn btn-danger" ><?= t('Delete'); ?></button>
+            </form>
+        </div>
+    <?php } ?>
+
+    <form method="post" action="<?= $view->action($controller->getTask())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+        <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('groupName',t("Group Name")); ?>
             <?= $form->text('groupName',$group->getGroupName(), array('required'=>'required')); ?>
@@ -123,6 +134,10 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
                         $('#group-products').on('click', 'a', function(){
                             $(this).parent().remove();
+                        });
+
+                        $('#deletegroup').submit(function(e){
+                            return confirm("<?= t('Are you sure you want to delete this product group?');?>");
                         });
 
 

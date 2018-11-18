@@ -25,7 +25,7 @@ class Groups extends DashboardPageController
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
 
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $errors = $this->validateGroup($this->post());
             $this->error = $errors;
             if (!$errors->has()) {
@@ -56,7 +56,11 @@ class Groups extends DashboardPageController
 
         $group = StoreGroup::getByID($gID);
 
-        if ($this->post()) {
+        if (!$group) {
+            \Redirect::to('/dashboard/store/products/groups');
+        }
+
+        if ($this->post() && $this->token->validate('community_store')) {
             $this->error = null; //clear errors
             $errors = $this->validateGroup($this->post());
             $this->error = $errors;
@@ -97,8 +101,13 @@ class Groups extends DashboardPageController
         return $e;
     }
 
-    public function deletegroup($gID)
+    public function delete()
     {
-        StoreGroup::getByID($gID)->delete();
+        if ($this->token->validate('community_store')) {
+            $data = $this->post();
+            StoreGroup::getByID($data['grID'])->delete();
+            $this->flash('success', t('Product Group Deleted'));
+            \Redirect::to('/dashboard/store/products/groups');
+        }
     }
 }
