@@ -729,6 +729,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <label><?= t('Option Handle');?></label>
                                         <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional');?>" value="<%=poHandle%>">
                                     </div>
+                                    <% if (poType == 'select') { %>
+                                    <div class="form-group">
+                                        <label><?= t('Display Type');?></label>
+                                        <select class="form-control" name="poDisplayType[]"><option value="select" <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down');?></option><option value="radio" <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons');?></option></select>
+                                    </div>
+                                    <% } %>
                                 </div>
 
                                 <% if (poType == 'select') { %>
@@ -822,6 +828,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             foreach ($options as $option) {
 
                             $type = $option->getType();
+                            $displayType = $option->getDisplayType();
                             $handle = $option->getHandle();
                             $required = $option->getRequired();
                             $includeVariations = $option->getIncludeVariations();
@@ -845,6 +852,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poName: '<?= h($option->getName()) ?>',
                             poID: '<?= $option->getID()?>',
                             poType: '<?= $type ?>',
+                            poDisplayType: '<?= $displayType ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
@@ -869,6 +877,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poName: '',
                                 poID: '',
                                 poType: 'select',
+                                poDisplayType: 'select',
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
                                 poRequired: '',

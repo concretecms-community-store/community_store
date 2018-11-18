@@ -240,6 +240,7 @@ if ($products) {
                         $optionItems = $option->getOptionItems();
                         $optionType = $option->getType();
                         $required = $option->getRequired();
+                        $displayType = $option->getDisplayType();
 
                         $requiredAttr = '';
 
@@ -251,7 +252,9 @@ if ($products) {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <?php if ($displayType != 'radio') { ?>
                                 <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
+                                <?php } ?>
                                     <?php
                                     $firstAvailableVariation = false;
                             $variation = false;
@@ -269,15 +272,22 @@ if ($products) {
                                     if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                         $selected = 'selected="selected"';
                                     } ?>
-                                            <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
+
+                                    <?php if ($displayType == 'radio') { ?>
+                                        <div class="radio">
+                                            <label><input type="radio" class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
+                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
+                                        </div>
+                                    <?php } else { ?>
+                                        <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
+                                    <?php } ?>
+
                                         <?php
                                 }
-                                // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                                        // Make sure to add the $disabled and $selected variables here and make $selected use "checked" instead
-                                        //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />';?>
-                                    <?php
                             } ?>
+                                <?php if ($displayType != 'radio') { ?>
                                 </select>
+                                <?php } ?>
                             </div>
                         <?php
                         } elseif ('text' == $optionType) {
@@ -343,11 +353,11 @@ if ($products) {
             } ?>
 
 
-                            $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select').change(function(){
+                            $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select, #store-form-add-to-cart-list-<?= $product->getID(); ?> input').change(function(){
                                 var variationdata = <?= json_encode($varationData); ?>;
                                 var ar = [];
 
-                                $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation').each(function(){
+                                $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-list-<?= $product->getID(); ?> .store-product-variation:checked').each(function(){
                                     ar.push($(this).val());
                                 });
 

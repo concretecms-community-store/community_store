@@ -232,6 +232,7 @@ if (is_object($product) && $product->isActive()) {
                             $optionItems = $option->getOptionItems();
                             $optionType = $option->getType();
                             $required = $option->getRequired();
+                            $displayType = $option->getDisplayType();
 
                             $requiredAttr = '';
 
@@ -243,8 +244,10 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                    <?php if ($displayType != 'radio') { ?>
                                     <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
                                             name="po<?= $option->getID(); ?>">
+                                    <?php } ?>
                                         <?php
                                         $firstAvailableVariation = false;
                                 $variation = false;
@@ -262,24 +265,22 @@ if (is_object($product) && $product->isActive()) {
                                         if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                             $selected = 'selected="selected"';
                                         } ?>
-                                                <option
-                                                    <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
-                                            <?php
-                                    } ?>
 
-                                            <?php
-                                            // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                                            /* ?>
+                                        <?php if ($displayType == 'radio') { ?>
                                             <div class="radio">
                                                 <label><input type="radio" class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
                                                         <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
                                             </div>
-                                             */
-                                            ?>
+                                        <?php } else { ?>
+                                        <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
+                                        <?php } ?>
 
                                         <?php
+                                        }
                                 } ?>
+                                     <?php if ($displayType != 'radio') { ?>
                                     </select>
+                                    <?php } ?>
                                 </div>
                             <?php
                             } elseif ('text' == $optionType) {

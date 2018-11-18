@@ -47,6 +47,11 @@ class ProductOption
     /**
      * @Column(type="string", nullable=true)
      */
+    protected $poDisplayType;
+
+    /**
+     * @Column(type="string", nullable=true)
+     */
     protected $poHandle;
 
     /**
@@ -112,6 +117,16 @@ class ProductOption
     public function setType($type)
     {
         $this->poType = $type;
+    }
+
+    public function getDisplayType()
+    {
+        return $this->poDisplayType;
+    }
+
+    public function setDisplayType($type)
+    {
+        $this->poDisplayType = $type;
     }
 
     public function getHandle()
@@ -183,26 +198,27 @@ class ProductOption
         }
     }
 
-    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
+    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
     {
         $ProductOption = new self();
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
     }
 
-    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
+    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
     {
         $ProductOption = $this;
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
     }
 
-    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $obj)
+    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $obj)
     {
         $obj->setProduct($product);
         $obj->setName($name);
         $obj->setSort($sort);
         $obj->setType($type);
+        $obj->setDisplayType($displayType);
         $obj->setHandle($handle);
         $obj->setRequired($required);
         $obj->setIncludeVariations($includeVariations);
@@ -260,13 +276,13 @@ class ProductOption
                         $option = self::getByID($data['poID'][$i]);
 
                         if ($option) {
-                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
                         }
                     }
 
                     if (!$option) {
                         if ($data['poName'][$i]) {
-                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
                             $product->getOptions()->add($option);
                         }
                     }
