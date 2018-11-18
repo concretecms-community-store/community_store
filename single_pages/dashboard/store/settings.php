@@ -6,6 +6,7 @@
         </div>
 
 	    <form method="post" action="<?= $view->action('save')?>">
+            <?= $token->output('community_store'); ?>
 
             <div class="row">
                 <div class="col-sm-3">

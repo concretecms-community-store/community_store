@@ -366,6 +366,7 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                 <div class="panel-body">
 
                     <form action="<?=URL::to("/dashboard/store/orders/updatestatus",$order->getOrderID())?>" method="post">
+                        <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <?= $form->select("orderStatus",$orderStatuses,$order->getStatus());?>
                         </div>
@@ -381,6 +382,7 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                 </div>
                 <div class="panel-body">
                     <form action="<?=URL::to("/dashboard/store/orders/resendnotification",$order->getOrderID())?>" method="post">
+                        <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <label for="email"><?= t('Email'); ?></label>
                             <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo Config::get('community_store.notificationemails');?>" />
@@ -432,7 +434,8 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                         <td><?php if (!$refunded && $paiduser) { ?>
 
                          <form action="<?=URL::to("/dashboard/store/orders/reversepaid",$order->getOrderID())?>" method="post">
-                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this payment?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                             <?= $token->output('community_store'); ?>
+                             <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this payment?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
                          </form>
 
                         <?php } ?></td>
@@ -455,7 +458,8 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                         <td>
 
                          <form action="<?=URL::to("/dashboard/store/orders/reverserefund",$order->getOrderID())?>" method="post">
-                            <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
+                             <?= $token->output('community_store'); ?>
+                             <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse")?>">
                          </form>
 
                         </td>
@@ -476,7 +480,8 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
 
                     <?php if (!$paid) { ?>
                     <form action="<?=URL::to("/dashboard/store/orders/markpaid",$order->getOrderID())?>" method="post">
-                       <div class="form-group">
+                        <?= $token->output('community_store'); ?>
+                        <div class="form-group">
                        <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
                        <input type="text" class="form-control ccm-input-text" id="transactionReference" name="transactionReference" />
                        </div>
@@ -484,7 +489,8 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                     </form>
                     <?php } elseif (!$refunded) {  ?>
                         <form action="<?=URL::to("/dashboard/store/orders/markrefunded",$order->getOrderID())?>" method="post">
-                           <div class="form-group">
+                            <?= $token->output('community_store'); ?>
+                            <div class="form-group">
                            <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
                            <input type="text" class="form-control ccm-input-text" id="oRefundReason" name="oRefundReason" />
                            </div>
@@ -504,6 +510,7 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
                 </div>
                 <div class="panel-body">
                     <form action="<?=URL::to("/dashboard/store/orders/resendinvoice",$order->getOrderID())?>" method="post">
+                        <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <label for="email"><?= t('Email'); ?></label>
                             <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?php echo $order->getAttribute('email');?>" />
@@ -521,12 +528,14 @@ use \Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKe
         <fieldset>
             <legend><?= t("Cancel Order")?></legend>
             <form action="<?=URL::to("/dashboard/store/orders/markcancelled",$order->getOrderID())?>" method="post">
-            <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
+                <?= $token->output('community_store'); ?>
+                <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order")?>">
             </form>
         </fieldset>
     <?php } else { ?>
      <form action="<?=URL::to("/dashboard/store/orders/reversecancel",$order->getOrderID())?>" method="post">
-        <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this cancellation?')); ?>" type="submit" class="confirm-action btn btn-default" value="<?= t("Reverse Cancellation")?>">
+         <?= $token->output('community_store'); ?>
+         <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this cancellation?')); ?>" type="submit" class="confirm-action btn btn-default" value="<?= t("Reverse Cancellation")?>">
      </form>
      <br />
 

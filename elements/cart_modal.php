@@ -39,7 +39,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
             <?php
             if($cart){ ?>
             <form method="post" action="<?= \URL::to('/cart/');?>" id="store-modal-cart">
-            <table id="cart" class="table table-hover table-condensed" >
+                <?= $token->output('community_store'); ?>
+                <table id="cart" class="table table-hover table-condensed" >
                 <thead>
                 <tr>
                     <th colspan="2" ><?= t('Product'); ?></th>

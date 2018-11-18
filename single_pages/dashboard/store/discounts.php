@@ -218,6 +218,7 @@ $currencySymbol = Config::get('community_store.symbol');
     <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
             <form method="post" id="deleterule" action="<?= \URL::to('/dashboard/store/discounts/delete/')?>">
+                <?= $token->output('community_store'); ?>
                 <input type="hidden" name="drID" value="<?= $discountRule->getID(); ?>" />
                 <button class="btn btn-danger" ><?= t('Delete'); ?></button>
             </form>
@@ -226,7 +227,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
     <form method="post" action="<?= $this->action('save')?>" id="discount-add">
-
+        <?= $token->output('community_store'); ?>
 
     <div class="ccm-pane-body">
 
@@ -550,6 +551,7 @@ $currencySymbol = Config::get('community_store.symbol');
                                 <td><span class="label label-success"><?= t('Available'); ?></span></td>
                             <td>
                                 <form method="post" action="<?= \URL::to('/dashboard/store/discounts/deletecode/')?>">
+                                    <?= $token->output('community_store'); ?>
                                     <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
                                     <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                 </form>
@@ -561,6 +563,7 @@ $currencySymbol = Config::get('community_store.symbol');
                             <td><?= $code->getCode(); ?></td>
                             <td>
                                 <form method="post" action="<?= \URL::to('/dashboard/store/discounts/deletecode/')?>">
+                                    <?= $token->output('community_store'); ?>
                                     <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
                                     <button class="btn btn-danger" ><i class="fa fa-trash"></i></button>
                                 </form>
@@ -579,7 +582,8 @@ $currencySymbol = Config::get('community_store.symbol');
     <?php } ?>
 <br />
 <form method="post" action="<?= \URL::to('/dashboard/store/discounts/addcodes', $discountRule->getID())?>" id="codes-add">
-<fieldset><legend><?= t('Add Codes'); ?></legend>
+    <?= $token->output('community_store'); ?>
+    <fieldset><legend><?= t('Add Codes'); ?></legend>
 
     <div class="form-group">
         <?= $form->label('codes', t('Code(s)'))?>

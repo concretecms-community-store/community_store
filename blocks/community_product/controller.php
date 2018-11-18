@@ -93,6 +93,9 @@ class Controller extends BlockController
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('showCartButton', false);
         }
+
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $this->set('token', $app->make('token'));
     }
 
     public function registerViewAssets($outputContent = '')

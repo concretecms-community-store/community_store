@@ -64,7 +64,7 @@ class Settings extends DashboardPageController
         $this->view();
         $args = $this->post();
 
-        if ($args) {
+        if ($args && $this->token->validate('community_store')) {
             $errors = $this->validate($args);
             $this->error = $errors;
 

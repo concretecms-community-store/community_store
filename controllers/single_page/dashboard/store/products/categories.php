@@ -37,7 +37,7 @@ class Categories extends DashboardPageController
 
     public function save($cID)
     {
-        if ($this->post()) {
+        if ($this->post() && $this->token->validate('community_store')) {
             $data = $this->post();
 
             $count = 0;

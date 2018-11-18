@@ -199,6 +199,9 @@ class Controller extends BlockController
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('showAddToCart', false);
         }
+
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $this->set('token', $app->make('token'));
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')

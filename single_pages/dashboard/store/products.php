@@ -30,7 +30,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <div class="ccm-dashboard-header-buttons">
 
         <form class="pull-right"  method="post" id="delete" action="<?= \URL::to('/dashboard/store/products/delete/', $pID)?>" >
-            &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
+            <?= $token->output('community_store'); ?>&nbsp;
+            <button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
 
         <form class="pull-right" method="get" id="duplicate" action="<?= \URL::to('/dashboard/store/products/duplicate/', $pID)?>" >
@@ -50,6 +51,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php } ?>
 
     <form method="post" action="<?= $view->action('save')?>">
+        <?= $token->output('community_store'); ?>
         <input type="hidden" name="pID" value="<?= $product->getID()?>"/>
 
         <div class="row">
@@ -1677,7 +1679,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
 <?php if ($controller->getAction() == 'duplicate') { ?>
     <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
-
+        <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('newName',t("New Product Name")); ?>
             <?= $form->text('newName',$product->getName() . ' ' . t('(Copy)')); ?>

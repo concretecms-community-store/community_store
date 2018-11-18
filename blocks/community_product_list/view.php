@@ -86,7 +86,8 @@ if ($products) {
         } ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-            <form   id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
+            <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
+                <?= $token->output('community_store'); ?>
 		<?php if ($showName) {
             ?>
                 <h2 class="store-product-list-name"><?= $product->getName(); ?></h2>

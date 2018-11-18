@@ -57,9 +57,9 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
 <?php }  ?>
 
-<?php if (in_array($controller->getTask(),$groupEdits)){ ?>
+<?php if (in_array($controller->getAction(),$groupEdits)){ ?>
 
-    <?php if ($controller->getTask() == 'edit') { ?>
+    <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
             <form method="post" id="deletegroup" action="<?= \URL::to('/dashboard/store/products/groups/delete/')?>">
                 <?= $token->output('community_store'); ?>
@@ -69,7 +69,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
         </div>
     <?php } ?>
 
-    <form method="post" action="<?= $view->action($controller->getTask())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('groupName',t("Group Name")); ?>

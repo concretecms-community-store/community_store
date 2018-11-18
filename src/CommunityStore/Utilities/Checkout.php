@@ -16,7 +16,9 @@ class Checkout extends Controller
 {
     public function setVatNumber()
     {
-        if (isset($_POST)) {
+        $token = $this->app->make('token');
+
+        if (isset($_POST) && $token->validate('community_store')) {
             $data = $_POST;
             // VAT Number validation
             if (Config::get('community_store.vat_number')) {
@@ -41,6 +43,12 @@ class Checkout extends Controller
 
     public function updater()
     {
+        $token = $this->app->make('token');
+
+        if (!$token->validate('community_store'))  {
+            return false;
+        }
+
         if (isset($_POST)) {
             $data = $_POST;
             $billing = false;
@@ -111,7 +119,7 @@ class Checkout extends Controller
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'phone' => $phone,
-                    'comapny' => $company,
+                    'company' => $company,
                     'email' => $email,
                     'address' => $address,
                     'error' => false,
@@ -265,6 +273,12 @@ class Checkout extends Controller
 
     private function updateVatNumber($data)
     {
+        $token = $this->app->make('token');
+
+        if (!$token->validate('community_store'))  {
+            return false;
+        }
+
         //update the users vat number
         $customer = new StoreCustomer();
         $customer->setValue("vat_number", trim($data['vat_number']));

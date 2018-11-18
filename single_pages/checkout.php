@@ -54,6 +54,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                 </div>
             <?php } else { ?>
                 <form class="store-checkout-form-group store-active-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-billing" action="">
+                    <?= $token->output('community_store'); ?>
                     <div class="store-checkout-form-group-body">
 
                         <?php if ($customer->isGuest()) { ?>
@@ -248,7 +249,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                 </form>
                 <?php if ($shippingEnabled) { ?>
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping">
-
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
                             <div class="row">
@@ -347,7 +348,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                     </form>
 
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping-method">
-
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
 
@@ -388,6 +389,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                 <?php if (Config::get('community_store.vat_number')) { ?>
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-vat">
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("VAT Number") ?></h2>
                             <div class="row">
@@ -420,6 +422,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
                       action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                    <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Payment") ?></h2>
@@ -525,6 +528,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
+                                <?= $token->output('community_store'); ?>
                                 <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
                                 <input type="hidden" name="action" value="code" />
                                 <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>

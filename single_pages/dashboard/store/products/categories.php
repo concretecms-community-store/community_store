@@ -21,6 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <?php if ($controller->getAction() == 'manage') { ?>
     <form method="post" action="<?= $view->action('save', $cID)?>">
+    <?= $token->output('community_store'); ?>
     <p><?php echo t('Products within category'); ?></p>
 
     <ul class="list-group" id="product-list">

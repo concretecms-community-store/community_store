@@ -11,7 +11,7 @@ if(in_array($controller->getAction(),$addViews)){
 
 
 <form action="<?=URL::to('/dashboard/store/settings/shipping','add_method')?>" method="post">
-
+    <?= $token->output('community_store'); ?>
     <div class="row">
         <div class="col-xs-12 col-md-12">
         <?php //echo var_dump($smt); ?>
