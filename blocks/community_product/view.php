@@ -93,7 +93,7 @@ if (is_object($product) && $product->isActive()) {
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>
                                        <?= $max ? 'max="' . $max . '"' : ''; ?>class="store-product-customer-price-entry-field form-control"
-                                       value="<?= $product->getPrice(); ?>" name="customerPrice"/>
+                                       value="<?= $product->getBasePrice(); ?>" name="customerPrice"/>
                             </div>
                             <?php if ($min >= 0 || $max > 0) {
             ?>
