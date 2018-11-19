@@ -195,6 +195,7 @@ class Cart
             unset($data['pID']);
             unset($data['quantity']);
             unset($data['customerPrice']);
+            unset($data['ccm_token']);
 
             //since we removed the ID/qty, we're left with just the attributes
             $cartItem['productAttributes'] = $data;
