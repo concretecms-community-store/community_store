@@ -284,8 +284,6 @@ class OrderItem
 
         $orderItem->save();
 
-        unset($data['productAttributes']['ccm_token']);
-
         foreach ($data['productAttributes'] as $groupID => $valID) {
             if ('po' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("po", "", $groupID);

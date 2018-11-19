@@ -198,6 +198,7 @@ class Cart
 
             //since we removed the ID/qty, we're left with just the attributes
             $cartItem['productAttributes'] = $data;
+            unset($data['productAttributes']['ccm_token']);
 
             $removeexistingexclusive = false;
 
