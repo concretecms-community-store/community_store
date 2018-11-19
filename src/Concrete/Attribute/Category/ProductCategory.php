@@ -3,8 +3,8 @@ namespace Concrete\Package\CommunityStore\Attribute\Category;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Attribute\Value\StoreProductValue;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
 
 class ProductCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
 {

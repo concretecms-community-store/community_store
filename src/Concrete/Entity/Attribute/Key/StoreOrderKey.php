@@ -1,7 +1,8 @@
 <?php
-namespace Concrete\Package\CommunityStore\Attribute\Key;
+namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
+
 use Doctrine\ORM\Mapping as ORM;
 use AttributeSet;
 

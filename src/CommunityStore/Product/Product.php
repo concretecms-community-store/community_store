@@ -24,8 +24,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxC
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Attribute\Value\StoreProductValue;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
 
 use \Concrete\Core\Attribute\ObjectTrait;
 

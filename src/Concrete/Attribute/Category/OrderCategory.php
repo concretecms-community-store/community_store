@@ -3,8 +3,8 @@ namespace Concrete\Package\CommunityStore\Attribute\Category;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Attribute\Value\StoreOrderValue;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue;
 use Concrete\Core\Entity\Attribute\Type;
 use Symfony\Component\HttpFoundation\Request;
 

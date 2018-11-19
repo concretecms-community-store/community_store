@@ -6,7 +6,7 @@ use User;
 use View;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 
 class OrderSlip extends Controller
 {

@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.0';
-    protected $pkgVersion = '2.0';
+    protected $pkgVersion = '2.0.1';
 
     protected $pkgAutoloaderRegistries = array(
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -57,6 +57,7 @@ class Controller extends Package
 
     public function install()
     {
+        $this->registerCategories();
         parent::install();
         $this->installStore();
     }
@@ -87,6 +88,7 @@ class Controller extends Package
     public function on_start()
     {
         $this->registerRoutes();
+        $this->registerCategories();
 
         $version = $this->getPackageVersion();
 
@@ -117,17 +119,6 @@ class Controller extends Package
             } catch (Exception $e) {
             }
         }
-
-
-        $this->app['manager/attribute/category']->extend('store_product',
-            function($app) {
-                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-            });
-
-        $this->app['manager/attribute/category']->extend('store_order',
-            function($app) {
-                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
-            });
     }
 
     public function uninstall()
@@ -173,6 +164,16 @@ class Controller extends Package
         </script>
         ";
     }
-}
 
-//require_once __DIR__ . '/vendor/autoload.php';
+    private function registerCategories() {
+        $this->app['manager/attribute/category']->extend('store_product',
+            function($app) {
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+            });
+
+        $this->app['manager/attribute/category']->extend('store_order',
+            function($app) {
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+            });
+    }
+}

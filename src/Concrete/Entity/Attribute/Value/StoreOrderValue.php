@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CommunityStore\Attribute\Value;
+namespace Concrete\Package\CommunityStore\Entity\Attribute\Value;
 
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
