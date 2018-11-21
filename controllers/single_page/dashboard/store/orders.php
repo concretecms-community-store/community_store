@@ -46,8 +46,6 @@ class Orders extends DashboardPageController
             $this->set('shoppingDisabled', true);
         }
         $this->set('pageTitle', t('Orders'));
-
-        $this->requireAsset('js', 'communityStoreDashboard');
     }
 
     public function order($oID)

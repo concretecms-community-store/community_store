@@ -611,7 +611,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                     $canend = '</del>';
                 }
             ?>
-                <tr class="danger">
+                <tr>
                     <td><?= $canstart; ?>
                     <a href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= $order->getOrderID()?></a><?= $canend; ?>
 
