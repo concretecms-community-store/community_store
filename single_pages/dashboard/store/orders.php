@@ -537,10 +537,13 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
      <br />
 
     <fieldset>
-    <legend><?= t("Delete Order")?></legend>
-        <a data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" id="btn-delete-order" href="<?=URL::to("/dashboard/store/orders/remove", $order->getOrderID())?>" class="btn btn-danger"><?= t("Delete Order")?></a>
-    <?php } ?>
+        <legend><?= t("Delete Order")?></legend>
+        <form action="<?=URL::to("/dashboard/store/orders/remove",$order->getOrderID())?>" method="post">
+            <?= $token->output('community_store'); ?>
+            <input data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Delete Order")?>">
+        </form>
     </fieldset>
+    <?php } ?>
 
 
 <?php } else { ?>
