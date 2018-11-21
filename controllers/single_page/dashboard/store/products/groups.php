@@ -57,7 +57,7 @@ class Groups extends DashboardPageController
         $group = StoreGroup::getByID($gID);
 
         if (!$group) {
-            \Redirect::to('/dashboard/store/products/groups');
+            return \Redirect::to('/dashboard/store/products/groups');
         }
 
         if ($this->post() && $this->token->validate('community_store')) {
@@ -107,7 +107,7 @@ class Groups extends DashboardPageController
             $data = $this->post();
             StoreGroup::getByID($data['grID'])->delete();
             $this->flash('success', t('Product Group Deleted'));
-            \Redirect::to('/dashboard/store/products/groups');
+            return \Redirect::to('/dashboard/store/products/groups');
         }
     }
 }

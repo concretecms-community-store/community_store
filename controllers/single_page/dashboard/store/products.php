@@ -258,7 +258,7 @@ class Products extends DashboardPageController
                 $product->remove();
             }
             $this->flash('success', t('Product Removed'));
-            \Redirect::to('/dashboard/store/products');
+            return \Redirect::to('/dashboard/store/products');
         }
 
         $this->flash('success', t('Product Removed'));

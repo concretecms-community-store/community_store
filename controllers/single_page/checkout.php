@@ -221,7 +221,7 @@ class Checkout extends PageController
         $token = $this->app->make('token');
 
         if (!$token->validate('community_store'))  {
-            \Redirect::to("/checkout");
+            return \Redirect::to("/checkout");
         }
 
         $data = $this->post();

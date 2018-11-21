@@ -77,7 +77,7 @@ class Orders extends DashboardPageController
         if ($this->token->validate('community_store')) {
             StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
             $this->flash('success', t('Fulfilment Status Updated'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -96,7 +96,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Marked As Paid'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -110,7 +110,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Payment Reversed'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -126,7 +126,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Marked As Refunded'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -140,7 +140,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Refund Reversed'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -155,7 +155,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Cancelled'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -168,7 +168,7 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Cancellation Reversed'));
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -182,7 +182,7 @@ class Orders extends DashboardPageController
                 $this->flash('success', t('Receipt Email Resent to %s', $this->post('email')));
             }
 
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -199,7 +199,7 @@ class Orders extends DashboardPageController
                 $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
             }
 
-            \Redirect::to('/dashboard/store/orders/order', $oID);
+            return \Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -208,7 +208,7 @@ class Orders extends DashboardPageController
         if ($this->token->validate('community_store')) {
             StoreOrder::getByID($oID)->remove();
             $this->flash('success', t('Order Deleted'));
-            \Redirect::to('/dashboard/store/orders');
+            return \Redirect::to('/dashboard/store/orders');
         }
     }
 }
