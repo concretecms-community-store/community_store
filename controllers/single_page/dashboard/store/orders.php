@@ -208,7 +208,8 @@ class Orders extends DashboardPageController
         if ($this->token->validate('community_store')) {
             StoreOrder::getByID($oID)->remove();
             $this->flash('success', t('Order Deleted'));
-            return \Redirect::to('/dashboard/store/orders');
         }
+
+        return \Redirect::to('/dashboard/store/orders');
     }
 }
