@@ -466,6 +466,12 @@ class Order
         return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
     }
 
+    public function getAttributes()
+    {
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
+    }
+
+
     /**
      * @ORM\param array $data
      * @ORM\param StorePaymentMethod $pm
@@ -1000,8 +1006,10 @@ class Order
         $em->flush();
     }
 
+
     public function remove()
     {
+        $em = \ORM::entityManager();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
@@ -1010,7 +1018,15 @@ class Order
         }
 
         $db->query("DELETE FROM CommunityStoreOrderItems WHERE oID=?", [$this->oID]);
-        $db->query("DELETE FROM CommunityStoreOrders WHERE oID=?", [$this->oID]);
+
+        $attributes = $this->getAttributes();
+
+        foreach($attributes as $attribute) {
+            $em->remove($attribute);
+        }
+
+        $em->remove($this);
+        $em->flush();
     }
 
     public function isShippable()

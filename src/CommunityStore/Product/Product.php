@@ -714,6 +714,11 @@ class Product
         return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
     }
 
+    public function getAttributes()
+    {
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
+    }
+
     public static function saveProduct($data)
     {
         if ($data['pID']) {
@@ -1339,6 +1344,10 @@ class Product
 
     public function remove()
     {
+        // create product event and dispatch
+        $event = new StoreProductEvent($this);
+        Events::dispatch('on_community_store_product_delete', $event);
+
         StoreProductImage::removeImagesForProduct($this);
         StoreProductOption::removeOptionsForProduct($this);
         StoreProductOptionItem::removeOptionItemsForProduct($this);
@@ -1348,11 +1357,16 @@ class Product
         StoreProductUserGroup::removeUserGroupsForProduct($this);
         StoreProductVariation::removeVariationsForProduct($this);
 
-        // create product event and dispatch
-        $event = new StoreProductEvent($this);
-        Events::dispatch('on_community_store_product_delete', $event);
+        $em = \ORM::entityManager();
+        $attributes = $this->getAttributes();
 
-        $this->delete();
+        foreach($attributes as $attribute) {
+            $em->remove($attribute);
+        }
+
+        $em->remove($this);
+        $em->flush();
+
         $page = Page::getByID($this->cID);
         if (is_object($page)) {
             $page->delete();
