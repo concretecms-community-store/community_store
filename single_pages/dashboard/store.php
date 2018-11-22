@@ -109,7 +109,7 @@ if ($taxCalc == 'extract') {
                         axisY: {
                             offset: 80,
                             labelInterpolationFnc: function (value) {
-                                return "<?= $symbol ;?>" + value;
+                                return "<?= $symbol;?>" + value;
                             }
                         },
                         plugins: [
@@ -128,8 +128,7 @@ if ($taxCalc == 'extract') {
         </script>
     </div>
     <div class="col-xs-12 col-sm-6">
-
-
+        
         <h4><?= t("Orders") ?></h4>
 
         <form action="<?= \URL::to('/dashboard/store/orders') ?>">
@@ -142,36 +141,38 @@ if ($taxCalc == 'extract') {
                         </span>
                 </div>
             </div>
+        </form>
 
-            <p><a href="<?= \URL::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i> View All Orders</a></p>
+        <p><a href="<?= \URL::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i> View All Orders</a></p>
 
-            <hr>
+        <hr>
 
-            <h4><?= t("Products") ?></h4>
+        <h4><?= t("Products") ?></h4>
 
+        <form action="<?= \URL::to('/dashboard/store/products') ?>">
             <div class="form-group">
-                <form action="<?= \URL::to('/dashboard/store/products') ?>">
-                    <div class="input-group">
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Products')]) ?>
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                        </span>
-
-                    </div>
-                </form>
+                <div class="input-group">
+                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Products')]) ?>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
             </div>
-
-            <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
-                    Add Product</a></p>
-            <p><a href="<?= \URL::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> View All Products</a></p>
-
-            <hr>
+        </form>
 
 
-            <h4><?= t("Discounts") ?></h4>
-            <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
-                    Add Discount Rule</a></p>
-            <p><a href="<?= \URL::to('/dashboard/store/discounts') ?>"><i class="fa fa-star"></i> View Discount Rules</a></p>
+        <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
+                Add Product</a></p>
+        <p><a href="<?= \URL::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> View All Products</a></p>
+
+        <hr>
+
+
+        <h4><?= t("Discounts") ?></h4>
+        <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
+                Add Discount Rule</a></p>
+        <p><a href="<?= \URL::to('/dashboard/store/discounts') ?>"><i class="fa fa-star"></i> View Discount Rules</a>
+        </p>
 
 
     </div>
@@ -188,86 +189,86 @@ if ($taxCalc == 'extract') {
 
         <?php
         if (!empty($orders)) { ?>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th><a><?= t("Order %s", "#") ?></a></th>
-                <th><a><?= t("Customer Name") ?></a></th>
-                <th><a><?= t("Order Date") ?></a></th>
-                <th><a><?= t("Total") ?></a></th>
-                <th><a><?= t("Payment") ?></a></th>
-                <th><a><?= t("Fulfilment") ?></a></th>
-                <th><a><?= t("View") ?></a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            foreach ($orders as $order) {
-
-                $cancelled = $order->getCancelled();
-                $canstart = '';
-                $canend = '';
-                if ($cancelled) {
-                    $canstart = '<del>';
-                    $canend = '</del>';
-                }
-                ?>
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td><?= $canstart; ?>
-                        <a href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
-
-                        <?php if ($cancelled) {
-                            echo '<span class="text-danger">' . t('Cancelled') . '</span>';
-                        }
-                        ?>
-                    </td>
-                    <td><?= $canstart; ?><?php
-
-                        $last = $order->getAttribute('billing_last_name');
-                        $first = $order->getAttribute('billing_first_name');
-
-                        $fullName = implode(', ', array_filter([$last, $first]));
-                        if (strlen($fullName) > 0) {
-                            echo h($fullName);
-                        } else {
-                            echo '<em>' . t('Not found') . '</em>';
-                        }
-
-                        ?><?= $canend; ?></td>
-                    <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate()) ?><?= $canend; ?></td>
-                    <td><?= $canstart; ?><?= Price::format($order->getTotal()) ?><?= $canend; ?></td>
-                    <td>
-                        <?php
-                        $refunded = $order->getRefunded();
-                        $paid = $order->getPaid();
-
-                        if ($refunded) {
-                            echo '<span class="label label-warning">' . t('Refunded') . '</span>';
-                        } elseif ($paid) {
-                            echo '<span class="label label-success">' . t('Paid') . '</span>';
-                        } elseif ($order->getTotal() > 0) {
-                            echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
-
-                            if ($order->getExternalPaymentRequested()) {
-                                echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
-                            }
-                        } else {
-                            echo '<span class="label label-default">' . t('Free Order') . '</span>';
-                        }
-
-
-                        ?>
-                    </td>
-                    <td><?= t(ucwords($order->getStatus())) ?></td>
-                    <td><a class="btn btn-primary"
-                           href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
-                    </td>
+                    <th><a><?= t("Order %s", "#") ?></a></th>
+                    <th><a><?= t("Customer Name") ?></a></th>
+                    <th><a><?= t("Order Date") ?></a></th>
+                    <th><a><?= t("Total") ?></a></th>
+                    <th><a><?= t("Payment") ?></a></th>
+                    <th><a><?= t("Fulfilment") ?></a></th>
+                    <th><a><?= t("View") ?></a></th>
                 </tr>
-            <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($orders as $order) {
+
+                    $cancelled = $order->getCancelled();
+                    $canstart = '';
+                    $canend = '';
+                    if ($cancelled) {
+                        $canstart = '<del>';
+                        $canend = '</del>';
+                    }
+                    ?>
+                    <tr>
+                        <td><?= $canstart; ?>
+                            <a href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
+
+                            <?php if ($cancelled) {
+                                echo '<span class="text-danger">' . t('Cancelled') . '</span>';
+                            }
+                            ?>
+                        </td>
+                        <td><?= $canstart; ?><?php
+
+                            $last = $order->getAttribute('billing_last_name');
+                            $first = $order->getAttribute('billing_first_name');
+
+                            $fullName = implode(', ', array_filter([$last, $first]));
+                            if (strlen($fullName) > 0) {
+                                echo h($fullName);
+                            } else {
+                                echo '<em>' . t('Not found') . '</em>';
+                            }
+
+                            ?><?= $canend; ?></td>
+                        <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate()) ?><?= $canend; ?></td>
+                        <td><?= $canstart; ?><?= Price::format($order->getTotal()) ?><?= $canend; ?></td>
+                        <td>
+                            <?php
+                            $refunded = $order->getRefunded();
+                            $paid = $order->getPaid();
+
+                            if ($refunded) {
+                                echo '<span class="label label-warning">' . t('Refunded') . '</span>';
+                            } elseif ($paid) {
+                                echo '<span class="label label-success">' . t('Paid') . '</span>';
+                            } elseif ($order->getTotal() > 0) {
+                                echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
+
+                                if ($order->getExternalPaymentRequested()) {
+                                    echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
+                                }
+                            } else {
+                                echo '<span class="label label-default">' . t('Free Order') . '</span>';
+                            }
+
+
+                            ?>
+                        </td>
+                        <td><?= t(ucwords($order->getStatus())) ?></td>
+                        <td><a class="btn btn-primary"
+                               href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
         <?php } else { ?>
-           <p class="alert alert-info"><?= t('No Orders Found');?></p>
+            <p class="alert alert-info"><?= t('No Orders Found'); ?></p>
         <?php } ?>
 
     </div>
