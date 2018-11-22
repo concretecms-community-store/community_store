@@ -185,6 +185,9 @@ if ($taxCalc == 'extract') {
 <div class="row">
     <div class="col-xs-12">
         <h4><?= t("Recent Orders") ?></h4>
+
+        <?php
+        if (!empty($orders)) { ?>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -263,6 +266,9 @@ if ($taxCalc == 'extract') {
             <?php } ?>
             </tbody>
         </table>
+        <?php } else { ?>
+           <p class="alert alert-info"><?= t('No Orders Found');?></p>
+        <?php } ?>
 
     </div>
 </div>
