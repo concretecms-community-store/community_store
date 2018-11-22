@@ -769,6 +769,7 @@ class Product
         $product->setQtySteps($data['pQtySteps'] > 0 ? $data['pQtySteps'] : null);
         $product->setQtyLabel($data['pQtyLabel']);
         $product->setMaxQty($data['pMaxQty']);
+        $product->setPageID($data['pageCID']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
