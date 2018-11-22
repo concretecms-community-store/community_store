@@ -1480,13 +1480,18 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                 <?php if($page && !$page->isInTrash()){ ?>
                     <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
+                    <?= $ps->selectPage('pageCID', $page->getCollectionID()); ?>
                 <?php } else { ?>
 
                     <?php if ($product->getID()) { ?>
                     <div class="alert alert-warning">
                         <?= t("This product is missing a corresponding page in the sitemap")?>
                     </div>
+                        <label for="pageCID"><?= t('Associate with an existing page'); ?></label>
+                        <?= $ps->selectPage('pageCID', ''); ?>
                     <?php } ?>
+                    <br />
+                    <label><?= t('Or, create a new product page') ;?></label>
 
                     <?php if ($productPublishTarget) { ?>
                         <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
