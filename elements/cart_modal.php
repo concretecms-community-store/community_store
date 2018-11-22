@@ -67,23 +67,32 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
                     if($i%2==0){$classes=" striped"; }else{ $classes=""; }
                     if(is_object($product)){
+                        $productPage = $product->getProductPage();
                         ?>
 
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $product->getID()?>">
                             <?php $thumb = $product->getImageThumb(); ?>
                             <?php if ($thumb) { ?>
                             <td class="cart-list-thumb col-xs-2">
-                                <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                                <?php if ($productPage) { ?>
+                                    <a href="<?= URL::to($productPage) ?>">
+                                        <?= $thumb ?>
+                                    </a>
+                                <?php } else { ?>
                                     <?= $thumb ?>
-                                </a>
+                                <?php } ?>
                             </td>
                             <td class="checkout-cart-product-name col-xs-4">
                                 <?php } else { ?>
                             <td colspan="2" class="checkout-cart-product-name">
                                 <?php } ?>
-                                <a href="<?=URL::to(Page::getByID($product->getPageID()))?>">
-                                    <?= $product->getName()?>
-                                </a>
+                                <?php if ($productPage) { ?>
+                                    <a href="<?= URL::to($productPage) ?>">
+                                        <?= $product->getName() ?>
+                                    </a>
+                                <?php } else { ?>
+                                    <?= $product->getName() ?>
+                                <?php } ?>
 
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
