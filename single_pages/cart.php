@@ -54,24 +54,32 @@ if ($cart) {
                 $qty = $cartItem['product']['qty'];
                 $product = $cartItem['product']['object'];
                 if (is_object($product)) {
+                    $productPage = $product->getProductPage();
                     ?>
 
                     <tr class="store-cart-item">
                         <?php $thumb = $product->getImageThumb(); ?>
                         <?php if ($thumb) { ?>
                         <td class="store-cart-list-thumb">
-                            <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
-                                <?=  $product->getImageThumb() ?>
-                            </a>
+                            <?php if ($productPage) { ?>
+                                <a href="<?= URL::to($productPage) ?>">
+                                    <?= $thumb ?>
+                                </a>
+                            <?php } else { ?>
+                                <?= $thumb ?>
+                            <?php } ?>
                         </td>
                         <td class="store-cart-product-name">
                         <?php } else { ?>
                         <td class="store-cart-product-name" colspan="2">
                         <?php } ?>
-                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                        <?php if ($productPage) { ?>
+                            <a href="<?= URL::to($productPage) ?>">
+                                <?= $product->getName() ?>
+                            </a>
+                        <?php } else { ?>
                             <?= $product->getName() ?>
-                        </a>
-
+                        <?php } ?>
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-list-item-attributes">
                                 <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {

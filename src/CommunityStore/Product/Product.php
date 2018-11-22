@@ -824,6 +824,18 @@ class Product
         return $this->cID;
     }
 
+    public function getProductPage()
+    {
+        if ($this->getPageID()) {
+            $productPage = Page::getByID($this->getPageID());
+            if ($productPage && !$productPage->isInTrash()) {
+                return $productPage;
+            }
+        }
+
+        return false;
+    }
+
     public function getDesc()
     {
         return $this->pDesc;
