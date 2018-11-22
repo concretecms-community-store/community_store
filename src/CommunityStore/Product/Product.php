@@ -879,8 +879,14 @@ class Product
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
-            foreach ($priceTiers as $pt) {
-                if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
+            if (!empty($priceTiers)) {
+                foreach ($priceTiers as $pt) {
+                    if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
+                        return $pt->getPrice();
+                    }
+                }
+
+                if ($qty >= $pt->getFrom()) {
                     return $pt->getPrice();
                 }
             }
