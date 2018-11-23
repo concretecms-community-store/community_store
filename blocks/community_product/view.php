@@ -269,7 +269,7 @@ if (is_object($product) && $product->isActive()) {
 
                                         <?php if ($displayType == 'radio') { ?>
                                             <div class="radio">
-                                                <label><input type="radio" class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
+                                                <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
                                                         <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
                                             </div>
                                         <?php } else { ?>
