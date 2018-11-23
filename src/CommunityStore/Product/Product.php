@@ -687,8 +687,12 @@ class Product
     }
 
     public function getNotificationEmailsArray() {
-        $notificationEmails =  explode(',', $this->pNotificationEmails);
-        return array_map('trim', $notificationEmails);
+        if ($this->pNotificationEmails) {
+            $notificationEmails = explode(',', $this->pNotificationEmails);
+            return array_map('trim', $notificationEmails);
+        } else {
+            return array();
+        }
     }
 
     public function setNotificationEmails($pNotificationEmails)

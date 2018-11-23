@@ -858,6 +858,8 @@ class Order
             }
         }
 
+        $notificationEmails = array_unique($notificationEmails);
+        
         $validNotification = false;
 
         $fromName = Config::get('community_store.emailalertsname');
