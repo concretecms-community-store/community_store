@@ -850,7 +850,7 @@ class Order
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
 
-        foreach($this->orderItems as $oi) {
+        foreach($this->getOrderItems() as $oi) {
             $product = $oi->getProductObject();
 
             if ($product) {
@@ -859,7 +859,7 @@ class Order
         }
 
         $notificationEmails = array_unique($notificationEmails);
-        
+
         $validNotification = false;
 
         $fromName = Config::get('community_store.emailalertsname');
