@@ -861,6 +861,15 @@ class Order
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
+
+        foreach($this->orderItems as $oi) {
+            $product = $oi->getProductObject();
+
+            if ($product) {
+                $notificationEmails  = array_merge($notificationEmails, $product->getNotificationEmailsArray());
+            }
+        }
+
         $validNotification = false;
 
         $fromName = Config::get('community_store.emailalertsname');

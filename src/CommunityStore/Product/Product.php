@@ -233,6 +233,12 @@ class Product
      */
     protected $pVariations;
 
+    /**
+     * @Column(type="text")
+     */
+    protected $pNotificationEmails;
+
+
     // not stored, used for price/sku/etc lookup purposes
     protected $variation;
 
@@ -680,6 +686,21 @@ class Product
         $this->pVariations = (!is_null($bool) ? $bool : false);
     }
 
+    public function getNotificationEmails()
+    {
+        return $this->pNotificationEmails;
+    }
+
+    public function getNotificationEmailsArray() {
+        $notificationEmails =  explode(',', $this->pNotificationEmails);
+        return array_map('trim', $notificationEmails);
+    }
+
+    public function setNotificationEmails($pNotificationEmails)
+    {
+        $this->pNotificationEmails = trim($pNotificationEmails);
+    }
+
     public function updateProductQty($qty)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -770,6 +791,7 @@ class Product
         $product->setQtyLabel($data['pQtyLabel']);
         $product->setMaxQty($data['pMaxQty']);
         $product->setPageID($data['pageCID']);
+        $product->setNotificationEmails($data['pNotificationEmails']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
