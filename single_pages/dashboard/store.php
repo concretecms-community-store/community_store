@@ -171,7 +171,7 @@ if ($taxCalc == 'extract') {
         <h4><?= t("Discounts") ?></h4>
         <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 Add Discount Rule</a></p>
-        <p><a href="<?= \URL::to('/dashboard/store/discounts') ?>"><i class="fa fa-star"></i> View Discount Rules</a>
+        <p><a href="<?= \URL::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> View Discount Rules</a>
         </p>
 
 
