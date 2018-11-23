@@ -61,10 +61,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups')?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images')?></a></li>
-                    <li><a href="#product-options" data-pane-toggle><?= t('Options')?></a></li>
+                    <li><a href="#product-options" data-pane-toggle><?= t('Options and Variations')?></a></li>
                     <li><a href="#product-related" data-pane-toggle><?= t('Related Products')?></a></li>
                     <li><a href="#product-attributes" data-pane-toggle><?= t('Attributes')?></a></li>
-                    <li><a href="#product-digital" data-pane-toggle><?= t("Memberships and Downloads")?></a></li>
+                    <li><a href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups")?></a></li>
+                    <li><a href="#product-checkout" data-pane-toggle><?= t("Checkout Options")?></a></li>
                     <li><a href="#product-page" data-pane-toggle><?= t('Detail Page')?></a></li>
                 </ul>
             </div>
@@ -1456,6 +1457,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
 
 
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('.select2-select').select2();
+                    });
+                </script>
+
+
+            </div><!-- #product-digital -->
+
+            <div class="col-sm-9 store-pane" id="product-checkout">
                 <div class="form-group">
                     <?= $form->checkbox('pAutoCheckout', '1', $product->autoCheckout())?>
                     <?= $form->label('pAutoCheckout', t('Send customer directly to checkout when added to cart'))?>
@@ -1466,15 +1477,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $form->label('pExclusive', t('Prevent this item from being in the cart with other items'))?>
                 </div>
 
+                <div class="form-group">
+                    <?= $form->label('pNotificationEmails',t('If order contains this product also send order notification to email(s)')); ?>
+                    <?= $form->text('pNotificationEmails',$product->getNotificationEmails(), array('placeholder'=>t('Email Address')));?>
+                    <span class="help-block"><?= t('separate multiple emails with commas'); ?></span>
+                </div>
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('.select2-select').select2();
-                    });
-                </script>
-
-
-            </div><!-- #product-digital -->
+            </div><!-- #checkout-digital -->
 
             <div class="col-sm-9 store-pane" id="product-page">
 
