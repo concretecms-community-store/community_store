@@ -9,15 +9,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 <?php if ($controller->getTask() == 'order'){ ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <form action="<?=URL::to('/dashboard/store/orders/details/slip')?>" method="post" target="_blank">
-            <input type="hidden" name="oID" value="<?= $order->getOrderID()?>">
-            <button class="btn btn-primary"><?= t("Print Order Slip")?></button>
-        </form>
+        <a href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>" class="btn btn-primary" target="_blank"><?= t("Print Order Slip")?></a>
     </div>
 
-
-
-<div class="row">
+    <div class="row">
     <div class="col-sm-8">
         <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
      </div>
@@ -125,6 +120,21 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
             </div>
         <?php } ?>
     </div>
+
+    <?php if (!empty($orderChoicesAttList)) { ?>
+    <div class="row">
+        <div class="col-sm-12">
+            <?php foreach ($orderChoicesAttList as $ak) {
+                $attValue = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                if ($attValue) {  ?>
+                    <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
+                    <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                <?php } ?>
+            <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
+
     </fieldset>
 
     <fieldset>
@@ -308,22 +318,6 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
         <?php } ?>
 
     <?php } ?>
-
-     <div class="row">
-        <?php if (!empty($orderChoicesAttList)) { ?>
-            <div class="col-sm-12">
-                <h4><?= t("Other Choices")?></h4>
-                <?php foreach ($orderChoicesAttList as $ak) {
-                    $attValue = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
-                    if ($attValue) {  ?>
-                    <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                    <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
-                    <?php } ?>
-                <?php } ?>
-            </div>
-        <?php } ?>
-    </div>
-
 
     </fieldset>
     <br />

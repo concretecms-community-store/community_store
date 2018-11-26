@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '1.4.6';
+    protected $pkgVersion = '1.4.7';
 
     public function getPackageDescription()
     {
@@ -74,7 +74,6 @@ class Controller extends Package
         Route::register('/checkout/setVatNumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::setVatNumber');
         Route::register('/checkout/selectShipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
-        Route::register('/dashboard/store/orders/details/slip', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OrderSlip::renderOrderPrintSlip');
     }
 
     public function on_start()
