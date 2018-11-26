@@ -95,7 +95,7 @@ $dh = Core::make('helper/date');
                     <p>
                         <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
                         <br>
-                        <?php $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('billing_address'));
+                        <?php $billingaddress = $order->getAttributeValueObject('billing_address');
                         if ($billingaddress) {
                             echo $billingaddress->getValue('displaySanitized', 'display');
                         }?>
@@ -103,7 +103,7 @@ $dh = Core::make('helper/date');
                 </div>
                 <div class="col-xs-4">
                     <?php
-                    $billingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
+                    $billingaddress = $order->getAttributeValueObject('shipping_address');
                     if ($billingaddress) { ?>
                         <h4><?= t("Shipping Address") ?></h4>
                         <p>
@@ -114,12 +114,15 @@ $dh = Core::make('helper/date');
                     <?php } ?>
                 </div>
 
-                <?php if ($orderChoicesEnabled) { ?>
+                <?php if (!empty($orderChoicesAttList)) { ?>
                     <div class="col-xs-12">
-                        <h4><?= t("Other Choices") ?></h4>
-                        <?php foreach ($orderChoicesAttList as $ak) { ?>
-                            <label><?= $ak->getAttributeKeyDisplayName() ?></label>
-                            <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
+                        <?php foreach ($orderChoicesAttList as $ak) {
+                            $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
+
+                            if ($attValue) {  ?>
+                                <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
+                                <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                            <?php } ?>
                         <?php } ?>
                     </div>
                 <?php } ?>

@@ -210,4 +210,18 @@ class Orders extends DashboardPageController
 
         return \Redirect::to('/dashboard/store/orders');
     }
+
+    public function printslip($oID)
+    {
+        $o = StoreOrder::getByID($oID);
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', \User::getByUserID($o->getCustomerID()));
+
+        if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . "/application/elements/order_slip.php")) {
+            \View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
+        } else {
+            \View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], "community_store");
+        }
+
+        exit();
+    }
 }
