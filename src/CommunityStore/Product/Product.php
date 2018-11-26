@@ -1508,10 +1508,9 @@ class Product
         $newproduct->setDateAdded(new \DateTime());
         $newproduct->save();
 
-        $attributes = StoreProductKey::getAttributes($this->getID());
-        foreach ($attributes as $handle => $value) {
-            $spk = StoreProductKey::getByHandle($handle);
-            $spk->saveAttribute($newproduct, $value);
+        $attributes = $this->getAttributes();
+        foreach ($attributes as $att) {
+            $newproduct->setAttribute($att->getAttributeKey()->getAttributeKeyHandle(), $att->getValue());
         }
 
         $variations = $this->getVariations();
@@ -1553,8 +1552,6 @@ class Product
 
         $em = \ORM::entityManager();
         $em->flush();
-
-        $newproduct->reindex();
 
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
