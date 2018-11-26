@@ -6,14 +6,13 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
 
 ?>
 
-<?php if ($controller->getAction() == 'order'){ ?>
+<?php if ($controller->getTask() == 'order'){ ?>
 
-<div class="ccm-dashboard-header-buttons">
-    <a href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>" class="btn btn-primary" target="_blank"><?= t("Print Order Slip")?></a>
-</div>
+    <div class="ccm-dashboard-header-buttons">
+        <a href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>" class="btn btn-primary" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip")?></a>
+    </div>
 
-
-<div class="row">
+    <div class="row">
     <div class="col-sm-8">
         <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate())?></p>
      </div>
@@ -648,7 +647,18 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                         ?>
                     </td>
                     <td><?=t(ucwords($order->getStatus()))?></td>
-                    <td><a class="btn btn-primary" href="<?=URL::to('/dashboard/store/orders/order/',$order->getOrderID())?>"><?= t("View")?></a></td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-primary"
+                               href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>"  target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip")?></a></li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>

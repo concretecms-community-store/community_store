@@ -260,8 +260,17 @@ if ($taxCalc == 'extract') {
                             ?>
                         </td>
                         <td><?= t(ucwords($order->getStatus())) ?></td>
-                        <td><a class="btn btn-primary"
-                               href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-primary"
+                                   href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>"  target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip")?></a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 <?php } ?>
