@@ -33,27 +33,25 @@ class Attributes extends DashboardPageController
 
     public function delete($akID, $token = null)
     {
-        if ($this->token->validate('community_store')) {
-            try {
-                $ak = StoreProductKey::getByID($akID);
+        try {
+            $ak = StoreProductKey::getByID($akID);
 
-                if (!($ak instanceof StoreProductKey)) {
-                    throw new Exception(t('Invalid attribute ID.'));
-                }
-
-                $valt = Core::make('helper/validation/token');
-
-                if (!$valt->validate('delete_attribute', $token)) {
-                    throw new Exception($valt->getErrorMessage());
-                }
-
-                $ak->delete();
-
-                $this->flash('success', t('Attribute Deleted'));
-                $this->redirect("/dashboard/store/products/attributes");
-            } catch (Exception $e) {
-                $this->set('error', $e);
+            if (!($ak instanceof StoreProductKey)) {
+                throw new Exception(t('Invalid attribute ID.'));
             }
+
+            $valt = Core::make('helper/validation/token');
+
+            if (!$valt->validate('delete_attribute', $token)) {
+                throw new Exception($valt->getErrorMessage());
+            }
+
+            $ak->delete();
+
+            $this->flash('success', t('Attribute Deleted'));
+            $this->redirect("/dashboard/store/products/attributes");
+        } catch (Exception $e) {
+            $this->set('error', $e);
         }
     }
 
@@ -68,26 +66,23 @@ class Attributes extends DashboardPageController
 
     public function add()
     {
-        if ($this->token->validate('community_store')) {
-            $pkg = \Package::getByHandle('community_store');
-            $this->select_type();
-            $type = $this->get('type');
-            $cnt = $type->getController();
-            $e = $cnt->validateKey($this->post());
-            if ($e->has()) {
-                $this->set('error', $e);
-            } else {
-                $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
-                StoreProductKey::add('store_product', $type, $this->post(), $pkg);
-                $this->flash('success', t('Attribute Created'));
-                $this->redirect('/dashboard/store/products/attributes');
-            }
+        $pkg = \Package::getByHandle('community_store');
+        $this->select_type();
+        $type = $this->get('type');
+        $cnt = $type->getController();
+        $e = $cnt->validateKey($this->post());
+        if ($e->has()) {
+            $this->set('error', $e);
+        } else {
+            $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
+            StoreProductKey::add('store_product', $type, $this->post(), $pkg);
+            $this->flash('success', t('Attribute Created'));
+            $this->redirect('/dashboard/store/products/attributes');
         }
     }
 
     public function edit($akID = 0)
     {
-        if ($this->token->validate('community_store')) {
             if ($this->post('akID')) {
                 $akID = $this->post('akID');
             }
@@ -109,6 +104,5 @@ class Attributes extends DashboardPageController
                     $this->redirect('/dashboard/store/products/attributes');
                 }
             }
-        }
     }
 }
