@@ -200,6 +200,7 @@ var communityStore = {
     },
 
     clearCart: function (modal) {
+        var ccm_token  = $('#store-modal-cart').find('[name=ccm_token]').val();
         $.ajax({
             url: CARTURL + "/clear" + TRAILINGSLASH,
             type: 'post',
