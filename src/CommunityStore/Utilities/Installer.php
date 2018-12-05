@@ -47,9 +47,21 @@ class Installer
         self::installSinglePage('/cart', $pkg);
         self::installSinglePage('/checkout', $pkg);
         self::installSinglePage('/checkout/complete', $pkg);
-        Page::getByPath('/cart/')->setAttribute('exclude_nav', 1);
-        Page::getByPath('/checkout/')->setAttribute('exclude_nav', 1);
-        Page::getByPath('/checkout/complete')->setAttribute('exclude_nav', 1);
+
+        $cartPage = Page::getByPath('/cart/');
+        $cartPage->setAttribute('exclude_nav', 1);
+        $cartPage->setAttribute('exclude_search_index', 1);
+        $cartPage->setAttribute('exclude_page_list', 1);
+
+        $checkoutPage = Page::getByPath('/checkout/');
+        $checkoutPage->setAttribute('exclude_nav', 1);
+        $checkoutPage->setAttribute('exclude_search_index', 1);
+        $checkoutPage->setAttribute('exclude_page_list', 1);
+
+        $completePage = Page::getByPath('/checkout/complete');
+        $completePage->setAttribute('exclude_nav', 1);
+        $completePage->setAttribute('exclude_search_index', 1);
+        $completePage->setAttribute('exclude_page_list', 1);
     }
 
     public static function installSinglePage($path, $pkg)
