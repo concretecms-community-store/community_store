@@ -22,6 +22,13 @@ class Products extends DashboardPageController
             $dateTo = date('Y-m-d');
         }
         $pr = new StoreProductReport($dateFrom, $dateTo);
+
+        $productSearch = $this->get('productSearch');
+
+        if ($productSearch) {
+            $pr->setProductSearch($productSearch);
+        }
+
         $orderBy = $this->get('orderBy');
         if (!$orderBy) {
             $orderBy = 'quantity';
@@ -32,10 +39,9 @@ class Products extends DashboardPageController
             $pr->sortByTotal();
         }
 
-        //$products = $pr->getProducts();
-
         $this->set('dateFrom', $dateFrom);
-        $this->set('dateTo', $dateTo);
+        $this->set('dateFrom', $dateFrom);
+        $this->set('productSearch', $productSearch);
 
         $pr->setItemsPerPage(20);
 
@@ -46,6 +52,7 @@ class Products extends DashboardPageController
         $this->set('products', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
+        $this->set('pageTitle', t('Products Report'));
     }
 
     public function detail($productid = null, $export = false)

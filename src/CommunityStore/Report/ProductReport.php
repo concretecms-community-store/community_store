@@ -35,6 +35,22 @@ class ProductReport extends AbstractItemList
         $this->orderItems = $orders->getOrderItems();
     }
 
+    public function setProductSearch($search = '') {
+        if ($search) {
+
+            $newlist = [];
+
+            foreach ($this->products as $product) {
+
+                if (strpos($product['name'], $search) !== false) {
+                    $newlist[] = $product;
+                }
+            }
+
+            $this->products = $newlist;
+        }
+    }
+
     public function setProducts()
     {
         $products = [];
@@ -55,12 +71,14 @@ class ProductReport extends AbstractItemList
                     } else {
                         $name = $oi->getProductName();
                     }
+
                     $products[$oi->getProductID()] = [
-                            'name' => $name,
-                            'pID' => $oi->getProductID(),
-                            'pricePaid' => $oi->getPricePaid() * $oi->getQty(),
-                            'quantity' => $oi->getQty(),
-                        ];
+                        'name' => $name,
+                        'pID' => $oi->getProductID(),
+                        'pricePaid' => $oi->getPricePaid() * $oi->getQty(),
+                        'quantity' => $oi->getQty(),
+                    ];
+
                 }
             }
         }

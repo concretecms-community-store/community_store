@@ -8,39 +8,59 @@ $task = $controller->getAction();
 ?>
 
 <?php if ($task == 'view') { ?>
-<div class="ccm-dashboard-content-full">
-	<form action="<?=URL::to('/dashboard/store/reports/products')?>" method="get" class="form form-inline ccm-search-fields">
-		<div class="ccm-search-fields-row">
-			<div class="form-group form-group-full">
-        		<?= $form->label('dateFrom', t('From'))?>
-        		<div class="ccm-search-field-content ccm-search-field-content-select2">
-					<?= Core::make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
-				</div>
-			</div>
-		</div>
-		<div class="ccm-search-fields-row">
-			<div class="form-group form-group-full">
-				<?= $form->label('dateFrom', t('To'))?>
-				<div class="ccm-search-field-content ccm-search-field-content-select2">
-					<?= Core::make('helper/form/date_time')->date('dateTo', $dateTo); ?>
-				</div>
-			</div>
-		</div>
-		<div class="ccm-search-fields-row">
-			<div class="form-group form-group-full">
-				<?= $form->label('orderBy', t('Order By'))?>
-				<div class="ccm-search-field-content ccm-search-field-content-select2">
-					<?= $form->select('orderBy',array('quantity'=>t('Quantity Sold'),'pricePaid'=>t('Total')),$orderBy); ?>
-				</div>
-			</div>
-		</div>
-		<div class="ccm-search-fields-submit">
-	        <button type="submit" class="btn btn-primary pull-right"><?= t('Filter Results')?></button>
-	    </div>
 
-	</form>
+    <form action="<?= URL::to('/dashboard/store/reports/products') ?>" method="get">
 
-</div>
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    <?= $form->label('dateFrom', t('From')) ?>
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <?= Core::make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?= $form->label('dateFrom', t('To')) ?>
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <?= Core::make('helper/form/date_time')->date('dateTo', $dateTo); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?= $form->label('orderBy', t('Order By')) ?>
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <?= $form->select('orderBy', ['quantity' => t('Quantity Sold'), 'pricePaid' => t('Total')], $orderBy); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?= $form->label('orderBy', t('Product Search')) ?>
+                    <?= $form->text('productSearch', h($productSearch), array('placeholder'=>'All Products') ); ?>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-default"><?= t('Filter Results') ?></button>
+            </div>
+        </div>
+    </form>
+
+    <hr />
+
+
 <table class="table table-striped">
 	<thead>
 		<tr>

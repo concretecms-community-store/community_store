@@ -49,6 +49,7 @@ class Sales extends DashboardPageController
         $this->set('paginator', $paginator);
 
         $this->requireAsset('css', 'communityStoreDashboard');
+        $this->set('pageTitle', t('Sales Report'));
     }
 
     public function export()
