@@ -280,7 +280,7 @@
 
                 <!-- #settings-customers -->
                 <div class="col-sm-9 store-pane" id="settings-checkout">
-                    <h3><?= t('Cart and Ordering');?></h3>
+                    <h3><?= t('Cart and Checkout');?></h3>
                     <div class="form-group">
                         <?php $shoppingDisabled =  Config::get('community_store.shoppingDisabled');
                         ?>
@@ -353,8 +353,18 @@
                     <script>
                         $(document).ready(function() {
                             $('.existing-select2').select2();
+                            $('.select2-container').removeClass('form-control');
                         });
                     </script>
+
+                    <h3><?= t('Digital Download Expiry');?></h3>
+                    <div class="form-group">
+                        <?= $form->label('download_expiry_hours',t('Number of hours before digital download links expiry')); ?>
+                        <div class="input-group">
+                        <?= $form->number('download_expiry_hours',Config::get('community_store.download_expiry_hours'), array('placeholder'=>'48'));?>
+                        <div class="input-group-addon"><?= t('hours'); ?></div>
+                        </div>
+                    </div>
 
 
                 </div>
