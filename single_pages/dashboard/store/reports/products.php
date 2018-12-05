@@ -88,6 +88,7 @@ $task = $controller->getAction();
 <?php if ($task == 'detail') {
 	$dh = Core::make('helper/date');
 	$totalSold = 0;
+	$totalSoldAll = 0;
 
 	?>
 
@@ -121,7 +122,7 @@ $task = $controller->getAction();
 				</td>
 				<td><?php
 					$qty = $item->getQty();
-					$totalSold +=  $qty;
+                    $totalSoldAll += $qty;
 					echo $qty; ?></td>
 				<td>
 					<?php
@@ -145,14 +146,15 @@ $task = $controller->getAction();
 
                     if ($paid) {
                         $paidstatus = t('Paid');
+                        $totalSold +=  $qty;
                     } elseif ($order->getTotal() > 0) {
                         $paidstatus = t('Unpaid');
-
-                    if ($order->getExternalPaymentRequested()) {
-                        $paidstatus = t('Incomplete') ;
-                    }
+                        if ($order->getExternalPaymentRequested()) {
+                            $paidstatus = t('Incomplete') ;
+                        }
                     } else {
                         $paidstatus = t('Free Order');
+                        $totalSold +=  $qty;
                     }
 
                     echo $paidstatus;
@@ -173,7 +175,12 @@ $task = $controller->getAction();
 		<tfoot>
 			<tr>
 				<td colspan="6" class="text-right"><strong><?= t('Total Quantity Sold'); ?>:</strong></td>
-				<td colspan="4"><strong><?= $totalSold; ?></strong></td>
+				<td colspan="7"><strong><?= $totalSold; ?>
+                    <?php if ($totalSoldAll != $totalSold) { ?>
+                        <?= t(' (%s across all orders)', $totalSoldAll);?>
+                    <?php } ?>
+
+                    </strong></td>
 			</tr>
 		</tfoot>
 	</table>
