@@ -1416,27 +1416,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
             </div>
 
             <div class="col-sm-9 store-pane" id="product-digital">
-                <?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
-                    <?php
-                    $files = $product->getDownloadFileObjects();
-                    for($i=0;$i<1;$i++){
-                        $file = $files[$i];
-                        ?>
-                        <div class="form-group">
-                            <?= $form->label("ddfID".$i, t("File to download on purchase"));?>
-                            <?= $al->file('ddfID'.$i, 'ddfID[]', t('Choose File'), is_object($file)?$file:null)?>
-                        </div>
-                    <?php }
-                } else { ?>
-                    <div class="alert alert-info">
-                        <?php
-                        $a = '<a href="'.URL::to('/dashboard/system/permissions/advanced').'"><strong>';
-                        $aa = '</strong></a>';
-                        echo t("In order to have digital downloads, you need to %sturn on advanced permissions%s.",$a,$aa);
-                        ?>
+                <?php
+                $files = $product->getDownloadFileObjects();
+                for($i=0;$i<1;$i++){
+                    $file = $files[$i];
+                    ?>
+                    <div class="form-group">
+                        <?= $form->label("ddfID".$i, t("File to download on purchase"));?>
+                        <?= $al->file('ddfID'.$i, 'ddfID[]', t('Choose File'), is_object($file)?$file:null)?>
                     </div>
                 <?php } ?>
-
                 <div class="form-group">
                     <?= $form->checkbox('pCreateUserAccount', '1', $product->createsLogin())?>
                     <?= $form->label('pCreateUserAccount', t('Create user account on purchase'))?>

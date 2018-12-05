@@ -21,7 +21,7 @@
         <ul class="order-downloads">
         <?php
         foreach($downloads as $name=>$file){
-            echo '<li><a href="'.$file->getForceDownloadURL().'">'.$name.'</a></li>';
+            echo '<li><a href="'. \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::buildDownloadURL($file, $order) .'">'.$name.'</a></li>';
         }?>
         </ul>
     <?php }
