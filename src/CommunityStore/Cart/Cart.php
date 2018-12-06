@@ -549,7 +549,7 @@ class Cart
             foreach (self::getCart() as $item) {
                 $product = StoreProduct::getByID($item['product']['pID']);
                 if ($product) {
-                    if (($product->hasUserGroups() || $product->hasDigitalDownload()) && !$product->createsLogin()) {
+                    if ($product->hasUserGroups() && !$product->createsLogin()) {
                         return true;
                     }
                 }

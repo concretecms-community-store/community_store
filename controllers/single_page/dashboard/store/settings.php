@@ -106,6 +106,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.noBillingSaveGroups', is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');
                 Config::save('community_store.noShippingSaveGroups', is_array($args['noShippingSaveGroups']) ? implode(',', $args['noShippingSaveGroups']) : '');
                 Config::save('community_store.showUnpaidExternalPaymentOrders', $args['showUnpaidExternalPaymentOrders']);
+                Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
 
                 //save payment methods
                 if ($args['paymentMethodHandle']) {
