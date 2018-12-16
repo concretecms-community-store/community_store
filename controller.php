@@ -22,8 +22,6 @@ class Controller extends Package
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
     );
 
-
-
     public function getPackageDescription()
     {
         return t("Add a store to your site");
@@ -69,6 +67,23 @@ class Controller extends Package
         Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();
+    }
+
+    public function testForUpgrade() {
+        $community_store = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+
+        if ($community_store) {
+            $installedversion = $community_store->getPackageVersion();
+
+            if (version_compare($installedversion, '2.0', '<')) {
+                $errors = $this->app->make('error');
+                $errors->add(t('Upgrading version 1.x version of Community Store to 2.x is not currently supported. Please immediately revert your community_store package folder to the %s release.',$installedversion ));
+
+                return $errors;
+            }
+        }
+
+        return parent::testForUpgrade();
     }
 
     public function registerRoutes()
