@@ -1,0 +1,3585 @@
+# Translators:
+# Michele Locati <michele@locati.it>, 2016
+# Vasilis Fotopoulos <basalba@gmail.com>, 2016
+# Remo Laubacher <remo.laubacher@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: community_store 1.4.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-21T17:57:03+10:30\n"
+"PO-Revision-Date: 2018-10-21T17:57:03+10:30\n"
+"Last-Translator: Remo Laubacher <remo.laubacher@gmail.com>, 2016\n"
+"Language-Team: Greek (Greece) (https://www.transifex.com/concrete5/teams/10374/el_GR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: el_GR\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: packages/community_store/blocks/autonav/templates/product_breadcrumb.php
+msgctxt "TemplateFileName"
+msgid "Product Breadcrumb"
+msgstr "Προϊόν Διακεκομμένα"
+
+#: packages/community_store/controller.php:22
+msgid "Add a store to your site"
+msgstr "Προσθέστε ένα Κατάστημα στο Site σας"
+
+#: packages/community_store/controller.php:27
+msgid "Community Store"
+msgstr "Community Store"
+
+#: packages/community_store/controller.php:154
+msgid "Quantity must be greater than zero"
+msgstr "Η ποσότητα πρέπει να είναι μεγαλύτερη από μηδέν"
+
+#: packages/community_store/blocks/community_product_list/controller.php:24
+msgid "Add a Product List for Community Store"
+msgstr "Προσθέστε μια λίστα προϊόντων για τα Kοινοτικό Κατάστημα"
+
+#: packages/community_store/blocks/community_product_list/controller.php:29
+msgid "Product List"
+msgstr "Λίστα προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/controller.php:272
+msgid "A page must be selected"
+msgstr "Μια σελίδα πρέπει να επιλεγεί"
+
+#: packages/community_store/blocks/community_product_list/controller.php:276
+msgid "Number of Products must be a whole number"
+msgstr "Ο αριθμός προϊόντων πρέπει να είναι ακέραιος αριθμός"
+
+#: packages/community_store/blocks/community_product_list/form.php:8
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:22
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:31
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:57
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:83
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:141
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:143
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:202
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:225
+#: packages/community_store/single_pages/dashboard/store/settings.php:20
+#: packages/community_store/single_pages/dashboard/store/settings.php:271
+#: packages/community_store/single_pages/dashboard/store.php:34
+#: packages/community_store/single_pages/dashboard/store.php:60
+#: packages/community_store/single_pages/dashboard/store.php:147
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:70
+msgid "Products"
+msgstr "Προϊόντα"
+
+#: packages/community_store/blocks/community_product_list/form.php:11
+msgid "List Products"
+msgstr "Κατάλογος Προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/form.php:13
+msgid "All"
+msgstr "Όλα"
+
+#: packages/community_store/blocks/community_product_list/form.php:14
+msgid "Under current page"
+msgstr "Κάτω από την παρούσα σελίδα"
+
+#: packages/community_store/blocks/community_product_list/form.php:15
+msgid "Under current page and child pages"
+msgstr "Κάτω από την παρούσα σελίδα και από τις θυγατρικές σελίδες"
+
+#: packages/community_store/blocks/community_product_list/form.php:16
+msgid "Under a specified page"
+msgstr "Κάτω από μια συγκεκριμένη σελίδα"
+
+#: packages/community_store/blocks/community_product_list/form.php:17
+msgid "Under a specified page and child pages"
+msgstr "Κάτω από μια συγκεκριμένη σελίδα και τις θυγατρικές σελίδες"
+
+#: packages/community_store/blocks/community_product_list/form.php:18
+msgid "Related to product displayed on this page"
+msgstr "Σχετικά με το προϊόν που εμφανίζεται σε αυτή τη σελίδα"
+
+#: packages/community_store/blocks/community_product_list/form.php:19
+msgid "Related to a specified product"
+msgstr "Που σχετίζονται με ένα συγκεκριμένο προϊόν"
+
+#: packages/community_store/blocks/community_product_list/form.php:33
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:82
+#: packages/community_store/single_pages/dashboard/store/products.php:1325
+msgid "Search for a Product"
+msgstr "Αναζήτηση ενός προϊόντος"
+
+#: packages/community_store/blocks/community_product_list/form.php:37
+#: packages/community_store/single_pages/dashboard/store/settings.php:139
+msgid "Sort Order"
+msgstr "Σειρά Ταξινόμησης "
+
+#: packages/community_store/blocks/community_product_list/form.php:39
+msgid "Alphabetical"
+msgstr "Αλφαβητικά"
+
+#: packages/community_store/blocks/community_product_list/form.php:40
+msgid "Alphabetical, reversed"
+msgstr "με αντίστροφη αλφαβητική σειρά"
+
+#: packages/community_store/blocks/community_product_list/form.php:41
+#: packages/community_store/single_pages/dashboard/store/products.php:440
+msgid "Date Added"
+msgstr "Ημερομηνία Προσθήκης"
+
+#: packages/community_store/blocks/community_product_list/form.php:42
+msgid "Price Ascending"
+msgstr "Κατά Αύξουσα Τιμή"
+
+#: packages/community_store/blocks/community_product_list/form.php:43
+msgid "Price Descending"
+msgstr "Κατά Φθίνουσα Τιμή "
+
+#: packages/community_store/blocks/community_product_list/form.php:44
+msgid "Best Sellers"
+msgstr "Κορυφαία σε πωλήσεις"
+
+#: packages/community_store/blocks/community_product_list/form.php:45
+msgid "Related Products Order"
+msgstr "Ταξινόμηση Σχετικών προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/form.php:46
+msgid "Category Sort Order"
+msgstr "Σειρά Ταξινόμησης Κατηγοριών"
+
+#: packages/community_store/blocks/community_product_list/form.php:47
+msgid "Random order, changing each display"
+msgstr "Τυχαία σειρά, αλλάζοντας με κάθε απεικόνιση"
+
+#: packages/community_store/blocks/community_product_list/form.php:48
+msgid "Random order, changing each day"
+msgstr "Τυχαία σειρά, αλλάζοντας με κάθε μέρα"
+
+#: packages/community_store/blocks/community_product_list/form.php:55
+msgid "Display Sort Option"
+msgstr "Εμφανίζει Επιλογή Ταξινόμισης"
+
+#: packages/community_store/blocks/community_product_list/form.php:62
+msgid "Filtering"
+msgstr "Φιλτράρισμα"
+
+#: packages/community_store/blocks/community_product_list/form.php:74
+msgid "Filter by Product Groups"
+msgstr "Φίλτρο ανά Ομάδα Προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/form.php:78
+#: packages/community_store/single_pages/dashboard/store/discounts.php:360
+#: packages/community_store/single_pages/dashboard/store/products.php:505
+msgid "Select Product Groups"
+msgstr "Επιλογή Ομάδας Προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/form.php:91
+msgid "Matching"
+msgstr "Ταίριασμα"
+
+#: packages/community_store/blocks/community_product_list/form.php:92
+msgid "All groups selected"
+msgstr "Όλες οι Ομάδες επιλέχτηκαν "
+
+#: packages/community_store/blocks/community_product_list/form.php:92
+msgid "Any group selected"
+msgstr "Οποιεσδήποτε Ομάδες επιλέχτηκαν "
+
+#: packages/community_store/blocks/community_product_list/form.php:101
+msgid "Include Featured Only"
+msgstr "Περιλαμβάνουν Προτεινόμενα Μόνο"
+
+#: packages/community_store/blocks/community_product_list/form.php:107
+msgid "Include On Sale Only"
+msgstr "Περιλαμβάνονται Προσφορές Μόνο"
+
+#: packages/community_store/blocks/community_product_list/form.php:113
+msgid "Include Out of Stock Products"
+msgstr "Περιλαμβάνουν Μη Διαθέσιμα Προϊόντα"
+
+#: packages/community_store/blocks/community_product_list/form.php:122
+msgid "Pagination and Display Options"
+msgstr "Σελιδοποίηση και Επιλογές εμφάνισης"
+
+#: packages/community_store/blocks/community_product_list/form.php:125
+msgid "Number of Products to Display"
+msgstr "Αριθμός προϊόντων για εμφάνιση"
+
+#: packages/community_store/blocks/community_product_list/form.php:126
+msgid "leave blank or 0 to list all matching products"
+msgstr "αφήστε το κενό ή 0 για την καταγραφή όσων προϊόντων ταιριάζουν "
+
+#: packages/community_store/blocks/community_product_list/form.php:132
+msgid ""
+"Display pagination interface if more products are available than are "
+"displayed."
+msgstr ""
+"Εμφάνιση σελιδοποίησης εάν περισσότερα προϊόντα είναι διαθέσιμα από αυτά που"
+" εμφανίζονται"
+
+#: packages/community_store/blocks/community_product_list/form.php:137
+msgid "Products per Row"
+msgstr "Προϊόντα ανά Σειρά"
+
+#: packages/community_store/blocks/community_product_list/form.php:143
+#: packages/community_store/single_pages/dashboard/store/settings.php:182
+msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
+
+#: packages/community_store/blocks/community_product_list/form.php:149
+msgid "Display Price"
+msgstr "Εμφάνιση Τιμής"
+
+#: packages/community_store/blocks/community_product_list/form.php:155
+msgid "Display Add To Cart Button"
+msgstr "Εμφάνιση κουμπιού \"Προσθήκη στο καλάθι\""
+
+#: packages/community_store/blocks/community_product_list/form.php:159
+msgid "Add To Cart Button Text"
+msgstr "Κείμενο κουμπιού Προσθήκη στο Καλάθι "
+
+#: packages/community_store/blocks/community_product_list/form.php:160
+msgid "Defaults to: Add To Cart"
+msgstr "Προεπιλογές για: Προσθήκη στο Καλάθι"
+
+#: packages/community_store/blocks/community_product_list/form.php:165
+msgid "Display Quantity Selector"
+msgstr "Εμφάνιση Επιλογέα Ποσότητας"
+
+#: packages/community_store/blocks/community_product_list/form.php:171
+msgid "Display Product Description"
+msgstr "Εμφάνιση  Περιγραφής προϊόντων"
+
+#: packages/community_store/blocks/community_product_list/form.php:180
+msgid "Display Quickview Link (Modal Window)"
+msgstr "Εμφάνιση Συνδέσμου  Quickview (Modal Window)"
+
+#: packages/community_store/blocks/community_product_list/form.php:186
+msgid "Display Link To Product Page"
+msgstr "Εμφάνιση συνδέσμου στη σελίδα του προϊόντος"
+
+#: packages/community_store/blocks/community_product_list/form.php:190
+msgid "Link To Product Page Text"
+msgstr "Κείμενο συνδέσμου της σελίδας του προϊόντος "
+
+#: packages/community_store/blocks/community_product_list/form.php:191
+msgid "Defaults to: More Details"
+msgstr "Προεπιλογές για: Περισσότερες λεπτομέρειες"
+
+#: packages/community_store/blocks/community_product_list/view.php:31
+msgid "Sort by"
+msgstr "Ταξινόμηση κατά"
+
+#: packages/community_store/blocks/community_product_list/view.php:35
+msgid "price, lowest to highest"
+msgstr "Τιμή,  Χαμηλή προς Υψηλή"
+
+#: packages/community_store/blocks/community_product_list/view.php:36
+msgid "price, highest to lowest"
+msgstr "Τιμή, Υψηλή προς Χαμηλή"
+
+#: packages/community_store/blocks/community_product_list/view.php:128
+#: packages/community_store/blocks/community_product_list/view.php:359
+#: packages/community_store/blocks/community_product/view.php:49
+#: packages/community_store/blocks/community_product/view.php:438
+#: packages/community_store/elements/product_modal.php:122
+msgid "was"
+msgstr "ήταν"
+
+#: packages/community_store/blocks/community_product_list/view.php:151
+#: packages/community_store/blocks/community_product/view.php:81
+msgid "Enter Other Amount"
+msgstr "Εισάγετε Άλλο Ποσό"
+
+#: packages/community_store/blocks/community_product_list/view.php:155
+#: packages/community_store/blocks/community_product/view.php:86
+#: packages/community_store/single_pages/dashboard/store/orders.php:199
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:64
+msgid "Amount"
+msgstr "Ποσό"
+
+#: packages/community_store/blocks/community_product_list/view.php:169
+#: packages/community_store/blocks/community_product/view.php:102
+msgid "minimum"
+msgstr "ελάχιστο"
+
+#: packages/community_store/blocks/community_product_list/view.php:176
+#: packages/community_store/blocks/community_product/view.php:109
+msgid "maximum"
+msgstr "μέγιστο όριο"
+
+#: packages/community_store/blocks/community_product_list/view.php:193
+msgid "More Details"
+msgstr "Περισσότερες Λεπτομέρειες"
+
+#: packages/community_store/blocks/community_product_list/view.php:202
+#: packages/community_store/blocks/community_product/view.php:194
+#: packages/community_store/single_pages/dashboard/store/orders.php:138
+#: packages/community_store/single_pages/cart.php:45
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:18
+#: packages/community_store/elements/cart_list.php:18
+#: packages/community_store/elements/cart_modal.php:47
+#: packages/community_store/elements/order_slip.php:140
+#: packages/community_store/elements/product_modal.php:29
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:58
+msgid "Quantity"
+msgstr "Ποσότητα"
+
+#: packages/community_store/blocks/community_product_list/view.php:246
+#: packages/community_store/blocks/community_product/view.php:239
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:64
+#: packages/community_store/single_pages/dashboard/store/products.php:747
+#: packages/community_store/single_pages/dashboard/store/settings.php:312
+#: packages/community_store/elements/attribute/type_form_order_groups.php:21
+msgid "Required"
+msgstr "Υποχρεωτικό"
+
+#: packages/community_store/blocks/community_product_list/view.php:265
+#: packages/community_store/blocks/community_product/view.php:259
+msgid "out of stock"
+msgstr "Εξάντληση αποθέματος"
+
+#: packages/community_store/blocks/community_product_list/view.php:300
+#: packages/community_store/blocks/community_product/view.php:305
+msgid "no"
+msgstr "όχι"
+
+#: packages/community_store/blocks/community_product_list/view.php:301
+#: packages/community_store/blocks/community_product/view.php:308
+msgid "yes"
+msgstr "ναι"
+
+#: packages/community_store/blocks/community_product_list/view.php:315
+#: packages/community_store/blocks/community_product/view.php:328
+#: packages/community_store/elements/product_modal.php:60
+msgid "Add to Cart"
+msgstr "Προσθήκη στο καλάθι"
+
+#: packages/community_store/blocks/community_product_list/view.php:316
+#: packages/community_store/blocks/community_product/view.php:331
+#: packages/community_store/elements/product_modal.php:61
+msgid "Out of Stock"
+msgstr "Εξάντληση αποθέματος"
+
+#: packages/community_store/blocks/community_product_list/view.php:413
+msgid "Empty Product List"
+msgstr "Κενή Λίστα Προϊόντων"
+
+#: packages/community_store/blocks/community_product/controller.php:22
+msgid "Add a Product to the Page"
+msgstr "Προσθέτετε ένα προϊόν στη Σελίδα"
+
+#: packages/community_store/blocks/community_product/controller.php:27
+#: packages/community_store/blocks/community_product/form.php:2
+#: packages/community_store/blocks/community_product/form.php:5
+#: packages/community_store/single_pages/cart.php:43
+#: packages/community_store/elements/cart_list.php:16
+#: packages/community_store/elements/cart_modal.php:45
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:57
+msgid "Product"
+msgstr "Προϊόν"
+
+#: packages/community_store/blocks/community_product/form.php:6
+msgid "A selected product"
+msgstr "Ένα επιλεγμένο προϊόν"
+
+#: packages/community_store/blocks/community_product/form.php:6
+msgid "Product associated with this page"
+msgstr "Προϊόν που συνδέεται με αυτή τη σελίδα"
+
+#: packages/community_store/blocks/community_product/form.php:11
+msgid "Select Product"
+msgstr "Επιλέξτε Προϊόν"
+
+#: packages/community_store/blocks/community_product/form.php:14
+msgid "Display Options"
+msgstr "Επιλογές εμφάνισης"
+
+#: packages/community_store/blocks/community_product/form.php:21
+msgid "Show Product Name"
+msgstr "Εμφάνιση Ονόματος Προϊόντος"
+
+#: packages/community_store/blocks/community_product/form.php:27
+msgid "Show Short Description"
+msgstr "Εμφάνιση Σύντομης Περιγραφής"
+
+#: packages/community_store/blocks/community_product/form.php:33
+msgid "Show Product Details"
+msgstr "Εμφάνιση Λεπτομεριών προϊόντος"
+
+#: packages/community_store/blocks/community_product/form.php:39
+msgid "Show Price"
+msgstr "Εμφάνιση Τιμής"
+
+#: packages/community_store/blocks/community_product/form.php:45
+msgid "Show Weight"
+msgstr "Εμφάνιση Βάρους"
+
+#: packages/community_store/blocks/community_product/form.php:53
+msgid "Show Product Image"
+msgstr "Εμφάνιση Εικόνας προϊόντων"
+
+#: packages/community_store/blocks/community_product/form.php:59
+msgid "Show \"Add to Cart\" Button"
+msgstr "Παρουσίαση κουμπιού \"Προσθήκη στο καλάθι\" "
+
+#: packages/community_store/blocks/community_product/form.php:65
+msgid "Show If Featured"
+msgstr "Εμφάνιση Εάν είναι στα Προτεινόμενα"
+
+#: packages/community_store/blocks/community_product/form.php:71
+msgid "Show Dimensions"
+msgstr "Εμφάνιση Διαστάσεις"
+
+#: packages/community_store/blocks/community_product/form.php:77
+msgid "Show Quantity Selector"
+msgstr "Εμφάνιση Επιλογέα Ποσότητας"
+
+#: packages/community_store/blocks/community_product/form.php:87
+msgid "Add to Cart Button Text"
+msgstr "Κείμενο κουμπιού Προσθήκη στο Καλάθι "
+
+#: packages/community_store/blocks/community_product/form.php:88
+msgid "Add To Cart"
+msgstr "Προσθήκη στο καλάθι"
+
+#: packages/community_store/blocks/community_product/view.php:48
+#: packages/community_store/blocks/community_product/view.php:437
+msgid "On Sale: "
+msgstr "Σε έκπτωση:"
+
+#: packages/community_store/blocks/community_product/view.php:130
+msgid "to"
+msgstr ""
+
+#: packages/community_store/blocks/community_product/view.php:151
+msgid "Dimensions"
+msgstr "Διαστάσεις"
+
+#: packages/community_store/blocks/community_product/view.php:161
+#: packages/community_store/single_pages/dashboard/store/products.php:569
+#: packages/community_store/single_pages/dashboard/store/products.php:1228
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:18
+msgid "Weight"
+msgstr "Βάρος"
+
+#: packages/community_store/blocks/community_product/view.php:185
+msgid "Featured Item"
+msgstr "Προτεινόμενο Στοιχείο"
+
+#: packages/community_store/blocks/community_product/view.php:475
+msgid "Product not available"
+msgstr "Το προϊόν δεν είναι διαθέσιμο"
+
+#: packages/community_store/blocks/autonav/templates/product_breadcrumb.php:31
+msgid "Empty Auto-Nav Block."
+msgstr "Κενό  Auto-Nav Μπλοκ"
+
+#: packages/community_store/blocks/community_utility_links/controller.php:21
+msgid "Add your cart links for Community Store"
+msgstr "Προσθέστε συνδέσμους για το καλάθι σας στο κοινοτικό κατάστημα"
+
+#: packages/community_store/blocks/community_utility_links/controller.php:26
+msgid "Utility Links"
+msgstr "Σύνδεσμοι κοινής ωφελείας "
+
+#: packages/community_store/blocks/community_utility_links/controller.php:88
+msgid "Cart Label must be set"
+msgstr "Η Ετικέτα του Καλαθιού πρέπει να οριστεί"
+
+#: packages/community_store/blocks/community_utility_links/controller.php:91
+msgid "Cart Link Label exceeds 255 characters"
+msgstr "Ο Σύνδεσμος της Ετικέτας του Καλαθιού υπερβαίνει τους 255 χαρακτήρες"
+
+#: packages/community_store/blocks/community_utility_links/controller.php:94
+msgid "Cart Items Label exceeds 255 characters"
+msgstr "Η Ετικέτα Ειδών Καλαθιού υπερβαίνει τους 255 χαρακτήρες"
+
+#: packages/community_store/blocks/community_utility_links/form.php:5
+msgid "Show Number Of Items In Cart"
+msgstr "Προβολή αριθμού αντικειμένων στο καλάθι"
+
+#: packages/community_store/blocks/community_utility_links/form.php:12
+msgid "Show Cart Total"
+msgstr "Εμφάνιση Σύνολου Καλαθιού "
+
+#: packages/community_store/blocks/community_utility_links/form.php:19
+msgid "Show Checkout Link"
+msgstr "Εμφάνιση Συνδέσμου Ταμείου"
+
+#: packages/community_store/blocks/community_utility_links/form.php:26
+msgid "Display Cart In Popup"
+msgstr "Εμφάνιση Καλαθιού Σε Popup"
+
+#: packages/community_store/blocks/community_utility_links/form.php:33
+msgid "Show Greeting"
+msgstr "Εμφάνιση Χαιρετισμού"
+
+#: packages/community_store/blocks/community_utility_links/form.php:40
+msgid "Show Sign-In Link"
+msgstr "Εμφάνιση Συνδέσμου Εισόδου"
+
+#: packages/community_store/blocks/community_utility_links/form.php:46
+msgid "Cart Link Label"
+msgstr "Ετικέτα  Συνδέσμου Καλαθιού"
+
+#: packages/community_store/blocks/community_utility_links/form.php:47
+msgid "View Cart"
+msgstr "Δείτε το καλάθι"
+
+#: packages/community_store/blocks/community_utility_links/form.php:50
+msgid "Cart Items Label"
+msgstr "Ετικέτα Ειδών Καλαθιού "
+
+#: packages/community_store/blocks/community_utility_links/form.php:51
+msgid "Items in Cart"
+msgstr "Αντικείμενα στο καλάθι"
+
+#: packages/community_store/blocks/community_utility_links/view.php:11
+#: packages/community_store/single_pages/checkout.php:39
+msgid "Sign In"
+msgstr "Είσοδος"
+
+#: packages/community_store/blocks/community_utility_links/view.php:17
+msgid "Welcome back"
+msgstr "Καλώς ήρθατε και πάλι"
+
+#: packages/community_store/blocks/community_utility_links/view.php:20
+msgid "Welcome back, "
+msgstr "Καλώς ήρθατε και πάλι,"
+
+#: packages/community_store/blocks/community_utility_links/view.php:68
+#: packages/community_store/single_pages/cart.php:255
+#: packages/community_store/single_pages/checkout.php:9
+#: packages/community_store/elements/cart_modal.php:224
+msgid "Checkout"
+msgstr "Ταμείο"
+
+#: packages/community_store/mail/new_order_notification.php:9
+msgid "New Order Notification #%s"
+msgstr "Ειδοποίηση Νέας Παραγγελίας #%s"
+
+#: packages/community_store/mail/new_order_notification.php:21
+msgid "An order has been placed"
+msgstr "Μια παραγγελία έχει τοποθετηθεί"
+
+#: packages/community_store/mail/new_order_notification.php:23
+#: packages/community_store/mail/order_receipt.php:29
+msgid "Order"
+msgstr "Ταξινόμηση "
+
+#: packages/community_store/mail/new_order_notification.php:24
+#: packages/community_store/mail/order_receipt.php:30
+#: packages/community_store/single_pages/dashboard/store/orders.php:22
+#: packages/community_store/elements/order_slip.php:27
+msgid "Order placed"
+msgstr "Ολοκλήρωση παραγγελίας"
+
+#: packages/community_store/mail/new_order_notification.php:29
+#: packages/community_store/mail/order_receipt.php:35
+msgid "Billing Information"
+msgstr "Πληροφορίες χρέωσης"
+
+#: packages/community_store/mail/new_order_notification.php:38
+#: packages/community_store/single_pages/dashboard/store/orders.php:59
+#: packages/community_store/single_pages/dashboard/store/orders.php:382
+#: packages/community_store/single_pages/dashboard/store/orders.php:505
+#: packages/community_store/single_pages/checkout.php:65
+#: packages/community_store/single_pages/checkout.php:66
+#: packages/community_store/single_pages/checkout.php:213
+#: packages/community_store/elements/order_slip.php:62
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:55
+msgid "Email"
+msgstr "Email"
+
+#: packages/community_store/mail/new_order_notification.php:39
+#: packages/community_store/mail/order_receipt.php:44
+#: packages/community_store/single_pages/dashboard/store/orders.php:67
+#: packages/community_store/single_pages/checkout.php:228
+#: packages/community_store/elements/order_slip.php:70
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:56
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#: packages/community_store/mail/new_order_notification.php:43
+#: packages/community_store/mail/order_receipt.php:48
+#: packages/community_store/single_pages/dashboard/store/orders.php:80
+#: packages/community_store/single_pages/checkout.php:394
+#: packages/community_store/single_pages/checkout.php:399
+#: packages/community_store/single_pages/checkout.php:411
+#: packages/community_store/elements/order_slip.php:86
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:226
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:293
+msgid "VAT Number"
+msgstr "ΦΠΑ"
+
+#: packages/community_store/mail/new_order_notification.php:49
+#: packages/community_store/mail/order_receipt.php:54
+msgid "Shipping Information"
+msgstr "Πληροφορίες αποστολής"
+
+#: packages/community_store/mail/new_order_notification.php:69
+#: packages/community_store/mail/order_receipt.php:74
+#: packages/community_store/single_pages/dashboard/store/orders.php:315
+#: packages/community_store/single_pages/checkout.php:178
+#: packages/community_store/single_pages/checkout.php:237
+#: packages/community_store/elements/order_slip.php:119
+msgid "Other Choices"
+msgstr "Άλλες Επιλογές"
+
+#: packages/community_store/mail/new_order_notification.php:85
+#: packages/community_store/mail/order_receipt.php:91
+msgid "Order Details"
+msgstr "Λεπτομέρειες Παραγγελίας"
+
+#: packages/community_store/mail/new_order_notification.php:89
+#: packages/community_store/mail/order_receipt.php:95
+#: packages/community_store/single_pages/dashboard/store/orders.php:135
+#: packages/community_store/single_pages/dashboard/store/products.php:74
+#: packages/community_store/single_pages/dashboard/store/products.php:1592
+#: packages/community_store/elements/order_slip.php:137
+msgid "Product Name"
+msgstr "Όνoμα Προϊόντος"
+
+#: packages/community_store/mail/new_order_notification.php:90
+#: packages/community_store/mail/order_receipt.php:96
+#: packages/community_store/single_pages/dashboard/store/products.php:62
+#: packages/community_store/single_pages/dashboard/store/products.php:692
+#: packages/community_store/single_pages/dashboard/store/products.php:1119
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:59
+msgid "Options"
+msgstr "Επιλογές"
+
+#: packages/community_store/mail/new_order_notification.php:91
+#: packages/community_store/mail/order_receipt.php:97
+msgid "Qty"
+msgstr "Ποσότητα"
+
+#: packages/community_store/mail/new_order_notification.php:92
+#: packages/community_store/mail/order_receipt.php:98
+#: packages/community_store/single_pages/dashboard/store/orders.php:137
+#: packages/community_store/single_pages/dashboard/store/products.php:116
+#: packages/community_store/single_pages/dashboard/store/products.php:211
+#: packages/community_store/single_pages/dashboard/store/products.php:1182
+#: packages/community_store/single_pages/dashboard/store/products.php:1595
+#: packages/community_store/single_pages/cart.php:44
+#: packages/community_store/elements/cart_list.php:17
+#: packages/community_store/elements/cart_modal.php:46
+#: packages/community_store/elements/order_slip.php:139
+msgid "Price"
+msgstr "Τιμή"
+
+#: packages/community_store/mail/new_order_notification.php:93
+#: packages/community_store/mail/order_receipt.php:99
+#: packages/community_store/single_pages/dashboard/store/orders.php:139
+#: packages/community_store/elements/order_slip.php:141
+#: packages/community_store/elements/order_slip.php:181
+msgid "Subtotal"
+msgstr "Μερικό σύνολο"
+
+#: packages/community_store/mail/new_order_notification.php:114
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:38
+#: packages/community_store/single_pages/dashboard/store/orders.php:163
+#: packages/community_store/single_pages/dashboard/store/products.php:1654
+msgid "None"
+msgstr "Κανένα"
+
+#: packages/community_store/mail/new_order_notification.php:133
+#: packages/community_store/mail/order_receipt.php:169
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:39
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:65
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:91
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:153
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:155
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:203
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:226
+#: packages/community_store/single_pages/dashboard/store/discounts.php:306
+#: packages/community_store/single_pages/dashboard/store/orders.php:254
+#: packages/community_store/single_pages/dashboard/store/products.php:60
+#: packages/community_store/single_pages/dashboard/store/settings.php:16
+#: packages/community_store/single_pages/dashboard/store.php:42
+#: packages/community_store/single_pages/dashboard/store.php:68
+#: packages/community_store/single_pages/dashboard/store.php:148
+#: packages/community_store/single_pages/cart.php:230
+#: packages/community_store/single_pages/checkout.php:354
+#: packages/community_store/single_pages/checkout.php:375
+#: packages/community_store/single_pages/checkout.php:562
+#: packages/community_store/elements/order_slip.php:186
+msgid "Shipping"
+msgstr "Αποστολή"
+
+#: packages/community_store/mail/new_order_notification.php:134
+#: packages/community_store/mail/order_receipt.php:170
+#: packages/community_store/single_pages/dashboard/store/orders.php:282
+#: packages/community_store/elements/order_slip.php:207
+msgid "Shipping Method"
+msgstr "Μέθοδος αποστολής"
+
+#: packages/community_store/mail/new_order_notification.php:139
+#: packages/community_store/mail/order_receipt.php:175
+#: packages/community_store/single_pages/dashboard/store/orders.php:307
+#: packages/community_store/single_pages/checkout.php:361
+#: packages/community_store/elements/order_slip.php:214
+msgid "Delivery Instructions"
+msgstr "Οδηγίες παράδοσης"
+
+#: packages/community_store/mail/new_order_notification.php:145
+#: packages/community_store/mail/order_receipt.php:181
+#: packages/community_store/elements/order_slip.php:190
+msgid "Discounts"
+msgstr "Εκπτώσεις"
+
+#: packages/community_store/mail/new_order_notification.php:145
+#: packages/community_store/mail/order_receipt.php:181
+#: packages/community_store/single_pages/dashboard/store/discounts.php:30
+#: packages/community_store/single_pages/dashboard/store/orders.php:198
+#: packages/community_store/elements/order_slip.php:190
+msgid "Discount"
+msgstr "Έκπτωση"
+
+#: packages/community_store/mail/new_order_notification.php:161
+#: packages/community_store/mail/order_receipt.php:197
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:33
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:49
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:28
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:54
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:80
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:129
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:131
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:205
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:228
+#: packages/community_store/single_pages/dashboard/store/orders.php:581
+#: packages/community_store/single_pages/dashboard/store.php:31
+#: packages/community_store/single_pages/dashboard/store.php:57
+#: packages/community_store/single_pages/dashboard/store.php:111
+#: packages/community_store/single_pages/dashboard/store.php:113
+#: packages/community_store/single_pages/dashboard/store.php:150
+#: packages/community_store/single_pages/cart.php:249
+#: packages/community_store/single_pages/checkout.php:583
+#: packages/community_store/elements/cart_modal.php:210
+msgid "Total"
+msgstr "Σύνολο"
+
+#: packages/community_store/mail/new_order_notification.php:164
+#: packages/community_store/mail/order_receipt.php:200
+#: packages/community_store/single_pages/dashboard/store/orders.php:273
+#: packages/community_store/elements/order_slip.php:205
+msgid "Payment Method"
+msgstr "Μέθοδος πληρωμής"
+
+#: packages/community_store/mail/new_order_notification.php:170
+#: packages/community_store/mail/order_receipt.php:217
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:127
+#: packages/community_store/single_pages/dashboard/store/orders.php:37
+#: packages/community_store/single_pages/dashboard/store/orders.php:415
+#: packages/community_store/single_pages/dashboard/store/orders.php:631
+#: packages/community_store/elements/order_slip.php:42
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:131
+msgid "Paid"
+msgstr "Πληρωμένη"
+
+#: packages/community_store/mail/new_order_notification.php:172
+#: packages/community_store/mail/order_receipt.php:219
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:129
+#: packages/community_store/single_pages/dashboard/store/orders.php:39
+#: packages/community_store/single_pages/dashboard/store/orders.php:398
+#: packages/community_store/single_pages/dashboard/store/orders.php:633
+#: packages/community_store/elements/order_slip.php:44
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:133
+msgid "Unpaid"
+msgstr "Απλήρωτη"
+
+#: packages/community_store/mail/new_order_notification.php:175
+#: packages/community_store/mail/order_receipt.php:225
+#: packages/community_store/single_pages/dashboard/store/orders.php:392
+msgid "Payment Status"
+msgstr "Κατάσταση πληρωμής"
+
+#: packages/community_store/mail/new_order_notification.php:179
+#: packages/community_store/single_pages/dashboard/store/orders.php:276
+#: packages/community_store/single_pages/dashboard/store/orders.php:477
+msgid "Transaction Reference"
+msgstr "Αναφορά συναλλαγής "
+
+#: packages/community_store/mail/new_order_notification.php:182
+#: packages/community_store/mail/order_receipt.php:202
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:135
+#: packages/community_store/single_pages/dashboard/store/orders.php:41
+#: packages/community_store/single_pages/dashboard/store/orders.php:395
+#: packages/community_store/single_pages/dashboard/store/orders.php:639
+#: packages/community_store/elements/order_slip.php:46
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:139
+msgid "Free Order"
+msgstr "Δωρεάν Παραγγελία"
+
+#: packages/community_store/mail/new_order_notification.php:186
+msgid "View this order within the Dashboard"
+msgstr "Δείτε αυτή την παραγγελία στον Πίνακα ελέγχου"
+
+#: packages/community_store/mail/new_order_notification.php:204
+msgid "Order #:"
+msgstr "Παραγγελία #:"
+
+#: packages/community_store/mail/new_order_notification.php:205
+msgid "A new order has been placed on your website"
+msgstr "Μια παραγγελία έχει τοποθετηθεί στο site σας"
+
+#: packages/community_store/mail/new_user.php:4
+msgid "account Created"
+msgstr "Δημιουργήθηκε λογαριασμός"
+
+#: packages/community_store/mail/new_user.php:16
+#: packages/community_store/mail/new_user.php:39
+msgid "Thank you for your order, an account has been created for you at"
+msgstr ""
+"Σας ευχαριστούμε για την παραγγελία σας, ένας λογαριασμός έχει δημιουργηθεί "
+"για σας"
+
+#: packages/community_store/mail/order_receipt.php:8
+msgid "Order Receipt #%s"
+msgstr "Απόδειξη  Παραγγελίας #%s"
+
+#: packages/community_store/mail/order_receipt.php:26
+msgid "Your Order"
+msgstr "Η Παραγγελία σας"
+
+#: packages/community_store/mail/order_receipt.php:155
+#: packages/community_store/single_pages/checkout/complete.php:20
+msgid "Your Downloads"
+msgstr "Οι Λήψεις σας"
+
+#: packages/community_store/mail/order_receipt.php:212
+#: packages/community_store/single_pages/dashboard/store/orders.php:31
+#: packages/community_store/single_pages/dashboard/store/orders.php:604
+#: packages/community_store/elements/order_slip.php:36
+msgid "Cancelled"
+msgstr "Ακυρώθηκε"
+
+#: packages/community_store/mail/order_receipt.php:215
+#: packages/community_store/single_pages/dashboard/store/orders.php:35
+#: packages/community_store/single_pages/dashboard/store/orders.php:442
+#: packages/community_store/single_pages/dashboard/store/orders.php:629
+#: packages/community_store/elements/order_slip.php:40
+msgid "Refunded"
+msgstr "Έγινε επιστροφή χρημάτων"
+
+#: packages/community_store/single_pages/checkout/complete.php:3
+msgid "Order #%s has been placed"
+msgstr "Η Παραγγελία #%s έχει τοποθετηθεί"
+
+#: packages/community_store/single_pages/checkout/complete.php:5
+msgid "Thank you for your order. A receipt will be emailed to you shortly."
+msgstr ""
+"Σας ευχαριστούμε για την παραγγελία σας. Μια απόδειξη θα σας αποσταλεί με "
+"email σύντομα."
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:26
+msgid "Method Name"
+msgstr "Όνομα μεθόδου"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:32
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:100
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:168
+#: packages/community_store/single_pages/dashboard/store/discounts.php:96
+#: packages/community_store/single_pages/dashboard/store/discounts.php:246
+#: packages/community_store/single_pages/dashboard/store/settings.php:122
+#: packages/community_store/single_pages/dashboard/store/settings.php:285
+msgid "Enabled"
+msgstr "Ενεργοποιημένο"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:33
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:112
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:21
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:179
+#: packages/community_store/single_pages/dashboard/store/discounts.php:247
+#: packages/community_store/single_pages/dashboard/store/products.php:100
+#: packages/community_store/single_pages/dashboard/store/products.php:320
+#: packages/community_store/single_pages/dashboard/store/products.php:399
+#: packages/community_store/single_pages/dashboard/store/products.php:408
+#: packages/community_store/single_pages/dashboard/store/products.php:564
+#: packages/community_store/single_pages/dashboard/store/products.php:583
+#: packages/community_store/single_pages/dashboard/store/products.php:738
+#: packages/community_store/single_pages/dashboard/store/products.php:748
+#: packages/community_store/single_pages/dashboard/store/settings.php:124
+msgid "Yes"
+msgstr "Ναι"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:33
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:112
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:21
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:179
+#: packages/community_store/single_pages/dashboard/store/discounts.php:247
+#: packages/community_store/single_pages/dashboard/store/products.php:100
+#: packages/community_store/single_pages/dashboard/store/products.php:320
+#: packages/community_store/single_pages/dashboard/store/products.php:564
+#: packages/community_store/single_pages/dashboard/store/products.php:738
+#: packages/community_store/single_pages/dashboard/store/products.php:748
+#: packages/community_store/single_pages/dashboard/store/settings.php:124
+#: packages/community_store/single_pages/checkout.php:175
+msgid "No"
+msgstr "Όχι"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:38
+msgid "Details"
+msgstr "Λεπτομέριες"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:60
+msgid "%s Shipping Method"
+msgstr "%s Τρόπος αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:71
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:19
+msgid "Add Shipping Method"
+msgstr "Προσθέστε Μέθοδος αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:81
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:123
+msgid "General Settings"
+msgstr "Γενικές Ρυθμίσεις"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:99
+msgid "%s Methods"
+msgstr "%s Μέθοδος"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:101
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:133
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:170
+#: packages/community_store/single_pages/dashboard/store/discounts.php:33
+#: packages/community_store/single_pages/dashboard/store/products.php:1598
+msgid "Actions"
+msgstr "Οι ενέργειες"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:115
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:152
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:182
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:117
+msgid "Disable"
+msgstr "Απενεργοποίηση"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:120
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:154
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:183
+#: packages/community_store/single_pages/dashboard/store/discounts.php:220
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:133
+msgid "No shipping methods are configured"
+msgstr "Δεν έχουν ρυθμιστεί μέθοδοι αποστολής "
+
+#: packages/community_store/single_pages/dashboard/store/settings/shipping.php:138
+msgid "No shipping methods are currently enabled"
+msgstr "Δεν υπάρχουν ενεργοποιημένες μέθοδοι αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:20
+msgid "Enable Tax Rate"
+msgstr "Ενεργοποίηση φορολογικού συντελεστή"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:26
+msgid "Tax Label"
+msgstr "Ετικέτα Φόρου"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:32
+msgid "Tax Rate %"
+msgstr "Φορολογικός συντελεστής %"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:42
+msgid "Tax is Based on the"
+msgstr "Φόρος βασίζεται στην"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:43
+msgid "Product Total"
+msgstr "Προϊόν Σύνολο"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:43
+msgid "Product Total + Shipping"
+msgstr "Προϊόν Σύνολο + μεταφορικά"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:46
+msgid "When to Charge Tax"
+msgstr "Πότε να γίνεται  χρέωση φόρου"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:54
+msgid "If the Customers..."
+msgstr "Εάν οι πελάτες..."
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:55
+#: packages/community_store/single_pages/dashboard/store/orders.php:107
+#: packages/community_store/single_pages/checkout.php:255
+#: packages/community_store/single_pages/checkout.php:334
+#: packages/community_store/elements/order_slip.php:108
+msgid "Shipping Address"
+msgstr "Διεύθυνση αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:55
+#: packages/community_store/single_pages/dashboard/store/orders.php:86
+#: packages/community_store/single_pages/checkout.php:73
+#: packages/community_store/single_pages/checkout.php:209
+#: packages/community_store/elements/order_slip.php:93
+msgid "Billing Address"
+msgstr "Διεύθυνση χρέωσης"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:62
+msgid "Matches..."
+msgstr "Αντιστοιχεί..."
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:64
+#: packages/community_store/single_pages/checkout.php:131
+#: packages/community_store/single_pages/checkout.php:306
+msgid "Country"
+msgstr "Χώρα"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:73
+msgid "Region"
+msgstr "Περιοχή"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:73
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:82
+#: packages/community_store/single_pages/dashboard/store/products.php:730
+#: packages/community_store/single_pages/dashboard/store/settings.php:135
+#: packages/community_store/single_pages/dashboard/store/settings.php:311
+msgid "Optional"
+msgstr "Προαιρετικό"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:82
+#: packages/community_store/single_pages/checkout.php:123
+#: packages/community_store/single_pages/checkout.php:124
+#: packages/community_store/single_pages/checkout.php:298
+#: packages/community_store/single_pages/checkout.php:299
+msgid "City"
+msgstr "Πόλη"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:92
+msgid "VAT Number Options"
+msgstr "Επιλογές ΦΠΑ"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:99
+msgid "Do not apply tax if a valid VAT number is supplied"
+msgstr "Μην εφαρμόζετε φόρο εάν παρέχεται έγκυρος αριθμός ΦΠΑ"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:101
+msgid ""
+"If the customer has entered a correctly formatted VAT Number then this tax "
+"will not be applied at checkout."
+msgstr ""
+"Εάν ο πελάτης έχει εισαγάγει έναν σωστά διαμορφωμένο αριθμό ΦΠΑ, τότε αυτός "
+"ο φόρος δεν θα εφαρμοστεί κατά την ολοκλήρωση της πληρωμής."
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:113
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:242
+msgid "%s Tax Rate"
+msgstr "%s φορολογικός συντελεστής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:121
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:21
+msgid "Add Tax Rate"
+msgstr "Προσθέστε φορολογικό συντελεστή"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:122
+msgid "Add Tax Class"
+msgstr "Προσθέστε Κλάση Φόρου"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:131
+#: packages/community_store/single_pages/dashboard/store/products.php:325
+msgid "Tax Class"
+msgstr "Κλάση φόρου"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:132
+msgid "Associated Tax Rates"
+msgstr "Σχετιζόμενοι Φορολογικοί Συντελεστές"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:166
+msgid "Tax Rate"
+msgstr "Φορολογικός συντελεστής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:167
+msgid "Rate"
+msgstr "Συντελεστής"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:169
+msgid "Applies To"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:201
+msgid "Tax Class Name"
+msgstr "Όνομα Κλάσης Φόρου "
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:206
+msgid ""
+"Since you're prices INCLUDE Tax, you can only specify one tax rate per "
+"class. If you need more, you must change this setting in the %stax setting "
+"here%s"
+msgstr ""
+"Δεδομένου ότι οι τιμές περιλαμβάνουν φόρους, μπορείτε να καθορίσετε μόνο ένα"
+" φορολογικό συντελεστή ανά τάξη. Αν χρειάζεστε περισσότερο, θα πρέπει να "
+"αλλάξετε αυτή τη ρύθμιση στο %stax setting here%s"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:210
+msgid "Select Tax Class Rates"
+msgstr "Επιλέξτε συντελεστή Φορολογικής Κλάσης"
+
+#: packages/community_store/single_pages/dashboard/store/settings/tax.php:241
+msgid "Cancel / View Taxes"
+msgstr "Ακύρωση / Προβολή Φόρων"
+
+#: packages/community_store/single_pages/dashboard/store/products/attributes.php:29
+#: packages/community_store/single_pages/dashboard/store/orders/attributes.php:31
+msgid "Add Attribute"
+msgstr "Προσθήκη Χαρακτηριστικού"
+
+#: packages/community_store/single_pages/dashboard/store/products/attributes.php:36
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:137
+#: packages/community_store/single_pages/dashboard/store/orders/attributes.php:38
+#: packages/community_store/single_pages/dashboard/store/discounts.php:420
+#: packages/community_store/single_pages/dashboard/store/products.php:696
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:22
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:22
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:98
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:64
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:8
+msgid "The following pages have been used to categorise products:"
+msgstr ""
+"Οι σελίδες που ακολουθούν έχουν χρησιμοποιηθεί για την κατηγοριοποίηση "
+"προϊόντων:"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:10
+msgid "No pages have been used to categorise products"
+msgstr ""
+"Δεν έχουν χρησιμοποιηθεί σελίδες για την κατηγοριοποίηση των προϊόντων"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:16
+msgid "%d product"
+msgid_plural "%d products"
+msgstr[0] "%d προϊόν"
+msgstr[1] "%d προϊόντα"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:24
+msgid "Products within category"
+msgstr "Προϊόντα στην κατηγορία"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:32
+#: packages/community_store/single_pages/dashboard/store/products.php:94
+#: packages/community_store/single_pages/dashboard/store/products.php:1620
+msgid "Inactive"
+msgstr "Ανενεργό"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:48
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:136
+#: packages/community_store/single_pages/dashboard/store/discounts.php:419
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: packages/community_store/single_pages/dashboard/store/products/categories.php:49
+msgid "Save Category Product Order"
+msgstr "Αποθηκεύστε Κατηγορία Παραγγελίας Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:13
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:23
+msgid "Add Product Group"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:21
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:64
+msgid "Group Name"
+msgstr "Όνομα Ομάδας"
+
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:54
+msgid "You have not added a group yet"
+msgstr "Δεν έχετε προσθέσει κάποια Ομάδα."
+
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:68
+msgid "Products within group"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products/groups.php:137
+#: packages/community_store/single_pages/dashboard/store/discounts.php:420
+#: packages/community_store/single_pages/dashboard/store/orders.php:369
+#: packages/community_store/single_pages/cart.php:172
+#: packages/community_store/elements/cart_modal.php:178
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:32
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:30
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:106
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:104
+msgid "Update"
+msgstr "Ενημέρωση"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:15
+#: packages/community_store/single_pages/dashboard/store/products.php:209
+msgid "From"
+msgstr "Από"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:23
+#: packages/community_store/single_pages/dashboard/store/products.php:210
+msgid "To"
+msgstr "Προς"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:31
+msgid "Order By"
+msgstr "Ταξινόμηση κατά"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:33
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:48
+msgid "Quantity Sold"
+msgstr "Η ποσότητα Εξαντλήθηκε"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:38
+msgid "Filter Results"
+msgstr "Αποτελέσματα φίλτρου"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:47
+#: packages/community_store/single_pages/dashboard/store/discounts.php:28
+#: packages/community_store/single_pages/dashboard/store/discounts.php:241
+#: packages/community_store/single_pages/dashboard/store/orders.php:55
+#: packages/community_store/single_pages/dashboard/store/orders.php:196
+#: packages/community_store/single_pages/checkout.php:216
+#: packages/community_store/single_pages/checkout.php:338
+#: packages/community_store/elements/order_slip.php:57
+msgid "Name"
+msgstr "Όνομα"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:75
+msgid "Export CSV"
+msgstr "Εξαγωγή CSV"
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:132
+#: packages/community_store/single_pages/dashboard/store/orders.php:636
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:136
+msgid "Incomplete"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/reports/products.php:155
+msgid "Total Quantity Sold"
+msgstr "Συνολική ποσότητα που πωλήθηκε"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:11
+#: packages/community_store/single_pages/dashboard/store.php:9
+msgid "Incl."
+msgstr "Συμπ."
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:23
+#: packages/community_store/single_pages/dashboard/store.php:26
+msgid "Today's Sales"
+msgstr "Οι σημερινές Πωλήσεις"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:36
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:62
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:88
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:204
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:227
+#: packages/community_store/single_pages/dashboard/store/settings.php:15
+#: packages/community_store/single_pages/dashboard/store.php:39
+#: packages/community_store/single_pages/dashboard/store.php:65
+#: packages/community_store/single_pages/dashboard/store.php:149
+#: packages/community_store/single_pages/cart.php:241
+#: packages/community_store/single_pages/checkout.php:574
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:108
+msgid "Tax"
+msgstr "Φόρος"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:49
+msgid "Past 30 Days"
+msgstr "ΤωνΤελευταίων 30 ημερών"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:75
+#: packages/community_store/single_pages/dashboard/store.php:52
+msgid "Year to Date"
+msgstr "Σαν σήμερα"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:183
+msgid "View Orders by Date"
+msgstr "Προβολή παραγγελιών ανά ημερομηνία"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:198
+msgid "Summary"
+msgstr "Περίληψη"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:206
+msgid "Export"
+msgstr "Εξαγωγή"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:215
+msgid "Export to CSV"
+msgstr "Εξαγωγή σε CSV"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:223
+#: packages/community_store/single_pages/dashboard/store.php:145
+#: packages/community_store/elements/order_slip.php:11
+#: packages/community_store/elements/order_slip.php:23
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:52
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:68
+msgid "Order #"
+msgstr "Παραγγελία #"
+
+#: packages/community_store/single_pages/dashboard/store/reports/sales.php:224
+#: packages/community_store/single_pages/dashboard/store/orders.php:338
+#: packages/community_store/single_pages/dashboard/store.php:146
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:20
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:32
+msgid "Add Discount Rule"
+msgstr "Προσθέστε Κανόνα Έκπτωσης"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:29
+msgid "Displayed Text"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:31
+msgid "Applies"
+msgstr "Iσχύει"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:32
+msgid "Availability"
+msgstr "Διαθεσιμότητα"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:49
+msgid "from all products"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:53
+msgid "from matching products"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:57
+msgid "from shipping when at least one product matches"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:61
+msgid "from each matching product"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:65
+#: packages/community_store/single_pages/dashboard/store/discounts.php:66
+#: packages/community_store/single_pages/dashboard/store/orders.php:221
+msgid "from each product"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:70
+#: packages/community_store/single_pages/dashboard/store/discounts.php:74
+#: packages/community_store/single_pages/dashboard/store/orders.php:225
+#: packages/community_store/single_pages/dashboard/store/orders.php:229
+msgid "from shipping"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:78
+msgid "set as price for all matching products"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:82
+msgid "set as price for all products"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:86
+#: packages/community_store/single_pages/dashboard/store/orders.php:237
+msgid "set as price for shipping"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:94
+#: packages/community_store/single_pages/dashboard/store/settings.php:296
+msgid "Disabled"
+msgstr "Ανενεργό"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:112
+msgid "automatically"
+msgstr "Αυτόματα"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:115
+msgid "when single use code entered"
+msgstr "όταν καταχωρείτε κώδικα για εφάπαξ χρήση"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:116
+msgid "of"
+msgstr "από"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:116
+msgid "codes available"
+msgstr "Διαθέσιμοι κωδικοί "
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:118
+msgid "when code entered"
+msgstr "όταν καταχωρείτε κώδικα"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:119
+msgid "code"
+msgstr "κώδικας"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:119
+msgid "codes"
+msgstr "κωδικοί"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:119
+msgid "configured"
+msgstr "διαμορφωμένο"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:129
+msgid "to specific product groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:131
+msgid "when product groups found in cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:138
+msgid "to specific user groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:145
+msgid "when %s to %s products in cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:147
+msgid "when %s or more products in cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:162
+msgid "starts"
+msgstr "ξεκινά"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:166
+msgid "expires"
+msgstr "λήγει"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:170
+msgid "always"
+msgstr "πάντοτε"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:185
+msgid "Manage Codes"
+msgstr "Διαχείριση Κωδικών"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:251
+msgid "Display Text"
+msgstr "Εμφάνιση Κειμένου"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:258
+msgid "Deduction Type"
+msgstr "Τύπος έκπτωσης"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:259
+msgid "Percentage"
+msgstr "Τοις εκατό"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:260
+msgid "Deduct value once"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:261
+msgid "Deduct value from each matching item"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:262
+msgid "Change to value"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:274
+msgid "Percentage Discount"
+msgstr "ποσοστό έκπτωσης"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:290
+msgid "Value"
+msgstr "Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:302
+msgid "Apply To"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:306
+msgid "Items In Cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:310
+#: packages/community_store/single_pages/cart.php:194
+#: packages/community_store/single_pages/checkout.php:532
+msgid "Apply"
+msgstr "Iσχύει"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:311
+msgid "Automatically, (when matching all restrictions)"
+msgstr "Αυτόματα, (όταν ταιριάζουν όλοι οι περιορισμοί)"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:312
+msgid "When valid code entered"
+msgstr "Όταν καταχωρείτε έγκυρος κωδικός"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:317
+msgid "Single use codes"
+msgstr "Κωδικός για εφάπαξ χρήση"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:320
+msgid "Codes can be entered after creating rule"
+msgstr "Οι κωδικοί μπορούν να εισαχθούν μετά την δημιουργία του κανόνα"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:326
+msgid "Restrictions"
+msgstr "Περιορισμοί"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:330
+msgid "Starts"
+msgstr "Ξεκινάει"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:333
+msgid "Immedately"
+msgstr "Αμέσως"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:333
+msgid "From a specified date"
+msgstr "Από μια συγκεκριμένη ημερομηνία"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:343
+msgid "Ends"
+msgstr "Λήξη"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:346
+msgid "Never"
+msgstr "Ποτέ"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:346
+msgid "At a specified date"
+msgstr "Σε μια συγκεκριμένη ημερομηνία"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:355
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:13
+msgid "Product Groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:360
+#: packages/community_store/single_pages/dashboard/store/products.php:505
+msgid "No Product Groups Available"
+msgstr "Δεν είναι Διαθέσιμες Ομάδες Προϊόντων"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:374
+msgid "User Groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:376
+msgid "Select User Groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:394
+msgid "Minimum Quantity in Cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:400
+msgid "Maximum Quantity in Cart"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:409
+msgid "Description / Notes"
+msgstr "Περιγραφή / Σημειώσεις"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:429
+msgid "Are you sure you want to delete this discount rule?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον κανόνα έκπτωσης;"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:505
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:66
+msgid "Edit Discount Rule"
+msgstr "Επεξεργασία Κανόνα Έκπτωσης "
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:509
+msgid "The following codes are invalid or are already active:"
+msgstr "Οι παρακάτω κωδικοί είναι άκυροι ή είναι ήδη ενεργοί:"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:516
+msgid "Current Codes"
+msgstr "Τρέχοντες Κωδικοί"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:520
+msgid "Single Use Codes"
+msgstr "Κωδικοί για εφάπαξ χρήση"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:522
+msgid "Codes can be repeatedly used"
+msgstr "Οι κωδικοί μπορούν να χρησιμοποιηθούν κατ 'επανάληψη"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:528
+#: packages/community_store/single_pages/cart.php:191
+msgid "Code"
+msgstr "Κώδικας"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:531
+msgid "Used"
+msgstr "Χρησιμοποιείται "
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:542
+msgid "View Order"
+msgstr "Προβολή παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:548
+msgid "Available"
+msgstr "Διαθέσιμο"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:575
+msgid "No codes specified"
+msgstr "Δεν έχουν οριστεί κωδικοί"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:580
+#: packages/community_store/single_pages/dashboard/store/discounts.php:589
+msgid "Add Codes"
+msgstr "Προσθέστε Κωδικούς"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:583
+msgid "Code(s)"
+msgstr "Κώδικας(ες)"
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:585
+msgid "Seperate codes via lines or commas. Codes are case-insensitive."
+msgstr ""
+"Διαχωρίστε τους κωδικούς με γραμμές ή κόμματα. Οι κωδικοί κάνουν διάκριση "
+"πεζών-κεφαλαίων."
+
+#: packages/community_store/single_pages/dashboard/store/discounts.php:596
+msgid "Return to Discount Rules"
+msgstr "Επιστροφή στους Κανόνες Έκπτωσης"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:14
+msgid "Print Order Slip"
+msgstr "Εκτυπώστε το Δελτίο Παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:49
+#: packages/community_store/elements/order_slip.php:54
+msgid "Customer Details"
+msgstr "Πληροφορίες Πελάτη"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:74
+#: packages/community_store/single_pages/dashboard/store/orders.php:339
+#: packages/community_store/elements/order_slip.php:77
+msgid "User"
+msgstr "Χρήστης"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:98
+#: packages/community_store/single_pages/dashboard/store/orders.php:119
+#: packages/community_store/single_pages/checkout.php:91
+#: packages/community_store/single_pages/checkout.php:99
+#: packages/community_store/single_pages/checkout.php:220
+#: packages/community_store/single_pages/checkout.php:274
+msgid "Company"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:131
+#: packages/community_store/elements/order_slip.php:132
+msgid "Order Items"
+msgstr "Στοιχεία Παραγγελίας "
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:136
+#: packages/community_store/elements/order_slip.php:138
+msgid "Product Options"
+msgstr "Επιλογές προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:181
+#: packages/community_store/single_pages/checkout.php:554
+msgid "Items Subtotal"
+msgstr "Μερικό σύνολο Ειδών"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:191
+#: packages/community_store/single_pages/cart.php:209
+#: packages/community_store/single_pages/checkout.php:506
+#: packages/community_store/elements/cart_modal.php:199
+msgid "Discounts Applied"
+msgstr "Η έκπτωση εφαρμόστηκε"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:197
+msgid "Displayed"
+msgstr "Εμφανίζεται "
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:200
+msgid "Triggered"
+msgstr "Ενεργοποιειμένο"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:217
+msgid "from products"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:233
+msgid "set as price"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:243
+msgid "by code"
+msgstr "με κωδικό"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:243
+msgid "Automatically"
+msgstr "Αυτόματα"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:270
+#: packages/community_store/elements/order_slip.php:201
+msgid "Grand Total"
+msgstr "Γενικό σύνολο"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:293
+msgid "Carrier"
+msgstr "Μεταφορέας"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:297
+msgid "Tracking Code"
+msgstr "Κώδικες Παρακολούθησης"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:301
+msgid "View shipment tracking"
+msgstr "Προβολή παρακολούθησης αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:333
+#: packages/community_store/single_pages/dashboard/store/orders.php:583
+msgid "Fulfilment"
+msgstr "Εκπλήρωση"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:337
+#: packages/community_store/single_pages/dashboard/store/orders.php:405
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:361
+msgid "Update Fulfilment Status"
+msgstr "Ενημέρωση Κατάστασης Εκπλήρωσης "
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:377
+msgid "Resend Notification Email"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:385
+msgid "Resend Notification"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:406
+msgid "Date / Reference"
+msgstr "Ημερομηνία / Αναφορά"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:407
+msgid "By"
+msgstr "Από"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:419
+msgid "Ref"
+msgstr "Σχετ"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:426
+msgid "payment"
+msgstr "πληρωμή"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:432
+msgid "Are you sure you wish to reverse this payment?"
+msgstr "Είστε σίγουροι ότι θέλετε να αντιστραφεί αυτή η πληρωμή;"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:432
+#: packages/community_store/single_pages/dashboard/store/orders.php:455
+msgid "reverse"
+msgstr "απόσυρση"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:455
+msgid "Are you sure you wish to reverse this refund?"
+msgstr "Είστε σίγουροι ότι θέλετε να αποσύρεται αυτή η επιστροφή;"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:470
+msgid "Update Payment Status"
+msgstr "Ενημέρωση Κατάστασης Πληρωμής"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:480
+msgid "Mark Paid"
+msgstr "Ένδειξη Πληρωμένο"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:485
+msgid "Refund Reason"
+msgstr "Αιτιολογία Επιστροφής Χρημάτων"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:488
+msgid "Mark Refunded"
+msgstr "Ένδειξη επιστροφή χρημάτων"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:500
+msgid "Resend Invoice Email"
+msgstr "Επανάληψη αποστολής Τιμολόγιο Email"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:508
+msgid "Resend Invoice"
+msgstr "Επανάληψη αποστολής Τιμολόγιο"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:519
+#: packages/community_store/single_pages/dashboard/store/orders.php:521
+msgid "Cancel Order"
+msgstr "Ακύρωση παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:521
+msgid "Are you sure you wish to cancel this order?"
+msgstr "Είστε σίγουροι ότι θέλετε να ακυρώσετε αυτήν την παραγγελία;"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:526
+msgid "Are you sure you wish to reverse this cancellation?"
+msgstr "Είστε σίγουροι ότι θέλετε να αποσύρεται αυτή την  ακύρωση;"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:526
+msgid "Reverse Cancellation"
+msgstr "Ανατροπή  ακύρωσης"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:531
+#: packages/community_store/single_pages/dashboard/store/orders.php:532
+msgid "Delete Order"
+msgstr "Διαγραφή Παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:532
+msgid ""
+"Are you sure you wish to completely delete this order? The order number will"
+" be reused."
+msgstr ""
+"Είστε σίγουροι ότι θέλετε να διαγράψετε εντελώς αυτή την παραγγελία; Ο "
+"αριθμός παραγγελίας θα επαναχρησιμοποιηθεί."
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:543
+#: packages/community_store/single_pages/dashboard/store.php:17
+msgid ""
+"Cart and Ordering features are currently disabled. This setting can be "
+"changed via the"
+msgstr ""
+"Οι δυνατότητες Καλάθι και Παραγγελία είναι απενεργοποιημένα αυτή τη στιγμή. "
+"Αυτή η ρύθμιση μπορεί να αλλάξει μέσω του"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:543
+#: packages/community_store/single_pages/dashboard/store.php:17
+msgid "settings page."
+msgstr "σελίδα ρυθμίσεων."
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:551
+msgid "All Statuses"
+msgstr "Όλες οι καταστάσεις"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:565
+msgid "Search Orders"
+msgstr "Αναζήτηση Παραγγελιών"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:568
+#: packages/community_store/single_pages/dashboard/store/products.php:1583
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:578
+msgid "Order %s"
+msgstr "Παραγγελία %s"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:579
+msgid "Customer Name"
+msgstr "Όνομα πελάτη"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:580
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:60
+msgid "Order Date"
+msgstr "Ημερομηνία παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:582
+#: packages/community_store/single_pages/checkout.php:427
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:62
+msgid "Payment"
+msgstr "Πληρωμή"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:584
+#: packages/community_store/single_pages/dashboard/store/orders.php:646
+msgid "View"
+msgstr "Προβολή"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:617
+msgid "Not found"
+msgstr "Δεν βρέθηκε"
+
+#: packages/community_store/single_pages/dashboard/store/orders.php:655
+msgid "No Orders Found"
+msgstr "Δεν Βρέθηκαν Παραγγελίες"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:33
+msgid "Delete Product"
+msgstr "Διαγραφή Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:37
+#: packages/community_store/single_pages/dashboard/store/products.php:1691
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:244
+msgid "Duplicate Product"
+msgstr "Δημιουργία Διπλότυπου για Προϊόν"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:45
+msgid "Are you sure you want to delete this product?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το προϊόν;"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:58
+msgid "Overview"
+msgstr "Επισκόπηση"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:59
+msgid "Categories and Groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:61
+msgid "Images"
+msgstr "Εικόνες"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:63
+#: packages/community_store/single_pages/dashboard/store/products.php:1311
+msgid "Related Products"
+msgstr "Σχετικά προϊόντα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:64
+msgid "Attributes"
+msgstr "Χαρακτηριστικά"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:65
+msgid "Memberships and Downloads"
+msgstr "Συμμετοχές και λήψεις"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:66
+msgid "Detail Page"
+msgstr "Σελίδα λεπτομεριών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:80
+msgid "Code / SKU"
+msgstr "Κωδικός / SKU"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:93
+#: packages/community_store/single_pages/dashboard/store/products.php:94
+#: packages/community_store/single_pages/dashboard/store/products.php:1593
+#: packages/community_store/single_pages/dashboard/store/products.php:1618
+msgid "Active"
+msgstr "Ενεργό"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:99
+msgid "Featured Product"
+msgstr "Προτεινόμενο Προϊόν"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:117
+msgid "Default Price"
+msgstr "Προεπιλεγμένη Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:123
+msgid "No Price Set"
+msgstr "Δεν υπάρχει Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:129
+#: packages/community_store/single_pages/dashboard/store/products.php:1213
+msgid "Sale Price"
+msgstr "Τιμή Πώλησης"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:139
+msgid "Price Suggestions"
+msgstr "Προτάσεις Τιμής"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:162
+msgid "Minimum Price"
+msgstr "Κατώτατη τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:174
+msgid "Maximum Price"
+msgstr "Μέγιστη Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:189
+msgid "Allow customer to enter price"
+msgstr "Επιτρέψτε στον πελάτη να εισάγει τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:200
+msgid "Quantity based pricing"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:217
+msgid "Add Tier"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:319
+msgid "Taxable"
+msgstr "Φορολογητέο"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:333
+#: packages/community_store/single_pages/dashboard/store/products.php:1161
+#: packages/community_store/single_pages/dashboard/store/products.php:1594
+msgid "Stock Level"
+msgstr "Επίπεδο αποθέματος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:339
+#: packages/community_store/single_pages/dashboard/store/products.php:1174
+#: packages/community_store/single_pages/dashboard/store/products.php:1628
+msgid "Unlimited"
+msgstr "Απεριόριστο"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:393
+msgid "Allow Back Orders"
+msgstr "Επιτρέψτε Επιστροφή Παραγγελιών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:398
+msgid "Offer quantity selection"
+msgstr "Προσφορά Επιλογής Ποσότητας "
+
+#: packages/community_store/single_pages/dashboard/store/products.php:399
+msgid "No, only allow one of this product in a cart"
+msgstr "Όχι, επιτρέπετε μόνο ένα από αυτό το προϊόν στο καλάθι"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:407
+msgid "Allow Decimal Quantities"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:408
+msgid "No, whole number quantities only"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:413
+msgid "Maximum Quantity (as single cart item)"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:422
+msgid "Quantity Label"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:429
+msgid "Quantity Steps"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:453
+msgid "Short Description"
+msgstr "Σύντομη Περιγραφή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:461
+msgid "Product Details (Long Description)"
+msgstr "Λεπτομέρειες Προϊόντος (Μακρά Περιγραφή)"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:472
+msgid "Categorized under pages"
+msgstr "Κατηγοροποίηση σε σελίδες"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:502
+msgid "In product groups"
+msgstr "Σε ομάδες προϊόντων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:563
+msgid "Product is Shippable"
+msgstr "Το προϊόν μπορεί να αποσταλεί"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:578
+msgid "Number Of Items"
+msgstr "Αριθμός αντικειμένων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:582
+msgid "Product can be packaged with other items"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:583
+msgid "No, must be shipped as seperate package"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:589
+#: packages/community_store/single_pages/dashboard/store/products.php:1247
+msgid "Length"
+msgstr "Μήκος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:597
+#: packages/community_store/single_pages/dashboard/store/products.php:1258
+msgid "Width"
+msgstr "Πλάτος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:605
+#: packages/community_store/single_pages/dashboard/store/products.php:1270
+msgid "Height"
+msgstr "Ύψος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:618
+#: packages/community_store/single_pages/dashboard/store/products.php:1283
+msgid "Or, Package(s) Data"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:619
+#: packages/community_store/single_pages/dashboard/store/products.php:625
+#: packages/community_store/single_pages/dashboard/store/products.php:1286
+msgid "%s LENGTHxWIDTHxHEIGHT"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:621
+msgid "Values entered will override individual set weights and sizes"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:623
+msgid "Enter packages on new lines, using the format:"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:627
+msgid "E.g. 10 4x6x8"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:638
+msgid "Primary Product Image"
+msgstr "Κύρια Εικόνα Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:640
+#: packages/community_store/single_pages/dashboard/store/products.php:1205
+msgid "Choose Image"
+msgstr "Επιλέξτε Εικόνα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:643
+msgid "Additional Images"
+msgstr "Επί πλέων Εικόνες "
+
+#: packages/community_store/single_pages/dashboard/store/products.php:657
+msgid "Choose Images"
+msgstr "Επιλογή Εικόνων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:697
+#: packages/community_store/single_pages/dashboard/store/products.php:830
+msgid "Option List"
+msgstr "Λίστα Επιλογών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:698
+msgid "Text Field"
+msgstr "Πεδίο κειμένου"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:699
+msgid "Text Area"
+msgstr "Περιοχή κειμένου"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:700
+#: packages/community_store/single_pages/dashboard/store/products.php:833
+msgid "Checkbox"
+msgstr "Πλαίσιο Επιλογής"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:701
+#: packages/community_store/single_pages/dashboard/store/products.php:834
+msgid "Hidden Value"
+msgstr "Κρυφή Αξία"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:714
+msgid "Delete the Option Group"
+msgstr "Διαγραφή την Ομάδα Επιλογών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:723
+msgid "Option Name"
+msgstr "Όνομα επιλογής"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:729
+msgid "Option Handle"
+msgstr "Δείκτης Επιλογής"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:737
+msgid "In Variations"
+msgstr "Παραλλαγές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:759
+msgid "Add Option"
+msgstr "Προσθήκη Επιλογής"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:831
+msgid "Text Input"
+msgstr "Εισαγωγή Κειμένου"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:832
+msgid "Text Area Input"
+msgstr "Περιοχή Εισαγωγής Κειμένου"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:977
+msgid "Option"
+msgstr "Επιλογή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:985
+msgid "Hide"
+msgstr "Απόκρυψη"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1089
+msgid "Variations"
+msgstr "Παραλλαγές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1091
+msgid "Options have different prices, SKUs or stock levels"
+msgstr "Οι Επιλογές έχουν διαφορετικές τιμές, SKUs ή τα επίπεδα αποθεμάτων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1094
+msgid ""
+"After creating options add the product to configure product variations."
+msgstr ""
+"Μετά τη δημιουργία επιλογής προσθέσετε το προϊόν για να ρυθμίσετε τις "
+"παραλλαγές του προϊόντος."
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1103
+msgid ""
+"Warning: Product options have changed that will create different variations "
+"- any existing variation data will be lost"
+msgstr ""
+"Προειδοποίηση: Οι επιλογές του προϊόντος έχουν αλλάξει και θα δημιουργήσουν "
+"διαφορετικές παραλλαγές - τα υπάρχοντα δεδομένα παραλλαγής θα χαθούν"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1106
+msgid ""
+"Product options have changed, update the product to configure updated "
+"variations"
+msgstr ""
+"Οι επιλογές προϊόντων έχουν αλλάξει, ενημερώστε το προϊόν για να ρυθμίσετε "
+"τις ενημερωμένες παραλλαγές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1133
+msgid "More options"
+msgstr "Περισσότερες επιλογές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1152
+msgid "SKU"
+msgstr "SKU"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1155
+msgid "Base SKU"
+msgstr "Βασικός SKU"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1189
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:9
+msgid "Base Price"
+msgstr "Βασική Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1196
+#: packages/community_store/single_pages/dashboard/store/products.php:1591
+msgid "Primary Image"
+msgstr "Κύρια Εικόνα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1220
+msgid "Base Sale Price"
+msgstr "Βασική Τιμή Πώλησης"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1232
+msgid "Base Weight"
+msgstr "Βασικό Βάρος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1239
+msgid "Number of Items"
+msgstr "Αριθμός αντικειμένων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1242
+msgid "Base Number Of Items"
+msgstr "Βασικός Αριθμός αντικειμένων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1251
+msgid "Base Length"
+msgstr "Βασικό Μήκος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1263
+msgid "Base Width"
+msgstr "Βασικό Πλάτος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1274
+msgid "Base Height"
+msgstr "Βασικό Ύψος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1297
+msgid "Maximum variations reached"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1301
+msgid "Update the product to display variations"
+msgstr "Ενημερώστε το προϊόν για να εμφανίσετε τις παραλλαγές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1381
+msgid ""
+"While you can set and assign attributes, they're are currently only able to "
+"be accessed programmatically"
+msgstr ""
+"Ενώ μπορείτε να ρυθμίσετε και να ορίσετε ιδιότητες, από όπου είναι σε θέση "
+"μόνο να έχει πρόσβαση μέσω προγραμματισμού."
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1400
+msgid "You haven't created product attributes"
+msgstr "Δεν έχετε δημιουργήσει χαρακτηριστικά του προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1414
+msgid "File to download on purchase"
+msgstr "Αρχείο για να κατεβάσετε μετά την αγορά"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1415
+msgid "Choose File"
+msgstr "Επιλογή Αρχείου"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1423
+msgid ""
+"In order to have digital downloads, you need to %sturn on advanced "
+"permissions%s."
+msgstr ""
+"Για να έχετε ψηφιακές λήψεις, θα πρέπει να  %sΕνεργοποιήστε τα προχωρημένα "
+"δικαιώματα%s."
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1430
+msgid "Create user account on purchase"
+msgstr "Δημιουργία λογαριασμού χρήστη κατά την αγορά"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1431
+msgid ""
+"When checked, if customer is guest, will create a user account on purchase"
+msgstr ""
+"Όταν ενεργοποιείται, εάν ο πελάτης είναι επισκέπτης, θα δημιουργήσει ένα "
+"λογαριασμό χρήστη κατά την αγορά"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1435
+msgid "On purchase add user to user groups"
+msgstr "Κατά την αγορά προσθέτει τον χρήστη σε ομάδες χρηστών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1437
+msgid "Select user groups"
+msgstr "Επιλέξτε ομάδες χρηστών"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1450
+msgid "Send customer directly to checkout when added to cart"
+msgstr "Στέλνει τον πελάτη απευθείας στο Ταμείο όταν προσθέτει στο καλάθι"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1455
+msgid "Prevent this item from being in the cart with other items"
+msgstr ""
+"Αποτρέπει αυτό το στοιχείο από το να μπει στο καλάθι με τα άλλα στοιχεία"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1471
+msgid "Detail Page is set to: "
+msgstr "Η Σελίδα Λεπτομέρειας ορίζεται σε:"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1476
+msgid "This product is missing a corresponding page in the sitemap"
+msgstr "Αυτό το προϊόν δεν έχει μια αντίστοιχη σελίδα στο sitemap"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1483
+msgid "Page Template"
+msgstr "Πρότυπο Σελίδας"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1488
+msgid "Any changes to the product will not be saved. Create product page?"
+msgstr ""
+"Τυχόν μεταβολές του προϊόντος δεν θα αποθηκευτούν. Να γίνει Δημιουργία "
+"σελίδας του προϊόντος;"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1488
+msgid "Generate a Product Page"
+msgstr "Δημιουργήστε μια Σελίδα Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1492
+msgid "A Page Type with the handle store_product was not found"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1497
+msgid "No page is configured as the parent page for new products"
+msgstr "Δεν έχει ρυθμιστεί σελίδα ως μητρική σελίδα για καινούργια προϊόντα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1509
+msgid "Cancel / View All Products"
+msgstr "Ακύρωση / Δείτε Όλα τα Προϊόντα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1510
+msgid "%s Product"
+msgstr "%s Προϊόντα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1537
+msgid "Manage Attributes"
+msgstr "Διαχειριστείτε Χαρακτηριστικά"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1538
+msgid "Manage Groups"
+msgstr "Διαχείριση ομάδων"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1539
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:97
+msgid "Add Product"
+msgstr "Προσθέτετε προϊόν"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1549
+msgid "All Groups"
+msgstr "Όλες οι Ομάδες"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1563
+msgid "Filtering By: %s"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1563
+msgid "Filter By Product Group"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1579
+msgid "Search by Name or SKU"
+msgstr "Αναζήτηση ανά Όνομα ή  SKU"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1596
+#: packages/community_store/single_pages/dashboard/store/products.php:1641
+msgid "Featured"
+msgstr "Προτεινόμενα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1597
+msgid "Groups"
+msgstr "Ομάδες"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1626
+#: packages/community_store/single_pages/dashboard/store/products.php:1633
+msgid "Multiple"
+msgstr "Πολλαπλές"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1634
+msgid "Base price"
+msgstr "Βασική Τιμή"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1643
+msgid "Not Featured"
+msgstr "Μη Προτεινόμενα"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1682
+msgid "New Product Name"
+msgstr "Νέο Όνομα Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1683
+msgid "(Copy)"
+msgstr "(Αντίγραφο)"
+
+#: packages/community_store/single_pages/dashboard/store/products.php:1687
+msgid "New Product SKU"
+msgstr "Νέος SKU Προϊόντος"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:4
+msgid "Shipping Methods"
+msgstr "Μέθοδοι Αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:5
+msgid "Tax Rates"
+msgstr "Φορολογικοί Συντελεστές"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:14
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:17
+msgid "Payments"
+msgstr "Πληρωμές"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:18
+#: packages/community_store/single_pages/dashboard/store/settings.php:173
+msgid "Fulfilment Statuses"
+msgstr "Καταστάσεις Εκπλήρωσης "
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:19
+msgid "Notifications and Receipts"
+msgstr "Ειδοποιήσεις και Αποδείξεις"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:21
+msgid "Cart and Checkout"
+msgstr "Καλάθι και Ταμείο"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:22
+#: packages/community_store/single_pages/dashboard/store/settings.php:362
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:45
+msgid "Orders"
+msgstr "Παραγγελίες"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:28
+msgid "Currency Settings"
+msgstr "Ρυθμίσεις Νομίσματος"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:31
+msgid "Currency Symbol"
+msgstr "Σύμβολο Νομίσματος"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:36
+msgid "Currency Code"
+msgstr "Κωδικός Νομίσματος"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:42
+msgid "Thousands Separator"
+msgstr "Διαχωριστικό για χιλιάδες "
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:44
+msgid "e.g. , or a space"
+msgstr "π.χ. , ή διάστημα"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:47
+msgid "Whole Number Separator"
+msgstr "Διαχωριστικό Ακέραιου Αριθμού"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:49
+msgid "e.g. period or a comma"
+msgstr "π.χ. διάστημα ή ένα κόμμα"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:56
+msgid "Tax Settings"
+msgstr "Φορολογικές Ρυθμίσεις"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:59
+msgid "Are Prices Entered with Tax Included?"
+msgstr "Οι τιμές που έχουν καταχωρηθεί με συμπεριλαμβανόμενο το ΦΠΑ ;"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:60
+msgid "No, I will enter product prices EXCLUSIVE of tax"
+msgstr "Όχι, θα καταχωρίσω τις τιμές των προϊόντων χωρίς φόρο"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:60
+msgid "Yes, I will enter product prices INCLUSIVE of tax"
+msgstr "Ναι, θα καταχωρίσω τις τιμές των προϊόντων να συμπεριλαμβάνουν φόρο"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:64
+msgid "Enable EU VAT Number Options?"
+msgstr "Ενεργοποίηση Επιλογών ΑΦΜ ΕΕ;"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:65
+msgid "No, I don't need this"
+msgstr "Όχι, δεν χρειάζεται αυτό"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:65
+msgid "Yes, enable VAT Number options"
+msgstr "Ναι, Ενεργοποίηση Επιλογών ΦΠΑ;"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:72
+msgid "Shipping Units"
+msgstr "Ενότητες Αποστολής"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:76
+msgid "Units for Weight"
+msgstr "Μονάδες Βάρους"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:78
+msgid "oz"
+msgstr "oz"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:78
+msgid "lb"
+msgstr "λίβρες"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:78
+msgid "kg"
+msgstr "κιλά"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:78
+msgid "g"
+msgstr "γρ."
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:83
+msgid "Units for Size"
+msgstr "Ενότητες για το Μέγεθος"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:85
+msgid "in"
+msgstr "σε"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:85
+msgid "cm"
+msgstr "εκ."
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:85
+msgid "mm"
+msgstr "χιλ,"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:93
+msgid "Include Delivery Instructions field in checkout"
+msgstr "Συμπεριλάβετε το πεδίο Οδηγίες Παράδοσης στο ταμείο"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:97
+msgid "Multiple Packages Support"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:101
+msgid "Enable Package(s) Data fields"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:111
+msgid "Payment Methods"
+msgstr "Μέθοδοι πληρωμής"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:130
+msgid "Display Name (on checkout)"
+msgstr "Εμφάνιση ονόματος (στο ταμείο)"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:134
+msgid "Button Label"
+msgstr "Ετικέτα κουμπιού"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:154
+msgid "No Payment Methods are Installed"
+msgstr "Δεν έχουν Εγκατασταθεί Τρόποι Πληρωμής "
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:183
+msgid "Default Status"
+msgstr "Προεπιλεγμένη Κατάσταση"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:184
+msgid "Send Change Notifications to..."
+msgstr "Στείλτε Αλλαγή Ειδοποιήσεων σε ..."
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:187
+msgid "Site"
+msgstr "Site"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:188
+msgid "Customer"
+msgstr "Πελάτης"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:219
+msgid "No Fulfilment Statuses are available"
+msgstr "Δεν υπάρχουν Καταστάσεις Εκπλήρωσης"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:227
+msgid "Notification Emails"
+msgstr "Emails Κοινοποίησης"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:230
+msgid ""
+"Send order notification to email %sseparate multiple emails with commas%s"
+msgstr ""
+"Στείλτε email κοινοποίησης παραγγελίας %sδιαχωρίστε πολλαπλά μηνύματα "
+"ηλεκτρονικού ταχυδρομείου με κόμματα%s"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:231
+msgid "Email Address"
+msgstr "Διεύθυνση email"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:234
+msgid "Emails Sent From"
+msgstr "Τα Μηνύματα στέλνονται από"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:239
+msgid "From Email"
+msgstr "Από Email"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:240
+msgid "From Email Address"
+msgstr "Από την Διεύθυνση Email"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:246
+#: packages/community_store/single_pages/dashboard/store/settings.php:247
+msgid "From Name"
+msgstr "Από Όνομα"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:252
+msgid "Receipt Emails"
+msgstr "Emails παραλαβή"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:255
+msgid "Receipt Email Header Content"
+msgstr "Περιεχόμενο Header Email Παραλαβής"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:261
+msgid "Receipt Email Footer Content"
+msgstr "Υποσέλιδο Email Παραλαβής"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:273
+msgid "Page to Publish Product Pages Under"
+msgstr "Σελίδα Κάτω από τις Σελίδες Δημοσίευσης Προϊόντων"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:281
+msgid "Cart and Ordering"
+msgstr "Καλάθι και Παραγγελία"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:286
+msgid "Disabled (Catalog Mode)"
+msgstr "Άτομα με ειδικές ανάγκες (Λειτουργία Καταλόγου)"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:289
+msgid "Guest Checkout"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:294
+msgid "Always (unless login required for products in cart)"
+msgstr "Πάντα (εκτός αν απαιτείται σύνδεση για τα προϊόντα στο καλάθι αγορών)"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:295
+msgid "Offer as checkout option"
+msgstr "Προσφορά ως επιλογή για την ολοκλήρωση της παραγγελίας"
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:299
+msgid "Address Auto-Complete"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:301
+msgid "Address Auto-Complete API Key (Google Places)"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:305
+msgid "Company Name"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:310
+msgid "Hidden"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:315
+msgid "Billing Details"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:320
+msgid "Do not save billing details to user on order"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:327
+#: packages/community_store/single_pages/dashboard/store/settings.php:344
+msgid "For users in groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:327
+#: packages/community_store/single_pages/dashboard/store/settings.php:344
+msgid "All Users/Groups"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:333
+msgid "Shipping Details"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:337
+msgid "Do not save shipping details to user on order"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:365
+msgid ""
+"Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)"
+msgstr ""
+
+#: packages/community_store/single_pages/dashboard/store/settings.php:373
+msgid "Save Settings"
+msgstr "Αποθήκευση Ρυθμίσεων"
+
+#: packages/community_store/single_pages/dashboard/store.php:78
+msgid "Sales this Week"
+msgstr "Πωλήσεις αυτή την εβδομάδα"
+
+#: packages/community_store/single_pages/dashboard/store.php:98
+#: packages/community_store/single_pages/dashboard/store.php:100
+msgid "m/d"
+msgstr "m/d"
+
+#: packages/community_store/single_pages/dashboard/store.php:141
+msgid "Recent Orders"
+msgstr "Πρόσφατες Παραγγελίες"
+
+#: packages/community_store/single_pages/cart.php:9
+#: packages/community_store/elements/cart_modal.php:10
+msgid "Shopping Cart"
+msgstr "Καλάθι αγορών"
+
+#: packages/community_store/single_pages/cart.php:13
+#: packages/community_store/elements/cart_modal.php:18
+msgid "Your cart has been updated"
+msgstr "Το καλάθι σας έχει ενημερωθεί"
+
+#: packages/community_store/single_pages/cart.php:17
+msgid "Your cart has been updated due to changes in stock levels"
+msgstr ""
+"Το καλάθι σας έχει ενημερωθεί λόγω των αλλαγών στα επίπεδα των αποθεμάτων"
+
+#: packages/community_store/single_pages/cart.php:21
+#: packages/community_store/elements/cart_modal.php:22
+msgid "Your cart has been cleared"
+msgstr "Το καλάθι σας έχει εκκαθαριστεί"
+
+#: packages/community_store/single_pages/cart.php:25
+#: packages/community_store/elements/cart_modal.php:26
+msgid "Item removed"
+msgstr "Το στοιχείο αφαιρέθηκε"
+
+#: packages/community_store/single_pages/cart.php:29
+#: packages/community_store/elements/cart_modal.php:30
+msgid "Due to stock levels your quantity has been limited"
+msgstr "Λόγω των επιπέδων των αποθεμάτων ποσότητα σας έχει περιοριστεί"
+
+#: packages/community_store/single_pages/cart.php:46
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: packages/community_store/single_pages/cart.php:170
+#: packages/community_store/elements/cart_modal.php:222
+msgid "Clear Cart"
+msgstr "Καθαρισμός καλαθιού"
+
+#: packages/community_store/single_pages/cart.php:188
+msgid "Enter Discount Code"
+msgstr "Εισάγετε τον Κωδικό Έκπτωσης"
+
+#: packages/community_store/single_pages/cart.php:199
+#: packages/community_store/single_pages/checkout.php:520
+msgid "Discount has been applied"
+msgstr "Η Έκπτωση έχει εφαρμοσθεί"
+
+#: packages/community_store/single_pages/cart.php:203
+#: packages/community_store/single_pages/checkout.php:524
+msgid "Invalid code"
+msgstr "Μη έγκυρος κωδικός"
+
+#: packages/community_store/single_pages/cart.php:209
+#: packages/community_store/single_pages/checkout.php:506
+#: packages/community_store/elements/cart_modal.php:199
+msgid "Discount Applied"
+msgstr "Η έκπτωση εφαρμόστηκε"
+
+#: packages/community_store/single_pages/cart.php:225
+msgid "Items Sub Total"
+msgstr "Είδη Υποσύνολο"
+
+#: packages/community_store/single_pages/cart.php:232
+#: packages/community_store/single_pages/checkout.php:380
+#: packages/community_store/single_pages/checkout.php:563
+#: packages/community_store/elements/checkout/shipping_methods.php:33
+msgid "No Charge"
+msgstr "Χωρίς χρέωση"
+
+#: packages/community_store/single_pages/cart.php:232
+#: packages/community_store/single_pages/checkout.php:563
+msgid "to be determined"
+msgstr "που θα καθοριστεί"
+
+#: packages/community_store/single_pages/cart.php:258
+#: packages/community_store/elements/cart_modal.php:214
+msgid "Your cart is empty"
+msgstr "Το καλάθι σας είναι άδειο"
+
+#: packages/community_store/single_pages/checkout.php:27
+msgid "Sign in, Register or Checkout as Guest"
+msgstr "Συνδεθείτε, Εγγραφή ή Checkout ως Επισκέπτης"
+
+#: packages/community_store/single_pages/checkout.php:29
+msgid "Sign in or Register"
+msgstr "Σύνδεση ή Εγγραφή"
+
+#: packages/community_store/single_pages/checkout.php:38
+msgid ""
+"In order to proceed, you'll need to either register, or sign in with your "
+"existing account."
+msgstr ""
+"Για να προχωρήσετε, θα πρέπει είτε να εγγραφείτε ή να συνδεθείτε με τον "
+"υπάρχοντα λογαριασμό σας."
+
+#: packages/community_store/single_pages/checkout.php:42
+msgid "Register"
+msgstr "Εγγραφή"
+
+#: packages/community_store/single_pages/checkout.php:47
+msgid "Or optionally, you may choose to checkout as a guest."
+msgstr ""
+"Ή προαιρετικά, μπορείτε να επιλέξετε να ολοκληρώσετε την παραγγελίας ως "
+"επισκέπτης."
+
+#: packages/community_store/single_pages/checkout.php:49
+msgid "Checkout as Guest"
+msgstr "Ταμείο ως Επισκέπτης"
+
+#: packages/community_store/single_pages/checkout.php:61
+msgid "Customer Information"
+msgstr ""
+
+#: packages/community_store/single_pages/checkout.php:78
+#: packages/community_store/single_pages/checkout.php:79
+#: packages/community_store/single_pages/checkout.php:259
+#: packages/community_store/single_pages/checkout.php:260
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:54
+msgid "First Name"
+msgstr "Όνομα"
+
+#: packages/community_store/single_pages/checkout.php:84
+#: packages/community_store/single_pages/checkout.php:85
+#: packages/community_store/single_pages/checkout.php:265
+#: packages/community_store/single_pages/checkout.php:266
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:53
+msgid "Last Name"
+msgstr "Επίθετο"
+
+#: packages/community_store/single_pages/checkout.php:93
+msgid "Company (optional)"
+msgstr ""
+
+#: packages/community_store/single_pages/checkout.php:107
+#: packages/community_store/single_pages/checkout.php:111
+#: packages/community_store/single_pages/checkout.php:286
+msgid "Street Address"
+msgstr ""
+
+#: packages/community_store/single_pages/checkout.php:116
+#: packages/community_store/single_pages/checkout.php:291
+msgid "Apartment, unit, etc (optional)"
+msgstr ""
+
+#: packages/community_store/single_pages/checkout.php:138
+#: packages/community_store/single_pages/checkout.php:313
+#: packages/community_store/src/CommunityStore/Utilities/States.php:53
+msgid "State / Province"
+msgstr "Πολιτεία / Επαρχία"
+
+#: packages/community_store/single_pages/checkout.php:146
+#: packages/community_store/single_pages/checkout.php:147
+#: packages/community_store/single_pages/checkout.php:321
+#: packages/community_store/single_pages/checkout.php:322
+msgid "Postal Code"
+msgstr "Ταχυδρομικός Κώδικας"
+
+#: packages/community_store/single_pages/checkout.php:155
+#: packages/community_store/single_pages/checkout.php:156
+msgid "Phone Number"
+msgstr "Αριθμός τηλεφώνου"
+
+#: packages/community_store/single_pages/checkout.php:167
+msgid "Use these details for shipping"
+msgstr "Χρησιμοποιήστε αυτές τις λεπτομέρειες για την αποστολή"
+
+#: packages/community_store/single_pages/checkout.php:202
+#: packages/community_store/single_pages/checkout.php:328
+#: packages/community_store/single_pages/checkout.php:368
+#: packages/community_store/single_pages/checkout.php:405
+msgid "Next"
+msgstr "Επόμενο"
+
+#: packages/community_store/single_pages/checkout.php:225
+#: packages/community_store/single_pages/checkout.php:282
+#: packages/community_store/single_pages/checkout.php:343
+msgid "Address"
+msgstr "Διεύθυνση "
+
+#: packages/community_store/single_pages/checkout.php:327
+#: packages/community_store/single_pages/checkout.php:367
+#: packages/community_store/single_pages/checkout.php:404
+#: packages/community_store/single_pages/checkout.php:466
+msgid "Previous"
+msgstr "Προηγούμενο"
+
+#: packages/community_store/single_pages/checkout.php:356
+msgid "Please select a shipping method"
+msgstr "Επιλέξτε μια μέθοδο αποστολής"
+
+#: packages/community_store/single_pages/checkout.php:398
+msgid "VAT Number (if applicable)"
+msgstr "ΦΠΑ (εάν ισχύει)"
+
+#: packages/community_store/single_pages/checkout.php:415
+msgid "Applied VAT Number"
+msgstr "Εφαρμοσμoζόμενο ΦΠΑ"
+
+#: packages/community_store/single_pages/checkout.php:416
+msgid "Not entered"
+msgstr "δεν εισήλθε"
+
+#: packages/community_store/single_pages/checkout.php:467
+msgid "Complete Order"
+msgstr "Ολοκληρωμένη Παραγγελία"
+
+#: packages/community_store/single_pages/checkout.php:475
+msgid ""
+"There are currently no payment methods available to process your order."
+msgstr ""
+"Δεν υπάρχουν μέθοδοι πληρωμής διαθέσιμοι για να  επεξεργαστούμε την "
+"παραγγελία σας."
+
+#: packages/community_store/single_pages/checkout.php:491
+msgid "Your Cart"
+msgstr "Το Καλάθι σας"
+
+#: packages/community_store/single_pages/checkout.php:527
+msgid "Enter discount code"
+msgstr "Εισάγετε τον κωδικό έκπτωσης"
+
+#: packages/community_store/single_pages/checkout.php:530
+msgid "Enter code"
+msgstr "Εισάγετε τον κωδικό"
+
+#: packages/community_store/single_pages/checkout.php:556
+msgid "inc. taxes"
+msgstr "με Φ.Π.Α."
+
+#: packages/community_store/single_pages/checkout.php:596
+msgid "Click here if you are not automatically redirected"
+msgstr "Κάντε κλικ εδώ εάν δεν γίνει αυτόματη ανακατεύθυνση"
+
+#: packages/community_store/elements/attribute/type_form_order_groups.php:7
+msgid "For customers in these groups"
+msgstr "Για τους πελάτες σε αυτές τις ομάδες"
+
+#: packages/community_store/elements/attribute/type_form_order_groups.php:9
+msgid "Available for all Groups"
+msgstr "Διαθέσιμα για όλες τις ομάδες"
+
+#: packages/community_store/elements/attribute/type_form_order_groups.php:23
+msgid "Required in checkout"
+msgstr ""
+
+#: packages/community_store/elements/checkout/shipping_methods.php:50
+msgid "There are no shipping options to process your order."
+msgstr ""
+"Δεν υπάρχουν επιλογές τρόπου αποστολής για να επεξεργαστούμε την παραγγελία "
+"σας."
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:17
+msgid "Rate Based On"
+msgstr "Ο συντελεστής ισχύει για"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:23
+msgid "Price per Item"
+msgstr "Τιμή ανά τεμάχιο"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:27
+msgid "Price per "
+msgstr "Τιμή ανά"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:38
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:7
+msgid "Which Countries does this Apply to?"
+msgstr "Για ποιες χώρες ισχύει αυτό;"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:39
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:8
+msgid "All Countries"
+msgstr "Όλες οι χώρες"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:39
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:8
+msgid "Certain Countries"
+msgstr "ορισμένες χώρες"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:44
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:13
+msgid "If Certain Countries, which?"
+msgstr "Αν Ορισμένες χώρες, ποιές;"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:57
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:26
+msgid "Minimum Purchase Amount for this rate to apply"
+msgstr "Ελάχιστο Ποσό Αγοράς για να εφαρμόστει αυτό το ποσοστό "
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:63
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:32
+msgid "Maximum Purchase Amount for this rate to apply"
+msgstr "Μέγιστο ποσό αγοράς για να εφαρμόστει αυτό το ποσοστό "
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:65
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:86
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:34
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:55
+msgid "Leave at 0 for no maximum"
+msgstr "Αφήστε 0 για χωρίς κανένα μέγιστο"
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:72
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:41
+msgid "Minimum Weight Amount for this rate to apply"
+msgstr "Ελάχιστο Ποσό Βάρους για να εφαρμοστεί αυτό το ποσοστό "
+
+#: packages/community_store/elements/shipping_method_types/flat_rate/dashboard_form.php:81
+#: packages/community_store/elements/shipping_method_types/free_shipping/dashboard_form.php:50
+msgid "Maximum Weight Amount for this rate to apply"
+msgstr "Μέγιστο Ποσό Βάρους για να εφαρμοστεί αυτό το ποσοστό "
+
+#: packages/community_store/elements/invoice/checkout_form.php:5
+msgid "An invoice will be sent to you upon ordering"
+msgstr "Ένα τιμολόγιο θα σας αποσταλεί μετά από παραγγελία"
+
+#: packages/community_store/elements/invoice/dashboard_form.php:7
+msgid "Minimum Order Value"
+msgstr "Ελάχιστη αξία παραγγελίας"
+
+#: packages/community_store/elements/invoice/dashboard_form.php:12
+msgid "Maximum Order Value"
+msgstr "Μέγιστη τιμή Παραγγελίας"
+
+#: packages/community_store/elements/invoice/dashboard_form.php:17
+msgid "Payment Instructions"
+msgstr "Οδηγίες πληρωμής"
+
+#: packages/community_store/elements/invoice/dashboard_form.php:23
+msgid "Mark Order As Paid"
+msgstr ""
+
+#: packages/community_store/elements/invoice/dashboard_form.php:24
+msgid "No, orders are left us unpaid"
+msgstr ""
+
+#: packages/community_store/elements/invoice/dashboard_form.php:24
+msgid "Yes, orders are immediately marked as paid"
+msgstr ""
+
+#: packages/community_store/elements/cart_modal.php:14
+msgid "has been added to your cart"
+msgstr "έχει προστεθεί στο καλάθι σας"
+
+#: packages/community_store/elements/cart_modal.php:34
+msgid ""
+"An issue has occured adding the product to the cart. You may be missing "
+"required information."
+msgstr ""
+"Ένα ζήτημα έχει συμβεί κατά την προσθήκη του προϊόντος στο καλάθι. Μπορεί να"
+" λείπουν οι  απαιτούμενες πληροφορίες."
+
+#: packages/community_store/elements/cart_modal.php:220
+msgid "Continue Shopping"
+msgstr "Συνεχίστε τις αγορές"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:27
+msgid "Edit Shipping Method"
+msgstr "Επεξεργασία τρόπος αποστολής"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:39
+msgid "Shipping Method Deleted"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:57
+msgid "Shipping Method Updated"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:68
+msgid "Shipping Method Created"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/shipping.php:87
+msgid "Method Name must be set"
+msgstr "Το Όνομα Μεθόδου πρέπει να οριστεί"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:29
+msgid "Edit Tax Rate"
+msgstr "Επεξεργασία φορολογικού συντελεστή"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:38
+msgid "Tax Rate Deleted"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:59
+msgid "Tax Rate Updated"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:64
+msgid "Tax Rate Added"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:83
+msgid "You need a label for this Tax Rate"
+msgstr "Χρειάζεται μια ετικέτα για αυτόν τον φορολογικό συντελεστή"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:87
+msgid "Tax Rate must be a number"
+msgstr "Ο Φορολογικός συντελεστής πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:90
+msgid "You need to enter a tax rate"
+msgstr "Θα πρέπει να εισάγετε ένα φορολογικό συντελεστή"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:128
+msgid "Tax Class Updated"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:133
+msgid "Tax Class Added"
+msgstr "Η Φορολογική Κλάση προστέθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:145
+msgid "You need a name for this Tax Class"
+msgstr "Χρειάζεται ένα όνομα για αυτήν την Φορολογική Κλάση"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:154
+msgid ""
+"You can only have one tax rate per country with your current tax settings"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings/tax.php:168
+msgid "Tax Class Deleted"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:24
+msgid "Product Attributes"
+msgstr "Χαρακτηριστικά προϊόντος"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:40
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:42
+msgid "Invalid attribute ID."
+msgstr "Μη έγκυρο ID χαρακτηριστικού."
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:51
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:52
+msgid "Attribute Deleted"
+msgstr "Το Χαρακτηριστικό Διαγράφτηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:64
+msgid "Create Product Attribute"
+msgstr "Δημιουργία Χαρακτηριστικού προϊόντος"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:79
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:83
+msgid "Attribute Created"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/attributes.php:103
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:111
+msgid "Attribute Updated"
+msgstr "Το Χαρακτηριστικό ενημερώθηκε "
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/categories.php:13
+msgid "Product Categories"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/categories.php:35
+msgid "Manage Category: "
+msgstr "Διαχειριστείτε Κατηγορία:"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/categories.php:56
+msgid "Category Order Updated"
+msgstr "Η Κατηγορία Παραγγελίας Ενημερώθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:44
+msgid "Product Group Added"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:53
+msgid "Edit Product Group"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:78
+msgid "Product Group Edited"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:91
+msgid "Please enter a Group Name"
+msgstr "Παρακαλώ εισάγετε ένα όνομα ομάδας"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:94
+msgid "A Group Name can not be more than 100 characters"
+msgstr "Ένα όνομα ομάδας δεν μπορεί να είναι πάνω από 100 χαρακτήρες"
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:26
+msgid "Order Attributes"
+msgstr "Χαρακτηριστικά Παραγγελίας"
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders/attributes.php:65
+msgid "Create Order Attribute"
+msgstr "Δημιουργία Χαρακτηριστικού παραγγελίας "
+
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:61
+msgid "Order Status"
+msgstr "Κατάσταση παραγγελίας"
+
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:63
+msgid "Method"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:87
+msgid "Orders of %s"
+msgstr "Παραγγελίες του %s"
+
+#. file name for product customer exports
+#: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:91
+msgid "product_orders"
+msgstr "παραγγελίες προϊόντων"
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:25
+msgid "Discount Rules"
+msgstr "Κανόνες έκπτωσης"
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:103
+msgid "Codes for discount rule"
+msgstr "Κωδικοί για κανόνα έκπτωσης"
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:120
+msgid "Discount Rule Deleted"
+msgstr "Ο κανόνας Έκπτωσης Διαγράφεται"
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:140
+msgid "Code Deleted"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:177
+msgid "Code Added"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:177
+msgid "Codes Added"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:194
+msgid "Discount Rule Updated"
+msgstr "Ο κανόνας Έκπτωσης Ενημερώθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/discounts.php:201
+msgid "Discount Rule Added"
+msgstr "Ο κανόνας Έκπτωσης προστέθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:75
+msgid "Fulfilment Status Updated"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:93
+msgid "Order Marked As Paid"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:105
+msgid "Order Payment Reversed"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:119
+msgid "Order Marked As Refunded"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:131
+msgid "Order Refund Reversed"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:144
+msgid "Order Cancelled"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:155
+msgid "Order Cancellation Reversed"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:165
+msgid "Receipt Email Resent to %s"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:180
+msgid "Notification Email Resent to %s"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/orders.php:189
+msgid "Order Deleted"
+msgstr ""
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:221
+msgid "Edit Product"
+msgstr "Επεξεργασία προϊόντων"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:240
+msgid "Product Duplicated"
+msgstr "Προϊόντα Εις Διπλούν"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:254
+msgid "Product Removed"
+msgstr "Το προϊόν Αφαιρέθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:377
+msgid "Product Updated"
+msgstr "Το προϊόν Ενημερώθηκε"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:380
+msgid "Product Added"
+msgstr "Το προϊόν προστέθηκε "
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:392
+msgid "Please enter a Product Name"
+msgstr "Παρακαλώ εισάγετε ένα όνομα προϊόντος"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:395
+msgid "The Product Name can not be greater than 255 Characters"
+msgstr ""
+"Το όνομα του προϊόντος δεν μπορεί να είναι μεγαλύτερο από 255 χαρακτήρες"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:398
+msgid "The Quantity must be set, and numeric"
+msgstr "Η ποσότητα πρέπει να οριστεί, και πρέπει να είναι αριθμητικό"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:401
+msgid "The Product Width must be a number"
+msgstr "Το πλάτος του προϊόντος πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:404
+msgid "The Product Height must be a number"
+msgstr "Το ύψος του προϊόντος πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:407
+msgid "The Product Length must be a number"
+msgstr "Το μήκος του προϊόντος πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/controllers/single_page/dashboard/store/products.php:410
+msgid "The Product Weight must be a number"
+msgstr "Το βάρος του προϊόντος πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings.php:143
+msgid "Settings Saved"
+msgstr "Οι ρυθμίσεις Αποθηκεύτηκαν "
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings.php:177
+msgid "You must set a currency symbol"
+msgstr "Θα πρέπει να ορίσετε ένα σύμβολο νομίσματος"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings.php:187
+msgid "At least one payment method must be enabled"
+msgstr "Τουλάχιστον μία μέθοδο πληρωμής πρέπει να είναι ενεργοποιημένη"
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings.php:196
+msgid "You must have at least one Order Status."
+msgstr "Θα πρέπει να έχετε τουλάχιστον μία Κατάσταση παραγγελίας."
+
+#: packages/community_store/controllers/single_page/dashboard/store/settings.php:205
+msgid ""
+"The %s Tax Class can't contain more than 1 Tax Rate if you change how the "
+"taxes are calculated"
+msgstr ""
+"Η %s Φορολογική Κλάση δεν μπορεί να περιέχει περισσότερο από 1 φορολογικό "
+"συντελεστή, αν αλλάξετε τον τρόπο υπολογισμού των φόρων"
+
+#: packages/community_store/controllers/single_page/dashboard/store.php:55
+msgid "Store"
+msgstr "Κατάστημα"
+
+#: packages/community_store/src/CommunityStore/Payment/Methods/Invoice/InvoicePaymentMethod.php:12
+msgid "Invoice"
+msgstr "Τιμολόγιο"
+
+#: packages/community_store/src/CommunityStore/Payment/Methods/Invoice/InvoicePaymentMethod.php:46
+msgid "Processing..."
+msgstr "Επεξεργασία..."
+
+#: packages/community_store/src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:216
+msgid "Please set a Base Rate"
+msgstr "Παρακαλούμε να ορίσετε ένα Βασικό Συντελεστή"
+
+#: packages/community_store/src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:219
+msgid "Base Rate should be a number"
+msgstr "Ο Βασικός Συντελεστής θα πρέπει να είναι ένας αριθμός"
+
+#: packages/community_store/src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:223
+msgid ""
+"The Price Per Item doesn't have to be set, but it does have to be numeric"
+msgstr ""
+"Η τιμή ανά τεμάχιο δεν πρέπει να οριστεί, αλλά πρέπει να είναι αριθμητικό"
+
+#: packages/community_store/src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:358
+msgid "Flat Rate"
+msgstr "Επίπεδος Συντελεστής"
+
+#: packages/community_store/src/CommunityStore/Shipping/Method/Types/FreeShippingShippingMethod.php:243
+msgid "Free Shipping"
+msgstr "Δωρεάν Αποστολή"
+
+#: packages/community_store/src/CommunityStore/Discount/DiscountRule.php:510
+#: packages/community_store/src/CommunityStore/Discount/DiscountRule.php:514
+msgid "off"
+msgstr "Ανενεργό"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:69
+msgid ""
+"The email address you have entered has already been used to create an "
+"account. Please login first or enter a different email address."
+msgstr ""
+"Η διεύθυνση ηλεκτρονικού ταχυδρομείου που έχετε εισάγει έχει ήδη "
+"χρησιμοποιηθεί για δημιουργία λογαριασμού. Παρακαλώ συνδεθείτε πρώτα ή "
+"εισάγετε μια διαφορετική διεύθυνση ηλεκτρονικού ταχυδρομείου."
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:146
+msgid "You must enter a valid VAT Number"
+msgstr "Πρέπει να εισάγετε έναν έγκυρο αριθμό ΦΠΑ"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:283
+msgid "You must enter a valid email address"
+msgstr "Πρέπει να εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:289
+msgid "You must enter a first name"
+msgstr "Πρέπει να εισάγετε ένα όνομα"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:292
+msgid "Please enter a first name under 255 characters"
+msgstr "Παρακαλώ εισάγετε ένα όνομα κάτω από 255 χαρακτήρες"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:295
+msgid "You must enter a Last Name"
+msgstr "Θα πρέπει να εισάγετε ένα Επώνυμο"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:298
+msgid "Please enter a last name under 255 characters"
+msgstr "Παρακαλώ εισάγετε ένα επώνυμο κάτω από 255 χαρακτήρες"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:301
+msgid "You must enter an address"
+msgstr "Πρέπει να εισάγετε μια διεύθυνση"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:304
+msgid "Please enter a street name under 255 characters"
+msgstr "Παρακαλώ εισάγετε ένα όνομα οδού κάτω από 255 χαρακτήρες"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:307
+msgid "You must enter a Country"
+msgstr "Πρέπει να εισάγετε μια Χώρα"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:310
+msgid "You did not select a Country from the list"
+msgstr "Δεν έχετε επιλέξει μια χώρα από τη λίστα"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:313
+msgid "You must enter a City"
+msgstr "Πρέπει να εισάγετε μια πόλη"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:316
+msgid "You must enter a valid City"
+msgstr "Πρέπει να εισάγετε μια έγκυρη Πόλη"
+
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:319
+#: packages/community_store/src/CommunityStore/Utilities/Checkout.php:322
+msgid "You must enter a valid Postal Code"
+msgstr "Πρέπει να εισάγετε έναν έγκυρο Τ.Κ."
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:196
+msgid "Registered Customer in your store"
+msgstr "Εγγεγραμμένος πελάτης στο κατάστημα σας"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:209
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:263
+msgid "Store Customer Info"
+msgstr "Πληροφορίες Πελατών Καταστήματος "
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:264
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:398
+msgid "Other Customer Choices"
+msgstr "Άλλες επιλογές των πελατών"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:336
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:338
+msgid "Digital Downloads"
+msgstr "Ψηφιακές Λήψεις"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:348
+msgid "Awaiting Processing"
+msgstr "Εν αναμονή Επεξεργασίας"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:349
+msgid "Processing"
+msgstr "Επεξεργασία"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:350
+msgid "Shipped"
+msgstr "Απεστάλησαν"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:351
+msgid "Delivered"
+msgstr "Παραδόθηκε"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:352
+msgid "Will not deliver"
+msgstr "Δεν θα παραδώσει"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:353
+msgid "Returned"
+msgstr "Επέστρεψε"
+
+#: packages/community_store/src/CommunityStore/Utilities/Installer.php:368
+msgid "Default"
+msgstr "Προεπιλεγμένη"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:42
+msgid ""
+"Are you sure you want to remove all products, orders and discounts from "
+"Community Store? (y/n)"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να αφαιρέσετε όλα τα προϊόντα, τις παραγγελίες και "
+"τις εκπτώσεις από το κοινοτικό κατάστημα; (Ν / Ο)"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:46
+msgid ""
+"Are you sure you want to remove all products from Community Store? (y/n)"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να αφαιρέσετε όλα τα προϊόντα από το κοινοτικό "
+"κατάστημα; (Ν / Ο)"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:50
+msgid "Are you sure you want to remove all orders from Community Store? (y/n)"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να αφαιρέσετε όλες τις παραγγελίες από το κοινοτικό"
+" κατάστημα; (Ν / Ο)"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:54
+msgid ""
+"Are you sure you want to remove all discounts from Community Store? (y/n)"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να καταργήσετε όλες τις εκπτώσεις από το κοινοτικό "
+"κατάστημα; (Ν / Ο)"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:63
+msgid "Operation aborted."
+msgstr "Η Λειτουργία ματαιώθηκε."
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:74
+msgid "%d order deleted"
+msgid_plural "%d orders deleted"
+msgstr[0] "%d παραγγελία διαγράφτηκε"
+msgstr[1] "%d παραγγελίες διαγράφτηκαν"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:87
+msgid "%d product deleted"
+msgid_plural "%d products deleted"
+msgstr[0] "%d προϊόν διαγράφτηκε"
+msgstr[1] "%d προϊόντα διαγράφτηκαν"
+
+#: packages/community_store/src/CommunityStore/Console/Command/ResetCommand.php:101
+msgid "%d discount deleted"
+msgid_plural "%d discounts deleted"
+msgstr[0] "%d έκπτωση  διαγράφτηκε"
+msgstr[1] "%d εκπτώσεις  διαγράφονται"
