@@ -16,6 +16,11 @@ The add-on will work directly with a Bootstrap based theme, primarily Elemental,
 ## Setup
 The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend concrete5' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concrete5-community-store/community_store/releases
 
+### Important note regarding versions
+For new installations on V8 of concrete5, please use a version 2.x release.
+For installations into existing 5.7 sites, please use a 1.x release.
+While the feature set is the same between both version of Community Store, it is currently not possible to upgrade from the 1.x to the 2.x version.
+
 ## Payment gateways
 To keep the 'core' store component as lightweight as possible it does not include a payment gateway other than the 'Invoice' type.
 Payment gateways are to be installed as additional add-ons.
