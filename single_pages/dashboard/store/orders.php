@@ -102,7 +102,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                     <h4><?= t("Shipping Address")?></h4>
                     <p>
                         <?= $order->getAttribute("shipping_first_name"). " " . $order->getAttribute("shipping_last_name")?><br>
-                        <?php $shippingaddress = $order->getAttributeValueObject(StoreOrderKey::getByHandle('shipping_address'));
+                        <?php $shippingaddress = $order->getAttributeValueObject('shipping_address');
                         if ($shippingaddress) {
                             echo $shippingaddress->getValue('displaySanitized', 'display');
                         }
