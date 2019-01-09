@@ -1,6 +1,8 @@
 # Community Store add-on for concrete5
 
-## !! THIS IS A WORK IN PROGRESS FOR A VERSION 8+ ONLY VERSION - AVOID USE !! ##
+**Important - this is the 2.x version of Community Store and is intended for use on V8+ versions of concrete5 only.** 
+
+**Please also check that the additional add-ons you install are compatible with this version. In particular, additional shipping methods will have both 1.x and 2.x versions, please use 2.x releases of these add-ons.**
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
@@ -81,17 +83,6 @@ https://github.com/JeRoNZ/community_store_order_history
 This add-on is intended to support PHP5.6+ onwards, being 100% operational on PHP7.
 
 ## Compatibility
-Community Store is designed to be  100% compatible with both version 5.7 and v8 of concrete5. Is is recommended that if you are starting a new project to use v8. 
+This version of Community Store is compatible with version 8+ of concrete5, and will not work on version 5.7.x. There is a separate branch/release of Community Store that still supports 5.7, this is version 1.x of Community Store.
+Version 1.x of Community Store cannot be updated to version 2.x at this point. For new installs, please use this version.
 
-If you are adding Community Store to an exisiting 5.7 and you plan to also upgrade it to v8, upgrade concrete5 _before_ installing Community Store. 
-
-If you have an existing 5.7 site with Community Store and need to upgrade to v8, be aware that the upgrade _does_ work, but there is  one outstanding issue with concrete5's upgrade process that requires the following SQL command to be run on the DB to rectify:
-```sql
-REPLACE INTO LegacyAttributeKeys (
-	SELECT akID FROM Packages 
-	LEFT JOIN AttributeKeys
-	ON AttributeKeys.pkgID = Packages.pkgID
-	WHERE pkgHandle = 'community_store'
-	AND akCategory = 'legacykey'
-)
-```
