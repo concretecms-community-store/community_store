@@ -53,11 +53,6 @@ class ProductOption
     /**
      * @Column(type="string", nullable=true)
      */
-    protected $poDisplayType;
-
-    /**
-     * @Column(type="string", nullable=true)
-     */
     protected $poHandle;
 
     /**
