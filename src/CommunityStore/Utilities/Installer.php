@@ -167,6 +167,7 @@ class Installer
         self::installBlock('community_product_list', $pkg);
         self::installBlock('community_utility_links', $pkg);
         self::installBlock('community_product', $pkg);
+        self::installBlock('community_product_filter', $pkg);
     }
 
     public static function installBlock($handle, $pkg)
@@ -395,6 +396,8 @@ class Installer
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
+        self::installBlocks($pkg);
+
 
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically

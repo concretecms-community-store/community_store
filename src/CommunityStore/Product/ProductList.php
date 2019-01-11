@@ -116,22 +116,38 @@ class ProductList extends AttributedItemList
 
         $params = explode('&', $querystring);
 
-        foreach ($params as $param) {
+        $searchparams = array();
+
+        foreach($params as $param) {
             $values = explode('=', $param);
+            $handle = str_replace('%5B%5D', '', $values[0]);
+            $handle = $service->sanitizeString($handle);
 
-            if (isset($values[1])) {
-                $filter = $values[0];
-                $filter = $service->sanitizeString($filter);
-                $items = $service->sanitizeString($values[1]);
+            $value = str_replace('%7C', '%2C', $values[1]);
+            $value = str_replace('%20', ' ', $value);
+            $value = $service->sanitizeString($value);
+            $values = explode('%2C', $value);
 
-                if ('price' == $filter) {
-                    $this->filterByPrice($items);
+            foreach($values as $val) {
+                $searchparams[$handle][] =  $val;
+            }
+        }
+
+        foreach ($searchparams as $handle=>$value) {
+            if (isset($value)) {
+                if ('price' == $handle) {
+                    $this->filterByPrice($value);
                 } else {
-                    $items = str_replace('%7C', '%2C', $items);
-                    $items = explode('%2C', $items);
 
-                    if (is_object(StoreProductKey::getByHandle($filter))) {
-                        $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
+                    $ak = StoreProductKey::getByHandle($handle);
+
+                    if (is_object($ak)) {
+                        $items = array_filter($value);
+                        if (count($items) == 1) {
+                            $ak->getController()->filterByAttribute($this, $value[0]);
+                        } else {
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                        }
                     }
                 }
             }

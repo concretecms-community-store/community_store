@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '1.4.7';
+    protected $pkgVersion = '1.4.8';
 
     public function getPackageDescription()
     {
@@ -156,5 +156,3 @@ class Controller extends Package
         ";
     }
 }
-
-//require_once __DIR__ . '/vendor/autoload.php';
