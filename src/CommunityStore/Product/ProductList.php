@@ -6,7 +6,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 
 class ProductList extends AttributedItemList
 {
@@ -95,14 +95,18 @@ class ProductList extends AttributedItemList
     public function setAttributeFilters($filterArray)
     {
         $this->attFilters = $filterArray;
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         if (!empty($this->attFilters)) {
             foreach ($this->attFilters as $handle => $value) {
                 if ('price' == $handle) {
                     $this->filterByPrice($value);
                 } else {
-                    if (is_object(StoreProductKey::getByHandle($handle))) {
-                        $this->filterByAttribute($handle, $value);
+                    $ak = $productCategory->getByHandle($handle);
+
+                    if (is_object($ak)) {
+                        $ak->getController()->filterByAttribute($this, $value);
                     }
                 }
             }
@@ -116,25 +120,40 @@ class ProductList extends AttributedItemList
 
         $params = explode('&', $querystring);
 
+        $searchparams = array();
+
+        foreach($params as $param) {
+            $values = explode('=', $param);
+            $handle = str_replace('%5B%5D', '', $values[0]);
+            $handle = $service->sanitizeString($handle);
+
+            $value = str_replace('%7C', '%2C', $values[1]);
+            $value = str_replace('%20', ' ', $value);
+            $value = $service->sanitizeString($value);
+            $values = explode('%2C', $value);
+
+            foreach($values as $val) {
+                $searchparams[$handle][] =  $val;
+            }
+        }
+
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
-        foreach ($params as $param) {
-            $values = explode('=', $param);
-
-            if (isset($values[1])) {
-                $filter = $values[0];
-                $filter = $service->sanitizeString($filter);
-                $items = $service->sanitizeString($values[1]);
-
-                if ('price' == $filter) {
-                    $this->filterByPrice($items);
+        foreach ($searchparams as $handle=>$value) {
+            if (isset($value)) {
+                if ('price' == $handle) {
+                    $this->filterByPrice($value);
                 } else {
-                    $items = str_replace('%7C', '%2C', $items);
-                    $items = explode('%2C', $items);
+                    $ak = $productCategory->getByHandle($handle);
 
-                    if (is_object($productCategory->getByHandle($filter))) {
-                        $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
+                    if (is_object($ak)) {
+                        $items = array_filter($value);
+                        if (count($items) == 1) {
+                            $ak->getController()->filterByAttribute($this, $value[0]);
+                        } else {
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                        }
                     }
                 }
             }
