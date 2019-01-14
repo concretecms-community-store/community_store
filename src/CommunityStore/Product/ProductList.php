@@ -133,7 +133,9 @@ class ProductList extends AttributedItemList
             $values = explode('%2C', $value);
 
             foreach($values as $val) {
-                $searchparams[$handle][] =  $val;
+                if ($val) {
+                    $searchparams[$handle][] = $val;
+                }
             }
         }
 
@@ -150,8 +152,6 @@ class ProductList extends AttributedItemList
                     if (is_object($ak)) {
                         $items = array_filter($value);
                         if (count($items) == 1) {
-                            $ak->getController()->filterByAttribute($this, $value[0]);
-                        } else {
                             $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
                         }
                     }
@@ -333,4 +333,18 @@ class ProductList extends AttributedItemList
 
         return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
     }
+
+    public function getResultIDs() {
+        $query = $this->deliverQueryObject();
+        $values = $query->execute()->fetchAll();
+
+        $productids = array();
+
+        foreach($values as $val) {
+            $productids[] = $val['pID'];
+        }
+
+        return $productids;
+    }
+
 }

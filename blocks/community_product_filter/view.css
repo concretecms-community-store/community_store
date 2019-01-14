@@ -1,0 +1,7 @@
+.store-product-filter-block .disabled .store-product-filter-block-option {
+    opacity: 0.6;
+}
+
+.store-product-filter-block .store-product-filter-block-count {
+    font-size: 80%;
+}

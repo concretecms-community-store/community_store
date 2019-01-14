@@ -5,11 +5,9 @@ use Concrete\Core\Block\BlockController;
 use Core;
 use Config;
 use Page;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class Controller extends BlockController
 {
@@ -76,6 +74,59 @@ class Controller extends BlockController
 
     public function view()
     {
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+        $attrList = $productCategory->getList();
+        $attrLookup = array();
+        $selectedarray = array();
+
+        $page = \Page::getCurrentPage();
+        $blocks = $page->getBlocks();
+
+        $block = null;
+
+        $groupfilters = $this->getGroupFilters();
+
+        foreach($blocks as $block) {
+            if ($block->getBlockTypeHandle() == 'community_product_list') {
+
+                if ($block) {
+                    $blockcontroller = $block->getController();
+
+                    $this->filter = $blockcontroller->filter;
+                    $this->filterCID = $blockcontroller->filterCID;
+                    $this->relatedPID = $blockcontroller->relatedPID;
+                    $this->showFeatured = $blockcontroller->showFeatured;
+                    $this->showSale = $blockcontroller->showSale;
+                    $this->showOutOfStock = $blockcontroller->showOutOfStock;
+                    $this->groupMatchAny = $blockcontroller->groupMatchAny;
+                    $groupfilters = $blockcontroller->getGroupFilters();
+
+                }
+
+                break;
+            }
+        }
+
+
+        foreach($attrList as $attitem) {
+            $handle = $attitem->getAttributeKeyHandle();
+            $attrLookup[$handle] = $attitem;
+
+            $params = $_GET[$handle];
+
+            if (!is_array($params)) {
+                $params = str_replace('|', ',', $params);
+                $params = explode(',', $params);
+            }
+
+            $params = array_filter($params);
+
+            if (isset($attrLookup[$handle]) && !empty($params)) {
+                $selectedarray[$handle] = $params;
+            }
+        }
+
+
         $products = new StoreProductList();
 
         if ('current' == $this->filter || 'current_children' == $this->filter) {
@@ -124,36 +175,95 @@ class Controller extends BlockController
             $products->setRandomSeed(date('z'));
         }
 
-
-        $products->setGroupIDs($this->getGroupFilters());
+        $products->setGroupIDs($groupfilters);
         $products->setFeaturedOnly($this->showFeatured);
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
 
-        if (!empty($this->attFilters)) {
-            $products->setAttributeFilters($this->attFilters);
+        $values = $products->getResultIDs();
+        $attributemapping = array();
+
+        if (!empty($values)) {
+            $db = \Database::connection();
+            $attributedata = $db->fetchAll('SELECT * FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
+
+            if (!empty($attributedata)) {
+                foreach ($attributedata as $atdata) {
+                    foreach ($atdata as $handle => $data) {
+
+                        if ($handle != 'pID') {
+                            $items = explode("\n", trim($data));
+                            $handle = substr($handle, 3);
+
+                            foreach ($items as $item) {
+                                $item = trim($item);
+                                if ($item && isset($attrLookup[$handle]) && isset($attrLookup[$handle])) {
+                                    $attributemapping[$handle][$item] += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach ($attributemapping as $attrhandle => $values) {
+                    ksort($attributemapping[$attrhandle]);
+                }
+            }
+
+
+            if (!empty($attributemapping)) {
+                //  second pass to work out what attribute values are actually available
+                $request = \Request::getInstance();
+
+                if ($request->getQueryString()) {
+                    $products->processUrlFilters($request);
+                    $hasfilters = true;
+                }
+
+                if ($hasfilters) {
+                    $afterfilterids = $products->getResultIDs();
+
+                    if ($afterfilterids) {
+                        $attributedata = $db->fetchAll('SELECT * FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $afterfilterids) . ')');
+
+                        foreach($attributemapping as $key=> $values) {
+                            foreach($values as $k2=>$val2) {
+                                // if we only have one filter in place, don't reset the counts for that set of options
+                                if (! (count($selectedarray) == 1 && isset($selectedarray[$key])) ) {
+                                    $attributemapping[$key][$k2] = 0;
+                                }
+                            }
+                        }
+
+                        foreach ($attributedata as $atdata) {
+                            foreach ($atdata as $handle => $data) {
+
+                                if ($handle != 'pID') {
+                                    $items = explode("\n", trim($data));
+                                    $handle = substr($handle, 3);
+
+                                    foreach ($items as $item) {
+                                        $item = trim($item);
+                                        // if we only have one filter in place, don't reset the counts for that set of options
+                                        if (! (count($selectedarray) == 1 && isset($selectedarray[$handle])) && $attrLookup[$handle]) {
+                                            $attributemapping[$handle][$item] += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
         }
 
-        $request = \Request::getInstance();
-
-        if ($request->getQueryString()) {
-            $products->processUrlFilters($request);
-        }
-
-        $factory = new PaginationFactory(\Request::createFromGlobals());
-        $paginator = $factory->createPaginationObject($products, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
-
-        $pagination = $paginator->renderDefaultView();
-        $products = $paginator->getCurrentPageResults();
 
 
-        $this->set('products', $products);
-
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-
-        $attrList = $productCategory->getList();
-        $this->set('attribs', $attrList);
+        $this->set('filterData', $attributemapping);
+        $this->set('selectedAttributes', $selectedarray);
+        $this->set('attributes', $attrLookup);
     }
 
     public function registerViewAssets($outputContent = '')
