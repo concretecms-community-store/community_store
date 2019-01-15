@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Block\CommunityProductFilter;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Core;
 use Config;
 use Page;
@@ -34,6 +35,11 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', []);
+
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+        $attrList = $productCategory->getList();
+
+        $this->set('attributes', $attrList);
     }
 
     public function edit()
@@ -42,6 +48,13 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
+
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+        $attrList = $productCategory->getList();
+
+        $this->set('attributes', $attrList);
+
+        $this->set('selectedAttributes', $this->getAttributes());
 
         if ($this->relatedPID) {
             $relatedProduct = StoreProduct::getByID($this->relatedPID);
@@ -72,6 +85,15 @@ class Controller extends BlockController
         $this->set("grouplist", $grouplist);
     }
 
+    public function getAttributes()
+    {
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $result = $db->query("SELECT akID, `order`, matchingType, invalidHiding FROM btCommunityStoreProductFilterAttributes where bID = ? order by `order` asc", [$this->bID])->fetchAll();
+
+        return $result;
+    }
+
     public function view()
     {
         $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
@@ -79,19 +101,14 @@ class Controller extends BlockController
         $attrLookup = array();
         $selectedarray = array();
 
-        $page = \Page::getCurrentPage();
-        $blocks = $page->getBlocks();
-
-        $block = null;
-
-        $groupfilters = $this->getGroupFilters();
-
-        foreach($blocks as $block) {
-            if ($block->getBlockTypeHandle() == 'community_product_list') {
-
-                if ($block) {
+        if ($this->filterSource == 'auto') {
+            $page = \Page::getCurrentPage();
+            $blocks = $page->getBlocks();
+            $block = null;
+            $groupfilters = $this->getGroupFilters();
+            foreach ($blocks as $block) {
+                if ($block->getBlockTypeHandle() == 'community_product_list') {
                     $blockcontroller = $block->getController();
-
                     $this->filter = $blockcontroller->filter;
                     $this->filterCID = $blockcontroller->filterCID;
                     $this->relatedPID = $blockcontroller->relatedPID;
@@ -101,12 +118,24 @@ class Controller extends BlockController
                     $this->groupMatchAny = $blockcontroller->groupMatchAny;
                     $groupfilters = $blockcontroller->getGroupFilters();
 
+                    break;
                 }
-
-                break;
             }
         }
 
+        $selecteAttributeList = $this->getAttributes();
+
+        $attrList = array();
+        $attrFilterTypes = array();
+
+        foreach($selecteAttributeList as $attr) {
+            $attributeKey = $productCategory->getByID($attr['akID']);
+
+            if ($attributeKey) {
+                $attrList[] = $attributeKey;
+                $attrFilterTypes[ $attributeKey->getAttributeKeyHandle()] = $attr;
+            }
+        }
 
         foreach($attrList as $attitem) {
             $handle = $attitem->getAttributeKeyHandle();
@@ -115,8 +144,8 @@ class Controller extends BlockController
             $params = $_GET[$handle];
 
             if (!is_array($params)) {
-                $params = str_replace('|', ',', $params);
-                $params = explode(',', $params);
+                $params = str_replace(';', '|', $params);
+                $params = explode('|', $params);
             }
 
             $params = array_filter($params);
@@ -184,9 +213,14 @@ class Controller extends BlockController
         $values = $products->getResultIDs();
         $attributemapping = array();
 
-        if (!empty($values)) {
+        $fieldnames = array_keys($attrLookup);
+        $fieldnames = array_map(function ($str) { return 'ak_' . $str; }, $fieldnames);
+
+        if (!empty($values) && !empty($fieldnames)) {
             $db = \Database::connection();
-            $attributedata = $db->fetchAll('SELECT * FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
+
+
+            $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnames) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
 
             if (!empty($attributedata)) {
                 foreach ($attributedata as $atdata) {
@@ -254,7 +288,6 @@ class Controller extends BlockController
                             }
                         }
                     }
-
                 }
             }
         }
@@ -264,6 +297,7 @@ class Controller extends BlockController
         $this->set('filterData', $attributemapping);
         $this->set('selectedAttributes', $selectedarray);
         $this->set('attributes', $attrLookup);
+        $this->set('attrFilterTypes', $attrFilterTypes);
     }
 
     public function registerViewAssets($outputContent = '')
@@ -299,6 +333,23 @@ class Controller extends BlockController
             foreach ($filtergroups as $gID) {
                 $vals = [$this->bID, (int) $gID];
                 $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
+            }
+        }
+
+        $vals = [$this->bID];
+        $db->query("DELETE FROM btCommunityStoreProductFilterAttributes where bID = ?", $vals);
+
+        $attributes = $args['attributes'];
+        $matchingTypes = $args['matchingType'];
+        $invalidHidings = $args['invalidHiding'];
+
+        //insert attribute selection
+        $count = 0;
+        if (!empty($attributes)) {
+            foreach ($attributes as $attributesid) {
+                $vals = [$this->bID, (int)$attributesid, $count, $matchingTypes[$count], $invalidHidings[$count]];
+                $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`,matchingType,invalidHiding) VALUES (?,?,?,?,?)", $vals);
+                $count++;
             }
         }
 

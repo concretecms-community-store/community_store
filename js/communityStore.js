@@ -408,6 +408,48 @@ var communityStore = {
     },
     hasFormValidation: function() {
         return (typeof document.createElement( 'input' ).checkValidity == 'function');
+    },
+    submitProductFilter: function(element) {
+        var filterform = element.closest('form');
+        var checkboxes = filterform.find(':checked');
+        var search = {};
+
+        checkboxes.each(function(index, field) {
+            var name = field.name.replace('[]', '');
+            var value = field.value;
+
+            if (name in search) {
+                search[name].push(value);
+            } else {
+                search[name] = [value];
+            }
+        });
+
+
+        var strings = [];
+
+        $.each( search, function( key, value ) {
+            strings.push(key + '=' + value.join('|') );
+        });
+
+        var searchstring =  strings.join('&');
+
+        var params = {};
+        var hasparams = false;
+
+        location.search.substr(1).split("&").forEach(function(item) {
+            var key = item.split("=")[0];
+            if (key.indexOf('sort') === 0) {
+                params[key] = item.split("=")[1];
+                hasparams = true;
+            }
+        });
+
+        if (hasparams) {
+            searchstring = searchstring + '&' + $.param(params);
+        }
+
+        window.location = '?' + searchstring ;
     }
 
 
@@ -839,56 +881,14 @@ $(document).ready(function () {
         communityStore.displayCart(false, true);
     });
 
+
     $('.store-btn-filter').click(function (e) {
-        var filterform = $(this).closest('form');
-
-        var checkboxes = filterform.find(':checked');
-
-        var search = {};
-
-
-        checkboxes.each(function(index, field) {
-            var name = field.name.replace('[]', '');
-            var value = field.value;
-
-            if (name in search) {
-                search[name].push(value);
-            } else {
-                search[name] = [value];
-            }
-        });
-
-
-
-        var strings = [];
-
-        $.each( search, function( key, value ) {
-            strings.push(key + '=' + value.join('|') );
-
-        });
-
-        var searchstring =  strings.join('&');
-
-        var params = {};
-        var hasparams = false;
-
-        location.search.substr(1).split("&").forEach(function(item) {
-            var key = item.split("=")[0];
-            if (key.indexOf('sort') === 0) {
-                params[key] = item.split("=")[1];
-                hasparams = true;
-            }
-        });
-
-        if (hasparams) {
-            searchstring = searchstring + '&' + $.param(params);
-        }
-
-        window.location = '?' + searchstring ;
-
         e.preventDefault();
-
+        communityStore.submitProductFilter($(this));
     });
 
+    $(document).on('change', '.store-product-filter-block-auto input', function(e) {
+        communityStore.submitProductFilter($(this));
+    });
 
 });
