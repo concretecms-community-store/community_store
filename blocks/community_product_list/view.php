@@ -118,7 +118,7 @@ if ($products) {
                         </p>
                 <?php
         }// if is_obj ?>
-                <?php if ($showPrice) {
+                <?php if ($showPrice && !$product->allowCustomerPrice()) {
             ?>
                 <p class="store-product-list-price">
 		            <?php
@@ -161,7 +161,7 @@ if ($products) {
                         <?php $max = $product->getPriceMaximum(); ?>
                         <div class="input-group col-md-6 col-sm-6 col-xs-6">
                             <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
-                            <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?>class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
+                            <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?>  step="0.01" class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice" />
                         </div>
                         <?php if ($min >= 0 || $max > 0) {
                 ?>
