@@ -137,6 +137,10 @@
                 <?= $form->label('productsPerRow', t('Products per Row')); ?>
                 <?= $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
             </div>
+            <div class="form-group">
+                <?= $form->label('noProductsMessage', t("Display text when no products")); ?>
+                <?= $form->text('noProductsMessage', $noProductsMessage); ?>
+            </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->checkbox('showName', 1, $showName); ?>
