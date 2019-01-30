@@ -413,39 +413,31 @@ var communityStore = {
         var filterform = element.closest('form');
         var checkboxes = filterform.find(':checked');
         var search = {};
+        var matchtypes = {};
 
         checkboxes.each(function(index, field) {
             var name = field.name.replace('[]', '');
             var value = field.value;
+            var matchtype = field.getAttribute('data-matching');
 
             if (name in search) {
                 search[name].push(value);
             } else {
                 search[name] = [value];
+                matchtypes[name] = [matchtype === 'or' ? '|' : ';'];
             }
         });
-
 
         var strings = [];
 
         $.each( search, function( key, value ) {
-            strings.push(key + '=' + value.join('|') );
+            strings.push(key + '=' + value.join(matchtypes[key]) );
         });
 
-        var price_min = filterform.find("[name='price-min']");
-        var price_max = filterform.find("[name='price-max']");
+        var price = filterform.find("[name='price']");
 
-        if (price_min || price_max) {
-            var price_min = price_min.val();
-            var price_max = price_max.val();
-
-            var price_range = price_max;
-
-            if (price_min) {
-                price_range = price_min + '-' + price_max;
-            }
-
-            strings.push('price=' + price_range);
+        if (price.length) {
+            strings.push('price=' + price.val());
         }
 
         var searchstring =  strings.join('&');
@@ -476,6 +468,7 @@ var communityStore = {
             checkboxes.prop('checked', false);
         });
 
+        filterform.find('[name="price"]').val('');
 
         communityStore.submitProductFilter(element);
     }
@@ -916,7 +909,7 @@ $(document).ready(function () {
         communityStore.submitProductFilter($(this));
     });
 
-    $(document).on('change', '.store-product-filter-block-auto input', function(e) {
+    $(document).on('change', '.store-product-filter-block-auto input[type="checkbox"]', function(e) {
         communityStore.submitProductFilter($(this));
     });
 

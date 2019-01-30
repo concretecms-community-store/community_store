@@ -141,8 +141,6 @@ class Controller extends BlockController
                     $selecteAttributeList[$count]['handle'] = $handle;
                     $attrFilterTypes[$handle] = $attr;
                 }
-            } else {
-                $optionList[] = array('type'=>$attr['type'],'order'=>$attr['order']);
             }
             $count++;
         }
@@ -220,16 +218,15 @@ class Controller extends BlockController
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
 
-        $values = $products->getResultIDs();
+        $unfilteredIDs = $products->getResultIDs();
         $attributemapping = array();
 
         $fieldnames = array_keys($attrLookup);
         $fieldnamesak = array_map(function ($str) { return 'ak_' . $str; }, $fieldnames);
 
-        if (!empty($values) && !empty($fieldnamesak)) {
-            $db = \Database::connection();
-
-            $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnamesak) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
+        $db = \Database::connection();
+        if (!empty($unfilteredIDs) && !empty($fieldnamesak)) {
+            $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnamesak) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $unfilteredIDs) . ')');
 
             if (!empty($attributedata)) {
                 foreach ($attributedata as $atdata) {
@@ -267,29 +264,33 @@ class Controller extends BlockController
                 if ($hasfilters) {
                     $afterfilterids = $products->getResultIDs();
 
+                    $attributedata = array();
+
                     if ($afterfilterids) {
                         $attributedata = $db->fetchAll('SELECT * FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $afterfilterids) . ')');
+                    }
 
-                        foreach($attributemapping as $key=> $values) {
-                            foreach($values as $k2=>$val2) {
-                                // if we only have one filter in place, don't reset the counts for that set of options
-                                if (! (count($selectedarray) == 1 && isset($selectedarray[$key])) ) {
-                                    $attributemapping[$key][$k2] = 0;
-                                }
+                    foreach($attributemapping as $key=> $values) {
+                        foreach($values as $k2=>$val2) {
+                            // if we only have one filter in place, don't reset the counts for that set of options
+                            if (! (count($selectedarray) == 1 && isset($selectedarray[$key])) ) {
+                                $attributemapping[$key][$k2] = 0;
                             }
                         }
+                    }
 
-                        foreach ($attributedata as $atdata) {
-                            foreach ($atdata as $handle => $data) {
+                    foreach ($attributedata as $atdata) {
+                        foreach ($atdata as $handle => $data) {
 
-                                if ($handle != 'pID') {
-                                    $items = explode("\n", trim($data));
-                                    $handle = substr($handle, 3);
+                            if ($handle != 'pID') {
+                                $items = explode("\n", trim($data));
+                                $handle = substr($handle, 3);
 
-                                    foreach ($items as $item) {
-                                        $item = trim($item);
+                                foreach ($items as $item) {
+                                    $item = trim($item);
+                                    if ($item) {
                                         // if we only have one filter in place, don't reset the counts for that set of options
-                                        if (! (count($selectedarray) == 1 && isset($selectedarray[$handle])) && $attrLookup[$handle]) {
+                                        if (!(count($selectedarray) == 1 && isset($selectedarray[$handle])) && $attrLookup[$handle]) {
                                             $attributemapping[$handle][$item] += 1;
                                         }
                                     }
@@ -297,43 +298,69 @@ class Controller extends BlockController
                             }
                         }
                     }
+
                 }
             }
         }
 
         // final loop to create a selection list that includes non-attribute options (like price)
-        $finaldata = array();
+        $finalData = array();
+
+        $hasprice = false;
+
         foreach($selecteAttributeList as $att) {
             $handle = $att['handle'];
 
             if ($att['type'] == 'attr') {
                 if (isset($attributemapping[$handle])) {
-                    $finaldata[$handle] = array('type'=>'attr', 'data'=>$attributemapping[$handle]);
+                    $finalData[$handle] = array('type'=>'attr', 'data'=>$attributemapping[$handle]);
                 }
             } else {
-                $finaldata[$att['type']] = array('type'=>$att['type'], 'data'=>false);
+                $finalData[$att['type']] = array('type'=>$att['type'], 'data'=>false);
+
+                if ($att['type'] == 'price') {
+                    $hasprice = true;
+                }
             }
         }
 
+        $minPriceSelected = '';
+        $maxPriceSelected = '';
+        $minPrice = '';
+        $maxPrice = '';
 
-        $priceminseleted = 0;
-        $pricemaxselected = 0;
-        $priceparam = $_GET['price'];
+        if ($hasprice) {
+            $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price 
+                                            FROM CommunityStoreProducts 
+                                            WHERE pID in (' . implode(',', $unfilteredIDs) . ')
+                                            AND pPrice > 0
+                                            ');
 
-        if ($priceparam) {
-            $price = explode('-', $priceparam);
-            if(count($price) > 1) {
-                $priceminseleted = $price[0];
-                $pricemaxselected = $price[1];
-            } else {
-                $pricemaxselected = $price[0];
+            $minPrice = $minmax[0]['min_price'];
+            $maxPrice = $minmax[0]['max_price'];
+
+            $minPriceSelected = $minPrice;
+            $maxPriceSelected = $maxPrice;
+
+            $priceparam = $_GET['price'];
+
+            if ($priceparam) {
+                $price = explode('-', $priceparam);
+                if (count($price) > 1) {
+                    $minPriceSelected = max($price[0],$minPriceSelected) ;
+                    $maxPriceSelected = min($price[1], $maxPriceSelected);
+                } else {
+                    $maxPriceSelected = min($price[0], $maxPriceSelected);
+                }
             }
         }
 
-        $this->set('filterData', $finaldata);
+        $this->set('filterData', $finalData);
         $this->set('selectedAttributes', $selectedarray);
-        $this->set('priceMinSelected', $priceminseleted);
-        $this->set('priceMaxSelected', $pricemaxselected);
+        $this->set('minPriceSelected', $minPriceSelected);
+        $this->set('maxPriceSelected', $maxPriceSelected);
+        $this->set('minPrice', $minPrice);
+        $this->set('maxPrice', $maxPrice);
         $this->set('attributes', $attrLookup);
         $this->set('attrFilterTypes', $attrFilterTypes);
     }
