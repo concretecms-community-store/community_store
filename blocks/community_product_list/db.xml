@@ -30,6 +30,7 @@
 		<field name="showAddToCart" type="boolean"><default value="1"/></field>
 		<field name="btnText" type="string" size="255"></field>
 		<field name="showQuantity" type="boolean"></field>
+		<field name="noProductsMessage" type="string" size="255"></field>
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">

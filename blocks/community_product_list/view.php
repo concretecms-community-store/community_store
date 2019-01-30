@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
 
-if ($products) {
+
     $columnClass = 'col-md-12';
 
     if (2 == $productsPerRow) {
@@ -23,6 +23,7 @@ if ($products) {
     } ?>
 
 <div class="store-product-list-block">
+    <?php if ($products) { ?>
 
     <?php if ($showSortOption) {
         ?>
@@ -420,11 +421,10 @@ if ($products) {
         }
     }
 
-    echo "</div><!-- .product-list-block -->";
-} //if products
-
-elseif (is_object($c) && $c->isEditMode()) {
+    } elseif (is_object($c) && $c->isEditMode()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?= t("Empty Product List"); ?></div>
-<?php
-} ?>
+       <?php } elseif($noProductsMessage) { ?>
+        <p class="alert alert-info"><?= h($noProductsMessage); ?></p>
+    <?php } ?>
+</div>

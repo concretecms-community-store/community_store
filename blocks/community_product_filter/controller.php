@@ -129,7 +129,7 @@ class Controller extends BlockController
 
         foreach($selectedAttributeList as $attr) {
             if ($attr['type'] == 'attr') {
-                $attributeKey = $productCategory->getByID($attr['akID']);
+                $attributeKey = StoreProductKey::getByID($attr['akID']);
 
                 if ($attributeKey) {
                     $attrList[] = $attributeKey;
