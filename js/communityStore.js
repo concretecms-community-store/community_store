@@ -432,6 +432,22 @@ var communityStore = {
             strings.push(key + '=' + value.join('|') );
         });
 
+        var price_min = filterform.find("[name='price-min']");
+        var price_max = filterform.find("[name='price-max']");
+
+        if (price_min || price_max) {
+            var price_min = price_min.val();
+            var price_max = price_max.val();
+
+            var price_range = price_max;
+
+            if (price_min) {
+                price_range = price_min + '-' + price_max;
+            }
+
+            strings.push('price=' + price_range);
+        }
+
         var searchstring =  strings.join('&');
 
         var params = {};
@@ -450,7 +466,20 @@ var communityStore = {
         }
 
         window.location = '?' + searchstring ;
+    },
+    clearProductFilter: function(element) {
+        var filterform = element.closest('form');
+        var checkboxes = filterform.find(':checked');
+        var search = {};
+
+        checkboxes.each(function(index, field) {
+            checkboxes.prop('checked', false);
+        });
+
+
+        communityStore.submitProductFilter(element);
     }
+
 
 
 };
@@ -889,6 +918,10 @@ $(document).ready(function () {
 
     $(document).on('change', '.store-product-filter-block-auto input', function(e) {
         communityStore.submitProductFilter($(this));
+    });
+
+    $(document).on('click', '.store-btn-filter-clear', function(e) {
+        communityStore.clearProductFilter($(this));
     });
 
 });

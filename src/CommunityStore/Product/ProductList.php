@@ -155,9 +155,8 @@ class ProductList extends AttributedItemList
             $type = $searchvalue['type'];
             $value =  $searchvalue['values'];
 
-
             if ('price' == $handle) {
-                $this->filterByPrice($value);
+                $this->filterByPrice($value[0]);
             } else {
                 $ak = $productCategory->getByHandle($handle);
 

@@ -33,6 +33,7 @@
     <table name="btCommunityStoreProductFilterAttributes">
         <field name="bID" type="integer" size="10"><unsigned /><key /></field>
         <field name="akID" type="integer" size="10"><unsigned /><key /></field>
+        <field name="type" type="string" size="30"></field>
         <field name="order" type="integer" size="10"><unsigned/></field>
         <field name="matchingType" type="string" size="30"></field>
         <field name="invalidHiding" type="string" size="30"></field>

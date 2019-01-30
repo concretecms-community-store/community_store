@@ -100,10 +100,19 @@
             <legend><?= t('Attributes'); ?></legend>
 
             <?php
+
+                $typelookup = array();
+                $typelookup['price'] = t('Price');
+
+                $otherfilters = array();
                 $selectattkeys = array();
                 if (!empty($selectedAttributes)) {
                     foreach($selectedAttributes as $selectedatt) {
-                        $selectattkeys[] = $selectedatt['akID'];
+                        if ($selectedatt['type'] == 'attr') {
+                            $selectattkeys[] = $selectedatt['akID'];
+                        } else {
+                            $otherfilters[] = $selectedatt['type'];
+                        }
                     }
                 }
 
@@ -115,14 +124,18 @@
                     <label><?= t('Available Attributes'); ?></label>
 
                     <ul class="list-group" id="availableatts">
+                        <li class="list-group-item <?= (in_array('price', $otherfilters) ? 'hidden' : ''); ?>" data-id="price"><a class="block" data-id="0" data-type="price" href="#"> <?= t('Price');?>
+                                <i class="pull-right fa fa-angle-right"></i> </a></li>
                         <?php
                         $attlookup = array();
                         foreach($attributes as $att) {
                             $attlookup[$att->getAttributeKeyID()] = $att->getAttributeKeyName();
                             ?>
-                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName());?>
+                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-type="attr" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName());?>
                                 <i class="pull-right fa fa-angle-right"></i> </a></li>
+
                         <?php } ?>
+
                     </ul>
 
                 </div>
@@ -133,10 +146,11 @@
                         <?php
                         if (!empty($selectedAttributes)) {
                             foreach ($selectedAttributes as $selectedatt) {
-                                echo '<li data-id="' . $selectedatt['akID'] . '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' . $attlookup[$selectedatt['akID']] .
-                                    '<select class="form-control input-sm pull-right"  name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>' .
-                                    '<select class="form-control input-sm pull-right" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>' .
-                                    '<input type="hidden" name="attributes[]" value="' . $selectedatt['akID'] . '" /></li>';
+                                echo '<li data-id="' . ($selectedatt['akID'] > 0 ? $selectedatt['akID'] : $selectedatt['type']) . '" data-type="' . $selectedatt['type'] . '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' . ($selectedatt['type'] == 'attr' ? $attlookup[$selectedatt['akID']] : $typelookup[$selectedatt['type']]);
+                                echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
+                                echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
+                                echo '<input type="hidden" name="types[]" value="' . $selectedatt['type'] . '" /><input type="hidden" name="attributes[]" value="' . $selectedatt['akID'] . '" />';
+                                echo '</li>';
                             }
                         }?>
                     </ul>
@@ -281,7 +295,7 @@ if ($relatedProduct) {
             $("#activeatts").append('<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' + $(this).text()  +
                 '<select class="form-control input-sm pull-right" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>' +
                 '<select class="form-control input-sm pull-right" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select> ' +
-                '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /> </li>');
+                '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /><input type="hidden" name="types[]" value="' + $(this).data('type') + '" /></li>');
             $(this).parent().addClass('hidden');
         });
 

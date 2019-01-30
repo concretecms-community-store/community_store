@@ -89,7 +89,7 @@ class Controller extends BlockController
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $result = $db->query("SELECT akID, `order`, matchingType, invalidHiding FROM btCommunityStoreProductFilterAttributes where bID = ? order by `order` asc", [$this->bID])->fetchAll();
+        $result = $db->query("SELECT akID, `order`, `type`, matchingType, invalidHiding FROM btCommunityStoreProductFilterAttributes where bID = ? order by `order` asc", [$this->bID])->fetchAll();
 
         return $result;
     }
@@ -126,15 +126,25 @@ class Controller extends BlockController
         $selecteAttributeList = $this->getAttributes();
 
         $attrList = array();
+        $optionList = array();
         $attrFilterTypes = array();
 
-        foreach($selecteAttributeList as $attr) {
-            $attributeKey = $productCategory->getByID($attr['akID']);
+        $count = 0;
 
-            if ($attributeKey) {
-                $attrList[] = $attributeKey;
-                $attrFilterTypes[ $attributeKey->getAttributeKeyHandle()] = $attr;
+        foreach($selecteAttributeList as $attr) {
+            if ($attr['type'] == 'attr') {
+                $attributeKey = $productCategory->getByID($attr['akID']);
+
+                if ($attributeKey) {
+                    $attrList[] = $attributeKey;
+                    $handle = $attributeKey->getAttributeKeyHandle();
+                    $selecteAttributeList[$count]['handle'] = $handle;
+                    $attrFilterTypes[$handle] = $attr;
+                }
+            } else {
+                $optionList[] = array('type'=>$attr['type'],'order'=>$attr['order']);
             }
+            $count++;
         }
 
         foreach($attrList as $attitem) {
@@ -214,13 +224,12 @@ class Controller extends BlockController
         $attributemapping = array();
 
         $fieldnames = array_keys($attrLookup);
-        $fieldnames = array_map(function ($str) { return 'ak_' . $str; }, $fieldnames);
+        $fieldnamesak = array_map(function ($str) { return 'ak_' . $str; }, $fieldnames);
 
-        if (!empty($values) && !empty($fieldnames)) {
+        if (!empty($values) && !empty($fieldnamesak)) {
             $db = \Database::connection();
 
-
-            $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnames) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
+            $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnamesak) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $values) . ')');
 
             if (!empty($attributedata)) {
                 foreach ($attributedata as $atdata) {
@@ -292,10 +301,39 @@ class Controller extends BlockController
             }
         }
 
+        // final loop to create a selection list that includes non-attribute options (like price)
+        $finaldata = array();
+        foreach($selecteAttributeList as $att) {
+            $handle = $att['handle'];
+
+            if ($att['type'] == 'attr') {
+                if (isset($attributemapping[$handle])) {
+                    $finaldata[$handle] = array('type'=>'attr', 'data'=>$attributemapping[$handle]);
+                }
+            } else {
+                $finaldata[$att['type']] = array('type'=>$att['type'], 'data'=>false);
+            }
+        }
 
 
-        $this->set('filterData', $attributemapping);
+        $priceminseleted = 0;
+        $pricemaxselected = 0;
+        $priceparam = $_GET['price'];
+
+        if ($priceparam) {
+            $price = explode('-', $priceparam);
+            if(count($price) > 1) {
+                $priceminseleted = $price[0];
+                $pricemaxselected = $price[1];
+            } else {
+                $pricemaxselected = $price[0];
+            }
+        }
+
+        $this->set('filterData', $finaldata);
         $this->set('selectedAttributes', $selectedarray);
+        $this->set('priceMinSelected', $priceminseleted);
+        $this->set('priceMaxSelected', $pricemaxselected);
         $this->set('attributes', $attrLookup);
         $this->set('attrFilterTypes', $attrFilterTypes);
     }
@@ -342,13 +380,14 @@ class Controller extends BlockController
         $attributes = $args['attributes'];
         $matchingTypes = $args['matchingType'];
         $invalidHidings = $args['invalidHiding'];
+        $types = $args['types'];
 
         //insert attribute selection
         $count = 0;
         if (!empty($attributes)) {
             foreach ($attributes as $attributesid) {
-                $vals = [$this->bID, (int)$attributesid, $count, $matchingTypes[$count], $invalidHidings[$count]];
-                $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`,matchingType,invalidHiding) VALUES (?,?,?,?,?)", $vals);
+                $vals = [$this->bID, (int)$attributesid, $count, $types[$count] , $matchingTypes[$count], $invalidHidings[$count]];
+                $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`, `type`, matchingType,invalidHiding) VALUES (?,?,?,?,?,?)", $vals);
                 $count++;
             }
         }
