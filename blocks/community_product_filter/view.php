@@ -70,6 +70,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                    data-input-values-separator="-"
                                    data-skin="round"
                                    data-prefix="<?= \Config::get('community_store.symbol'); ?>"
+                                   data-force-edges="true"
                             />
 
                         </div>
