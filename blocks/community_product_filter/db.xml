@@ -23,6 +23,7 @@
         <field name="filterButtonText" type="string" size="255"></field>
         <field name="clearButtonText" type="string" size="255"></field>
         <field name="showTotals" type="boolean"></field>
+        <field name="jumpAnchor" type="boolean"></field>
 
     </table>
 

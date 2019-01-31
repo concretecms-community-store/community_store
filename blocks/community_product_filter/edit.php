@@ -191,6 +191,13 @@
                 <?= $form->text('clearButtonText', $clearButtonText, ['placeholder' => t('Clear')]); ?>
             </div>
 
+            <div class="form-group">
+                <label>
+                    <?= $form->checkbox('jumpAnchor', 1, $jumpAnchor); ?>
+                    <?= t('Scroll to top of filter block on page refresh'); ?>
+                </label>
+            </div>
+
         </fieldset>
 
     </div>

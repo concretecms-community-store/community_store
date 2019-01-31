@@ -466,6 +466,12 @@ var communityStore = {
             searchstring = searchstring + '&' + $.param(params);
         }
 
+        var id = filterform.attr('id');
+
+        if (id) {
+            searchstring += '#' + filterform.attr('id');
+        }
+
         window.location = '?' + searchstring ;
     },
     clearProductFilter: function(element) {

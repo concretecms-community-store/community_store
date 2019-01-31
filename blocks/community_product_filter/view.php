@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="store-product-filter-block">
+<div class="store-product-filter-block" >
 
-    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>">
+    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-'. $bID .'"' : ''); ?>>
 
         <?php
         if (!empty($filterData)) {

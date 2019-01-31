@@ -393,6 +393,7 @@ class Controller extends BlockController
         $args['relatedPID'] = isset($args['relatedPID']) ? (int) $args['relatedPID'] : 0;
         $args['displayClear'] = isset($args['displayClear']) ? 1 : 0;
         $args['showTotals'] = isset($args['showTotals']) ? 1 : 0;
+        $args['jumpAnchor'] = isset($args['jumpAnchor']) ? 1 : 0;
 
         if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;
