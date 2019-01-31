@@ -1,57 +1,117 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="store-product-filter-block">
+<div class="store-product-filter-block" >
 
-    <p>Filter</p>
+    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-'. $bID .'"' : ''); ?>>
 
-    <form>
-    <?php
+        <?php
+        if (!empty($filterData)) {
+            foreach ($filterData as $akhandle => $data) { ?>
+                <div class="form-group">
+                    <?php if ($data['type'] == 'attr') { ?>
+                        <?php
+                        $optiondata = $data['data'];
 
-    if (count($attribs) > 0) {
-        foreach($attribs as $ak) { ?>
+                        $ak = $attributes[$akhandle];
+                        $matchingType = $attrFilterTypes[$akhandle]['matchingType'];
+                        $invalidHiding = $attrFilterTypes[$akhandle]['invalidHiding'];
 
-            <div class="form-group">
-                <h4><?= $ak->render('label');?></h4>
+                        ?>
+                        <h3><?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?></h3>
 
-                <?php
+                        <?php
 
-                $type = $ak->getAttributeType()->getAttributeTypeHandle();
+                        // Use to fetch type of attribute for different display
+                        // $type = $ak->getAttributeType()->getAttributeTypeHandle();
 
-                if ($type == 'select') {
+                    foreach ($optiondata as $option => $count) {
+                        $checked = false;
+                        $disabled = false;
+                        $show = true;
 
-                    $params = $_GET[$ak->getAttributeKeyHandle()];
+                        if (isset($selectedAttributes[$akhandle]) && in_array($option, $selectedAttributes[$akhandle])) {
+                            $checked = true;
+                        } else {
+                            if ($count == 0 && $matchingType == 'and') {
+                                $disabled = true;
+                                if ($invalidHiding == 'hide') {
+                                    $show = false;
+                                }
+                            }
+                        }
+                        ?>
 
-                    if (!is_array($params)) {
-                        $params = str_replace('|', ',', $params);
-                        $params = explode(',', $params);
-                    }
+                        <?php if ($show) { ?>
+                        <div class="<?= ($disabled ? 'disabled' : ''); ?>">
+                            <label>
+                                <input type="checkbox" data-matching="<?= $matchingType; ?>"
+                                    <?= ($disabled ? 'disabled="disabled"' : ''); ?>
+                                    <?= ($checked ? 'checked="checked"' : ''); ?>
 
-                    $options = $ak->getController()->getOptions();
-
-                    foreach($options as $option) { ?>
-                        <label>
-                            <input type="checkbox"
-                                   <?php if (in_array($option->getSelectAttributeOptionDisplayValue(), $params)) { ?>
-                            checked="checked"
+                                       value="<?php echo h($option); ?>" name="<?php echo $akhandle; ?>[]"/>
+                                <span class="store-product-filter-block-option"><?php echo $option; ?>
+                                    <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
+                                    <span class="store-product-filter-block-count">(<?php echo $count; ?>)</span>
                                     <?php } ?>
 
-                                   value="<?php  echo h($option->getSelectAttributeOptionDisplayValue()); ?>" name="<?php echo $ak->getAttributeKeyHandle(); ?>[]" />
-                       <?php  echo $option->getSelectAttributeOptionDisplayValue(); ?></label>
-                        <br />
-
+                                </span></label>
+                        </div>
+                    <?php } ?>
                     <?php }
+                    } elseif ($data['type'] == 'price') { ?>
 
-                } ?>
+                        <?php if ($minPrice != $maxPrice) { ?>
+
+                        <h3><?= t($data['label'] ? $data['label']  : t('Price')); ?></h3>
+
+                        <div data-role="rangeslider">
+
+                            <input type="hidden" class="js-range-slider" name="price" value=""
+                                   data-type="double"
+                                   data-min="<?= $minPrice; ?>"
+                                   data-max="<?= $maxPrice; ?>"
+                                   data-from="<?= $minPriceSelected; ?>"
+                                   data-to="<?= $maxPriceSelected; ?>"
+                                   data-input-values-separator="-"
+                                   data-skin="round"
+                                   data-prefix="<?= \Config::get('community_store.symbol'); ?>"
+                                   data-force-edges="true"
+                            />
+
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $(".js-range-slider").ionRangeSlider({
+                                    <?php if ($updateType == 'auto') { ?>
+                                    onFinish: function() {
+                                        communityStore.submitProductFilter($('.js-range-slider'));
+                                    }
+                                    <?php } ?>
+                                });
+                            });
+
+                        </script>
+                    <?php } ?>
+
+                    <?php } ?>
+
+                </div>
 
 
+            <?php } ?>
 
-            </div>
-        <?php  } ?>
+        <?php } ?>
 
-    <?php }?>
-<button type="submit" class="store-btn-filter btn btn-default">Filter Products</button>
+        <?php if ($updateType == 'button') { ?>
+            <p><button type="submit"
+                    class="store-btn-filter btn btn-default btn-block"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
+        <?php } ?>
+
+        <?php if ($displayClear && (!empty($selectedAttributes) || $priceFiltering)) { ?>
+            <p><button type="submit"
+                    class="store-btn-filter-clear btn btn-default btn-block"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
+        <?php } ?>
     </form>
-
-
 </div>
