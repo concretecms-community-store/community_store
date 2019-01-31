@@ -22,6 +22,7 @@
         <field name="displayClear" type="boolean"></field>
         <field name="filterButtonText" type="string" size="255"></field>
         <field name="clearButtonText" type="string" size="255"></field>
+        <field name="showTotals" type="boolean"></field>
 
     </table>
 
@@ -37,5 +38,6 @@
         <field name="order" type="integer" size="10"><unsigned/></field>
         <field name="matchingType" type="string" size="30"></field>
         <field name="invalidHiding" type="string" size="30"></field>
+        <field name="label" type="string" size="255"></field>
     </table>
 </schema>

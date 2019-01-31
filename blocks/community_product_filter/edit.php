@@ -148,6 +148,7 @@
                                 echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
                                 echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
                                 echo '<input type="hidden" name="types[]" value="' . $selectedatt['type'] . '" /><input type="hidden" name="attributes[]" value="' . $selectedatt['akID'] . '" />';
+                                echo '<br /><input class="form-control input-sm" placeholder="'.t('Custom Label') .'" type="text" name="labels[]" value="' . $selectedatt['label'] . '" />';
                                 echo '</li>';
                             }
                         }?>
@@ -161,22 +162,31 @@
             <legend><?= t('Display Options'); ?></legend>
 
             <div class="form-group">
-                <?= $form->label('updateType', t('Filter is applied when')); ?>
+                <label>
+                    <?= $form->checkbox('showTotals', 1, $showTotals); ?>
+                    <?= t('Display product counts against options if possible'); ?>
+                </label>
+            </div>
+
+
+            <div class="form-group">
+                <?= $form->label('updateType', t('Filter is applied')); ?>
                 <?= $form->select('updateType', ['auto' => t("Automatically when filters are selected"), 'button' => t('When filter button is pressed')], $updateType); ?>
             </div>
 
-            <div class="form-group">
-                <?= $form->label('displayClear', t('Display filter clear button')); ?>
-                <?= $form->select('displayClear', ['1' => t("Yes"), '0' => t('No')], $displayClear); ?>
-            </div>
-
-
-            <div class="form-group">
+            <div id="filterButtonTextField" class="form-group <?= $updateType == 'button' ? '' :'hidden'; ?>">
                 <?= $form->label('filterButtonText', t("Filter Button Text")); ?>
-                <?= $form->text('filteButtonText', $clearButtonText, ['placeholder' => t('Filter')]); ?>
+                <?= $form->text('filterButtonText', $filterButtonText, ['placeholder' => t('Filter')]); ?>
             </div>
 
             <div class="form-group">
+                <label>
+                    <?= $form->checkbox('displayClear', 1, $displayClear); ?>
+                    <?= t('Display filter clear button'); ?>
+                </label>
+            </div>
+
+            <div id="clearButtonTextField" class="form-group <?= $displayClear ? '' :'hidden'; ?>">
                 <?= $form->label('clearButtonText', t("Clear Button Text")); ?>
                 <?= $form->text('clearButtonText', $clearButtonText, ['placeholder' => t('Clear')]); ?>
             </div>
@@ -196,6 +206,22 @@ if ($relatedProduct) {
 
 <script>
     $(document).ready(function () {
+
+        $('#displayClear').change(function () {
+            if ($(this).prop('checked')) {
+                $('#clearButtonTextField').removeClass('hidden');
+            } else {
+                $('#clearButtonTextField').addClass('hidden');
+            }
+        });
+
+        $('#updateType').change(function () {
+            if ($(this).val() === 'button') {
+                $('#filterButtonTextField').removeClass('hidden');
+            } else {
+                $('#filterButtonTextField').addClass('hidden');
+            }
+        });
 
         $("#product-select").select2({
             ajax: {
@@ -290,10 +316,18 @@ if ($relatedProduct) {
 
         $('#availableatts a').click(function (e) {
             e.preventDefault();
-            $("#activeatts").append('<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' + $(this).text()  +
-                '<select class="form-control input-sm pull-right" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>' +
-                '<select class="form-control input-sm pull-right" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select> ' +
-                '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /><input type="hidden" name="types[]" value="' + $(this).data('type') + '" /></li>');
+
+            var newitem = '<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' + $(this).text();
+                if($(this).data('type')==='attr') {
+                    newitem += '<select class="form-control input-sm pull-right" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>';
+                    newitem += '<select class="form-control input-sm pull-right" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select>';
+                }
+
+            newitem += '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /><input type="hidden" name="types[]" value="' + $(this).data('type') + '" />';
+            newitem += '<br /><input class="form-control input-sm" placeholder="<?= t('Custom Label'); ?>" type="text" name="labels[]" value="" /></li>';
+            newitem += '</li>';
+
+            $("#activeatts").append(newitem);
             $(this).parent().addClass('hidden');
         });
 
@@ -305,6 +339,8 @@ if ($relatedProduct) {
         $("#availableatts").find("[data-id='" + id + "']").removeClass('hidden');
         element.remove();
     });
+
+
 </script>
 
 

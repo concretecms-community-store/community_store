@@ -437,7 +437,16 @@ var communityStore = {
         var price = filterform.find("[name='price']");
 
         if (price.length) {
-            strings.push('price=' + price.val());
+            var min = parseFloat(price.data('min'), 2);
+            var max = parseFloat(price.data('max'), 2);
+
+           var pricerange = price.val();
+           console.log(min + '-' + max);
+           console.log(pricerange);
+
+            if (min + '-' + max !== pricerange) {
+                strings.push('price=' + price.val());
+            }
         }
 
         var searchstring =  strings.join('&');

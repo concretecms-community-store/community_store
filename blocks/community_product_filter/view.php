@@ -11,21 +11,21 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 <div class="form-group">
                     <?php if ($data['type'] == 'attr') { ?>
                         <?php
-                        $data = $data['data'];
+                        $optiondata = $data['data'];
 
                         $ak = $attributes[$akhandle];
                         $matchingType = $attrFilterTypes[$akhandle]['matchingType'];
                         $invalidHiding = $attrFilterTypes[$akhandle]['invalidHiding'];
 
                         ?>
-                        <h3><?= $ak->getAttributeKeyName(); ?></h3>
+                        <h3><?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?></h3>
 
                         <?php
 
                         // Use to fetch type of attribute for different display
                         // $type = $ak->getAttributeType()->getAttributeTypeHandle();
 
-                    foreach ($data as $option => $count) {
+                    foreach ($optiondata as $option => $count) {
                         $checked = false;
                         $disabled = false;
                         $show = true;
@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         if (isset($selectedAttributes[$akhandle]) && in_array($option, $selectedAttributes[$akhandle])) {
                             $checked = true;
                         } else {
-                            if ($count == 0) {
+                            if ($count == 0 && $matchingType == 'and') {
                                 $disabled = true;
                                 if ($invalidHiding == 'hide') {
                                     $show = false;
@@ -43,22 +43,28 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         ?>
 
                         <?php if ($show) { ?>
-                        <div class="<?= ($count == 0 ? 'disabled' : ''); ?>">
+                        <div class="<?= ($disabled ? 'disabled' : ''); ?>">
                             <label>
                                 <input type="checkbox" data-matching="<?= $matchingType; ?>"
                                     <?= ($disabled ? 'disabled="disabled"' : ''); ?>
                                     <?= ($checked ? 'checked="checked"' : ''); ?>
 
                                        value="<?php echo h($option); ?>" name="<?php echo $akhandle; ?>[]"/>
-                                <span class="store-product-filter-block-option"><?php echo $option; ?> <span
-                                            class="store-product-filter-block-count">(<?php echo $count; ?>)</span></span></label>
+                                <span class="store-product-filter-block-option"><?php echo $option; ?>
+                                    <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
+                                    <span class="store-product-filter-block-count">(<?php echo $count; ?>)</span>
+                                    <?php } ?>
+
+                                </span></label>
                         </div>
                     <?php } ?>
                     <?php }
                     } elseif ($data['type'] == 'price') { ?>
 
                         <?php if ($minPrice != $maxPrice) { ?>
-                        <h3><?= t('Price'); ?></h3>
+
+                        <h3><?= t($data['label'] ? $data['label']  : t('Price')); ?></h3>
+
                         <div data-role="rangeslider">
 
                             <input type="hidden" class="js-range-slider" name="price" value=""
@@ -97,14 +103,15 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <?php } ?>
 
         <?php } ?>
+
         <?php if ($updateType == 'button') { ?>
-            <button type="submit"
-                    class="store-btn-filter btn btn-default"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button>
+            <p><button type="submit"
+                    class="store-btn-filter btn btn-default btn-block"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
         <?php } ?>
 
-        <?php if ($displayClear) { ?>
-            <button type="submit"
-                    class="store-btn-filter-clear btn btn-default"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button>
+        <?php if ($displayClear && (!empty($selectedAttributes) || $priceFiltering)) { ?>
+            <p><button type="submit"
+                    class="store-btn-filter-clear btn btn-default btn-block"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
         <?php } ?>
     </form>
 </div>
