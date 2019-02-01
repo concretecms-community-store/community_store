@@ -327,4 +327,17 @@ class ProductList extends AttributedItemList
 
         return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
     }
+
+    public function getResultIDs() {
+        $query = $this->deliverQueryObject();
+        $values = $query->execute()->fetchAll();
+
+        $productids = array();
+
+        foreach($values as $val) {
+            $productids[] = $val['pID'];
+        }
+
+        return $productids;
+    }
 }

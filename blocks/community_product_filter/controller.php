@@ -2,7 +2,7 @@
 namespace Concrete\Package\CommunityStore\Block\CommunityProductFilter;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 use Core;
 use Config;
 use Page;
@@ -36,9 +36,7 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', []);
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-        $attrList = $productCategory->getList();
-
+        $attrList = StoreProductKey::getList();
         $this->set('attributes', $attrList);
     }
 
@@ -49,8 +47,7 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-        $attrList = $productCategory->getList();
+        $attrList = StoreProductKey::getList();
 
         $this->set('attributes', $attrList);
 
@@ -97,9 +94,6 @@ class Controller extends BlockController
     public function view()
     {
         $request = \Request::getInstance();
-
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-        $attrList = $productCategory->getList();
         $attrLookup = array();
         $selectedarray = array();
 
@@ -126,7 +120,6 @@ class Controller extends BlockController
         }
 
         $selectedAttributeList = $this->getAttributes();
-
 
         $attrList = array();
         $optionList = array();
