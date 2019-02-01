@@ -8,7 +8,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
-defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProduct';
