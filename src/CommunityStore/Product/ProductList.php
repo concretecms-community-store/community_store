@@ -123,31 +123,44 @@ class ProductList extends AttributedItemList
             $handle = str_replace('%5B%5D', '', $values[0]);
             $handle = $service->sanitizeString($handle);
 
+            $type = 'or';
+
+            if (strpos($values[1], '%3B')) {
+                $type = 'and';
+            }
+
             $value = str_replace('%7C', '%2C', $values[1]);
+            $value = str_replace('%3B', '%2C', $value);
+
             $value = str_replace('%20', ' ', $value);
             $value = $service->sanitizeString($value);
             $values = explode('%2C', $value);
 
             foreach($values as $val) {
-                $searchparams[$handle][] =  $val;
+                if ($val) {
+                    $searchparams[$handle]['type'] = $type;
+                    $searchparams[$handle]['values'][] = $val;
+                }
             }
         }
 
-        foreach ($searchparams as $handle=>$value) {
-            if (isset($value)) {
-                if ('price' == $handle) {
-                    $this->filterByPrice($value);
-                } else {
+        foreach ($searchparams as $handle=>$searchvalue) {
+            $type = $searchvalue['type'];
+            $value = $searchvalue['values'];
 
-                    $ak = StoreProductKey::getByHandle($handle);
+            if ('price' == $handle) {
+                $this->filterByPrice($value[0]);
+            } else {
+                $ak = StoreProductKey::getByHandle($handle);
 
-                    if (is_object($ak)) {
-                        $items = array_filter($value);
-                        if (count($items) == 1) {
-                            $ak->getController()->filterByAttribute($this, $value[0]);
-                        } else {
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                if (is_object($ak)) {
+                    $value = array_filter($value);
+                    if ($type == 'and') {
+                        foreach ($value as $searchterm) {
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . $searchterm . '"');
                         }
+                    } else {
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
                     }
                 }
             }
