@@ -863,6 +863,11 @@ class Product
         return false;
     }
 
+    public function getDescription()
+    {
+        return $this->pDesc;
+    }
+
     public function getDesc()
     {
         return $this->pDesc;

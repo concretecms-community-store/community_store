@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.0';
-    protected $pkgVersion = '2.0.6';
+    protected $pkgVersion = '2.0.6.2.1';
 
     protected $pkgAutoloaderRegistries = array(
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -64,6 +64,11 @@ class Controller extends Package
     {
         $pkg = Package::getByHandle('community_store');
         parent::upgrade();
+
+        Installer::installSinglePage('/dashboard/store/multilingual', $pkg);
+        Installer::installSinglePage('/dashboard/store/multilingual/products', $pkg);
+        Installer::installSinglePage('/dashboard/store/multilingual/common', $pkg);
+
         Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();
@@ -134,6 +139,8 @@ class Controller extends Package
             } catch (Exception $e) {
             }
         }
+
+        $this->app->singleton('cshelper/multilingual', 'Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual');
     }
 
     public function uninstall()
@@ -192,3 +199,5 @@ class Controller extends Package
             });
     }
 }
+
+

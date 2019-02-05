@@ -7,6 +7,7 @@ use Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use \Concrete\Core\Multilingual\Page\Section\Section;
 
 class Controller extends BlockController
 {
@@ -31,10 +32,24 @@ class Controller extends BlockController
         $product = false;
 
         if ('page' == $this->productLocation || !$this->productLocation) {
-            $cID = Page::getCurrentPage()->getCollectionID();
+            $page = Page::getCurrentPage();
+            $cID = $page->getCollectionID();
 
             if ($cID) {
                 $product = StoreProduct::getByCollectionID($cID);
+            }
+
+            if (!$product) {
+                $site = $this->app->make('site')->getSite();
+                if ($site) {
+                    $locale = $site->getDefaultLocale();
+
+                    if ($locale) {
+
+                        $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale() );
+                        $product = StoreProduct::getByCollectionID($originalcID);
+                    }
+                }
             }
         } else {
             if ($this->pID) {

@@ -45,6 +45,7 @@ class Installer
         self::installSinglePage('/dashboard/store/reports', $pkg);
         self::installSinglePage('/dashboard/store/reports/sales', $pkg);
         self::installSinglePage('/dashboard/store/reports/products', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual', $pkg);
         self::installSinglePage('/cart', $pkg);
         self::installSinglePage('/checkout', $pkg);
         self::installSinglePage('/checkout/complete', $pkg);
@@ -398,6 +399,5 @@ class Installer
         self::installUserAttributes($pkg);
 
         Localization::clearCache();
-        //Installer::addProductSearchIndexTable($pkg);
     }
 }

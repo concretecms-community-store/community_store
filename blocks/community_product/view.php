@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$csm = \Core::make('cshelper/multilingual');
+
 $defaultimagewidth = 720;
 $defaultimageheight = 720;
 
@@ -32,7 +34,7 @@ if (is_object($product) && $product->isActive()) {
     } ?>
                     <?php if ($showProductName) {
         ?>
-                        <h1 class="store-product-name" itemprop="name"><?= $product->getName(); ?></h1>
+                        <h1 class="store-product-name" itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h1>
                         <meta itemprop="sku" content="<?= $product->getSKU(); ?>"/>
                     <?php
     } ?>
@@ -141,7 +143,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductDescription) {
         ?>
                         <div class="store-product-description">
-                            <?= $product->getDesc(); ?>
+                            <?= $product->getDescription(); ?>
                         </div>
                     <?php
     } ?>
@@ -215,7 +217,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ($qtylabel) {
             ?>
-                                    <div class="input-group-addon"><?= $product->getQtyLabel(); ?></div>
+                                    <div class="input-group-addon"><?= $csm->t($product->getQtyLabel(), 'productQtyLabel', $product->getID()) ?></div>
                                 </div>
                             <?php
         } ?>
