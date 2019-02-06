@@ -18,6 +18,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
+    protected $attTypes = ['select', 'text', 'textarea'];
 
     public function getBlockTypeDescription()
     {
@@ -35,9 +36,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', []);
-
-        $attrList = StoreProductKey::getList();
-        $this->set('attributes', $attrList);
+        $this->set('attributes', $this->getAvailableAttributes());
     }
 
     public function edit()
@@ -46,10 +45,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
-
-        $attrList = StoreProductKey::getList();
-
-        $this->set('attributes', $attrList);
+        $this->set('attributes', $this->getAvailableAttributes());
 
         $this->set('selectedAttributes', $this->getAttributes());
 
@@ -57,6 +53,19 @@ class Controller extends BlockController
             $relatedProduct = StoreProduct::getByID($this->relatedPID);
             $this->set('relatedProduct', $relatedProduct);
         }
+    }
+
+    private function getAvailableAttributes() {
+        $attrList = StoreProductKey::getList();
+        $availableAtts = array();
+
+        foreach($attrList as $ak) {
+            if (in_array($ak->getAttributeType()->getAttributeTypeHandle(), $this->attTypes)) {
+                $availableAtts[] = $ak;
+            }
+        }
+
+        return $availableAtts;
     }
 
     public function getGroupFilters()
