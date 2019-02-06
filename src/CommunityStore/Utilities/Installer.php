@@ -398,6 +398,9 @@ class Installer
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
 
+        $pakc = AttributeKeyCategory::getByHandle('store_product');
+        $pakc->associateAttributeKeyType(AttributeType::getByHandle('select'));
+
 
         if (version_compare(\Config::get('concrete.version'), '8.0', '>=')) {
             // skip this for version 8, these items would have already been installed historically
