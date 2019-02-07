@@ -1,6 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$defaultimagewidth = 400;
+$defaultimageheight = 280;
+
 $c = Page::getCurrentPage();
 
 if ($products) {
@@ -96,7 +99,7 @@ if ($products) {
                 <?php
                     $imgObj = $product->getImageObj();
         if (is_object($imgObj)) {
-            $thumb = $ih->getThumbnail($imgObj, 400, 280, true); ?>
+            $thumb = $ih->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, true); ?>
                         <p class="store-product-list-thumbnail">
                             <?php if ($showQuickViewLink) {
                 ?>
@@ -350,7 +353,7 @@ if ($products) {
                 $imgObj = $product->getImageObj();
 
                 if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, 400, 280, true);
+                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, true);
                 }
 
                 $varationData[$key] = [
