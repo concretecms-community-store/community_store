@@ -95,6 +95,10 @@ class Settings extends DashboardPageController
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
+                Config::save('community_store.defaultSingleProductImageWidth', $args['defaultSingleProductImageWidth'] ?: 720);
+                Config::save('community_store.defaultSingleProductImageHeight', $args['defaultSingleProductImageHeight'] ?: 720);
+                Config::save('community_store.defaultProductListImageWidth', $args['defaultProductListImageWidth'] ?: 400);
+                Config::save('community_store.defaultProductListImageHeight', $args['defaultProductListImageHeight'] ?: 280);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
                 Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
@@ -142,6 +146,7 @@ class Settings extends DashboardPageController
 
                 $this->saveOrderStatuses($args);
                 $this->flash('success', t('Settings Saved'));
+
                 return \Redirect::to('/dashboard/store/settings');
             }
         }
@@ -173,6 +178,7 @@ class Settings extends DashboardPageController
     public function validate($args)
     {
         $e = Core::make('helper/validation/error');
+        $nv = Core::make('helper/validation/numbers');
 
         if ("" == $args['symbol']) {
             $e->add(t('You must set a currency symbol'));
@@ -205,6 +211,20 @@ class Settings extends DashboardPageController
                 if (count($taxClassRates) > 1) {
                     $e->add(t("The %s Tax Class can't contain more than 1 Tax Rate if you change how the taxes are calculated", $taxClass->getTaxClassName()));
                 }
+            }
+        }
+
+        $sizeFields = [
+            'defaultSingleProductImageWidth',
+            'defaultSingleProductImageHeight',
+            'defaultProductListImageWidth',
+            'defaultProductListImageHeight',
+        ];
+
+        foreach ($sizeFields as $field) {
+            if (isset($args[$field]) && !empty($args[$field]) && !$nv->integer($args[$field])) {
+                $e->add(t("All legacy thumbnail dimensions must be positive integers"));
+                break;
             }
         }
 

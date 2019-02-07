@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$defaultImageWidth = 400;
-$defaultImageHeight = 280;
+$defaultImageWidth = Config::get('community_store.defaultProductListImageWidth') ?: 400;
+$defaultImageHeight = Config::get('community_store.defaultProductListImageHeight') ?: 280;
 
 $c = Page::getCurrentPage();
 

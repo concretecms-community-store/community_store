@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$defaultImageWidth = 720;
-$defaultImageHeight = 720;
+$defaultImageWidth = Config::get('community_store.defaultSingleProductImageWidth') ?: 720;
+$defaultImageHeight = Config::get('community_store.defaultSingleProductImageHeight') ?: 720;
 
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
