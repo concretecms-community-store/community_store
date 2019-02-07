@@ -84,7 +84,7 @@ if ($products) {
         if ($productPage->isError() || $productPage->isInTrash()) {
             $productPage = false;
         } ?>
-    
+
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
                 <?= $token->output('community_store'); ?>
@@ -117,7 +117,7 @@ if ($products) {
             } ?>
                         </p>
                 <?php
-        }// if is_obj ?>
+        }// if is_obj?>
                 <?php if ($showPrice) {
             ?>
                 <p class="store-product-list-price">
@@ -253,9 +253,11 @@ if ($products) {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                 <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
-                                <?php if ($displayType != 'radio') { ?>
+                                <?php if ('radio' != $displayType) {
+                                ?>
                                 <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
-                                <?php } ?>
+                                <?php
+                            } ?>
                                     <?php
                                     $firstAvailableVariation = false;
                             $variation = false;
@@ -274,21 +276,27 @@ if ($products) {
                                         $selected = 'selected="selected"';
                                     } ?>
 
-                                    <?php if ($displayType == 'radio') { ?>
+                                    <?php if ('radio' == $displayType) {
+                                        ?>
                                         <div class="radio">
-                                            <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
+                                            <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> "
+                                                    <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName()); ?></label>
                                         </div>
-                                    <?php } else { ?>
+                                    <?php
+                                    } else {
+                                        ?>
                                         <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
-                                    <?php } ?>
+                                    <?php
+                                    } ?>
 
                                         <?php
                                 }
                             } ?>
-                                <?php if ($displayType != 'radio') { ?>
+                                <?php if ('radio' != $displayType) {
+                                ?>
                                 </select>
-                                <?php } ?>
+                                <?php
+                            } ?>
                             </div>
                         <?php
                         } elseif ('text' == $optionType) {
@@ -401,7 +409,7 @@ if ($products) {
 
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
-        
+
         <?php
             if (0 == $i % $productsPerRow) {
                 echo "</div>";
