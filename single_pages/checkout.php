@@ -45,7 +45,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= \URL::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -421,7 +421,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                 <?php } ?>
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
-                      action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                      action="<?= \URL::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
                     <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
@@ -525,7 +525,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <p><?= t('Invalid code');?></p>
                             <?php } ?>
 
-                            <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+                            <a href="<?= \URL::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
                                 <?= $token->output('community_store'); ?>

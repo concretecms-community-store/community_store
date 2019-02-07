@@ -1,6 +1,5 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
@@ -231,7 +230,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                 <?php if ($cart  && !empty($cart)) { ?>
                 <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= \URL::to('/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= \URL::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

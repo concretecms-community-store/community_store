@@ -86,31 +86,25 @@ class Products extends DashboardSitePageController
 
             $translations = $this->post('translation');
 
-//            $em = \ORM::entityManager();
-//            $qb = $em->createQueryBuilder();
-//            $qb->delete('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't');
-//            $qb->where('t.product_id = :project');
-//            $qb->setParameter('project', $project);
-
+//            echo '<pre>';
+//            dd($translations);
 
             foreach($translations as $locale => $value) {
 
                 foreach($value as $type => $entries) {
                     foreach ($entries as $key => $text) {
 
-
                         $qb = $this->entityManager->createQueryBuilder();
 
                         $query = $qb->select('t')
                             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
-                            ->where('t.entityType = :type')
-                            ->setParameter('type', $key);
-                            $query->andWhere('t.entityID = :id')->setParameter('id', $this->post('pID'));
+                            ->where('t.entityType = :type')->setParameter('type', $key);
 
+                        $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
+                        $query->andWhere('t.entityID = :id')->setParameter('id', $this->post('pID'));
                         $query->setMaxResults(1);
 
                         $t = $query->getQuery()->getResult();
-
 
                         if (!empty($t)) {
                             $t = $t[0];
@@ -126,6 +120,7 @@ class Products extends DashboardSitePageController
                         } else {
                             $t->setExtendedText($text);
                         }
+
                         $t->setLocale($locale);
                         $t->save();
                     }

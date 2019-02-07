@@ -27,29 +27,5 @@ class CartTotal extends RouteController
         }
     }
 
-    public function getCartSummary()
-    {
-        $totals = StoreCalculator::getTotals();
-        $itemCount = StoreCart::getTotalItemsInCart();
-        $total = $totals['total'];
-        $subTotal = $totals['subTotal'];
-        $shippingTotal = $totals['shippingTotal'];
 
-        $taxes = $totals['taxes'];
-        $formattedtaxes = [];
-
-        foreach ($taxes as $tax) {
-            $tax['taxamount'] = StorePrice::format($tax['taxamount']);
-            $formattedtaxes[] = $tax;
-        }
-
-        if (!\Session::get('community_store.smID')) {
-            $shippingTotalRaw = false;
-        } else {
-            $shippingTotalRaw = $shippingTotal;
-        }
-
-        $data = ['subTotal' => StorePrice::format($subTotal), 'total' => StorePrice::format($total), 'itemCount' => $itemCount, 'totalCents' => $total * 100, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => StorePrice::format($shippingTotal)];
-        echo json_encode($data);
-    }
 }

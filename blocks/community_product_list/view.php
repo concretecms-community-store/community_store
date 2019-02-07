@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$csm = \Core::make('cshelper/multilingual');
+
 $c = Page::getCurrentPage();
 
 if ($products) {
@@ -90,7 +92,7 @@ if ($products) {
                 <?= $token->output('community_store'); ?>
 		<?php if ($showName) {
             ?>
-                <h2 class="store-product-list-name"><?= $product->getName(); ?></h2>
+                <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
 		<?php
         } ?>
                 <?php
@@ -187,7 +189,7 @@ if ($products) {
 
                 <?php if ($showDescription) {
             ?>
-                <div class="store-product-list-description"><?= $product->getDesc(); ?></div>
+                <div class="store-product-list-description"><?= $csm->t($product->getDesc(), 'productDescription', $product->getID()); ?></div>
                 <?php
         } ?>
                 <?php if ($showPageLink && $productPage) {

@@ -55,6 +55,8 @@ class Multilingual
                  $query->andWhere('t.entityID = :id')->setParameter('id', $id);
             }
 
+            $query->andWhere('t.locale = :locale')->setParameter('locale', $forcedLocale ? $forcedLocale : $locale);
+
             $query->setMaxResults(1);
 
             $result = $query->getQuery()->getResult();

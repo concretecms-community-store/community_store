@@ -1,15 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
-use Package;
+use Concrete\Core\Package\Package;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-use Route;
-use Asset;
-use AssetList;
-use URL;
+use Concrete\Core\Support\Facade\Route;
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Support\Facade\Url;
 use Core;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 class Controller extends Package
 {
@@ -98,8 +99,6 @@ class Controller extends Package
 
     public function registerRoutes()
     {
-        Route::register('/cart/getCartSummary', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getCartSummary');
-        Route::register('/cart/getmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartModal::getCartModal');
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
         Route::register('/checkout/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\States::getStateList');
         Route::register('/checkout/getShippingMethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::getShippingMethods');
@@ -181,10 +180,17 @@ class Controller extends Package
 
     public static function returnHeaderJS()
     {
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+
         return "
         <script type=\"text/javascript\">
             var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
-            var CARTURL = '" . rtrim(URL::to('/cart'), '/') . "';
+            var CARTURL = '" . rtrim(URL::to($langpath . '/cart'), '/') . "';
             var TRAILINGSLASH = '" . ((bool) \Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
             var CHECKOUTURL = '" . rtrim(URL::to('/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';

@@ -76,7 +76,7 @@ if ($action == 'view') { ?>
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb();?></td>
-                        <td><strong><a href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID())?>"><?=  $product->getName();
+                        <td><strong><a href="<?= \URL::to('/dashboard/store/multilingual/products/product/', $product->getID())?>"><?=  $product->getName();
                                 $sku = $product->getSKU();
                                 if ($sku) {
                                     echo ' (' .$sku . ')';

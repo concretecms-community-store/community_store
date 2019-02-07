@@ -30,13 +30,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
     <?php } ?>
 <?php } ?>
 
-<input id='cartURL' type='hidden' data-cart-url='<?= \URL::to("/cart/") ?>'>
+<input id='cartURL' type='hidden' data-cart-url='<?= \URL::to($langpath . '/cart/') ?>'>
 
 <?php
 if ($cart) {
     $i = 1;
     ?>
-    <form method="post" class="form-inline" action="<?=  \URL::to("/cart/"); ?>" >
+    <form method="post" class="form-inline" action="<?=  \URL::to($langpath . '/cart/'); ?>" >
         <?= $token->output('community_store'); ?>
         <table id="store-cart" class="store-cart-table table table-hover table-condensed">
             <thead>
@@ -186,7 +186,7 @@ if ($cart) {
     </form>
 
     <!--    Hidden form for deleting-->
-    <form method="post" id="deleteform" action="<?=  \URL::to("/cart/"); ?>">
+    <form method="post" id="deleteform" action="<?=  \URL::to($langpath  . '/cart/'); ?>">
         <?= $token->output('community_store'); ?>
         <input type="hidden" name="instance" value=""/>
         <input type="hidden" name="action" value="remove" value=""/>
@@ -196,7 +196,7 @@ if ($cart) {
 
 <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code'); ?></h3>
-    <form method="post" action="<?= \URL::to('/cart/'); ?>" class="form-inline">
+    <form method="post" action="<?= \URL::to($langpath .'/cart/'); ?>" class="form-inline">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
             <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
@@ -263,7 +263,7 @@ if ($cart) {
 
     <div class="store-cart-page-cart-links pull-right">
         <a class="store-btn-cart-page-checkout btn btn-primary"
-           href="<?= \URL::to('/checkout') ?>"><?= t('Checkout') ?></a>
+           href="<?= \URL::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>
 <?php } else { ?>
     <p class="alert alert-info"><?= t('Your cart is empty'); ?></p>

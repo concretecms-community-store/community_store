@@ -16,11 +16,19 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 class Checkout extends PageController
 {
     public function view($guest = false)
     {
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+
         if ($this->post()) {
             if ('code' == $this->post('action')) {
                 $codeerror = false;
@@ -39,7 +47,7 @@ class Checkout extends PageController
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
-            return \Redirect::to("/");
+            return \Redirect::to($langpath . '/');
         }
 
         $customer = new StoreCustomer();
@@ -53,11 +61,11 @@ class Checkout extends PageController
         $cart = StoreCart::getCart();
 
         if (StoreCart::hasChanged()) {
-            return \Redirect::to("/cart/changed");
+            return \Redirect::to($langpath . '/cart/changed');
         }
 
         if (0 == StoreCart::getTotalItemsInCart()) {
-            return \Redirect::to("/cart");
+            return \Redirect::to($langpath . '/cart');
         }
         $this->set('form', Core::make("helper/form"));
 
@@ -204,6 +212,7 @@ class Checkout extends PageController
         }
 
         $this->set('token', $this->app->make('token'));
+        $this->set('langpath', $langpath);
     }
 
     public function failed($guest = false)
@@ -220,8 +229,15 @@ class Checkout extends PageController
     {
         $token = $this->app->make('token');
 
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+
         if (!$token->validate('community_store'))  {
-            return \Redirect::to("/checkout");
+            return \Redirect::to($langpath . '/checkout');
         }
 
         $data = $this->post();
@@ -233,16 +249,16 @@ class Checkout extends PageController
 
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
         if (false === $pm || (StoreCart::isShippable() && !Session::get('community_store.smID'))) {
-            return \Redirect::to("/checkout");
+            return \Redirect::to($langpath . '/checkout');
         }
 
         if ($pm->getMethodController()->isExternal()) {
             if (0 != StoreCart::getTotalItemsInCart()) {
                 $order = StoreOrder::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
-                return \Redirect::to('/checkout/external');
+                return \Redirect::to($langpath .'/checkout/external');
             } else {
-                return \Redirect::to("/cart");
+                return \Redirect::to($langpath . '/cart');
             }
         } else {
             $payment = $pm->submitPayment();
@@ -250,14 +266,15 @@ class Checkout extends PageController
                 $errors = $payment['errorMessage'];
                 Session::set('paymentErrors', $errors);
                 if ($guest) {
-                    return \Redirect::to("/checkout/failed/1#payment");
+                    return \Redirect::to($langpath . '/checkout/failed/1#payment');
                 } else {
-                    return \Redirect::to("/checkout/failed#payment");
+                    return \Redirect::to($langpath . '/checkout/failed#payment');
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
                 $order = StoreOrder::add($pm, $transactionReference);
-                return \Redirect::to('/checkout/complete');
+
+                return \Redirect::to($langpath . '/checkout/complete');
             }
         }
     }
@@ -273,7 +290,14 @@ class Checkout extends PageController
         }
 
         if (!$pm) {
-            return \Redirect::to('/checkout');
+            $c = \Page::getCurrentPage();
+            $al = Section::getBySectionOfSite($c);
+            $langpath = '';
+            if ($al !== null) {
+                $langpath =  $al->getCollectionHandle();
+            }
+
+            return \Redirect::to($langpath . '/checkout');
         }
 
         $this->set('pm', $pm);
