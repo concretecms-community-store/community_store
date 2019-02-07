@@ -14,6 +14,8 @@ class Multilingual
     protected $app;
     protected $entityManager;
 
+    protected $longTextTypes = ['productDescription', 'productDetails'];
+
     public function __construct(Localization $localization, Application $application, EntityManagerInterface $entityManager)
     {
         $this->localization = $localization;
@@ -57,8 +59,14 @@ class Multilingual
 
             $result = $query->getQuery()->getResult();
 
+
             if ($result && $result[0]) {
-                $translation = $result[0]->getTranslatedText();
+
+                if (in_array($type, $this->longTextTypes)) {
+                    $translation = $result[0]->getExtendedText();
+                } else {
+                    $translation = $result[0]->getTranslatedText();
+                }
 
                 if ($translation) {
                     return $translation;

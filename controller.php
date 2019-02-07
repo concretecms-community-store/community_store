@@ -15,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.0';
-    protected $pkgVersion = '2.0.6.2.1';
+    protected $pkgVersion = '2.0.6.2.3';
 
     protected $pkgAutoloaderRegistries = array(
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -63,11 +63,16 @@ class Controller extends Package
     public function upgrade()
     {
         $pkg = Package::getByHandle('community_store');
-        parent::upgrade();
 
         Installer::installSinglePage('/dashboard/store/multilingual', $pkg);
         Installer::installSinglePage('/dashboard/store/multilingual/products', $pkg);
+        Installer::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         Installer::installSinglePage('/dashboard/store/multilingual/common', $pkg);
+
+
+        parent::upgrade();
+
+
 
         Installer::upgrade($pkg);
         $cms = Core::make('app');

@@ -143,7 +143,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductDescription) {
         ?>
                         <div class="store-product-description">
-                            <?= $product->getDescription(); ?>
+                            <?= $csm->t($product->getDescription(), 'productDecription', $product->getID()); ?>
                         </div>
                     <?php
     } ?>
@@ -196,7 +196,7 @@ if (is_object($product) && $product->isActive()) {
                             <div class="store-product-quantity form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
 
-                                <?php $qtylabel = $product->getQtyLabel(); ?>
+                                <?php  $qtylabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
 
                                 <?php if ($qtylabel) {
             ?>
