@@ -215,7 +215,7 @@ class Installer
     {
         //user attributes for customers
         $uakc = AttributeKeyCategory::getByHandle('user');
-        $uakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_MULTIPLE);
+        $uakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
 
         //define attr group, and the different attribute types we'll use
         $custSet = AttributeSet::getByHandle('customer_info');
@@ -280,11 +280,18 @@ class Installer
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
-        $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
-        $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
+
+        $orderCustSet = AttributeSet::getByHandle('order_customer');
+        if (!is_object($orderCustSet)) {
+            $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
+        }
+
+        $orderChoiceSet = AttributeSet::getByHandle('order_choices');
+        if (!is_object($orderChoiceSet)) {
+            $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
+        }
 
         if (!$orderCustSet) {
-
             $sets = $orderCategory->getAttributeSets();
 
             foreach ($sets as $set) {
