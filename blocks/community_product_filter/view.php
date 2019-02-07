@@ -9,6 +9,16 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         if (!empty($filterData)) {
             foreach ($filterData as $akhandle => $data) { ?>
                 <div class="form-group">
+
+                    <h3 class="store-product-filter-block-option-title">
+                    <?php if ($data['type'] == 'attr') { ?>
+                        <?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?>
+                    <?php } elseif ($data['type'] == 'price') { ?>
+                      <?= t($data['label'] ? $data['label']  : t('Price')); ?>
+                    <?php } ?>
+                    </h3>
+
+                    <div class="store-product-filter-block-options">
                     <?php if ($data['type'] == 'attr') { ?>
                         <?php
                         $optiondata = $data['data'];
@@ -16,14 +26,6 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         $ak = $attributes[$akhandle];
                         $matchingType = $attrFilterTypes[$akhandle]['matchingType'];
                         $invalidHiding = $attrFilterTypes[$akhandle]['invalidHiding'];
-
-                        ?>
-                        <h3><?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?></h3>
-
-                        <?php
-
-                        // Use to fetch type of attribute for different display
-                        // $type = $ak->getAttributeType()->getAttributeTypeHandle();
 
                     foreach ($optiondata as $option => $count) {
                         $checked = false;
@@ -43,7 +45,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         ?>
 
                         <?php if ($show) { ?>
-                        <div class="<?= ($disabled ? 'disabled' : ''); ?>">
+                        <div class="store-product-filter-block-option <?= ($disabled ? 'disabled' : ''); ?>">
                             <label>
                                 <input type="checkbox" data-matching="<?= $matchingType; ?>"
                                     <?= ($disabled ? 'disabled="disabled"' : ''); ?>
@@ -62,8 +64,6 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     } elseif ($data['type'] == 'price') { ?>
 
                         <?php if ($minPrice != $maxPrice) { ?>
-
-                        <h3><?= t($data['label'] ? $data['label']  : t('Price')); ?></h3>
 
                         <div data-role="rangeslider">
 
@@ -96,6 +96,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     <?php } ?>
 
                     <?php } ?>
+                    </div>
 
                 </div>
 
