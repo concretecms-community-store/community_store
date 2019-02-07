@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 	    <div class="ccm-dashboard-header-buttons">
-            <a href="<?= \URL::to('/dashboard/store/settings/shipping'); ?>" class="btn btn-primary"><i class="fa fa-truck"></i> <?= t("Shipping Methods"); ?></a>
+            <a href="<?= \URL::to('/dashboard/store/settings/shipping'); ?>" class="btn btn-primary"><i class="fa fa-truck fa-flip-horizontal"></i> <?= t("Shipping Methods"); ?></a>
             <a href="<?= \URL::to('/dashboard/store/settings/tax'); ?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates"); ?></a>
         </div>
 
