@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$defaultimagewidth = 720;
-$defaultimageheight = 720;
+$defaultImageWidth = 720;
+$defaultImageHeight = 720;
 
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
@@ -245,10 +245,12 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
-                                    <?php if ($displayType != 'radio') { ?>
+                                    <?php if ('radio' != $displayType) {
+                                    ?>
                                     <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
                                             name="po<?= $option->getID(); ?>">
-                                    <?php } ?>
+                                    <?php
+                                } ?>
                                         <?php
                                         $firstAvailableVariation = false;
                                 $variation = false;
@@ -267,21 +269,27 @@ if (is_object($product) && $product->isActive()) {
                                             $selected = 'selected="selected"';
                                         } ?>
 
-                                        <?php if ($displayType == 'radio') { ?>
+                                        <?php if ('radio' == $displayType) {
+                                            ?>
                                             <div class="radio">
-                                                <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                        <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
+                                                <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> "
+                                                        <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName()); ?></label>
                                             </div>
-                                        <?php } else { ?>
+                                        <?php
+                                        } else {
+                                            ?>
                                         <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
-                                        <?php } ?>
+                                        <?php
+                                        } ?>
 
                                         <?php
-                                        }
+                                    }
                                 } ?>
-                                     <?php if ($displayType != 'radio') { ?>
+                                     <?php if ('radio' != $displayType) {
+                                    ?>
                                     </select>
-                                    <?php } ?>
+                                    <?php
+                                } ?>
                                 </div>
                             <?php
                             } elseif ('text' == $optionType) {
@@ -343,7 +351,7 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                             if (is_object($imgObj)) {
-                                $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false); ?>
+                                $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, false); ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
                                    title="<?= h($product->getName()); ?>"
@@ -360,11 +368,11 @@ if (is_object($product) && $product->isActive()) {
                                 $loop = 1;
                                 echo '<div class="store-product-additional-images clearfix no-gutter">';
 
-                                foreach ($images as $secondaryimage) {
-                                    if (is_object($secondaryimage)) {
-                                        $thumb = Core::make('helper/image')->getThumbnail($secondaryimage, $defaultimagewidth, $defaultimageheight, true); ?>
+                                foreach ($images as $secondaryImage) {
+                                    if (is_object($secondaryImage)) {
+                                        $thumb = Core::make('helper/image')->getThumbnail($secondaryImage, $defaultImageWidth, $defaultImageHeight, true); ?>
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a
-                                                href="<?= $secondaryimage->getRelativePath(); ?>"
+                                                href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
                                                 class="store-product-thumb text-center center-block"><img
                                                     src="<?= $thumb->src; ?>"/></a></div>
@@ -404,7 +412,7 @@ if (is_object($product) && $product->isActive()) {
                             ?>
 
             <?php
-            $varationData = [];
+                $varationData = [];
                             foreach ($variationLookup as $key => $variation) {
                                 $product->setVariation($variation);
                                 $imgObj = $product->getImageObj();
@@ -412,20 +420,20 @@ if (is_object($product) && $product->isActive()) {
                                 $thumb = false;
 
                                 if ($imgObj) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false);
+                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, false);
                                 }
 
                                 $varationData[$key] = [
-                    'price' => $product->getFormattedOriginalPrice(),
-                    'saleprice' => $product->getFormattedSalePrice(),
-                    'available' => ($variation->isSellable()),
-                    'imageThumb' => $thumb ? $thumb->src : '',
-                    'image' => $imgObj ? $imgObj->getRelativePath() : '',
-                ];
+                        'price' => $product->getFormattedOriginalPrice(),
+                        'saleprice' => $product->getFormattedSalePrice(),
+                        'available' => ($variation->isSellable()),
+                        'imageThumb' => $thumb ? $thumb->src : '',
+                        'image' => $imgObj ? $imgObj->getRelativePath() : '',
+                    ];
                             } ?>
 
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
-                var variationdata = <?= json_encode($varationData); ?>;
+                var variationData = <?= json_encode($varationData); ?>;
                 var ar = [];
 
                 $('#product-options-<?= $bID; ?> select.store-product-variation, #product-options-<?= $bID; ?> .store-product-variation:checked').each(function () {
@@ -435,31 +443,31 @@ if (is_object($product) && $product->isActive()) {
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
 
-                if (variationdata[ar.join('_')]['saleprice']) {
-                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationdata[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
+                if (variationData[ar.join('_')]['saleprice']) {
+                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
                         '<?php echo t('was'); ?>' +
-                        '&nbsp;<span class="store-original-price ">' + variationdata[ar.join('_')]['price'] + '</span>';
+                        '&nbsp;<span class="store-original-price ">' + variationData[ar.join('_')]['price'] + '</span>';
 
                     pdb.find('.store-product-price').html(pricing);
                 } else {
-                    pdb.find('.store-product-price').html(variationdata[ar.join('_')]['price']);
+                    pdb.find('.store-product-price').html(variationData[ar.join('_')]['price']);
                 }
 
-                if (variationdata[ar.join('_')]['available']) {
+                if (variationData[ar.join('_')]['available']) {
                     pdb.find('.store-out-of-stock-label').addClass('hidden');
                     pdb.find('.store-btn-add-to-cart').removeClass('hidden');
                 } else {
                     pdb.find('.store-out-of-stock-label').removeClass('hidden');
                     pdb.find('.store-btn-add-to-cart').addClass('hidden');
                 }
-                if (variationdata[ar.join('_')]['imageThumb']) {
+                if (variationData[ar.join('_')]['imageThumb']) {
                     var image = pdb.find('.store-product-primary-image img');
 
                     if (image) {
-                        image.attr('src', variationdata[ar.join('_')]['imageThumb']);
+                        image.attr('src', variationData[ar.join('_')]['imageThumb']);
                         var link = image.parent();
                         if (link) {
-                            link.attr('href', variationdata[ar.join('_')]['image'])
+                            link.attr('href', variationData[ar.join('_')]['image'])
                         }
                     }
                 }
