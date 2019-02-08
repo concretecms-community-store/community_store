@@ -17,10 +17,10 @@ class Controller extends Package
     protected $appVersionRequired = '8.0';
     protected $pkgVersion = '2.0.5';
 
-    protected $pkgAutoloaderRegistries = array(
+    protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
-        'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
-    );
+        'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
+    ];
 
     public function getPackageDescription()
     {
@@ -69,7 +69,8 @@ class Controller extends Package
         $cms->clearCaches();
     }
 
-    public function testForUpgrade() {
+    public function testForUpgrade()
+    {
         $community_store = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
 
         if ($community_store) {
@@ -77,7 +78,7 @@ class Controller extends Package
 
             if (version_compare($installedversion, '2.0', '<')) {
                 $errors = $this->app->make('error');
-                $errors->add(t('Upgrading version 1.x version of Community Store to 2.x is not currently supported. Please immediately revert your community_store package folder to the %s release.',$installedversion ));
+                $errors->add(t('Upgrading version 1.x version of Community Store to 2.x is not currently supported. Please immediately revert your community_store package folder to the %s release.', $installedversion));
 
                 return $errors;
             }
@@ -100,8 +101,20 @@ class Controller extends Package
         Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::downloadFile');
     }
 
+    public function registerHelpers()
+    {
+        $singletons = [
+            'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
+        ];
+
+        foreach ($singletons as $key => $value) {
+            $this->app->singleton($key, $value);
+        }
+    }
+
     public function on_start()
     {
+        $this->registerHelpers();
         $this->registerRoutes();
         $this->registerCategories();
 
@@ -180,14 +193,15 @@ class Controller extends Package
         ";
     }
 
-    private function registerCategories() {
+    private function registerCategories()
+    {
         $this->app['manager/attribute/category']->extend('store_product',
-            function($app) {
+            function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
             });
 
         $this->app['manager/attribute/category']->extend('store_order',
-            function($app) {
+            function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
             });
     }

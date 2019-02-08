@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
+
+?>
 
 	    <div class="ccm-dashboard-header-buttons">
             <a href="<?= \URL::to('/dashboard/store/settings/shipping'); ?>" class="btn btn-primary"><i class="fa fa-truck fa-flip-horizontal"></i> <?= t("Shipping Methods"); ?></a>
@@ -279,45 +282,77 @@
                     </div>
 
                     <h3><?= t("Product Images"); ?></h3>
-                    <h4><?= t("Single Product - Legacy Thumbnail Generator"); ?></h4>
+
                     <div class="row">
+                        <h4 class="col-md-12"><?= t("Product Thumbnail Types"); ?></h4>
                         <div class="form-group col-md-6">
-                            <?= $form->label('defaultSingleProductImageWidth', t('Single Product Image Width'), ['class' => 'sr-only']); ?>
-                            <div class="input-group">
-                                <div class="input-group-addon"><?php echo t("Width"); ?></div>
-                                <?= $form->number('defaultSingleProductImageWidth', Config::get('community_store.defaultSingleProductImageWidth') ?: 720, ['min' => '0', 'step' => '1']); ?>
-                                <div class="input-group-addon">px</div>
-                            </div>
+                            <?= $form->label('defaultSingleProductThumbType', t('Single Product Thumbnail Type')); ?>
+                            <?= $form->select('defaultSingleProductThumbType', $thumbnailTypes, Config::get('community_store.defaultSingleProductThumbType')); ?>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <?= $form->label('defaultSingleProductImageHeight', t('Single Product Image Height'), ['class' => 'sr-only']); ?>
-                            <div class="input-group">
-                                <div class="input-group-addon"><?php echo t("Height"); ?></div>
-                                <?= $form->number('defaultSingleProductImageHeight', Config::get('community_store.defaultSingleProductImageHeight') ?: 720, ['min' => '0', 'step' => '1']); ?>
-                                <div class="input-group-addon">px</div>
-                            </div>
+                            <?= $form->label('defaultProductListThumbType', t('Product List Thumbnail Type')); ?>
+                            <?= $form->select('defaultProductListThumbType', $thumbnailTypes, Config::get('community_store.defaultProductListThumbType')); ?>
                         </div>
                     </div>
 
-                    <h4><?= t("Product List - Legacy Thumbnail Generator"); ?></h4>
                     <div class="row">
-                        <div class="form-group col-md-6">
-                            <?= $form->label('defaultProductListImageWidth', t('Product List Image Width'), ['class' => 'sr-only']); ?>
+                        <h4 class="col-md-12"><?= t("Single Product - Legacy Thumbnail Generator"); ?></h4>
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultSingleProductImageWidth', t('Image Width')); ?>
                             <div class="input-group">
-                                <div class="input-group-addon"><?php echo t("Width"); ?></div>
-                                <?= $form->number('defaultProductListImageWidth', Config::get('community_store.defaultProductListImageWidth') ?: 400, ['min' => '0', 'step' => '1']); ?>
+                                <?= $form->number('defaultSingleProductImageWidth', Config::get('community_store.defaultSingleProductImageWidth') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
                                 <div class="input-group-addon">px</div>
+                            </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH); ?>
                             </div>
                         </div>
 
-                        <div class="form-group col-md-6">
-                            <?= $form->label('defaultProductListImageHeight', t('Product List Image Height'), ['class' => 'sr-only']); ?>
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultSingleProductImageHeight', t('Image Height')); ?>
                             <div class="input-group">
-                                <div class="input-group-addon"><?php echo t("Height"); ?></div>
-                                <?= $form->number('defaultProductListImageHeight', Config::get('community_store.defaultProductListImageHeight') ?: 280, ['min' => '0', 'step' => '1']); ?>
+                                <?= $form->number('defaultSingleProductImageHeight', Config::get('community_store.defaultSingleProductImageHeight') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
                                 <div class="input-group-addon">px</div>
                             </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultSingleProductCrop', t('Image cropping')); ?>
+                            <?= $form->select('defaultSingleProductCrop', ['0' => t("Scale proportionally"), '1' => t("Scale and crop")], Config::get('community_store.defaultSingleProductCrop')); ?>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <h4 class="col-md-12"><?= t("Product List - Legacy Thumbnail Generator"); ?></h4>
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductListImageWidth', t('Image Width')); ?>
+                            <div class="input-group">
+                                <?= $form->number('defaultProductListImageWidth', Config::get('community_store.defaultProductListImageWidth') ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
+                                <div class="input-group-addon">px</div>
+                            </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductListImageHeight', t('Image Height')); ?>
+                            <div class="input-group">
+                                <?= $form->number('defaultProductListImageHeight', Config::get('community_store.defaultProductListImageHeight') ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
+                                <div class="input-group-addon">px</div>
+                            </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductListCrop', t('Image cropping')); ?>
+                            <?= $form->select('defaultProductListCrop', ['0' => t("Scale proportionally"), '1' => t("Scale and crop")], Config::get('community_store.defaultProductListCrop')); ?>
                         </div>
                     </div>
                 </div>

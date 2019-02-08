@@ -5,15 +5,18 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Package;
 use Core;
 use Config;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
 class Settings extends DashboardPageController
 {
     public function view()
     {
         $this->loadFormAssets();
+        $this->set('thumbnailTypes', $this->getThumbTypesList());
         $this->set("pageSelector", Core::make('helper/form/page_selector'));
         $this->set("countries", Core::make('helper/lists/countries')->getCountries());
         $this->set("states", Core::make('helper/lists/states_provinces')->getStates());
@@ -59,6 +62,28 @@ class Settings extends DashboardPageController
         $this->requireAsset('select2');
     }
 
+    protected function getThumbTypesList()
+    {
+        $thumbTypesList = [];
+        $thumbTypesList[] = t('None');
+        $thumbTypes = ThumbType::getList();
+
+        if (count($thumbTypes)) {
+            foreach ($thumbTypes as $tt) {
+                if (!is_object($tt)) {
+                    continue;
+                }
+
+                $height = $tt->getHeight() ? $tt->getHeight() : t('Automatic');
+                $sizingMode = method_exists($tt, 'getSizingModeDisplayName') ? ', ' . $tt->getSizingModeDisplayName() : '';
+                $displayName = sprintf('%s (w:%s, h:%s%s)', $tt->getDisplayName(), $tt->getWidth(), $height, $sizingMode);
+                $thumbTypesList[$tt->getID()] = htmlentities($displayName, ENT_QUOTES, APP_CHARSET);
+            }
+        }
+
+        return $thumbTypesList;
+    }
+
     public function save()
     {
         $this->view();
@@ -95,10 +120,14 @@ class Settings extends DashboardPageController
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
-                Config::save('community_store.defaultSingleProductImageWidth', $args['defaultSingleProductImageWidth'] ?: 720);
-                Config::save('community_store.defaultSingleProductImageHeight', $args['defaultSingleProductImageHeight'] ?: 720);
-                Config::save('community_store.defaultProductListImageWidth', $args['defaultProductListImageWidth'] ?: 400);
-                Config::save('community_store.defaultProductListImageHeight', $args['defaultProductListImageHeight'] ?: 280);
+                Config::save('community_store.defaultSingleProductThumbType', $args['defaultSingleProductThumbType']);
+                Config::save('community_store.defaultProductListThumbType', $args['defaultProductListThumbType']);
+                Config::save('community_store.defaultSingleProductImageWidth', $args['defaultSingleProductImageWidth'] ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH);
+                Config::save('community_store.defaultSingleProductImageHeight', $args['defaultSingleProductImageHeight'] ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT);
+                Config::save('community_store.defaultProductListImageWidth', $args['defaultProductListImageWidth'] ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH);
+                Config::save('community_store.defaultProductListImageHeight', $args['defaultProductListImageHeight'] ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT);
+                Config::save('community_store.defaultSingleProductCrop', $args['defaultSingleProductCrop']);
+                Config::save('community_store.defaultProductListCrop', $args['defaultProductListCrop']);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
                 Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));

@@ -1,8 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$defaultImageWidth = Config::get('community_store.defaultSingleProductImageWidth') ?: 720;
-$defaultImageHeight = Config::get('community_store.defaultSingleProductImageHeight') ?: 720;
+$communityStoreImageHelper = Core::make('cs/helper/image', ['single_product']);
 
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
@@ -351,7 +350,7 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                             if (is_object($imgObj)) {
-                                $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, false); ?>
+                                $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
                                    title="<?= h($product->getName()); ?>"
@@ -368,9 +367,13 @@ if (is_object($product) && $product->isActive()) {
                                 $loop = 1;
                                 echo '<div class="store-product-additional-images clearfix no-gutter">';
 
+                                // This is only needed if no thumbnail type was defined or for some reason
+                                // we need to fallback on the legacy thumbnailer.
+                                $communityStoreImageHelper->setLegacyThumbnailCrop(true);
+
                                 foreach ($images as $secondaryImage) {
                                     if (is_object($secondaryImage)) {
-                                        $thumb = Core::make('helper/image')->getThumbnail($secondaryImage, $defaultImageWidth, $defaultImageHeight, true); ?>
+                                        $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage); ?>
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
@@ -413,6 +416,10 @@ if (is_object($product) && $product->isActive()) {
 
             <?php
                 $varationData = [];
+                            // This is only needed if no thumbnail type was defined or for some reason
+                            // we need to fallback on the legacy thumbnailer. We set it again because we set it to true above
+                            $communityStoreImageHelper->setLegacyThumbnailCrop(false);
+
                             foreach ($variationLookup as $key => $variation) {
                                 $product->setVariation($variation);
                                 $imgObj = $product->getImageObj();
@@ -420,7 +427,7 @@ if (is_object($product) && $product->isActive()) {
                                 $thumb = false;
 
                                 if ($imgObj) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, false);
+                                    $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
                                 }
 
                                 $varationData[$key] = [
