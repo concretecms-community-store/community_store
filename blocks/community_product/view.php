@@ -369,6 +369,7 @@ if (is_object($product) && $product->isActive()) {
 
                                 // This is only needed if no thumbnail type was defined or for some reason
                                 // we need to fallback on the legacy thumbnailer.
+                                // We are setting crop to true as it's false by default
                                 $communityStoreImageHelper->setLegacyThumbnailCrop(true);
 
                                 foreach ($images as $secondaryImage) {
@@ -417,7 +418,8 @@ if (is_object($product) && $product->isActive()) {
             <?php
                 $varationData = [];
                             // This is only needed if no thumbnail type was defined or for some reason
-                            // we need to fallback on the legacy thumbnailer. We set it again because we set it to true above
+                            // we need to fallback on the legacy thumbnailer.
+                            // We set it to false again because we set it to true above
                             $communityStoreImageHelper->setLegacyThumbnailCrop(false);
 
                             foreach ($variationLookup as $key => $variation) {

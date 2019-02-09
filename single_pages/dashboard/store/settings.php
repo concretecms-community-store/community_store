@@ -285,14 +285,19 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
                     <div class="row">
                         <h4 class="col-md-12"><?= t("Product Thumbnail Types"); ?></h4>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <?= $form->label('defaultSingleProductThumbType', t('Single Product Thumbnail Type')); ?>
                             <?= $form->select('defaultSingleProductThumbType', $thumbnailTypes, Config::get('community_store.defaultSingleProductThumbType')); ?>
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <?= $form->label('defaultProductListThumbType', t('Product List Thumbnail Type')); ?>
                             <?= $form->select('defaultProductListThumbType', $thumbnailTypes, Config::get('community_store.defaultProductListThumbType')); ?>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductModalThumbType', t('Product Modal Thumbnail Type')); ?>
+                            <?= $form->select('defaultProductModalThumbType', $thumbnailTypes, Config::get('community_store.defaultProductModalThumbType')); ?>
                         </div>
                     </div>
 
@@ -353,6 +358,36 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                         <div class="form-group col-md-4">
                             <?= $form->label('defaultProductListCrop', t('Image cropping')); ?>
                             <?= $form->select('defaultProductListCrop', ['0' => t("Scale proportionally"), '1' => t("Scale and crop")], Config::get('community_store.defaultProductListCrop')); ?>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <h4 class="col-md-12"><?= t("Product Modal - Legacy Thumbnail Generator"); ?></h4>
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductModalImageWidth', t('Image Width')); ?>
+                            <div class="input-group">
+                                <?= $form->number('defaultProductModalImageWidth', Config::get('community_store.defaultProductModalImageWidth') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
+                                <div class="input-group-addon">px</div>
+                            </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductModalImageHeight', t('Image Height')); ?>
+                            <div class="input-group">
+                                <?= $form->number('defaultProductModalImageHeight', Config::get('community_store.defaultProductModalImageHeight') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
+                                <div class="input-group-addon">px</div>
+                            </div>
+                            <div class="help-block">
+                                <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <?= $form->label('defaultProductModalCrop', t('Image cropping')); ?>
+                            <?= $form->select('defaultProductModalCrop', ['0' => t("Scale proportionally"), '1' => t("Scale and crop")], Config::get('community_store.defaultProductModalCrop')); ?>
                         </div>
                     </div>
                 </div>

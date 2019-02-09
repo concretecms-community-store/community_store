@@ -17,11 +17,14 @@ class Image
 {
     const IMG_FOR_PRODUCT_LIST = 'product_list';
     const IMG_FOR_SINGLE_PRODUCT = 'single_product';
+    const IMG_FOR_PRODUCT_MODAL = 'product_modal';
     const DEFAULT_SINGLE_PRODUCT_IMG_WIDTH = 720;
     const DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT = 720;
     const DEFAULT_PRODUCT_LIST_IMG_WIDTH = 400;
     const DEFAULT_PRODUCT_LIST_IMG_HEIGHT = 280;
-    const DEFAULT_SINGLE_PRODUCT_IMG_CROP = false;
+    const DEFAULT_PRODUCT_MODAL_IMG_WIDTH = 560;
+    const DEFAULT_PRODUCT_MODAL_IMG_HEIGHT = 999;
+    const DEFAULT_IMG_CROP = false;
 
     /** @var Application $app */
     protected $app;
@@ -31,7 +34,7 @@ class Image
     protected $legacyThumbProps;
     /** @var ThumbType $thumbType core thumbnail type */
     protected $thumbType = null;
-    /** @var string $resizingScheme CamelCase version of either static::IMG_FOR_PRODUCT_LIST or static::IMG_FOR_SINGLE_PRODUCT */
+    /** @var string $resizingScheme CamelCase version of either static::IMG_FOR_PRODUCT_LIST, static::IMG_FOR_SINGLE_PRODUCT or static::IMG_FOR_PRODUCT_MODAL */
     protected $resizingScheme;
 
     /**
@@ -51,7 +54,7 @@ class Image
     /**
      * Sets whether we are using the single product or product list image thumbnailing settings.
      *
-     * @param string $resizingScheme one of IMG_FOR_PRODUCT_LIST or IMG_FOR_SINGLE_PRODUCT. Defaults to IMG_FOR_PRODUCT_LIST
+     * @param string $resizingScheme one of IMG_FOR_PRODUCT_LIST, IMG_FOR_SINGLE_PRODUCT or IMG_FOR_PRODUCT_MODAL. Defaults to IMG_FOR_PRODUCT_LIST
      */
     public function setResizingScheme($resizingScheme)
     {
@@ -59,6 +62,7 @@ class Image
         switch ($resizingScheme) {
             case static::IMG_FOR_PRODUCT_LIST:
             case static::IMG_FOR_SINGLE_PRODUCT:
+            case static::IMG_FOR_PRODUCT_MODAL:
                 $this->resizingScheme = camelcase($resizingScheme);
                 break;
             default:
@@ -146,7 +150,7 @@ class Image
     {
         $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : new stdClass();
 
-        $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : static::DEFAULT_SINGLE_PRODUCT_IMG_CROP;
+        $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : static::DEFAULT_IMG_CROP;
     }
 
     /**
