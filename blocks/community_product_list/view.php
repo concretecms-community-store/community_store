@@ -1,8 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$defaultImageWidth = Config::get('community_store.defaultProductListImageWidth') ?: 400;
-$defaultImageHeight = Config::get('community_store.defaultProductListImageHeight') ?: 280;
+// We want to crop the image so we're providing an object
+// with the crop property set to true since default is false
+$legacyThumbProps = new \stdClass();
+$legacyThumbProps->crop = true;
+$communityStoreImageHelper = Core::make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
 
 $c = Page::getCurrentPage();
 
@@ -99,7 +102,7 @@ if ($products) {
                 <?php
                     $imgObj = $product->getImageObj();
         if (is_object($imgObj)) {
-            $thumb = $ih->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, true); ?>
+            $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
                         <p class="store-product-list-thumbnail">
                             <?php if ($showQuickViewLink) {
                 ?>
@@ -353,7 +356,7 @@ if ($products) {
                 $imgObj = $product->getImageObj();
 
                 if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultImageWidth, $defaultImageHeight, true);
+                    $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
                 }
 
                 $varationData[$key] = [
