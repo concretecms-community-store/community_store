@@ -304,7 +304,11 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                             <?php echo $form->select('defaultProductModalThumbType', $thumbnailTypes, Config::get('community_store.defaultProductModalThumbType')); ?>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="alert alert-info">
+                            <?php echo t("%sThumbnail types will be used if selected because they offer better performance. %sIf they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption. %sReasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type.%s", '<p>', '</p><p>', '</p><p>', '</p>'); ?>
+                        </div>
+                    </div>
                     <div class="row">
                         <h4 class="col-md-12"><?php echo t("Single Product - Legacy Thumbnail Generator"); ?></h4>
                         <div class="form-group col-md-4">
