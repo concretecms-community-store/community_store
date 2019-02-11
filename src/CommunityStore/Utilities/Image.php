@@ -120,7 +120,7 @@ class Image
 
         if (!$this->legacyThumbProps->width) {
             $const = 'DEFAULT_' . strtoupper(uncamelcase($this->resizingScheme)) . '_IMG_WIDTH';
-            $this->legacyThumbProps->width = constant('static::{$const}');
+            $this->legacyThumbProps->width = constant('self::' . $const);
         }
     }
 
@@ -137,7 +137,7 @@ class Image
 
         if (!$this->legacyThumbProps->height) {
             $const = 'DEFAULT_' . strtoupper(uncamelcase($this->resizingScheme)) . '_IMG_HEIGHT';
-            $this->legacyThumbProps->height = constant('static::{$const}');
+            $this->legacyThumbProps->height = constant('self::' . $const);
         }
     }
 
