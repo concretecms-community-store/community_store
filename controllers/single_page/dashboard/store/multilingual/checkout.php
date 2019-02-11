@@ -23,6 +23,7 @@ class Checkout extends DashboardSitePageController
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
+        $this->set('pageTitle', t('Checkout Related Translations'));
 
     }
 
@@ -49,8 +50,6 @@ class Checkout extends DashboardSitePageController
         if ($this->post() && $this->token->validate('community_store')) {
 
             $translations = $this->post('translation');
-
-
 
             foreach ($translations as $entityType => $translationData) {
                 foreach ($translationData as $paymentMethodID => $langs) {

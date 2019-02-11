@@ -1669,9 +1669,18 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?php } ?>
                         </td>
                         <td>
-                            <a class="btn btn-default"
-                               href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID())?>"><i
-                                    class="fa fa-pencil"></i></a>
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-primary"
+                                   href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID())?>"><?= t("Manage") ?></a>
+                                <?php if ($multilingualEnabled) { ?>
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?=URL::to('/dashboard/store/multilingual/products/product/' . $product->getID())?>"><i class="fa fa-language"></i> <?= t("Translate")?></a></li>
+                                </ul>
+                                <?php } ?>
+                            </div>
                         </td>
                     </tr>
                 <?php }

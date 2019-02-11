@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Attribute\Category\ProductCategory;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Core;
 use PageType;
-use GroupList;
-use Events;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Support\Facade\Events;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
@@ -24,7 +23,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as S
 
 use Concrete\Core\Search\Pagination\PaginationFactory;
 
-class Products extends DashboardPageController
+class Products extends DashboardSitePageController
 {
     public function view($gID = null)
     {
@@ -61,6 +60,10 @@ class Products extends DashboardPageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
+
+        $site = $this->getSite();
+        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+        $this->set('multilingualEnabled', (count($pages) > 1));
     }
 
     public function add()
