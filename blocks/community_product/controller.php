@@ -110,6 +110,14 @@ class Controller extends BlockController
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->set('token', $app->make('token'));
+
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+        $this->set('langpath', $langpath);
     }
 
     public function registerViewAssets($outputContent = '')

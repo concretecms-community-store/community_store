@@ -113,6 +113,11 @@ class TaxRate
         $this->taxVatExclude = $exclude;
     }
 
+    public function getID()
+    {
+        return $this->trID;
+    }
+
     public function getTaxRateID()
     {
         return $this->trID;

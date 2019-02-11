@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+
+$csm = \Core::make('cshelper/multilingual');
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
@@ -87,10 +89,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
                                 <?php } ?>
                                 <?php if ($productPage) { ?>
                                     <a href="<?= URL::to($productPage) ?>">
-                                        <?= $product->getName() ?>
+                                        <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                                     </a>
                                 <?php } else { ?>
-                                    <?= $product->getName() ?>
+                                    <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                                 <?php } ?>
 
                                 <?php if($cartItem['productAttributes']){?>

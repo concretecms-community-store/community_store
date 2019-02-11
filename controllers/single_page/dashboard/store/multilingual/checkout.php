@@ -1,12 +1,15 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 
 
 class Checkout extends DashboardSitePageController
@@ -15,20 +18,22 @@ class Checkout extends DashboardSitePageController
     {
         $this->set("paymentMethods", StorePaymentMethod::getMethods());
         $this->set("shippingMethods", StoreShippingMethod::getMethods());
+        $this->set("taxRates", StoreTax::getTaxRates());
+        $this->set("discountRules", DiscountRule::getRules());
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
 
     }
 
-
-    private function getLocales() {
+    private function getLocales()
+    {
         $site = $this->getSite();
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
-        $localePages = array('additional'=>array());
+        $localePages = ['additional' => []];
         $defaultSourceLocale = $site->getConfigRepository()->get('multilingual.default_source_locale');
 
-        foreach($pages as $p) {
+        foreach ($pages as $p) {
             if ($defaultSourceLocale == $p->getLocale()) {
                 $localePages['default'] = $p;
             } else {
@@ -39,54 +44,56 @@ class Checkout extends DashboardSitePageController
         return $localePages;
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->post() && $this->token->validate('community_store')) {
 
             $translations = $this->post('translation');
 
-            foreach($translations as $locale => $value) {
-
-                foreach($value as $type => $entries) {
-                    foreach ($entries as $key => $text) {
 
 
-                        $qb = $this->entityManager->createQueryBuilder();
+            foreach ($translations as $entityType => $translationData) {
+                foreach ($translationData as $paymentMethodID => $langs) {
+                    foreach ($langs as $locale => $types) {
+                        foreach ($types as $type => $items) {
+                            foreach ($items as $key => $text) {
+                                if ($text) {
+                                    $qb = $this->entityManager->createQueryBuilder();
+                                    $t = $qb->select('t')
+                                        ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
+                                        ->where('t.entityType = :type')->setParameter('type', $key)
+                                        ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
+                                        ->andWhere('t.entityID = :entid')->setParameter('entid', $paymentMethodID)
+                                        ->setMaxResults(1)->getQuery()->getResult();
 
-                        $query = $qb->select('t')
-                            ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
-                            ->where('t.entityType = :type')
-                            ->setParameter('type', $key);
-                        $query->andWhere('t.entityID = :id')->setParameter('id', $this->post('pID'));
+                                    if (!empty($t)) {
+                                        $t = $t[0];
+                                    } else {
+                                        $t = new Translation();
+                                    }
 
-                        $query->setMaxResults(1);
+                                    $t->setEntityID($paymentMethodID);
+                                    $t->setEntityType($key);
 
-                        $t = $query->getQuery()->getResult();
-
-
-                        if (!empty($t)) {
-                            $t = $t[0];
-                        } else {
-                            $t = new Translation();
+                                    if ($type == 'text') {
+                                        $t->setTranslatedText($text);
+                                    } else {
+                                        $t->setExtendedText($text);
+                                    }
+                                    $t->setLocale($locale);
+                                    $t->save();
+                                }
+                            }
                         }
-
-                        $t->setEntityID($this->post('pID'));
-                        $t->setEntityType($key);
-
-                        if ($type == 'text') {
-                            $t->setTranslatedText($text);
-                        } else {
-                            $t->setExtendedText($text);
-                        }
-                        $t->setLocale($locale);
-                        $t->save();
                     }
                 }
-
             }
-
-            $this->flash('success', t('Checkout Translations Updated'));
-            return \Redirect::to('/dashboard/store/multilingual/checkout');
-
         }
+
+
+        $this->flash('success', t('Checkout Translations Updated'));
+        return \Redirect::to('/dashboard/store/multilingual/checkout');
+
     }
+
 }

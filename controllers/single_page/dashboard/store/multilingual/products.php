@@ -86,9 +86,6 @@ class Products extends DashboardSitePageController
 
             $translations = $this->post('translation');
 
-//            echo '<pre>';
-//            dd($translations);
-
             foreach($translations as $locale => $value) {
 
                 foreach($value as $type => $entries) {

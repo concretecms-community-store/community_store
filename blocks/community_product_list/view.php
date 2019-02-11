@@ -81,11 +81,8 @@ if ($products) {
             $activeclass = 'on-product-page';
         }
 
-        $productPage = Page::getByID($product->getPageID());
-
-        if ($productPage->isError() || $productPage->isInTrash()) {
-            $productPage = false;
-        } ?>
+        $productPage = $product->getProductPage()
+        ?>
     
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">

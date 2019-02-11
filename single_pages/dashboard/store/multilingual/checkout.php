@@ -9,11 +9,12 @@ $localecount = count($locales);
 ?>
 
 <form method="post" action="<?= $view->action('save') ?>">
-
+    <?= $token->output('community_store'); ?>
     <fieldset>
         <legend><?= t('Payment Methods'); ?></legend>
 
-        <table class="table table-bordered">
+        <?php if (!empty($paymentMethods)) { ?>
+         <table class="table table-bordered">
             <tr>
                 <th><?= t('Payment Method'); ?></th>
                 <th><?= t('Context'); ?></th>
@@ -47,8 +48,8 @@ $localecount = count($locales);
 
                         <td>
                             <input type="text" class="form-control"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][paymentDisplayName]"
-                                   value="<?= $csm->t(null, 'paymentDisplayName'); ?>"/>
+                                   name="translation[paymentMethods][<?= $paymentMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][paymentDisplayName]"
+                                   value="<?= $csm->t(null, 'paymentDisplayName', $paymentMethod->getID(), $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -74,8 +75,8 @@ $localecount = count($locales);
 
                         <td>
                             <input type="text" class="form-control"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][paymentButtonLabel]"
-                                   value="<?= $csm->t(null, 'paymentButtonLabel'); ?>"/>
+                                   name="translation[paymentMethods][<?= $paymentMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][paymentButtonLabel]"
+                                   value="<?= $csm->t(null, 'paymentButtonLabel', $paymentMethod->getID(), $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -84,7 +85,9 @@ $localecount = count($locales);
 
             <?php } ?>
         </table>
-
+        <?php } else { ?>
+        <p class="alert alert-info"><?= t("No Payment Methods are installed"); ?></p>
+        <?php } ?>
 
     </fieldset>
 
@@ -126,8 +129,8 @@ $localecount = count($locales);
 
                         <td>
                             <input type="text" class="form-control"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][shippingName]"
-                                   value="<?= $csm->t(null, 'shippingName'); ?>"/>
+                                   name="translation[shippingMethods][<?= $shippingMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][shippingName]"
+                                   value="<?= $csm->t(null, 'shippingName',  $shippingMethod->getID(), $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -153,8 +156,8 @@ $localecount = count($locales);
 
                         <td>
                             <input type="text" class="form-control"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][paymentButtonLabel]"
-                                   value="<?= $csm->t(null, 'paymentButtonLabel'); ?>"/>
+                                   name="translation[shippingMethods][<?= $shippingMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][shippingDetails]"
+                                   value="<?= $csm->t(null, 'shippingDetails', $shippingMethod->getID(), $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -164,16 +167,117 @@ $localecount = count($locales);
             <?php } ?>
         </table>
 
-
-
     </fieldset>
 
     <fieldset>
         <legend><?= t('Tax Rates'); ?></legend>
+
+        <?php if  (!empty($taxRates)) { ?>
+            <table class="table table-bordered">
+            <tr>
+                <th><?= t('Shipping Method'); ?></th>
+                <th><?= t('Context'); ?></th>
+                <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                    (<?= $defaultLocale->getLocale() ?>)
+                </th>
+                <th><?= t('Locale') ?></th>
+                <th style="width: 50%"><?= t('Translations'); ?></th>
+            </tr>
+
+            <?php
+
+            foreach ($taxRates as $taxRate) {
+
+                $firstrow = true;
+                foreach ($locales as $lp) { ?>
+                    <tr>
+                        <?php if ($firstrow) {
+                            $firstrow = false;
+                            ?>
+                            <td rowspan="<?= $localecount * 2; ?>"><?= h($shippingMethod->getName()); ?></td>
+                            <td rowspan="<?= $localecount; ?>"><span
+                                        class="label label-primary"><?= t('Tax Rate Name'); ?></span>
+                            </td>
+                            <td rowspan="<?= $localecount; ?>"><?= h($taxRate->getTaxLabel()); ?></td>
+                        <?php } ?>
+
+                        <td>
+                            <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                        </td>
+
+                        <td>
+                            <input type="text" class="form-control"
+                                   name="translation[taxRates][<?= $taxRate->getID(); ?>][<?= $lp->getLocale(); ?>][text][taxRateName]"
+                                   value="<?= $csm->t(null, 'taxRateName', $taxRate->getID(), $lp->getLocale()); ?>"/>
+                        </td>
+
+                    </tr>
+                <?php } ?>
+
+
+            <?php } ?>
+        </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t('No Tax Rates have been defined'); ?></p>
+        <?php } ?>
+
     </fieldset>
 
     <fieldset>
         <legend><?= t('Discount Rules'); ?></legend>
+
+
+        <?php if  (!empty($discountRules)) { ?>
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= t('Discount Rule'); ?></th>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php
+
+                foreach ($discountRules as $discountRule) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+                                <td rowspan="<?= $localecount * 2; ?>"><?= h($discountRule->getName()); ?></td>
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Discount Display Name'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($discountRule->getDisplay()); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[discountRules][<?= $discountRule->getID(); ?>][<?= $lp->getLocale(); ?>][text][discountRuleDisplayName]"
+                                       value="<?= $csm->t(null, 'discountRuleDisplayName',  $discountRule->getID(), $lp->getLocale()); ?>"/>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+
+
+                <?php } ?>
+            </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t('No Discount Rules have been defined'); ?></p>
+        <?php } ?>
+
+
+
     </fieldset>
 
 

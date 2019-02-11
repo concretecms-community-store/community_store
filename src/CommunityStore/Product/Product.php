@@ -26,6 +26,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 use \Concrete\Core\Attribute\ObjectTrait;
 
@@ -854,8 +855,21 @@ class Product
     public function getProductPage()
     {
         if ($this->getPageID()) {
-            $productPage = Page::getByID($this->getPageID());
+            $productPage = \Page::getByID($this->getPageID());
             if ($productPage && !$productPage->isInTrash()) {
+
+                $c = \Page::getCurrentPage();
+                $lang = Section::getBySectionOfSite($c);
+
+                if (is_object($lang)) {
+                    $relatedID = $lang->getTranslatedPageID($productPage);
+                    $translatedPage = \Page::getByID($relatedID);
+
+                    if ($translatedPage && !$translatedPage->isInTrash()) {
+                        $productPage = $translatedPage;
+                    }
+                }
+
                 return $productPage;
             }
         }

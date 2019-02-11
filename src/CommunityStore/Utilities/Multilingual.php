@@ -35,7 +35,7 @@ class Multilingual
      * @return string Returns the translated text.
      *
      */
-    function t($text, $type = false, $id = false, $forcedLocale = false, $nativeTranslate = false)
+    function t($text, $type = false, $id = false, $forcedLocale = false)
     {
         $locale = $this->localization->getLocale();
 

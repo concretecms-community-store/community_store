@@ -100,11 +100,6 @@ class Controller extends Package
     public function registerRoutes()
     {
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
-        Route::register('/checkout/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\States::getStateList');
-        Route::register('/checkout/getShippingMethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::getShippingMethods');
-        Route::register('/checkout/updater', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::updater');
-        Route::register('/checkout/setVatNumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::setVatNumber');
-        Route::register('/checkout/selectShipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
         Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::downloadFile');
     }
@@ -192,7 +187,7 @@ class Controller extends Package
             var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
             var CARTURL = '" . rtrim(URL::to($langpath . '/cart'), '/') . "';
             var TRAILINGSLASH = '" . ((bool) \Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
-            var CHECKOUTURL = '" . rtrim(URL::to('/checkout'), '/') . "';
+            var CHECKOUTURL = '" . rtrim(URL::to($langpath . '/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";

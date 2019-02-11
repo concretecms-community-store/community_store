@@ -4,6 +4,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
+$csm = \Core::make('cshelper/multilingual');
+
 ?>
 <div class="store-cart-page">
 <h1><?= t("Shopping Cart") ?></h1>
@@ -75,10 +77,10 @@ if ($cart) {
                         <?php } ?>
                         <?php if ($productPage) { ?>
                             <a href="<?= URL::to($productPage) ?>">
-                                <?= $product->getName() ?>
+                                <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                             </a>
                         <?php } else { ?>
-                            <?= $product->getName() ?>
+                            <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                         <?php } ?>
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-list-item-attributes">

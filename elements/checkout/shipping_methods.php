@@ -10,7 +10,7 @@ $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
 
-
+$csm = \Core::make('cshelper/multilingual');
 ?>
 
 <?php if (!empty($eligibleMethods)) { ?>
@@ -30,7 +30,7 @@ $foundOffer = false;
                             <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
                             <div class="store-shipping-details">
                                 <?php $rate = $offer->getDiscountedRate(); ?>
-                                <p class="store-shipping-details-label"><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName'); ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
                                 <?php $details = $offer->getOfferDetails();
                                 if ($details) { ?>
                                 <p  class="store-shipping-details-details"><?= $details; ?></p>

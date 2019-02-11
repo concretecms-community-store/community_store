@@ -10,6 +10,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 class Controller extends BlockController
 {
@@ -202,6 +203,14 @@ class Controller extends BlockController
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->set('token', $app->make('token'));
+
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+        $this->set('langpath', $langpath);
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')

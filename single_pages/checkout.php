@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+
+$csm = \Core::make('cshelper/multilingual');
 ?>
 <div class="store-checkout-page">
 <?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>
@@ -509,7 +511,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                             <?php
                             $discountstrings = array();
                             foreach ($discounts as $discount) {
-                                $discountstrings[] = h($discount->getDisplay());
+                                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', $discount->getID()));
                             }
                             echo implode(', ', $discountstrings);
                             ?>
@@ -571,9 +573,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                     <?php
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
-                            if ($tax['taxamount'] > 0) { ?>
+                            if ($tax['taxamount'] > 0) {
+                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', $tax['trID']);
+                                ?>
                                 <li class="store-line-item store-tax-item list-group-item">
-                                <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
                         }

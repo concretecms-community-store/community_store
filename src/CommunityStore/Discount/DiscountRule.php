@@ -746,4 +746,11 @@ class DiscountRule
         $em->remove($this);
         $em->flush();
     }
+
+    public static function getRules()
+    {
+        $em = \ORM::entityManager();
+        $rules = $em->getRepository(get_called_class())->findAll();
+        return $rules;
+    }
 }

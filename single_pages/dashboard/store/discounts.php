@@ -201,7 +201,6 @@ $currencySymbol = Config::get('community_store.symbol');
 
     </div>
 
-
 <style>
     @media (max-width: 992px) {
         div#ccm-dashboard-content div.ccm-dashboard-content-full {
