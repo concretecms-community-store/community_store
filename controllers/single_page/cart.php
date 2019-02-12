@@ -50,7 +50,6 @@ class Cart extends PageController
 
             if ('update' == $this->post('action')) {
                 $data = $this->post();
-
                 if (is_array($data['instance'])) {
                     $result = StoreCart::updateMutiple($data);
                     $quantity = 0;
@@ -147,6 +146,7 @@ class Cart extends PageController
             $product = StoreProduct::getByID($data['pID']);
             $productdata['pAutoCheckout'] = $product->autoCheckout();
             $productdata['pName'] = $product->getName();
+            $productdata['pID'] = $product->getID();
 
             $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error];
             echo json_encode($returndata);

@@ -14,7 +14,7 @@ $localecount = count($locales);
         <legend><?= t('Payment Methods'); ?></legend>
 
         <?php if (!empty($paymentMethods)) { ?>
-         <table class="table table-bordered">
+         <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Payment Method'); ?></th>
                 <th><?= t('Context'); ?></th>
@@ -95,7 +95,7 @@ $localecount = count($locales);
     <fieldset>
         <legend><?= t('Shipping Methods'); ?></legend>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Shipping Method'); ?></th>
                 <th><?= t('Context'); ?></th>
@@ -173,7 +173,7 @@ $localecount = count($locales);
         <legend><?= t('Tax Rates'); ?></legend>
 
         <?php if  (!empty($taxRates)) { ?>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Shipping Method'); ?></th>
                 <th><?= t('Context'); ?></th>
@@ -228,7 +228,7 @@ $localecount = count($locales);
 
 
         <?php if  (!empty($discountRules)) { ?>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed">
                 <tr>
                     <th><?= t('Discount Rule'); ?></th>
                     <th><?= t('Context'); ?></th>

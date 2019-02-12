@@ -955,7 +955,7 @@ class Product
 
     public function getFormattedOriginalPrice()
     {
-        return StorePrice::format($this->getPrice());
+        return StorePrice::format($this->getPrice(1, true));
     }
 
     public function getFormattedPrice()

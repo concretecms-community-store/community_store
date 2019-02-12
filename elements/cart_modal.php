@@ -10,9 +10,10 @@ $csm = \Core::make('cshelper/multilingual');
     <a href="#" class="store-modal-exit">x</a>
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
-        <?php if (isset($actiondata) and !empty($actiondata)) { ?>
+        <?php
+        if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
-                <p class="alert alert-success"><strong><?= $actiondata['product']['pName']; ?></strong> <?= t('has been added to your cart');?></p>
+                <p class="alert alert-success"><strong><?=  h($csm->t( $actiondata['product']['pName'], 'productName',  $actiondata['product']['pID'])) ; ?></strong> <?= t('has been added to your cart');?></p>
             <?php } ?>
 
             <?php if( $actiondata['action'] =='update') { ?>
@@ -97,37 +98,36 @@ $csm = \Core::make('cshelper/multilingual');
 
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
-                                        <?php foreach($cartItem['productAttributes'] as $groupID => $valID){
+                                        <?php foreach($cartItem['productAttributes'] as $optionID => $valID){
 
-                                            if (substr($groupID, 0, 2) == 'po') {
-                                                $groupID = str_replace("po", "", $groupID);
+                                            if (substr($optionID, 0, 2) == 'po') {
+                                                $optionID = str_replace("po", "", $optionID);
                                                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                                                 if ($optionvalue) {
                                                     $optionvalue = $optionvalue->getName();
                                                 }
-                                            } elseif (substr($groupID, 0, 2) == 'pt')  {
-                                                $groupID = str_replace("pt", "", $groupID);
+                                            } elseif (substr($optionID, 0, 2) == 'pt')  {
+                                                $optionID = str_replace("pt", "", $optionID);
                                                 $optionvalue = $valID;
-                                            } elseif (substr($groupID, 0, 2) == 'pa')  {
-                                                $groupID = str_replace("pa", "", $groupID);
+                                            } elseif (substr($optionID, 0, 2) == 'pa')  {
+                                                $optionID = str_replace("pa", "", $optionID);
                                                 $optionvalue = $valID;
-                                            } elseif (substr($groupID, 0, 2) == 'ph')  {
-                                                $groupID = str_replace("ph", "", $groupID);
+                                            } elseif (substr($optionID, 0, 2) == 'ph')  {
+                                                $optionID = str_replace("ph", "", $optionID);
                                                 $optionvalue = $valID;
-                                            } elseif (substr($groupID, 0, 2) == 'pc')  {
-                                                $groupID = str_replace("pc", "", $groupID);
+                                            } elseif (substr($optionID, 0, 2) == 'pc')  {
+                                                $optionID = str_replace("pc", "", $optionID);
                                                 $optionvalue = $valID;
                                             }
 
-
-                                            $optiongroup = StoreProductOption::getByID($groupID);
+                                            $optiongroup = StoreProductOption::getByID($optionID);
 
                                             ?>
                                             <?php if ($optiongroup) { ?>
                                             <div class="store-cart-list-item-attribute">
-                                                <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? $optiongroup->getName() : '')?>:</span>
-                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($optionvalue) : '')?></span>
+                                                <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $optionID)) : '') ?>:</span>
+                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $valID)) : '') ?></span>
                                             </div>
                                             <?php } ?>
                                         <?php }  ?>

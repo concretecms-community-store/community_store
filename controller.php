@@ -63,7 +63,7 @@ class Controller extends Package
 
     public function upgrade()
     {
-        $pkg = Package::getByHandle('community_store');
+        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
 
         Installer::installSinglePage('/dashboard/store/multilingual', $pkg);
         Installer::installSinglePage('/dashboard/store/multilingual/products', $pkg);

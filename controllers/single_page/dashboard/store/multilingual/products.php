@@ -50,7 +50,7 @@ class Products extends DashboardSitePageController
         $this->set('gID', $gID);
     }
 
-    public function product($pID)
+    public function translate($pID)
     {
         $product = StoreProduct::getByID($pID);
 
@@ -86,40 +86,58 @@ class Products extends DashboardSitePageController
 
             $translations = $this->post('translation');
 
+        
+
             foreach($translations as $locale => $value) {
 
                 foreach($value as $type => $entries) {
-                    foreach ($entries as $key => $text) {
+                    foreach ($entries as $key => $items) {
 
-                        $qb = $this->entityManager->createQueryBuilder();
+                        $itemstosave = array();
 
-                        $query = $qb->select('t')
-                            ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
-                            ->where('t.entityType = :type')->setParameter('type', $key);
-
-                        $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
-                        $query->andWhere('t.entityID = :id')->setParameter('id', $this->post('pID'));
-                        $query->setMaxResults(1);
-
-                        $t = $query->getQuery()->getResult();
-
-                        if (!empty($t)) {
-                            $t = $t[0];
+                        if (is_array($items)) {
+                            $itemstosave = $items;
                         } else {
-                            $t = new Translation();
+                            $itemstosave[] = $items;
                         }
 
-                        $t->setEntityID($this->post('pID'));
-                        $t->setEntityType($key);
+                        foreach($itemstosave as $id=>$text) {
+                            $qb = $this->entityManager->createQueryBuilder();
 
-                        if ($type == 'text') {
-                            $t->setTranslatedText($text);
-                        } else {
-                            $t->setExtendedText($text);
+                            $entityID = $this->post('pID');
+
+                            if ($key == 'optionName' || $key == 'optionName') {
+                                $entityID = $id;
+                            }
+
+                            $query = $qb->select('t')
+                                ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
+                                ->where('t.entityType = :type')->setParameter('type', $key);
+
+                            $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
+                            $query->andWhere('t.entityID = :id')->setParameter('id', $entityID);
+                            $query->setMaxResults(1);
+
+                            $t = $query->getQuery()->getResult();
+
+                            if (!empty($t)) {
+                                $t = $t[0];
+                            } else {
+                                $t = new Translation();
+                            }
+
+                            $t->setEntityID($entityID);
+                            $t->setEntityType($key);
+
+                            if ($type == 'text') {
+                                $t->setTranslatedText($text);
+                            } else {
+                                $t->setExtendedText($text);
+                            }
+
+                            $t->setLocale($locale);
+                            $t->save();
                         }
-
-                        $t->setLocale($locale);
-                        $t->save();
                     }
                 }
 

@@ -5,8 +5,6 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;

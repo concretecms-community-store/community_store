@@ -52,11 +52,13 @@ class Multilingual
                 ->setParameter('type', $type);
 
             if ($id) {
-                 $query->andWhere('t.entityID = :id')->setParameter('id', $id);
+                 $query->andWhere('(t.entityID = :id or (t.entityID is null and t.originalText = :text))')->setParameter('id', $id)->setParameter('text', $text);
+            } else {
+                $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 
             $query->andWhere('t.locale = :locale')->setParameter('locale', $forcedLocale ? $forcedLocale : $locale);
-
+            $query->orderBy('t.entityID', 'desc');
             $query->setMaxResults(1);
 
             $result = $query->getQuery()->getResult();
@@ -76,7 +78,11 @@ class Multilingual
             }
         }
 
-        return $text;
+        if (!$forcedLocale){
+            return $text;
+        } else {
+            return '';
+        }
     }
 
 }

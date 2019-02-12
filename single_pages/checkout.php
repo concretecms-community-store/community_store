@@ -445,7 +445,8 @@ $csm = \Core::make('cshelper/multilingual');
                                     <div class='radio'>
                                         <label>
                                             <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                            <?= $pm->getDisplayName() ?>
+                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', $pm->getID()); ?>
+
                                         </label>
                                     </div>
                                     <?php
