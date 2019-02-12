@@ -273,7 +273,7 @@ if ($action == 'view') { ?>
             <td>
                 <input type="text" class="form-control" placeholder="<?= $csm->t($option->getName(), 'optionName',false, $lp->getLocale()); ?>"
                        name="translation[<?= $lp->getLocale(); ?>][text][optionName][<?= $option->getID(); ?>]"
-                       value="<?= $csm->t($option->getName(), 'optionName', $option->getID(), $lp->getLocale()); ?>"/>
+                       value="<?= $csm->t($option->getName(), 'optionName', $option->getID(), $lp->getLocale(), false); ?>"/>
 
             </td>
 
@@ -298,9 +298,9 @@ if ($action == 'view') { ?>
                         </td>
 
                         <td>
-                            <input type="text" class="form-control" placeholder="<?= $csm->t($optionValue->getName(), 'optionName', false, $lp->getLocale()); ?>"
+                            <input type="text" class="form-control" placeholder="<?= $csm->t($optionValue->getName(), 'optionValue', false, $lp->getLocale()); ?>"
                                    name="translation[<?= $lp->getLocale(); ?>][text][optionValue][<?= $optionValue->getID(); ?>]"
-                                   value="<?= $csm->t($optionValue->getName(), 'optionValue', $optionValue->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t($optionValue->getName(), 'optionValue', $optionValue->getID(), $lp->getLocale(), false); ?>"/>
                         </td>
                     </tr>
                 <?php } ?>

@@ -35,7 +35,7 @@ class Multilingual
      * @return string Returns the translated text.
      *
      */
-    function t($text, $type = false, $id = false, $forcedLocale = false)
+    function t($text, $type = false, $id = false, $forcedLocale = false, $useCommon = true)
     {
         $locale = $this->localization->getLocale();
 
@@ -52,7 +52,11 @@ class Multilingual
                 ->setParameter('type', $type);
 
             if ($id) {
-                 $query->andWhere('(t.entityID = :id or (t.entityID is null and t.originalText = :text))')->setParameter('id', $id)->setParameter('text', $text);
+                if ($useCommon) {
+                    $query->andWhere('(t.entityID = :id or (t.entityID is null and t.originalText = :text))')->setParameter('id', $id)->setParameter('text', $text);
+                }  else {
+                    $query->andWhere('t.entityID = :id')->setParameter('id', $id);
+                }
             } else {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }

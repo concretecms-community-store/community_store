@@ -86,8 +86,6 @@ class Products extends DashboardSitePageController
 
             $translations = $this->post('translation');
 
-        
-
             foreach($translations as $locale => $value) {
 
                 foreach($value as $type => $entries) {
@@ -97,16 +95,17 @@ class Products extends DashboardSitePageController
 
                         if (is_array($items)) {
                             $itemstosave = $items;
+
                         } else {
                             $itemstosave[] = $items;
                         }
 
-                        foreach($itemstosave as $id=>$text) {
+                        foreach($itemstosave as $id => $text) {
                             $qb = $this->entityManager->createQueryBuilder();
 
                             $entityID = $this->post('pID');
 
-                            if ($key == 'optionName' || $key == 'optionName') {
+                            if ($key == 'optionName' || $key == 'optionValue') {
                                 $entityID = $id;
                             }
 
