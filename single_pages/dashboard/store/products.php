@@ -737,6 +737,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <label><?= t('Display Type');?></label>
                                         <select class="form-control" name="poDisplayType[]"><option value="select" <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down');?></option><option value="radio" <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons');?></option></select>
                                     </div>
+                                    <% } else { %>
+                                        <input type="hidden" value="" name="poDisplayType[]" />
                                     <% } %>
                                 </div>
 
