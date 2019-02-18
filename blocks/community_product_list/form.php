@@ -236,7 +236,7 @@ if ($relatedProduct) {
                 },
                 minimumInputLength: 2,
                 initSelection: function(element, callback) {
-                    callback({text:<?php echo json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
+                    callback({text:<?= json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
                 }
             }).select2('val', []);
 

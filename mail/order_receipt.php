@@ -204,7 +204,7 @@ ob_start();
         <?php } ?>
     </p>
 
-    <?php echo $paymentInstructions; ?>
+    <?= $paymentInstructions; ?>
 
 
     <?php
@@ -234,7 +234,7 @@ ob_start();
 
     <?php } ?>
 
-    <?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+    <?= trim(\Config::get('community_store.receiptFooter')); ?>
 
     </body>
     </html>

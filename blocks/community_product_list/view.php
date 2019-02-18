@@ -51,7 +51,7 @@ if (6 == $productsPerRow) {
         <script type="text/javascript">
             $(function () {
                 $('#sort<?= $bID; ?>').change(function () {
-                    var sortstring = '<?php echo \Core::make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
+                    var sortstring = '<?= \Core::make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
                     window.location.href = sortstring.replace('%sort%', $(this).val());
                 });
             });

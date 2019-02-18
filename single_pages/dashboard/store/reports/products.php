@@ -72,7 +72,7 @@ $task = $controller->getAction();
 	<tbody>
 		<?php foreach($products as $product){ ?>
 		<tr>
-			<td><a href="<?php echo URL::to('/dashboard/store/reports/products/detail/ ' . $product['pID']); ?>"><?= $product['name']?></a></td>
+			<td><a href="<?= URL::to('/dashboard/store/reports/products/detail/ ' . $product['pID']); ?>"><?= $product['name']?></a></td>
 			<td><?= $product['quantity']?></td>
 			<td><?=Price::format($product['pricePaid'])?></td>
 		</tr>
@@ -110,7 +110,7 @@ $task = $controller->getAction();
 			$order = $item->getOrder();
 			?>
 			<tr>
-                <td><a href="<?php echo URL::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
+                <td><a href="<?= URL::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
 				<td><?= $order->getAttribute("billing_last_name");?></td>
 				<td><?= $order->getAttribute("billing_first_name"); ?></td>
 				<td><?= $order->getAttribute("email"); ?></td>

@@ -55,10 +55,10 @@ $csm = $app->make('cs/helper/multilingual');
                                     <?= ($disabled ? 'disabled="disabled"' : ''); ?>
                                     <?= ($checked ? 'checked="checked"' : ''); ?>
 
-                                       value="<?php echo h($option); ?>" name="<?php echo $akhandle; ?>[]"/>
-                                <span class="store-product-filter-block-option"><?php echo h($csm->t($option, 'productAttributeValue')); ?>
+                                       value="<?= h($option); ?>" name="<?= $akhandle; ?>[]"/>
+                                <span class="store-product-filter-block-option"><?= h($csm->t($option, 'productAttributeValue')); ?>
                                     <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
-                                    <span class="store-product-filter-block-count">(<?php echo $count; ?>)</span>
+                                    <span class="store-product-filter-block-count">(<?= $count; ?>)</span>
                                     <?php } ?>
 
                                 </span></label>

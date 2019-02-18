@@ -15,7 +15,7 @@ if ($taxCalc == 'extract') {
 ?>
 
 <?php if ($shoppingDisabled) { ?>
-    <p class="alert alert-warning text-center"><?php echo t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?>
+    <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?>
         <a href="<?= \URL::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
 <?php } ?>
 

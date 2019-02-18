@@ -450,7 +450,7 @@ if (is_object($product) && $product->isActive()) {
 
                 if (variationData[ar.join('_')]['saleprice']) {
                     var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
-                        '<?php echo t('was'); ?>' +
+                        '<?= t('was'); ?>' +
                         '&nbsp;<span class="store-original-price ">' + variationData[ar.join('_')]['price'] + '</span>';
 
                     pdb.find('.store-product-price').html(pricing);
