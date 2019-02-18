@@ -1,7 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$csm = \Core::make('cshelper/multilingual');
+// We want to crop the image so we're providing an object
+// with the crop property set to true since default is false
+$legacyThumbProps = new \stdClass();
+$legacyThumbProps->crop = true;
+$communityStoreImageHelper = Core::make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
 
 $c = Page::getCurrentPage();
 
@@ -82,9 +86,12 @@ $c = Page::getCurrentPage();
             $activeclass = 'on-product-page';
         }
 
-        $productPage = $product->getProductPage()
-        ?>
-    
+        $productPage = Page::getByID($product->getPageID());
+
+        if ($productPage->isError() || $productPage->isInTrash()) {
+            $productPage = false;
+        } ?>
+
         <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
             <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
                 <?= $token->output('community_store'); ?>
@@ -96,7 +103,7 @@ $c = Page::getCurrentPage();
                 <?php
                     $imgObj = $product->getImageObj();
         if (is_object($imgObj)) {
-            $thumb = $ih->getThumbnail($imgObj, 400, 280, true); ?>
+            $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
                         <p class="store-product-list-thumbnail">
                             <?php if ($showQuickViewLink) {
                 ?>
@@ -117,7 +124,7 @@ $c = Page::getCurrentPage();
             } ?>
                         </p>
                 <?php
-        }// if is_obj ?>
+        }// if is_obj?>
                 <?php if ($showPrice && !$product->allowCustomerPrice()) {
             ?>
                 <p class="store-product-list-price">
@@ -342,7 +349,7 @@ $c = Page::getCurrentPage();
                 $imgObj = $product->getImageObj();
 
                 if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, 400, 280, true);
+                    $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
                 }
 
                 $varationData[$key] = [
@@ -355,7 +362,7 @@ $c = Page::getCurrentPage();
 
 
                             $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select, #store-form-add-to-cart-list-<?= $product->getID(); ?> input').change(function(){
-                                var variationdata = <?= json_encode($varationData); ?>;
+                                var variationData = <?= json_encode($varationData); ?>;
                                 var ar = [];
 
                                 $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-list-<?= $product->getID(); ?> .store-product-variation:checked').each(function(){
@@ -366,17 +373,17 @@ $c = Page::getCurrentPage();
 
                                 var pli = $(this).closest('.store-product-list-item');
 
-                                if (variationdata[ar.join('_')]['saleprice']) {
-                                    var pricing =  '<span class="store-sale-price">'+ variationdata[ar.join('_')]['saleprice']+'</span>' +
-                                        ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
+                                if (variationData[ar.join('_')]['saleprice']) {
+                                    var pricing =  '<span class="store-sale-price">'+ variationData[ar.join('_')]['saleprice']+'</span>' +
+                                        ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variationData[ar.join('_')]['price'] +'</span>';
 
                                     pli.find('.store-product-list-price').html(pricing);
 
                                 } else {
-                                    pli.find('.store-product-list-price').html(variationdata[ar.join('_')]['price']);
+                                    pli.find('.store-product-list-price').html(variationData[ar.join('_')]['price']);
                                 }
 
-                                if (variationdata[ar.join('_')]['available']) {
+                                if (variationData[ar.join('_')]['available']) {
                                     pli.find('.store-out-of-stock-label').addClass('hidden');
                                     pli.find('.store-btn-add-to-cart').removeClass('hidden');
                                 } else {
@@ -384,11 +391,11 @@ $c = Page::getCurrentPage();
                                     pli.find('.store-btn-add-to-cart').addClass('hidden');
                                 }
 
-                                if (variationdata[ar.join('_')]['imageThumb']) {
+                                if (variationData[ar.join('_')]['imageThumb']) {
                                     var image = pli.find('.store-product-list-thumbnail img');
 
                                     if (image) {
-                                        image.attr('src', variationdata[ar.join('_')]['imageThumb']);
+                                        image.attr('src', variationData[ar.join('_')]['imageThumb']);
 
                                     }
                                 }
@@ -401,7 +408,7 @@ $c = Page::getCurrentPage();
 
             </form><!-- .product-list-item-inner -->
         </div><!-- .product-list-item -->
-        
+
         <?php
             if (0 == $i % $productsPerRow) {
                 echo "</div>";

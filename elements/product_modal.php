@@ -1,115 +1,129 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+
+$communityStoreImageHelper = Core::make('cs/helper/image', ['product_modal']);
 ?>
-<form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID()?>">
+<form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID(); ?>">
 
     <div class="store-product-modal-info-shell">
 
         <a href="#" class="store-modal-exit">x</a>
-        <h4 class="store-product-modal-title"><?= $product->getName()?></h4>
+        <h4 class="store-product-modal-title"><?= $product->getName(); ?></h4>
 
         <p class="store-product-modal-thumb">
             <?php
             $imgObj = $product->getImageObj();
-            $ih = Core::make("helper/image");
-            $thumb = $ih->getThumbnail($imgObj,560,999,false);
+            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
             ?>
-            <img src="<?= $thumb->src?>">
+            <img src="<?= $thumb->src; ?>">
         </p>
 
 
-        <p class="store-product-modal-price"><?= $product->getFormattedPrice()?></p>
+        <p class="store-product-modal-price"><?= $product->getFormattedPrice(); ?></p>
         <div class="store-product-modal-details">
-            <?= $product->getDesc()?>
+            <?= $product->getDesc(); ?>
         </div>
         <div class="store-product-modal-options">
-            <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
+            <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
+                ?>
             <div class="store-product-modal-quantity form-group">
-                <?php if ($product->allowQuantity()) { ?>
-                    <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
-                    <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" max="<?= $product->getQty()?>">
-                <?php } else { ?>
+                <?php if ($product->allowQuantity()) {
+                    ?>
+                    <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
+                    <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" max="<?= $product->getQty(); ?>">
+                <?php
+                } else {
+                    ?>
                     <input type="hidden" name="quantity" class="store-product-qty form-control" value="1">
-                <?php } ?>
+                <?php
+                } ?>
             </div>
-            <?php } ?>
+            <?php
+            } ?>
             <?php
             foreach ($product->getOptions() as $option) {
-            $optionItems = $option->getOptionItems();
+                $optionItems = $option->getOptionItems();
 
-             if (!empty($optionItems)) { ?>
+                if (!empty($optionItems)) {
+                    ?>
                 <div class="store-product-option-group form-group">
-                    <label class="store-product-option-group-label"><?= $option->getName() ?></label>
-                    <select class="store-product-option form-control" name="po<?= $option->getID() ?>">
+                    <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                    <select class="store-product-option form-control" name="po<?= $option->getID(); ?>">
                         <?php
                         foreach ($optionItems as $optionItem) {
-                            if (!$optionItem->isHidden()) { ?>
-                                <option value="<?= $optionItem->getID() ?>"><?= $optionItem->getName() ?></option>
-                            <?php }
+                            if (!$optionItem->isHidden()) {
+                                ?>
+                                <option value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName(); ?></option>
+                            <?php
+                            }
                             // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />'; ?>
-                        <?php } ?>
+                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />';?>
+                        <?php
+                        } ?>
                     </select>
                 </div>
-            <?php }
+            <?php
+                }
             } ?>
         </div>
-        <input type="hidden" name="pID" value="<?= $product->getID()?>">
-        <?php if (Config::get('community_store.shoppingDisabled') != 'all') { ?>
+        <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
+        <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
+                ?>
         <div class="store-product-modal-buttons">
-            <p><button data-add-type="modal" data-product-id="<?= $product->getID()?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden');?> "><?=  ($btnText ? h($btnText) : t("Add to Cart"))?></button></p>
-            <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : '');?>"><?= t("Out of Stock")?></p>
+            <p><button data-add-type="modal" data-product-id="<?= $product->getID(); ?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t("Add to Cart")); ?></button></p>
+            <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : ''); ?>"><?= t("Out of Stock"); ?></p>
         </div>
-        <?php } ?>
+        <?php
+            } ?>
     </div>
 </form>
 
 <?php
 if ($product->hasVariations()) {
-    $variations = StoreProductVariation::getVariationsForProduct($product);
+                $variations = StoreProductVariation::getVariationsForProduct($product);
 
-    $variationLookup = array();
+                $variationLookup = [];
 
-    if (!empty($variations)) {
-        foreach ($variations as $variation) {
-            // returned pre-sorted
-            $ids = $variation->getOptionItemIDs();
-            $variationLookup[implode('_', $ids)] = $variation;
-        }
-    }
-}
+                if (!empty($variations)) {
+                    foreach ($variations as $variation) {
+                        // returned pre-sorted
+                        $ids = $variation->getOptionItemIDs();
+                        $variationLookup[implode('_', $ids)] = $variation;
+                    }
+                }
+            }
 ?>
 
-<?php if ($product->hasVariations() && !empty($variationLookup)) {?>
+<?php if ($product->hasVariations() && !empty($variationLookup)) {
+    ?>
     <script>
         $(function() {
             <?php
-            $varationData = array();
-            foreach($variationLookup as $key=>$variation) {
-                $product->setVariation($variation);
+            $varationData = [];
+    foreach ($variationLookup as $key => $variation) {
+        $product->setVariation($variation);
 
-                $imgObj = $product->getImageObj();
+        $imgObj = $product->getImageObj();
 
-                if ($imgObj) {
-                    $thumb = Core::make('helper/image')->getThumbnail($imgObj,560,999,false);
-                }
+        if ($imgObj) {
+            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
+        }
 
-                $varationData[$key] = array(
-                'price'=>$product->getFormattedOriginalPrice(),
-                'saleprice'=>$product->getFormattedSalePrice(),
-                'available'=>($variation->isSellable()),
-                'imageThumb'=>$thumb ? $thumb->src : '',
-                'image'=>$imgObj ? $imgObj->getRelativePath() : '');
+        $varationData[$key] = [
+                'price' => $product->getFormattedOriginalPrice(),
+                'saleprice' => $product->getFormattedSalePrice(),
+                'available' => ($variation->isSellable()),
+                'imageThumb' => $thumb ? $thumb->src : '',
+                'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
+    } ?>
 
-            } ?>
 
-
-            $('#store-form-add-to-cart-modal-<?= $product->getID()?> select').change(function(){
+            $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select').change(function(){
 
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#store-form-add-to-cart-modal-<?= $product->getID()?> select').each(function(){
+                $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select').each(function(){
                     ar.push($(this).val());
                 });
 
@@ -119,7 +133,7 @@ if ($product->hasVariations()) {
 
                 if (variationdata[ar.join('_')]['saleprice']) {
                     var pricing =  '<span class="store-sale-price">'+ variationdata[ar.join('_')]['saleprice']+'</span>' +
-                        ' <?= t('was');?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
+                        ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variationdata[ar.join('_')]['price'] +'</span>';
 
                     pli.find('.store-product-modal-price').html(pricing);
 
@@ -147,4 +161,5 @@ if ($product->hasVariations()) {
             });
         });
     </script>
-<?php } ?>
+<?php
+} ?>
