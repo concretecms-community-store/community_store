@@ -1,0 +1,23 @@
+.store-product-filter-block .disabled .store-product-filter-block-option {
+    opacity: 0.6;
+}
+
+.store-product-filter-block .store-product-filter-block-count {
+    font-size: 80%;
+}
+
+.store-product-filter-block .irs--round .irs-bar {
+    background-color: black;
+}
+
+.store-product-filter-block .irs--round .irs-handle {
+    border-color: black;
+}
+
+.store-product-filter-block .irs--round .irs-from, .store-product-filter-block .irs--round .irs-to, .store-product-filter-block .irs--round .irs-single {
+    background-color: black;
+}
+
+.store-product-filter-block .irs--round .irs-from:before, .store-product-filter-block  .irs--round .irs-to:before, .store-product-filter-block  .irs--round .irs-single:before {
+    border-top-color: black;
+}

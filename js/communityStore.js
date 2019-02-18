@@ -408,7 +408,86 @@ var communityStore = {
     },
     hasFormValidation: function() {
         return (typeof document.createElement( 'input' ).checkValidity == 'function');
+    },
+    submitProductFilter: function(element) {
+        var filterform = element.closest('form');
+        var checkboxes = filterform.find(':checked');
+        var search = {};
+        var matchtypes = {};
+
+        checkboxes.each(function(index, field) {
+            var name = field.name.replace('[]', '');
+            var value = field.value;
+            var matchtype = field.getAttribute('data-matching');
+
+            if (name in search) {
+                search[name].push(value);
+            } else {
+                search[name] = [value];
+                matchtypes[name] = [matchtype === 'or' ? '|' : ';'];
+            }
+        });
+
+        var strings = [];
+
+        $.each( search, function( key, value ) {
+            strings.push(key + '=' + value.join(matchtypes[key]) );
+        });
+
+        var price = filterform.find("[name='price']");
+
+        if (price.length) {
+            var min = parseFloat(price.data('min'), 2);
+            var max = parseFloat(price.data('max'), 2);
+
+           var pricerange = price.val();
+           console.log(min + '-' + max);
+           console.log(pricerange);
+
+            if (min + '-' + max !== pricerange) {
+                strings.push('price=' + price.val());
+            }
+        }
+
+        var searchstring =  strings.join('&');
+
+        var params = {};
+        var hasparams = false;
+
+        location.search.substr(1).split("&").forEach(function(item) {
+            var key = item.split("=")[0];
+            if (key.indexOf('sort') === 0) {
+                params[key] = item.split("=")[1];
+                hasparams = true;
+            }
+        });
+
+        if (hasparams) {
+            searchstring = searchstring + '&' + $.param(params);
+        }
+
+        var id = filterform.attr('id');
+
+        if (id) {
+            searchstring += '#' + filterform.attr('id');
+        }
+
+        window.location = '?' + searchstring ;
+    },
+    clearProductFilter: function(element) {
+        var filterform = element.closest('form');
+        var checkboxes = filterform.find(':checked');
+        var search = {};
+
+        checkboxes.each(function(index, field) {
+            checkboxes.prop('checked', false);
+        });
+
+        filterform.find('[name="price"]').val('');
+
+        communityStore.submitProductFilter(element);
     }
+
 
 
 };
@@ -839,5 +918,18 @@ $(document).ready(function () {
         communityStore.displayCart(false, true);
     });
 
+
+    $('.store-btn-filter').click(function (e) {
+        e.preventDefault();
+        communityStore.submitProductFilter($(this));
+    });
+
+    $(document).on('change', '.store-product-filter-block-auto input[type="checkbox"]', function(e) {
+        communityStore.submitProductFilter($(this));
+    });
+
+    $(document).on('click', '.store-btn-filter-clear', function(e) {
+        communityStore.clearProductFilter($(this));
+    });
 
 });

@@ -172,6 +172,7 @@ class Installer
         self::installBlock('community_product_list', $pkg);
         self::installBlock('community_utility_links', $pkg);
         self::installBlock('community_product', $pkg);
+        self::installBlock('community_product_filter', $pkg);
     }
 
     public static function installBlock($handle, $pkg)
@@ -407,7 +408,8 @@ class Installer
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
-        self::installSinglePages($pkg);
+        self::installBlocks($pkg);
+
 
         Localization::clearCache();
     }
