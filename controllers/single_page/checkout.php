@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use PageController;
 use Core;
 use Session;
@@ -16,6 +17,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Illuminate\Filesystem\Filesystem;
@@ -730,6 +732,26 @@ class Checkout extends PageController
         }
 
         Session::set('community_store.smID', false);
+    }
+
+    public function selectShipping()
+    {
+        $token = $this->app->make('token');
+
+        if (!empty($_POST) && $token->validate('community_store')) {
+            $smID = $_POST['smID'];
+            $sInstructions = $_POST['sInstructions'];
+
+            StoreCart::setShippingInstructions($sInstructions);
+
+            $total = StoreCalculator::getShippingTotal($smID);
+            if ($total > 0) {
+                echo StorePrice::format($total);
+            } else {
+                echo 0;
+            }
+        }
+       exit();
     }
 
 }

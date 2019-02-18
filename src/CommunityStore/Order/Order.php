@@ -2,14 +2,14 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use Doctrine\ORM\Mapping as ORM;
-use User;
-use Core;
-use Group;
-use Events;
-use Config;
-use Page;
-use UserInfo;
-use Session;
+use Concrete\Core\User\User;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\UserInfo;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Localization\Localization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
@@ -24,9 +24,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as S
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
 use Concrete\Core\Support\Facade\Application;
-
-use \Concrete\Core\Attribute\ObjectTrait;
-
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue as StoreOrderValue;
 
@@ -53,25 +51,25 @@ class Order
     /** @ORM\Column(type="integer",nullable=true) */
     protected $pmID;
 
-    /** @ORM\Column(type="text") */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $pmName;
 
-    /** @ORM\Column(type="text") */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $smName;
 
     /** @ORM\Column(type="text",nullable=true) */
     protected $sInstructions;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sShipmentID;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sRateID;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sCarrier;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sTrackingID;
 
     /** @ORM\Column(type="text",nullable=true) */
@@ -80,22 +78,22 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingURL;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=2) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
     protected $oShippingTotal;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
     protected $oTax;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
     protected $oTaxIncluded;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) * */
     protected $oTaxName;
 
     /** @ORM\Column(type="decimal", precision=10, scale=2) * */
     protected $oTotal;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /** @ORM\Column(type="string", nullable=true) */
     protected $transactionReference;
 
     /** @ORM\Column(type="datetime", nullable=true) */
@@ -121,6 +119,9 @@ class Order
 
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $locale;
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
@@ -373,6 +374,16 @@ class Order
         return $this->oShippingTotal;
     }
 
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
     public function getTaxes()
     {
         $taxes = [];
@@ -532,6 +543,9 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
+
+        $order->setLocale(Localization::activeLocale());
+
         if ($pm->getMethodController()->isExternal()) {
             $order->setExternalPaymentRequested(true);
         }
@@ -668,6 +682,7 @@ class Order
 
     public function completePostPaymentProcesses($sameRequest = false)
     {
+        $app = Application::getFacadeApplication();
         $groupstoadd = [];
         $createlogin = false;
         $usercreated = false;
@@ -702,11 +717,10 @@ class Order
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
 
-                $mh = Core::make('helper/mail');
-
+                $mh = $app->make('helper/mail');
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
-                $navhelper = Core::make('helper/navigation');
+                $navhelper = $app->make('helper/navigation');
                 $target = Page::getByPath('/login');
 
                 if ($target) {
@@ -719,7 +733,7 @@ class Order
                     $mh->addParameter('link', '');
                 }
 
-                $valc = Core::make('helper/concrete/validation');
+                $valc = $app->make('helper/concrete/validation');
                 $min = Config::get('concrete.user.username.minimum');
                 $max = Config::get('concrete.user.username.maximum');
 
@@ -732,7 +746,7 @@ class Order
                     $newusername .= rand(0, 9);
                 }
 
-                $userRegistrationService = \Core::make('Concrete\Core\User\RegistrationServiceInterface');
+                $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);
                 $usercreated = true;
 
@@ -857,7 +871,8 @@ class Order
 
     public function sendNotifications($email = '')
     {
-        $mh = Core::make('mail');
+        $app = Application::getFacadeApplication();
+        $mh = $app->make('mail');
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
@@ -927,7 +942,8 @@ class Order
 
     public function sendOrderReceipt($email = '')
     {
-        $mh = Core::make('mail');
+        $app = Application::getFacadeApplication();
+        $mh = $app->make('mail');
         $fromName = Config::get('community_store.emailalertsname');
 
         $fromEmail = Config::get('community_store.emailalerts');
@@ -1142,7 +1158,8 @@ class Order
 
     public function getObjectAttributeCategory()
     {
-        return \Core::make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+        $app = Application::getFacadeApplication();
+        return $app->make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
     }
 
     public function getAttributeValueObject($ak, $createIfNotExists = false)
