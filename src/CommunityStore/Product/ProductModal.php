@@ -12,6 +12,11 @@ class ProductModal extends Controller
     {
         $pID = $this->get('pID');
 
+        $locale = $this->get('locale');
+        if ($locale) {
+            \Concrete\Core\Localization\Localization::changeLocale($locale);
+        }
+
         if ($pID) {
             $product = StoreProduct::getByID($pID);
 

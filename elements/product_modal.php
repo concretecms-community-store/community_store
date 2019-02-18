@@ -2,13 +2,15 @@
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
 $communityStoreImageHelper = Core::make('cs/helper/image', ['product_modal']);
+$csm = Core::make('cs/helper/multilingual');
+$token = Core::make('token');
 ?>
 <form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID(); ?>">
-
+    <?= $token->output('community_store'); ?>
     <div class="store-product-modal-info-shell">
 
         <a href="#" class="store-modal-exit">x</a>
-        <h4 class="store-product-modal-title"><?= $product->getName(); ?></h4>
+        <h4 class="store-product-modal-title"><?= h($csm->t($product->getName(), 'productName', $product->getID())); ?></h4>
 
         <p class="store-product-modal-thumb">
             <?php
@@ -21,50 +23,150 @@ $communityStoreImageHelper = Core::make('cs/helper/image', ['product_modal']);
 
         <p class="store-product-modal-price"><?= $product->getFormattedPrice(); ?></p>
         <div class="store-product-modal-details">
-            <?= $product->getDesc(); ?>
+            <?= $csm->t($product->getDesc(), 'productDetails', $product->getID()); ?>
         </div>
         <div class="store-product-modal-options">
             <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
                 ?>
             <div class="store-product-modal-quantity form-group">
-                <?php if ($product->allowQuantity()) {
+                <?php if ($product->allowQuantity() && $showQuantity) {
                     ?>
-                    <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
-                    <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" max="<?= $product->getQty(); ?>">
-                <?php
+                    <div class="store-product-quantity form-group">
+                        <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
+
+                        <?php $qtylabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
+
+                        <?php if ($qtylabel) {
+                        ?>
+                        <div class="input-group">
+                            <?php
+                            }
+                            $max = $product->getMaxCartQty(); ?>
+
+                            <?php if ($product->allowDecimalQuantity()) {
+                                ?>
+                                <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                                <?php
+                            } else {
+                                ?>
+                                <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                                <?php
+                            } ?>
+
+                            <?php if ($qtylabel) {
+                            ?>
+                            <div class="input-group-addon"><?= $csm->t($product->getQtyLabel(), 'productQtyLabel', $product->getID()) ?></div>
+                        </div>
+                    <?php
+                    } ?>
+
+                    </div>
+                    <?php
                 } else {
                     ?>
-                    <input type="hidden" name="quantity" class="store-product-qty form-control" value="1">
-                <?php
+                    <input type="hidden" name="quantity" class="store-product-qty" value="1">
+                    <?php
                 } ?>
             </div>
             <?php
             } ?>
+
             <?php
+
             foreach ($product->getOptions() as $option) {
                 $optionItems = $option->getOptionItems();
+                $optionType = $option->getType();
+                $required = $option->getRequired();
+                $displayType = $option->getDisplayType();
 
-                if (!empty($optionItems)) {
+                $requiredAttr = '';
+
+                if ($required) {
+                    $requiredAttr = ' required="required" placeholder="' . t('Required') . '" ';
+                } ?>
+
+                <?php if (!$optionType || 'select' == $optionType) {
                     ?>
-                <div class="store-product-option-group form-group">
-                    <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
-                    <select class="store-product-option form-control" name="po<?= $option->getID(); ?>">
-                        <?php
-                        foreach ($optionItems as $optionItem) {
-                            if (!$optionItem->isHidden()) {
-                                ?>
-                                <option value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName(); ?></option>
+                    <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
+                        <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                        <?php if ('radio' != $displayType) {
+                        ?>
+                        <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
+                                name="po<?= $option->getID(); ?>">
                             <?php
-                            }
-                            // below is an example of a radio button, comment out the <select> and <option> tags to use instead
-                            //echo '<input type="radio" name="po'.$option->getID().'" value="'. $optionItem->getID(). '" />' . $optionItem->getName() . '<br />';?>
-                        <?php
-                        } ?>
-                    </select>
-                </div>
-            <?php
-                }
+                            } ?>
+                            <?php
+                            $firstAvailableVariation = false;
+                            $variation = false;
+                            $disabled = false;
+                            $outOfStock = false;
+                            foreach ($optionItems as $optionItem) {
+                                if (!$optionItem->isHidden()) {
+                                    $variation = $variationLookup[$optionItem->getID()];
+                                    if (!empty($variation)) {
+                                        $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
+                                        $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                        $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
+                                    }
+                                    $selected = '';
+                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                        $selected = 'selected="selected"';
+                                    } ?>
+
+                                    <?php if ($displayType == 'radio') { ?>
+                                        <div class="radio">
+                                            <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
+                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID()));?></label>
+                                        </div>
+                                    <?php } else { ?>
+                                        <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
+                                    <?php } ?>
+
+                                    <?php
+                                }
+                            } ?>
+                            <?php if ($displayType != 'radio') { ?>
+                        </select>
+                    <?php } ?>
+                    </div>
+                    <?php
+                } elseif ('text' == $optionType) {
+                    ?>
+                    <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                        <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                        <input class="store-product-option-entry form-control" <?= $requiredAttr; ?>
+                               name="pt<?= $option->getID(); ?>"/>
+                    </div>
+                    <?php
+                } elseif ('textarea' == $optionType) {
+                    ?>
+                    <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                        <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                        <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?>
+                                              name="pa<?= $option->getID(); ?>"></textarea>
+                    </div>
+                    <?php
+                } elseif ('checkbox' == $optionType) {
+                    ?>
+                    <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                        <label class="store-product-option-group-label">
+                            <input type="hidden" value="<?= t('no'); ?>"
+                                   class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>"
+                                   name="pc<?= $option->getID(); ?>"/>
+                            <input type="checkbox" value="<?= t('yes'); ?>"
+                                   class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> <?= $option->getHandle(); ?>"
+                                   name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                    </div>
+                    <?php
+                } elseif ('hidden' == $optionType) {
+                    ?>
+                    <input type="hidden" class="store-product-option-hidden <?= $option->getHandle(); ?>"
+                           name="ph<?= $option->getID(); ?>"/>
+                    <?php
+                } ?>
+                <?php
             } ?>
+
         </div>
         <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
         <?php if ('all' != Config::get('community_store.shoppingDisabled')) {

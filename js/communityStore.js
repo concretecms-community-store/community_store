@@ -42,11 +42,11 @@ var communityStore = {
         $(".store-whiteout").remove();
     },
 
-    productModal: function (pID) {
+    productModal: function (pID, locale) {
         communityStore.waiting();
         $.ajax({
             url: PRODUCTMODAL,
-            data: {pID: pID},
+            data: {pID: pID, locale: locale},
             type: 'get',
             cache: false,
             dataType : 'text',
@@ -859,7 +859,7 @@ $(document).ready(function () {
     });
 
     $('.store-product-quick-view').click(function(e){
-        communityStore.productModal($(this).data('product-id'));
+        communityStore.productModal($(this).data('product-id'), $(this).data('locale'));
         e.preventDefault();
     });
 

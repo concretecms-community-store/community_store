@@ -154,6 +154,7 @@ $localecount = count($locales);
 
     <fieldset>
         <legend><?= t('Product Overview'); ?></legend>
+        <p class="help-block"><?= t('Product specific translations'); ?></p>
     <table class="table table-bordered table-condensed">
         <tr>
             <th><?= t('Context'); ?></th>
@@ -279,6 +280,7 @@ $localecount = count($locales);
 
     <fieldset>
         <legend><?= t('Options and Option Values'); ?></legend>
+        <p class="help-block"><?= t('Translations entered below will override common translations for this product only. It is recommended to enter common translations first.'); ?></p>
 
         <table class="table table-bordered table-condensed">
             <tr>
@@ -393,7 +395,7 @@ $localecount = count($locales);
                             <input type="text" class="form-control"
                                    placeholder="<?= $csm->t($attr->getAttributeKeyName(), 'productAttributeName', false, $attr->getAttributeKeyID(), $lp->getLocale()); ?>"
                                    name="translation[<?= $lp->getLocale(); ?>][text][productAttributeName][<?= $attr->getAttributeKeyID(); ?>]"
-                                   value="<?= $csm->t(null, 'productAttributeName', $product->getID(), $attr->getAttributeKeyID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'productAttributeName', $product->getID(), $attr->getAttributeKeyID(), $lp->getLocale(), false); ?>"/>
                         </td>
 
                     </tr>
@@ -424,7 +426,7 @@ $localecount = count($locales);
                                 <input type="text" class="form-control"
                                        placeholder="<?= $csm->t($attrOption, 'productAttributeValue', false, false, $lp->getLocale()); ?>"
                                        name="translation[<?= $lp->getLocale(); ?>][<?= $type; ?>][productAttributeValue][<?= h($attrOption); ?>]"
-                                       value="<?= $csm->t($attrOption, 'productAttributeValue', $product->getID(), false, $lp->getLocale()); ?>"/>
+                                       value="<?= $csm->t($attrOption, 'productAttributeValue', $product->getID(), false, $lp->getLocale(), false); ?>"/>
                             </td>
 
                         </tr>

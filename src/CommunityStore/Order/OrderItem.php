@@ -7,6 +7,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -237,9 +238,12 @@ class OrderItem
 
     public static function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)
     {
+        $app = Application::getFacadeApplication();
+        $csm = $app->make('cs/helper/multilingual');
+
         $product = $data['product']['object'];
 
-        $productName = $product->getName();
+        $productName = $csm->t($product->getName(), 'productName', $product->getID());
         $qty = $data['product']['qty'];
 
         if (isset($data['product']['customerPrice'])) {
@@ -248,7 +252,7 @@ class OrderItem
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $qtyLabel = $product->getQtyLabel();
+        $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID());
 
         $sku = $product->getSKU();
 
@@ -290,7 +294,7 @@ class OrderItem
                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
-                    $optionvalue = $optionvalue->getName();
+                    $optionvalue = $csm->t($optionvalue->getName(), 'optionValue');
                 }
             } elseif ('pt' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pt", "", $groupID);
@@ -310,7 +314,7 @@ class OrderItem
 
             $optiongroup = StoreProductOption::getByID($groupID);
             if ($optiongroup) {
-                $optionGroupName = $optiongroup->getName();
+                $optionGroupName = $csm->t($optiongroup->getName(), 'optionName', null, $groupID);
             }
 
             $orderItemOption = new StoreOrderItemOption();

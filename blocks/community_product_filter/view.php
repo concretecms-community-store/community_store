@@ -16,7 +16,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                     <h3 class="store-product-filter-block-option-title">
                     <?php if ($data['type'] == 'attr') { ?>
-                        <?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?>
+                        <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
                     <?php } elseif ($data['type'] == 'price') { ?>
                       <?= t($data['label'] ? $data['label']  : t('Price')); ?>
                     <?php } ?>
@@ -56,7 +56,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     <?= ($checked ? 'checked="checked"' : ''); ?>
 
                                        value="<?php echo h($option); ?>" name="<?php echo $akhandle; ?>[]"/>
-                                <span class="store-product-filter-block-option"><?php echo $option; ?>
+                                <span class="store-product-filter-block-option"><?php echo h($csm->t($option, 'productAttributeValue')); ?>
                                     <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
                                     <span class="store-product-filter-block-count">(<?php echo $count; ?>)</span>
                                     <?php } ?>

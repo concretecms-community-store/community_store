@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $locale = $order->getLocale();
 if ($locale) {
-    \Concrete\Core\Localization\Localization::changeLocale($order->getLocale());
+    \Concrete\Core\Localization\Localization::changeLocale($locale);
 }
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;

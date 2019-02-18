@@ -137,7 +137,7 @@ $localecount = count($locales);
                             <td>
                                 <input type="text" class="form-control"
                                        name="translation[options][<?= $lp->getLocale(); ?>][text][productAttributeName][<?= $attr->getAttributeKeyID(); ?>]"
-                                       value="<?= $csm->t(null, 'productAttributeName', false, $attr->getAttributeKeyID(), $lp->getLocale()); ?>"/>
+                                       value="<?= $csm->t(null, 'productAttributeName', false, $attr->getAttributeKeyID(), $lp->getLocale(), false); ?>"/>
                             </td>
 
                         </tr>

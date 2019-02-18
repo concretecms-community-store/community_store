@@ -11,6 +11,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as St
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Localization\Localization;
 
 class Controller extends BlockController
 {
@@ -212,6 +213,7 @@ class Controller extends BlockController
         }
         $this->set('langpath', $langpath);
         $this->set('app', $this->app);
+        $this->set('locale', Localization::activeLocale());
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
