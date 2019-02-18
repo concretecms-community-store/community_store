@@ -9,7 +9,9 @@ $csm = $app->make('cs/helper/multilingual');
 
         <?php
         if (!empty($filterData)) {
-            foreach ($filterData as $akhandle => $data) { ?>
+            foreach ($filterData as $akhandle => $data) {
+                $ak = $attributes[$akhandle];
+                ?>
                 <div class="form-group">
 
                     <h3 class="store-product-filter-block-option-title">
@@ -25,7 +27,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?php
                         $optiondata = $data['data'];
 
-                        $ak = $attributes[$akhandle];
+
                         $matchingType = $attrFilterTypes[$akhandle]['matchingType'];
                         $invalidHiding = $attrFilterTypes[$akhandle]['invalidHiding'];
 
