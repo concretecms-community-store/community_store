@@ -90,8 +90,8 @@ if ($cart) {
                                     ?>
                                     <?php if ($optionvalue) { ?>
                                     <div class="store-cart-list-item-attribute">
-                                        <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $optionID)) : '') ?>:</span>
-                                        <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $valID)) : '') ?></span>
+                                        <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $product->getID(), $optionID)) : '') ?>:</span>
+                                        <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $product->getID(), $valID)) : '') ?></span>
                                     </div>
                                     <?php } ?>
                                 <?php } ?>

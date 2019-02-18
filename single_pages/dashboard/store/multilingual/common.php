@@ -49,7 +49,7 @@ $localecount = count($locales);
                             <td>
                                 <input type="text" class="form-control"
                                        name="translation[options][<?= $lp->getLocale(); ?>][text][optionName][<?= h($option->getName()); ?>]"
-                                       value="<?= $csm->t($option->getName(), 'optionName', false, $lp->getLocale()); ?>"/>
+                                       value="<?= $csm->t($option->getName(), 'optionName', false, false, $lp->getLocale()); ?>"/>
 
                             </td>
 
@@ -82,7 +82,7 @@ $localecount = count($locales);
                             <td>
                                 <input type="text" class="form-control"
                                        name="translation[options][<?= $lp->getLocale(); ?>][text][optionValue][<?= h($option->getName()); ?>]"
-                                       value="<?= $csm->t($option->getName(), 'optionValue', false, $lp->getLocale()); ?>"/>
+                                       value="<?= $csm->t($option->getName(), 'optionValue', false, false, $lp->getLocale()); ?>"/>
                             </td>
 
                         </tr>
@@ -102,7 +102,7 @@ $localecount = count($locales);
     <fieldset>
         <legend><?= t('Attribute Names and Values'); ?></legend>
 
-        <?php if (!empty($optionStrings)) { ?>
+        <?php if (!empty($attrList)) { ?>
             <table class="table table-bordered">
                 <tr>
                     <th><?= t('Context'); ?></th>
@@ -115,7 +115,7 @@ $localecount = count($locales);
 
                 <?php
 
-                foreach ($optionStrings as $paymentMethod) {
+                foreach ($attrList as $attr) {
 
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
@@ -125,9 +125,9 @@ $localecount = count($locales);
                                 ?>
 
                                 <td rowspan="<?= $localecount; ?>"><span
-                                        class="label label-primary"><?= t('Payment Display Name'); ?></span>
+                                        class="label label-primary"><?= t('Attribute Name'); ?></span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>">XXX</td>
+                                <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
                             <?php } ?>
 
                             <td>
@@ -136,17 +136,53 @@ $localecount = count($locales);
 
                             <td>
                                 <input type="text" class="form-control"
-                                       name="translation[options][<?= $lp->getLocale(); ?>][text][optionName]"
-                                       value="<?= $csm->t(null, 'optionName', false, $lp->getLocale()); ?>"/>
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][productAttributeName][<?= $attr->getAttributeKeyID(); ?>]"
+                                       value="<?= $csm->t(null, 'productAttributeName', false, $attr->getAttributeKeyID(), $lp->getLocale()); ?>"/>
                             </td>
 
                         </tr>
                     <?php } ?>
 
-                <?php } ?>
+
+                <?php }
+                ?>
+
+
+                <?php
+                foreach ($attrOptions as $type=>$attrOptions) {
+
+                    foreach ($attrOptions as $attrOption=>$x) {
+
+                        $firstrow = true;
+                        foreach ($locales as $lp) { ?>
+                            <tr>
+                                <?php if ($firstrow) {
+                                    $firstrow = false;
+                                    ?>
+
+                                    <td rowspan="<?= $localecount; ?>"><span
+                                                class="label label-primary"><?= t('Attribute Value'); ?></span>
+                                    </td>
+                                    <td rowspan="<?= $localecount; ?>"><?= $attrOption; ?></td>
+                                <?php } ?>
+
+                                <td>
+                                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control"
+                                           name="translation[options][<?= $lp->getLocale(); ?>][<?= $type; ?>][productAttributeValue][<?= h($attrOption); ?>]"
+                                           value="<?= $csm->t($attrOption, 'productAttributeValue', false, false, $lp->getLocale()); ?>"/>
+                                </td>
+
+                            </tr>
+                        <?php } ?>
+                    <?php }
+                }?>
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No Options or Option Values have been created on products"); ?></p>
+            <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
         <?php } ?>
 
     </fieldset>

@@ -16,7 +16,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.0';
-    protected $pkgVersion = '2.0.6.2.3';
+    protected $pkgVersion = '2.0.6.2.4';
 
     protected $pkgAutoloaderRegistries = array(
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -33,10 +33,8 @@ class Controller extends Package
         return t("Community Store");
     }
 
-    public function installStore()
+    public function installStore($pkg)
     {
-        $pkg = Package::getByHandle('community_store');
-
         Installer::installSinglePages($pkg);
         Installer::installProductParentPage($pkg);
         Installer::installStoreProductPageType($pkg);
@@ -58,23 +56,15 @@ class Controller extends Package
     {
         $this->registerCategories();
         parent::install();
-        $this->installStore();
+
+        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+        $this->installStore($pkg);
     }
 
     public function upgrade()
     {
         $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-
-        Installer::installSinglePage('/dashboard/store/multilingual', $pkg);
-        Installer::installSinglePage('/dashboard/store/multilingual/products', $pkg);
-        Installer::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
-        Installer::installSinglePage('/dashboard/store/multilingual/common', $pkg);
-
-
         parent::upgrade();
-
-
-
         Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();

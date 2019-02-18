@@ -36,6 +36,11 @@ class Translation
     protected $extendedText;
 
     /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $pID;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $entityType;
@@ -54,97 +59,71 @@ class Translation
     }
 
 
-    /**
-     * @return mixed
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * @param mixed $locale
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * @return mixed
-     */
     public function getOriginalText()
     {
         return $this->originalText;
     }
 
-    /**
-     * @param mixed $originalText
-     */
     public function setOriginalText($originalText)
     {
         $this->originalText = $originalText;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTranslatedText()
     {
         return $this->translatedText;
     }
 
-    /**
-     * @param mixed $translatedText
-     */
     public function setTranslatedText($translatedText)
     {
         $this->translatedText = $translatedText;
     }
 
-    /**
-     * @return mixed
-     */
     public function getExtendedText()
     {
         return $this->extendedText;
     }
 
-    /**
-     * @param mixed $extendedText
-     */
     public function setExtendedText($extendedText)
     {
         $this->extendedText = $extendedText;
     }
 
-    /**
-     * @return mixed
-     */
+    public function setProductID($pid)
+    {
+        $this->pID = $pid;
+    }
+
+    public function getProductID()
+    {
+        return $this->pID;
+    }
+
     public function getEntityType()
     {
         return $this->entityType;
     }
 
-    /**
-     * @param mixed $entityType
-     */
     public function setEntityType($entityType)
     {
         $this->entityType = $entityType;
     }
 
-    /**
-     * @return mixed
-     */
     public function getEntityID()
     {
         return $this->entityID;
     }
 
-    /**
-     * @param mixed $entityID
-     */
     public function setEntityID($entityID)
     {
         $this->entityID = $entityID;

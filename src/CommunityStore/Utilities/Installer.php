@@ -46,6 +46,9 @@ class Installer
         self::installSinglePage('/dashboard/store/reports/sales', $pkg);
         self::installSinglePage('/dashboard/store/reports/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
         self::installSinglePage('/cart', $pkg);
         self::installSinglePage('/checkout', $pkg);
         self::installSinglePage('/checkout/complete', $pkg);
@@ -404,6 +407,7 @@ class Installer
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
+        self::installSinglePages($pkg);
 
         Localization::clearCache();
     }

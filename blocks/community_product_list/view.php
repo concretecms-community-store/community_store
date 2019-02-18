@@ -251,7 +251,7 @@ if ($products) {
                         <?php if (!$optionType || 'select' == $optionType) {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
                                 <?php if ($displayType != 'radio') { ?>
                                 <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
                                 <?php } ?>
@@ -276,7 +276,7 @@ if ($products) {
                                     <?php if ($displayType == 'radio') { ?>
                                         <div class="radio">
                                             <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($optionItem->getName());?></label>
+                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())) . $outOfStock; ?></label>
                                         </div>
                                     <?php } else { ?>
                                         <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= $optionItem->getName() . $outOfStock; ?></option>
@@ -293,14 +293,14 @@ if ($products) {
                         } elseif ('text' == $optionType) {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
                                 <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID(); ?>" />
                             </div>
                         <?php
                         } elseif ('textarea' == $optionType) {
                             ?>
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
-                                <label class="store-product-option-group-label"><?= $option->getName(); ?></label>
+                                <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
                                 <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID(); ?>"></textarea>
                             </div>
                         <?php
@@ -309,7 +309,7 @@ if ($products) {
                             <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                 <label class="store-product-option-group-label">
                                     <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>" />
-                                    <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>" /> <?= $option->getName(); ?></label>
+                                    <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>" /> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
                             </div>
                         <?php
                         } elseif ('hidden' == $optionType) {

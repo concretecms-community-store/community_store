@@ -27,15 +27,15 @@ class Multilingual
      * Translate text using Community Store's translation system
      *
      * @param string $text The text to be translated.
+     * @param string $productID The ID of the product (if applicable).
      * @param string $type The type of text being translated.
      * @param string $id The ID of the entity being translated, for example a Product's ID.
      * @param string $forcedLocale Force the translation to a specified locale, instead of determining it automatically.
-     * @param string $nativeTranslate Fall back to native translate function
      *
      * @return string Returns the translated text.
      *
      */
-    function t($text, $type = false, $id = false, $forcedLocale = false, $useCommon = true)
+    function t($text, $type = false, $productID = false, $id = false, $forcedLocale = false, $useCommon = true)
     {
         $locale = $this->localization->getLocale();
 
@@ -57,8 +57,12 @@ class Multilingual
                 }  else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } else {
+            } elseif ($type == 'productAttributeValue' || $type == 'optionName' ||  $type == 'optionValue') {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
+            }
+
+            if ($productID) {
+                $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
             }
 
             $query->andWhere('t.locale = :locale')->setParameter('locale', $forcedLocale ? $forcedLocale : $locale);

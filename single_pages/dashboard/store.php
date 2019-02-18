@@ -262,9 +262,9 @@ if ($taxCalc == 'extract') {
                         <td><?= t(ucwords($order->getStatus())) ?></td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-primary"
+                                <a class="btn btn-primary btn-sm"
                                    href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">

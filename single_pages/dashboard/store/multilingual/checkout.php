@@ -49,7 +49,7 @@ $localecount = count($locales);
                         <td>
                             <input type="text" class="form-control"
                                    name="translation[paymentMethods][<?= $paymentMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][paymentDisplayName]"
-                                   value="<?= $csm->t(null, 'paymentDisplayName', $paymentMethod->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'paymentDisplayName', $paymentMethod->getID(), false, $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -76,7 +76,7 @@ $localecount = count($locales);
                         <td>
                             <input type="text" class="form-control"
                                    name="translation[paymentMethods][<?= $paymentMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][paymentButtonLabel]"
-                                   value="<?= $csm->t(null, 'paymentButtonLabel', $paymentMethod->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'paymentButtonLabel', $paymentMethod->getID(), false, $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -130,7 +130,7 @@ $localecount = count($locales);
                         <td>
                             <input type="text" class="form-control"
                                    name="translation[shippingMethods][<?= $shippingMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][shippingName]"
-                                   value="<?= $csm->t(null, 'shippingName',  $shippingMethod->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'shippingName',  $shippingMethod->getID(), false, $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -157,7 +157,7 @@ $localecount = count($locales);
                         <td>
                             <input type="text" class="form-control"
                                    name="translation[shippingMethods][<?= $shippingMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][shippingDetails]"
-                                   value="<?= $csm->t(null, 'shippingDetails', $shippingMethod->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'shippingDetails', $shippingMethod->getID(), false, $lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -208,7 +208,7 @@ $localecount = count($locales);
                         <td>
                             <input type="text" class="form-control"
                                    name="translation[taxRates][<?= $taxRate->getID(); ?>][<?= $lp->getLocale(); ?>][text][taxRateName]"
-                                   value="<?= $csm->t(null, 'taxRateName', $taxRate->getID(), $lp->getLocale()); ?>"/>
+                                   value="<?= $csm->t(null, 'taxRateName', $taxRate->getID(), false ,$lp->getLocale()); ?>"/>
                         </td>
 
                     </tr>
@@ -263,7 +263,7 @@ $localecount = count($locales);
                             <td>
                                 <input type="text" class="form-control"
                                        name="translation[discountRules][<?= $discountRule->getID(); ?>][<?= $lp->getLocale(); ?>][text][discountRuleDisplayName]"
-                                       value="<?= $csm->t(null, 'discountRuleDisplayName',  $discountRule->getID(), $lp->getLocale()); ?>"/>
+                                       value="<?= $csm->t(null, 'discountRuleDisplayName', $discountRule->getID(), false, $lp->getLocale()); ?>"/>
                             </td>
 
                         </tr>

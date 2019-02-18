@@ -48,6 +48,7 @@ class Products extends DashboardSitePageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
+
     }
 
     public function translate($pID)
@@ -62,6 +63,68 @@ class Products extends DashboardSitePageController
         $this->set('locales', $this->getLocales()['additional']);
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('pageTitle', t('Translate Product'));
+
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+
+        $attrList = $productCategory->getList();
+        $this->set('attrList', $attrList);
+
+        $attInputTypes = ['text'];
+        $attSelectTypes = ['select'];
+        $attrHandles = [];
+
+        $attrOptions = [];
+        $typeLookup = [];
+
+
+        foreach($attrList as $ak) {
+            $typeHandle = $ak->getAttributeType()->getAttributeTypeHandle();
+
+            if (in_array($typeHandle, $attInputTypes)) {
+                $availableAtts[] = $ak;
+                $handle = $ak->getAttributeKeyHandle();
+
+                $typeLookup['ak_'. $handle] = $typeHandle;
+                $attrHandles[] = 'ak_'. $handle;
+
+            }
+
+            if (in_array($typeHandle, $attSelectTypes)) {
+                $options = $ak->getController()->getOptions();
+
+                foreach ($options as $option) {
+                    $attrOptions['text'][$option->getSelectAttributeOptionDisplayValue()] = true;
+                }
+            }
+        }
+
+        $db = \Database::connection();
+
+        if ($attrHandles) {
+            $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes where pID = ?',[$pID]);
+        }
+
+        foreach($attributedata as $row) {
+            foreach ($row as $field => $data) {
+                $lines = explode("\n", trim($data));
+
+                foreach($lines as $l) {
+                    if ($l && !is_numeric($l)) {
+                        $attrOptions[$typeLookup[$field]][trim($l)] = true;
+                    }
+                }
+            }
+        }
+
+        ksort($attrOptions);
+
+        foreach($attrOptions as $type=>$options) {
+            ksort($options);
+            $attrOptions[$type] = $options;
+        }
+
+        $this->set('attrOptions',$attrOptions);
+
     }
 
     private function getLocales() {
@@ -87,7 +150,6 @@ class Products extends DashboardSitePageController
             $translations = $this->post('translation');
 
             foreach($translations as $locale => $value) {
-
                 foreach($value as $type => $entries) {
                     foreach ($entries as $key => $items) {
 
@@ -103,39 +165,54 @@ class Products extends DashboardSitePageController
                         foreach($itemstosave as $id => $text) {
                             $qb = $this->entityManager->createQueryBuilder();
 
-                            $entityID = $this->post('pID');
-
-                            if ($key == 'optionName' || $key == 'optionValue') {
-                                $entityID = $id;
-                            }
+                            $productID = $this->post('pID');
 
                             $query = $qb->select('t')
                                 ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
                                 ->where('t.entityType = :type')->setParameter('type', $key);
 
                             $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
-                            $query->andWhere('t.entityID = :id')->setParameter('id', $entityID);
+                            $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
+
+                            if ($key == 'optionName' || $key == 'optionValue' || $key == 'productAttributeName' ) {
+                                $query->andWhere('t.entityID = :entityID')->setParameter('entityID', $id);
+                            }
+
                             $query->setMaxResults(1);
 
                             $t = $query->getQuery()->getResult();
 
                             if (!empty($t)) {
                                 $t = $t[0];
+
+                                if (!$text)  {
+                                    $t->delete();
+                                }
                             } else {
                                 $t = new Translation();
                             }
 
-                            $t->setEntityID($entityID);
-                            $t->setEntityType($key);
+                            if ($text) {
+                                $t->setProductID($productID);
+                                $t->setEntityType($key);
 
-                            if ($type == 'text') {
-                                $t->setTranslatedText($text);
-                            } else {
-                                $t->setExtendedText($text);
+                                if ($key == 'optionName' || $key == 'optionValue' || $key == 'productAttributeName') {
+                                    $t->setEntityID($id);
+                                }
+
+                                if ($key == 'productAttributeValue') {
+                                    $t->setOriginalText($id);
+                                }
+
+                                if ($type == 'text') {
+                                    $t->setTranslatedText($text);
+                                } else {
+                                    $t->setExtendedText($text);
+                                }
+
+                                $t->setLocale($locale);
+                                $t->save();
                             }
-
-                            $t->setLocale($locale);
-                            $t->save();
                         }
                     }
                 }

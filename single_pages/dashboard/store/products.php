@@ -1677,7 +1677,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<?=URL::to('/dashboard/store/multilingual/products/translate/' . $product->getID())?>"><i class="fa fa-language"></i> <?= t("Translate")?></a></li>
+                                <?php
+                                    $page = $product->getProductPage();
+                                    if($page && !$page->isInTrash()){ ?>
+                                    <li><a target="_blank" href="<?= $page->getCollectionLink()?>"> <?= t("View Product Page")?></a></li>
+                                    <?php } ?>
+
+
+                                    <li><a target="_blank" href="<?=URL::to('/dashboard/store/multilingual/products/translate/' . $product->getID())?>"><?= t("Translate")?></a></li>
                                 </ul>
                                 <?php } ?>
                             </div>
