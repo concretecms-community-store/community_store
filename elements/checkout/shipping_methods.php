@@ -10,7 +10,7 @@ $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
 
-$csm = \Core::make('cshelper/multilingual');
+$csm = \Core::make('cs/helper/multilingual');
 ?>
 
 <?php if (!empty($eligibleMethods)) { ?>

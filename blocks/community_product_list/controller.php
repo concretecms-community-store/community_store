@@ -211,6 +211,7 @@ class Controller extends BlockController
             $langpath =  $al->getCollectionHandle();
         }
         $this->set('langpath', $langpath);
+        $this->set('app', $this->app);
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')

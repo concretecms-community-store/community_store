@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $action = $controller->getAction();
-$csm = \Core::make('cshelper/multilingual');
+$csm = \Core::make('cs/helper/multilingual');
 
 if ($action == 'view') { ?>
 

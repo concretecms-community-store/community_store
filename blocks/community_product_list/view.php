@@ -5,7 +5,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // with the crop property set to true since default is false
 $legacyThumbProps = new \stdClass();
 $legacyThumbProps->crop = true;
-$communityStoreImageHelper = Core::make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
+$communityStoreImageHelper = $app->make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
+$csm = $app->make('cs/helper/multilingual');
 
 $c = Page::getCurrentPage();
 

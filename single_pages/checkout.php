@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
-$csm = \Core::make('cshelper/multilingual');
+$csm = \Core::make('cs/helper/multilingual');
 ?>
 <div class="store-checkout-page">
 <?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>

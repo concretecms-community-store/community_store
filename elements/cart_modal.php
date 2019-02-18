@@ -4,7 +4,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
-$csm = \Core::make('cshelper/multilingual');
+$csm = \Core::make('cs/helper/multilingual');
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>

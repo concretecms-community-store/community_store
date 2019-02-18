@@ -118,6 +118,7 @@ class Controller extends BlockController
             $langpath =  $al->getCollectionHandle();
         }
         $this->set('langpath', $langpath);
+        $this->set('app', $this->app);
     }
 
     public function registerViewAssets($outputContent = '')

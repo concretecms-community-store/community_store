@@ -63,7 +63,7 @@ class Controller extends Package
 
     public function upgrade()
     {
-        $pkg = Package::getByHandle('community_store');
+        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
         $db = $this->app->make('database')->connection();
         $db = Installer::prepareUpgradeFromLegacy($db);
 
@@ -113,7 +113,7 @@ class Controller extends Package
     {
         $singletons = [
             'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
-            'cshelper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual'
+            'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual'
         ];
 
         foreach ($singletons as $key => $value) {

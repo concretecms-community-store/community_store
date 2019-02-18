@@ -407,8 +407,8 @@ class Installer
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
-
-
+        self::installSinglePages($pkg);
+        
         Localization::clearCache();
     }
 

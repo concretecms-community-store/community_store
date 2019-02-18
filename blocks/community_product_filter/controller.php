@@ -175,7 +175,6 @@ class Controller extends BlockController
             }
         }
 
-
         $products = new StoreProductList();
 
         if ('current' == $this->filter || 'current_children' == $this->filter) {
@@ -322,7 +321,6 @@ class Controller extends BlockController
         $hasprice = false;
 
 
-
         foreach($selectedAttributeList as $att) {
             $handle = $att['handle'];
 
@@ -383,6 +381,7 @@ class Controller extends BlockController
         $this->set('maxPrice', $maxPrice);
         $this->set('attributes', $attrLookup);
         $this->set('attrFilterTypes', $attrFilterTypes);
+        $this->set('app', $this->app);
     }
 
     public function registerViewAssets($outputContent = '')
