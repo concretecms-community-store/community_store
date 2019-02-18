@@ -24,7 +24,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
-
+use Concrete\Core\Database\DatabaseStructureManager;
+use ORM;
 
 class Installer
 {
@@ -253,7 +254,7 @@ class Installer
         $categoryEntity = $service->getByHandle('user');
         $category = $categoryEntity->getController();
 
-        $attr =  $category->getByHandle($handle);
+        $attr = $category->getByHandle($handle);
 
         if (!is_object($attr)) {
             $name = Core::make("helper/text")->unhandle($handle);
@@ -283,7 +284,6 @@ class Installer
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-
 
         $orderCustSet = AttributeSet::getByHandle('order_customer');
         if (!is_object($orderCustSet)) {
@@ -329,10 +329,9 @@ class Installer
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
 
-        $attr =  $orderCategory->getByHandle($handle);
+        $attr = $orderCategory->getByHandle($handle);
 
         if (!is_object($attr)) {
-
             $name = Core::make("helper/text")->unhandle($handle);
 
             $key = new StoreOrderKey();
@@ -358,7 +357,6 @@ class Installer
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-
     }
 
     public static function createDDFileset($pkg)
@@ -412,5 +410,48 @@ class Installer
 
 
         Localization::clearCache();
+    }
+
+    public static function refreshEntities()
+    {
+        $em = ORM::entityManager();
+        $manager = new DatabaseStructureManager($em);
+        $manager->refreshEntities();
+    }
+
+    public static function prepareUpgradeFromLegacy($db)
+    {
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $installedVersion = $db->fetchColumn("SELECT pkgVersion from Packages WHERE pkgHandle=?", ['community_store']);
+        $installedVersionFromConfig = \Config::get('cs.pkgversion');
+        $community_store = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+        if (
+            $community_store
+            && (
+            ($installedVersion && version_compare($installedVersion, '2.0', '<'))
+            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
+            )
+        ) {
+            $db->query("SET foreign_key_checks = 0");
+
+            // First we have to delete orphan attribute values and keys so constraints can be added to the table
+            $db->query("DELETE FROM CommunityStoreProductAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreProducts WHERE pID = CommunityStoreProductAttributeValues.pID)");
+            $db->query("DELETE FROM CommunityStoreOrderAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreOrders WHERE oID = CommunityStoreOrderAttributeValues.oID)");
+
+            $db->query("DELETE FROM CommunityStoreProductAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreProductAttributeKeys.akID)");
+            $db->query("DELETE FROM CommunityStoreOrderAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreOrderAttributeKeys.akID)");
+
+            // then we make sure our attributes keys are not marked legacy anymore
+            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreProductAttributeKeys)", ["storeproductkey", "legacykey"]);
+            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreOrderAttributeKeys)", ["storeorderkey", "legacykey"]);
+
+            // And we remove them from the LegacyAttributeKeys table
+            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreProductAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
+            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreOrderAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
+
+            return $db;
+        } else {
+            return false;
+        }
     }
 }

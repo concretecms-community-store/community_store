@@ -63,29 +63,43 @@ class Controller extends Package
 
     public function upgrade()
     {
-        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        parent::upgrade();
+        $pkg = Package::getByHandle('community_store');
+        $db = $this->app->make('database')->connection();
+        $db = Installer::prepareUpgradeFromLegacy($db);
+
+        if ($db) {
+            parent::upgrade();
+
+            // this was set to false in the Installer so setting it back to normal
+            $db->query("SET foreign_key_checks = 1");
+
+            // We need to refresh our entities after install, otherwise the order attributes installation will fail
+            Installer::refreshEntities();
+        } else {
+            parent::upgrade();
+        }
+
         Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();
     }
 
-    public function testForUpgrade()
+    public function testForInstall($testForAlreadyInstalled = true)
     {
         $community_store = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
 
         if ($community_store) {
-            $installedversion = $community_store->getPackageVersion();
+            // this is ridiculous but I found out the hard way that
+            // getting the version from inside the upgrade() function
+            // was giving me different result depending on the C5 version I was using.
+            // So I'm getting the version twice, once here and once in the upgrade function
+            // and I check both. I tried to set a variable instead of saving it in config
+            // but for some reason it didn't work
 
-            if (version_compare($installedversion, '2.0', '<')) {
-                $errors = $this->app->make('error');
-                $errors->add(t('Upgrading version 1.x version of Community Store to 2.x is not currently supported. Please immediately revert your community_store package folder to the %s release.', $installedversion));
-
-                return $errors;
-            }
+            \Config::save('cs.pkgversion', $community_store->getPackageVersion());
         }
 
-        return parent::testForUpgrade();
+        return parent::testForInstall($testForAlreadyInstalled);
     }
 
     public function registerRoutes()
@@ -99,6 +113,7 @@ class Controller extends Package
     {
         $singletons = [
             'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
+            'cshelper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual'
         ];
 
         foreach ($singletons as $key => $value) {
@@ -141,8 +156,6 @@ class Controller extends Package
             } catch (Exception $e) {
             }
         }
-
-        $this->app->singleton('cshelper/multilingual', 'Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual');
     }
 
     public function uninstall()
@@ -198,15 +211,19 @@ class Controller extends Package
 
     private function registerCategories()
     {
-        $this->app['manager/attribute/category']->extend('store_product',
+        $this->app['manager/attribute/category']->extend(
+            'store_product',
             function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-            });
+            }
+        );
 
-        $this->app['manager/attribute/category']->extend('store_order',
+        $this->app['manager/attribute/category']->extend(
+            'store_order',
             function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
-            });
+            }
+        );
     }
 }
 
