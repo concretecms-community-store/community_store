@@ -1,13 +1,15 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="store-product-filter-block" >
+<div class="store-product-filter-block">
 
-    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-'. $bID .'"' : ''); ?>>
+    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-' . $bID . '"' : ''); ?>>
 
         <?php
         if (!empty($filterData)) {
-        foreach ($filterData as $akhandle => $data) { ?>
+        foreach ($filterData
+
+        as $akhandle => $data) { ?>
         <div class="form-group">
             <?php if ($data['type'] == 'attr') { ?>
             <?php
@@ -61,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
                 <?php if ($minPrice != $maxPrice) { ?>
 
-                <h3 class="store-product-filter-block-option-title"><?= t($data['label'] ? $data['label']  : t('Price')); ?></h3>
+                <h3 class="store-product-filter-block-option-title"><?= t($data['label'] ? $data['label'] : t('Price')); ?></h3>
 
                 <div class="store-product-filter-block-options">
 
@@ -86,7 +88,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         $(document).ready(function () {
                             $(".js-range-slider").ionRangeSlider({
                                 <?php if ($updateType == 'auto') { ?>
-                                onFinish: function() {
+                                onFinish: function () {
                                     communityStore.submitProductFilter($('.js-range-slider'));
                                 }
                                 <?php } ?>
@@ -103,13 +105,17 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <?php } ?>
 
             <?php if ($updateType == 'button') { ?>
-                <p><button type="submit"
-                           class="store-btn-filter btn btn-default btn-block"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
+                <p>
+                    <button type="submit"
+                            class="store-btn-filter btn btn-default btn-block"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button>
+                </p>
             <?php } ?>
 
             <?php if ($displayClear && (!empty($selectedAttributes) || $priceFiltering)) { ?>
-                <p><button type="submit"
-                           class="store-btn-filter-clear btn btn-default btn-block"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
+                <p>
+                    <button type="submit"
+                            class="store-btn-filter-clear btn btn-default btn-block"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button>
+                </p>
             <?php } ?>
     </form>
 </div>
