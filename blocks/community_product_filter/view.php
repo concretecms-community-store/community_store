@@ -17,7 +17,7 @@ $csm = $app->make('cs/helper/multilingual');
                     <h3 class="store-product-filter-block-option-title">
                     <?php if ($data['type'] == 'attr') { ?>
                         <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
-                    <?php } elseif ($data['type'] == 'price') { ?>
+                    <?php } elseif ($data['type'] == 'price' && $minPrice != $maxPrice) { ?>
                       <?= t($data['label'] ? $data['label']  : t('Price')); ?>
                     <?php } ?>
                     </h3>
