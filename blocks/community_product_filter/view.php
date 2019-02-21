@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     <h3 class="store-product-filter-block-option-title">
                         <?php if ($data['type'] == 'attr') { ?>
                             <?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?>
-                        <?php } elseif ($data['type'] == 'price' && $minPrice != $maxPrice) { ?>
+                        <?php } elseif ($data['type'] == 'price') { ?>
                             <?= t($data['label'] ? $data['label']  : t('Price')); ?>
                         <?php } ?>
                     </h3>
@@ -94,6 +94,8 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                 });
 
                             </script>
+                        <?php } else { ?>
+                            <?php echo StorePrice::format($minPrice); ?>
                         <?php } ?>
 
                         <?php } ?>
