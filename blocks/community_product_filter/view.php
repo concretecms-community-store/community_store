@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 $csm = $app->make('cs/helper/multilingual');
+
 ?>
 
 <div class="store-product-filter-block" >
@@ -17,7 +19,7 @@ $csm = $app->make('cs/helper/multilingual');
                     <h3 class="store-product-filter-block-option-title">
                     <?php if ($data['type'] == 'attr') { ?>
                         <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
-                    <?php } elseif ($data['type'] == 'price' && $minPrice != $maxPrice) { ?>
+                    <?php } elseif ($data['type'] == 'price') { ?>
                       <?= t($data['label'] ? $data['label']  : t('Price')); ?>
                     <?php } ?>
                     </h3>
@@ -97,6 +99,8 @@ $csm = $app->make('cs/helper/multilingual');
                             });
 
                         </script>
+                    <?php } else { ?>
+                        <?php echo StorePrice::format($minPrice); ?>
                     <?php } ?>
 
                     <?php } ?>
