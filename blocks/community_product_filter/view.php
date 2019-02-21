@@ -4,16 +4,17 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="store-product-filter-block" >
 
     <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-'. $bID .'"' : ''); ?>>
-
         <?php
         if (!empty($filterData)) {
-            foreach ($filterData as $akhandle => $data) { ?>
+            foreach ($filterData as $akhandle => $data) {
+                $ak = $attributes[$akhandle];
+                ?>
                 <div class="form-group">
 
                     <h3 class="store-product-filter-block-option-title">
                         <?php if ($data['type'] == 'attr') { ?>
                             <?= t($data['label'] ? $data['label'] : $ak->getAttributeKeyName()); ?>
-                        <?php } elseif ($data['type'] == 'price') { ?>
+                        <?php } elseif ($data['type'] == 'price' && $minPrice != $maxPrice) { ?>
                             <?= t($data['label'] ? $data['label']  : t('Price')); ?>
                         <?php } ?>
                     </h3>
