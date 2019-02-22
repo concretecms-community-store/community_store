@@ -269,7 +269,8 @@ $localecount = count($locales);
                 <td>
                     <input type="text" class="form-control"
                            name="translation[<?= $lp->getLocale(); ?>][text][productQuantityLabel]"
-                           value="<?= $csm->t(null, 'productQuantityLabel', $product->getID(), false, $lp->getLocale()); ?>"/>
+                           value="<?= $csm->t(null, 'productQuantityLabel', $product->getID(), false, $lp->getLocale(), false); ?>"
+                            placeholder="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale()); ?>" />
                 </td>
 
             </tr>
@@ -282,6 +283,8 @@ $localecount = count($locales);
         <legend><?= t('Options and Option Values'); ?></legend>
         <p class="help-block"><?= t('Translations entered below will override common translations for this product only. It is recommended to enter common translations first.'); ?></p>
 
+        <?php $productOptions = $product->getOptions(); ?>
+        <?php if (count($productOptions) > 0) { ?>
         <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Context'); ?></th>
@@ -353,6 +356,9 @@ $localecount = count($locales);
         <?php } ?>
 
     </table>
+        <?php } else { ?>
+        <p class="alert alert-info"><?= t('No options have been created for this product');?></p>
+        <?php } ?>
     </fieldset>
 
 

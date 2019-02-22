@@ -98,9 +98,63 @@ $localecount = count($locales);
     </fieldset>
 
 
+    <fieldset>
+        <legend><?= t('Product Quantity Labels'); ?></legend>
+
+
+        <?php if (!empty($quantityLabels)) { ?>
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php
+
+                foreach ($quantityLabels as $quantityLabel) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Quantity Label'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($quantityLabel); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][productQuantityLabel][<?= h($quantityLabel); ?>]"
+                                       value="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale(), false); ?>"/>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+                <?php }
+                ?>
+
+            </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t("No products have quantity labels entered"); ?></p>
+        <?php } ?>
+
+    </fieldset>
+
 
     <fieldset>
-        <legend><?= t('Attribute Names and Values'); ?></legend>
+        <legend><?= t('Product Attribute Names and Values'); ?></legend>
 
         <?php if (!empty($attrList)) { ?>
             <table class="table table-bordered">
@@ -186,8 +240,6 @@ $localecount = count($locales);
         <?php } ?>
 
     </fieldset>
-
-
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

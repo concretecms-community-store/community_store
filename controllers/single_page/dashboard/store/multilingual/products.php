@@ -184,7 +184,6 @@ class Products extends DashboardSitePageController
 
                             if (!empty($t)) {
                                 $t = $t[0];
-
                                 if (!$text)  {
                                     $t->delete();
                                 }

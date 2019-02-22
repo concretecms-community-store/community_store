@@ -181,15 +181,15 @@ $csm = \Core::make('cs/helper/multilingual');
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label><br />
+                                                    <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
                                                      if ($ak->isRequired()) {
-                                                         echo str_replace('<input', '<input required ', $fieldoutput);
-                                                     } else {
-                                                        echo $fieldoutput;
+                                                         $fieldoutput = str_replace('<input', '<input required ', $fieldoutput);
+                                                         $fieldoutput = str_replace('<select', '<select required ', $fieldoutput);
                                                      }
-                                                      ?>
+                                                     echo $fieldoutput;
+                                                     ?>
                                                 </div>
                                             </div>
                                         </div>

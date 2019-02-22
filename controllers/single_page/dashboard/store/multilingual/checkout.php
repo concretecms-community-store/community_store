@@ -8,6 +8,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 
 
 class Checkout extends DashboardSitePageController
@@ -18,6 +19,9 @@ class Checkout extends DashboardSitePageController
         $this->set("shippingMethods", StoreShippingMethod::getMethods());
         $this->set("taxRates", StoreTax::getTaxRates());
         $this->set("discountRules", DiscountRule::getRules());
+
+        $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');
+        $this->set('orderAttributes', $orderAttributes);
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
@@ -54,21 +58,24 @@ class Checkout extends DashboardSitePageController
                     foreach ($langs as $locale => $types) {
                         foreach ($types as $type => $items) {
                             foreach ($items as $key => $text) {
-                                if ($text) {
-                                    $qb = $this->entityManager->createQueryBuilder();
-                                    $t = $qb->select('t')
-                                        ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
-                                        ->where('t.entityType = :type')->setParameter('type', $key)
-                                        ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
-                                        ->andWhere('t.entityID = :entid')->setParameter('entid', $paymentMethodID)
-                                        ->setMaxResults(1)->getQuery()->getResult();
+                                $qb = $this->entityManager->createQueryBuilder();
+                                $t = $qb->select('t')
+                                    ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
+                                    ->where('t.entityType = :type')->setParameter('type', $key)
+                                    ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
+                                    ->andWhere('t.entityID = :entid')->setParameter('entid', $paymentMethodID)
+                                    ->setMaxResults(1)->getQuery()->getResult();
 
-                                    if (!empty($t)) {
-                                        $t = $t[0];
-                                    } else {
-                                        $t = new Translation();
+                                if (!empty($t)) {
+                                    $t = $t[0];
+                                    if (!$text)  {
+                                        $t->delete();
                                     }
+                                } else {
+                                    $t = new Translation();
+                                }
 
+                                if ($text) {
                                     $t->setEntityID($paymentMethodID);
                                     $t->setEntityType($key);
 

@@ -216,7 +216,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ($qtylabel) {
                                     ?>
-                                    <div class="input-group-addon"><?= $csm->t($product->getQtyLabel(), 'productQtyLabel', $product->getID()) ?></div>
+                                    <div class="input-group-addon"><?= $qtylabel; ?></div>
                                 </div>
                             <?php
                             } ?>

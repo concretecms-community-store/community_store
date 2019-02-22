@@ -280,6 +280,60 @@ $localecount = count($locales);
 
     </fieldset>
 
+    <fieldset>
+        <legend><?= t('Order Attribute Names'); ?></legend>
+
+        <?php if (!empty($orderAttributes)) { ?>
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php
+
+                foreach ($orderAttributes as $attr) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Attribute Name'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[orderAttributes][<?= $attr->getAttributeKeyID(); ?>][<?= $lp->getLocale(); ?>][text][orderAttributeName]"
+                                       value="<?= $csm->t(null, 'orderAttributeName', false, $attr->getAttributeKeyID(), $lp->getLocale(), false); ?>"/>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+
+
+                <?php }
+                ?>
+            </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
+        <?php } ?>
+
+    </fieldset>
+
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

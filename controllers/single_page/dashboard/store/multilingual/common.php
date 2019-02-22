@@ -90,6 +90,16 @@ class Common extends DashboardSitePageController
 
 
         $this->set('attrOptions',$attrOptions);
+
+        $quantityLabels = [];
+        $quantityLabelsData =  $db->fetchAll('SELECT distinct pQtyLabel FROM CommunityStoreProducts where pQtyLabel <> ""');
+
+        foreach($quantityLabelsData as $label) {
+            $quantityLabels[] = $label['pQtyLabel'];
+        }
+
+        $this->set('quantityLabels',$quantityLabels);
+
     }
 
     private function getLocales()
@@ -113,36 +123,37 @@ class Common extends DashboardSitePageController
     public function save()
     {
         if ($this->post() && $this->token->validate('community_store')) {
-
             $translations = $this->post('translation');
-
-           // dd($translations);
 
             foreach ($translations['options'] as $locale => $types) {
                 foreach ($types as $type => $items) {
                     foreach ($items as $key => $texts) {
                         foreach ($texts as $original => $text) {
+                            $qb = $this->entityManager->createQueryBuilder();
+                            $t = $qb->select('t')
+                                ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
+                                ->where('t.entityType = :type')->setParameter('type', $key)
+                                ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
+                                ->andWhere('t.pID is null');
+
+                            if ($key == 'productAttributeName') {
+                                $t->andWhere('t.entityID = :entityID')->setParameter('entityID', $original);
+                            } else {
+                                $t->andWhere('t.originalText = :originalText')->setParameter('originalText', $original);
+                            }
+
+                            $t = $t->setMaxResults(1)->getQuery()->getResult();
+
+                            if (!empty($t)) {
+                                $t = $t[0];
+                                if (!$text)  {
+                                    $t->delete();
+                                }
+                            } else {
+                                $t = new Translation();
+                            }
+
                             if ($text) {
-                                $qb = $this->entityManager->createQueryBuilder();
-                                $t = $qb->select('t')
-                                    ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
-                                    ->where('t.entityType = :type')->setParameter('type', $key)
-                                    ->andWhere('t.locale = :locale')->setParameter('locale', $locale);
-
-                                if ($key == 'productAttributeName') {
-                                    $t->andWhere('t.entityID = :entityID')->setParameter('entityID', $original);
-                                } else {
-                                    $t->andWhere('t.originalText = :originalText')->setParameter('originalText', $original);
-                                }
-
-                                $t = $t->setMaxResults(1)->getQuery()->getResult();
-
-                                if (!empty($t)) {
-                                    $t = $t[0];
-                                } else {
-                                    $t = new Translation();
-                                }
-
                                 $t->setEntityType($key);
 
                                 if ($type == 'text') {
