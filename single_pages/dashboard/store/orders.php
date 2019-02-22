@@ -318,6 +318,12 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
 
         <?php } ?>
 
+        <?php $locale = $order->getLocale();
+        if ($locale) { ?>
+            <br /><p><strong><?= t("Order Locale") ?>: </strong><?= \Punic\Language::getName($locale) ?></p>
+        <?php } ?>
+
+        
     </fieldset>
     <br/>
 
