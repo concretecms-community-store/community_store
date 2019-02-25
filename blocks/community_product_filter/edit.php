@@ -340,7 +340,8 @@ if ($relatedProduct) {
 
     });
 
-    $(document).on('click', '.attremove', function() {
+    $(document).on('click', '.attremove', function(e) {
+        e.preventDefault();
         var element = $(this).closest('li');
         var id = element.data('id');
         $("#availableatts").find("[data-id='" + id + "']").removeClass('hidden');
