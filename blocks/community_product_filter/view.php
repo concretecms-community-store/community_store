@@ -56,9 +56,27 @@ $csm = $app->make('cs/helper/multilingual');
                                 <input type="checkbox" data-matching="<?= $matchingType; ?>"
                                     <?= ($disabled ? 'disabled="disabled"' : ''); ?>
                                     <?= ($checked ? 'checked="checked"' : ''); ?>
-
                                        value="<?= h($option); ?>" name="<?= $akhandle; ?>[]"/>
-                                <span class="store-product-filter-block-option"><?= h($csm->t($option, 'productAttributeValue')); ?>
+                                <span class="store-product-filter-block-option">
+                                    <?php
+                                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
+                                        // if dealing with a boolean use the label if exists
+                                        $checkboxSettings = $ak->getAttributeKeySettings();
+                                        $checkboxLabel = false;
+
+                                        // I believe that method might not be availablein earlier versions of C5
+                                        if (method_exists($checkboxSettings, 'getCheckboxLabel')) {
+                                            $checkboxLabel = $checkboxSettings->getCheckboxLabel();
+                                        }
+                                        
+                                        $checkboxLabel = empty($checkboxLabel) ? $option : $checkboxLabel;
+                                        
+                                        echo h($csm->t($checkboxLabel, 'productAttributeLabel'));
+                                    } else {
+                                        echo h($csm->t($option, 'productAttributeValue'));
+                                    }
+                                    
+                                    ?>
                                     <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
                                     <span class="store-product-filter-block-count">(<?= $count; ?>)</span>
                                     <?php } ?>

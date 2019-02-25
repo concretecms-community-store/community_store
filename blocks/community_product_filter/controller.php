@@ -18,7 +18,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
-    protected $attTypes = ['select', 'text'];
+    protected $attTypes = ['select', 'text', 'boolean'];
 
 
     public function getBlockTypeDescription()
