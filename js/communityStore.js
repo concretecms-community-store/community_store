@@ -417,7 +417,7 @@ var communityStore = {
 
         checkboxes.each(function(index, field) {
             var name = field.name.replace('[]', '');
-            var value = field.value;
+            var value = encodeURIComponent(field.value);
             var matchtype = field.getAttribute('data-matching');
 
             if (name in search) {
@@ -431,7 +431,7 @@ var communityStore = {
         var strings = [];
 
         $.each( search, function( key, value ) {
-            strings.push(key + '=' + value.join(matchtypes[key]) );
+            strings.push(encodeURIComponent(key) + '=' + value.join(matchtypes[key]));
         });
 
         var price = filterform.find("[name='price']");

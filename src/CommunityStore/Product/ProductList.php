@@ -143,7 +143,7 @@ class ProductList extends AttributedItemList
             foreach($values as $val) {
                 if ($val) {
                     $searchparams[$handle]['type'] = $type;
-                    $searchparams[$handle]['values'][] = $val;
+                    $searchparams[$handle]['values'][] = urldecode($val);
                 }
             }
         }
