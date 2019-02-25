@@ -2,8 +2,7 @@
 namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
 use Concrete\Core\Block\BlockController;
-use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
@@ -59,6 +58,7 @@ class Controller extends BlockController
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
+        $this->set('app', $this->app);
     }
 
     public function registerViewAssets($outputContent = '')
@@ -83,7 +83,7 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = Core::make("helper/validation/error");
+        $e = $this->app->make("helper/validation/error");
         if ("" == $args['cartLabel']) {
             $e->add(t('Cart Label must be set'));
         }

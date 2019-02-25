@@ -2,8 +2,6 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Package;
-use Core;
 use Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;

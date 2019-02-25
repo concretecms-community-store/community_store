@@ -5,11 +5,11 @@
     <div class="col-xs-6">
 
         <fieldset>
-            <legend><?= t('Products'); ?></legend>
+            <legend><?php echo t('Products'); ?></legend>
 
             <div class="form-group">
-                <?= $form->label('filter', t('List Products')); ?>
-                <?= $form->select('filter', [
+                <?php echo $form->label('filter', t('List Products')); ?>
+                <?php echo $form->select('filter', [
                     'all' => '** ' . t("All") . ' **',
                     'current' => t('Under current page'),
                     'current_children' => t('Under current page and child pages'),
@@ -22,20 +22,21 @@
 
             <div class="form-group" id="pageselector">
                 <div
-                    class="form-group" <?= ('page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'); ?> >
+                    class="form-group" <?php echo 'page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'; ?> >
                     <?php
-                    $ps = Core::make('helper/form/page_selector');
+                    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+                    $ps = $app->make('helper/form/page_selector');
                     echo $ps->selectPage('filterCID', ($filterCID > 0 ? $filterCID : false)); ?>
                 </div>
             </div>
 
-            <div class="form-group" id="product-search" <?= ('related_product' == $filter ? '' : 'style="display: none"'); ?>>
-                <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?= t('Search for a Product'); ?>" />
+            <div class="form-group" id="product-search" <?php echo 'related_product' == $filter ? '' : 'style="display: none"'; ?>>
+                <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?php echo t('Search for a Product'); ?>" />
             </div>
 
             <div class="form-group">
-                <?= $form->label('sortOrder', t('Sort Order')); ?>
-                <?= $form->select('sortOrder', [
+                <?php echo $form->label('sortOrder', t('Sort Order')); ?>
+                <?php echo $form->select('sortOrder', [
                     'alpha' => t("Alphabetical"),
                     'alpha_desc' => t("Alphabetical, reversed"),
                     'date' => t('Date Added'),
@@ -51,15 +52,15 @@
 
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showSortOption', 1, $showSortOption); ?>
-                    <?= t('Display Sort Option'); ?>
+                    <?php echo $form->checkbox('showSortOption', 1, $showSortOption); ?>
+                    <?php echo t('Display Sort Option'); ?>
                 </label>
             </div>
 
         </fieldset>
 
         <fieldset>
-            <legend><?= t('Filtering'); ?></legend>
+            <legend><?php echo t('Filtering'); ?></legend>
 
             <?php
             foreach ($grouplist as $productgroup) {
@@ -71,15 +72,15 @@
                 ?>
 
                 <div class="form-group">
-                    <?= $form->label('gID', t('Filter by Product Groups')); ?>
+                    <?php echo $form->label('gID', t('Filter by Product Groups')); ?>
 
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <select multiple="multiple" name="filtergroups[]" id="groups-select"
-                                class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Groups'); ?>">
+                                class="existing-select2 select2-select" autocomplete="off" style="width: 100%" placeholder="<?php echo t('Select Product Groups'); ?>">
                             <?php foreach ($productgroups as $pgkey => $pglabel) {
                     ?>
                                 <option
-                                    value="<?= $pgkey; ?>" <?= (in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''); ?>><?= $pglabel; ?></option>
+                                    value="<?php echo $pgkey; ?>" <?php echo in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''; ?>><?php echo $pglabel; ?></option>
                             <?php
                 } ?>
                         </select>
@@ -88,8 +89,8 @@
 
 
                 <div class="form-group">
-                    <?= $form->label('groupMatchAny', t('Matching')); ?>
-                    <?= $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected')], $groupMatchAny); ?>
+                    <?php echo $form->label('groupMatchAny', t('Matching')); ?>
+                    <?php echo $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected')], $groupMatchAny); ?>
                 </div>
 
             <?php
@@ -97,20 +98,20 @@
 
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
-                    <?= t('Include Featured Only'); ?>
+                    <?php echo $form->checkbox('showFeatured', 1, $showFeatured); ?>
+                    <?php echo t('Include Featured Only'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showSale', 1, $showSale); ?>
-                    <?= t('Include On Sale Only'); ?>
+                    <?php echo $form->checkbox('showSale', 1, $showSale); ?>
+                    <?php echo t('Include On Sale Only'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showOutOfStock', 1, $showOutOfStock); ?>
-                    <?= t('Include Out of Stock Products'); ?>
+                    <?php echo $form->checkbox('showOutOfStock', 1, $showOutOfStock); ?>
+                    <?php echo t('Include Out of Stock Products'); ?>
                 </label>
             </div>
         </fieldset>
@@ -119,60 +120,60 @@
     </div>
     <div class="col-xs-6">
         <fieldset>
-            <legend><?= t('Pagination and Display Options'); ?></legend>
+            <legend><?php echo t('Pagination and Display Options'); ?></legend>
 
             <div class="form-group">
-                <?= $form->label('maxProducts', t('Number of Products to Display')); ?>
-                <?= $form->number('maxProducts', $maxProducts, ['min' => '0', 'step' => '1', 'placeholder' => t('leave blank or 0 to list all matching products')]); ?>
+                <?php echo $form->label('maxProducts', t('Number of Products to Display')); ?>
+                <?php echo $form->number('maxProducts', $maxProducts, ['min' => '0', 'step' => '1', 'placeholder' => t('leave blank or 0 to list all matching products')]); ?>
             </div>
 
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showPagination', 1, $showPagination); ?>
-                    <?= t('Display pagination interface if more products are available than are displayed.'); ?>
+                    <?php echo $form->checkbox('showPagination', 1, $showPagination); ?>
+                    <?php echo t('Display pagination interface if more products are available than are displayed.'); ?>
                 </label>
             </div>
 
             <div class="form-group">
-                <?= $form->label('productsPerRow', t('Products per Row')); ?>
-                <?= $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
+                <?php echo $form->label('productsPerRow', t('Products per Row')); ?>
+                <?php echo $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
             </div>
             <div class="form-group">
-                <?= $form->label('noProductsMessage', t("Display text when no products")); ?>
-                <?= $form->text('noProductsMessage', $noProductsMessage); ?>
+                <?php echo $form->label('noProductsMessage', t("Display text when no products")); ?>
+                <?php echo $form->text('noProductsMessage', $noProductsMessage); ?>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showName', 1, $showName); ?>
-                    <?= t('Display Name'); ?>
+                    <?php echo $form->checkbox('showName', 1, $showName); ?>
+                    <?php echo t('Display Name'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showPrice', 1, $showPrice); ?>
-                    <?= t('Display Price'); ?>
+                    <?php echo $form->checkbox('showPrice', 1, $showPrice); ?>
+                    <?php echo t('Display Price'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                <?= $form->checkbox('showAddToCart', 1, $showAddToCart); ?>
-                <?= t('Display Add To Cart Button'); ?>
+                <?php echo $form->checkbox('showAddToCart', 1, $showAddToCart); ?>
+                <?php echo t('Display Add To Cart Button'); ?>
                 </label>
             </div>
-            <div class="form-group <?= ($showAddToCart ? '' : 'hidden'); ?>" id="addToCartTextField">
-                <?= $form->label('btnText', t("Add To Cart Button Text")); ?>
-                <?= $form->text('btnText', $btnText, ['placeholder' => t("Defaults to: Add To Cart")]); ?>
+            <div class="form-group <?php echo $showAddToCart ? '' : 'hidden'; ?>" id="addToCartTextField">
+                <?php echo $form->label('btnText', t("Add To Cart Button Text")); ?>
+                <?php echo $form->text('btnText', $btnText, ['placeholder' => t("Defaults to: Add To Cart")]); ?>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
-                    <?= t('Display Quantity Selector'); ?>
+                    <?php echo $form->checkbox('showQuantity', 1, $showQuantity); ?>
+                    <?php echo t('Display Quantity Selector'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showDescription', 1, $showDescription); ?>
-                    <?= t('Display Product Description'); ?>
+                    <?php echo $form->checkbox('showDescription', 1, $showDescription); ?>
+                    <?php echo t('Display Product Description'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
@@ -180,19 +181,19 @@
                     <?php if (0 != $showQuickViewLink) {
                 $showQuickViewLink = 1;
             } ?>
-                    <?= $form->checkbox('showQuickViewLink', 1, $showQuickViewLink); ?>
-                    <?= t('Display Quickview Link (Modal Window)'); ?>
+                    <?php echo $form->checkbox('showQuickViewLink', 1, $showQuickViewLink); ?>
+                    <?php echo t('Display Quickview Link (Modal Window)'); ?>
                 </label>
             </div>
             <div class="form-group checkbox">
                 <label>
-                    <?= $form->checkbox('showPageLink', 1, $showPageLink); ?>
-                    <?= t('Display Link To Product Page'); ?>
+                    <?php echo $form->checkbox('showPageLink', 1, $showPageLink); ?>
+                    <?php echo t('Display Link To Product Page'); ?>
                 </label>
             </div>
-            <div class="form-group <?= ($showPageLink ? '' : 'hidden'); ?>" id="pageLinkTextField">
-                <?= $form->label('pageLinkText', t("Link To Product Page Text")); ?>
-                <?= $form->text('pageLinkText', $pageLinkText, ['placeholder' => t("Defaults to: More Details")]); ?>
+            <div class="form-group <?php echo $showPageLink ? '' : 'hidden'; ?>" id="pageLinkTextField">
+                <?php echo $form->label('pageLinkText', t("Link To Product Page Text")); ?>
+                <?php echo $form->text('pageLinkText', $pageLinkText, ['placeholder' => t("Defaults to: More Details")]); ?>
             </div>
         </fieldset>
     </div>
@@ -212,7 +213,7 @@ if ($relatedProduct) {
         $(function(){
             $("#product-select").select2({
                 ajax: {
-                    url: "<?= \URL::to('/productfinder'); ?>",
+                    url: "<?php echo \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
                     dataType: 'json',
                     quietMillis: 250,
                     data: function (term, page) {
@@ -236,7 +237,7 @@ if ($relatedProduct) {
                 },
                 minimumInputLength: 2,
                 initSelection: function(element, callback) {
-                    callback({text:<?= json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
+                    callback({text:<?php echo json_encode($relatedProductName); ?>,id:'<?php echo $relatedPID; ?>'});
                 }
             }).select2('val', []);
 
@@ -309,6 +310,3 @@ if ($relatedProduct) {
         });
     });
 </script>
-
-
-

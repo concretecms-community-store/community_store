@@ -9,8 +9,10 @@ use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Support\Facade\Url;
-use Core;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Page;
 
 class Controller extends Package
 {
@@ -80,8 +82,8 @@ class Controller extends Package
         }
 
         Installer::upgrade($pkg);
-        $cms = Core::make('app');
-        $cms->clearCaches();
+        // $cms = Core::make('app');
+        $this->app->clearCaches();
     }
 
     public function testForInstall($testForAlreadyInstalled = true)
@@ -96,7 +98,7 @@ class Controller extends Package
             // and I check both. I tried to set a variable instead of saving it in config
             // but for some reason it didn't work
 
-            \Config::save('cs.pkgversion', $community_store->getPackageVersion());
+            Config::save('cs.pkgversion', $community_store->getPackageVersion());
         }
 
         return parent::testForInstall($testForAlreadyInstalled);
@@ -149,9 +151,9 @@ class Controller extends Package
             ]
         );
 
-        if (Core::make('app')->isRunThroughCommandLineInterface()) {
+        if ($this->app->isRunThroughCommandLineInterface()) {
             try {
-                $app = Core::make('console');
+                $app = $this->app->make('console');
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
             } catch (Exception $e) {
             }
@@ -178,7 +180,7 @@ class Controller extends Package
         $list->filterByPageTypeHandle('store_product');
         $pages = $list->getResults();
 
-        $pageType = \PageType::getByHandle('page');
+        $pageType = PageType::getByHandle('page');
 
         if ($pageType) {
             foreach ($pages as $page) {
@@ -191,7 +193,7 @@ class Controller extends Package
 
     public static function returnHeaderJS()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
         if ($al !== null) {
@@ -200,10 +202,10 @@ class Controller extends Package
 
         return "
         <script type=\"text/javascript\">
-            var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
-            var CARTURL = '" . rtrim(URL::to($langpath . '/cart'), '/') . "';
-            var TRAILINGSLASH = '" . ((bool) \Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
-            var CHECKOUTURL = '" . rtrim(URL::to($langpath . '/checkout'), '/') . "';
+            var PRODUCTMODAL = '" . Url::to('/productmodal') . "';
+            var CARTURL = '" . rtrim(Url::to($langpath . '/cart'), '/') . "';
+            var TRAILINGSLASH = '" . ((bool) Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
+            var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";

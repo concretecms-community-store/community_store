@@ -8,14 +8,14 @@
         <?php if ($showSignIn) {
             $u = new User();
             if (!$u->isLoggedIn()) {
-                echo '<a href="' . \URL::to('/login') . '">' . t("Sign In") . '</a>';
+                echo '<a href="' . \Concrete\Core\Support\Facade\Url::to('/login') . '">' . t("Sign In") . '</a>';
             }
         } ?>
         <?php if ($showGreeting) {
             $u = new User();
             if ($u->isLoggedIn()) {
                 $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
-                $ui = UserInfo::getByID($u->getUserID());
+                $ui = $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByID($u->getUserID());
                 if ($ui && $firstname = $ui->getAttribute('billing_first_name')) {
                     $msg = '<span class="store-welcome-message">' . t("Welcome back, ") . '<span class="first-name">' . $firstname . '</span></span>';
                 }
@@ -53,7 +53,7 @@
             <?php
         } else {
             ?>
-                <a href="<?= \URL::to('/cart'); ?>" class="store-cart-link"><?= $cartLabel; ?></a>
+                <a href="<?= \Concrete\Core\Support\Facade\Url::to('/cart'); ?>" class="store-cart-link"><?= $cartLabel; ?></a>
             <?php
         } ?>
         </p>
@@ -65,7 +65,7 @@
         <?php if ($showCheckout) {
             ?>
         <p  class="store-utility-links-checkout-link">
-            <a href="<?= \URL::to('/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
+            <a href="<?= \Concrete\Core\Support\Facade\Url::to('/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
         </p>
         <?php
         } ?>

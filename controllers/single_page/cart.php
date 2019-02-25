@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use PageController;
-use Config;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -10,6 +10,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\View\View;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
@@ -17,7 +20,7 @@ class Cart extends PageController
 {
     public function view($action = '')
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
         if ($al !== null) {
@@ -25,7 +28,7 @@ class Cart extends PageController
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
-            return \Redirect::to("/");
+            return Redirect::to("/");
         }
 
         $codeerror = false;
@@ -100,7 +103,7 @@ class Cart extends PageController
         if (StoreCart::isShippable()) {
             $this->set('shippingEnabled', true);
 
-            if (\Session::get('community_store.smID')) {
+            if (Session::get('community_store.smID')) {
                 $this->set('shippingtotal', $totals['shippingTotal']);
             } else {
                 $this->set('shippingtotal', false);
@@ -223,7 +226,7 @@ class Cart extends PageController
 
     public function getmodal()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
         if ($al !== null) {
@@ -264,7 +267,7 @@ class Cart extends PageController
             $formattedtaxes[] = $tax;
         }
 
-        if (!\Session::get('community_store.smID')) {
+        if (!Session::get('community_store.smID')) {
             $shippingTotalRaw = false;
         } else {
             $shippingTotalRaw = $shippingTotal;

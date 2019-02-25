@@ -79,7 +79,7 @@ $csm = $app->make('cs/helper/multilingual');
                                    data-to="<?= $maxPriceSelected; ?>"
                                    data-input-values-separator="-"
                                    data-skin="round"
-                                   data-prefix="<?= \Config::get('community_store.symbol'); ?>"
+                                   data-prefix="<?= \Concrete\Core\Support\Facade\Config::get('community_store.symbol'); ?>"
                                    data-force-edges="true"
                             />
 

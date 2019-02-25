@@ -8,7 +8,7 @@ $legacyThumbProps->crop = true;
 $communityStoreImageHelper = $app->make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
 $csm = $app->make('cs/helper/multilingual');
 
-$c = Page::getCurrentPage();
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 
 
 $columnClass = 'col-md-12';
@@ -51,7 +51,7 @@ if (6 == $productsPerRow) {
         <script type="text/javascript">
             $(function () {
                 $('#sort<?= $bID; ?>').change(function () {
-                    var sortstring = '<?= \Core::make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
+                    var sortstring = '<?= $app->make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
                     window.location.href = sortstring.replace('%sort%', $(this).val());
                 });
             });
@@ -116,7 +116,7 @@ if (6 == $productsPerRow) {
                             <?php
                         } elseif ($showPageLink && $productPage) {
                             ?>
-                            <a href="<?= \URL::to(Page::getByID($product->getPageID())); ?>">
+                            <a href="<?= \Concrete\Core\Support\Facade\Url::to(Page::getByID($product->getPageID())); ?>">
                                 <img src="<?= $thumb->src; ?>" class="img-responsive">
                             </a>
                             <?php
@@ -202,7 +202,7 @@ if (6 == $productsPerRow) {
                 } ?>
                 <?php if ($showPageLink && $productPage) {
                     ?>
-                    <p class="store-btn-more-details-container"><a href="<?= \URL::to($productPage); ?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
+                    <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
                     <?php
                 } ?>
                 <?php if ($showAddToCart) {
