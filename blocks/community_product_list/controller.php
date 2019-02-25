@@ -162,7 +162,7 @@ class Controller extends BlockController
 
         $request = \Request::getInstance();
 
-        if ($request->getQueryString()) {
+        if ($request->getQueryString() && $this->enableExternalFiltering) {
             $products->processUrlFilters($request);
         }
 
@@ -253,6 +253,7 @@ class Controller extends BlockController
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['enableExternalFiltering'] = isset($args['enableExternalFiltering']) ? 1 : 0;
         $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;

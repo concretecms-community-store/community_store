@@ -97,6 +97,12 @@
 
             <div class="form-group checkbox">
                 <label>
+                    <?= $form->checkbox('enableExternalFiltering', 1, $enableExternalFiltering); ?>
+                    <?= t('Enable Other Blocks to Filter This Product List'); ?>
+                </label>
+            </div>
+            <div class="form-group checkbox">
+                <label>
                     <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
                     <?= t('Include Featured Only'); ?>
                 </label>

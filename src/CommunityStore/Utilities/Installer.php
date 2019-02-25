@@ -283,6 +283,7 @@ class Installer
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
 
         $orderCustSet = AttributeSet::getByHandle('order_customer');
@@ -356,6 +357,7 @@ class Installer
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
     }
 
@@ -403,12 +405,14 @@ class Installer
 
     public static function upgrade($pkg)
     {
+        // trigger a reinstall to add the select attribute type to the product category
+        self::installProductAttributes($pkg);
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
         self::installSinglePages($pkg);
-        
+
         Localization::clearCache();
     }
 
@@ -425,12 +429,9 @@ class Installer
         $installedVersion = $db->fetchColumn("SELECT pkgVersion from Packages WHERE pkgHandle=?", ['community_store']);
         $installedVersionFromConfig = \Config::get('cs.pkgversion');
         $community_store = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        if (
-            $community_store
-            && (
-            ($installedVersion && version_compare($installedVersion, '2.0', '<'))
-            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
-            )
+        if ($community_store
+            && (($installedVersion && version_compare($installedVersion, '2.0', '<'))
+            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<')))
         ) {
             $db->query("SET foreign_key_checks = 0");
 

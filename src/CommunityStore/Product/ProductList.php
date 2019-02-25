@@ -120,9 +120,9 @@ class ProductList extends AttributedItemList
 
         $params = explode('&', $querystring);
 
-        $searchparams = array();
+        $searchparams = [];
 
-        foreach($params as $param) {
+        foreach ($params as $param) {
             $values = explode('=', $param);
             $handle = str_replace('%5B%5D', '', $values[0]);
             $handle = $service->sanitizeString($handle);
@@ -140,7 +140,7 @@ class ProductList extends AttributedItemList
             $value = $service->sanitizeString($value);
             $values = explode('%2C', $value);
 
-            foreach($values as $val) {
+            foreach ($values as $val) {
                 if ($val) {
                     $searchparams[$handle]['type'] = $type;
                     $searchparams[$handle]['values'][] = $val;
@@ -151,9 +151,9 @@ class ProductList extends AttributedItemList
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
-        foreach ($searchparams as $handle=>$searchvalue) {
+        foreach ($searchparams as $handle => $searchvalue) {
             $type = $searchvalue['type'];
-            $value =  $searchvalue['values'];
+            $value = $searchvalue['values'];
 
             if ('price' == $handle) {
                 $this->filterByPrice($value[0]);
@@ -162,17 +162,19 @@ class ProductList extends AttributedItemList
 
                 if (is_object($ak)) {
                     $value = array_filter($value);
-                    if ($type == 'and') {
-                        foreach ($value as $searchterm) {
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . $searchterm . '"');
-                        }
+                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = ' . $value[0]);
                     } else {
-                        $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value). '"');
+                        if ('and' == $type) {
+                            foreach ($value as $searchterm) {
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . $searchterm . '"');
+                            }
+                        } else {
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                        }
                     }
                 }
             }
-
-
         }
     }
 
@@ -350,17 +352,17 @@ class ProductList extends AttributedItemList
         return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
     }
 
-    public function getResultIDs() {
+    public function getResultIDs()
+    {
         $query = $this->deliverQueryObject();
         $values = $query->execute()->fetchAll();
 
-        $productids = array();
+        $productids = [];
 
-        foreach($values as $val) {
+        foreach ($values as $val) {
             $productids[] = $val['pID'];
         }
 
         return $productids;
     }
-
 }

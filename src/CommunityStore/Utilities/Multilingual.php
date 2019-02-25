@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Core\Localization\Localization;
@@ -24,7 +24,7 @@ class Multilingual
     }
 
     /**
-     * Translate text using Community Store's translation system
+     * Translate text using Community Store's translation system.
      *
      * @param string $text The text to be translated.
      * @param string $productID The ID of the product (if applicable).
@@ -41,6 +41,7 @@ class Multilingual
      *  productDetails
      *  productQuantityLabel
      *  productAttributeName
+     *  productAttributeLabel
      *  productAttributeValue
      *  optionName
      *  optionValue
@@ -50,8 +51,7 @@ class Multilingual
      *  paymentDisplayName
      *  paymentButtonLabel
      */
-
-    function t($text, $context = false, $productID = false, $id = false, $forcedLocale = false, $useCommon = true)
+    public function t($text, $context = false, $productID = false, $id = false, $forcedLocale = false, $useCommon = true)
     {
         $locale = $this->localization->getLocale();
 
@@ -59,7 +59,6 @@ class Multilingual
         $defaultSourceLocale = $siteConfig->get('multilingual.default_source_locale');
 
         if ($locale != $defaultSourceLocale || $forcedLocale) {
-
             $qb = $this->entityManager->createQueryBuilder();
 
             $query = $qb->select('t')
@@ -70,10 +69,10 @@ class Multilingual
             if ($id) {
                 if ($useCommon) {
                     $query->andWhere('(t.entityID = :id or (t.entityID is null and t.originalText = :text))')->setParameter('id', $id)->setParameter('text', $text);
-                }  else {
+                } else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } elseif ($context == 'productAttributeValue' || $context == 'optionName' ||  $context == 'optionValue') {
+            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionValue' == $context) {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 
@@ -102,7 +101,6 @@ class Multilingual
             $result = $query->getQuery()->getResult();
 
             if ($result && $result[0]) {
-
                 if (in_array($context, $this->longTextTypes)) {
                     $translation = $result[0]->getExtendedText();
                 } else {
@@ -115,11 +113,10 @@ class Multilingual
             }
         }
 
-        if (!$forcedLocale){
+        if (!$forcedLocale) {
             return $text;
         } else {
             return '';
         }
     }
-
 }
