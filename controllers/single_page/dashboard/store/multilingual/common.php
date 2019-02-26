@@ -102,18 +102,18 @@ class Common extends DashboardSitePageController
 
     }
 
-    private function getLocales()
-    {
+    private function getLocales() {
         $site = $this->getSite();
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
-        $localePages = ['additional' => []];
-        $defaultSourceLocale = $site->getConfigRepository()->get('multilingual.default_source_locale');
+        $locales = $site->getLocales();
 
-        foreach ($pages as $p) {
-            if ($defaultSourceLocale == $p->getLocale()) {
-                $localePages['default'] = $p;
+        $localePages = array('additional'=>array());
+
+        foreach($locales as $locale) {
+            if ($locale->getIsDefault()) {
+                $localePages['default'] = $locale;
             } else {
-                $localePages['additional'][] = $p;
+                $localePages['additional'][] = $locale;
             }
         }
 
