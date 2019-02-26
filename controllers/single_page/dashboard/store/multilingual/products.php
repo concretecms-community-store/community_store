@@ -102,15 +102,17 @@ class Products extends DashboardSitePageController
 
         if ($attrHandles) {
             $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes where pID = ?',[$pID]);
-        }
 
-        foreach($attributedata as $row) {
-            foreach ($row as $field => $data) {
-                $lines = explode("\n", trim($data));
+            if (!empty($attributedata)) {
+                foreach ($attributedata as $row) {
+                    foreach ($row as $field => $data) {
+                        $lines = explode("\n", trim($data));
 
-                foreach($lines as $l) {
-                    if ($l && !is_numeric($l)) {
-                        $attrOptions[$typeLookup[$field]][trim($l)] = true;
+                        foreach ($lines as $l) {
+                            if ($l && !is_numeric($l)) {
+                                $attrOptions[$typeLookup[$field]][trim($l)] = true;
+                            }
+                        }
                     }
                 }
             }
