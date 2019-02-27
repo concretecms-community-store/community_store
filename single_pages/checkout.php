@@ -445,7 +445,7 @@ $csm = \Core::make('cs/helper/multilingual');
                                     <div class='radio'>
                                         <label>
                                             <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', $pm->getID()); ?>
+                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', false, $pm->getID()); ?>
 
                                         </label>
                                     </div>
@@ -468,7 +468,7 @@ $csm = \Core::make('cs/helper/multilingual');
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
+                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>
