@@ -212,7 +212,8 @@ if (6 == $productsPerRow) {
                         ?>
                         <div class="store-product-quantity form-group">
                             <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
-                            <?php $quantityLabel = $product->getQtyLabel(); ?>
+
+                            <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
 
                             <?php if ($quantityLabel) {
                             ?>

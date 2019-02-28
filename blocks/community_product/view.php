@@ -195,9 +195,9 @@ if (is_object($product) && $product->isActive()) {
                             <div class="store-product-quantity form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
 
-                                <?php $qtylabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
+                                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
 
-                                <?php if ($qtylabel) {
+                                <?php if ($quantityLabel) {
                                 ?>
                                 <div class="input-group">
                                     <?php
@@ -214,9 +214,9 @@ if (is_object($product) && $product->isActive()) {
                                         <?php
                                     } ?>
 
-                                    <?php if ($qtylabel) {
+                                    <?php if ($quantityLabel) {
                                     ?>
-                                    <div class="input-group-addon"><?= $qtylabel; ?></div>
+                                    <div class="input-group-addon"><?= $quantityLabel; ?></div>
                                 </div>
                             <?php
                             } ?>
