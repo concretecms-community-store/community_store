@@ -14,7 +14,7 @@ class Multilingual
     protected $app;
     protected $entityManager;
 
-    protected $longTextTypes = ['productDescription', 'productDetails'];
+    protected $longTextTypes = ['productDescription', 'productDetails', 'receiptEmailHeader', 'receiptEmailFooter'];
 
     public function __construct(Localization $localization, Application $application, EntityManagerInterface $entityManager)
     {
@@ -72,7 +72,7 @@ class Multilingual
                 } else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionValue' == $context) {
+            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionValue' == $context ) {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 

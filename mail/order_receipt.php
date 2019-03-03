@@ -10,6 +10,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
 $dh = Core::make('helper/date');
+$csm = Core::make('cs/helper/multilingual');
+
 $subject = t("Order Receipt #%s", $order->getOrderID());
 
 /**
@@ -23,7 +25,7 @@ ob_start();
     <head>
     </head>
     <body>
-    <?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
+    <?php $header = $csm->t(trim(\Config::get('community_store.receiptHeader')), 'receiptEmailHeader'); ?>
 
     <?php if ($header) {
         echo $header;
@@ -234,7 +236,7 @@ ob_start();
 
     <?php } ?>
 
-    <?= trim(\Config::get('community_store.receiptFooter')); ?>
+    <?= $csm->t(trim(\Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
 
     </body>
     </html>

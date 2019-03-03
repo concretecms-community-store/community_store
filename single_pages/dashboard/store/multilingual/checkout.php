@@ -332,6 +332,88 @@ $localecount = count($locales);
             <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
         <?php } ?>
 
+
+
+        <fieldset>
+            <legend><?= t('Receipt Email'); ?></legend>
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th><?= t('Context'); ?></th>
+                        <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                            (<?= $defaultLocale->getLocale() ?>)
+                        </th>
+                        <th><?= t('Locale') ?></th>
+                        <th style="width: 50%"><?= t('Translations'); ?></th>
+                    </tr>
+
+                    <?php
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Receipt Email Header'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>">
+
+                                    <?= $receiptHeader; ?>
+
+                                </td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <?php
+                                $editor = Core::make('editor');
+                                echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() .'][longText][receiptEmailHeader]', $csm->t(null, 'receiptEmailHeader', false, false, $lp->getLocale()));
+                                ?>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+
+                    <?php
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                    <tr>
+                        <?php if ($firstrow) {
+                            $firstrow = false;
+                            ?>
+
+                            <td rowspan="<?= $localecount; ?>"><span
+                                        class="label label-primary"><?= t('Receipt Email Footer'); ?></span>
+                            </td>
+                            <td rowspan="<?= $localecount; ?>">
+
+                                <?= $receiptFooter; ?>
+                            </td>
+                        <?php } ?>
+
+                        <td>
+                            <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                        </td>
+
+                        <td>
+                            <?php
+                            $editor = Core::make('editor');
+                            echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() .'][longText][receiptEmailFooter]', $csm->t(null, 'receiptEmailFooter', false, false, $lp->getLocale()));
+                            ?>
+                        </td>
+
+                    </tr>
+                    <?php } ?>
+
+
+                </table>
+
+
     </fieldset>
 
 

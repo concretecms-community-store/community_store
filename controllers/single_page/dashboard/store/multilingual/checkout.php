@@ -23,10 +23,12 @@ class Checkout extends DashboardSitePageController
         $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');
         $this->set('orderAttributes', $orderAttributes);
 
+        $this->set('receiptHeader', trim(\Config::get('community_store.receiptHeader')));
+        $this->set('receiptFooter', trim(\Config::get('community_store.receiptFooter')));
+
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
         $this->set('pageTitle', t('Checkout Related Translations'));
-
     }
 
     private function getLocales() {
@@ -54,7 +56,7 @@ class Checkout extends DashboardSitePageController
             $translations = $this->post('translation');
 
             foreach ($translations as $entityType => $translationData) {
-                foreach ($translationData as $paymentMethodID => $langs) {
+                foreach ($translationData as $entityID => $langs) {
                     foreach ($langs as $locale => $types) {
                         foreach ($types as $type => $items) {
                             foreach ($items as $key => $text) {
@@ -63,7 +65,7 @@ class Checkout extends DashboardSitePageController
                                     ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
                                     ->where('t.entityType = :type')->setParameter('type', $key)
                                     ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
-                                    ->andWhere('t.entityID = :entid')->setParameter('entid', $paymentMethodID)
+                                    ->andWhere('t.entityID = :entid')->setParameter('entid', $entityID)
                                     ->setMaxResults(1)->getQuery()->getResult();
 
                                 if (!empty($t)) {
@@ -76,7 +78,7 @@ class Checkout extends DashboardSitePageController
                                 }
 
                                 if ($text) {
-                                    $t->setEntityID($paymentMethodID);
+                                    $t->setEntityID($entityID);
                                     $t->setEntityType($key);
 
                                     if ($type == 'text') {
@@ -88,6 +90,42 @@ class Checkout extends DashboardSitePageController
                                     $t->save();
                                 }
                             }
+                        }
+                    }
+                }
+            }
+
+
+            $translations = $this->post('configtranslation');
+            foreach ($translations as $locale => $types) {
+                foreach ($types as $type => $items) {
+                    foreach ($items as $key => $text) {
+                        $qb = $this->entityManager->createQueryBuilder();
+                        $t = $qb->select('t')
+                            ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
+                            ->where('t.entityType = :type')->setParameter('type', $key)
+                            ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
+                            ->setMaxResults(1)->getQuery()->getResult();
+
+                        if (!empty($t)) {
+                            $t = $t[0];
+                            if (!$text)  {
+                                $t->delete();
+                            }
+                        } else {
+                            $t = new Translation();
+                        }
+
+                        if ($text) {
+                            $t->setEntityType($key);
+
+                            if ($type == 'text') {
+                                $t->setTranslatedText($text);
+                            } else {
+                                $t->setExtendedText($text);
+                            }
+                            $t->setLocale($locale);
+                            $t->save();
                         }
                     }
                 }
