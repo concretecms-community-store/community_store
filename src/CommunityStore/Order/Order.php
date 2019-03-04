@@ -230,17 +230,17 @@ class Order
 
     public function setShippingTotal($shippingTotal)
     {
-        $this->oShippingTotal = $shippingTotal;
+        $this->oShippingTotal = (float)$shippingTotal;
     }
 
     public function setTaxTotal($taxTotal)
     {
-        $this->oTax = $taxTotal;
+        $this->oTax = (float)$taxTotal;
     }
 
     public function setTaxIncluded($taxIncluded)
     {
-        $this->oTaxIncluded = $taxIncluded;
+        $this->oTaxIncluded = (float)$taxIncluded;
     }
 
     public function setTaxLabels($taxLabels)
