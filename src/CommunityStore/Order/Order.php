@@ -81,10 +81,10 @@ class Order
     /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
     protected $oShippingTotal;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) * */
     protected $oTax;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) * */
     protected $oTaxIncluded;
 
     /** @ORM\Column(type="string", nullable=true) * */
@@ -235,12 +235,12 @@ class Order
 
     public function setTaxTotal($taxTotal)
     {
-        $this->oTax = (float)$taxTotal;
+        $this->oTax = $taxTotal;
     }
 
     public function setTaxIncluded($taxIncluded)
     {
-        $this->oTaxIncluded = (float)$taxIncluded;
+        $this->oTaxIncluded = $taxIncluded;
     }
 
     public function setTaxLabels($taxLabels)
