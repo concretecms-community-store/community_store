@@ -20,7 +20,7 @@ $currencySymbol = Config::get('community_store.symbol');
         <a href="<?= \URL::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t("Add Discount Rule")?></a>
 	</div>
 
-
+<?php if(count($discounts)>0) { ?>
     <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
             <thead>
@@ -35,7 +35,7 @@ $currencySymbol = Config::get('community_store.symbol');
             </thead>
             <tbody>
 
-                <?php if(count($discounts)>0) {
+                <?php
                     foreach ($discounts as $discountRule) {
 
                         $usergroups = $discountRule->getUserGroups();
@@ -187,10 +187,13 @@ $currencySymbol = Config::get('community_store.symbol');
 
                             </td>
                         </tr>
-                    <?php }
-                }?>
+                    <?php } ?>
             </tbody>
         </table>
+    <?php } else { ?>
+        <p class="alert alert-info"><?= t('No Discount Rules have been defined'); ?></p>
+    <?php } ?>
+
 
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
@@ -403,14 +406,14 @@ $currencySymbol = Config::get('community_store.symbol');
                 <?= $form->text('drMaximumQuantity', $discountRule->getMaximumQuantity(), array('class' => ''))?>
             </div>
 
-
+            <div class="form-group">
+                <?= $form->label('drDescription', t('Description / Notes'))?>
+                <?= $form->textarea('drDescription', $discountRule->getDescription(), array('class' => 'span5'))?>
+            </div>
 
         </fieldset>
 
-        <div class="form-group">
-            <?= $form->label('drDescription', t('Description / Notes'))?>
-            <?= $form->textarea('drDescription', $discountRule->getDescription(), array('class' => 'span5'))?>
-        </div>
+
 
         <br /><br /><br /><br />
 

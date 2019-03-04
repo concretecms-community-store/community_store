@@ -95,6 +95,7 @@ $localecount = count($locales);
     <fieldset>
         <legend><?= t('Shipping Methods'); ?></legend>
 
+        <?php if  (!empty($shippingMethods)) { ?>
         <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Shipping Method'); ?></th>
@@ -166,6 +167,10 @@ $localecount = count($locales);
 
             <?php } ?>
         </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t('No Shipping Methods have been defined'); ?></p>
+        <?php } ?>
+
 
     </fieldset>
 
@@ -194,7 +199,7 @@ $localecount = count($locales);
                         <?php if ($firstrow) {
                             $firstrow = false;
                             ?>
-                            <td rowspan="<?= $localecount * 2; ?>"><?= h($shippingMethod->getName()); ?></td>
+                            <td rowspan="<?= $localecount * 2; ?>"><?= h($taxRate->getTaxLabel()); ?></td>
                             <td rowspan="<?= $localecount; ?>"><span
                                         class="label label-primary"><?= t('Tax Rate Name'); ?></span>
                             </td>
