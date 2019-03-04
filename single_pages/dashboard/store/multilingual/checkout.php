@@ -4,10 +4,10 @@
 $csm = \Core::make('cs/helper/multilingual');
 $action = $controller->getAction();
 $localecount = count($locales);
-
-
 ?>
 
+
+<?if (count($locales) > 1) { ?>
 <form method="post" action="<?= $view->action('save') ?>">
     <?= $token->output('community_store'); ?>
     <fieldset>
@@ -430,3 +430,6 @@ $localecount = count($locales);
     </div>
 
 </form>
+<?php } else { ?>
+    <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
+<?php } ?>

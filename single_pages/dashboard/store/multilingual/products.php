@@ -5,6 +5,8 @@ $csm = \Core::make('cs/helper/multilingual');
 
 if ($action == 'view') { ?>
 
+<?if (count($locales) > 1) { ?>
+
     <div class="ccm-dashboard-content-full">
         <form role="form" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
@@ -67,9 +69,7 @@ if ($action == 'view') { ?>
                 <th><a><?= t('Groups') ?></a></th>
 
                 <?php
-                foreach ($locales
-
-                as $lp) { ?>
+                foreach ($locales  as $lp) { ?>
                 <th><a><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</a>
                 <th>
                     <?php } ?>
@@ -139,6 +139,9 @@ if ($action == 'view') { ?>
 
     </div>
 
+    <?php } else { ?>
+    <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
+    <?php } ?>
 
 <?php } ?>
 

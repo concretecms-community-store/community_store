@@ -855,18 +855,22 @@ class Product
     public function getProductPage()
     {
         if ($this->getPageID()) {
-            $productPage = \Page::getByID($this->getPageID());
-            if ($productPage && !$productPage->isInTrash()) {
+            $pageID = $this->getPageID();
+            $productPage = \Page::getByID($pageID);
+            if ($productPage && !$productPage->isError() && !$productPage->isInTrash()) {
 
                 $c = \Page::getCurrentPage();
                 $lang = Section::getBySectionOfSite($c);
 
                 if (is_object($lang)) {
                     $relatedID = $lang->getTranslatedPageID($productPage);
-                    $translatedPage = \Page::getByID($relatedID);
 
-                    if ($translatedPage && !$translatedPage->isInTrash()) {
-                        $productPage = $translatedPage;
+                    if ($relatedID && $relatedID != $pageID) {
+                        $translatedPage = \Page::getByID($relatedID);
+
+                        if ($translatedPage && !$translatedPage->isError() && !$translatedPage->isInTrash()) {
+                            $productPage = $translatedPage;
+                        }
                     }
                 }
 
