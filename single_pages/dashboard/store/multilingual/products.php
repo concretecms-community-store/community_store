@@ -5,7 +5,7 @@ $csm = \Core::make('cs/helper/multilingual');
 
 if ($action == 'view') { ?>
 
-<?if (count($locales) > 1) { ?>
+<?if (count($locales) > 0) { ?>
 
     <div class="ccm-dashboard-content-full">
         <form role="form" class="form-inline ccm-search-fields">

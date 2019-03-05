@@ -6,7 +6,7 @@ $action = $controller->getAction();
 $localecount = count($locales);
 ?>
 
-<?if (count($locales) > 1) { ?>
+<?if (count($locales) > 0) { ?>
 <form method="post" action="<?= $view->action('save') ?>">
     <?= $token->output('community_store'); ?>
 
