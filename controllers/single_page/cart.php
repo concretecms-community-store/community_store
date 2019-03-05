@@ -255,11 +255,14 @@ class Cart extends PageController
         $total = $totals['total'];
         $subTotal = $totals['subTotal'];
         $shippingTotal = $totals['shippingTotal'];
+        $csm = $this->app->make('cs/helper/multilingual');
 
         $taxes = $totals['taxes'];
         $formattedtaxes = [];
 
         foreach ($taxes as $tax) {
+            // translate tax name
+            $tax['name'] = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
             $tax['taxamount'] = StorePrice::format($tax['taxamount']);
             $formattedtaxes[] = $tax;
         }

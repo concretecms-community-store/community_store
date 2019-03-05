@@ -512,7 +512,7 @@ $csm = \Core::make('cs/helper/multilingual');
                             <?php
                             $discountstrings = array();
                             foreach ($discounts as $discount) {
-                                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', $discount->getID()));
+                                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
                             }
                             echo implode(', ', $discountstrings);
                             ?>
@@ -575,7 +575,7 @@ $csm = \Core::make('cs/helper/multilingual');
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
                             if ($tax['taxamount'] > 0) {
-                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', $tax['trID']);
+                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['trID']);
                                 ?>
                                 <li class="store-line-item store-tax-item list-group-item">
                                 <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>

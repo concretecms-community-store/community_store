@@ -14,7 +14,7 @@ class Multilingual
     protected $app;
     protected $entityManager;
 
-    protected $longTextTypes = ['productDescription', 'productDetails', 'receiptEmailHeader', 'receiptEmailFooter'];
+    protected $longTextTypes = ['productDescription', 'productDetails', 'receiptEmailHeader', 'receiptEmailFooter', 'shippingDetails'];
 
     public function __construct(Localization $localization, Application $application, EntityManagerInterface $entityManager)
     {

@@ -2,6 +2,7 @@
 
 
 $csm = \Core::make('cs/helper/multilingual');
+$editor = \Core::make('editor');
 $action = $controller->getAction();
 $localecount = count($locales);
 ?>
@@ -148,7 +149,7 @@ $localecount = count($locales);
                             <td rowspan="<?= $localecount; ?>"><span
                                         class="label label-primary"><?= t('Details'); ?></span>
                             </td>
-                            <td rowspan="<?= $localecount; ?>"><?= h($paymentMethod->getButtonLabel()); ?></td>
+                            <td rowspan="<?= $localecount; ?>"><?= $shippingMethod->getDetails(); ?></td>
                         <?php } ?>
 
                         <td>
@@ -156,9 +157,9 @@ $localecount = count($locales);
                         </td>
 
                         <td>
-                            <input type="text" class="form-control"
-                                   name="translation[shippingMethods][<?= $shippingMethod->getID(); ?>][<?= $lp->getLocale(); ?>][text][shippingDetails]"
-                                   value="<?= $csm->t(null, 'shippingDetails', false, $shippingMethod->getID(), $lp->getLocale()); ?>"/>
+                            <?php
+                            echo $editor->outputStandardEditor('translation[shippingMethods]['.  $shippingMethod->getID() . '][' . $lp->getLocale() .'][longText][shippingDetails]', $csm->t(null, 'shippingDetails', false, $shippingMethod->getID(), $lp->getLocale()));
+                            ?>
                         </td>
 
                     </tr>
@@ -376,7 +377,6 @@ $localecount = count($locales);
 
                             <td>
                                 <?php
-                                $editor = Core::make('editor');
                                 echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() .'][longText][receiptEmailHeader]', $csm->t(null, 'receiptEmailHeader', false, false, $lp->getLocale()));
                                 ?>
                             </td>
@@ -407,7 +407,6 @@ $localecount = count($locales);
 
                         <td>
                             <?php
-                            $editor = Core::make('editor');
                             echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() .'][longText][receiptEmailFooter]', $csm->t(null, 'receiptEmailFooter', false, false, $lp->getLocale()));
                             ?>
                         </td>

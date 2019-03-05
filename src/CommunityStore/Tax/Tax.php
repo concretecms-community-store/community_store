@@ -42,6 +42,7 @@ class Tax
                         'taxamount' => $taxAmount,
                         'based' => $taxRate->getTaxBasedOn(),
                         'taxed' => $tax,
+                        'id' => $taxRate->getID(),
                     ];
                 }
             }
