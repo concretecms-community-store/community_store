@@ -276,6 +276,11 @@ class Installer
 
         if (!is_object($orderCategory)) {
             $orderCategory = Category::add('store_order', 1, $pkg);
+        } else {
+            $indexer = $orderCategory->getController()->getSearchIndexer();
+            if (is_object($indexer)) {
+                $indexer->createRepository($orderCategory->getController());
+            }
         }
 
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
