@@ -509,7 +509,7 @@ class Order
         $discountRatio = $totals['discountRatio'];
 
         $pmName = $pm->getName();
-        $pmDisplayName = $pm->getDisplayName();
+        $pmDisplayName = $csm->t($pm->getDisplayName() , 'paymentDisplayName', null, $pm->getID());
 
         $taxCalc = Config::get('community_store.calculation');
 
