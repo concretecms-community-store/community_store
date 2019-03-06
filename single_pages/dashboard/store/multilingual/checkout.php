@@ -181,7 +181,7 @@ $localecount = count($locales);
         <?php if  (!empty($taxRates)) { ?>
             <table class="table table-bordered table-condensed">
             <tr>
-                <th><?= t('Shipping Method'); ?></th>
+                <th><?= t('Tax Rate'); ?></th>
                 <th><?= t('Context'); ?></th>
                 <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                     (<?= $defaultLocale->getLocale() ?>)
