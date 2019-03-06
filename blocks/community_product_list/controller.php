@@ -177,8 +177,6 @@ class Controller extends BlockController
             $products->setAttributeFilters($this->attFilters);
         }
 
-        // $request = $app->make(Request::class);
-
         if ($request->getQueryString() && $this->enableExternalFiltering) {
             $products->processUrlFilters($request);
         }

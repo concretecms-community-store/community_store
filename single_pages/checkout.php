@@ -509,8 +509,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                     <?php if (!empty($discounts)) { ?>
                         <li class="store-line-item store-discounts list-group-item">
-                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-                                :</strong>
+                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
                             <?php
                             $discountstrings = array();
                             foreach ($discounts as $discount) {

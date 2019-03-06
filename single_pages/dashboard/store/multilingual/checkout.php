@@ -4,6 +4,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
 $action = $controller->getAction();
 $localecount = count($locales);
+$editor = $app->make('editor');
 ?>
 
 

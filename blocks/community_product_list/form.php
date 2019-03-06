@@ -114,6 +114,12 @@
                     <?= t('Include Out of Stock Products'); ?>
                 </label>
             </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('enableExternalFiltering', 1, $enableExternalFiltering); ?>
+                    <?= t('Enable Other Blocks to Filter This Product List'); ?>
+                </label>
+            </div>
         </fieldset>
 
 

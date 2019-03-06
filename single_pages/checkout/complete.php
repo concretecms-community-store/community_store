@@ -1,6 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 ?>
 
 <div class="store-order-complete-page">
@@ -8,6 +10,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
     <h1><?= t("Order #%s has been placed",$order->getOrderID())?></h1>
 
     <p><?= t("Thank you for your order. A receipt will be emailed to you shortly.")?></p>
+
+    <br>
 
     <?php
     $downloads = array();
@@ -241,11 +245,30 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
         </p>
         <p>
             <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
-            <?php $transactionReference = $order->getTransactionReference();
-            if ($transactionReference) { ?>
-                <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
-            <?php } ?>
         </p>
+
+        <?php
+        $refunded = $order->getRefunded();
+        $paid = $order->getPaid();
+        $cancelled = $order->getCancelled();
+        $status = '';
+
+        if ($cancelled) {
+            echo '<br /><strong>' . t('Cancelled') . '</strong>';
+        } else {
+            if ($refunded) {
+                $status = t('Refunded');
+            } elseif ($paid) {
+                $status = t('Paid') . ' - ' . $dh->formatDateTime($paid);
+            } elseif ($order->getTotal() > 0) {
+                $status = t('Unpaid');
+            }
+        }
+        ?>
+
+        <?php if ($status) { ?>
+            <p><strong><?= t("Payment Status") ?></strong>: <?= $status; ?></p>
+        <?php } ?>
 
 
         <?php if ($order->isShippable()) { ?>

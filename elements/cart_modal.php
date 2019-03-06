@@ -212,7 +212,7 @@ $csm = $app->make('cs/helper/multilingual');
                 <p><strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied'));?></strong></p>
                 <ul>
                     <?php foreach($discounts as $discount) { ?>
-                        <li><?= h($discount->getDisplay()); ?></li>
+                        <li><?= h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID())); ?></li>
                     <?php } ?>
                 </ul>
             </div>

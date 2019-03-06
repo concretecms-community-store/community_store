@@ -4,6 +4,7 @@ use \Concrete\Core\Support\Facade\Url;
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $action = $controller->getAction();
 $csm = $app->make('cs/helper/multilingual');
+$editor = $app->make('editor');
 
 if ($action == 'view') { ?>
 
@@ -217,7 +218,6 @@ $localecount = count($locales);
                 <td>
 
                     <?php
-                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
                     ?>
 
@@ -245,7 +245,6 @@ $localecount = count($locales);
 
                 <td>
                     <?php
-                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
                     ?>
                 </td>

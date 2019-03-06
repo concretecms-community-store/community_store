@@ -221,12 +221,11 @@ if ($cart) {
 <?php if (!empty($discounts)) { ?>
 
     <p class="store-cart-page-discounts text-right">
-        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-            :</strong>
+        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
         <?php
         $discountstrings = array();
         foreach ($discounts as $discount) {
-            $discountstrings[] = h($discount->getDisplay());
+            $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
         }
         echo implode(', ', $discountstrings);
         ?>

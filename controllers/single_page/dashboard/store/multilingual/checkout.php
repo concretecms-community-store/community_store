@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
