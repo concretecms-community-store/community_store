@@ -2,9 +2,11 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToMany;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 /**
  * @ORM\Entity
@@ -521,14 +523,14 @@ class DiscountRule
 
     public static function getByID($drID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $drID);
     }
 
     public static function discountsWithCodesExist()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
 
@@ -538,10 +540,10 @@ class DiscountRule
     public static function findAutomaticDiscounts($user = null, $cartitems = false)
     {
         if (null === $user) {
-            $user = new \User();
+            $user = new User();
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
               WHERE drEnabled = 1
@@ -617,7 +619,7 @@ class DiscountRule
 
     public function retrieveStatistics()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", [$this->drID]);
         $r = $r->fetchRow();
@@ -630,10 +632,10 @@ class DiscountRule
     public static function findDiscountRuleByCode($code, $user = null)
     {
         if (null === $user) {
-            $user = new \User();
+            $user = new User();
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
         $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
@@ -735,21 +737,21 @@ class DiscountRule
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function getRules()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $rules = $em->getRepository(get_called_class())->findAll();
         return $rules;
     }

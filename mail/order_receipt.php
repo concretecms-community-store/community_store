@@ -8,10 +8,11 @@ if ($locale) {
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use \Concrete\Core\Support\Facade\Config;
 
-$dh = Core::make('helper/date');
-$csm = Core::make('cs/helper/multilingual');
-
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
+$csm = $app->make('cs/helper/multilingual');
 $subject = t("Order Receipt #%s", $order->getOrderID());
 
 /**
@@ -236,7 +237,7 @@ ob_start();
 
     <?php } ?>
 
-    <?= $csm->t(trim(\Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
+    <?= $csm->t(trim(Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
 
     </body>
     </html>

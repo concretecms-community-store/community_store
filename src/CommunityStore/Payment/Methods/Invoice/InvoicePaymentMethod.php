@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Methods\Invoice;
 
-use Core;
-use Config;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 
 class InvoicePaymentMethod extends StorePaymentMethod
@@ -14,7 +14,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
 
     public function dashboardForm()
     {
-        $this->set('form', Core::make("helper/form"));
+        $this->set('form', Application::getFacadeApplication()->make("helper/form"));
         $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
         $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
         $this->set('paymentInstructions', Config::get('community_store.paymentInstructions'));
@@ -84,7 +84,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
 
     public function markPaid()
     {
-        return (bool) \Config::get('community_store.markPaid');
+        return (bool) Config::get('community_store.markPaid');
     }
 
     // to be overridden by individual payment methods

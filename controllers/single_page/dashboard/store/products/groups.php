@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
@@ -25,13 +26,13 @@ class Groups extends DashboardPageController
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
 
-        if ($this->post() && $this->token->validate('community_store')) {
-            $errors = $this->validateGroup($this->post());
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $errors = $this->validateGroup($this->request->request->all());
             $this->error = $errors;
             if (!$errors->has()) {
-                $newproductgroup = StoreGroup::add($this->post('groupName'));
+                $newproductgroup = StoreGroup::add($this->request->request->get('groupName'));
 
-                $productids = $this->post('products');
+                $productids = $this->request->request->get('products');
 
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
@@ -42,7 +43,8 @@ class Groups extends DashboardPageController
                 }
 
                 $this->flash('success', t('Product Group Added'));
-                return \Redirect::to('/dashboard/store/products/groups');
+
+                return Redirect::to('/dashboard/store/products/groups');
             }
         }
     }
@@ -57,19 +59,19 @@ class Groups extends DashboardPageController
         $group = StoreGroup::getByID($gID);
 
         if (!$group) {
-            return \Redirect::to('/dashboard/store/products/groups');
+            return Redirect::to('/dashboard/store/products/groups');
         }
 
-        if ($this->post() && $this->token->validate('community_store')) {
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
             $this->error = null; //clear errors
-            $errors = $this->validateGroup($this->post());
+            $errors = $this->validateGroup($this->request->request->all());
             $this->error = $errors;
             if (!$errors->has()) {
-                $group->update($this->post('groupName'));
+                $group->update($this->request->request->get('groupName'));
 
                 StoreProductGroup::removeProductsForGroup($group);
 
-                $productids = $this->post('products');
+                $productids = $this->request->request->get('products');
 
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
@@ -80,7 +82,8 @@ class Groups extends DashboardPageController
                 }
 
                 $this->flash('success', t('Product Group Edited'));
-                return \Redirect::to('/dashboard/store/products/groups');
+
+                return Redirect::to('/dashboard/store/products/groups');
             }
         }
 
@@ -89,7 +92,7 @@ class Groups extends DashboardPageController
 
     public function validateGroup($args)
     {
-        $e = \Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
 
         if ("" == $args['groupName']) {
             $e->add(t('Please enter a Group Name'));
@@ -104,10 +107,11 @@ class Groups extends DashboardPageController
     public function delete()
     {
         if ($this->token->validate('community_store')) {
-            $data = $this->post();
+            $data = $this->request->request->all();
             StoreGroup::getByID($data['grID'])->delete();
             $this->flash('success', t('Product Group Deleted'));
-            return \Redirect::to('/dashboard/store/products/groups');
+
+            return Redirect::to('/dashboard/store/products/groups');
         }
     }
 }

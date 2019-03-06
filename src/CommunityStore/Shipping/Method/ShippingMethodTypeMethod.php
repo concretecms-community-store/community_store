@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
 use Doctrine\ORM\Mapping as ORM;
-use Controller;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Controller\Controller;
 
 abstract class ShippingMethodTypeMethod extends Controller
 {
@@ -61,7 +62,7 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public static function getByID($smtmID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_called_class())->find($smtmID);
     }
@@ -73,14 +74,14 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

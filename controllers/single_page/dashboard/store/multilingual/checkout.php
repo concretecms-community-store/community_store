@@ -1,15 +1,14 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-
 
 class Checkout extends DashboardSitePageController
 {
@@ -31,12 +30,13 @@ class Checkout extends DashboardSitePageController
         $this->set('pageTitle', t('Checkout Related Translations'));
     }
 
-    private function getLocales() {
+    private function getLocales()
+    {
         $site = $this->getSite();
-        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+        $pages = Section::getList($site);
         $locales = $site->getLocales();
 
-        $localePages = array('additional'=>array());
+        $localePages = ['additional'=>[]];
 
         foreach($locales as $locale) {
             if ($locale->getIsDefault()) {
@@ -51,9 +51,8 @@ class Checkout extends DashboardSitePageController
 
     public function save()
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-
-            $translations = $this->post('translation');
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $translations = $this->request->request->get('translation');
 
             foreach ($translations as $entityType => $translationData) {
                 foreach ($translationData as $entityID => $langs) {
@@ -132,10 +131,8 @@ class Checkout extends DashboardSitePageController
             }
         }
 
-
         $this->flash('success', t('Checkout Translations Updated'));
-        return \Redirect::to('/dashboard/store/multilingual/checkout');
 
+        return Redirect::to('/dashboard/store/multilingual/checkout');
     }
-
 }

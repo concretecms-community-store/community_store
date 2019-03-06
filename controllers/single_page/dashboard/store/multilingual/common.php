@@ -1,7 +1,8 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 
@@ -27,7 +28,6 @@ class Common extends DashboardSitePageController
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
 
-
         $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         $attrList = $productCategory->getList();
@@ -40,17 +40,15 @@ class Common extends DashboardSitePageController
         $attrOptions = [];
         $typeLookup = [];
 
-
-        foreach($attrList as $ak) {
+        foreach ($attrList as $ak) {
             $typeHandle = $ak->getAttributeType()->getAttributeTypeHandle();
 
             if (in_array($typeHandle, $attInputTypes)) {
                 $availableAtts[] = $ak;
                 $handle = $ak->getAttributeKeyHandle();
 
-                $typeLookup['ak_'. $handle] = $typeHandle;
-                $attrHandles[] = 'ak_'. $handle;
-
+                $typeLookup['ak_' . $handle] = $typeHandle;
+                $attrHandles[] = 'ak_' . $handle;
             }
 
             if (in_array($typeHandle, $attSelectTypes)) {
@@ -60,10 +58,9 @@ class Common extends DashboardSitePageController
                     $attrOptions['text'][$option->getSelectAttributeOptionDisplayValue()] = true;
                 }
             }
-
         }
 
-        $db = \Database::connection();
+        $db = Database::connection();
 
         if ($attrHandles) {
             $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes');
@@ -85,11 +82,10 @@ class Common extends DashboardSitePageController
 
         ksort($attrOptions);
 
-        foreach($attrOptions as $type=>$options) {
+        foreach ($attrOptions as $type => $options) {
             ksort($options);
             $attrOptions[$type] = $options;
         }
-
 
         $this->set('attrOptions',$attrOptions);
 
@@ -101,7 +97,6 @@ class Common extends DashboardSitePageController
         }
 
         $this->set('quantityLabels',$quantityLabels);
-
     }
 
     private function getLocales() {
@@ -124,8 +119,8 @@ class Common extends DashboardSitePageController
 
     public function save()
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $translations = $this->post('translation');
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $translations = $this->request->request->get('translation');
 
             foreach ($translations['options'] as $locale => $types) {
                 foreach ($types as $type => $items) {
@@ -179,9 +174,8 @@ class Common extends DashboardSitePageController
             }
         }
 
-
         $this->flash('success', t('Common Translations Updated'));
-        return \Redirect::to('/dashboard/store/multilingual/common');
 
+        return Redirect::to('/dashboard/store/multilingual/common');
     }
 }

@@ -1,15 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Package\Package;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Package;
-use Core;
-use Config;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 
 class Settings extends DashboardPageController
 {
@@ -17,15 +18,15 @@ class Settings extends DashboardPageController
     {
         $this->loadFormAssets();
         $this->set('thumbnailTypes', $this->getThumbTypesList());
-        $this->set("pageSelector", Core::make('helper/form/page_selector'));
-        $this->set("countries", Core::make('helper/lists/countries')->getCountries());
-        $this->set("states", Core::make('helper/lists/states_provinces')->getStates());
+        $this->set("pageSelector", $this->app->make('helper/form/page_selector'));
+        $this->set("countries", $this->app->make('helper/lists/countries')->getCountries());
+        $this->set("states", $this->app->make('helper/lists/states_provinces')->getStates());
         $this->set("installedPaymentMethods", StorePaymentMethod::getMethods());
         $this->set("orderStatuses", StoreOrderStatus::getAll());
         $targetCID = Config::get('community_store.productPublishTarget');
 
         if ($targetCID > 0) {
-            $parentPage = \Page::getByID($targetCID);
+            $parentPage = Page::getByID($targetCID);
 
             if (!$parentPage || $parentPage->isError()) {
                 $targetCID = false;
@@ -34,7 +35,7 @@ class Settings extends DashboardPageController
 
         $groupList = [];
 
-        $gl = new \GroupList();
+        $gl = new GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
@@ -42,7 +43,7 @@ class Settings extends DashboardPageController
         $this->set('groupList', $groupList);
 
         if ($targetCID) {
-            $publishTarget = \Page::getByID($targetCID);
+            $publishTarget = Page::getByID($targetCID);
 
             if (!$publishTarget || $publishTarget->isError() || $publishTarget->isInTrash()) {
                 $targetCID = false;
@@ -87,7 +88,7 @@ class Settings extends DashboardPageController
     public function save()
     {
         $this->view();
-        $args = $this->post();
+        $args = $this->request->request->all();
 
         if ($args && $this->token->validate('community_store')) {
             $errors = $this->validate($args);
@@ -180,7 +181,7 @@ class Settings extends DashboardPageController
                 $this->saveOrderStatuses($args);
                 $this->flash('success', t('Settings Saved'));
 
-                return \Redirect::to('/dashboard/store/settings');
+                return Redirect::to('/dashboard/store/settings');
             }
         }
     }
@@ -210,8 +211,8 @@ class Settings extends DashboardPageController
 
     public function validate($args)
     {
-        $e = Core::make('helper/validation/error');
-        $nv = Core::make('helper/validation/numbers');
+        $e = $this->app->make('helper/validation/error');
+        $nv = $this->app->make('helper/validation/numbers');
 
         if ("" == $args['symbol']) {
             $e->add(t('You must set a currency symbol'));

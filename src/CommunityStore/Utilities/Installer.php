@@ -1,20 +1,20 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use BlockType;
-use BlockTypeSet;
-use SinglePage;
-use Core;
-use Page;
-use PageTemplate;
-use PageType;
-use Group;
-use FileSet;
-use Config;
-use Localization;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Type as AttributeType;
-use AttributeSet;
+use Concrete\Core\Attribute\Set as AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
@@ -25,7 +25,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxC
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Database\DatabaseStructureManager;
-use ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 class Installer
 {
@@ -252,7 +252,7 @@ class Installer
 
     public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
         $categoryEntity = $service->getByHandle('user');
         $category = $categoryEntity->getController();
@@ -260,7 +260,7 @@ class Installer
         $attr = $category->getByHandle($handle);
 
         if (!is_object($attr)) {
-            $name = Core::make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
 
             $key = new UserKey();
             $key->setAttributeKeyHandle($handle);
@@ -335,13 +335,13 @@ class Installer
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
 
         $attr = $orderCategory->getByHandle($handle);
 
         if (!is_object($attr)) {
-            $name = Core::make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
 
             $key = new StoreOrderKey();
             $key->setAttributeKeyHandle($handle);
@@ -381,7 +381,7 @@ class Installer
     public static function installOrderStatuses($pkg)
     {
         $table = StoreOrderStatus::getTableName();
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $statuses = [
             ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
@@ -419,27 +419,30 @@ class Installer
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
-        self::installSinglePages($pkg, true);
+        self::installSinglePages($pkg);
 
         Localization::clearCache();
     }
 
     public static function refreshEntities()
     {
-        $em = ORM::entityManager();
+        $em = dbORM::entityManager();
         $manager = new DatabaseStructureManager($em);
         $manager->refreshEntities();
     }
 
     public static function prepareUpgradeFromLegacy($db)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $installedVersion = $db->fetchColumn("SELECT pkgVersion from Packages WHERE pkgHandle=?", ['community_store']);
-        $installedVersionFromConfig = \Config::get('cs.pkgversion');
+        $installedVersionFromConfig = Config::get('cs.pkgversion');
         $community_store = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        if ($community_store
-            && (($installedVersion && version_compare($installedVersion, '2.0', '<'))
-            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<')))
+        if (
+            $community_store
+            && (
+            ($installedVersion && version_compare($installedVersion, '2.0', '<'))
+            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
+            )
         ) {
             $db->query("SET foreign_key_checks = 0");
 

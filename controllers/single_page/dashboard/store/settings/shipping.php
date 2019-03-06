@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Settings;
 
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use View;
-use Core;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 
 class Shipping extends DashboardPageController
 {
@@ -37,42 +36,45 @@ class Shipping extends DashboardPageController
         $sm = StoreShippingMethod::getByID($smID);
         $sm->delete();
         $this->flash('success', t('Shipping Method Deleted'));
-        return \Redirect::to('/dashboard/store/settings/shipping');
+
+        return Redirect::to('/dashboard/store/settings/shipping');
     }
 
     public function add_method()
     {
-        $data = $this->post();
+        $data = $this->request->request->all();
         $errors = $this->validate($data);
         $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {
-            if ($this->post('shippingMethodID')) {
+            if ($this->request->request->get('shippingMethodID')) {
                 //update
-                $shippingMethod = StoreShippingMethod::getByID($this->post('shippingMethodID'));
+                $shippingMethod = StoreShippingMethod::getByID($this->request->request->get('shippingMethodID'));
                 if ($shippingMethod) {
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
-                    $shippingMethodTypeMethod->update($this->post());
-                    $shippingMethod->update($this->post('methodName'), $this->post('methodEnabled'), $this->post('methodDetails'));
+                    $shippingMethodTypeMethod->update($this->request->request->all());
+                    $shippingMethod->update($this->request->request->get('methodName'), $this->request->request->get('methodEnabled'), $this->request->request->get('methodDetails'));
                     $this->flash('success', t('Shipping Method Updated'));
-                    return \Redirect::to('/dashboard/store/settings/shipping');
+
+                    return Redirect::to('/dashboard/store/settings/shipping');
                 } else {
-                    return \Redirect::to('/dashboard/store/settings/shipping');
+                    return Redirect::to('/dashboard/store/settings/shipping');
                 }
             } else {
                 //first we send the data to the shipping method type.
-                $shippingMethodType = StoreShippingMethodType::getByID($this->post('shippingMethodTypeID'));
-                $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->post());
+                $shippingMethodType = StoreShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
+                $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->request->request->all());
                 //make a shipping method that correlates with it.
-                StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->post('methodName'), true, $this->post('methodDetails'));
+                StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'));
                 $this->flash('success', t('Shipping Method Created'));
-                return \Redirect::to('/dashboard/store/settings/shipping');
+
+                return Redirect::to('/dashboard/store/settings/shipping');
             }
         } else {
-            if ($this->post('shippingMethodID')) {
-                $this->edit($this->post('shippingMethodID'));
+            if ($this->request->request->get('shippingMethodID')) {
+                $this->edit($this->request->request->get('shippingMethodID'));
             } else {
-                $this->add($this->post('shippingMethodTypeID'));
+                $this->add($this->request->request->get('shippingMethodTypeID'));
             }
         }
     }
@@ -80,7 +82,7 @@ class Shipping extends DashboardPageController
     public function validate($data)
     {
         $this->error = null;
-        $e = Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
 
         //check our manditory fields
         if ("" == $data['methodName']) {

@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
 use Doctrine\ORM\Mapping as ORM;
-use Core;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -190,7 +191,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         }
         $sm->setCountriesSelected($countriesSelected);
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($sm);
         $em->flush();
 
@@ -199,9 +200,10 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function dashboardForm($shippingMethod = null)
     {
-        $this->set('form', Core::make("helper/form"));
+        $app = Application::getFacadeApplication();
+        $this->set('form', $app->make("helper/form"));
         $this->set('smt', $this);
-        $this->set('countryList', Core::make('helper/lists/countries')->getCountries());
+        $this->set('countryList', $app->make('helper/lists/countries')->getCountries());
 
         if (is_object($shippingMethod)) {
             $smtm = $shippingMethod->getShippingMethodTypeMethod();

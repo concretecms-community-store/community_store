@@ -1,8 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Core\Support\Facade\Url;
 
-$csm = \Core::make('cs/helper/multilingual');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 ?>
 <div class="store-checkout-page">
 <?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>
@@ -37,17 +39,17 @@ $csm = \Core::make('cs/helper/multilingual');
                         <div class="row">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= \URL::to('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/register') ?>"><?= t("Register") ?></a>
+                                       href="<?= Url::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= Url::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -423,7 +425,7 @@ $csm = \Core::make('cs/helper/multilingual');
                 <?php } ?>
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
-                      action="<?= \URL::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                      action="<?= Url::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
                     <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
@@ -528,7 +530,7 @@ $csm = \Core::make('cs/helper/multilingual');
                                 <p><?= t('Invalid code');?></p>
                             <?php } ?>
 
-                            <a href="<?= \URL::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+                            <a href="<?= Url::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
                                 <?= $token->output('community_store'); ?>

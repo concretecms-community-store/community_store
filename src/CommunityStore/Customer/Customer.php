@@ -1,9 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 
-use Session;
-use User;
-use UserInfo;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
+use Concrete\Core\Support\Facade\Application;
 
 class Customer
 {
@@ -11,12 +12,13 @@ class Customer
 
     public function __construct($uID = null)
     {
+        $app = Application::getFacadeApplication();
         $u = new User();
 
         if (!is_null($uID)) {
-            $this->ui = UserInfo::getByID($uID);
+            $this->ui = $app->make(UserInfoRepository::class)->getByID($uID);
         } elseif ($u->isLoggedIn()) {
-            $this->ui = UserInfo::getByID($u->getUserID());
+            $this->ui = $app->make(UserInfoRepository::class)->getByID($u->getUserID());
         } else {
             $this->ui = null;
         }
@@ -134,6 +136,8 @@ class Customer
     // 5.7 compatibility function
     public static function formatAddress($address)
     {
+        $app = Application::getFacadeApplication();
+
         $ret = '';
         $address1 = self::returnAttributeValue($address, 'address1');
         $address2 = self::returnAttributeValue($address, 'address2');
@@ -155,7 +159,7 @@ class Customer
             $ret .= ", ";
         }
         if ($state_province) {
-            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
+            $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
             if ('' == $val) {
                 $ret .= $state_province;
             } else {
@@ -169,7 +173,7 @@ class Customer
             $ret .= "\n";
         }
         if ($country) {
-            $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
+            $ret .= $app->make('helper/lists/countries')->getCountryName($country);
         }
 
         return $ret;
@@ -177,6 +181,8 @@ class Customer
 
     public static function formatAddressArray($address)
     {
+        $app = Application::getFacadeApplication();
+
         $ret = '';
         $address1 = $address['address1'];
         $address2 = $address['address2'];
@@ -201,7 +207,7 @@ class Customer
             $ret .= ", ";
         }
         if ($state_province) {
-            $val = \Core::make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
+            $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
             if ('' == $val) {
                 $ret .= $state_province;
             } else {
@@ -215,7 +221,7 @@ class Customer
             $ret .= "\n";
         }
         if ($country) {
-            $ret .= \Core::make('helper/lists/countries')->getCountryName($country);
+            $ret .= $app->make('helper/lists/countries')->getCountryName($country);
         }
 
         return $ret;

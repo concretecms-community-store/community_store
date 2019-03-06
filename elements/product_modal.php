@@ -1,9 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
-$communityStoreImageHelper = Core::make('cs/helper/image', ['product_modal']);
-$csm = Core::make('cs/helper/multilingual');
-$token = Core::make('token');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+$communityStoreImageHelper = $app->make('cs/helper/image', ['product_modal']);
+$csm = $app->make('cs/helper/multilingual');
+$token = $app->make('token');
 ?>
 <form class="store-product-modal" id="store-form-add-to-cart-modal-<?= $product->getID(); ?>">
     <?= $token->output('community_store'); ?>

@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProductFilter;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
-use Core;
-use Config;
-use Page;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 
 class Controller extends BlockController
 {
@@ -19,7 +18,6 @@ class Controller extends BlockController
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
     protected $attTypes = ['select', 'text', 'boolean'];
-
 
     public function getBlockTypeDescription()
     {
@@ -38,6 +36,7 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', []);
         $this->set('attributes', $this->getAvailableAttributes());
+        $this->set('app', $this->app);
     }
 
     public function edit()
@@ -47,6 +46,7 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
         $this->set('attributes', $this->getAvailableAttributes());
+        $this->set('app', $this->app);
 
         $this->set('selectedAttributes', $this->getAttributes());
 
@@ -56,12 +56,13 @@ class Controller extends BlockController
         }
     }
 
-    private function getAvailableAttributes() {
+    private function getAvailableAttributes()
+    {
         $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
         $attrList = $productCategory->getList();
-        $availableAtts = array();
+        $availableAtts = [];
 
-        foreach($attrList as $ak) {
+        foreach ($attrList as $ak) {
             if (in_array($ak->getAttributeType()->getAttributeTypeHandle(), $this->attTypes)) {
                 $availableAtts[] = $ak;
             }
@@ -70,11 +71,9 @@ class Controller extends BlockController
         return $availableAtts;
     }
 
-
     public function getGroupFilters()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $db = $this->app->make('database')->connection();
         $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", [$this->bID]);
 
         $list = [];
@@ -96,8 +95,7 @@ class Controller extends BlockController
 
     public function getAttributes()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $db = $this->app->make('database')->connection();
         $result = $db->query("SELECT akID, `order`, `type`, matchingType, invalidHiding, label FROM btCommunityStoreProductFilterAttributes where bID = ? order by `order` asc", [$this->bID])->fetchAll();
 
         return $result;
@@ -105,20 +103,20 @@ class Controller extends BlockController
 
     public function view()
     {
-        $request = \Request::getInstance();
+        $request = $this->app->make(Request::class);
 
         $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
         $attrList = $productCategory->getList();
-        $attrLookup = array();
-        $selectedarray = array();
+        $attrLookup = [];
+        $selectedarray = [];
 
-        if ($this->filterSource == 'auto') {
-            $page = \Page::getCurrentPage();
+        if ('auto' == $this->filterSource) {
+            $page = Page::getCurrentPage();
             $blocks = $page->getBlocks();
             $block = null;
             $groupfilters = $this->getGroupFilters();
             foreach ($blocks as $block) {
-                if ($block->getBlockTypeHandle() == 'community_product_list') {
+                if ('community_product_list' == $block->getBlockTypeHandle()) {
                     $blockcontroller = $block->getController();
                     $this->filter = $blockcontroller->filter;
                     $this->filterCID = $blockcontroller->filterCID;
@@ -136,15 +134,14 @@ class Controller extends BlockController
 
         $selectedAttributeList = $this->getAttributes();
 
-
-        $attrList = array();
-        $optionList = array();
-        $attrFilterTypes = array();
+        $attrList = [];
+        $optionList = [];
+        $attrFilterTypes = [];
 
         $count = 0;
 
-        foreach($selectedAttributeList as $attr) {
-            if ($attr['type'] == 'attr') {
+        foreach ($selectedAttributeList as $attr) {
+            if ('attr' == $attr['type']) {
                 $attributeKey = $productCategory->getByID($attr['akID']);
 
                 if ($attributeKey) {
@@ -154,10 +151,10 @@ class Controller extends BlockController
                     $attrFilterTypes[$handle] = $attr;
                 }
             }
-            $count++;
+            ++$count;
         }
 
-        foreach($attrList as $attitem) {
+        foreach ($attrList as $attitem) {
             $handle = $attitem->getAttributeKeyHandle();
             $attrLookup[$handle] = $attitem;
 
@@ -231,27 +228,26 @@ class Controller extends BlockController
 
         $unfilteredIDs = $products->getResultIDs();
 
-        $attributemapping = array();
+        $attributemapping = [];
 
         $fieldnames = array_keys($attrLookup);
         $fieldnamesak = array_map(function ($str) { return 'ak_' . $str; }, $fieldnames);
 
-        $db = \Database::connection();
+        $db = Database::connection();
         if (!empty($unfilteredIDs) && !empty($fieldnamesak)) {
             $attributedata = $db->fetchAll('SELECT ' . implode(',', $fieldnamesak) . ' FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $unfilteredIDs) . ')');
 
             if (!empty($attributedata)) {
                 foreach ($attributedata as $atdata) {
                     foreach ($atdata as $handle => $data) {
-
-                        if ($handle != 'pID') {
+                        if ('pID' != $handle) {
                             $items = explode("\n", trim($data));
                             $handle = substr($handle, 3);
 
                             foreach ($items as $item) {
                                 $item = trim($item);
                                 if ($item && isset($attrLookup[$handle]) && isset($attrLookup[$handle])) {
-                                    $attributemapping[$handle][$item] += 1;
+                                    ++$attributemapping[$handle][$item];
                                 }
                             }
                         }
@@ -265,7 +261,7 @@ class Controller extends BlockController
 
             if (!empty($attributemapping)) {
                 //  second pass to work out what attribute values are actually available
-                $request = \Request::getInstance();
+                $request = $this->app->make(Request::class);
 
                 if ($request->getQueryString()) {
                     $products->processUrlFilters($request);
@@ -275,26 +271,24 @@ class Controller extends BlockController
                 if ($hasfilters) {
                     $afterfilterids = $products->getResultIDs();
 
-                    $attributedata = array();
+                    $attributedata = [];
 
                     if ($afterfilterids) {
                         $attributedata = $db->fetchAll('SELECT * FROM CommunityStoreProductSearchIndexAttributes WHERE pID in (' . implode(',', $afterfilterids) . ')');
                     }
 
-                    foreach($attributemapping as $handle=> $values) {
-                        foreach($values as $k2=>$val2) {
-
+                    foreach ($attributemapping as $handle => $values) {
+                        foreach ($values as $k2 => $val2) {
                             // if we only have one filter in place, don't reset the counts for that set of options
                             //if (! (count($selectedarray) == 1 && isset($selectedarray[$handle])  && $attrFilterTypes[$handle]['matchingType'] == 'or' ) ) {
-                                $attributemapping[$handle][$k2] = 0;
+                            $attributemapping[$handle][$k2] = 0;
                             //}
                         }
                     }
 
                     foreach ($attributedata as $atdata) {
                         foreach ($atdata as $handle => $data) {
-
-                            if ($handle != 'pID') {
+                            if ('pID' != $handle) {
                                 $items = explode("\n", trim($data));
                                 $handle = substr($handle, 3);
 
@@ -302,51 +296,47 @@ class Controller extends BlockController
                                     $item = trim($item);
                                     if ($item) {
                                         // if we only have one filter in place, don't reset the counts for that set of options
-                                       // if (!(count($selectedarray) == 1 && isset($selectedarray[$handle]) && $attrFilterTypes[$handle]['matchingType'] == 'or') && $attrLookup[$handle] ) {
-                                            $attributemapping[$handle][$item] += 1;
+                                        // if (!(count($selectedarray) == 1 && isset($selectedarray[$handle]) && $attrFilterTypes[$handle]['matchingType'] == 'or') && $attrLookup[$handle] ) {
+                                        ++$attributemapping[$handle][$item];
                                         //}
                                     }
                                 }
                             }
                         }
                     }
-
                 }
             }
         }
 
         // final loop to create a selection list that includes non-attribute options (like price)
-        $finalData = array();
+        $finalData = [];
 
         $hasprice = false;
 
-
-        foreach($selectedAttributeList as $att) {
+        foreach ($selectedAttributeList as $att) {
             $handle = $att['handle'];
 
-            if ($att['type'] == 'attr') {
+            if ('attr' == $att['type']) {
                 if (isset($attributemapping[$handle])) {
-                    $finalData[$handle] = array('type'=>'attr', 'data'=>$attributemapping[$handle], 'label'=>$att['label']);
+                    $finalData[$handle] = ['type' => 'attr', 'data' => $attributemapping[$handle], 'label' => $att['label']];
                 }
             } else {
-                $finalData[$att['type']] = array('type'=>$att['type'], 'data'=>false, 'label'=>$att['label']);
+                $finalData[$att['type']] = ['type' => $att['type'], 'data' => false, 'label' => $att['label']];
 
-                if ($att['type'] == 'price') {
+                if ('price' == $att['type']) {
                     $hasprice = true;
                 }
             }
         }
-
 
         $minPriceSelected = '';
         $maxPriceSelected = '';
         $minPrice = '';
         $maxPrice = '';
 
-
         if ($hasprice) {
-            $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price 
-                                            FROM CommunityStoreProducts 
+            $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price
+                                            FROM CommunityStoreProducts
                                             WHERE pID in (' . implode(',', $unfilteredIDs) . ')
                                             AND pPrice > 0
                                             ');
@@ -359,13 +349,12 @@ class Controller extends BlockController
 
             $priceparam = $request->get('price');
 
-            $this->set('priceFiltering', (bool)$priceparam);
-
+            $this->set('priceFiltering', (bool) $priceparam);
 
             if ($priceparam) {
                 $price = explode('-', $priceparam);
                 if (count($price) > 1) {
-                    $minPriceSelected = max($price[0],$minPriceSelected) ;
+                    $minPriceSelected = max($price[0], $minPriceSelected);
                     $maxPriceSelected = min($price[1], $maxPriceSelected);
                 } else {
                     $maxPriceSelected = min($price[0], $maxPriceSelected);
@@ -410,8 +399,7 @@ class Controller extends BlockController
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $db = $this->app->make('database')->connection();
         $vals = [$this->bID];
         $db->query("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
@@ -436,9 +424,9 @@ class Controller extends BlockController
         $count = 0;
         if (!empty($attributes)) {
             foreach ($attributes as $attributesid) {
-                $vals = [$this->bID, (int)$attributesid, $count, $types[$count] , $matchingTypes[$count], $invalidHidings[$count],  $labels[$count]];
+                $vals = [$this->bID, (int) $attributesid, $count, $types[$count], $matchingTypes[$count], $invalidHidings[$count],  $labels[$count]];
                 $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`, `type`, matchingType,invalidHiding, label) VALUES (?,?,?,?,?,?,?)", $vals);
-                $count++;
+                ++$count;
             }
         }
 
@@ -447,12 +435,13 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = Core::make("helper/validation/error");
-        $nh = Core::make("helper/number");
+        $e = $this->app->make("helper/validation/error");
+        $nh = $this->app->make("helper/number");
 
         if (('page' == $args['filter'] || 'page_children' == $args['filter']) && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));
         }
+
         return $e;
     }
 }

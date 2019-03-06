@@ -1,14 +1,18 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use  \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\User\UserInfoRepository;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 ?>
 <html>
 <head>
     <title><?= t("Order #") . $order->getOrderID() ?></title>
-    <link href="<?= str_replace('/index.php/', '/' , \URL::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <link href="<?= str_replace('/index.php/', '/' , Url::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
     <style>
         #store-print-slip td, #store-print-slip th, #store-print-slip p {
             font-size: 0.8em;

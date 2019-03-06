@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
@@ -95,7 +96,7 @@ class ProductList extends AttributedItemList
     public function setAttributeFilters($filterArray)
     {
         $this->attFilters = $filterArray;
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         if (!empty($this->attFilters)) {
@@ -115,7 +116,7 @@ class ProductList extends AttributedItemList
 
     public function processUrlFilters(\Concrete\Core\Http\Request $request)
     {
-        $service = \Core::make('helper/security');
+        $service = Application::getFacadeApplication()->make('helper/security');
         $querystring = $request->getQueryString();
 
         $params = explode('&', $querystring);
@@ -148,7 +149,7 @@ class ProductList extends AttributedItemList
             }
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         foreach ($searchparams as $handle => $searchvalue) {

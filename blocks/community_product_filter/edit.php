@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 
 <div class="row">
 
@@ -31,7 +33,7 @@
                     <div
                         class="form-group" <?= ('page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'); ?> >
                         <?php
-                        $ps = Core::make('helper/form/page_selector');
+                        $ps = $app->make('helper/form/page_selector');
                         echo $ps->selectPage('filterCID', ($filterCID > 0 ? $filterCID : false)); ?>
                     </div>
                 </div>
@@ -232,7 +234,7 @@ if ($relatedProduct) {
 
         $("#product-select").select2({
             ajax: {
-                url: "<?= \URL::to('/productfinder'); ?>",
+                url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
                 dataType: 'json',
                 quietMillis: 250,
                 data: function (term, page) {

@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
-use File;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\File\File;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -80,14 +81,14 @@ class ProductImage
 
     public static function getByID($piID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $piID);
     }
 
     public static function getImagesForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
@@ -144,14 +145,14 @@ class ProductImage
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

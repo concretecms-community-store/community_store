@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Concrete\Core\Controller\Controller;
-use View;
+use Concrete\Core\View\View;
+use Concrete\Core\Routing\Redirect;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
@@ -10,9 +11,9 @@ class ProductModal extends Controller
 {
     public function getProductModal()
     {
-        $pID = $this->get('pID');
+        $pID = $this->request->query->get('pID');
 
-        $locale = $this->get('locale');
+        $locale = $this->request->query->get('locale');
         if ($locale) {
             \Concrete\Core\Localization\Localization::changeLocale($locale);
         }
@@ -33,6 +34,6 @@ class ProductModal extends Controller
             }
         }
 
-        return \Redirect::to('/');
+        return Redirect::to('/');
     }
 }

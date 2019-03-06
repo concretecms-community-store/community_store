@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+
 class GroupList
 {
     public static function getGroupList()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $queryBuilder = $em->createQueryBuilder();
 
         return $queryBuilder->select('g')

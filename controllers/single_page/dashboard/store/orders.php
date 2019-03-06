@@ -1,13 +1,17 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 
 class Orders extends DashboardPageController
 {
@@ -15,8 +19,8 @@ class Orders extends DashboardPageController
     {
         $orderList = new StoreOrderList();
 
-        if ($this->get('keywords')) {
-            $orderList->setSearch($this->get('keywords'));
+        if ($this->request->query->get('keywords')) {
+            $orderList->setSearch($this->request->query->get('keywords'));
         }
 
         if ($status) {
@@ -29,7 +33,7 @@ class Orders extends DashboardPageController
             $orderList->setIncludeExternalPaymentRequested(true);
         }
 
-        $factory = new PaginationFactory(\Request::getInstance());
+        $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
 
         $pagination = $paginator->renderDefaultView();
@@ -63,7 +67,7 @@ class Orders extends DashboardPageController
             }
             $this->requireAsset('javascript', 'communityStoreFunctions');
         } else {
-            return \Redirect::to('/dashboard/store/orders');
+            return Redirect::to('/dashboard/store/orders');
         }
 
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
@@ -71,11 +75,12 @@ class Orders extends DashboardPageController
 
     public function updatestatus($oID)
     {
-        $data = $this->post();
+        $data = $this->request->request->all();
         if ($this->token->validate('community_store')) {
             StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
             $this->flash('success', t('Fulfilment Status Updated'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -83,18 +88,19 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = StoreOrder::getByID($oID);
-            if ($this->post('transactionReference')) {
-                $order->setTransactionReference($this->post('transactionReference'));
+            if ($this->request->request->get('transactionReference')) {
+                $order->setTransactionReference($this->request->request->get('transactionReference'));
             }
 
-            $user = new \User();
+            $user = new User();
 
             $order->completePayment();
             $order->setPaidByUID($user->getUserID());
             $order->save();
 
             $this->flash('success', t('Order Marked As Paid'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -108,7 +114,8 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Payment Reversed'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -116,15 +123,16 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = StoreOrder::getByID($oID);
-            $user = new \User();
+            $user = new User();
 
             $order->setRefunded(new \DateTime());
             $order->setRefundedByUID($user->getUserID());
-            $order->setRefundReason($this->post('oRefundReason'));
+            $order->setRefundReason($this->request->request->get('oRefundReason'));
             $order->save();
 
             $this->flash('success', t('Order Marked As Refunded'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -138,7 +146,8 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Refund Reversed'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -146,14 +155,15 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = StoreOrder::getByID($oID);
-            $user = new \User();
+            $user = new User();
 
             $order->setCancelled(new \DateTime());
             $order->setCancelledByUID($user->getUserID());
             $order->save();
 
             $this->flash('success', t('Order Cancelled'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -166,7 +176,8 @@ class Orders extends DashboardPageController
             $order->save();
 
             $this->flash('success', t('Order Cancellation Reversed'));
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -175,12 +186,12 @@ class Orders extends DashboardPageController
         if ($this->token->validate('community_store')) {
             $order = StoreOrder::getByID($oID);
 
-            if ($order && $this->post('email')) {
-                $order->sendOrderReceipt($this->post('email'));
-                $this->flash('success', t('Receipt Email Resent to %s', $this->post('email')));
+            if ($order && $this->request->request->get('email')) {
+                $order->sendOrderReceipt($this->request->request->get('email'));
+                $this->flash('success', t('Receipt Email Resent to %s', $this->request->request->get('email')));
             }
 
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -188,16 +199,16 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = StoreOrder::getByID($oID);
-            $emails = $this->post('email');
+            $emails = $this->request->request->get('email');
 
             if ($order && $emails) {
-                $order->sendNotifications($this->post('email'));
+                $order->sendNotifications($this->request->request->get('email'));
                 $notificationEmails = explode(",", trim($emails));
                 $notificationEmails = array_map('trim', $notificationEmails);
                 $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
             }
 
-            return \Redirect::to('/dashboard/store/orders/order', $oID);
+            return Redirect::to('/dashboard/store/orders/order', $oID);
         }
     }
 
@@ -208,18 +219,18 @@ class Orders extends DashboardPageController
             $this->flash('success', t('Order Deleted'));
         }
 
-        return \Redirect::to('/dashboard/store/orders');
+        return Redirect::to('/dashboard/store/orders');
     }
 
     public function printslip($oID)
     {
         $o = StoreOrder::getByID($oID);
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', \User::getByUserID($o->getCustomerID()));
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($o->getCustomerID()));
 
         if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . "/application/elements/order_slip.php")) {
-            \View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
+            View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
         } else {
-            \View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], "community_store");
+            View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], "community_store");
         }
 
         exit();

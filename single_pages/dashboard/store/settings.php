@@ -1,12 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\Support\Facade\Config;
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 ?>
 
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= \URL::to('/dashboard/store/settings/shipping'); ?>" class="btn btn-primary"><i class="fa fa-truck fa-flip-horizontal"></i> <?= t("Shipping Methods"); ?></a>
-    <a href="<?= \URL::to('/dashboard/store/settings/tax'); ?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates"); ?></a>
+    <a href="<?= Url::to('/dashboard/store/settings/shipping'); ?>" class="btn btn-primary"><i class="fa fa-truck fa-flip-horizontal"></i> <?= t("Shipping Methods"); ?></a>
+    <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates"); ?></a>
 </div>
 
 <form method="post" action="<?= $view->action('save'); ?>">
@@ -261,13 +264,13 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
             <div class="form-group">
                 <label><?= t("Receipt Email Header Content"); ?></label>
-                <?php $editor = \Core::make('editor');
+                <?php $editor = $app->make('editor');
                 echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
             </div>
 
             <div class="form-group">
                 <label><?= t("Receipt Email Footer Content"); ?></label>
-                <?php $editor = \Core::make('editor');
+                <?php $editor = $app->make('editor');
                 echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
             </div>
 

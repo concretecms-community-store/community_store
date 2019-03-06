@@ -2,9 +2,12 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\Support\Facade\Config;
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $taxCalc = Config::get('community_store.calculation');
-$dh = Core::make('helper/date');
+$dh = $app->make('helper/date');
 
 if ($taxCalc == 'extract') {
 	$taxValue = 'includedTaxTotal';
@@ -183,12 +186,12 @@ $(function(){
 			<h3><?= t("View Orders by Date")?></h3>
 		</div>
 		<div class="col-xs-12 col-sm-8 text-right">
-			<form action="<?=URL::to('/dashboard/store/reports/sales')?>" method="post" class="form form-inline order-report-form">
+			<form action="<?=Url::to('/dashboard/store/reports/sales')?>" method="post" class="form form-inline order-report-form">
 				<div class="form-group">
-					<?= Core::make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
+					<?= $app->make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
 				</div>
 				<div class="form-group">
-					<?= Core::make('helper/form/date_time')->date('dateTo', $dateTo); ?>
+					<?= $app->make('helper/form/date_time')->date('dateTo', $dateTo); ?>
 				</div>
 				<input type="submit" class="btn btn-primary">
 			</form>
@@ -212,7 +215,7 @@ $(function(){
 				<td><?=Price::format($ordersTotals['shippingTotal'])?></td>
 				<td><?=Price::format($ordersTotals[$taxValue])?></td>
 				<td><?=Price::format($ordersTotals['total'])?></td>
-				<td><a href="<?=URL::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default"><?= t('Export to CSV')?></a></td>
+				<td><a href="<?=Url::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default"><?= t('Export to CSV')?></a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -231,7 +234,7 @@ $(function(){
 	<tbody>
 		<?php foreach($orders as $o){?>
 		<tr>
-			<td><a href="<?=URL::to('/dashboard/store/orders/order',$o->getOrderID())?>"><?= $o->getOrderID()?></a></td>
+			<td><a href="<?=Url::to('/dashboard/store/orders/order',$o->getOrderID())?>"><?= $o->getOrderID()?></a></td>
 			<td><?= $dh->formatDateTime($o->getOrderDate())?></td>
 			<td><?=Price::format($o->getSubTotal())?></td>
 			<td><?=Price::format($o->getShippingTotal())?></td>

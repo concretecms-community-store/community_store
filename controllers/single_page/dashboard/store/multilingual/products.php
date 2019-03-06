@@ -1,12 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
-use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 
 class Products extends DashboardSitePageController
 {
@@ -18,21 +21,21 @@ class Products extends DashboardSitePageController
         $productsList->setActiveOnly(false);
         $productsList->setShowOutOfStock(true);
 
-        if ($this->get('ccm_order_by')) {
-            $productsList->setSortBy($this->get('ccm_order_by'));
-            $productsList->setSortByDirection($this->get('ccm_order_by_direction'));
+        if ($this->request->query->get('ccm_order_by')) {
+            $productsList->setSortBy($this->request->query->get('ccm_order_by'));
+            $productsList->setSortByDirection($this->request->query->get('ccm_order_by_direction'));
         } else {
             $productsList->setSortBy('date');
             $productsList->setSortByDirection('desc');
         }
 
-        if ($this->get('keywords')) {
-            $productsList->setSearch(trim($this->get('keywords')));
+        if ($this->request->query->get('keywords')) {
+            $productsList->setSearch(trim($this->request->query->get('keywords')));
         }
 
         $this->set('productList', $productsList);
 
-        $factory = new PaginationFactory(\Request::getInstance());
+        $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($productsList);
 
         $pagination = $paginator->renderDefaultView();
@@ -48,7 +51,6 @@ class Products extends DashboardSitePageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
-
     }
 
     public function translate($pID)
@@ -56,7 +58,7 @@ class Products extends DashboardSitePageController
         $product = StoreProduct::getByID($pID);
 
         if (!$product) {
-            return \Redirect::to('/dashboard/store/multilingual/');
+            return Redirect::to('/dashboard/store/multilingual/');
         }
 
         $this->set('product', $product);
@@ -76,17 +78,15 @@ class Products extends DashboardSitePageController
         $attrOptions = [];
         $typeLookup = [];
 
-
-        foreach($attrList as $ak) {
+        foreach ($attrList as $ak) {
             $typeHandle = $ak->getAttributeType()->getAttributeTypeHandle();
 
             if (in_array($typeHandle, $attInputTypes)) {
                 $availableAtts[] = $ak;
                 $handle = $ak->getAttributeKeyHandle();
 
-                $typeLookup['ak_'. $handle] = $typeHandle;
-                $attrHandles[] = 'ak_'. $handle;
-
+                $typeLookup['ak_' . $handle] = $typeHandle;
+                $attrHandles[] = 'ak_' . $handle;
             }
 
             if (in_array($typeHandle, $attSelectTypes)) {
@@ -98,7 +98,7 @@ class Products extends DashboardSitePageController
             }
         }
 
-        $db = \Database::connection();
+        $db = Database::connection();
 
         if ($attrHandles) {
             $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes where pID = ?',[$pID]);
@@ -120,13 +120,12 @@ class Products extends DashboardSitePageController
 
         ksort($attrOptions);
 
-        foreach($attrOptions as $type=>$options) {
+        foreach ($attrOptions as $type => $options) {
             ksort($options);
             $attrOptions[$type] = $options;
         }
 
-        $this->set('attrOptions',$attrOptions);
-
+        $this->set('attrOptions', $attrOptions);
     }
 
     private function getLocales() {
@@ -147,28 +146,26 @@ class Products extends DashboardSitePageController
         return $localePages;
     }
 
-    public function save() {
-        if ($this->post() && $this->token->validate('community_store')) {
+    public function save()
+    {
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $translations = $this->request->request->get('translation');
 
-            $translations = $this->post('translation');
-
-            foreach($translations as $locale => $value) {
-                foreach($value as $type => $entries) {
+            foreach ($translations as $locale => $value) {
+                foreach ($value as $type => $entries) {
                     foreach ($entries as $key => $items) {
-
-                        $itemstosave = array();
+                        $itemstosave = [];
 
                         if (is_array($items)) {
                             $itemstosave = $items;
-
                         } else {
                             $itemstosave[] = $items;
                         }
 
-                        foreach($itemstosave as $id => $text) {
+                        foreach ($itemstosave as $id => $text) {
                             $qb = $this->entityManager->createQueryBuilder();
 
-                            $productID = $this->post('pID');
+                            $productID = $this->request->request->get('pID');
 
                             $query = $qb->select('t')
                                 ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
@@ -187,7 +184,8 @@ class Products extends DashboardSitePageController
 
                             if (!empty($t)) {
                                 $t = $t[0];
-                                if (!$text)  {
+
+                                if (!$text) {
                                     $t->delete();
                                 }
                             } else {
@@ -218,12 +216,11 @@ class Products extends DashboardSitePageController
                         }
                     }
                 }
-
             }
 
             $this->flash('success', t('Product Translations Updated'));
-            return \Redirect::to('/dashboard/store/multilingual/products');
 
+            return Redirect::to('/dashboard/store/multilingual/products');
         }
     }
 }

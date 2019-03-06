@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -84,7 +85,7 @@ class ProductPriceTier
 
     public static function getByID($ptID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier', $ptID);
     }
@@ -109,7 +110,7 @@ class ProductPriceTier
 
     public static function removePriceTiersForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $priceTiers = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier')->findBy(['pID' => $product->getID()]);
 
         foreach ($priceTiers as $tier) {
@@ -139,14 +140,14 @@ class ProductPriceTier
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

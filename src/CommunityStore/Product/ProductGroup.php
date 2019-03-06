@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
@@ -91,14 +92,14 @@ class ProductGroup
 
     public static function getByID($pgID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $pgID);
     }
 
     public static function getGroupsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $productGroups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
         $groups = [];
         if (count($productGroups)) {
@@ -112,7 +113,7 @@ class ProductGroup
 
     public static function isProductInGroup(StoreProduct $product, StoreGroup $group)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $gID = $group->getGroupID();
 
         $productGroup = $em->getRepository(get_class())->findBy(['pID' => $product->getID(), 'gID' => $gID]);
@@ -149,7 +150,7 @@ class ProductGroup
 
     public static function removeGroupsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $groups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
@@ -158,7 +159,7 @@ class ProductGroup
 
     public static function removeProductsForGroup(StoreGroup $group)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $groups = $em->getRepository(get_class())->findBy(['gID' => $group->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
@@ -196,14 +197,14 @@ class ProductGroup
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

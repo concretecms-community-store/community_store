@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
 use Doctrine\ORM\Mapping as ORM;
-use AttributeSet;
+use Concrete\Core\Attribute\Set as AttributeSet;
 
 /**
  * @ORM\Entity

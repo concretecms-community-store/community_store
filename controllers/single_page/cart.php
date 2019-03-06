@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use PageController;
-use Config;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -10,6 +10,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\View\View;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
@@ -17,15 +20,15 @@ class Cart extends PageController
 {
     public function view($action = '')
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if ($al !== null) {
-            $langpath =  $al->getCollectionHandle();
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
-            return \Redirect::to("/");
+            return Redirect::to("/");
         }
 
         $codeerror = false;
@@ -34,22 +37,21 @@ class Cart extends PageController
         $returndata = [];
 
         $token = $this->app->make('token');
-
-        if ($this->post() && $token->validate('community_store')) {
-            if ('code' == $this->post('action')) {
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            if ('code' == $this->request->request->get('action')) {
                 $codeerror = false;
                 $codesuccess = false;
 
-                if ($this->post('code')) {
-                    $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
+                if ($this->request->request->get('code')) {
+                    $codesuccess = StoreDiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
                 } else {
                     StoreDiscountCode::clearCartCode();
                 }
             }
 
-            if ('update' == $this->post('action')) {
-                $data = $this->post();
+            if ('update' == $this->request->request->get('action')) {
+                $data = $this->request->request->all();
                 if (is_array($data['instance'])) {
                     $result = StoreCart::updateMutiple($data);
                     $quantity = 0;
@@ -70,13 +72,13 @@ class Cart extends PageController
                 $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
             }
 
-            if ('clear' == $this->post('action')) {
+            if ('clear' == $this->request->request->get('action')) {
                 StoreCart::clear();
                 $returndata = ['success' => true, 'action' => 'clear'];
             }
 
-            if ('remove' == $this->post('action')) {
-                $data = $this->post();
+            if ('remove' == $this->request->request->get('action')) {
+                $data = $this->request->request->all();
                 if (isset($data['instance'])) {
                     StoreCart::remove($data['instance']);
                     $returndata = ['success' => true, 'action' => 'remove'];
@@ -100,7 +102,7 @@ class Cart extends PageController
         if (StoreCart::isShippable()) {
             $this->set('shippingEnabled', true);
 
-            if (\Session::get('community_store.smID')) {
+            if (Session::get('community_store.smID')) {
                 $this->set('shippingtotal', $totals['shippingTotal']);
             } else {
                 $this->set('shippingtotal', false);
@@ -131,8 +133,8 @@ class Cart extends PageController
     {
         $token = $this->app->make('token');
 
-        if ($this->post() && $token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $data = $this->request->request->all();
             $result = StoreCart::add($data);
 
             $added = $result['added'];
@@ -159,7 +161,7 @@ class Cart extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('community_store')) {
-            StoreDiscountCode::storeCartCode($this->post('code'));
+            StoreDiscountCode::storeCartCode($this->request->request->get('code'));
         }
 
         exit();
@@ -169,8 +171,8 @@ class Cart extends PageController
     {
         $token = $this->app->make('token');
 
-        if ($this->post() && $token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $data = $this->request->request->all();
 
             if (is_array($data['instance'])) {
                 $result = StoreCart::updateMutiple($data);
@@ -199,9 +201,8 @@ class Cart extends PageController
     public function remove()
     {
         $token = $this->app->make('token');
-
-        if ($this->post() && $token->validate('community_store')) {
-            $instanceID = $_POST['instance'];
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $instanceID = $this->request->request->get('instance');
             StoreCart::remove($instanceID);
             $returndata = ['success' => true, 'action' => 'remove'];
             echo json_encode($returndata);
@@ -213,7 +214,7 @@ class Cart extends PageController
     {
         $token = $this->app->make('token');
 
-        if ($this->post() && $token->validate('community_store')) {
+        if ($this->request->request->all() && $token->validate('community_store')) {
             StoreCart::clear();
             $returndata = ['success' => true, 'action' => 'clear'];
             echo json_encode($returndata);
@@ -223,11 +224,11 @@ class Cart extends PageController
 
     public function getmodal()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if ($al !== null) {
-            $langpath =  $al->getCollectionHandle();
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
         }
 
         $cart = StoreCart::getCart();
@@ -237,12 +238,12 @@ class Cart extends PageController
         $total = $totals['subTotal'];
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $token =  $app->make('token');
+        $token = $app->make('token');
 
         if (Filesystem::exists(DIR_BASE . '/application/elements/cart_modal.php')) {
-            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post(), 'token'=>$token, 'langpath'=>$langpath]);
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
         } else {
-            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->post(), 'token'=>$token, 'langpath'=>$langpath], 'community_store');
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
         }
 
         exit();
@@ -267,7 +268,7 @@ class Cart extends PageController
             $formattedtaxes[] = $tax;
         }
 
-        if (!\Session::get('community_store.smID')) {
+        if (!Session::get('community_store.smID')) {
             $shippingTotalRaw = false;
         } else {
             $shippingTotalRaw = $shippingTotal;

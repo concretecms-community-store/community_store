@@ -1,8 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-
-$csm = \Core::make('cs/helper/multilingual');
-$editor = \Core::make('editor');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 $action = $controller->getAction();
 $localecount = count($locales);
 ?>

@@ -3,8 +3,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use \Concrete\Core\Support\Facade\Url;
 
-$csm = \Core::make('cs/helper/multilingual');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 ?>
 <div class="store-cart-modal clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
@@ -37,10 +39,10 @@ $csm = \Core::make('cs/helper/multilingual');
             <?php } ?>
         <?php } ?>
 
-        <input id='cartURL' type='hidden' data-cart-url='<?=\URL::to("/cart/")?>'>
+        <input id='cartURL' type='hidden' data-cart-url='<?=Url::to("/cart/")?>'>
             <?php
             if($cart){ ?>
-            <form method="post" action="<?= \URL::to('/cart/');?>" id="store-modal-cart">
+            <form method="post" action="<?= Url::to('/cart/');?>" id="store-modal-cart">
                 <?= $token->output('community_store'); ?>
                 <table id="cart" class="table table-hover table-condensed" >
                 <thead>
@@ -232,7 +234,7 @@ $csm = \Core::make('cs/helper/multilingual');
                 <?php if ($cart  && !empty($cart)) { ?>
                 <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= \URL::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

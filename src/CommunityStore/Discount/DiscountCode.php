@@ -2,10 +2,10 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Doctrine\ORM\Mapping\Column;
-use Core;
-use Session;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -119,14 +119,14 @@ class DiscountCode
 
     public static function getByID($dcID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $dcID);
     }
 
     public static function getByCode($code)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['dcCode' => $code]);
     }
@@ -144,21 +144,21 @@ class DiscountCode
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function validate($args)
     {
-        $e = Core::make('helper/validation/error');
+        $e = Application::getFacadeApplication()->make('helper/validation/error');
 
         return $e;
     }
