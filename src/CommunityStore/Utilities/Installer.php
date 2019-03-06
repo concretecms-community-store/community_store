@@ -29,7 +29,7 @@ use ORM;
 
 class Installer
 {
-    public static function installSinglePages($pkg)
+    public static function installSinglePages($pkg, $upgrade = false)
     {
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
@@ -50,24 +50,27 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
-        self::installSinglePage('/cart', $pkg);
-        self::installSinglePage('/checkout', $pkg);
-        self::installSinglePage('/checkout/complete', $pkg);
 
-        $cartPage = Page::getByPath('/cart/');
-        $cartPage->setAttribute('exclude_nav', 1);
-        $cartPage->setAttribute('exclude_search_index', 1);
-        $cartPage->setAttribute('exclude_page_list', 1);
+       if (!$upgrade) {
+           self::installSinglePage('/cart', $pkg);
+           self::installSinglePage('/checkout', $pkg);
+           self::installSinglePage('/checkout/complete', $pkg);
 
-        $checkoutPage = Page::getByPath('/checkout/');
-        $checkoutPage->setAttribute('exclude_nav', 1);
-        $checkoutPage->setAttribute('exclude_search_index', 1);
-        $checkoutPage->setAttribute('exclude_page_list', 1);
+           $cartPage = Page::getByPath('/cart/');
+           $cartPage->setAttribute('exclude_nav', 1);
+           $cartPage->setAttribute('exclude_search_index', 1);
+           $cartPage->setAttribute('exclude_page_list', 1);
 
-        $completePage = Page::getByPath('/checkout/complete');
-        $completePage->setAttribute('exclude_nav', 1);
-        $completePage->setAttribute('exclude_search_index', 1);
-        $completePage->setAttribute('exclude_page_list', 1);
+           $checkoutPage = Page::getByPath('/checkout/');
+           $checkoutPage->setAttribute('exclude_nav', 1);
+           $checkoutPage->setAttribute('exclude_search_index', 1);
+           $checkoutPage->setAttribute('exclude_page_list', 1);
+
+           $completePage = Page::getByPath('/checkout/complete');
+           $completePage->setAttribute('exclude_nav', 1);
+           $completePage->setAttribute('exclude_search_index', 1);
+           $completePage->setAttribute('exclude_page_list', 1);
+       }
     }
 
     public static function installSinglePage($path, $pkg)
@@ -416,7 +419,7 @@ class Installer
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
-        self::installSinglePages($pkg);
+        self::installSinglePages($pkg, true);
 
         Localization::clearCache();
     }
