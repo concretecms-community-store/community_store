@@ -1,5 +1,6 @@
 <?php
-$form = Core::make('helper/form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
 
 $groupList = [];
 $gl = new Concrete\Core\User\Group\GroupList();

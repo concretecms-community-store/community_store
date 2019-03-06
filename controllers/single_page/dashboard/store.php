@@ -2,10 +2,11 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Http\Request;
 
 class Store extends DashboardPageController
 {
@@ -20,7 +21,7 @@ class Store extends DashboardPageController
         $orderList = new OrderList();
         $orderList->setItemsPerPage(10);
 
-        $factory = new PaginationFactory(\Request::getInstance());
+        $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
 
         $orders = new OrderList();

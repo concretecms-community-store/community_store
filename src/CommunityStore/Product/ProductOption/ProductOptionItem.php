@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -99,14 +100,14 @@ class ProductOptionItem
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
@@ -165,7 +166,7 @@ class ProductOptionItem
 
     public function save($persistonly = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
 
         if (!$persistonly) {
@@ -175,7 +176,7 @@ class ProductOptionItem
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

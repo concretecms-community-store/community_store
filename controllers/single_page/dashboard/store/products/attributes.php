@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
-use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
@@ -21,7 +22,7 @@ class Attributes extends DashboardAttributesPageController
     {
         $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->renderEdit($key,
-            \URL::to('/dashboard/store/products/attributes', 'view')
+            Url::to('/dashboard/store/products/attributes', 'view')
         );
     }
 
@@ -30,7 +31,7 @@ class Attributes extends DashboardAttributesPageController
         $this->edit($akID);
         $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->executeUpdate($key,
-            \URL::to('/dashboard/store/products/attributes', 'view')
+            Url::to('/dashboard/store/products/attributes', 'view')
         );
     }
 
@@ -38,7 +39,7 @@ class Attributes extends DashboardAttributesPageController
     {
         $type = Type::getByID($type);
         $this->renderAdd($type,
-            \URL::to('/dashboard/store/products/attributes', 'view')
+            Url::to('/dashboard/store/products/attributes', 'view')
         );
     }
 
@@ -46,14 +47,14 @@ class Attributes extends DashboardAttributesPageController
     {
         $this->select_type($type);
         $type = Type::getByID($type);
-        $this->executeAdd($type, \URL::to('/dashboard/store/products/attributes', 'view'));
+        $this->executeAdd($type, Url::to('/dashboard/store/products/attributes', 'view'));
     }
 
     public function delete($akID = null)
     {
         $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->executeDelete($key,
-            \URL::to('/dashboard/store/products/attributes', 'view')
+            Url::to('/dashboard/store/products/attributes', 'view')
         );
     }
 }

@@ -2,14 +2,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use  \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\User\UserInfoRepository;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 ?>
 <html>
 <head>
     <title><?= t("Order #") . $order->getOrderID() ?></title>
-    <link href="<?= str_replace('/index.php/', '/' , \URL::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <link href="<?= str_replace('/index.php/', '/' , Url::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
     <style>
         td, th {
             font-size: 14px;
@@ -72,11 +75,11 @@ $dh = Core::make('helper/date');
                     <?php } ?>
 
                     <?php
-                    $ui = UserInfo::getByID($order->getCustomerID());
+                    $ui = $app->make(UserInfoRepository::class)->getByID($order->getCustomerID());
                     if ($ui) { ?>
                         <h4><?= t("User") ?></h4>
                         <p>
-                            <a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
+                            <a href="<?= Url::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
                         </p>
                     <?php } ?>
 

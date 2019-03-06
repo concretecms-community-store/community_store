@@ -1,16 +1,19 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\User\UserInfoRepository;
 
 ?>
 
 <?php if ($controller->getTask() == 'order') { ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" class="btn btn-primary" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a>
+        <a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" class="btn btn-primary" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a>
     </div>
 
     <div class="row">
@@ -65,10 +68,10 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                 <?php } ?>
 
                 <?php
-                $ui = UserInfo::getByID($order->getCustomerID());
+                $ui = $app->make(UserInfoRepository::class)->getByID($order->getCustomerID());
                 if ($ui) { ?>
                     <h4><?= t("User") ?></h4>
-                    <p><a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a></p>
+                    <p><a href="<?= Url::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a></p>
                 <?php } ?>
 
                 <?php if (Config::get('community_store.vat_number')) { ?>
@@ -355,7 +358,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                 </div>
                 <div class="panel-body">
 
-                    <form action="<?= URL::to("/dashboard/store/orders/updatestatus", $order->getOrderID()) ?>" method="post">
+                    <form action="<?= Url::to("/dashboard/store/orders/updatestatus", $order->getOrderID()) ?>" method="post">
                         <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <?= $form->select("orderStatus", $orderStatuses, $order->getStatus()); ?>
@@ -371,7 +374,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                     <h4 class="panel-title"><?= t("Resend Notification Email") ?></h4>
                 </div>
                 <div class="panel-body">
-                    <form action="<?= URL::to("/dashboard/store/orders/resendnotification", $order->getOrderID()) ?>" method="post">
+                    <form action="<?= Url::to("/dashboard/store/orders/resendnotification", $order->getOrderID()) ?>" method="post">
                         <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <label for="email"><?= t('Email'); ?></label>
@@ -423,7 +426,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                                     ?></td>
                                 <td><?php if (!$refunded && $paiduser) { ?>
 
-                                        <form action="<?= URL::to("/dashboard/store/orders/reversepaid", $order->getOrderID()) ?>" method="post">
+                                        <form action="<?= Url::to("/dashboard/store/orders/reversepaid", $order->getOrderID()) ?>" method="post">
                                             <?= $token->output('community_store'); ?>
                                             <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this payment?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse") ?>">
                                         </form>
@@ -447,7 +450,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                                     ?></td>
                                 <td>
 
-                                    <form action="<?= URL::to("/dashboard/store/orders/reverserefund", $order->getOrderID()) ?>" method="post">
+                                    <form action="<?= Url::to("/dashboard/store/orders/reverserefund", $order->getOrderID()) ?>" method="post">
                                         <?= $token->output('community_store'); ?>
                                         <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse") ?>">
                                     </form>
@@ -469,7 +472,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                         <div class="panel-body">
 
                             <?php if (!$paid) { ?>
-                                <form action="<?= URL::to("/dashboard/store/orders/markpaid", $order->getOrderID()) ?>" method="post">
+                                <form action="<?= Url::to("/dashboard/store/orders/markpaid", $order->getOrderID()) ?>" method="post">
                                     <?= $token->output('community_store'); ?>
                                     <div class="form-group">
                                         <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
@@ -478,7 +481,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                                     <input type="submit" class="btn btn-default" value="<?= t("Mark Paid") ?>">
                                 </form>
                             <?php } elseif (!$refunded) { ?>
-                                <form action="<?= URL::to("/dashboard/store/orders/markrefunded", $order->getOrderID()) ?>" method="post">
+                                <form action="<?= Url::to("/dashboard/store/orders/markrefunded", $order->getOrderID()) ?>" method="post">
                                     <?= $token->output('community_store'); ?>
                                     <div class="form-group">
                                         <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
@@ -499,7 +502,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                     <h4 class="panel-title"><?= t("Resend Invoice Email") ?></h4>
                 </div>
                 <div class="panel-body">
-                    <form action="<?= URL::to("/dashboard/store/orders/resendinvoice", $order->getOrderID()) ?>" method="post">
+                    <form action="<?= Url::to("/dashboard/store/orders/resendinvoice", $order->getOrderID()) ?>" method="post">
                         <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <label for="email"><?= t('Email'); ?></label>
@@ -517,13 +520,13 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
     <?php if (!$order->getCancelled()) { ?>
         <fieldset>
             <legend><?= t("Cancel Order") ?></legend>
-            <form action="<?= URL::to("/dashboard/store/orders/markcancelled", $order->getOrderID()) ?>" method="post">
+            <form action="<?= Url::to("/dashboard/store/orders/markcancelled", $order->getOrderID()) ?>" method="post">
                 <?= $token->output('community_store'); ?>
                 <input data-confirm-message="<?= h(t('Are you sure you wish to cancel this order?')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Cancel Order") ?>">
             </form>
         </fieldset>
     <?php } else { ?>
-        <form action="<?= URL::to("/dashboard/store/orders/reversecancel", $order->getOrderID()) ?>" method="post">
+        <form action="<?= Url::to("/dashboard/store/orders/reversecancel", $order->getOrderID()) ?>" method="post">
             <?= $token->output('community_store'); ?>
             <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this cancellation?')); ?>" type="submit" class="confirm-action btn btn-default" value="<?= t("Reverse Cancellation") ?>">
         </form>
@@ -531,7 +534,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
 
         <fieldset>
             <legend><?= t("Delete Order") ?></legend>
-            <form action="<?= URL::to("/dashboard/store/orders/remove", $order->getOrderID()) ?>" method="post">
+            <form action="<?= Url::to("/dashboard/store/orders/remove", $order->getOrderID()) ?>" method="post">
                 <?= $token->output('community_store'); ?>
                 <input data-confirm-message="<?= h(t('Are you sure you wish to completely delete this order? The order number will be reused.')); ?>" type="submit" class="confirm-action btn btn-danger" value="<?= t("Delete Order") ?>">
             </form>
@@ -545,7 +548,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
     </div>
 
     <?php if ($shoppingDisabled) { ?>
-        <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= \URL::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
+        <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 
     <div class="ccm-dashboard-content-full">
@@ -553,10 +556,10 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
             <div class="ccm-search-fields-row">
                 <?php if ($statuses) { ?>
                     <ul id="group-filters" class="nav nav-pills">
-                        <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/') ?>"><?= t('All Statuses') ?></a></li>
+                        <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/orders/') ?>"><?= t('All Statuses') ?></a></li>
 
                         <?php foreach ($statuses as $statusoption) { ?>
-                            <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle()) ?>"><?= t($statusoption->getName()); ?></a></li>
+                            <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/orders/', $statusoption->getHandle()) ?>"><?= t($statusoption->getName()); ?></a></li>
                         <?php } ?>
                     </ul>
                 <?php } ?>
@@ -603,7 +606,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                     ?>
                     <tr>
                         <td><?= $canstart; ?>
-                            <a href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
+                            <a href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
 
                             <?php if ($cancelled) {
                                 echo '<span class="text-danger">' . t('Cancelled') . '</span>';
@@ -651,12 +654,12 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-primary btn-sm"
-                                   href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                                   href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<?= URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
+                                    <li><a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
                                 </ul>
                             </div>
                         </td>

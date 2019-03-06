@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -58,14 +59,14 @@ class Group
 
     public static function getByID($gID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_called_class(), $gID);
     }
 
     public static function getByName($gName)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['groupName' => $gName]);
     }
@@ -89,14 +90,14 @@ class Group
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

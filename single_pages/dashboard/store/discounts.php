@@ -1,10 +1,14 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\Support\Facade\Config;
 
-$form = Core::make('helper/form');
-$date = Core::make('helper/form/date_time');
-$dfh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+$form = $app->make('helper/form');
+$date = $app->make('helper/form/date_time');
+$dfh = $app->make('helper/date');
 
 $listViews = array('view','updated','removed','success', 'deleted');
 $addViews = array('add','edit','save');
@@ -17,7 +21,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 <?php if (in_array($controller->getAction(), $listViews)){ ?>
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= \URL::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t("Add Discount Rule")?></a>
+        <a href="<?= Url::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t("Add Discount Rule")?></a>
 	</div>
 
 
@@ -88,7 +92,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
                         ?>
                         <tr>
-                            <td><strong><a href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong>
+                            <td><strong><a href="<?= Url::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= h($discountRule->getName()); ?></a></strong>
                             <br />
                                 <?php if(!$discountRule->isEnabled()){ ?>
                                     <span class="label label-danger"><?= t('Disabled')?></span>
@@ -179,10 +183,10 @@ $currencySymbol = Config::get('community_store.symbol');
                             </td>
 
                             <td>
-                                <p><a class="btn btn-default" href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
+                                <p><a class="btn btn-default" href="<?= Url::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
                                 <?php
                                 if ($discountRule->getTrigger() == 'code') {
-                                    echo '<p>' . '<a class="btn btn-default btn-sm" href="'. \URL::to('/dashboard/store/discounts/codes/', $discountRule->getID()).'">'.t('Manage Codes').'</a></p>';
+                                    echo '<p>' . '<a class="btn btn-default btn-sm" href="'. Url::to('/dashboard/store/discounts/codes/', $discountRule->getID()).'">'.t('Manage Codes').'</a></p>';
                                 } ?>
 
                             </td>
@@ -216,7 +220,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
-            <form method="post" id="deleterule" action="<?= \URL::to('/dashboard/store/discounts/delete/')?>">
+            <form method="post" id="deleterule" action="<?= Url::to('/dashboard/store/discounts/delete/')?>">
                 <?= $token->output('community_store'); ?>
                 <input type="hidden" name="drID" value="<?= $discountRule->getID(); ?>" />
                 <button class="btn btn-danger" ><?= t('Delete'); ?></button>
@@ -418,7 +422,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= \URL::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Cancel')?></a>
+            <a href="<?= Url::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Cancel')?></a>
             <button class="pull-right btn btn-primary" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
@@ -504,7 +508,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 <?php if (in_array($controller->getAction(), $codeViews)){ ?>
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= \URL::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
+    <a href="<?= Url::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
 </div>
 
 <?php if (isset($failedcodes) && count($failedcodes) > 0 ) { ?>
@@ -541,7 +545,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?php if ($code->isUsed()) { ?>
                             <tr>
                                 <td><del><?= $code->getCode(); ?></del></td>
-                                <td><a class="btn btn-default btn-xs" href="<?= \URL::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
+                                <td><a class="btn btn-default btn-xs" href="<?= Url::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>
                         <?php } else { ?>
@@ -549,7 +553,7 @@ $currencySymbol = Config::get('community_store.symbol');
                                 <td><?= $code->getCode(); ?></td>
                                 <td><span class="label label-success"><?= t('Available'); ?></span></td>
                             <td>
-                                <form method="post" action="<?= \URL::to('/dashboard/store/discounts/deletecode/')?>">
+                                <form method="post" action="<?= Url::to('/dashboard/store/discounts/deletecode/')?>">
                                     <?= $token->output('community_store'); ?>
                                     <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
                                     <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -561,7 +565,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <tr>
                             <td><?= $code->getCode(); ?></td>
                             <td>
-                                <form method="post" action="<?= \URL::to('/dashboard/store/discounts/deletecode/')?>">
+                                <form method="post" action="<?= Url::to('/dashboard/store/discounts/deletecode/')?>">
                                     <?= $token->output('community_store'); ?>
                                     <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
                                     <button class="btn btn-danger" ><i class="fa fa-trash"></i></button>
@@ -580,7 +584,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <?php } ?>
 <br />
-<form method="post" action="<?= \URL::to('/dashboard/store/discounts/addcodes', $discountRule->getID())?>" id="codes-add">
+<form method="post" action="<?= Url::to('/dashboard/store/discounts/addcodes', $discountRule->getID())?>" id="codes-add">
     <?= $token->output('community_store'); ?>
     <fieldset><legend><?= t('Add Codes'); ?></legend>
 
@@ -598,7 +602,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= \URL::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Return to Discount Rules')?></a>
+            <a href="<?= Url::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Return to Discount Rules')?></a>
         </div>
     </div>
 

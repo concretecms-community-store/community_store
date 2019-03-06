@@ -1,12 +1,16 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\Support\Facade\Config;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use \Concrete\Core\Page\Page;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $listViews = ['view', 'updated', 'removed', 'success'];
 $addViews = ['add', 'edit', 'save'];
 $attributeViews = ['attributes', 'attributeadded', 'attributeremoved'];
-$ps = Core::make('helper/form/page_selector');
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+$ps = $app->make('helper/form/page_selector');
 
 ?>
 
@@ -29,12 +33,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php if ($pID > 0) { ?>
         <div class="ccm-dashboard-header-buttons">
 
-            <form class="pull-right" method="post" id="delete" action="<?= \URL::to('/dashboard/store/products/delete/', $pID) ?>">
+            <form class="pull-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/products/delete/', $pID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
                 <button class="btn btn-danger"><?= t("Delete Product") ?></button>
             </form>
 
-            <form class="pull-right" method="get" id="duplicate" action="<?= \URL::to('/dashboard/store/products/duplicate/', $pID) ?>">
+            <form class="pull-right" method="get" id="duplicate" action="<?= Url::to('/dashboard/store/products/duplicate/', $pID) ?>">
                 <button class="btn btn-default"><?= t("Duplicate Product") ?></button>
             </form>
 
@@ -440,7 +444,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <div class="col-xs-12">
                             <div class="form-group">
                                 <?= $form->label("pDateAdded", t("Date Added")); ?>
-                                <?= \Core::make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
+                                <?= $app->make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
                             </div>
                             <style>
                                 #ui-datepicker-div {
@@ -454,7 +458,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Short Description")); ?><br>
                     <?php
-                    $editor = Core::make('editor');
+                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('pDesc', $product->getDesc());
                     ?>
                 </div>
@@ -462,7 +466,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Product Details (Long Description)")); ?><br>
                     <?php
-                    $editor = Core::make('editor');
+                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                     ?>
                 </div>
@@ -480,7 +484,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         if (!empty($locationPages)) {
                             foreach ($locationPages as $location) {
                                 if ($location) {
-                                    $locationpage = \Page::getByID($location->getCollectionID());
+                                    $locationpage = Page::getByID($location->getCollectionID());
                                     if ($locationpage) {
                                         echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
                                     }
@@ -1355,7 +1359,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     $(function () {
                         $("#product-select").select2({
                             ajax: {
-                                url: "<?= \URL::to('/productfinder')?>",
+                                url: "<?= Url::to('/productfinder')?>",
                                 dataType: 'json',
                                 quietMillis: 250,
                                 data: function (term, page) {
@@ -1512,7 +1516,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             </div>
 
                             <?php if ($product->getID()) { ?>
-                                <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" href="<?= \URL::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page") ?></a>
+                                <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" href="<?= Url::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page") ?></a>
                             <?php } ?>
                         <?php } else { ?>
                             <div class="alert alert-warning">
@@ -1533,7 +1537,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= \URL::to('/dashboard/store/products/') ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/') ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
                 <button class="pull-right btn btn-success" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
@@ -1560,9 +1564,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 <?php } elseif (in_array($controller->getAction(), $listViews)) { ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <!--<a href="<?= \URL::to('/dashboard/store/products/', 'attributes') ?>" class="btn btn-dark"><?= t("Manage Attributes") ?></a>-->
-        <a href="<?= \URL::to('/dashboard/store/products/', 'groups') ?>" class="btn btn-primary"><?= t("Manage Groups") ?></a>
-        <a href="<?= \URL::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
+        <!--<a href="<?= Url::to('/dashboard/store/products/', 'attributes') ?>" class="btn btn-dark"><?= t("Manage Attributes") ?></a>-->
+        <a href="<?= Url::to('/dashboard/store/products/', 'groups') ?>" class="btn btn-primary"><?= t("Manage Groups") ?></a>
+        <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
     </div>
 
     <div class="ccm-dashboard-content-full">
@@ -1572,7 +1576,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     $currentFilter = '';
                     ?>
                     <ul id="group-filters" class="nav nav-pills">
-                        <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
+                        <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
 
                         <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
                             <?php
@@ -1591,7 +1595,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
                             <ul class="dropdown-menu">
                                 <?php foreach ($grouplist as $group) { ?>
-                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
                                 <?php } ?>
                             </ul>
                         </li>
@@ -1631,7 +1635,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb(); ?></td>
-                        <td><strong><a href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= $product->getName();
+                        <td><strong><a href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= $product->getName();
                                     $sku = $product->getSKU();
                                     if ($sku) {
                                         echo ' (' . $sku . ')';
@@ -1683,7 +1687,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-primary"
-                                   href="<?= \URL::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= t("Manage") ?></a>
+                                   href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= t("Manage") ?></a>
                                 <?php if ($multilingualEnabled) { ?>
                                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
@@ -1696,7 +1700,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <?php } ?>
 
 
-                                        <li><a target="_blank" href="<?= URL::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
+                                        <li><a target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
                                     </ul>
                                 <?php } ?>
                             </div>

@@ -4,13 +4,13 @@ use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
-
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $eligibleMethods = StoreShippingMethod::getEligibleMethods();
 $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
 
-$csm = \Core::make('cs/helper/multilingual');
+$csm = $app->make('cs/helper/multilingual');
 ?>
 
 <?php if (!empty($eligibleMethods)) { ?>

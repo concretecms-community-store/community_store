@@ -1,7 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Support\Facade\Url;
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $action = $controller->getAction();
-$csm = \Core::make('cs/helper/multilingual');
+$csm = $app->make('cs/helper/multilingual');
 
 if ($action == 'view') { ?>
 
@@ -13,7 +15,7 @@ if ($action == 'view') { ?>
                     ?>
                     <ul id="group-filters" class="nav nav-pills">
                         <li <?= (!$gID ? 'class="active"' : ''); ?>><a
-                                    href="<?= \URL::to('/dashboard/store/multilingual/products/') ?>"><?= t('All Groups') ?></a>
+                                    href="<?= Url::to('/dashboard/store/multilingual/products/') ?>"><?= t('All Groups') ?></a>
                         </li>
 
                         <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
@@ -35,7 +37,7 @@ if ($action == 'view') { ?>
                             <ul class="dropdown-menu">
                                 <?php foreach ($grouplist as $group) { ?>
                                     <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a
-                                                href="<?= \URL::to('/dashboard/store/multilingual/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a>
+                                                href="<?= Url::to('/dashboard/store/multilingual/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a>
                                     </li>
                                 <?php } ?>
                             </ul>
@@ -86,7 +88,7 @@ if ($action == 'view') { ?>
                     <tr>
                         <td><?= $product->getImageThumb(); ?></td>
                         <td>
-                            <strong><a href="<?= \URL::to('/dashboard/store/multilingual/products/translate/', $product->getID()) ?>"><?= $product->getName();
+                            <strong><a href="<?= Url::to('/dashboard/store/multilingual/products/translate/', $product->getID()) ?>"><?= $product->getName();
                                     $sku = $product->getSKU();
                                     if ($sku) {
                                         echo ' (' . $sku . ')';
@@ -123,7 +125,7 @@ if ($action == 'view') { ?>
                             <?php } ?>
                         <td>
                             <a class="btn btn-sm btn-primary"
-                               href="<?= \URL::to('/dashboard/store/multilingual/products/translate', $product->getID()) ?>"><?= t('Translate'); ?></i></a>
+                               href="<?= Url::to('/dashboard/store/multilingual/products/translate', $product->getID()) ?>"><?= t('Translate'); ?></i></a>
                         </td>
                     </tr>
                 <?php }
@@ -212,7 +214,7 @@ $localecount = count($locales);
                 <td>
 
                     <?php
-                    $editor = Core::make('editor');
+                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
                     ?>
 
@@ -240,7 +242,7 @@ $localecount = count($locales);
 
                 <td>
                     <?php
-                    $editor = Core::make('editor');
+                    $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
                     ?>
                 </td>
@@ -440,7 +442,7 @@ $localecount = count($locales);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= \URL::to('/dashboard/store/multilingual/products/') ?>"
+            <a href="<?= Url::to('/dashboard/store/multilingual/products/') ?>"
                class="btn btn-default pull-left"><?= t("Cancel") ?></a>
             <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
         </div>

@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Session;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use GroupList;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
 
 class Discounts extends DashboardPageController
 {
@@ -17,7 +19,7 @@ class Discounts extends DashboardPageController
         $discountRuleList = new StoreDiscountRuleList();
         $discountRuleList->setItemsPerPage(10);
 
-        $factory = new PaginationFactory(\Request::getInstance());
+        $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($discountRuleList);
 
         $pagination = $paginator->renderDefaultView();
@@ -113,41 +115,44 @@ class Discounts extends DashboardPageController
 
     public function delete()
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $data = $this->request->request->all();
             $dr = StoreDiscountRule::getByID($data['drID']);
 
             if ($dr) {
                 $dr->delete();
             }
             $this->flash('success', t('Discount Rule Deleted'));
-            return \Redirect::to('/dashboard/store/discounts');
+
+            return Redirect::to('/dashboard/store/discounts');
         }
 
-        return \Redirect::to('/dashboard/store/discounts');
+        return Redirect::to('/dashboard/store/discounts');
     }
 
     public function deletecode()
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $data = $this->request->request->all();
             $dc = StoreDiscountCode::getByID($data['dcID']);
 
             if ($dc) {
                 $ruleid = $dc->getDiscountRule()->getID();
                 $dc->delete();
-                return \Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
+
+                return Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
             }
         }
 
         $this->flash('success', t('Code Deleted'));
-        return \Redirect::to('/dashboard/store/discounts');
+
+        return Redirect::to('/dashboard/store/discounts');
     }
 
     public function addcodes($drID)
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $data = $this->request->request->all();
 
             $codes = trim($data['codes']);
 
@@ -178,13 +183,14 @@ class Discounts extends DashboardPageController
         }
 
         $this->flash('success', $successcount . ' ' . (1 == $successcount ? t('Code Added') : t('Codes Added')));
-        return \Redirect::to('/dashboard/store/discounts/codes/' . $drID);
+
+        return Redirect::to('/dashboard/store/discounts/codes/' . $drID);
     }
 
     public function save()
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $data = $this->request->request->all();
 
             if ($data['drID']) {
                 $this->edit($data['drID']);
@@ -195,14 +201,16 @@ class Discounts extends DashboardPageController
                 if ($data['drID']) {
                     StoreDiscountRule::edit($data['drID'], $data);
                     $this->flash('success', t('Discount Rule Updated'));
-                    return \Redirect::to('/dashboard/store/discounts');
+
+                    return Redirect::to('/dashboard/store/discounts');
                 } else {
                     $discountrule = StoreDiscountRule::add($data);
                     if ('code' == $discountrule->getTrigger()) {
-                        return \Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
+                        return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
                     } else {
                         $this->flash('success', t('Discount Rule Added'));
-                        return \Redirect::to('/dashboard/store/discounts');
+
+                        return Redirect::to('/dashboard/store/discounts');
                     }
                 }
             } else {

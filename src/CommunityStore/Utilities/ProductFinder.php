@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Controller;
-use User;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\User\User;
 
 class ProductFinder extends Controller
 {
@@ -13,11 +13,11 @@ class ProductFinder extends Controller
             echo "Access Denied";
             exit;
         }
-        if (!$_GET['q']) {
+        if (!$this->request->query->get('q')) {
             echo "Access Denied";
             exit;
         } else {
-            $query = $_GET['q'];
+            $query = $this->request->query->get('q');
             $db = $this->app->make('database')->connection();
             $results = $db->query('SELECT * FROM CommunityStoreProducts WHERE pName LIKE ? OR pSKU LIKE ? ', ['%' . $query . '%', '%' . $query . '%']);
             $resultsArray = [];

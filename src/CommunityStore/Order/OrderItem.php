@@ -2,6 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
@@ -231,7 +233,7 @@ class OrderItem
 
     public static function getByID($oiID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $oiID);
     }
@@ -343,7 +345,7 @@ class OrderItem
 
     public function getProductOptions()
     {
-        return \Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
+        return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
 
     public function getProductObject()
@@ -353,14 +355,14 @@ class OrderItem
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

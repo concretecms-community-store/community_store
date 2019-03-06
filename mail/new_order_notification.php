@@ -2,8 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Core\Support\Facade\Url;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 $subject = t("New Order Notification #%s", $order->getOrderID());
 /**
@@ -182,7 +184,7 @@ ob_start();
         <?php } ?>
     </p>
 
-    <p><a href="<?= \URL::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
+    <p><a href="<?= Url::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
 
     </body>
     </html>

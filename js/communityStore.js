@@ -1,6 +1,6 @@
 var communityStore = {
 
-    openModal: function (content, animatecart) {
+    openModal: function(content, animatecart) {
         var whiteout = $(".store-whiteout");
 
         if (whiteout.length) {
@@ -8,16 +8,16 @@ var communityStore = {
         } else {
             $(".ccm-page").append("<div class='store-whiteout'>" + content + "</div>");
 
-            setTimeout(function () {
+            setTimeout(function() {
                 $('.store-cart-modal').addClass('store-cart-modal-active');
             }, 10);
 
-            whiteout.click(function (e) {
-                if (e.target != this) return;  // only allow the actual whiteout background to close the dialog
+            whiteout.click(function(e) {
+                if (e.target != this) return; // only allow the actual whiteout background to close the dialog
                 communityStore.exitModal();
             });
 
-            $(document).keyup("keyup.communitywhiteout", function (e) {
+            $(document).keyup("keyup.communitywhiteout", function(e) {
                 if (e.keyCode === 27) {
                     communityStore.exitModal();
                     $(document).unbind("keyup.communitywhiteout");
@@ -26,7 +26,7 @@ var communityStore = {
         }
 
         if (animatecart) {
-            setTimeout(function () {
+            setTimeout(function() {
                 $('.store-cart-modal').addClass('store-cart-modal-active');
             }, 10);
         } else {
@@ -34,42 +34,42 @@ var communityStore = {
         }
     },
 
-    waiting: function () {
+    waiting: function() {
         communityStore.openModal("<div class='store-spinner-container'><div class='store-spinner'></div></div>");
     },
 
-    exitModal: function () {
+    exitModal: function() {
         $(".store-whiteout").remove();
     },
 
-    productModal: function (pID, locale) {
+    productModal: function(pID, locale) {
         communityStore.waiting();
         $.ajax({
             url: PRODUCTMODAL,
-            data: {pID: pID, locale: locale},
+            data: { pID: pID, locale: locale },
             type: 'get',
             cache: false,
-            dataType : 'text',
-            success: function (modalContent) {
+            dataType: 'text',
+            success: function(modalContent) {
                 communityStore.openModal(modalContent);
             }
         });
     },
 
-    displayCart: function (res, animatecart) {
+    displayCart: function(res, animatecart) {
         $.ajax({
             type: "POST",
             cache: false,
-            dataType : 'text',
+            dataType: 'text',
             data: res,
             url: CARTURL + '/getmodal' + TRAILINGSLASH,
-            success: function (data) {
+            success: function(data) {
                 communityStore.openModal(data, animatecart);
             }
         });
     },
 
-    addToCart: function (pID, type) {
+    addToCart: function(pID, type) {
         var form;
         if (type == 'modal') {
             form = $('#store-form-add-to-cart-modal-' + pID);
@@ -96,8 +96,8 @@ var communityStore = {
 
         }
 
-        $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField){
-            if($(requiredField).val()=='') {
+        $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField) {
+            if ($(requiredField).val() == '') {
                 $(requiredField).focus();
                 valid = false;
             }
@@ -117,8 +117,8 @@ var communityStore = {
                 data: serial,
                 type: 'post',
                 cache: false,
-                dataType : 'text',
-                success: function (data) {
+                dataType: 'text',
+                success: function(data) {
                     var res = jQuery.parseJSON(data);
 
                     if (res.product.pAutoCheckout == '1') {
@@ -137,17 +137,17 @@ var communityStore = {
     },
 
     //Update a single item in cart
-    updateItem: function (instanceID, modal) {
+    updateItem: function(instanceID, modal) {
         var qty = $("*[data-instance-id='" + instanceID + "']").find(".store-cart-list-product-qty .form-control").val();
-        var ccm_token  = $('#store-modal-cart').find('[name=ccm_token]').val();
+        var ccm_token = $('#store-modal-cart').find('[name=ccm_token]').val();
         //communityStore.waiting();
         $.ajax({
             url: CARTURL + "/update" + TRAILINGSLASH,
-            data: {instance: instanceID, pQty: qty, ccm_token: ccm_token},
+            data: { instance: instanceID, pQty: qty, ccm_token: ccm_token },
             type: 'post',
             cache: false,
-            dataType : 'text',
-            success: function (data) {
+            dataType: 'text',
+            success: function(data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
@@ -160,16 +160,16 @@ var communityStore = {
 
 
     //Update multiple item quantities
-    updateMultiple: function (instances, quantities, modal) {
-        var ccm_token  = $('#store-modal-cart').find('[name=ccm_token]').val();
+    updateMultiple: function(instances, quantities, modal) {
+        var ccm_token = $('#store-modal-cart').find('[name=ccm_token]').val();
 
         $.ajax({
             url: CARTURL + "/update" + TRAILINGSLASH,
-            data: {instance: instances, pQty: quantities, ccm_token: ccm_token},
+            data: { instance: instances, pQty: quantities, ccm_token: ccm_token },
             type: 'post',
             cache: false,
-            dataType : 'text',
-            success: function (data) {
+            dataType: 'text',
+            success: function(data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
@@ -180,15 +180,15 @@ var communityStore = {
         });
     },
 
-    removeItem: function (instanceID, modal) {
-        var ccm_token  = $('#store-modal-cart').find('[name=ccm_token]').val();
+    removeItem: function(instanceID, modal) {
+        var ccm_token = $('#store-modal-cart').find('[name=ccm_token]').val();
         $.ajax({
             url: CARTURL + "/remove" + TRAILINGSLASH,
-            data: {instance: instanceID, ccm_token: ccm_token},
+            data: { instance: instanceID, ccm_token: ccm_token },
             type: 'post',
             cache: false,
-            dataType : 'text',
-            success: function (data) {
+            dataType: 'text',
+            success: function(data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
@@ -199,15 +199,15 @@ var communityStore = {
         });
     },
 
-    clearCart: function (modal) {
-        var ccm_token  = $('#store-modal-cart').find('[name=ccm_token]').val();
+    clearCart: function(modal) {
+        var ccm_token = $('#store-modal-cart').find('[name=ccm_token]').val();
         $.ajax({
             url: CARTURL + "/clear" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
-            data: {clear: 1, ccm_token: ccm_token},
-            success: function (data) {
+            dataType: 'text',
+            data: { clear: 1, ccm_token: ccm_token },
+            success: function(data) {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
@@ -224,8 +224,8 @@ var communityStore = {
         $.ajax({
             url: CARTURL + '/getCartSummary' + TRAILINGSLASH,
             cache: false,
-            dataType : 'text',
-            success: function (response) {
+            dataType: 'text',
+            success: function(response) {
                 var values = $.parseJSON(response);
                 var itemCount = values.itemCount;
                 var subTotal = values.subTotal;
@@ -249,7 +249,7 @@ var communityStore = {
 
                 if (shippingTotalRaw === false) {
                     $("#shipping-total").text($("#shipping-total").data('unknown-label'));
-                } else if(shippingTotalRaw <= 0) {
+                } else if (shippingTotalRaw <= 0) {
                     $("#shipping-total").text($("#shipping-total").data('no-charge-label'));
                 } else {
                     $("#shipping-total").text(shippingTotal);
@@ -266,9 +266,9 @@ var communityStore = {
 
                 $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
-                $(".store-total-amount").data('total-cents',totalCents);
+                $(".store-total-amount").data('total-cents', totalCents);
 
-                if (callback){
+                if (callback) {
                     callback();
                 }
             }
@@ -276,7 +276,7 @@ var communityStore = {
     },
 
     // checkout
-    loadViaHash: function () {
+    loadViaHash: function() {
         var hash = window.location.hash;
         hash = hash.replace('#', '');
         if (hash != "") {
@@ -290,7 +290,7 @@ var communityStore = {
         }
     },
 
-    updateBillingStates: function (load, callback) {
+    updateBillingStates: function(load, callback) {
         var countryCode = $("#store-checkout-billing-country").val();
         var selectedState;
         var classList = $("#store-checkout-billing-state").attr('class').toString();
@@ -305,9 +305,9 @@ var communityStore = {
             url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
-            data: {country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList},
-            success: function (states) {
+            dataType: 'text',
+            data: { country: countryCode, selectedState: selectedState, type: "billing", class: classList, data: dataList },
+            success: function(states) {
                 $("#store-checkout-billing-state").replaceWith(states);
                 if (callback) {
                     callback();
@@ -316,7 +316,7 @@ var communityStore = {
         });
     },
 
-    updateShippingStates: function (load, callback) {
+    updateShippingStates: function(load, callback) {
         var countryCode = $("#store-checkout-shipping-country").val();
         var selectedState;
         if (load) {
@@ -329,9 +329,9 @@ var communityStore = {
             url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
-            data: {country: countryCode, selectedState: selectedState, type: "shipping"},
-            success: function (states) {
+            dataType: 'text',
+            data: { country: countryCode, selectedState: selectedState, type: "shipping" },
+            success: function(states) {
                 $("#store-checkout-shipping-state").replaceWith(states);
                 if (callback) {
                     callback();
@@ -340,7 +340,7 @@ var communityStore = {
         });
     },
 
-    nextPane: function (obj) {
+    nextPane: function(obj) {
         if (typeof $(obj)[0].checkValidity === "undefined" || $(obj)[0].checkValidity()) {
             var pane = $(obj).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().next();
             $('.store-active-form-group').removeClass('store-active-form-group');
@@ -355,12 +355,12 @@ var communityStore = {
         }
     },
 
-    showShippingMethods: function (callback) {
+    showShippingMethods: function(callback) {
         $.ajax({
             url: CHECKOUTURL + "/getShippingMethods" + TRAILINGSLASH,
             cache: false,
-            dataType : 'text',
-            success: function (html) {
+            dataType: 'text',
+            success: function(html) {
                 $("#store-checkout-shipping-method-options").html(html);
                 $('.store-whiteout').remove();
 
@@ -378,7 +378,7 @@ var communityStore = {
         });
     },
 
-    showPaymentForm: function () {
+    showPaymentForm: function() {
         var pmID = $("#store-checkout-payment-method-options input[type='radio']:checked").attr('data-payment-method-id');
         $('.store-payment-method-container').addClass('hidden');
         $(".store-payment-method-container[data-payment-method-id='" + pmID + "']").removeClass('hidden');
@@ -403,11 +403,11 @@ var communityStore = {
         $("#store-checkout-shipping-zip").val($("#store-checkout-billing-zip").val());
     },
 
-    sortNumber: function(a,b) {
+    sortNumber: function(a, b) {
         return a - b;
     },
     hasFormValidation: function() {
-        return (typeof document.createElement( 'input' ).checkValidity == 'function');
+        return (typeof document.createElement('input').checkValidity == 'function');
     },
     submitProductFilter: function(element) {
         var filterform = element.closest('form');
@@ -430,8 +430,8 @@ var communityStore = {
 
         var strings = [];
 
-        $.each( search, function( key, value ) {
-            strings.push(key + '=' + value.join(matchtypes[key]) );
+        $.each(search, function(key, value) {
+            strings.push(key + '=' + value.join(matchtypes[key]));
         });
 
         var price = filterform.find("[name='price']");
@@ -440,16 +440,16 @@ var communityStore = {
             var min = parseFloat(price.data('min'), 2);
             var max = parseFloat(price.data('max'), 2);
 
-           var pricerange = price.val();
-           console.log(min + '-' + max);
-           console.log(pricerange);
+            var pricerange = price.val();
+            console.log(min + '-' + max);
+            console.log(pricerange);
 
             if (min + '-' + max !== pricerange) {
                 strings.push('price=' + price.val());
             }
         }
 
-        var searchstring =  strings.join('&');
+        var searchstring = strings.join('&');
 
         var params = {};
         var hasparams = false;
@@ -472,7 +472,7 @@ var communityStore = {
             searchstring += '#' + filterform.attr('id');
         }
 
-        window.location = '?' + searchstring ;
+        window.location = '?' + searchstring;
     },
     clearProductFilter: function(element) {
         var filterform = element.closest('form');
@@ -492,7 +492,7 @@ var communityStore = {
 
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     if ($('.store-checkout-form-shell form').length > 0) {
         communityStore.updateBillingStates(true);
         communityStore.updateShippingStates(true);
@@ -500,7 +500,7 @@ $(document).ready(function () {
         communityStore.showPaymentForm();
     }
 
-    $("#store-checkout-form-group-billing").submit(function (e) {
+    $("#store-checkout-form-group-billing").submit(function(e) {
         e.preventDefault();
         var email = $("#store-email").val();
         var bfName = $("#store-checkout-billing-first-name").val();
@@ -521,7 +521,7 @@ $(document).ready(function () {
         var bPostal = $("#store-checkout-billing-zip").val();
         $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
 
-        var ccm_token  = $(this).find('[name=ccm_token]').val();
+        var ccm_token = $(this).find('[name=ccm_token]').val();
 
         var novalue = $("#store-checkout-form-group-other-attributes").data('no-value');
 
@@ -577,8 +577,8 @@ $(document).ready(function () {
                 }
 
                 $('.store-summary-order-choices-' + akID).html(displayvalue);
-                $('#akIDinput'+ akID).remove();
-                $('#store-checkout-form-group-payment').append('<input id="akIDinput'+ akID +'" name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+                $('#akIDinput' + akID).remove();
+                $('#store-checkout-form-group-payment').append('<input id="akIDinput' + akID + '" name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
             }
         });
 
@@ -588,7 +588,7 @@ $(document).ready(function () {
             url: CHECKOUTURL + "/updater" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
+            dataType: 'text',
             data: {
                 ccm_token: ccm_token,
                 adrType: 'billing',
@@ -604,7 +604,7 @@ $(document).ready(function () {
                 state: bState,
                 postal: bPostal
             },
-            success: function (result) {
+            success: function(result) {
                 //var test = null;
                 var response = JSON.parse(result);
                 console.log(response);
@@ -632,14 +632,14 @@ $(document).ready(function () {
                     $('.store-whiteout').remove();
                 }
             },
-            error: function (data) {
+            error: function(data) {
                 $(".store-whiteout").remove();
             }
         });
 
     });
 
-    $("#store-checkout-form-group-shipping").submit(function (e) {
+    $("#store-checkout-form-group-shipping").submit(function(e) {
         e.preventDefault();
         var sfName = $("#store-checkout-shipping-first-name").val();
         var slName = $("#store-checkout-shipping-last-name").val();
@@ -657,7 +657,7 @@ $(document).ready(function () {
         var sPostal = $("#store-checkout-shipping-zip").val();
         $("#store-checkout-form-group-shipping .store-checkout-form-group-body .store-checkout-errors").remove();
 
-        var ccm_token  = $(this).find('[name=ccm_token]').val();
+        var ccm_token = $(this).find('[name=ccm_token]').val();
 
         communityStore.waiting();
         var obj = $(this);
@@ -665,7 +665,7 @@ $(document).ready(function () {
             url: CHECKOUTURL + "/updater" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
+            dataType: 'text',
             data: {
                 ccm_token: ccm_token,
                 adrType: 'shipping',
@@ -677,9 +677,10 @@ $(document).ready(function () {
                 count: sCountry,
                 city: sCity,
                 state: sState,
-                postal: sPostal            },
+                postal: sPostal
+            },
             //dataType: 'json',
-            success: function (result) {
+            success: function(result) {
                 var response = JSON.parse(result);
                 if (response.error == false) {
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
@@ -690,7 +691,7 @@ $(document).ready(function () {
                     } else {
                         obj.find('.store-checkout-form-group-summary .store-summary-vat-number').html('-');
                     }
-                    communityStore.showShippingMethods(function(){
+                    communityStore.showShippingMethods(function() {
                         communityStore.refreshCartTotals();
                         communityStore.nextPane(obj);
                     });
@@ -700,18 +701,18 @@ $(document).ready(function () {
                     $('.store-whiteout').remove();
                 }
             },
-            error: function (data) {
+            error: function(data) {
                 $(".store-whiteout").remove();
             }
         });
 
     });
 
-    $("#store-checkout-form-group-vat").submit(function (e) {
+    $("#store-checkout-form-group-vat").submit(function(e) {
         e.preventDefault();
         var vat_number = $("#store-checkout-shipping-vat-number").val();
         $("#store-checkout-form-group-vat .store-checkout-errors").remove();
-        var ccm_token  = $(this).find('[name=ccm_token]').val();
+        var ccm_token = $(this).find('[name=ccm_token]').val();
 
         communityStore.waiting();
         var obj = $(this);
@@ -719,12 +720,12 @@ $(document).ready(function () {
             url: CHECKOUTURL + "/setVatNumber" + TRAILINGSLASH,
             type: 'post',
             cache: false,
-            dataType : 'text',
+            dataType: 'text',
             data: {
                 vat_number: vat_number,
                 ccm_token: ccm_token
             },
-            success: function (result) {
+            success: function(result) {
                 //var test = null;
                 var response = JSON.parse(result);
                 if (response.error == false) {
@@ -744,14 +745,14 @@ $(document).ready(function () {
                     $('.store-whiteout').remove();
                 }
             },
-            error: function (data) {
+            error: function(data) {
                 $(".store-whiteout").remove();
             }
         });
 
     });
 
-    $("#store-checkout-form-group-shipping-method").submit(function (e) {
+    $("#store-checkout-form-group-shipping-method").submit(function(e) {
         e.preventDefault();
         communityStore.waiting();
         var obj = $(this);
@@ -770,13 +771,14 @@ $(document).ready(function () {
             $.ajax({
                 type: 'post',
                 cache: false,
-                dataType : 'text',
-                data: { smID: smID,
+                dataType: 'text',
+                data: {
+                    smID: smID,
                     sInstructions: sInstructions,
                     ccm_token: ccm_token
                 },
                 url: CHECKOUTURL + "/selectShipping" + TRAILINGSLASH,
-                success: function (total) {
+                success: function(total) {
                     communityStore.refreshCartTotals(function() {
                         communityStore.nextPane(obj);
                         $('.store-whiteout').remove();
@@ -787,7 +789,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".store-btn-previous-pane").click(function (e) {
+    $(".store-btn-previous-pane").click(function(e) {
         //hide the body of the current pane, go to the next pane, show that body.
         var pane = $(this).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().prev();
         $('.store-active-form-group').removeClass('store-active-form-group');
@@ -801,11 +803,11 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $("#store-checkout-payment-method-options input[type='radio']").change(function () {
+    $("#store-checkout-payment-method-options input[type='radio']").change(function() {
         communityStore.showPaymentForm();
     });
 
-    $('#store-cart .store-btn-cart-list-remove').click(function(e){
+    $('#store-cart .store-btn-cart-list-remove').click(function(e) {
         $('#deleteform input[name=instance]').val($(this).data('instance'));
         $('#deleteform').submit();
         e.preventDefault();
@@ -848,22 +850,22 @@ $(document).ready(function () {
     $(document).on('click', '.store-price-suggestion', function(e) {
         var productform = $(this).closest('form');
         productform.find('.store-product-customer-price-entry-field').val($(this).data('suggestion-value'));
-        communityStore.addToCart(productform.data('product-id'),$(this).data('add-type'));
+        communityStore.addToCart(productform.data('product-id'), $(this).data('add-type'));
         e.preventDefault();
     });
 
 
     $(document).on('click', '.store-btn-cart-list-remove', function(e) {
-        communityStore.removeItem($(this).data('instance-id'),$(this).data('modal'));
+        communityStore.removeItem($(this).data('instance-id'), $(this).data('modal'));
         e.preventDefault();
     });
 
-    $('.store-product-quick-view').click(function(e){
+    $('.store-product-quick-view').click(function(e) {
         communityStore.productModal($(this).data('product-id'), $(this).data('locale'));
         e.preventDefault();
     });
 
-    $('.store-cart-link-modal').click(function(e){
+    $('.store-cart-link-modal').click(function(e) {
         communityStore.displayCart(false, true);
         e.preventDefault();
     });
@@ -897,10 +899,10 @@ $(document).ready(function () {
             }
 
             if (update) {
-                var instances = $("#store-modal-cart input[name='instance[]']").map(function () {
+                var instances = $("#store-modal-cart input[name='instance[]']").map(function() {
                     return $(this).val();
                 }).get();
-                var pQty = $("#store-modal-cart input[name='pQty[]']").map(function () {
+                var pQty = $("#store-modal-cart input[name='pQty[]']").map(function() {
                     return $(this).val();
                 }).get();
 
@@ -913,13 +915,13 @@ $(document).ready(function () {
     });
 
 
-    $('.store-cart-modal-link').click(function (e) {
+    $('.store-cart-modal-link').click(function(e) {
         e.preventDefault();
         communityStore.displayCart(false, true);
     });
 
 
-    $('.store-btn-filter').click(function (e) {
+    $('.store-btn-filter').click(function(e) {
         e.preventDefault();
         communityStore.submitProductFilter($(this));
     });

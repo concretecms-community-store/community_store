@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
 use Doctrine\ORM\Mapping as ORM;
-use Core;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -129,21 +130,21 @@ class TaxClass
 
     public static function getByID($tcID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['taxClassHandle' => $taxClassHandle]);
     }
 
     public static function getTaxClasses()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->createQuery('select u from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass u')->getResult();
     }
@@ -155,7 +156,7 @@ class TaxClass
             $locked = $data['taxClassLocked'];
         }
         $tc = new self();
-        $th = Core::make("helper/text");
+        $th = Application::getFacadeApplication()->make("helper/text");
         $tc->setTaxClassHandle($th->handle($data['taxClassName']));
         $tc->setTaxClassName($data['taxClassName']);
         $tc->setTaxClassRates($data['taxClassRates']);
@@ -178,14 +179,14 @@ class TaxClass
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

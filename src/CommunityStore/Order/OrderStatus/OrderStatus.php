@@ -194,7 +194,7 @@ class OrderStatus
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $sql = "UPDATE CommunityStoreOrderStatuses SET " . $column . "=? WHERE osID=?";
-        $db->Execute($sql, [$column, $value]);
+        $db->executeQuery($sql, [$column, $value]);
     }
 
     public static function setNewStartingStatus($osHandle = null)
@@ -231,7 +231,7 @@ class OrderStatus
             $values[] = $this->osID;
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
-            $db->Execute("UPDATE CommunityStoreOrderStatuses SET " . $columnPhrase . " WHERE osID=?", $values);
+            $db->executeQuery("UPDATE CommunityStoreOrderStatuses SET " . $columnPhrase . " WHERE osID=?", $values);
             if ($startingStatusHandle) {
                 self::setNewStartingStatus($startingStatusHandle);
             }

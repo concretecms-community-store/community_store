@@ -1,15 +1,15 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-?>
+use \Concrete\Core\Support\Facade\Url;
 
-<?php
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $task = $controller->getAction();
 ?>
 
 <?php if ($task == 'view') { ?>
 
-    <form action="<?= URL::to('/dashboard/store/reports/products') ?>" method="get">
+    <form action="<?= Url::to('/dashboard/store/reports/products') ?>" method="get">
 
         <div class="row">
 
@@ -18,7 +18,7 @@ $task = $controller->getAction();
                 <div class="form-group">
                     <?= $form->label('dateFrom', t('From')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= Core::make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
+                        <?= $app->make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@ $task = $controller->getAction();
                 <div class="form-group">
                     <?= $form->label('dateFrom', t('To')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= Core::make('helper/form/date_time')->date('dateTo', $dateTo); ?>
+                        <?= $app->make('helper/form/date_time')->date('dateTo', $dateTo); ?>
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@ $task = $controller->getAction();
 	<tbody>
 		<?php foreach($products as $product){ ?>
 		<tr>
-			<td><a href="<?= URL::to('/dashboard/store/reports/products/detail/ ' . $product['pID']); ?>"><?= $product['name']?></a></td>
+			<td><a href="<?= Url::to('/dashboard/store/reports/products/detail/ ' . $product['pID']); ?>"><?= $product['name']?></a></td>
 			<td><?= $product['quantity']?></td>
 			<td><?=Price::format($product['pricePaid'])?></td>
 		</tr>
@@ -86,14 +86,14 @@ $task = $controller->getAction();
 <?php } ?>
 
 <?php if ($task == 'detail') {
-	$dh = Core::make('helper/date');
+	$dh = $app->make('helper/date');
 	$totalSold = 0;
 	$totalSoldAll = 0;
 
 	?>
 
 	<div class="ccm-dashboard-header-buttons">
-		<a href="<?= \URL::to('/dashboard/store/reports/products/export/' . $product->getID())?>" class="btn btn-primary"><?= t("Export CSV")?></a>
+		<a href="<?= Url::to('/dashboard/store/reports/products/export/' . $product->getID())?>" class="btn btn-primary"><?= t("Export CSV")?></a>
 	</div>
 
 	<table class="table table-striped">
@@ -110,7 +110,7 @@ $task = $controller->getAction();
 			$order = $item->getOrder();
 			?>
 			<tr>
-                <td><a href="<?= URL::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
+                <td><a href="<?= Url::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
 				<td><?= $order->getAttribute("billing_last_name");?></td>
 				<td><?= $order->getAttribute("billing_first_name"); ?></td>
 				<td><?= $order->getAttribute("email"); ?></td>

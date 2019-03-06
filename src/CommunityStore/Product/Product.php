@@ -2,13 +2,14 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
-use Package;
-use Page;
-use PageType;
-use PageTemplate;
-use File;
-use Config;
-use Events;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\File\File;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Events;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
@@ -24,7 +25,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxC
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
 use Concrete\Core\Multilingual\Page\Section\Section;
 
@@ -721,21 +721,21 @@ class Product
 
     public static function getByID($pID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $pID);
     }
 
     public static function getBySKU($pSKU)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
     }
 
     public static function getByCollectionID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
     }
@@ -855,15 +855,15 @@ class Product
     public function getProductPage()
     {
         if ($this->getPageID()) {
-            $productPage = \Page::getByID($this->getPageID());
+            $productPage = Page::getByID($this->getPageID());
             if ($productPage && !$productPage->isInTrash()) {
 
-                $c = \Page::getCurrentPage();
+                $c = Page::getCurrentPage();
                 $lang = Section::getBySectionOfSite($c);
 
                 if (is_object($lang)) {
                     $relatedID = $lang->getTranslatedPageID($productPage);
-                    $translatedPage = \Page::getByID($relatedID);
+                    $translatedPage = Page::getByID($relatedID);
 
                     if ($translatedPage && !$translatedPage->isInTrash()) {
                         $productPage = $translatedPage;
@@ -1394,14 +1394,14 @@ class Product
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -1421,7 +1421,7 @@ class Product
         StoreProductUserGroup::removeUserGroupsForProduct($this);
         StoreProductVariation::removeVariationsForProduct($this);
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $attributes = $this->getAttributes();
 
         foreach($attributes as $attribute) {
@@ -1569,7 +1569,7 @@ class Product
             StoreProductRelated::addRelatedProducts(['pRelatedProducts' => $related], $newproduct);
         }
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->flush();
 
         // create product event and dispatch
@@ -1674,7 +1674,7 @@ class Product
 
     public function getObjectAttributeCategory()
     {
-        return \Core::make('\Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+        return Application::getFacadeApplication()->make('\Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
     }
 
     public function getAttributeValueObject($ak, $createIfNotExists = false)

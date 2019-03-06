@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Config;
+use Concrete\Core\Support\Facade\Config;
 
 class Price
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Config;
+use Concrete\Core\Support\Facade\Config;
 use stdClass;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Support\Facade\Application;
@@ -173,7 +173,7 @@ class Image
      */
     public function getThumbTypeThumbnail(File $imgObj)
     {
-        $thumb = new StdClass();
+        $thumb = new stdClass();
         $this->imgObj = $imgObj;
 
         if (is_object($this->thumbType)) {
@@ -198,7 +198,7 @@ class Image
      */
     public function getLegacyThumbnail(File $imgObj)
     {
-        $image = new StdClass();
+        $image = new stdClass();
         $this->imgObj = $imgObj;
 
         $thumb = $this->app->make('helper/image')->getThumbnail($imgObj, $this->legacyThumbProps->width, $this->legacyThumbProps->height, $this->legacyThumbProps->crop);
