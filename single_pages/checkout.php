@@ -575,7 +575,7 @@ $csm = \Core::make('cs/helper/multilingual');
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
                             if ($tax['taxamount'] > 0) {
-                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['trID']);
+                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
                                 ?>
                                 <li class="store-line-item store-tax-item list-group-item">
                                 <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>

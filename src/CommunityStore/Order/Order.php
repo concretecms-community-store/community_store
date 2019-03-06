@@ -493,6 +493,9 @@ class Order
      */
     public static function add($pm, $transactionReference = '', $status = null)
     {
+        $app = Application::getFacadeApplication();
+        $csm = $app->make('cs/helper/multilingual');
+
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
@@ -521,7 +524,9 @@ class Order
                 } else {
                     $taxTotal[] = $tax['taxamount'];
                 }
-                $taxLabels[] = $tax['name'];
+
+                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+                $taxLabels[] = $taxlabel;
             }
         }
 
@@ -1101,61 +1106,6 @@ class Order
         }
     }
 
-//    public function setAttribute($ak, $value)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreOrderKey::getByHandle($ak);
-//        }
-//        $ak->setAttribute($this, $value);
-//    }
-//
-//    public function getAttribute($ak, $displayMode = false)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreOrderKey::getByHandle($ak);
-//        }
-//        if (is_object($ak)) {
-//            $av = $this->getAttributeValueObject($ak);
-//            if (is_object($av)) {
-//                return $av->getValue($displayMode);
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    public function getAttributeValueObject($ak, $createIfNotFound = false)
-//    {
-//        $app = Application::getFacadeApplication();
-//        $db = $app->make('database')->connection();
-//        $av = false;
-//        $v = [$this->getOrderID(), $ak->getAttributeKeyID()];
-//        $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
-//        if ($avID > 0) {
-//            $av = StoreOrderValue::getByID($avID);
-//            if (is_object($av)) {
-//                $av->setOrder($this);
-//                $av->setAttributeKey($ak);
-//            }
-//        }
-//
-//        if ($createIfNotFound) {
-//            $cnt = 0;
-//
-//            // Is this avID in use ?
-//            if (is_object($av)) {
-//                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreOrderAttributeValues WHERE avID = ?", $av->getAttributeValueID());
-//            }
-//
-//            if ((!is_object($av)) || ($cnt > 1)) {
-//                $av = $ak->addAttributeValue();
-//            }
-//        }
-//
-//        return $av;
-//    }
-
-
     public function getObjectAttributeCategory()
     {
         $app = Application::getFacadeApplication();
@@ -1189,9 +1139,13 @@ class Order
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
+        $csm = $app->make('cs/helper/multilingual');
 
         //add the discount
-        $vals = [$this->oID, $discount->drName, $discount->getDisplay(), $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
+        $displayName = $discount->getDisplay();
+        $displayName = $csm->t($displayName, 'discountRuleDisplayName', null, $discount->getID());
+
+        $vals = [$this->oID, $discount->drName, $displayName , $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
         $db->query("INSERT INTO CommunityStoreOrderDiscounts(oID,odName,odDisplay,odValue,odPercentage,odDeductFrom,odCode) VALUES (?,?,?,?,?,?,?)", $vals);
     }
 

@@ -3,8 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Core::make('helper/date');
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
-
 ?>
 
 <?php if ($controller->getTask() == 'order') { ?>
@@ -145,9 +143,9 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
             <tr>
                 <th><strong><?= t("Product Name") ?></strong></th>
                 <th><?= t("Product Options") ?></th>
-                <th><?= t("Price") ?></th>
-                <th><?= t("Quantity") ?></th>
-                <th><?= t("Subtotal") ?></th>
+                <th class="text-right"><?= t("Price") ?></th>
+                <th class="text-right"><?= t("Quantity") ?></th>
+                <th class="text-right"><?= t("Subtotal") ?></th>
             </tr>
             </thead>
             <tbody>
@@ -158,9 +156,9 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                 foreach ($items as $item) {
                     ?>
                     <tr>
-                        <td><?= $item->getProductName() ?>
+                        <td><?= h($item->getProductName())?>
                             <?php if ($sku = $item->getSKU()) {
-                                echo '(' . $sku . ')';
+                                echo '(' .  h($sku) . ')';
                             } ?>
                         </td>
                         <td>
@@ -168,19 +166,16 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
                             $options = $item->getProductOptions();
                             if ($options) {
                                 echo "<ul class='list-unstyled'>";
-                                foreach ($options as $option) {
-                                    echo "<li>";
-                                    echo "<strong>" . $option['oioKey'] . ": </strong>";
-                                    echo($option['oioValue'] ? $option['oioValue'] : '<em>' . t('None') . '</em>');
-                                    echo "</li>";
-                                }
+                                foreach ($options as $option) { ?>
+                                    <li><strong><?= h($option['oioKey']); ?></strong> <?= h($option['oioValue']) ? h($option['oioValue']) : '<em>' . t('None') . '</em>'; ?></li>
+                                <?php }
                                 echo "</ul>";
                             }
                             ?>
                         </td>
-                        <td><?= Price::format($item->getPricePaid()) ?></td>
-                        <td><?= $item->getQty() ?> <?= h($item->getQtyLabel()); ?></td>
-                        <td><?= Price::format($item->getSubTotal()) ?></td>
+                        <td class="text-right"><?= Price::format($item->getPricePaid()) ?></td>
+                        <td class="text-right"><?= $item->getQty() ?> <?= h($item->getQtyLabel()); ?></td>
+                        <td class="text-right"><?= Price::format($item->getSubTotal()) ?></td>
                     </tr>
                     <?php
                 }
@@ -190,7 +185,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
             <tfoot>
             <tr>
                 <td colspan="4" class="text-right"><strong><?= t("Items Subtotal") ?>:</strong></td>
-                <td colspan="1"><?= Price::format($order->getSubTotal()) ?></td>
+                <td colspan="1" class="text-right"><?= Price::format($order->getSubTotal()) ?></td>
             </tr>
             </tfoot>
         </table>
@@ -271,7 +266,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
         if (!empty($taxes)) { ?>
             <p>
                 <?php foreach ($order->getTaxes() as $tax) { ?>
-                    <strong><?= $tax['label'] ?>
+                    <strong><?= h($tax['label']) ?>
                         :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
                 <?php } ?>
             </p>
@@ -313,7 +308,7 @@ use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as Store
             <?php
             $shippingInstructions = $order->getShippingInstructions();
             if ($shippingInstructions) { ?>
-                <p><strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?></p>
+                <p><strong><?= t("Delivery Instructions") ?>: </strong><?= h($shippingInstructions) ?></p>
             <?php } ?>
 
         <?php } ?>
