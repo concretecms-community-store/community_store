@@ -3,10 +3,11 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
 use Doctrine\ORM\Mapping as ORM;
-use Core;
-use Package;
-use Controller;
-use View;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\View\View;
 
 /**
  * @ORM\Entity
@@ -126,7 +127,7 @@ class Method extends Controller
 
     public static function getByID($pmID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $method = $em->find(get_class(), $pmID);
 
         if ($method) {
@@ -138,7 +139,7 @@ class Method extends Controller
 
     public static function getByHandle($pmHandle)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
@@ -160,7 +161,7 @@ class Method extends Controller
 
     protected function setMethodController()
     {
-        $th = Core::make("helper/text");
+        $th = Application::getFacadeApplication()->make("helper/text");
         $namespace = "Concrete\\Package\\" . $th->camelcase(Package::getByID($this->pkgID)->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
 
         $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
@@ -197,7 +198,7 @@ class Method extends Controller
 
     public static function getMethods($enabled = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         if ($enabled) {
             $methods = $em->getRepository(get_class())->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
         } else {
@@ -259,7 +260,7 @@ class Method extends Controller
 
     public function save(array $data = [])
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -271,7 +272,7 @@ class Method extends Controller
 
     public function remove()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

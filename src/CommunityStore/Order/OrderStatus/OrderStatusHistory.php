@@ -2,8 +2,10 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
 use Doctrine\ORM\Mapping as ORM;
-use Events;
-use User;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Database;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\User\User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
@@ -131,7 +133,7 @@ class OrderStatusHistory
             return false;
         }
         $sql = "SELECT * FROM " . self::$table . " WHERE oID=? ORDER BY oshDate DESC";
-        $rows = \Database::connection()->getAll($sql, $order->getOrderID());
+        $rows = Database::connection()->getAll($sql, $order->getOrderID());
         $history = [];
         if (count($rows) > 0) {
             foreach ($rows as $row) {
@@ -159,7 +161,7 @@ class OrderStatusHistory
 
     private static function recordStatusChange(StoreOrder $order, $statusHandle)
     {
-        $user = new user();
+        $user = new User();
         $orderStatusHistory = new self();
         $orderStatusHistory->setOrderStatusHandle($statusHandle);
         $orderStatusHistory->setUserID($user->getUserID());
@@ -172,14 +174,14 @@ class OrderStatusHistory
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

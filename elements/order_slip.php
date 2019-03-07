@@ -1,24 +1,49 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use  \Concrete\Core\Support\Facade\Url;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 ?>
 <html>
 <head>
     <title><?= t("Order #") . $order->getOrderID() ?></title>
-    <link href="<?= str_replace('/index.php/', '/' , \URL::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <link href="<?= str_replace('/index.php/', '/' , Url::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
     <style>
-        td, th {
-            font-size: 14px;
+        #store-print-slip td, #store-print-slip th, #store-print-slip p {
+            font-size: 0.8em;
         }
+
+        #store-print-slip h1 {
+            font-size: 2em;
+        }
+
+        #store-print-slip h4 {
+            font-size: 1.1em;
+        }
+
+        #store-print-slip legend {
+            font-size: 1.4em;
+            margin-bottom: 0.5em;
+        }
+
+        #store-print-slip fieldset {
+            margin-bottom: 1em;
+            padding-bottom: 1em;
+        }
+
+        #store-print-slip .alert {
+            margin-top: -3em;
+            margin-bottom: 3em;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="ccm-ui">
+<div class="ccm-ui" id="store-print-slip">
     <div class="container">
         <h1><?= t("Order #") . $order->getOrderID() ?></h1>
 
@@ -72,15 +97,6 @@ $dh = Core::make('helper/date');
                     <?php } ?>
 
                     <?php
-                    $ui = UserInfo::getByID($order->getCustomerID());
-                    if ($ui) { ?>
-                        <h4><?= t("User") ?></h4>
-                        <p>
-                            <a href="<?= \URL::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a>
-                        </p>
-                    <?php } ?>
-
-                    <?php
                     $vat_number = $order->getAttribute("vat_number");
                     if (Config::get('community_store.vat_number') && $vat_number) { ?>
                         <h4><?= t("VAT Number")?></h4>
@@ -119,9 +135,14 @@ $dh = Core::make('helper/date');
                         <?php foreach ($orderChoicesAttList as $ak) {
                             $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
 
-                            if ($attValue) {  ?>
+                            if ($attValue) {
+                                $value = $attValue->getValue('displaySanitized', 'display');
+
+                                if ($value) {
+                                ?>
                                 <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
-                                <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                                <p><?= str_replace("\r\n", "<br>", $value); ?></p>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -129,7 +150,6 @@ $dh = Core::make('helper/date');
 
             </div>
         </fieldset>
-        <br/>
 
         <fieldset>
             <legend><?= t("Order Items") ?></legend>
@@ -139,9 +159,9 @@ $dh = Core::make('helper/date');
                 <tr>
                     <th><strong><?= t("Product Name") ?></strong></th>
                     <th><?= t("Product Options") ?></th>
-                    <th><?= t("Price") ?></th>
-                    <th><?= t("Quantity") ?></th>
-                    <th><?= t("Subtotal") ?></th>
+                    <th class="text-right"><?= t("Price") ?></th>
+                    <th class="text-right"><?= t("Quantity") ?></th>
+                    <th class="text-right"><?= t("Subtotal") ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -152,72 +172,110 @@ $dh = Core::make('helper/date');
                     foreach ($items as $item) {
                         ?>
                         <tr>
-                            <td><?= $item->getProductName() ?></td>
+                            <td><?= h($item->getProductName())?>
+                                <?php if ($sku = $item->getSKU()) {
+                                    echo '(' .  h($sku) . ')';
+                                } ?>
+                            </td>
                             <td>
                                 <?php
                                 $options = $item->getProductOptions();
                                 if ($options) {
                                     echo "<ul class='list-unstyled'>";
                                     foreach ($options as $option) {
-                                        echo "<li>";
-                                        echo "<strong>" . $option['oioKey'] . ": </strong>";
-                                        echo $option['oioValue'];
-                                        echo "</li>";
+                                        if ( $option['oioValue']) { ?>
+                                            <li><strong><?= h($option['oioKey']); ?></strong> <?= h($option['oioValue']); ?></li>
+                                        <?php }
                                     }
                                     echo "</ul>";
                                 }
                                 ?>
                             </td>
-                            <td><?= Price::format($item->getPricePaid()) ?></td>
-                            <td><?= $item->getQty() ?></td>
-                            <td><?= Price::format($item->getSubTotal()) ?></td>
+                            <td class="text-right"><?=StorePrice::format($item->getPricePaid()) ?></td>
+                            <td class="text-right"><?= $item->getQty() ?></td>
+                            <td class="text-right"><?=StorePrice::format($item->getSubTotal()) ?></td>
                         </tr>
                         <?php
                     }
                 }
                 ?>
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4" class="text-right"><strong><?= t("Items Subtotal")?>:</strong></td>
+                    <td colspan="1" class="text-right" ><?= StorePrice::format($order->getSubTotal())?></td>
+                </tr>
+                </tfoot>
             </table>
-        </fieldset>
-
-        <p>
-            <strong><?= t("Subtotal") ?>: </strong><?= Price::format($order->getSubTotal()) ?><br>
-            <?php foreach ($order->getTaxes() as $tax) { ?>
-                <strong><?= $tax['label'] ?>
-                    :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
-            <?php } ?>
-            <strong><?= t("Shipping") ?>: </strong><?= Price::format($order->getShippingTotal()) ?><br>
 
             <?php $applieddiscounts = $order->getAppliedDiscounts();
-            if (!empty($applieddiscounts)) { ?>
-                <strong><?= (count($applieddiscounts) > 1 ? t('Discounts') : t('Discount')); ?>: </strong>
-                <?php
-                $discountsApplied = array();
-                foreach ($applieddiscounts as $discount) {
-                    $discountsApplied[] = $discount['odDisplay'];
-                }
-                echo implode(',', $discountsApplied);
-                ?>
-                <br/>
-            <?php } ?>
 
-            <strong><?= t("Grand Total") ?>: </strong><?= Price::format($order->getTotal()) ?>
-        </p>
+            if (!empty($applieddiscounts)) { ?>
+                <h4><?= t("Discounts Applied")?></h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+
+                        <th><?= t("Discount")?></th>
+                        <th class="text-right"><?= t("Amount")?></th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <?php foreach($applieddiscounts as $discount) { ?>
+                        <tr>
+                            <td><?= h($discount['odDisplay']); ?></td>
+                            <td class="text-right"><?= ($discount['odValue'] > 0 ? StorePrice::format($discount['odValue']) : $discount['odPercentage'] . '%' ); ?></td>
+                        </tr>
+                    <?php } ?>
+
+                    </tbody>
+                </table>
+
+            <?php } ?>
+        </fieldset>
+
+        <?php if ($order->isShippable()) { ?>
+            <p>
+                <strong><?= t("Shipping")?>: </strong><?= StorePrice::format($order->getShippingTotal())?>
+            </p>
+        <?php } ?>
+
+
+        <?php $taxes = $order->getTaxes();
+
+        if (!empty($taxes)) { ?>
+            <p>
+                <?php foreach ($order->getTaxes() as $tax) { ?>
+                    <strong><?= h($tax['label']) ?>
+                        :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
+                <?php } ?>
+            </p>
+        <?php } ?>
+
 
         <p>
+            <strong><?= t("Grand Total") ?>: </strong><?= StorePrice::format($order->getTotal()) ?>
+        </p>
+        <p>
             <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
-            <?php if ($order->isShippable()) { ?>
-            <br><strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+            <?php $transactionReference = $order->getTransactionReference();
+            if ($transactionReference) { ?>
+                <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
+            <?php } ?>
+        </p>
+
+
+        <?php if ($order->isShippable()) { ?>
+            <br/><p>
+                <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+            </p>
 
             <?php
             $shippingInstructions = $order->getShippingInstructions();
             if ($shippingInstructions) { ?>
-
-        <p>
-            <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?>
-        </p>
-        <?php } ?>
-
+                <p><strong><?= t("Delivery Instructions") ?>: </strong><?= h($shippingInstructions) ?></p>
+            <?php } ?>
 
         <?php } ?>
     </div>

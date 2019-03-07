@@ -2,7 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
 use Doctrine\ORM\Mapping as ORM;
-use Config;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
@@ -113,6 +114,11 @@ class TaxRate
         $this->taxVatExclude = $exclude;
     }
 
+    public function getID()
+    {
+        return $this->trID;
+    }
+
     public function getTaxRateID()
     {
         return $this->trID;
@@ -165,7 +171,7 @@ class TaxRate
 
     public static function getByID($trID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $trID);
     }
@@ -331,14 +337,14 @@ class TaxRate
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

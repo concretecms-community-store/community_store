@@ -1,9 +1,18 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+$locale = $order->getLocale();
+if ($locale) {
+    \Concrete\Core\Localization\Localization::changeLocale($locale);
+}
+
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use \Concrete\Core\Support\Facade\Config;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
+$csm = $app->make('cs/helper/multilingual');
 $subject = t("Order Receipt #%s", $order->getOrderID());
 
 /**
@@ -17,7 +26,7 @@ ob_start();
     <head>
     </head>
     <body>
-    <?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
+    <?php $header = $csm->t(trim(\Config::get('community_store.receiptHeader')), 'receiptEmailHeader'); ?>
 
     <?php if ($header) {
         echo $header;
@@ -198,7 +207,7 @@ ob_start();
         <?php } ?>
     </p>
 
-    <?php echo $paymentInstructions; ?>
+    <?= $paymentInstructions; ?>
 
 
     <?php
@@ -228,7 +237,7 @@ ob_start();
 
     <?php } ?>
 
-    <?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+    <?= $csm->t(trim(Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
 
     </body>
     </html>

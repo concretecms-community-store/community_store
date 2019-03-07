@@ -1,14 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
-use Config;
-use Page;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
-defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProduct';
@@ -32,10 +33,24 @@ class Controller extends BlockController
         $product = false;
 
         if ('page' == $this->productLocation || !$this->productLocation) {
-            $cID = Page::getCurrentPage()->getCollectionID();
+            $page = Page::getCurrentPage();
+            $cID = $page->getCollectionID();
 
             if ($cID) {
                 $product = StoreProduct::getByCollectionID($cID);
+            }
+
+            // if product not found, look for it via multilingual related page
+            if (!$product) {
+                $site = $this->app->make('site')->getSite();
+                if ($site) {
+                    $locale = $site->getDefaultLocale();
+
+                    if ($locale) {
+                        $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
+                        $product = StoreProduct::getByCollectionID($originalcID);
+                    }
+                }
             }
         } else {
             if ($this->pID) {
@@ -63,7 +78,7 @@ class Controller extends BlockController
 
             $codediscounts = false;
             $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
-            $code = trim(\Session::get('communitystore.code'));
+            $code = trim(Session::get('communitystore.code'));
 
             if ($code) {
                 $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
@@ -94,8 +109,16 @@ class Controller extends BlockController
             $this->set('showCartButton', false);
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $this->set('token', $app->make('token'));
+        $this->set('token', $this->app->make('token'));
+
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+        $this->set('langpath', $langpath);
+        $this->set('app', $this->app);
     }
 
     public function registerViewAssets($outputContent = '')

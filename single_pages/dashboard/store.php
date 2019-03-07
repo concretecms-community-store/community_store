@@ -1,9 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Core\Support\Facade\Config;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 $taxCalc = Config::get('community_store.calculation');
-$dh = Core::make('helper/date');
+$dh = $app->make('helper/date');
 
 if ($taxCalc == 'extract') {
     $taxValue = 'includedTaxTotal';
@@ -15,8 +19,8 @@ if ($taxCalc == 'extract') {
 ?>
 
 <?php if ($shoppingDisabled) { ?>
-    <p class="alert alert-warning text-center"><?php echo t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?>
-        <a href="<?= \URL::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
+    <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?>
+        <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
 <?php } ?>
 
 
@@ -59,7 +63,7 @@ if ($taxCalc == 'extract') {
                 <div id="sales-chart"></div>
             </div>
             <div class="panel-footer">
-                <a href="<?= \URL::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> View Sales Report</a>
+                <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> View Sales Report</a>
             </div>
         </div>
 
@@ -131,7 +135,7 @@ if ($taxCalc == 'extract') {
         
         <h4><?= t("Orders") ?></h4>
 
-        <form action="<?= \URL::to('/dashboard/store/orders') ?>">
+        <form action="<?= Url::to('/dashboard/store/orders') ?>">
             <div class="form-group">
 
                 <div class="input-group">
@@ -143,13 +147,13 @@ if ($taxCalc == 'extract') {
             </div>
         </form>
 
-        <p><a href="<?= \URL::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i> View All Orders</a></p>
+        <p><a href="<?= Url::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i> View All Orders</a></p>
 
         <hr>
 
         <h4><?= t("Products") ?></h4>
 
-        <form action="<?= \URL::to('/dashboard/store/products') ?>">
+        <form action="<?= Url::to('/dashboard/store/products') ?>">
             <div class="form-group">
                 <div class="input-group">
                     <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Products')]) ?>
@@ -161,17 +165,17 @@ if ($taxCalc == 'extract') {
         </form>
 
 
-        <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
                 Add Product</a></p>
-        <p><a href="<?= \URL::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> View All Products</a></p>
+        <p><a href="<?= Url::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> View All Products</a></p>
 
         <hr>
 
 
         <h4><?= t("Discounts") ?></h4>
-        <p class="pull-right"><a href="<?= \URL::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 Add Discount Rule</a></p>
-        <p><a href="<?= \URL::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> View Discount Rules</a>
+        <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> View Discount Rules</a>
         </p>
 
 
@@ -262,9 +266,9 @@ if ($taxCalc == 'extract') {
                         <td><?= t(ucwords($order->getStatus())) ?></td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-primary"
+                                <a class="btn btn-primary btn-sm"
                                    href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">

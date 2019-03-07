@@ -1,26 +1,29 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
-use Package;
+use Concrete\Core\Package\Package;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-use Route;
-use Asset;
-use AssetList;
-use URL;
-use Core;
+use Concrete\Core\Support\Facade\Route;
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Page;
 
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
-    protected $appVersionRequired = '8.0';
-    protected $pkgVersion = '2.0.6';
+    protected $appVersionRequired = '8.2.1';
+    protected $pkgVersion = '2.1';
 
-    protected $pkgAutoloaderRegistries = array(
+    protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
-        'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute'
-    );
+        'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
+    ];
 
     public function getPackageDescription()
     {
@@ -32,10 +35,8 @@ class Controller extends Package
         return t("Community Store");
     }
 
-    public function installStore()
+    public function installStore($pkg)
     {
-        $pkg = Package::getByHandle('community_store');
-
         Installer::installSinglePages($pkg);
         Installer::installProductParentPage($pkg);
         Installer::installStoreProductPageType($pkg);
@@ -57,51 +58,73 @@ class Controller extends Package
     {
         $this->registerCategories();
         parent::install();
-        $this->installStore();
+
+        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+        $this->installStore($pkg);
     }
 
     public function upgrade()
     {
-        $pkg = Package::getByHandle('community_store');
-        parent::upgrade();
+        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+        $db = $this->app->make('database')->connection();
+        $db = Installer::prepareUpgradeFromLegacy($db);
+
+        if ($db) {
+            parent::upgrade();
+
+            // this was set to false in the Installer so setting it back to normal
+            $db->query("SET foreign_key_checks = 1");
+
+            // We need to refresh our entities after install, otherwise the order attributes installation will fail
+            Installer::refreshEntities();
+        } else {
+            parent::upgrade();
+        }
+
         Installer::upgrade($pkg);
-        $cms = Core::make('app');
-        $cms->clearCaches();
+        $this->app->clearCaches();
     }
 
-    public function testForUpgrade() {
+    public function testForInstall($testForAlreadyInstalled = true)
+    {
         $community_store = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
 
         if ($community_store) {
-            $installedversion = $community_store->getPackageVersion();
+            // this is ridiculous but I found out the hard way that
+            // getting the version from inside the upgrade() function
+            // was giving me different result depending on the C5 version I was using.
+            // So I'm getting the version twice, once here and once in the upgrade function
+            // and I check both. I tried to set a variable instead of saving it in config
+            // but for some reason it didn't work
 
-            if (version_compare($installedversion, '2.0', '<')) {
-                $errors = $this->app->make('error');
-                $errors->add(t('Upgrading version 1.x version of Community Store to 2.x is not currently supported. Please immediately revert your community_store package folder to the %s release.',$installedversion ));
-
-                return $errors;
-            }
+            Config::save('cs.pkgversion', $community_store->getPackageVersion());
         }
 
-        return parent::testForUpgrade();
+        return parent::testForInstall($testForAlreadyInstalled);
     }
 
     public function registerRoutes()
     {
-        Route::register('/cart/getCartSummary', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getCartSummary');
-        Route::register('/cart/getmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartModal::getCartModal');
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
-        Route::register('/checkout/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\States::getStateList');
-        Route::register('/checkout/getShippingMethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::getShippingMethods');
-        Route::register('/checkout/updater', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::updater');
-        Route::register('/checkout/setVatNumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::setVatNumber');
-        Route::register('/checkout/selectShipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
         Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::downloadFile');
     }
 
+    public function registerHelpers()
+    {
+        $singletons = [
+            'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
+            'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual'
+        ];
+
+        foreach ($singletons as $key => $value) {
+            $this->app->singleton($key, $value);
+        }
+    }
+
     public function on_start()
     {
+        $this->registerHelpers();
         $this->registerRoutes();
         $this->registerCategories();
 
@@ -127,9 +150,9 @@ class Controller extends Package
             ]
         );
 
-        if (Core::make('app')->isRunThroughCommandLineInterface()) {
+        if ($this->app->isRunThroughCommandLineInterface()) {
             try {
-                $app = Core::make('console');
+                $app = $this->app->make('console');
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
             } catch (Exception $e) {
             }
@@ -156,7 +179,7 @@ class Controller extends Package
         $list->filterByPageTypeHandle('store_product');
         $pages = $list->getResults();
 
-        $pageType = \PageType::getByHandle('page');
+        $pageType = PageType::getByHandle('page');
 
         if ($pageType) {
             foreach ($pages as $page) {
@@ -169,26 +192,40 @@ class Controller extends Package
 
     public static function returnHeaderJS()
     {
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath =  $al->getCollectionHandle();
+        }
+
         return "
         <script type=\"text/javascript\">
-            var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
-            var CARTURL = '" . rtrim(URL::to('/cart'), '/') . "';
-            var TRAILINGSLASH = '" . ((bool) \Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
-            var CHECKOUTURL = '" . rtrim(URL::to('/checkout'), '/') . "';
+            var PRODUCTMODAL = '" . Url::to('/productmodal') . "';
+            var CARTURL = '" . rtrim(Url::to($langpath . '/cart'), '/') . "';
+            var TRAILINGSLASH = '" . ((bool) Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
+            var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";
     }
 
-    private function registerCategories() {
-        $this->app['manager/attribute/category']->extend('store_product',
-            function($app) {
+    private function registerCategories()
+    {
+        $this->app['manager/attribute/category']->extend(
+            'store_product',
+            function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-            });
+            }
+        );
 
-        $this->app['manager/attribute/category']->extend('store_order',
-            function($app) {
+        $this->app['manager/attribute/category']->extend(
+            'store_order',
+            function ($app) {
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
-            });
+            }
+        );
     }
 }
+
+

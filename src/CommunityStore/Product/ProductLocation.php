@@ -2,6 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Page\Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -99,21 +101,21 @@ class ProductLocation
 
     public static function getByID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $cID);
     }
 
     public static function getLocationsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
     }
 
     public static function getProductsForLocation($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
@@ -172,7 +174,7 @@ class ProductLocation
 
         $pages = [];
         while ($row = $query->fetchRow()) {
-            $page = \Page::getByID($row['cID']);
+            $page = Page::getByID($row['cID']);
 
             if ($page) {
                 $pages[$page->getCollectionName()] = ['page' => $page, 'productCount' => $row['productCount']];
@@ -205,14 +207,14 @@ class ProductLocation
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

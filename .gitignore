@@ -6,3 +6,4 @@ thumbs.db
 /.buildpath
 vendor
 .php_cs.cache
+products.php.orig

@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 
 class Categories extends DashboardPageController
 {
@@ -18,10 +20,10 @@ class Categories extends DashboardPageController
     {
         $products = new StoreProductList();
 
-        $page = \Page::getByID($cID);
+        $page = Page::getByID($cID);
 
         if (!$page) {
-            return \Redirect::to('/dashboard/store/products/categories');
+            return Redirect::to('/dashboard/store/products/categories');
         }
 
         $products->setSortBy('category');
@@ -37,8 +39,8 @@ class Categories extends DashboardPageController
 
     public function save($cID)
     {
-        if ($this->post() && $this->token->validate('community_store')) {
-            $data = $this->post();
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $data = $this->request->request->all();
 
             $count = 0;
 
@@ -54,6 +56,7 @@ class Categories extends DashboardPageController
         }
 
         $this->flash('success', t('Category Order Updated'));
-        return \Redirect::to('/dashboard/store/products/categories/manage/' . $cID);
+
+        return Redirect::to('/dashboard/store/products/categories/manage/' . $cID);
     }
 }

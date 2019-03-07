@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
-use Session;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -507,7 +508,7 @@ class Cart
         }
 
         if ($unit) {
-            $storeweightunit = \Config::get('community_store.weightUnit');
+            $storeweightunit = Config::get('community_store.weightUnit');
 
             if ($storeweightunit != $unit) {
                 // convert to grams first
@@ -578,11 +579,11 @@ class Cart
 
     public static function setShippingInstructions($sInstructions)
     {
-        \Session::set('communitystore.sInstructions', $sInstructions);
+        Session::set('communitystore.sInstructions', $sInstructions);
     }
 
     public static function getShippingInstructions()
     {
-        return  \Session::get('communitystore.sInstructions');
+        return  Session::get('communitystore.sInstructions');
     }
 }

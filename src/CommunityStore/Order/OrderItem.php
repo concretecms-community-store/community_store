@@ -2,11 +2,14 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -230,16 +233,19 @@ class OrderItem
 
     public static function getByID($oiID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $oiID);
     }
 
     public static function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)
     {
+        $app = Application::getFacadeApplication();
+        $csm = $app->make('cs/helper/multilingual');
+
         $product = $data['product']['object'];
 
-        $productName = $product->getName();
+        $productName = $csm->t($product->getName(), 'productName', $product->getID());
         $qty = $data['product']['qty'];
 
         if (isset($data['product']['customerPrice'])) {
@@ -248,7 +254,7 @@ class OrderItem
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $qtyLabel = $product->getQtyLabel();
+        $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID());
 
         $sku = $product->getSKU();
 
@@ -290,7 +296,7 @@ class OrderItem
                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
-                    $optionvalue = $optionvalue->getName();
+                    $optionvalue = $csm->t($optionvalue->getName(), 'optionValue');
                 }
             } elseif ('pt' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pt", "", $groupID);
@@ -310,7 +316,7 @@ class OrderItem
 
             $optiongroup = StoreProductOption::getByID($groupID);
             if ($optiongroup) {
-                $optionGroupName = $optiongroup->getName();
+                $optionGroupName = $csm->t($optiongroup->getName(), 'optionName', null, $groupID);
             }
 
             $orderItemOption = new StoreOrderItemOption();
@@ -339,7 +345,7 @@ class OrderItem
 
     public function getProductOptions()
     {
-        return \Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
+        return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
 
     public function getProductObject()
@@ -349,14 +355,14 @@ class OrderItem
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

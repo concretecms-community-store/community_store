@@ -1,6 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Core\Support\Facade\Url;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 ?>
 <div class="store-checkout-page">
 <?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>
@@ -35,17 +39,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                         <div class="row">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= \URL::to('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/register') ?>"><?= t("Register") ?></a>
+                                       href="<?= Url::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= Url::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -179,15 +183,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label><br />
+                                                    <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
                                                      if ($ak->isRequired()) {
-                                                         echo str_replace('<input', '<input required ', $fieldoutput);
-                                                     } else {
-                                                        echo $fieldoutput;
+                                                         $fieldoutput = str_replace('<input', '<input required ', $fieldoutput);
+                                                         $fieldoutput = str_replace('<select', '<select required ', $fieldoutput);
                                                      }
-                                                      ?>
+                                                     echo $fieldoutput;
+                                                     ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -421,7 +425,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                 <?php } ?>
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
-                      action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                      action="<?= Url::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
                     <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
@@ -443,7 +447,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                     <div class='radio'>
                                         <label>
                                             <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                            <?= $pm->getDisplayName() ?>
+                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', false, $pm->getID()); ?>
+
                                         </label>
                                     </div>
                                     <?php
@@ -465,7 +470,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
+                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>
@@ -504,12 +509,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
 
                     <?php if (!empty($discounts)) { ?>
                         <li class="store-line-item store-discounts list-group-item">
-                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-                                :</strong>
+                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
                             <?php
                             $discountstrings = array();
                             foreach ($discounts as $discount) {
-                                $discountstrings[] = h($discount->getDisplay());
+                                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
                             }
                             echo implode(', ', $discountstrings);
                             ?>
@@ -525,7 +529,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                                 <p><?= t('Invalid code');?></p>
                             <?php } ?>
 
-                            <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+                            <a href="<?= Url::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
                                 <?= $token->output('community_store'); ?>
@@ -571,9 +575,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Store
                     <?php
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
-                            if ($tax['taxamount'] > 0) { ?>
+                            if ($tax['taxamount'] > 0) {
+                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+                                ?>
                                 <li class="store-line-item store-tax-item list-group-item">
-                                <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
                         }

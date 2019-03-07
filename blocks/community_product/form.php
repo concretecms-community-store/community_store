@@ -105,7 +105,7 @@
 
         $("#product-select").select2({
             ajax: {
-                url: "<?= \URL::to('/productfinder'); ?>",
+                url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
                 dataType: 'json',
                 quietMillis: 250,
                 data: function (term, page) {

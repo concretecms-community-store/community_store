@@ -3,6 +3,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use \Concrete\Core\Support\Facade\Url;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 
 ?>
 <div class="store-cart-page">
@@ -30,13 +34,13 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
     <?php } ?>
 <?php } ?>
 
-<input id='cartURL' type='hidden' data-cart-url='<?= \URL::to("/cart/") ?>'>
+<input id='cartURL' type='hidden' data-cart-url='<?= Url::to($langpath . '/cart/') ?>'>
 
 <?php
 if ($cart) {
     $i = 1;
     ?>
-    <form method="post" class="form-inline" action="<?=  \URL::to("/cart/"); ?>" >
+    <form method="post" class="form-inline" action="<?=  Url::to($langpath . '/cart/'); ?>" >
         <?= $token->output('community_store'); ?>
         <table id="store-cart" class="store-cart-table table table-hover table-condensed">
             <thead>
@@ -75,10 +79,10 @@ if ($cart) {
                         <?php } ?>
                         <?php if ($productPage) { ?>
                             <a href="<?= URL::to($productPage) ?>">
-                                <?= $product->getName() ?>
+                                <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                             </a>
                         <?php } else { ?>
-                            <?= $product->getName() ?>
+                            <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                         <?php } ?>
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-list-item-attributes">
@@ -186,17 +190,17 @@ if ($cart) {
     </form>
 
     <!--    Hidden form for deleting-->
-    <form method="post" id="deleteform" action="<?=  \URL::to("/cart/"); ?>">
+    <form method="post" id="deleteform" action="<?=  Url::to($langpath  . '/cart/'); ?>">
         <?= $token->output('community_store'); ?>
         <input type="hidden" name="instance" value=""/>
-        <input type="hidden" name="action" value="remove" value=""/>
+        <input type="hidden" name="action" value="remove"/>
     </form>
 
 <?php } ?>
 
 <?php if ($discountsWithCodesExist && $cart) { ?>
     <h3><?= t('Enter Discount Code'); ?></h3>
-    <form method="post" action="<?= \URL::to('/cart/'); ?>" class="form-inline">
+    <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
             <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
@@ -217,12 +221,11 @@ if ($cart) {
 <?php if (!empty($discounts)) { ?>
 
     <p class="store-cart-page-discounts text-right">
-        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-            :</strong>
+        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
         <?php
         $discountstrings = array();
         foreach ($discounts as $discount) {
-            $discountstrings[] = h($discount->getDisplay());
+            $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
         }
         echo implode(', ', $discountstrings);
         ?>
@@ -263,7 +266,7 @@ if ($cart) {
 
     <div class="store-cart-page-cart-links pull-right">
         <a class="store-btn-cart-page-checkout btn btn-primary"
-           href="<?= \URL::to('/checkout') ?>"><?= t('Checkout') ?></a>
+           href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>
 <?php } else { ?>
     <p class="alert alert-info"><?= t('Your cart is empty'); ?></p>

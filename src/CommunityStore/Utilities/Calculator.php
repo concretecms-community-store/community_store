@@ -4,8 +4,8 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Config;
-use Session;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Session;
 
 class Calculator
 {

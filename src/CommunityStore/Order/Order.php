@@ -1,34 +1,35 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
+use Concrete\Core\Http\Request;
+use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\Mapping as ORM;
-use User;
-use Core;
-use Group;
-use Events;
-use Config;
-use Page;
-use UserInfo;
-use Session;
-use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount as StoreOrderDiscount;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Log;
+use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
-
-use \Concrete\Core\Attribute\ObjectTrait;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue as StoreOrderValue;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount as StoreOrderDiscount;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
 
 /**
  * @ORM\Entity
@@ -53,25 +54,25 @@ class Order
     /** @ORM\Column(type="integer",nullable=true) */
     protected $pmID;
 
-    /** @ORM\Column(type="text") */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $pmName;
 
-    /** @ORM\Column(type="text") */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $smName;
 
     /** @ORM\Column(type="text",nullable=true) */
     protected $sInstructions;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sShipmentID;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sRateID;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sCarrier;
 
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @ORM\Column(type="string",nullable=true) */
     protected $sTrackingID;
 
     /** @ORM\Column(type="text",nullable=true) */
@@ -80,22 +81,22 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingURL;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=2) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) */
     protected $oShippingTotal;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) */
     protected $oTax;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) */
     protected $oTaxIncluded;
 
-    /** @ORM\Column(type="text", nullable=true) * */
+    /** @ORM\Column(type="string", nullable=true) */
     protected $oTaxName;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=2) * */
+    /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $oTotal;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /** @ORM\Column(type="string", nullable=true) */
     protected $transactionReference;
 
     /** @ORM\Column(type="datetime", nullable=true) */
@@ -121,6 +122,9 @@ class Order
 
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $locale;
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
@@ -229,7 +233,7 @@ class Order
 
     public function setShippingTotal($shippingTotal)
     {
-        $this->oShippingTotal = $shippingTotal;
+        $this->oShippingTotal = (float)$shippingTotal;
     }
 
     public function setTaxTotal($taxTotal)
@@ -373,6 +377,16 @@ class Order
         return $this->oShippingTotal;
     }
 
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
     public function getTaxes()
     {
         $taxes = [];
@@ -454,14 +468,14 @@ class Order
 
     public static function getByID($oID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $oID);
     }
 
     public function getCustomersMostRecentOrderByCID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
     }
@@ -482,6 +496,9 @@ class Order
      */
     public static function add($pm, $transactionReference = '', $status = null)
     {
+        $app = Application::getFacadeApplication();
+        $csm = $app->make('cs/helper/multilingual');
+
         $customer = new StoreCustomer();
         $now = new \DateTime();
         $smName = StoreShippingMethod::getActiveShippingLabel();
@@ -495,7 +512,7 @@ class Order
         $discountRatio = $totals['discountRatio'];
 
         $pmName = $pm->getName();
-        $pmDisplayName = $pm->getDisplayName();
+        $pmDisplayName = $csm->t($pm->getDisplayName() , 'paymentDisplayName', null, $pm->getID());
 
         $taxCalc = Config::get('community_store.calculation');
 
@@ -510,7 +527,9 @@ class Order
                 } else {
                     $taxTotal[] = $tax['taxamount'];
                 }
-                $taxLabels[] = $tax['name'];
+
+                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+                $taxLabels[] = $taxlabel;
             }
         }
 
@@ -532,6 +551,9 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
+
+        $order->setLocale(Localization::activeLocale());
+
         if ($pm->getMethodController()->isExternal()) {
             $order->setExternalPaymentRequested(true);
         }
@@ -668,6 +690,8 @@ class Order
 
     public function completePostPaymentProcesses($sameRequest = false)
     {
+        $app = Application::getFacadeApplication();
+        $request = $app->make(Request::class);
         $groupstoadd = [];
         $createlogin = false;
         $usercreated = false;
@@ -702,11 +726,10 @@ class Order
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
 
-                $mh = Core::make('helper/mail');
-
+                $mh = $app->make('helper/mail');
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
-                $navhelper = Core::make('helper/navigation');
+                $navhelper = $app->make('helper/navigation');
                 $target = Page::getByPath('/login');
 
                 if ($target) {
@@ -719,7 +742,7 @@ class Order
                     $mh->addParameter('link', '');
                 }
 
-                $valc = Core::make('helper/concrete/validation');
+                $valc = $app->make('helper/concrete/validation');
                 $min = Config::get('concrete.user.username.minimum');
                 $max = Config::get('concrete.user.username.maximum');
 
@@ -732,7 +755,7 @@ class Order
                     $newusername .= rand(0, 9);
                 }
 
-                $userRegistrationService = \Core::make('Concrete\Core\User\RegistrationServiceInterface');
+                $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);
                 $usercreated = true;
 
@@ -759,7 +782,7 @@ class Order
                 $fromName = Config::get('community_store.emailalertsname');
                 $fromEmail = Config::get('community_store.emailalerts');
                 if (!$fromEmail) {
-                    $fromEmail = "store" . $_SERVER['SERVER_NAME'];
+                    $fromEmail = "store@" . $request->getHost();
                 }
 
                 // new user password email
@@ -774,7 +797,7 @@ class Order
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    \Log::addWarning(t('Community Store: a new user email failed sending to %s', array($email)));
+                    Log::addWarning(t('Community Store: a new user email failed sending to %s', array($email)));
                 }
             }
         }
@@ -841,7 +864,7 @@ class Order
             }
 
             //add user to Store Customers group
-            $group = \Group::getByName('Store Customer');
+            $group = Group::getByName('Store Customer');
             if (is_object($group) || $group->getGroupID() < 1) {
                 $user->getUserObject()->enterGroup($group);
             }
@@ -857,7 +880,9 @@ class Order
 
     public function sendNotifications($email = '')
     {
-        $mh = Core::make('mail');
+        $app = Application::getFacadeApplication();
+        $request = $app->make(Request::class);
+        $mh = $app->make('mail');
 
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
@@ -878,7 +903,7 @@ class Order
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
-            $fromEmail = "store" . $_SERVER['SERVER_NAME'];
+            $fromEmail = "store@" . $request->getHost();
         }
 
         //order notification
@@ -920,19 +945,21 @@ class Order
             try {
                 $mh->sendMail();
             } catch (\Exception $e) {
-                \Log::addWarning(t('Community Store: a notification email failed sending to %s', array(implode(', ', $notificationEmails))));
+                Log::addWarning(t('Community Store: a notification email failed sending to %s', array(implode(', ', $notificationEmails))));
             }
         }
     }
 
     public function sendOrderReceipt($email = '')
     {
-        $mh = Core::make('mail');
+        $app = Application::getFacadeApplication();
+        $request = $app->make(Request::class);
+        $mh = $app->make('mail');
         $fromName = Config::get('community_store.emailalertsname');
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
-            $fromEmail = "store@" . $_SERVER['SERVER_NAME'];
+            $fromEmail = "store@" . $request->getHost();
         }
 
         if ($fromName) {
@@ -971,7 +998,7 @@ class Order
         try {
             $mh->sendMail();
         } catch (\Exception $e) {
-            \Log::addWarning(t('Community Store: a receipt email failed sending to %s', array($email)));
+            Log::addWarning(t('Community Store: a receipt email failed sending to %s', array($email)));
         }
     }
 
@@ -1005,14 +1032,14 @@ class Order
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -1020,7 +1047,7 @@ class Order
 
     public function remove()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $rows = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $this->oID);
@@ -1085,64 +1112,10 @@ class Order
         }
     }
 
-//    public function setAttribute($ak, $value)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreOrderKey::getByHandle($ak);
-//        }
-//        $ak->setAttribute($this, $value);
-//    }
-//
-//    public function getAttribute($ak, $displayMode = false)
-//    {
-//        if (!is_object($ak)) {
-//            $ak = StoreOrderKey::getByHandle($ak);
-//        }
-//        if (is_object($ak)) {
-//            $av = $this->getAttributeValueObject($ak);
-//            if (is_object($av)) {
-//                return $av->getValue($displayMode);
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    public function getAttributeValueObject($ak, $createIfNotFound = false)
-//    {
-//        $app = Application::getFacadeApplication();
-//        $db = $app->make('database')->connection();
-//        $av = false;
-//        $v = [$this->getOrderID(), $ak->getAttributeKeyID()];
-//        $avID = $db->GetOne("SELECT avID FROM CommunityStoreOrderAttributeValues WHERE oID = ? AND akID = ?", $v);
-//        if ($avID > 0) {
-//            $av = StoreOrderValue::getByID($avID);
-//            if (is_object($av)) {
-//                $av->setOrder($this);
-//                $av->setAttributeKey($ak);
-//            }
-//        }
-//
-//        if ($createIfNotFound) {
-//            $cnt = 0;
-//
-//            // Is this avID in use ?
-//            if (is_object($av)) {
-//                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreOrderAttributeValues WHERE avID = ?", $av->getAttributeValueID());
-//            }
-//
-//            if ((!is_object($av)) || ($cnt > 1)) {
-//                $av = $ak->addAttributeValue();
-//            }
-//        }
-//
-//        return $av;
-//    }
-
-
     public function getObjectAttributeCategory()
     {
-        return \Core::make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+        $app = Application::getFacadeApplication();
+        return $app->make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
     }
 
     public function getAttributeValueObject($ak, $createIfNotExists = false)
@@ -1172,9 +1145,13 @@ class Order
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
+        $csm = $app->make('cs/helper/multilingual');
 
         //add the discount
-        $vals = [$this->oID, $discount->drName, $discount->getDisplay(), $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
+        $displayName = $discount->getDisplay();
+        $displayName = $csm->t($displayName, 'discountRuleDisplayName', null, $discount->getID());
+
+        $vals = [$this->oID, $discount->drName, $displayName , $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
         $db->query("INSERT INTO CommunityStoreOrderDiscounts(oID,odName,odDisplay,odValue,odPercentage,odDeductFrom,odCode) VALUES (?,?,?,?,?,?,?)", $vals);
     }
 

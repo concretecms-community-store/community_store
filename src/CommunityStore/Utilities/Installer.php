@@ -1,20 +1,20 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use BlockType;
-use BlockTypeSet;
-use SinglePage;
-use Core;
-use Page;
-use PageTemplate;
-use PageType;
-use Group;
-use FileSet;
-use Config;
-use Localization;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Type as AttributeType;
-use AttributeSet;
+use Concrete\Core\Attribute\Set as AttributeSet;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
@@ -24,11 +24,12 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
-
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 class Installer
 {
-    public static function installSinglePages($pkg)
+    public static function installSinglePages($pkg, $upgrade = false)
     {
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
@@ -45,24 +46,31 @@ class Installer
         self::installSinglePage('/dashboard/store/reports', $pkg);
         self::installSinglePage('/dashboard/store/reports/sales', $pkg);
         self::installSinglePage('/dashboard/store/reports/products', $pkg);
-        self::installSinglePage('/cart', $pkg);
-        self::installSinglePage('/checkout', $pkg);
-        self::installSinglePage('/checkout/complete', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
 
-        $cartPage = Page::getByPath('/cart/');
-        $cartPage->setAttribute('exclude_nav', 1);
-        $cartPage->setAttribute('exclude_search_index', 1);
-        $cartPage->setAttribute('exclude_page_list', 1);
+       if (!$upgrade) {
+           self::installSinglePage('/cart', $pkg);
+           self::installSinglePage('/checkout', $pkg);
+           self::installSinglePage('/checkout/complete', $pkg);
 
-        $checkoutPage = Page::getByPath('/checkout/');
-        $checkoutPage->setAttribute('exclude_nav', 1);
-        $checkoutPage->setAttribute('exclude_search_index', 1);
-        $checkoutPage->setAttribute('exclude_page_list', 1);
+           $cartPage = Page::getByPath('/cart/');
+           $cartPage->setAttribute('exclude_nav', 1);
+           $cartPage->setAttribute('exclude_search_index', 1);
+           $cartPage->setAttribute('exclude_page_list', 1);
 
-        $completePage = Page::getByPath('/checkout/complete');
-        $completePage->setAttribute('exclude_nav', 1);
-        $completePage->setAttribute('exclude_search_index', 1);
-        $completePage->setAttribute('exclude_page_list', 1);
+           $checkoutPage = Page::getByPath('/checkout/');
+           $checkoutPage->setAttribute('exclude_nav', 1);
+           $checkoutPage->setAttribute('exclude_search_index', 1);
+           $checkoutPage->setAttribute('exclude_page_list', 1);
+
+           $completePage = Page::getByPath('/checkout/complete');
+           $completePage->setAttribute('exclude_nav', 1);
+           $completePage->setAttribute('exclude_search_index', 1);
+           $completePage->setAttribute('exclude_page_list', 1);
+       }
     }
 
     public static function installSinglePage($path, $pkg)
@@ -168,6 +176,7 @@ class Installer
         self::installBlock('community_product_list', $pkg);
         self::installBlock('community_utility_links', $pkg);
         self::installBlock('community_product', $pkg);
+        self::installBlock('community_product_filter', $pkg);
     }
 
     public static function installBlock($handle, $pkg)
@@ -243,15 +252,15 @@ class Installer
 
     public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
         $categoryEntity = $service->getByHandle('user');
         $category = $categoryEntity->getController();
 
-        $attr =  $category->getByHandle($handle);
+        $attr = $category->getByHandle($handle);
 
         if (!is_object($attr)) {
-            $name = Core::make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
 
             $key = new UserKey();
             $key->setAttributeKeyHandle($handle);
@@ -270,6 +279,11 @@ class Installer
 
         if (!is_object($orderCategory)) {
             $orderCategory = Category::add('store_order', 1, $pkg);
+        } else {
+            $indexer = $orderCategory->getController()->getSearchIndexer();
+            if (is_object($indexer)) {
+                $indexer->createRepository($orderCategory->getController());
+            }
         }
 
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
@@ -277,8 +291,8 @@ class Installer
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
         $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-
 
         $orderCustSet = AttributeSet::getByHandle('order_customer');
         if (!is_object($orderCustSet)) {
@@ -321,14 +335,13 @@ class Installer
 
     public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
 
-        $attr =  $orderCategory->getByHandle($handle);
+        $attr = $orderCategory->getByHandle($handle);
 
         if (!is_object($attr)) {
-
-            $name = Core::make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
 
             $key = new StoreOrderKey();
             $key->setAttributeKeyHandle($handle);
@@ -352,8 +365,8 @@ class Installer
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
         $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-
     }
 
     public static function createDDFileset($pkg)
@@ -368,7 +381,7 @@ class Installer
     public static function installOrderStatuses($pkg)
     {
         $table = StoreOrderStatus::getTableName();
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $statuses = [
             ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
@@ -400,11 +413,59 @@ class Installer
 
     public static function upgrade($pkg)
     {
+        // trigger a reinstall to add the select attribute type to the product category
+        self::installProductAttributes($pkg);
         // trigger a reinstall in case new fields have been added
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
+        self::installBlocks($pkg);
+
+        // pass an upgrade value of true, to avoid recreating cart/checkout pages again
+        self::installSinglePages($pkg, true);
 
         Localization::clearCache();
-        //Installer::addProductSearchIndexTable($pkg);
+    }
+
+    public static function refreshEntities()
+    {
+        $em = dbORM::entityManager();
+        $manager = new DatabaseStructureManager($em);
+        $manager->refreshEntities();
+    }
+
+    public static function prepareUpgradeFromLegacy($db)
+    {
+        $app = Application::getFacadeApplication();
+        $installedVersion = $db->fetchColumn("SELECT pkgVersion from Packages WHERE pkgHandle=?", ['community_store']);
+        $installedVersionFromConfig = Config::get('cs.pkgversion');
+        $community_store = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+        if (
+            $community_store
+            && (
+            ($installedVersion && version_compare($installedVersion, '2.0', '<'))
+            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
+            )
+        ) {
+            $db->query("SET foreign_key_checks = 0");
+
+            // First we have to delete orphan attribute values and keys so constraints can be added to the table
+            $db->query("DELETE FROM CommunityStoreProductAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreProducts WHERE pID = CommunityStoreProductAttributeValues.pID)");
+            $db->query("DELETE FROM CommunityStoreOrderAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreOrders WHERE oID = CommunityStoreOrderAttributeValues.oID)");
+
+            $db->query("DELETE FROM CommunityStoreProductAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreProductAttributeKeys.akID)");
+            $db->query("DELETE FROM CommunityStoreOrderAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreOrderAttributeKeys.akID)");
+
+            // then we make sure our attributes keys are not marked legacy anymore
+            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreProductAttributeKeys)", ["storeproductkey", "legacykey"]);
+            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreOrderAttributeKeys)", ["storeorderkey", "legacykey"]);
+
+            // And we remove them from the LegacyAttributeKeys table
+            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreProductAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
+            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreOrderAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
+
+            return $db;
+        } else {
+            return false;
+        }
     }
 }

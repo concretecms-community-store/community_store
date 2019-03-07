@@ -1,14 +1,17 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
-use Core;
-use Config;
-use Page;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class Controller extends BlockController
@@ -53,8 +56,8 @@ class Controller extends BlockController
 
     public function getGroupFilters()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        // $app = Application::getFacadeApplication();
+        $db = $this->app->make('database')->connection();
         $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", [$this->bID]);
 
         $list = [];
@@ -76,6 +79,9 @@ class Controller extends BlockController
 
     public function view()
     {
+        // $app = Application::getFacadeApplication();
+        $request = $this->app->make(Request::class);
+
         $products = new StoreProductList();
 
         // checks in case sort order was inadvertantly set to an option that doesn't work with the current filter
@@ -87,7 +93,7 @@ class Controller extends BlockController
             $this->sortOrder = 'related';
         }
 
-        $usersort = $this->get('sort' . $this->bID);
+        $usersort = $request->query->get('sort' . $this->bID);
 
         if ($usersort && '0' != $usersort) {
             $products->setSortBy($usersort);
@@ -127,6 +133,19 @@ class Controller extends BlockController
             if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
                 $product = StoreProduct::getByCollectionID($cID);
+
+                // if product not found, look for it via multilingual related page
+                if (!$product) {
+                    $site = $this->app->make('site')->getSite();
+                    if ($site) {
+                        $locale = $site->getDefaultLocale();
+
+                        if ($locale) {
+                            $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
+                            $product = StoreProduct::getByCollectionID($originalcID);
+                        }
+                    }
+                }
             } else {
                 $product = StoreProduct::getByID($this->relatedPID);
             }
@@ -158,13 +177,11 @@ class Controller extends BlockController
             $products->setAttributeFilters($this->attFilters);
         }
 
-        $request = \Request::getInstance();
-
-        if ($request->getQueryString()) {
+        if ($request->getQueryString() && $this->enableExternalFiltering) {
             $products->processUrlFilters($request);
         }
 
-        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $factory = new PaginationFactory(Request::createFromGlobals());
         $paginator = $factory->createPaginationObject($products, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
 
         $pagination = $paginator->renderDefaultView();
@@ -172,7 +189,7 @@ class Controller extends BlockController
 
         $codediscounts = false;
         $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
-        $code = trim(\Session::get('communitystore.code'));
+        $code = trim(Session::get('communitystore.code'));
 
         if ($code) {
             $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
@@ -193,15 +210,26 @@ class Controller extends BlockController
         $this->set('paginator', $paginator);
 
         //load some helpers
-        $this->set('ih', Core::make('helper/image'));
-        $this->set('th', Core::make('helper/text'));
+        $this->set('ih', $this->app->make('helper/image'));
+        $this->set('th', $this->app->make('helper/text'));
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('showAddToCart', false);
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $this->set('token', $app->make('token'));
+        $this->set('token', $this->app->make('token'));
+
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
+        $this->set('langpath', $langpath);
+        $this->set('app', $this->app);
+        $this->set('locale', Localization::activeLocale());
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
@@ -241,6 +269,7 @@ class Controller extends BlockController
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['enableExternalFiltering'] = isset($args['enableExternalFiltering']) ? 1 : 0;
         $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
@@ -253,8 +282,8 @@ class Controller extends BlockController
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        // $app = Application::getFacadeApplication();
+        $db = $this->app->make('database')->connection();
         $vals = [$this->bID];
         $db->query("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
@@ -271,8 +300,8 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = Core::make("helper/validation/error");
-        $nh = Core::make("helper/number");
+        $e = $this->app->make("helper/validation/error");
+        $nh = $this->app->make("helper/number");
 
         if (('page' == $args['filter'] || 'page_children' == $args['filter']) && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));

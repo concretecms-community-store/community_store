@@ -2,12 +2,13 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Doctrine\Common\Collections\ArrayCollection;
-use File;
+use Concrete\Core\File\File;
 use Concrete\Core\Support\Facade\Application;
 
 /**
@@ -506,7 +507,7 @@ class ProductVariation
                 ++$sort;
             }
 
-            $em = \ORM::entityManager();
+            $em = dbORM::entityManager();
             $em->flush();
         }
 
@@ -532,14 +533,14 @@ class ProductVariation
 
     public static function getByID($pvID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $pvID);
     }
 
     public static function getBySKU($pvSKU)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['pvSKU' => $pvSKU]);
     }
@@ -585,7 +586,7 @@ class ProductVariation
 
     public function save($persistonly = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
 
         if (!$persistonly) {
@@ -595,14 +596,14 @@ class ProductVariation
 
     public static function getVariationsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['pvSort' => 'asc']);
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
