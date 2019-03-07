@@ -179,9 +179,9 @@ if ($cart) {
             <tfoot>
             <tr>
                 <td colspan="5" class="text-right">
-                    <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-default"
+                    <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-warning"
                             type="submit"><?= t("Clear Cart") ?></button>
-                    <button name="action" value="update" class="store-btn-cart-list-update btn btn-default"
+                    <button name="action" value="update" class="store-btn-cart-list-update btn btn-primary"
                             type="submit"><?= t("Update") ?></button>
                 </td>
             </tr>
@@ -265,7 +265,7 @@ if ($cart) {
     </p>
 
     <div class="store-cart-page-cart-links pull-right">
-        <a class="store-btn-cart-page-checkout btn btn-primary"
+        <a class="store-btn-cart-page-checkout btn btn-success"
            href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>
 <?php } else { ?>

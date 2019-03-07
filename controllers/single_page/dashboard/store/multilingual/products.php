@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -29,9 +30,15 @@ class Products extends DashboardSitePageController
             $productsList->setSortByDirection('desc');
         }
 
-        if ($this->request->query->get('keywords')) {
-            $productsList->setSearch(trim($this->request->query->get('keywords')));
+        $keywords = trim($this->request->query->get('keywords'));
+
+        if ($keywords) {
+            $productsList->setSearch($keywords);
+            Session::set('communitystore.dashboard.multilingual.keywords', $keywords);
+        } else {
+            Session::remove('communitystore.dashboard.multilingual.keywords');
         }
+
 
         $this->set('productList', $productsList);
 
@@ -51,6 +58,12 @@ class Products extends DashboardSitePageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
+
+        if ($gID) {
+            Session::set('communitystore.dashboard.multilingual.group', $gID);
+        } else {
+            Session::remove('communitystore.dashboard.multilingual.group');
+        }
     }
 
     public function translate($pID)
@@ -126,6 +139,9 @@ class Products extends DashboardSitePageController
         }
 
         $this->set('attrOptions', $attrOptions);
+
+        $this->set('keywords', Session::get('communitystore.dashboard.multilingual.keywords'));
+        $this->set('group', Session::get('communitystore.dashboard.multilingual.group'));
     }
 
     private function getLocales() {
@@ -220,7 +236,10 @@ class Products extends DashboardSitePageController
 
             $this->flash('success', t('Product Translations Updated'));
 
-            return Redirect::to('/dashboard/store/multilingual/products');
+            $keywords = Session::get('communitystore.dashboard.multilingual.keywords');
+            $group = Session::get('communitystore.dashboard.multilingual.group');
+
+            return Redirect::to('/dashboard/store/multilingual/products/' . ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : ''));
         }
     }
 }

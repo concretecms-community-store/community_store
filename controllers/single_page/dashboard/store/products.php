@@ -7,6 +7,7 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -43,8 +44,13 @@ class Products extends DashboardSitePageController
             $productsList->setSortByDirection('desc');
         }
 
-        if ($this->request->query->get('keywords')) {
-            $productsList->setSearch(trim($this->request->query->get('keywords')));
+        $keywords = trim($this->request->query->get('keywords'));
+
+        if ($keywords) {
+            $productsList->setSearch($keywords);
+            Session::set('communitystore.dashboard.products.keywords', $keywords);
+        } else {
+            Session::remove('communitystore.dashboard.products.keywords');
         }
 
         $this->set('productList', $productsList);
@@ -62,6 +68,12 @@ class Products extends DashboardSitePageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
+
+        if ($gID) {
+            Session::set('communitystore.dashboard.products.group', $gID);
+        } else {
+            Session::remove('communitystore.dashboard.products.group');
+        }
 
         $site = $this->getSite();
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
@@ -230,6 +242,9 @@ class Products extends DashboardSitePageController
 
         $this->set('pageTitle', t('Edit Product'));
         $this->set('usergroups', $usergrouparray);
+
+        $this->set('keywords', Session::get('communitystore.dashboard.products.keywords'));
+        $this->set('group', Session::get('communitystore.dashboard.products.group'));
     }
 
     public function generate($pID, $templateID = null)

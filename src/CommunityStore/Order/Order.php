@@ -990,6 +990,7 @@ class Order
             $orderChoicesAttList = [];
         }
 
+        $mh->addParameter('paymentMethodID', $pmID);
         $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
         $mh->addParameter('paymentInstructions', $paymentInstructions);
         $mh->addParameter("order", $this);

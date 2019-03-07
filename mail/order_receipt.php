@@ -207,8 +207,12 @@ ob_start();
         <?php } ?>
     </p>
 
+    <?php
+    if ($paymentInstructions && $paymentMethodID) {
+        $paymentInstructions = $csm->t($paymentInstructions, 'paymentInstructions', false, $paymentMethodID);
+    }
+    ?>
     <?= $paymentInstructions; ?>
-
 
     <?php
     $downloads = array();

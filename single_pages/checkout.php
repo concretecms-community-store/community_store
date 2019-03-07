@@ -202,7 +202,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?php } ?>
 
                         <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
@@ -328,7 +328,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -368,7 +368,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
@@ -470,7 +470,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
+                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>

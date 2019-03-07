@@ -1537,7 +1537,7 @@ $ps = $app->make('helper/form/page_selector');
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/') ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/'. ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : '')) ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
                 <button class="pull-right btn btn-success" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
@@ -1606,7 +1606,7 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="form-group">
                     <div class="ccm-search-main-lookup-field">
                         <i class="fa fa-search"></i>
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU')]) ?>
+                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 300px"]) ?>
                     </div>
 
                 </div>

@@ -10,6 +10,10 @@ if ($action == 'view') { ?>
 
 <?if (count($locales) > 0) { ?>
 
+        <div class="ccm-dashboard-header-buttons">
+
+        </div>
+
     <div class="ccm-dashboard-content-full">
         <form role="form" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
@@ -52,7 +56,7 @@ if ($action == 'view') { ?>
                 <div class="form-group">
                     <div class="ccm-search-main-lookup-field">
                         <i class="fa fa-search"></i>
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU')]) ?>
+                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 300px"]) ?>
                     </div>
 
                 </div>
@@ -450,7 +454,7 @@ $localecount = count($locales);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/multilingual/products/') ?>"
+            <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : '')) ?>"
                class="btn btn-default pull-left"><?= t("Cancel") ?></a>
             <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
         </div>

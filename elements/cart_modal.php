@@ -188,9 +188,8 @@ $csm = $app->make('cs/helper/multilingual');
                     <td></td>
                     <td colspan="2">
                         <?php if ($allowUpdate) { ?>
-                            <p class="text-right"><button type="submit" class="store-btn-cart-modal-update btn btn-default" data-modal="true" href="#"><?= t("Update")?></button></p>
+                            <p class="text-right"><button type="submit" class="store-btn-cart-modal-update btn btn-primary" data-modal="true" href="#"><?= t("Update")?></button></p>
                         <?php } ?>
-
                     </td>
                 </tr>
                 </tfoot>
@@ -232,9 +231,9 @@ $csm = $app->make('cs/helper/multilingual');
             <p class="pull-left">
                 <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
                 <?php if ($cart  && !empty($cart)) { ?>
-                <a class="store-btn-cart-modal-clear btn btn-default" href="#"><?= t('Clear Cart')?></a>
+                <a class="store-btn-cart-modal-clear btn btn-warning" href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-primary " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

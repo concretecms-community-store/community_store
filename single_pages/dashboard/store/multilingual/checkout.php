@@ -30,13 +30,20 @@ $editor = $app->make('editor');
 
             foreach ($paymentMethods as $paymentMethod) {
 
+                $rowcount = 2;
+
+                 if ($paymentMethod->getMethodController()->getPaymentInstructions()) {
+                     $rowcount = 3;
+                 }
+
+
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
                         <?php if ($firstrow) {
                             $firstrow = false;
                             ?>
-                            <td rowspan="<?= $localecount * 2; ?>"><?= h($paymentMethod->getName()); ?></td>
+                            <td rowspan="<?= $localecount * $rowcount; ?>"><?= h($paymentMethod->getName()); ?></td>
                             <td rowspan="<?= $localecount; ?>"><span
                                         class="label label-primary"><?= t('Payment Display Name'); ?></span>
                             </td>
@@ -81,6 +88,33 @@ $editor = $app->make('editor');
                         </td>
 
                     </tr>
+                <?php } ?>
+
+                <?php if ($paymentMethod->getMethodController()->getPaymentInstructions()) { ?>
+                    <?php
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Payment Instructions'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= $paymentMethod->getMethodController()->getPaymentInstructions(); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <?= $editor->outputStandardEditor('translation[paymentMethods]['.  $paymentMethod->getID() . '][' . $lp->getLocale() .'][longText][paymentInstructions]', $csm->t(null, 'paymentInstructions', false, $paymentMethod->getID(), $lp->getLocale())); ?>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
                 <?php } ?>
 
 
