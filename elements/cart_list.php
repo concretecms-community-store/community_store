@@ -131,7 +131,7 @@ if ($cart) {
                 <?= $qty ?>
                 <?php 
             } ?>
-                <?php $quantityLabel = $product->getQtyLabel(); ?>
+                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
                 <?php if ($quantityLabel) { ?>
                 <span class="store-cart-qty-label small">
                     <?= $quantityLabel; ?></span>
