@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
