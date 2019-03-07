@@ -47,9 +47,12 @@ class Multilingual
      *  optionValue
      *  taxRateName
      *  shippingName
+     *  shippingDetails
      *  optionValue
      *  paymentDisplayName
      *  paymentButtonLabel
+     *  receiptEmailHeader
+     *  receiptEmailFooter
      */
     public function t($text, $context = false, $productID = false, $id = false, $forcedLocale = false, $useCommon = true)
     {
@@ -72,13 +75,17 @@ class Multilingual
                 } else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionValue' == $context ) {
+            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionValue' == $context || 'productQuantityLabel' == $context ) {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 
             if ($productID) {
                 if ($useCommon) {
-                    $query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
+                    if ('productQuantityLabel' == $context) {
+                        $query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
+                    } else {
+                        $query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
+                    }
                 } else {
                     $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
                 }

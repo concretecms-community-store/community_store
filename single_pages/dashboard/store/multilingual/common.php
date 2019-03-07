@@ -136,7 +136,7 @@ $localecount = count($locales);
                             <td>
                                 <input type="text" class="form-control"
                                        name="translation[options][<?= $lp->getLocale(); ?>][text][productQuantityLabel][<?= h($quantityLabel); ?>]"
-                                       value="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale(), false); ?>"/>
+                                       value="<?= $csm->t($quantityLabel, 'productQuantityLabel', false, false, $lp->getLocale(), false); ?>"/>
                             </td>
 
                         </tr>

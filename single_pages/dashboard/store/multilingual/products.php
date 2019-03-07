@@ -159,7 +159,7 @@ $localecount = count($locales);
 
 
     <fieldset>
-        <legend><?= t('Product Overview'); ?></legend>
+        <legend><a target="_blank" title="<?= t('Manage Product'); ?>" href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= h($product->getName()); ?></a></legend>
         <p class="help-block"><?= t('Product specific translations'); ?></p>
     <table class="table table-bordered table-condensed">
         <tr>

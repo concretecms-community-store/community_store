@@ -146,7 +146,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </td>
 
                             <td class="store-cart-list-product-qty col-xs-3">
-                                <?php $quantityLabel = $product->getQtyLabel(); ?>
+                                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
                                 <span class="store-qty-container
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>

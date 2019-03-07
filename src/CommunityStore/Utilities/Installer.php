@@ -419,7 +419,9 @@ class Installer
         self::installOrderAttributes($pkg);
         self::installUserAttributes($pkg);
         self::installBlocks($pkg);
-        self::installSinglePages($pkg);
+
+        // pass an upgrade value of true, to avoid recreating cart/checkout pages again
+        self::installSinglePages($pkg, true);
 
         Localization::clearCache();
     }
