@@ -109,7 +109,22 @@ class Controller extends BlockController
 
         if ('current' == $this->filter || 'current_children' == $this->filter) {
             $page = Page::getCurrentPage();
-            $products->setCID($page->getCollectionID());
+            $pageID  = $page->getCollectionID();
+
+            $site = $this->app->make('site')->getSite();
+            if ($site) {
+                $locale = $site->getDefaultLocale();
+
+                if ($locale) {
+                    $relatedPageID = Section::getRelatedCollectionIDForLocale($pageID, $locale->getLocale());
+                    if ($relatedPageID) {
+                        $pageID = $relatedPageID;
+                        $page = Page::getByID($pageID);
+                    }
+                }
+            }
+
+            $products->setCID($pageID);
 
             if ('current_children' == $this->filter) {
                 $products->setCIDs($page->getCollectionChildrenArray());

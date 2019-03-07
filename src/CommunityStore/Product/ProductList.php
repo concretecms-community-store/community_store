@@ -315,7 +315,11 @@ class ProductList extends AttributedItemList
             $query->andWhere("pActive = 1");
         }
 
-        $query->groupBy('p.pID');
+        if ($this->sortBy == 'category') {
+            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
+        } else {
+            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
+        }
 
         if ($this->search) {
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%' . $this->search . '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%' . $this->search . '%');

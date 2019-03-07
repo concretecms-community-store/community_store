@@ -335,14 +335,17 @@ class Controller extends BlockController
         $maxPrice = '';
 
         if ($hasprice) {
-            $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price
+
+            if (count($unfilteredIDs) > 0) {
+                $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price
                                             FROM CommunityStoreProducts
                                             WHERE pID in (' . implode(',', $unfilteredIDs) . ')
                                             AND pPrice > 0
                                             ');
+                $minPrice = $minmax[0]['min_price'];
+                $maxPrice = $minmax[0]['max_price'];
+            }
 
-            $minPrice = $minmax[0]['min_price'];
-            $maxPrice = $minmax[0]['max_price'];
 
             $minPriceSelected = $minPrice;
             $maxPriceSelected = $maxPrice;

@@ -17,13 +17,25 @@ class Common extends DashboardSitePageController
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
             ->groupBy('o.poName')->orderBy('o.poName');
 
-        $this->set("optionNames", $query->getQuery()->getResult());
+        $optionNames = [];
+
+        foreach($query as $optionName) {
+            $optionNames[$optionName->getName()] = $optionName;
+        }
+
+        $this->set("optionNames", array_values($optionNames));
 
         $query = $qb->select('oi')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'oi')
             ->groupBy('oi.poiName')->orderBy('oi.poiName');
 
-        $this->set("optionItems", $query->getQuery()->getResult());
+        $optionItems = [];
+
+        foreach($query as $optionItem) {
+            $optionItems[$optionItem->getName()] = $optionItem;
+        }
+
+        $this->set("optionItems", array_values($optionItems));
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
