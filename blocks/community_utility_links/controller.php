@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
-use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
@@ -27,6 +28,13 @@ class Controller extends BlockController
 
     public function view()
     {
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
         $itemcount = StoreCart::getTotalItemsInCart();
         $this->set("itemCount", $itemcount);
 
@@ -42,23 +50,23 @@ class Controller extends BlockController
             $this->set('total', '');
         }
 
-        $c = Page::getCurrentPage();
-        $path = $c->getCollectionPath();
+        $collectionHandle =  $c->getCollectionHandle();
 
         $inCheckout = false;
         $inCart = false;
 
-        if ('/checkout' == $path) {
+        if ('checkout' == $collectionHandle) {
             $inCheckout = true;
         }
 
-        if ('/cart' == $path) {
+        if ('cart' == $collectionHandle) {
             $inCart = true;
         }
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
         $this->set('app', $this->app);
+        $this->set('langpath', $langpath);
     }
 
     public function registerViewAssets($outputContent = '')

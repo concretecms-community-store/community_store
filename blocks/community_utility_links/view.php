@@ -53,7 +53,7 @@
             <?php
         } else {
             ?>
-                <a href="<?= \Concrete\Core\Support\Facade\Url::to('/cart'); ?>" class="store-cart-link"><?= $cartLabel; ?></a>
+                <a href="<?= \Concrete\Core\Support\Facade\Url::to($langpath . '/cart'); ?>" class="store-cart-link"><?= $cartLabel; ?></a>
             <?php
         } ?>
         </p>
@@ -65,7 +65,7 @@
         <?php if ($showCheckout) {
             ?>
         <p  class="store-utility-links-checkout-link">
-            <a href="<?= \Concrete\Core\Support\Facade\Url::to('/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
+            <a href="<?= \Concrete\Core\Support\Facade\Url::to($langpath . '/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
         </p>
         <?php
         } ?>
