@@ -140,8 +140,8 @@ class Products extends DashboardSitePageController
 
         $this->set('attrOptions', $attrOptions);
 
-        $this->set('keywords', Session::get('communitystore.dashboard.multilingual.keywords'));
-        $this->set('group', Session::get('communitystore.dashboard.multilingual.group'));
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.multilingual.keywords'));
+        $this->set('groupSearch', Session::get('communitystore.dashboard.multilingual.group'));
     }
 
     private function getLocales() {

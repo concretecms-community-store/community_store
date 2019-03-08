@@ -1537,7 +1537,7 @@ $ps = $app->make('helper/form/page_selector');
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/'. ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : '')) ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
                 <button class="pull-right btn btn-success" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>

@@ -452,9 +452,10 @@ $localecount = count($locales);
         </table>
     </fieldset>
 
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : '')) ?>"
+            <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>"
                class="btn btn-default pull-left"><?= t("Cancel") ?></a>
             <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
         </div>

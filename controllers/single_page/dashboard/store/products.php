@@ -243,8 +243,8 @@ class Products extends DashboardSitePageController
         $this->set('pageTitle', t('Edit Product'));
         $this->set('usergroups', $usergrouparray);
 
-        $this->set('keywords', Session::get('communitystore.dashboard.products.keywords'));
-        $this->set('group', Session::get('communitystore.dashboard.products.group'));
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.products.keywords'));
+        $this->set('groupSearch', Session::get('communitystore.dashboard.products.group'));
     }
 
     public function generate($pID, $templateID = null)
