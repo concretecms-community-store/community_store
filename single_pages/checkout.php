@@ -182,7 +182,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
-                                                <div class="form-group">
+                                                <div class="form-group" id="store-att-<?= $ak->getAttributeKeyHandle(); ?>">
                                                     <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
