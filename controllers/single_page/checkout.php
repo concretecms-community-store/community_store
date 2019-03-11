@@ -16,6 +16,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Illuminate\Filesystem\Filesystem;
@@ -351,7 +352,7 @@ class Checkout extends PageController
             // VAT Number validation
             if (Config::get('community_store.vat_number')) {
                 $vat_number = str_replace(' ', '', trim($data['vat_number']));
-                $e = Checkout::validateVatNumber($vat_number);
+                $e = StoreCheckout::validateVatNumber($vat_number);
                 if ($e->has()) {
                     echo $e->outputJSON();
 
@@ -433,7 +434,7 @@ class Checkout extends PageController
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
                         $vat_number = $customer->getValue('vat_number');
-                        $e = Checkout::validateVatNumber($vat_number);
+                        $e = StoreCheckout::validateVatNumber($vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
 
