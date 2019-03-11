@@ -10,7 +10,7 @@ use \Concrete\Core\User\UserInfoRepository;
 
 ?>
 
-<?php if ($controller->getTask() == 'order') { ?>
+<?php if ($controller->getAction() == 'order') { ?>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" class="btn btn-primary" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a>
