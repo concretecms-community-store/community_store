@@ -486,56 +486,31 @@ var communityStore = {
         filterform.find('[name="price"]').val('');
 
         communityStore.submitProductFilter(element);
-    }
+    },
+    processOtherAttributes: function() {
 
+        var extrafields = $('#store-checkout-form-group-payment #store-extrafields');
 
-
-};
-
-$(document).ready(function() {
-    if ($('.store-checkout-form-shell form').length > 0) {
-        communityStore.updateBillingStates(true);
-        communityStore.updateShippingStates(true);
-        communityStore.showShippingMethods();
-        communityStore.showPaymentForm();
-    }
-
-    $("#store-checkout-form-group-billing").submit(function(e) {
-        e.preventDefault();
-        var email = $("#store-email").val();
-        var bfName = $("#store-checkout-billing-first-name").val();
-        var blName = $("#store-checkout-billing-last-name").val();
-        var bPhone = $("#store-checkout-billing-phone").val();
-
-        var bCompany = '';
-
-        if ($("#store-checkout-billing-company")) {
-            bCompany = $("#store-checkout-billing-company").val();
+        if (extrafields.length) {
+            extrafields.remove();
         }
 
-        var bAddress1 = $("#store-checkout-billing-address-1").val();
-        var bAddress2 = $("#store-checkout-billing-address-2").val();
-        var bCountry = $("#store-checkout-billing-country").val();
-        var bCity = $("#store-checkout-billing-city").val();
-        var bState = $("#store-checkout-billing-state").val();
-        var bPostal = $("#store-checkout-billing-zip").val();
-        $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
-
-        var ccm_token = $(this).find('[name=ccm_token]').val();
-
-        var novalue = $("#store-checkout-form-group-other-attributes").data('no-value');
-
-        if (!novalue) {
-            novalue = '';
-        }
-
-        var yesvalue = $("#store-checkout-form-group-other-attributes").data('yes-value');
-
-        if (!yesvalue) {
-            yesvalue = 'Yes';
-        }
+        $('#store-checkout-form-group-payment').append('<div id="store-extrafields" style="display: none"></div>');
 
         $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
+
+            var novalue = $("#store-checkout-form-group-other-attributes").data('no-value');
+
+            if (!novalue) {
+                novalue = '';
+            }
+
+            var yesvalue = $("#store-checkout-form-group-other-attributes").data('yes-value');
+
+            if (!yesvalue) {
+                yesvalue = 'Yes';
+            }
+
             var akID = $(el).data("akid");
             var field = $(el).find(".form-control");
 
@@ -578,9 +553,48 @@ $(document).ready(function() {
 
                 $('.store-summary-order-choices-' + akID).html(displayvalue);
                 $('#akIDinput' + akID).remove();
-                $('#store-checkout-form-group-payment').append('<input id="akIDinput' + akID + '" name="akID[' + akID + '][value]" type="hidden" value="' + value + '">')
+                field.clone().hide().appendTo($('#store-checkout-form-group-payment #store-extrafields'));
             }
         });
+
+    }
+
+};
+
+$(document).ready(function() {
+    if ($('.store-checkout-form-shell form').length > 0) {
+        communityStore.updateBillingStates(true);
+        communityStore.updateShippingStates(true);
+        communityStore.showShippingMethods();
+        communityStore.showPaymentForm();
+    }
+
+    $("#store-checkout-form-group-billing").submit(function(e) {
+        e.preventDefault();
+        var email = $("#store-email").val();
+        var bfName = $("#store-checkout-billing-first-name").val();
+        var blName = $("#store-checkout-billing-last-name").val();
+        var bPhone = $("#store-checkout-billing-phone").val();
+
+        var bCompany = '';
+
+        if ($("#store-checkout-billing-company")) {
+            bCompany = $("#store-checkout-billing-company").val();
+        }
+
+        var bAddress1 = $("#store-checkout-billing-address-1").val();
+        var bAddress2 = $("#store-checkout-billing-address-2").val();
+        var bCountry = $("#store-checkout-billing-country").val();
+        var bCity = $("#store-checkout-billing-city").val();
+        var bState = $("#store-checkout-billing-state").val();
+        var bPostal = $("#store-checkout-billing-zip").val();
+        $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
+
+        var ccm_token = $(this).find('[name=ccm_token]').val();
+
+        if ($('#store-checkout-form-group-billing #store-checkout-form-group-other-attributes').length) {
+            communityStore.processOtherAttributes();
+        }
 
         communityStore.waiting();
         var obj = $(this);
@@ -659,6 +673,10 @@ $(document).ready(function() {
 
         var ccm_token = $(this).find('[name=ccm_token]').val();
 
+        if ($('#store-checkout-form-group-shipping #store-checkout-form-group-other-attributes').length) {
+            communityStore.processOtherAttributes();
+        }
+
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
@@ -713,6 +731,10 @@ $(document).ready(function() {
         var vat_number = $("#store-checkout-shipping-vat-number").val();
         $("#store-checkout-form-group-vat .store-checkout-errors").remove();
         var ccm_token = $(this).find('[name=ccm_token]').val();
+
+        if ($('#store-checkout-form-group-vat #store-checkout-form-group-other-attributes').length) {
+            communityStore.processOtherAttributes();
+        }
 
         communityStore.waiting();
         var obj = $(this);
@@ -854,7 +876,6 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-
     $(document).on('click', '.store-btn-cart-list-remove', function(e) {
         communityStore.removeItem($(this).data('instance-id'), $(this).data('modal'));
         e.preventDefault();
@@ -914,12 +935,10 @@ $(document).ready(function() {
 
     });
 
-
     $('.store-cart-modal-link').click(function(e) {
         e.preventDefault();
         communityStore.displayCart(false, true);
     });
-
 
     $('.store-btn-filter').click(function(e) {
         e.preventDefault();

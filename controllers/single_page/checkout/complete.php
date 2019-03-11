@@ -5,6 +5,7 @@ use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
@@ -44,5 +45,11 @@ class Complete extends PageController
 
         // unset the shipping type, as next order might be unshippable
         Session::set('community_store.smID', '');
+
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+        $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
+        if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+            $this->set("orderChoicesAttList", $orderChoicesAttList);
+        }
     }
 }

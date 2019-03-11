@@ -60,23 +60,36 @@ $dh = $app->make('helper/date');
             <div class="col-sm-4">
                 <?php $orderemail = $order->getAttribute("email"); ?>
 
-                <p><strong><?= t("Name")?>:</strong> <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
+                    <p><strong><?= t("Name")?>:</strong> <?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?><br>
 
-                    <?php if ($orderemail) { ?>
-                        <strong><?= t("Email")?>:</strong> <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
+                        <?php if ($orderemail) { ?>
+                            <strong><?= t("Email")?>:</strong> <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
+                        <?php } ?>
+
+                        <?php
+                        $phone = $order->getAttribute("billing_phone");
+                        if ($phone) {
+                            ?>
+                            <strong><?= t('Phone'); ?>:</strong> <?= $phone; ?><br>
+                        <?php } ?>
+
+                        <?php if (Config::get('community_store.vat_number')) { ?>
+                        <?php $vat_number = $order->getAttribute('vat_number'); ?>
+                        <strong><?= t("VAT Number")?>:</strong> <?=$vat_number?>
+                        <?php } ?>
+                    </p>
+
+                    <?php if (!empty($orderChoicesAttList)) { ?>
+                        <?php
+                        foreach ($orderChoicesAttList as $ak) {
+                            $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
+
+                            if ($attValue) {  ?>
+                                <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
+                                <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                            <?php } ?>
+                        <?php } ?>
                     <?php } ?>
-
-                    <?php
-                    $phone = $order->getAttribute("billing_phone");
-                    if ($phone) {
-                        ?>
-                        <strong><?= t('Phone'); ?>:</strong> <?= $phone; ?><br>
-                    <?php } ?>
-
-                    <?php if (Config::get('community_store.vat_number')) { ?>
-                    <?php $vat_number = $order->getAttribute('vat_number'); ?>
-                    <strong><?= t("VAT Number")?>:</strong> <?=$vat_number?></p>
-            <?php } ?>
             </div>
 
             <div class="col-sm-4">
@@ -122,23 +135,9 @@ $dh = $app->make('helper/date');
                 </div>
             <?php } ?>
         </div>
-        <?php if (!empty($orderChoicesAttList)) { ?>
-            <div class="row">
-                <div class="col-sm-12">
-                    <?php
-                    foreach ($orderChoicesAttList as $ak) {
-                        $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
 
-                        if ($attValue) {  ?>
-                            <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
-                            <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
-                        <?php } ?>
-                    <?php } ?>
-                </div>
-            </div>
-        <?php } ?>
     </fieldset>
-
+    <br>
     <fieldset>
         <legend><?= t("Order Items")?></legend>
         <table class="table table-striped">

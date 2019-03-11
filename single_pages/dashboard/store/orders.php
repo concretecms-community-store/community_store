@@ -129,8 +129,7 @@ use \Concrete\Core\User\UserInfoRepository;
                 <div class="col-sm-12">
                     <?php
                     foreach ($orderChoicesAttList as $ak) {
-                        $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
-
+                        $attValue = $order->getAttributeValueObject($ak);
                         if ($attValue) { ?>
                             <h4><?= $ak->getAttributeKeyDisplayName() ?></h4>
                             <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>

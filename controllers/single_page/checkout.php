@@ -356,7 +356,7 @@ class Checkout extends PageController
                 if ($e->has()) {
                     echo $e->outputJSON();
 
-                    return;
+                    exit();
                 } else {
                     $this->updateVatNumber($data);
                     echo json_encode([
