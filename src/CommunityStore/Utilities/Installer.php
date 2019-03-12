@@ -51,26 +51,26 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
 
-       if (!$upgrade) {
-           self::installSinglePage('/cart', $pkg);
-           self::installSinglePage('/checkout', $pkg);
-           self::installSinglePage('/checkout/complete', $pkg);
+        if (!$upgrade) {
+            self::installSinglePage('/cart', $pkg);
+            self::installSinglePage('/checkout', $pkg);
+            self::installSinglePage('/checkout/complete', $pkg);
 
-           $cartPage = Page::getByPath('/cart/');
-           $cartPage->setAttribute('exclude_nav', 1);
-           $cartPage->setAttribute('exclude_search_index', 1);
-           $cartPage->setAttribute('exclude_page_list', 1);
+            $cartPage = Page::getByPath('/cart/');
+            $cartPage->setAttribute('exclude_nav', 1);
+            $cartPage->setAttribute('exclude_search_index', 1);
+            $cartPage->setAttribute('exclude_page_list', 1);
 
-           $checkoutPage = Page::getByPath('/checkout/');
-           $checkoutPage->setAttribute('exclude_nav', 1);
-           $checkoutPage->setAttribute('exclude_search_index', 1);
-           $checkoutPage->setAttribute('exclude_page_list', 1);
+            $checkoutPage = Page::getByPath('/checkout/');
+            $checkoutPage->setAttribute('exclude_nav', 1);
+            $checkoutPage->setAttribute('exclude_search_index', 1);
+            $checkoutPage->setAttribute('exclude_page_list', 1);
 
-           $completePage = Page::getByPath('/checkout/complete');
-           $completePage->setAttribute('exclude_nav', 1);
-           $completePage->setAttribute('exclude_search_index', 1);
-           $completePage->setAttribute('exclude_page_list', 1);
-       }
+            $completePage = Page::getByPath('/checkout/complete');
+            $completePage->setAttribute('exclude_nav', 1);
+            $completePage->setAttribute('exclude_search_index', 1);
+            $completePage->setAttribute('exclude_page_list', 1);
+        }
     }
 
     public static function installSinglePage($path, $pkg)
@@ -213,10 +213,19 @@ class Installer
 
     public static function installCustomerGroups($pkg)
     {
-        $group = Group::getByName('Store Customer');
+        $groupID = Config::get('community_store.customerGroup');
+
+        if (empty($groupID)) {
+            $group = Group::getByName('Store Customer');
+        } else {
+            $group = Group::getByID($groupID);
+        }
+
         if (!$group || $group->getGroupID() < 1) {
             $group = Group::add('Store Customer', t('Registered Customer in your store'));
         }
+
+        Config::save('community_store.customerGroup', $group->getGroupID());
     }
 
     public static function installUserAttributes($pkg)
@@ -372,10 +381,19 @@ class Installer
     public static function createDDFileset($pkg)
     {
         //create fileset to place digital downloads
-        $fs = FileSet::getByName(t('Digital Downloads'));
-        if (!is_object($fs)) {
-            FileSet::add(t("Digital Downloads"));
+        $fsID = Config::get('community_store.digitalDownloadFileSet');
+
+        if (empty($fsID)) {
+            $fs = FileSet::getByName(t('Digital Downloads'));
+        } else {
+            $fs = FileSet::getByID($fsID);
         }
+
+        if (!is_object($fs)) {
+            $fs = FileSet::create(t("Digital Downloads"));
+        }
+
+        Config::save('community_store.digitalDownloadFileSet', $fs->getFileSetID());
     }
 
     public static function installOrderStatuses($pkg)
@@ -422,6 +440,10 @@ class Installer
 
         // pass an upgrade value of true, to avoid recreating cart/checkout pages again
         self::installSinglePages($pkg, true);
+
+        // in case the customer group and digital download fileset are not saved in config yet
+        self::installCustomerGroups($pkg);
+        self::createDDFileset($pkg);
 
         Localization::clearCache();
     }

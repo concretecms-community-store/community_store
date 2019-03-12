@@ -4,7 +4,10 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\File\Set\SetList;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
@@ -24,15 +27,6 @@ class Settings extends DashboardPageController
         $this->set("states", $this->app->make('helper/lists/states_provinces')->getStates());
         $this->set("installedPaymentMethods", StorePaymentMethod::getMethods());
         $this->set("orderStatuses", StoreOrderStatus::getAll());
-        $targetCID = Config::get('community_store.productPublishTarget');
-
-        if ($targetCID > 0) {
-            $parentPage = Page::getByID($targetCID);
-
-            if (!$parentPage || $parentPage->isError()) {
-                $targetCID = false;
-            }
-        }
 
         $groupList = [];
 
@@ -43,6 +37,8 @@ class Settings extends DashboardPageController
 
         $this->set('groupList', $groupList);
 
+        $targetCID = Config::get('community_store.productPublishTarget');
+
         if ($targetCID) {
             $publishTarget = Page::getByID($targetCID);
 
@@ -52,6 +48,44 @@ class Settings extends DashboardPageController
         }
 
         $this->set('productPublishTarget', $targetCID);
+
+        $customerGroupID = Config::get('community_store.customerGroup');
+        $customerGroupName = null;
+
+        if ($customerGroupID) {
+            $customerGroup = Group::getByID($customerGroupID);
+
+            if (!$customerGroup || !is_object($customerGroup)) {
+                $customerGroupID = null;
+            } else {
+                $customerGroupName = $customerGroup->getGroupName();
+            }
+        }
+
+        $this->set('customerGroup', $customerGroupID);
+        $this->set('customerGroupName', $customerGroupName);
+
+        $fsl = new SetList();
+        $fileSets = $fsl->get();
+        $sets = [];
+        if (count($fileSets)) {
+            foreach ($fileSets  as  $fileSet) {
+                $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
+            }
+        }
+        $this->set('fileSets', $sets);
+
+        $fsID = Config::get('community_store.digitalDownloadFileSet');
+
+        if ($fsID) {
+            $fs = FileSet::getByID($fsID);
+
+            if (!$fs || !is_object($fs)) {
+                $fsID = null;
+            }
+        }
+
+        $this->set('digitalDownloadFileSet', $fsID);
     }
 
     public function loadFormAssets()
@@ -121,6 +155,8 @@ class Settings extends DashboardPageController
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
+                Config::save('community_store.customerGroup', $args['customerGroup']);
+                Config::save('community_store.digitalDownloadFileSet', $args['digitalDownloadFileSet']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
                 Config::save('community_store.defaultSingleProductThumbType', $args['defaultSingleProductThumbType']);
                 Config::save('community_store.defaultProductListThumbType', $args['defaultProductListThumbType']);

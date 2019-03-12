@@ -18,7 +18,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.2.1';
-    protected $pkgVersion = '2.1.1';
+    protected $pkgVersion = '2.1.1.1';
 
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -114,7 +114,7 @@ class Controller extends Package
     {
         $singletons = [
             'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
-            'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual'
+            'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual',
         ];
 
         foreach ($singletons as $key => $value) {
@@ -195,8 +195,8 @@ class Controller extends Package
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if ($al !== null) {
-            $langpath =  $al->getCollectionHandle();
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
         }
 
         return "
@@ -227,5 +227,3 @@ class Controller extends Package
         );
     }
 }
-
-

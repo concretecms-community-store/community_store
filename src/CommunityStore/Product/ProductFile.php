@@ -95,12 +95,15 @@ class ProductFile
         self::removeFilesForProduct($product);
         //add new ones.
         if (!empty($files['ddfID'])) {
+            $fs = FileSet::getByID(Config::get('community_store.digitalDownloadFileSet', 0));
+
             foreach ($files['ddfID'] as $fileID) {
                 if ($fileID) {
                     self::add($product, $fileID);
                     $fileObj = File::getByID($fileID);
-                    $fs = FileSet::getByName("Digital Downloads");
-                    $fs->addFileToSet($fileObj);
+                    if (is_object($fs)) {
+                        $fs->addFileToSet($fileObj);
+                    }
                 }
             }
         }

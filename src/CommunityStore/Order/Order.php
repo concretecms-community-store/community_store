@@ -37,7 +37,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
  */
 class Order
 {
-
     use ObjectTrait;
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -233,7 +232,7 @@ class Order
 
     public function setShippingTotal($shippingTotal)
     {
-        $this->oShippingTotal = (float)$shippingTotal;
+        $this->oShippingTotal = (float) $shippingTotal;
     }
 
     public function setTaxTotal($taxTotal)
@@ -485,7 +484,6 @@ class Order
         return $this->getObjectAttributeCategory()->getAttributeValues($this);
     }
 
-
     /**
      * @ORM\param array $data
      * @ORM\param StorePaymentMethod $pm
@@ -512,7 +510,7 @@ class Order
         $discountRatio = $totals['discountRatio'];
 
         $pmName = $pm->getName();
-        $pmDisplayName = $csm->t($pm->getDisplayName() , 'paymentDisplayName', null, $pm->getID());
+        $pmDisplayName = $csm->t($pm->getDisplayName(), 'paymentDisplayName', null, $pm->getID());
 
         $taxCalc = Config::get('community_store.calculation');
 
@@ -528,7 +526,7 @@ class Order
                     $taxTotal[] = $tax['taxamount'];
                 }
 
-                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+                $taxlabel = $csm->t($tax['name'], 'taxRateName', null, $tax['id']);
                 $taxLabels[] = $taxlabel;
             }
         }
@@ -797,7 +795,7 @@ class Order
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    Log::addWarning(t('Community Store: a new user email failed sending to %s', array($email)));
+                    Log::addWarning(t('Community Store: a new user email failed sending to %s', [$email]));
                 }
             }
         }
@@ -864,7 +862,7 @@ class Order
             }
 
             //add user to Store Customers group
-            $group = Group::getByName('Store Customer');
+            $group = Group::getByID(Config::get('community_store.customerGroup', 0));
             if (is_object($group) || $group->getGroupID() < 1) {
                 $user->getUserObject()->enterGroup($group);
             }
@@ -887,11 +885,11 @@ class Order
         $notificationEmails = explode(",", Config::get('community_store.notificationemails'));
         $notificationEmails = array_map('trim', $notificationEmails);
 
-        foreach($this->getOrderItems() as $oi) {
+        foreach ($this->getOrderItems() as $oi) {
             $product = $oi->getProductObject();
 
             if ($product) {
-                $notificationEmails  = array_merge($notificationEmails, $product->getNotificationEmailsArray());
+                $notificationEmails = array_merge($notificationEmails, $product->getNotificationEmailsArray());
             }
         }
 
@@ -945,7 +943,7 @@ class Order
             try {
                 $mh->sendMail();
             } catch (\Exception $e) {
-                Log::addWarning(t('Community Store: a notification email failed sending to %s', array(implode(', ', $notificationEmails))));
+                Log::addWarning(t('Community Store: a notification email failed sending to %s', [implode(', ', $notificationEmails)]));
             }
         }
     }
@@ -999,7 +997,7 @@ class Order
         try {
             $mh->sendMail();
         } catch (\Exception $e) {
-            Log::addWarning(t('Community Store: a receipt email failed sending to %s', array($email)));
+            Log::addWarning(t('Community Store: a receipt email failed sending to %s', [$email]));
         }
     }
 
@@ -1045,7 +1043,6 @@ class Order
         $em->flush();
     }
 
-
     public function remove()
     {
         $em = dbORM::entityManager();
@@ -1060,7 +1057,7 @@ class Order
 
         $attributes = $this->getAttributes();
 
-        foreach($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
             $em->remove($attribute);
         }
 
@@ -1116,6 +1113,7 @@ class Order
     public function getObjectAttributeCategory()
     {
         $app = Application::getFacadeApplication();
+
         return $app->make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
     }
 
@@ -1138,6 +1136,7 @@ class Order
             $attributeValue = new StoreOrderValue();
             $attributeValue->setOrder($this);
             $attributeValue->setAttributeKey($ak);
+
             return $attributeValue;
         }
     }
@@ -1152,7 +1151,7 @@ class Order
         $displayName = $discount->getDisplay();
         $displayName = $csm->t($displayName, 'discountRuleDisplayName', null, $discount->getID());
 
-        $vals = [$this->oID, $discount->drName, $displayName , $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
+        $vals = [$this->oID, $discount->drName, $displayName, $discount->drValue, $discount->drPercentage, $discount->drDeductFrom, $code];
         $db->query("INSERT INTO CommunityStoreOrderDiscounts(oID,odName,odDisplay,odValue,odPercentage,odDeductFrom,odCode) VALUES (?,?,?,?,?,?,?)", $vals);
     }
 

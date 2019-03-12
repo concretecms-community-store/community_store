@@ -25,8 +25,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <li><a href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
                 <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses'); ?></a></li>
                 <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts'); ?></a></li>
+                <li><a href="#settings-customers" data-pane-toggle><?= t('Customers'); ?></a></li>
                 <li><a href="#settings-products" data-pane-toggle><?= t('Products'); ?></a></li>
                 <li><a href="#settings-product-images" data-pane-toggle><?= t('Product Images'); ?></a></li>
+                <li><a href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
                 <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
                 <li><a href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
             </ul>
@@ -83,14 +85,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-xs-6">
                     <div class="form-group">
                         <?= $form->label('weightUnit', t('Units for Weight')); ?>
-                        <?php // do not add other units to this list. these are specific to making calculated shipping work?>
+                        <?php  ?>
                         <?= $form->select('weightUnit', ['oz' => t('oz'), 'lb' => t('lb'), 'kg' => t('kg'), 'g' => t('g')], Config::get('community_store.weightUnit')); ?>
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <?= $form->label('sizeUnit', t('Units for Size')); ?>
-                        <?php // do not add other units to this list. these are specific to making calculated shipping work?>
+                        <?php  ?>
                         <?= $form->select('sizeUnit', ['in' => t('in'), 'cm' => t('cm'), 'mm' => t('mm')], Config::get('community_store.sizeUnit')); ?>
                     </div>
                 </div>
@@ -122,49 +124,50 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 foreach ($installedPaymentMethods as $pm) {
                     ?>
 
-                    <div class="panel panel-default">
+            <div class="panel panel-default">
 
-                        <div class="panel-heading"><?= t($pm->getName()); ?></div>
-                        <div class="panel-body">
-                            <div class="form-group paymentMethodEnabled">
-                                <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
-                                <label><?= t("Enabled"); ?></label>
-                                <?php
-                                echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+                <div class="panel-heading"><?= t($pm->getName()); ?></div>
+                <div class="panel-body">
+                    <div class="form-group paymentMethodEnabled">
+                        <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
+                        <label><?= t("Enabled"); ?></label>
+                        <?php
+                        echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+                    </div>
+                    <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label><?= t("Display Name (on checkout)"); ?></label>
+                                <?= $form->text('paymentMethodDisplayName[' . $pm->getID() . ']', $pm->getDisplayName()); ?>
                             </div>
-                            <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label><?= t("Display Name (on checkout)"); ?></label>
-                                        <?= $form->text('paymentMethodDisplayName[' . $pm->getID() . ']', $pm->getDisplayName()); ?>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label><?= t("Button Label"); ?></label>
-                                        <?= $form->text('paymentMethodButtonLabel[' . $pm->getID() . ']', $pm->getButtonLabel(), ['placeholder' => t('Optional')]); ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label><?= t("Sort Order"); ?></label>
-                                    <?= $form->text('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
-                                </div>
-                                <?php
-                                $pm->renderDashboardForm(); ?>
+                            <div class="form-group col-sm-6">
+                                <label><?= t("Button Label"); ?></label>
+                                <?= $form->text('paymentMethodButtonLabel[' . $pm->getID() . ']', $pm->getButtonLabel(), ['placeholder' => t('Optional')]); ?>
                             </div>
-
                         </div>
-
+                        <div class="form-group">
+                            <label><?= t("Sort Order"); ?></label>
+                            <?= $form->text('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
+                        </div>
+                        <?php
+                        $pm->renderDashboardForm(); ?>
                     </div>
 
-                    <?php
-                }
-            } else {
-                echo t("No Payment Methods are Installed");
-            }
-            ?>
+                </div>
+
+            </div>
+
+            <?php
+
+        }
+    } else {
+        echo t("No Payment Methods are Installed");
+    }
+    ?>
 
             <script>
-                $(function () {
-                    $('.paymentMethodEnabled SELECT').on('change', function () {
+                $(function() {
+                    $('.paymentMethodEnabled SELECT').on('change', function() {
                         var $this = $(this);
                         if ($this.val() == 1) {
                             $this.parent().next().slideDown();
@@ -181,10 +184,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <?php
             if (count($orderStatuses) > 0) {
                 ?>
-                <div class="panel panel-default">
+            <div class="panel panel-default">
 
-                    <table class="table" id="orderStatusTable">
-                        <thead>
+                <table class="table" id="orderStatusTable">
+                    <thead>
                         <tr>
                             <th rowspan="1">&nbsp;</th>
                             <th rowspan="1"><?= t('Display Name'); ?></th>
@@ -195,40 +198,41 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                             <th><?= t('Site'); ?></th>
                             <th><?= t('Customer'); ?></th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <?php foreach ($orderStatuses as $orderStatus) {
                             ?>
-                            <tr>
-                                <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
-                                <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
-                                <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked' : ''; ?>></td>
-                                <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked' : ''; ?> class="form-control"></td>
-                                <td style="display:none;"><input type="checkbox" name="osInformCustomer[]" value="1" <?= $orderStatus->getInformCustomer() ? 'checked' : ''; ?> class="form-control"></td>
-                            </tr>
-                            <?php
-                        } ?>
-                        </tbody>
-                    </table>
-                    <script>
-                        $(function () {
-                            $('#orderStatusTable TBODY').sortable({
-                                cursor: 'move',
-                                opacity: 0.5,
-                                handle: '.sorthandle'
-                            });
+                        <tr>
+                            <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
+                            <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
+                            <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked' : ''; ?>></td>
+                            <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked' : ''; ?> class="form-control"></td>
+                            <td style="display:none;"><input type="checkbox" name="osInformCustomer[]" value="1" <?= $orderStatus->getInformCustomer() ? 'checked' : ''; ?> class="form-control"></td>
+                        </tr>
+                        <?php
 
+                    } ?>
+                    </tbody>
+                </table>
+                <script>
+                    $(function() {
+                        $('#orderStatusTable TBODY').sortable({
+                            cursor: 'move',
+                            opacity: 0.5,
+                            handle: '.sorthandle'
                         });
 
-                    </script>
+                    });
+                </script>
 
-                </div>
+            </div>
 
-                <?php
-            } else {
-                echo t("No Fulfilment Statuses are available");
-            }
-            ?>
+            <?php
+
+        } else {
+            echo t("No Fulfilment Statuses are available");
+        }
+        ?>
 
 
         </div><!-- #settings-order-statuses -->
@@ -275,6 +279,19 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
 
+        </div>
+
+        <!-- #settings-customers -->
+        <div class="col-sm-9 store-pane" id="settings-customers">
+            <h3><?= t("Customers"); ?></h3>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                        <?= $form->label('customerGroup', t('Customer Group to Put Customers in')); ?>
+                        <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- #settings-products -->
@@ -402,15 +419,24 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 </div>
             </div>
         </div>
+        
+        <!-- #settings-digital-downloads -->
+        <div class="col-sm-9 store-pane" id="settings-digital-downloads">
+            <h3><?= t("Digital Downloads"); ?></h3>
+            <div class="form-group">
+                <?= $form->label('digitalDownloadFileSet', t('Digital Downloads FileSet')); ?>
+                <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet); ?>
+            </div>
+        </div>
 
-        <!-- #settings-customers -->
+        <!-- #settings-checkout -->
         <div class="col-sm-9 store-pane" id="settings-checkout">
             <h3><?= t('Cart and Checkout'); ?></h3>
             <div class="form-group">
                 <?php $shoppingDisabled = Config::get('community_store.shoppingDisabled');
                 ?>
-                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label><br/>
-                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label><br/>
+                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label><br />
+                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label><br />
             </div>
 
             <h3><?= t('Guest Checkout'); ?></h3>
@@ -418,9 +444,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $guestCheckout = Config::get('community_store.guestCheckout');
                 $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                 ?>
-                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label><br/>
-                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label><br/>
-                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label><br/>
+                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label><br />
+                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label><br />
+                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label><br />
             </div>
 
             <h3><?= t('Address Auto-Complete'); ?></h3>
@@ -434,9 +460,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $companyField = Config::get('community_store.companyField');
                 $companyField = ($companyField ? $companyField : 'off');
                 ?>
-                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label><br/>
-                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label><br/>
-                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label><br/>
+                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label><br />
+                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label><br />
+                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label><br />
             </div>
 
             <h3><?= t('Billing Details'); ?></h3>
@@ -475,7 +501,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 
             <script>
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $('.existing-select2').select2();
                     $('.select2-container').removeClass('form-control');
                 });
