@@ -290,6 +290,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         <?= $form->label('customerGroup', t('Customer Group to Put Customers in')); ?>
                         <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
                     </div>
+                    <div class="alert alert-warning">
+                        <?= t("If you change group remember to switch your existing customers over to the new group"); ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -426,6 +429,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('digitalDownloadFileSet', t('Digital Downloads FileSet')); ?>
                 <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet); ?>
+                <div class="alert alert-warning">
+                    <?= t("If you change fileset remember to switch your existing digital downloads over to the new fileset"); ?>
+                </div>
             </div>
         </div>
 
