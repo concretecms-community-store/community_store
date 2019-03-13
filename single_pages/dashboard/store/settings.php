@@ -288,11 +288,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-xs-12">
                     <div class="form-group">
                         <?= $form->label('customerGroup', t('User Group to Put Customers in')); ?>
-                        <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                        <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                        <div class="alert alert-warning">
+                            <?= t("If you change group remember to switch your existing customers over to the new group"); ?>
+                        </div>
                     </div>
-                    <div class="alert alert-warning">
-                        <?= t("If you change group remember to switch your existing customers over to the new group"); ?>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -428,11 +429,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t("Digital Downloads"); ?></h3>
             <div class="form-group">
                 <?= $form->label('digitalDownloadFileSet', t('Digital Downloads File Set')); ?>
-                <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet); ?>
+                <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet,  ['class' => 'selectize']); ?>
+                <div class="alert alert-warning">
+                    <?= t("If you change file set remember to switch your existing digital downloads over to the new file set"); ?>
+                </div>
             </div>
-            <div class="alert alert-warning">
-                <?= t("If you change file set remember to switch your existing digital downloads over to the new file set"); ?>
-            </div>
+
 
             <h3><?= t('Digital Download Expiry'); ?></h3>
             <div class="form-group">
@@ -491,8 +493,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= t('For users in groups'); ?> <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                    <div class="ccm-search-field-content">
+                        <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
+                        <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
                     </div>
                 </div>
             </div>
@@ -508,8 +511,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= t('For users in groups'); ?> <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                    <div class="ccm-search-field-content">
+                        <?= $form->label('noShippingSaveGroups', t('For users in groups')); ?>
+                        <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
                     </div>
                 </div>
             </div>
@@ -517,8 +521,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <script>
                 $(document).ready(function() {
-                    $('.existing-select2').select2();
-                    $('.select2-container').removeClass('form-control');
+                    $('.selectize').selectize();
+                    $('.selectize').removeClass('form-control');
                 });
             </script>
 

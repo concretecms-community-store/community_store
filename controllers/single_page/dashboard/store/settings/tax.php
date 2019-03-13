@@ -101,7 +101,7 @@ class Tax extends DashboardPageController
         $this->set('task', t("Add"));
         $this->set('tc', new StoreTaxClass());
         $this->set('taxRates', StoreTax::getTaxRates());
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 
     public function edit_class($tcID)
@@ -109,7 +109,7 @@ class Tax extends DashboardPageController
         $this->set('task', t("Update"));
         $this->set('tc', StoreTaxClass::getByID($tcID));
         $this->set('taxRates', StoreTax::getTaxRates());
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 
     public function save_class()

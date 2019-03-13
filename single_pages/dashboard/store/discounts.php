@@ -365,7 +365,7 @@ $currencySymbol = Config::get('community_store.symbol');
                 <div class="row">
                     <div class="col-md-12">
                         <div class="ccm-search-field-content ccm-search-field-content-select2">
-                            <select multiple="multiple" name="drProductGroups[]" class="select2-select" style="width: 100%"
+                            <select multiple="multiple" name="drProductGroups[]" class="selectize" style="width: 100%"
                                     placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
                                 <?php
                                 if (!empty($productgroups)) {
@@ -382,7 +382,7 @@ $currencySymbol = Config::get('community_store.symbol');
             <div class="form-group">
                 <?= $form->label("usergroups", t("User Groups"));?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
-                    <select multiple="multiple" name="drUserGroups[]" id="groupselect" class="select2-select" style="width: 100%;" placeholder="<?= t('Select User Groups');?>">
+                    <select multiple="multiple" name="drUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('Select User Groups');?>">
                         <?php
                         foreach ($usergroups as $ugkey=>$uglabel) { ?>
                             <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
@@ -394,7 +394,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
             <script>
                 $(document).ready(function() {
-                    $('.select2-select').select2();
+                    $('.selectize').selectize();
                 });
             </script>
 

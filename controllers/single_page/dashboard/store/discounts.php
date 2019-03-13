@@ -32,8 +32,7 @@ class Discounts extends DashboardPageController
 
     public function add()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('selectize');
         $this->set('pageTitle', t('Add Discount Rule'));
 
         $grouplist = StoreGroupList::getGroupList();
@@ -63,8 +62,7 @@ class Discounts extends DashboardPageController
 
     public function edit($drID)
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('selectize');
         $discountRule = StoreDiscountRule::getByID($drID);
 
         $this->set('discountRule', $discountRule);

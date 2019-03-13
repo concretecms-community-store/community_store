@@ -148,7 +148,9 @@ if(in_array($controller->getAction(),$addViews)){
                                     foreach($taxClassRates as $taxRate){
                                         echo '<span class="label label-primary">' . $taxRate->getTaxLabel() . '</span> ';
                                     }
-                                }
+                                } else { ?>
+                                     <span class="label label-warning"><?= t('No associated tax rates');?></span>
+                                <?php }
                              ?>
                         </td>
                         <td class="text-right">
@@ -229,7 +231,7 @@ if(in_array($controller->getAction(),$addViews)){
                 <?php if(count($taxRates) < $sizeswap){ ?>
                 <script>
                     $(document).ready(function() {
-                        $('.taxclassRates').select2();
+                        $('.taxclassRates').selectize();
                     });
                 </script>
                 <?php } ?>
