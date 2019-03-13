@@ -1,29 +1,29 @@
 # Community Store add-on for concrete5
 
-**Important - this is the 2.x version of Community Store and is intended for use on V8+ versions of concrete5 only.** 
-
-**Please also check that the additional add-ons you install are compatible with this version. In particular, additional shipping methods will have both 1.x and 2.x versions, please use 2.x releases of these add-ons.**
-
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 An open, free and community developed eCommerce system for concrete5
 
-Please refer to the project wiki for more extended details - https://github.com/concrete5-community-store/community_store/wiki
+Please refer to the project wiki for extended details - https://github.com/concrete5-community-store/community_store/wiki
 
-The goal of this project is to provide a stable, feature rich, highly extensible and customizable 'shopping cart toolkit' for concrete5.7 and v8.
-
-At this point the add-on and it's associated payment and shipping methods are functioning well, but should still be considered beta.
-If you are not a concrete5 developer and wish to use the Community Store on a production site it is advised that you find a developer to assist you.
-
+The goal of this project is to provide a stable, feature rich, highly extensible and customizable 'shopping cart toolkit' for version 8+ of concrete5.
 The add-on will work directly with a Bootstrap based theme, primarily Elemental, but is intended to be easily modified and overriden for a custom theme.
 
 ## Setup
 The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend concrete5' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concrete5-community-store/community_store/releases
 
 ### Important note regarding versions
-For new installations on V8 of concrete5, please use a version 2.x release.
-For installations into existing 5.7 sites, please use a 1.x release.
-While the feature set is the same between both version of Community Store, it is currently not possible to upgrade from the 1.x to the 2.x version.
+For new installations on V8 of concrete5 please use a 2.x release.
+
+There is a separate 1.x branch/release of Community Store that still supports 5.7, but should only be used to maintain an existing 5.7 site.
+If you are planning to install Community Store into a 5.7 site, it is _highly recommended_ to update to V8 first, _then_ install a 2.x release of Community Store.
+If you are already running Community Store on concrete5.7.x it is advised _not_ to upgrade through to V8 of concrete5 and to remain on 1.x releases.
+
+Note that an existing 1.x installation of Community Store on V8 _can_ be upgraded to a 2.x release.
+
+Please also check that the additional add-ons you install are compatible with the version you are using. In particular, additional shipping methods will have both 1.x and 2.x versions.
+
+With all updates, please perform appropriate backups beforehand. 
 
 ## Payment gateways
 To keep the 'core' store component as lightweight as possible it does not include a payment gateway other than the 'Invoice' type.
@@ -80,9 +80,4 @@ Show a user's order history as a single page /account/orders:
 https://github.com/JeRoNZ/community_store_order_history
 
 ## PHP Version
-This add-on is intended to support PHP5.6+ onwards, being 100% operational on PHP7.
-
-## Compatibility
-This version of Community Store is compatible with version 8+ of concrete5, and will not work on version 5.7.x. There is a separate branch/release of Community Store that still supports 5.7, this is version 1.x of Community Store.
-Version 1.x of Community Store cannot be updated to version 2.x at this point. For new installs, please use this version.
-
+This add-on is intended to be run in a PHP 7 environment.
