@@ -67,12 +67,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Tax Settings'); ?></h3>
 
             <div class="form-group">
-                <label for="calculation"><?= t("Are Prices Entered with Tax Included?"); ?></label>
+                <?= $form->label('calculation', t('Are Prices Entered with Tax Included?')); ?>
                 <?= $form->select('calculation', ['add' => t("No, I will enter product prices EXCLUSIVE of tax"), 'extract' => t("Yes, I will enter product prices INCLUSIVE of tax")], Config::get('community_store.calculation')); ?>
             </div>
 
             <div class="form-group">
-                <label for="vat_number"><?= t("Enable EU VAT Number Options?"); ?></label>
+                <?= $form->label('vat_number', t('Enable EU VAT Number Options?')); ?>
                 <?= $form->select('vat_number', ['0' => t("No, I don't need this"), '1' => t("Yes, enable VAT Number options")], Config::get('community_store.vat_number')); ?>
             </div>
 
@@ -267,13 +267,13 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Receipt Emails'); ?></h3>
 
             <div class="form-group">
-                <label><?= t("Receipt Email Header Content"); ?></label>
+                <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
                 <?php $editor = $app->make('editor');
                 echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
             </div>
 
             <div class="form-group">
-                <label><?= t("Receipt Email Footer Content"); ?></label>
+                <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
                 <?php $editor = $app->make('editor');
                 echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
             </div>
@@ -286,8 +286,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t("Customers"); ?></h3>
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= $form->label('customerGroup', t('Customer Group to Put Customers in')); ?>
+                    <div class="form-group">
+                        <?= $form->label('customerGroup', t('User Group to Put Customers in')); ?>
                         <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'existing-select2', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
                     </div>
                     <div class="alert alert-warning">
@@ -427,10 +427,19 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         <div class="col-sm-9 store-pane" id="settings-digital-downloads">
             <h3><?= t("Digital Downloads"); ?></h3>
             <div class="form-group">
-                <?= $form->label('digitalDownloadFileSet', t('Digital Downloads FileSet')); ?>
+                <?= $form->label('digitalDownloadFileSet', t('Digital Downloads File Set')); ?>
                 <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet); ?>
-                <div class="alert alert-warning">
-                    <?= t("If you change fileset remember to switch your existing digital downloads over to the new fileset"); ?>
+            </div>
+            <div class="alert alert-warning">
+                <?= t("If you change file set remember to switch your existing digital downloads over to the new file set"); ?>
+            </div>
+
+            <h3><?= t('Digital Download Expiry'); ?></h3>
+            <div class="form-group">
+                <?= $form->label('download_expiry_hours', t('Number of hours before digital download links expiry')); ?>
+                <div class="input-group">
+                    <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
+                    <div class="input-group-addon"><?= t('hours'); ?></div>
                 </div>
             </div>
         </div>
@@ -441,8 +450,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?php $shoppingDisabled = Config::get('community_store.shoppingDisabled');
                 ?>
-                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label><br />
-                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label><br />
+                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?> <?php echo t('Enabled'); ?></label><br />
+                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?> <?php echo t('Disabled (Catalog Mode)'); ?></label><br />
             </div>
 
             <h3><?= t('Guest Checkout'); ?></h3>
@@ -450,9 +459,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $guestCheckout = Config::get('community_store.guestCheckout');
                 $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                 ?>
-                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label><br />
-                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label><br />
-                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label><br />
+                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?> <?php echo t('Always (unless login required for products in cart)'); ?></label><br />
+                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?> <?php echo t('Offer as checkout option'); ?></label><br />
+                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?> <?php echo t('Disabled'); ?></label><br />
             </div>
 
             <h3><?= t('Address Auto-Complete'); ?></h3>
@@ -466,9 +475,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $companyField = Config::get('community_store.companyField');
                 $companyField = ($companyField ? $companyField : 'off');
                 ?>
-                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label><br />
-                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label><br />
-                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label><br />
+                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?> <?php echo t('Hidden'); ?></label><br />
+                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?> <?php echo t('Optional'); ?></label><br />
+                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?> <?php echo t('Required'); ?></label><br />
             </div>
 
             <h3><?= t('Billing Details'); ?></h3>
@@ -512,16 +521,6 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     $('.select2-container').removeClass('form-control');
                 });
             </script>
-
-            <h3><?= t('Digital Download Expiry'); ?></h3>
-            <div class="form-group">
-                <?= $form->label('download_expiry_hours', t('Number of hours before digital download links expiry')); ?>
-                <div class="input-group">
-                    <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
-                    <div class="input-group-addon"><?= t('hours'); ?></div>
-                </div>
-            </div>
-
 
         </div>
 
