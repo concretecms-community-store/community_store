@@ -457,14 +457,10 @@ class Product
     {
         $this->pPrice = ('' != $price ? $price : 0);
     }
-<<<<<<< HEAD
     public function setWholesalePrice($price)
     {
         $this->pWholesalePrice = ($price != '' ? $price : 0);
     }
-=======
-
->>>>>>> v1.4.7
     public function setSalePrice($price)
     {
         $this->pSalePrice = ('' != $price ? $price : null);
@@ -917,7 +913,6 @@ class Product
         return $price;
     }
 
-<<<<<<< HEAD
     public function getWholesalePrice($qty = 1)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -933,10 +928,6 @@ class Product
     }
 
     private function getQuantityAdjustedPrice($qty = 1) {
-=======
-    private function getQuantityAdjustedPrice($qty = 1)
-    {
->>>>>>> v1.4.7
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
@@ -997,16 +988,9 @@ class Product
     }
 
     public function getActivePrice($qty = 1)
-<<<<<<< HEAD
     {   
         if(Wholesale::isUserWholesale()){
             return $this->getWholesalePrice();
-=======
-    {
-        $salePrice = $this->getSalePrice();
-        if ("" != $salePrice) {
-            return $salePrice;
->>>>>>> v1.4.7
         } else {
             $salePrice = $this->getSalePrice();
             if ($salePrice != "") {

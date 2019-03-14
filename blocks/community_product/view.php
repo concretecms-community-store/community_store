@@ -418,34 +418,28 @@ if (is_object($product) && $product->isActive()) {
 
             <?php
             $varationData = [];
-                            foreach ($variationLookup as $key => $variation) {
-                                $product->setVariation($variation);
-                                $imgObj = $product->getImageObj();
+            foreach ($variationLookup as $key => $variation) {
+                $product->setVariation($variation);
+                $imgObj = $product->getImageObj();
 
-                                $thumb = false;
+                $thumb = false;
 
-                                if ($imgObj) {
-                                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false);
-                                }
-
-<<<<<<< HEAD
-                );
-
-                if(Wholesale::isUserWholesale()){
-                    $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
+                if ($imgObj) {
+                    $thumb = Core::make('helper/image')->getThumbnail($imgObj, $defaultimagewidth, $defaultimageheight, false);
                 }
 
-            } ?>
-=======
-                                $varationData[$key] = [
+                    $varationData[$key] = [
                     'price' => $product->getFormattedOriginalPrice(),
                     'saleprice' => $product->getFormattedSalePrice(),
                     'available' => ($variation->isSellable()),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                 ];
-                            } ?>
->>>>>>> v1.4.7
+
+                if(Wholesale::isUserWholesale()){
+                    $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
+                }
+            } ?>
 
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
                 var variationdata = <?= json_encode($varationData); ?>;
