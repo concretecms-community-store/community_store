@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
@@ -78,7 +78,7 @@ $currencySymbol = Config::get('community_store.symbol');
                             $discountRuleDeduct = t('from shipping');
                         }
 
-                        if (empty(!$productgroups) && $deducttype == 'fixed' ) {
+                        if (!empty($productgroups) && $deducttype == 'fixed' ) {
                             $discountRuleDeduct = t('set as price for all matching products');
                         }
 

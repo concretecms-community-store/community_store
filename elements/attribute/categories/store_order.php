@@ -1,4 +1,5 @@
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $form = $app->make('helper/form');
 
