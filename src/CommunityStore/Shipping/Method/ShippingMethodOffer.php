@@ -14,7 +14,7 @@ class ShippingMethodOffer
     private $rateID;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getMethodLabel()
     {
@@ -22,7 +22,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @param mixed $label
+     * @ORM\param mixed $label
      */
     public function setMethodLabel($label)
     {
@@ -30,7 +30,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getKey()
     {
@@ -38,15 +38,15 @@ class ShippingMethodOffer
     }
 
     /**
-     * @param mixed $key
+     * @ORM\param mixed $key
      */
     public function setKey($key)
     {
         $this->key = $key;
     }
 
-
-    public function getLabel() {
+    public function getLabel()
+    {
         if ($this->getOfferLabel()) {
             return $this->getOfferLabel();
         } else {
@@ -55,7 +55,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOfferLabel()
     {
@@ -63,7 +63,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @param mixed $offerLabel
+     * @ORM\param mixed $offerLabel
      */
     public function setOfferLabel($offerLabel)
     {
@@ -71,7 +71,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOfferDetails()
     {
@@ -79,7 +79,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @param mixed $offerDetails
+     * @ORM\param mixed $offerDetails
      */
     public function setOfferDetails($offerDetails)
     {
@@ -87,13 +87,12 @@ class ShippingMethodOffer
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getRate()
     {
-        return $this->rate ;
+        return $this->rate;
     }
-
 
     public function getDiscountedRate()
     {
@@ -103,17 +102,16 @@ class ShippingMethodOffer
 
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
-                if($discount->getDeductFrom() == 'shipping') {
-
-                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
+                if ('shipping' == $discount->getDeductFrom()) {
+                    if ('value' == $discount->getDeductType() || 'value_all' == $discount->getDeductType()) {
                         $deduct += $discount->getValue();
                     }
 
-                    if ($discount->getDeductType() == 'percentage') {
+                    if ('percentage' == $discount->getDeductType()) {
                         $percentage -= ($discount->getPercentage() / 100);
                     }
 
-                    if ($discount->getDeductType() == 'fixed') {
+                    if ('fixed' == $discount->getDeductType()) {
                         return $discount->getValue();
                     }
                 }
@@ -147,5 +145,4 @@ class ShippingMethodOffer
     {
         $this->rateID = $rateID;
     }
-
 }

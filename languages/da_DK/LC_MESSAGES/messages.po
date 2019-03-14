@@ -1,0 +1,3541 @@
+# Translators:
+# Michael Jensen-Maar <maar@maargrafisk.dk>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: community_store 2.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-20 11:42+0100\n"
+"PO-Revision-Date: 2018-11-20 11:49+0100\n"
+"Last-Translator: Concrete5 Danmark <info@concrete5.dk>\n"
+"Language-Team: Danish (Concrete5 Danmark)\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _;t;t2:1,2\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: languages\n"
+
+#: blocks/autonav/templates/product_breadcrumb.php:31
+msgid "Empty Auto-Nav Block."
+msgstr "Tom Auto-Nav Block."
+
+#: blocks/community_product/controller.php:22
+msgid "Add a Product to the Page"
+msgstr "Tilføj et Produkt til Siden"
+
+#: blocks/community_product/controller.php:27
+#: blocks/community_product/form.php:2 blocks/community_product/form.php:5
+#: controllers/single_page/dashboard/store/reports/products.php:60
+#: elements/cart_list.php:16 elements/cart_modal.php:46
+#: single_pages/cart.php:44
+msgid "Product"
+msgstr "Produkt"
+
+#: blocks/community_product/form.php:6
+msgid "A selected product"
+msgstr "Et udvalgt produkt"
+
+#: blocks/community_product/form.php:6
+msgid "Product associated with this page"
+msgstr "Produkt forbundet med denne side"
+
+#: blocks/community_product/form.php:11
+msgid "Select Product"
+msgstr "Vælg Produkt"
+
+#: blocks/community_product/form.php:14
+msgid "Display Options"
+msgstr "Vis Optioner"
+
+#: blocks/community_product/form.php:21
+msgid "Show Product Name"
+msgstr "Vis Produktnavn"
+
+#: blocks/community_product/form.php:27
+msgid "Show Short Description"
+msgstr "Vis Kort Beskrivelse"
+
+#: blocks/community_product/form.php:33
+msgid "Show Product Details"
+msgstr "Vis Produktdetaljer"
+
+#: blocks/community_product/form.php:39
+msgid "Show Price"
+msgstr "Vis Pris"
+
+#: blocks/community_product/form.php:45
+msgid "Show Weight"
+msgstr "Vis Vægt"
+
+#: blocks/community_product/form.php:53
+msgid "Show Product Image"
+msgstr "Vis Produktbillede"
+
+#: blocks/community_product/form.php:59
+msgid "Show \"Add to Cart\" Button"
+msgstr "Vis “Læg i kurven” knap"
+
+#: blocks/community_product/form.php:65
+msgid "Show If Featured"
+msgstr "Vis, hvis den er udvalgt"
+
+#: blocks/community_product/form.php:71
+msgid "Show Dimensions"
+msgstr "Vis Dimensioner"
+
+#: blocks/community_product/form.php:77
+msgid "Show Quantity Selector"
+msgstr "Vis Mængde Vælger"
+
+#: blocks/community_product/form.php:87
+msgid "Add to Cart Button Text"
+msgstr "Tilføj Til Kurv Knap Tekst"
+
+#: blocks/community_product/form.php:88
+msgid "Add To Cart"
+msgstr "Læg i Kurven"
+
+#: blocks/community_product/view.php:49 blocks/community_product/view.php:439
+msgid "On Sale: "
+msgstr "På Tilbud:"
+
+#: blocks/community_product/view.php:50 blocks/community_product/view.php:440
+#: blocks/community_product_list/view.php:130
+#: blocks/community_product_list/view.php:371 elements/product_modal.php:122
+msgid "was"
+msgstr "før"
+
+#: blocks/community_product/view.php:82
+#: blocks/community_product_list/view.php:153
+msgid "Enter Other Amount"
+msgstr "Indtast Andet Beløb"
+
+#: blocks/community_product/view.php:87
+#: blocks/community_product_list/view.php:157
+#: controllers/single_page/dashboard/store/reports/products.php:67
+#: single_pages/dashboard/store/orders.php:199
+msgid "Amount"
+msgstr "Beløb"
+
+#: blocks/community_product/view.php:103
+#: blocks/community_product_list/view.php:171
+msgid "minimum"
+msgstr "minimum"
+
+#: blocks/community_product/view.php:110
+#: blocks/community_product_list/view.php:178
+msgid "maximum"
+msgstr "maksimum"
+
+#: blocks/community_product/view.php:131
+msgid "to"
+msgstr "til"
+
+#: blocks/community_product/view.php:152
+msgid "Dimensions"
+msgstr "Mål"
+
+#: blocks/community_product/view.php:162
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:18
+#: single_pages/dashboard/store/products.php:571
+#: single_pages/dashboard/store/products.php:1239
+msgid "Weight"
+msgstr "Vægt"
+
+#: blocks/community_product/view.php:186
+msgid "Featured Item"
+msgstr "Udvalgte Varer"
+
+#: blocks/community_product/view.php:195
+#: blocks/community_product_list/view.php:204
+#: controllers/single_page/dashboard/store/reports/products.php:61
+#: elements/cart_list.php:18 elements/cart_modal.php:48
+#: elements/order_slip.php:140 elements/product_modal.php:29
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:18
+#: single_pages/cart.php:46 single_pages/dashboard/store/orders.php:138
+msgid "Quantity"
+msgstr "Antal"
+
+#: blocks/community_product/view.php:241
+#: blocks/community_product_list/view.php:249
+#: elements/attribute/categories/store_order.php:31
+#: single_pages/dashboard/store/products.php:755
+#: single_pages/dashboard/store/settings.php:313
+#: single_pages/dashboard/store/settings/tax.php:64
+msgid "Required"
+msgstr "Krævet"
+
+#: blocks/community_product/view.php:263
+#: blocks/community_product_list/view.php:270
+msgid "out of stock"
+msgstr "Ikke på lager"
+
+#: blocks/community_product/view.php:307
+#: blocks/community_product_list/view.php:312
+msgid "no"
+msgstr "nej"
+
+#: blocks/community_product/view.php:310
+#: blocks/community_product_list/view.php:313
+msgid "yes"
+msgstr "ja"
+
+#: blocks/community_product/view.php:330
+#: blocks/community_product_list/view.php:327 elements/product_modal.php:60
+msgid "Add to Cart"
+msgstr "Læg i Kurven"
+
+#: blocks/community_product/view.php:333
+#: blocks/community_product_list/view.php:328 elements/product_modal.php:61
+msgid "Out of Stock"
+msgstr "Ikke på Lager"
+
+#: blocks/community_product/view.php:477
+msgid "Product not available"
+msgstr "Produktet er ikke tilgængelig"
+
+#: blocks/community_product_list/controller.php:25
+msgid "Add a Product List for Community Store"
+msgstr "Tilføj en Produktliste til Community Store"
+
+#: blocks/community_product_list/controller.php:30
+msgid "Product List"
+msgstr "Produktliste"
+
+#: blocks/community_product_list/controller.php:278
+msgid "A page must be selected"
+msgstr "En side skal vælges"
+
+#: blocks/community_product_list/controller.php:282
+msgid "Number of Products must be a whole number"
+msgstr "Antal produkter skal være et helt tal"
+
+#: blocks/community_product_list/form.php:8 single_pages/dashboard/store.php:34
+#: single_pages/dashboard/store.php:60 single_pages/dashboard/store.php:147
+#: single_pages/dashboard/store/products/groups.php:22
+#: single_pages/dashboard/store/reports/sales.php:31
+#: single_pages/dashboard/store/reports/sales.php:57
+#: single_pages/dashboard/store/reports/sales.php:83
+#: single_pages/dashboard/store/reports/sales.php:141
+#: single_pages/dashboard/store/reports/sales.php:143
+#: single_pages/dashboard/store/reports/sales.php:202
+#: single_pages/dashboard/store/reports/sales.php:225
+#: single_pages/dashboard/store/settings.php:21
+#: single_pages/dashboard/store/settings.php:272
+#: src/CommunityStore/Utilities/Installer.php:71
+msgid "Products"
+msgstr "Produkter"
+
+#: blocks/community_product_list/form.php:11
+msgid "List Products"
+msgstr "Liste Produkter"
+
+#: blocks/community_product_list/form.php:13
+msgid "All"
+msgstr "Alle"
+
+#: blocks/community_product_list/form.php:14
+msgid "Under current page"
+msgstr "Under nuværende side"
+
+#: blocks/community_product_list/form.php:15
+msgid "Under current page and child pages"
+msgstr "Under nuværende side og underordnede sider"
+
+#: blocks/community_product_list/form.php:16
+msgid "Under a specified page"
+msgstr "Under en bestemt side"
+
+#: blocks/community_product_list/form.php:17
+msgid "Under a specified page and child pages"
+msgstr "Under en bestemt side og underordnede sider"
+
+#: blocks/community_product_list/form.php:18
+msgid "Related to product displayed on this page"
+msgstr "Relateret til produkt vist på denne side"
+
+#: blocks/community_product_list/form.php:19
+msgid "Related to a specified product"
+msgstr "Relateret til et bestemt produkt"
+
+#: blocks/community_product_list/form.php:33
+#: single_pages/dashboard/store/products.php:1336
+#: single_pages/dashboard/store/products/groups.php:93
+msgid "Search for a Product"
+msgstr "Søg efter et Produkt"
+
+#: blocks/community_product_list/form.php:37
+#: single_pages/dashboard/store/settings.php:140
+msgid "Sort Order"
+msgstr "Sorteringsrækkefølge"
+
+#: blocks/community_product_list/form.php:39
+msgid "Alphabetical"
+msgstr "Alfabetisk"
+
+#: blocks/community_product_list/form.php:40
+msgid "Alphabetical, reversed"
+msgstr "Alfabetisk, omvendt"
+
+#: blocks/community_product_list/form.php:41
+#: single_pages/dashboard/store/products.php:442
+msgid "Date Added"
+msgstr "Dato Tilføjet"
+
+#: blocks/community_product_list/form.php:42
+msgid "Price Ascending"
+msgstr "Pris Stigende"
+
+#: blocks/community_product_list/form.php:43
+msgid "Price Descending"
+msgstr "Pris Faldende"
+
+#: blocks/community_product_list/form.php:44
+msgid "Best Sellers"
+msgstr "Bestsellere"
+
+#: blocks/community_product_list/form.php:45
+msgid "Related Products Order"
+msgstr "Rækkefølge for Relaterede Produkter"
+
+#: blocks/community_product_list/form.php:46
+msgid "Category Sort Order"
+msgstr "Kategori Sorteringsrækkefølge"
+
+#: blocks/community_product_list/form.php:47
+msgid "Random order, changing each display"
+msgstr "Tilfældig rækkefølge, ændre hver visning"
+
+#: blocks/community_product_list/form.php:48
+msgid "Random order, changing each day"
+msgstr "Tilfældig rækkefølge, ændre hver dag"
+
+#: blocks/community_product_list/form.php:55
+msgid "Display Sort Option"
+msgstr "Vis Sorteringsfunktion"
+
+#: blocks/community_product_list/form.php:62
+msgid "Filtering"
+msgstr "Filtrering"
+
+#: blocks/community_product_list/form.php:74
+msgid "Filter by Product Groups"
+msgstr "Filtrer efter Produktgrupper"
+
+#: blocks/community_product_list/form.php:78
+#: single_pages/dashboard/store/discounts.php:363
+#: single_pages/dashboard/store/products.php:507
+msgid "Select Product Groups"
+msgstr "Vælg Produktgrupper"
+
+#: blocks/community_product_list/form.php:91
+msgid "Matching"
+msgstr "Matching"
+
+#: blocks/community_product_list/form.php:92
+msgid "All groups selected"
+msgstr "Alle valgte grupper"
+
+#: blocks/community_product_list/form.php:92
+msgid "Any group selected"
+msgstr "Enhver gruppe valgt"
+
+#: blocks/community_product_list/form.php:101
+msgid "Include Featured Only"
+msgstr "Medtag Kun Udvalgte"
+
+#: blocks/community_product_list/form.php:107
+msgid "Include On Sale Only"
+msgstr "Vis Kun På Tilbud"
+
+#: blocks/community_product_list/form.php:113
+msgid "Include Out of Stock Products"
+msgstr "Medtag Udsolgte Produkter"
+
+#: blocks/community_product_list/form.php:122
+msgid "Pagination and Display Options"
+msgstr "Paginering og Visningsindstillinger"
+
+#: blocks/community_product_list/form.php:125
+msgid "Number of Products to Display"
+msgstr "Antal produkter, der skal vises"
+
+#: blocks/community_product_list/form.php:126
+msgid "leave blank or 0 to list all matching products"
+msgstr "lad stå tomt eller 0 til liste alle matchende produkter"
+
+#: blocks/community_product_list/form.php:132
+msgid ""
+"Display pagination interface if more products are available than are "
+"displayed."
+msgstr ""
+"Vis paginering brugerflade hvis flere produkter er tilgængelige end der "
+"vises."
+
+#: blocks/community_product_list/form.php:137
+msgid "Products per Row"
+msgstr "Produkter pr Række"
+
+#: blocks/community_product_list/form.php:143
+#: single_pages/dashboard/store/settings.php:183
+msgid "Display Name"
+msgstr "Vist Navn"
+
+#: blocks/community_product_list/form.php:149
+msgid "Display Price"
+msgstr "Vis Pris"
+
+#: blocks/community_product_list/form.php:155
+msgid "Display Add To Cart Button"
+msgstr "Vis Tilføj Til Kurv Knap"
+
+#: blocks/community_product_list/form.php:159
+msgid "Add To Cart Button Text"
+msgstr "Tilføj Til Kurv Knap Tekst"
+
+#: blocks/community_product_list/form.php:160
+msgid "Defaults to: Add To Cart"
+msgstr "Standard: Tilføj Til Kurv"
+
+#: blocks/community_product_list/form.php:165
+msgid "Display Quantity Selector"
+msgstr "Vis Mængde Vælger"
+
+#: blocks/community_product_list/form.php:171
+msgid "Display Product Description"
+msgstr "Vis Produktbeskrivelse"
+
+#: blocks/community_product_list/form.php:180
+msgid "Display Quickview Link (Modal Window)"
+msgstr "Vis Hurtigvisnings Link (Modal Vindue)"
+
+#: blocks/community_product_list/form.php:186
+msgid "Display Link To Product Page"
+msgstr "Vis Link til Produkt Side"
+
+#: blocks/community_product_list/form.php:190
+msgid "Link To Product Page Text"
+msgstr "Link til Produktsiden Tekst"
+
+#: blocks/community_product_list/form.php:191
+msgid "Defaults to: More Details"
+msgstr "Standard: Flere detaljer"
+
+#: blocks/community_product_list/view.php:32
+msgid "Sort by"
+msgstr "Sorter efter"
+
+#: blocks/community_product_list/view.php:36
+msgid "price, lowest to highest"
+msgstr "pris, laveste til højeste"
+
+#: blocks/community_product_list/view.php:37
+msgid "price, highest to lowest"
+msgstr "pris, højeste til laveste"
+
+#: blocks/community_product_list/view.php:195
+msgid "More Details"
+msgstr "Flere Detaljer"
+
+#: blocks/community_product_list/view.php:428
+msgid "Empty Product List"
+msgstr "Tom Produktliste"
+
+#: blocks/community_utility_links/controller.php:21
+msgid "Add your cart links for Community Store"
+msgstr "Tilføj dine kurv links til Community Store"
+
+#: blocks/community_utility_links/controller.php:26
+msgid "Utility Links"
+msgstr "Utility Links"
+
+#: blocks/community_utility_links/controller.php:88
+msgid "Cart Label must be set"
+msgstr "Label  for Indkøbskurv skal være angivet"
+
+#: blocks/community_utility_links/controller.php:91
+msgid "Cart Link Label exceeds 255 characters"
+msgstr "Label  for Indkøbskurv Link overstiger 255 karakterer"
+
+#: blocks/community_utility_links/controller.php:94
+msgid "Cart Items Label exceeds 255 characters"
+msgstr "Label  for Indkøbskurv Elementer overstiger 255 karakterer"
+
+#: blocks/community_utility_links/form.php:5
+msgid "Show Number Of Items In Cart"
+msgstr "Vis Antal Produkter i Indkøbskurven"
+
+#: blocks/community_utility_links/form.php:12
+msgid "Show Cart Total"
+msgstr "Vis Indkøbsvognens Total"
+
+#: blocks/community_utility_links/form.php:19
+msgid "Show Checkout Link"
+msgstr "Vis Check-out Link"
+
+#: blocks/community_utility_links/form.php:26
+msgid "Display Cart In Popup"
+msgstr "Vis Kurv i pop-up"
+
+#: blocks/community_utility_links/form.php:33
+msgid "Show Greeting"
+msgstr "Vis Hilsen"
+
+#: blocks/community_utility_links/form.php:40
+msgid "Show Sign-In Link"
+msgstr "Vis Log-ind Link"
+
+#: blocks/community_utility_links/form.php:46
+msgid "Cart Link Label"
+msgstr "Label for Indkøbskurv Link"
+
+#: blocks/community_utility_links/form.php:47
+msgid "View Cart"
+msgstr "Vis Kurv"
+
+#: blocks/community_utility_links/form.php:50
+msgid "Cart Items Label"
+msgstr "Label for Indkøbskurv Elementer"
+
+#: blocks/community_utility_links/form.php:51
+msgid "Items in Cart"
+msgstr "Vare i Kurven"
+
+#: blocks/community_utility_links/view.php:11 single_pages/checkout.php:38
+msgid "Sign In"
+msgstr "Login"
+
+#: blocks/community_utility_links/view.php:17
+msgid "Welcome back"
+msgstr "Velkommen tilbage"
+
+#: blocks/community_utility_links/view.php:20
+msgid "Welcome back, "
+msgstr "Velkommen tilbage,"
+
+#: blocks/community_utility_links/view.php:68 elements/cart_modal.php:225
+#: single_pages/cart.php:258 single_pages/checkout.php:8
+msgid "Checkout"
+msgstr "Check-out"
+
+#: controller.php:29
+msgid "Add a store to your site"
+msgstr "Føj en butik til din hjemmeside"
+
+#: controller.php:34
+msgid "Community Store"
+msgstr "Community Store"
+
+#: controller.php:163
+msgid "Quantity must be greater than zero"
+msgstr "Antal skal være større end nul"
+
+#: controllers/single_page/dashboard/store.php:58
+msgid "Store"
+msgstr "Webshop"
+
+#: controllers/single_page/dashboard/store/discounts.php:28
+msgid "Discount Rules"
+msgstr "Rabat Regler"
+
+#: controllers/single_page/dashboard/store/discounts.php:35
+#: single_pages/dashboard/store/discounts.php:20
+msgid "Add Discount Rule"
+msgstr "Tilføj Rabat Regel"
+
+#: controllers/single_page/dashboard/store/discounts.php:69
+#: single_pages/dashboard/store/discounts.php:508
+msgid "Edit Discount Rule"
+msgstr "Redigér Rabat Regel"
+
+#: controllers/single_page/dashboard/store/discounts.php:106
+msgid "Codes for discount rule"
+msgstr "Koder for rabat regel"
+
+#: controllers/single_page/dashboard/store/discounts.php:123
+msgid "Discount Rule Deleted"
+msgstr "Rabat Regel Slettet"
+
+#: controllers/single_page/dashboard/store/discounts.php:143
+msgid "Code Deleted"
+msgstr "Kode Slettet"
+
+#: controllers/single_page/dashboard/store/discounts.php:180
+msgid "Code Added"
+msgstr "Kode Tilføjet"
+
+#: controllers/single_page/dashboard/store/discounts.php:180
+msgid "Codes Added"
+msgstr "Koder Tilføjet"
+
+#: controllers/single_page/dashboard/store/discounts.php:197
+msgid "Discount Rule Updated"
+msgstr "Rabat Regel Opdateret"
+
+#: controllers/single_page/dashboard/store/discounts.php:204
+msgid "Discount Rule Added"
+msgstr "Rabat Regel Tilføjet"
+
+#: controllers/single_page/dashboard/store/orders.php:48
+#: single_pages/dashboard/store/settings.php:23
+#: single_pages/dashboard/store/settings.php:363
+msgid "Orders"
+msgstr "Ordrer"
+
+#: controllers/single_page/dashboard/store/orders.php:71
+#: controllers/single_page/dashboard/store/reports/products.php:55
+#: elements/order_slip.php:11 elements/order_slip.php:23
+#: single_pages/dashboard/store.php:145
+#: single_pages/dashboard/store/reports/sales.php:223
+msgid "Order #"
+msgstr "Ordre #"
+
+#: controllers/single_page/dashboard/store/orders.php:79
+msgid "Fulfilment Status Updated"
+msgstr "Status for opfyldelse er opdateret"
+
+#: controllers/single_page/dashboard/store/orders.php:98
+msgid "Order Marked As Paid"
+msgstr "Ordre Markeret som Betalt"
+
+#: controllers/single_page/dashboard/store/orders.php:112
+msgid "Order Payment Reversed"
+msgstr "Tilbageført Ordre Betaling"
+
+#: controllers/single_page/dashboard/store/orders.php:128
+msgid "Order Marked As Refunded"
+msgstr "Ordre Markeret som Refunderet"
+
+#: controllers/single_page/dashboard/store/orders.php:142
+msgid "Order Refund Reversed"
+msgstr "Refundering af Ordre Tilbageført"
+
+#: controllers/single_page/dashboard/store/orders.php:157
+msgid "Order Cancelled"
+msgstr "Ordre Annulleret"
+
+#: controllers/single_page/dashboard/store/orders.php:170
+msgid "Order Cancellation Reversed"
+msgstr "Tilbageført Ordreannullering"
+
+#: controllers/single_page/dashboard/store/orders.php:182
+#, php-format
+msgid "Receipt Email Resent to %s"
+msgstr "Kvittering E-mail gensendt til %s"
+
+#: controllers/single_page/dashboard/store/orders.php:199
+#, php-format
+msgid "Notification Email Resent to %s"
+msgstr "Kvittering E-mail gensendt til %s"
+
+#: controllers/single_page/dashboard/store/orders.php:210
+msgid "Order Deleted"
+msgstr "Ordre Slettet"
+
+#: controllers/single_page/dashboard/store/products.php:69
+#: controllers/single_page/dashboard/store/settings/shipping.php:22
+#: controllers/single_page/dashboard/store/settings/tax.php:22
+#: controllers/single_page/dashboard/store/settings/tax.php:98
+#: single_pages/dashboard/store/discounts.php:423
+#: single_pages/dashboard/store/products.php:698
+#: single_pages/dashboard/store/products/groups.php:152
+msgid "Add"
+msgstr "Tilføj"
+
+#: controllers/single_page/dashboard/store/products.php:102
+#: single_pages/dashboard/store/products.php:1550
+msgid "Add Product"
+msgstr "Tilføj Produkt"
+
+#: controllers/single_page/dashboard/store/products.php:109
+#: controllers/single_page/dashboard/store/settings/shipping.php:32
+#: controllers/single_page/dashboard/store/settings/tax.php:30
+#: controllers/single_page/dashboard/store/settings/tax.php:106
+#: elements/cart_modal.php:179 single_pages/cart.php:173
+#: single_pages/dashboard/store/discounts.php:423
+#: single_pages/dashboard/store/orders.php:373
+#: single_pages/dashboard/store/products/groups.php:152
+msgid "Update"
+msgstr "Opdater"
+
+#: controllers/single_page/dashboard/store/products.php:226
+msgid "Edit Product"
+msgstr "Redigér Produkt"
+
+#: controllers/single_page/dashboard/store/products.php:245
+msgid "Product Duplicated"
+msgstr "Produkt Duplikeret"
+
+#: controllers/single_page/dashboard/store/products.php:249
+#: single_pages/dashboard/store/products.php:38
+#: single_pages/dashboard/store/products.php:1702
+msgid "Duplicate Product"
+msgstr "Kopier Produkt"
+
+#: controllers/single_page/dashboard/store/products.php:260
+#: controllers/single_page/dashboard/store/products.php:264
+msgid "Product Removed"
+msgstr "Produkt Fjernet"
+
+#: controllers/single_page/dashboard/store/products.php:393
+msgid "Product Updated"
+msgstr "Produkt Opdateret"
+
+#: controllers/single_page/dashboard/store/products.php:396
+msgid "Product Added"
+msgstr "Produkt Tilføjet"
+
+#: controllers/single_page/dashboard/store/products.php:408
+msgid "Please enter a Product Name"
+msgstr "Indtast et Produktnavn"
+
+#: controllers/single_page/dashboard/store/products.php:411
+msgid "The Product Name can not be greater than 255 Characters"
+msgstr "Produktnavn kan ikke være større end 255 tegn"
+
+#: controllers/single_page/dashboard/store/products.php:414
+msgid "The Quantity must be set, and numeric"
+msgstr "Antal skal være sat, og numerisk"
+
+#: controllers/single_page/dashboard/store/products.php:417
+msgid "The Product Width must be a number"
+msgstr "Produktet bredde skal være et tal"
+
+#: controllers/single_page/dashboard/store/products.php:420
+msgid "The Product Height must be a number"
+msgstr "Produktets højde skal være et tal"
+
+#: controllers/single_page/dashboard/store/products.php:423
+msgid "The Product Length must be a number"
+msgstr "Produktets længde skal være et tal"
+
+#: controllers/single_page/dashboard/store/products.php:426
+msgid "The Product Weight must be a number"
+msgstr "Produkt Vægt skal være et tal"
+
+#: controllers/single_page/dashboard/store/products/categories.php:13
+msgid "Product Categories"
+msgstr "Produktkategorier"
+
+#: controllers/single_page/dashboard/store/products/categories.php:35
+msgid "Manage Category: "
+msgstr "Administrer Kategori:"
+
+#: controllers/single_page/dashboard/store/products/categories.php:56
+msgid "Category Order Updated"
+msgstr "Kategori Sorteringsrækkefølge Opdateret"
+
+#: controllers/single_page/dashboard/store/products/groups.php:13
+#: single_pages/dashboard/store/discounts.php:358
+msgid "Product Groups"
+msgstr "Produktgrupper"
+
+#: controllers/single_page/dashboard/store/products/groups.php:23
+#: single_pages/dashboard/store/products/groups.php:13
+msgid "Add Product Group"
+msgstr "Tilføj Produktgruppe"
+
+#: controllers/single_page/dashboard/store/products/groups.php:44
+msgid "Product Group Added"
+msgstr "Produktgruppe tilføjet"
+
+#: controllers/single_page/dashboard/store/products/groups.php:53
+msgid "Edit Product Group"
+msgstr "Rediger Produktgruppe"
+
+#: controllers/single_page/dashboard/store/products/groups.php:82
+msgid "Product Group Edited"
+msgstr "Produktgruppe Redigeret"
+
+#: controllers/single_page/dashboard/store/products/groups.php:95
+msgid "Please enter a Group Name"
+msgstr "Indtast et Gruppenavn"
+
+#: controllers/single_page/dashboard/store/products/groups.php:98
+msgid "A Group Name can not be more than 100 characters"
+msgstr "En Gruppe navn kan ikke være mere end 100 tegn"
+
+#: controllers/single_page/dashboard/store/products/groups.php:109
+msgid "Product Group Deleted"
+msgstr "Produkt Gruppe Slettet"
+
+#: controllers/single_page/dashboard/store/reports/products.php:56
+#: single_pages/checkout.php:84 single_pages/checkout.php:85
+#: single_pages/checkout.php:264 single_pages/checkout.php:265
+msgid "Last Name"
+msgstr "Efternavn"
+
+#: controllers/single_page/dashboard/store/reports/products.php:57
+#: single_pages/checkout.php:78 single_pages/checkout.php:79
+#: single_pages/checkout.php:258 single_pages/checkout.php:259
+msgid "First Name"
+msgstr "Fornavn"
+
+#: controllers/single_page/dashboard/store/reports/products.php:58
+#: elements/order_slip.php:62 mail/new_order_notification.php:37
+#: single_pages/checkout.php:65 single_pages/checkout.php:66
+#: single_pages/checkout.php:212 single_pages/dashboard/store/orders.php:59
+#: single_pages/dashboard/store/orders.php:387
+#: single_pages/dashboard/store/orders.php:515
+msgid "Email"
+msgstr "E-mail"
+
+#: controllers/single_page/dashboard/store/reports/products.php:59
+#: elements/order_slip.php:70 mail/new_order_notification.php:38
+#: mail/order_receipt.php:43 single_pages/checkout.php:227
+#: single_pages/dashboard/store/orders.php:67
+msgid "Phone"
+msgstr "Telefon"
+
+#: controllers/single_page/dashboard/store/reports/products.php:62
+#: mail/new_order_notification.php:89 mail/order_receipt.php:95
+#: single_pages/dashboard/store/products.php:64
+#: single_pages/dashboard/store/products.php:694
+#: single_pages/dashboard/store/products.php:1130
+msgid "Options"
+msgstr "Optioner"
+
+#: controllers/single_page/dashboard/store/reports/products.php:63
+#: single_pages/dashboard/store/orders.php:592
+msgid "Order Date"
+msgstr "Ordredato"
+
+#: controllers/single_page/dashboard/store/reports/products.php:64
+msgid "Order Status"
+msgstr "Ordre Status"
+
+#: controllers/single_page/dashboard/store/reports/products.php:65
+#: single_pages/checkout.php:428 single_pages/dashboard/store/orders.php:594
+msgid "Payment"
+msgstr "Betaling"
+
+#: controllers/single_page/dashboard/store/reports/products.php:66
+msgid "Method"
+msgstr "Metode"
+
+#: controllers/single_page/dashboard/store/reports/products.php:90
+#, php-format
+msgid "Orders of %s"
+msgstr "Ordrer med %s"
+
+#: controllers/single_page/dashboard/store/reports/products.php:94
+msgid "product_orders"
+msgstr "product_orders"
+
+#: controllers/single_page/dashboard/store/reports/products.php:134
+#: elements/order_slip.php:42 mail/new_order_notification.php:169
+#: mail/order_receipt.php:216 single_pages/dashboard/store/orders.php:37
+#: single_pages/dashboard/store/orders.php:420
+#: single_pages/dashboard/store/orders.php:643
+#: single_pages/dashboard/store/reports/products.php:127
+msgid "Paid"
+msgstr "Betalt"
+
+#: controllers/single_page/dashboard/store/reports/products.php:136
+#: elements/order_slip.php:44 mail/new_order_notification.php:171
+#: mail/order_receipt.php:218 single_pages/dashboard/store/orders.php:39
+#: single_pages/dashboard/store/orders.php:403
+#: single_pages/dashboard/store/orders.php:645
+#: single_pages/dashboard/store/reports/products.php:129
+msgid "Unpaid"
+msgstr "Ubetalt"
+
+#: controllers/single_page/dashboard/store/reports/products.php:139
+#: single_pages/dashboard/store/orders.php:648
+#: single_pages/dashboard/store/reports/products.php:132
+msgid "Incomplete"
+msgstr "Ufuldstændig"
+
+#: controllers/single_page/dashboard/store/reports/products.php:142
+#: elements/order_slip.php:46 mail/new_order_notification.php:181
+#: mail/order_receipt.php:201 single_pages/dashboard/store/orders.php:41
+#: single_pages/dashboard/store/orders.php:400
+#: single_pages/dashboard/store/orders.php:651
+#: single_pages/dashboard/store/reports/products.php:135
+msgid "Free Order"
+msgstr "Gratis Ordrer"
+
+#: controllers/single_page/dashboard/store/settings.php:143
+msgid "Settings Saved"
+msgstr "Indstillinger er gemt"
+
+#: controllers/single_page/dashboard/store/settings.php:177
+msgid "You must set a currency symbol"
+msgstr "Du skal angive et valutasymbol"
+
+#: controllers/single_page/dashboard/store/settings.php:187
+msgid "At least one payment method must be enabled"
+msgstr "Mindst én betalingsmetode skal være aktiveret"
+
+#: controllers/single_page/dashboard/store/settings.php:196
+msgid "You must have at least one Order Status."
+msgstr "Du skal have mindst én ordrestatus."
+
+#: controllers/single_page/dashboard/store/settings.php:205
+#, php-format
+msgid ""
+"The %s Tax Class can't contain more than 1 Tax Rate if you change how the "
+"taxes are calculated"
+msgstr ""
+"%s Afgift Class kan ikke indeholde mere end en Afgift, hvis du ændre, "
+"hvordan afgifter beregnes"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:19
+#: single_pages/dashboard/store/settings/shipping.php:71
+msgid "Add Shipping Method"
+msgstr "Tilføj Shipping Metode"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:27
+msgid "Edit Shipping Method"
+msgstr "Redigér Shipping Metode"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:39
+msgid "Shipping Method Deleted"
+msgstr "Forsendelsesmetode slettet"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:57
+msgid "Shipping Method Updated"
+msgstr "Forsendelsesmetode opdateret"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:68
+msgid "Shipping Method Created"
+msgstr "Forsendelsesmetode oprettet"
+
+#: controllers/single_page/dashboard/store/settings/shipping.php:87
+msgid "Method Name must be set"
+msgstr "Metode Navn skal sættes"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:21
+#: single_pages/dashboard/store/settings/tax.php:121
+msgid "Add Tax Rate"
+msgstr "Tilføj Afgifts Sats"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:29
+msgid "Edit Tax Rate"
+msgstr "Redigér Afgifts Sats"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:38
+msgid "Tax Rate Deleted"
+msgstr "Afgiftsrate Slettet"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:59
+msgid "Tax Rate Updated"
+msgstr "Afgiftsrate opdateret"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:64
+msgid "Tax Rate Added"
+msgstr "Afgifts Class Tilføjet"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:83
+msgid "You need a label for this Tax Rate"
+msgstr "Du skal angive en label for denne afgiftssats"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:87
+msgid "Tax Rate must be a number"
+msgstr "Afgift skal være et tal"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:90
+msgid "You need to enter a tax rate"
+msgstr "Du skal indtaste en afgiftssats"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:128
+msgid "Tax Class Updated"
+msgstr "Afgift Class opdateret"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:133
+msgid "Tax Class Added"
+msgstr "Afgifts Class Tilføjet"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:145
+msgid "You need a name for this Tax Class"
+msgstr "Du skal angive et navn for denne Afgifts Class"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:154
+msgid ""
+"You can only have one tax rate per country with your current tax settings"
+msgstr ""
+"Du kan kun have én skattesats pr. land med dine aktuelle skatte indstillinger"
+
+#: controllers/single_page/dashboard/store/settings/tax.php:168
+msgid "Tax Class Deleted"
+msgstr "Afgift Class fjernet"
+
+#: elements/attribute/categories/store_order.php:13
+#: single_pages/dashboard/store/discounts.php:329
+msgid "Restrictions"
+msgstr "Begrænsninger"
+
+#: elements/attribute/categories/store_order.php:16
+msgid "For customers in these groups"
+msgstr "For kunder i disse grupper"
+
+#: elements/attribute/categories/store_order.php:18
+msgid "Available for all Groups"
+msgstr "Tilgængelig for all  Grupper"
+
+#: elements/attribute/categories/store_order.php:33
+msgid "Required in checkout"
+msgstr "Kræves ved checkout"
+
+#: elements/cart_list.php:17 elements/cart_modal.php:47
+#: elements/order_slip.php:139 mail/new_order_notification.php:91
+#: mail/order_receipt.php:97 single_pages/cart.php:45
+#: single_pages/dashboard/store/orders.php:137
+#: single_pages/dashboard/store/products.php:118
+#: single_pages/dashboard/store/products.php:213
+#: single_pages/dashboard/store/products.php:1193
+#: single_pages/dashboard/store/products.php:1606
+msgid "Price"
+msgstr "Stk. Pris"
+
+#: elements/cart_modal.php:10 single_pages/cart.php:9
+msgid "Shopping Cart"
+msgstr "Indkøbskurv"
+
+#: elements/cart_modal.php:14
+msgid "has been added to your cart"
+msgstr "er blevet tilføjet til din indkøbskurv"
+
+#: elements/cart_modal.php:18 single_pages/cart.php:13
+msgid "Your cart has been updated"
+msgstr "Din indkøbskurv er blevet opdateret"
+
+#: elements/cart_modal.php:22 single_pages/cart.php:21
+msgid "Your cart has been cleared"
+msgstr "Din indkøbskurv er blevet ryddet"
+
+#: elements/cart_modal.php:26 single_pages/cart.php:25
+msgid "Item removed"
+msgstr "Vare fjernet"
+
+#: elements/cart_modal.php:30 single_pages/cart.php:29
+msgid "Due to stock levels your quantity has been limited"
+msgstr "På grund af lagerbeholdningerne er din mængde begrænset"
+
+#: elements/cart_modal.php:34
+msgid ""
+"An issue has occured adding the product to the cart. You may be missing "
+"required information."
+msgstr ""
+"Er et problem er opstået, da varen blev tilføjet til indkøbskurven. Du "
+"mangler krævede oplysninger."
+
+#: elements/cart_modal.php:200 single_pages/cart.php:212
+#: single_pages/checkout.php:507
+msgid "Discount Applied"
+msgstr "Rabat Anvendt"
+
+#: elements/cart_modal.php:200 single_pages/cart.php:212
+#: single_pages/checkout.php:507 single_pages/dashboard/store/orders.php:191
+msgid "Discounts Applied"
+msgstr "Rabatter Anvendt"
+
+#: elements/cart_modal.php:211 mail/new_order_notification.php:160
+#: mail/order_receipt.php:196 single_pages/cart.php:252
+#: single_pages/checkout.php:585 single_pages/dashboard/store.php:31
+#: single_pages/dashboard/store.php:57 single_pages/dashboard/store.php:111
+#: single_pages/dashboard/store.php:113 single_pages/dashboard/store.php:150
+#: single_pages/dashboard/store/orders.php:593
+#: single_pages/dashboard/store/reports/products.php:33
+#: single_pages/dashboard/store/reports/products.php:49
+#: single_pages/dashboard/store/reports/sales.php:28
+#: single_pages/dashboard/store/reports/sales.php:54
+#: single_pages/dashboard/store/reports/sales.php:80
+#: single_pages/dashboard/store/reports/sales.php:129
+#: single_pages/dashboard/store/reports/sales.php:131
+#: single_pages/dashboard/store/reports/sales.php:205
+#: single_pages/dashboard/store/reports/sales.php:228
+msgid "Total"
+msgstr "Total"
+
+#: elements/cart_modal.php:215 single_pages/cart.php:261
+msgid "Your cart is empty"
+msgstr "Din indkøbskurv er tom"
+
+#: elements/cart_modal.php:221
+msgid "Continue Shopping"
+msgstr "Forsæt med at handle"
+
+#: elements/cart_modal.php:223 single_pages/cart.php:171
+msgid "Clear Cart"
+msgstr "Ryd Indkøbskurv"
+
+#: elements/checkout/shipping_methods.php:33 single_pages/cart.php:235
+#: single_pages/checkout.php:379 single_pages/checkout.php:565
+msgid "No Charge"
+msgstr "Gratis"
+
+#: elements/checkout/shipping_methods.php:50
+msgid "There are no shipping options to process your order."
+msgstr "Der er ingen shipping muligheder for at behandle din ordre."
+
+#: elements/invoice/checkout_form.php:5
+msgid "An invoice will be sent to you upon ordering"
+msgstr "En faktura vil blive sendt til dig efter bestilling"
+
+#: elements/invoice/dashboard_form.php:7
+msgid "Minimum Order Value"
+msgstr "Minimum Ordreværdi"
+
+#: elements/invoice/dashboard_form.php:12
+msgid "Maximum Order Value"
+msgstr "Maksimal Ordreværdi"
+
+#: elements/invoice/dashboard_form.php:17
+msgid "Payment Instructions"
+msgstr "Betalingsinstrukser"
+
+#: elements/invoice/dashboard_form.php:23
+msgid "Mark Order As Paid"
+msgstr "Markér Ordre som Betalt"
+
+#: elements/invoice/dashboard_form.php:24
+msgid "No, orders are left us unpaid"
+msgstr "Nej, ordrer forlod os ubetalt"
+
+#: elements/invoice/dashboard_form.php:24
+msgid "Yes, orders are immediately marked as paid"
+msgstr "Ja, ordrer er umiddelbart markeret som betalt"
+
+#: elements/order_slip.php:27 mail/new_order_notification.php:23
+#: mail/order_receipt.php:29 single_pages/dashboard/store/orders.php:22
+msgid "Order placed"
+msgstr "Ordre oprettet"
+
+#: elements/order_slip.php:36 mail/order_receipt.php:211
+#: single_pages/dashboard/store/orders.php:31
+#: single_pages/dashboard/store/orders.php:616
+msgid "Cancelled"
+msgstr "Annulleret"
+
+#: elements/order_slip.php:40 mail/order_receipt.php:214
+#: single_pages/dashboard/store/orders.php:35
+#: single_pages/dashboard/store/orders.php:448
+#: single_pages/dashboard/store/orders.php:641
+msgid "Refunded"
+msgstr "Refunderet"
+
+#: elements/order_slip.php:54 single_pages/dashboard/store/orders.php:49
+msgid "Customer Details"
+msgstr "Kundedetaljer"
+
+#: elements/order_slip.php:57 single_pages/checkout.php:215
+#: single_pages/checkout.php:337 single_pages/dashboard/store/discounts.php:28
+#: single_pages/dashboard/store/discounts.php:244
+#: single_pages/dashboard/store/orders.php:55
+#: single_pages/dashboard/store/orders.php:196
+#: single_pages/dashboard/store/reports/products.php:47
+msgid "Name"
+msgstr "Navn"
+
+#: elements/order_slip.php:77 single_pages/dashboard/store/orders.php:74
+#: single_pages/dashboard/store/orders.php:342
+msgid "User"
+msgstr "Bruger"
+
+#: elements/order_slip.php:86 mail/new_order_notification.php:42
+#: mail/order_receipt.php:47 single_pages/checkout.php:394
+#: single_pages/checkout.php:399 single_pages/checkout.php:411
+#: single_pages/dashboard/store/orders.php:80
+#: src/CommunityStore/Utilities/Installer.php:228
+#: src/CommunityStore/Utilities/Installer.php:299
+msgid "VAT Number"
+msgstr "Moms Nummer"
+
+#: elements/order_slip.php:93 single_pages/dashboard/store/orders.php:86
+#: single_pages/dashboard/store/settings/tax.php:55
+msgid "Billing Address"
+msgstr "Faktura adresse"
+
+#: elements/order_slip.php:108 single_pages/checkout.php:254
+#: single_pages/checkout.php:333 single_pages/dashboard/store/orders.php:107
+#: single_pages/dashboard/store/settings/tax.php:55
+msgid "Shipping Address"
+msgstr "Forsendelsesadresse"
+
+#: elements/order_slip.php:119 mail/new_order_notification.php:68
+#: mail/order_receipt.php:73 single_pages/dashboard/store/orders.php:315
+msgid "Other Choices"
+msgstr "Andre Valg"
+
+#: elements/order_slip.php:132 single_pages/dashboard/store/orders.php:131
+msgid "Order Items"
+msgstr "Ordre Emner"
+
+#: elements/order_slip.php:137 mail/new_order_notification.php:88
+#: mail/order_receipt.php:94 single_pages/dashboard/store/orders.php:135
+#: single_pages/dashboard/store/products.php:76
+#: single_pages/dashboard/store/products.php:1603
+msgid "Product Name"
+msgstr "Produktnavn"
+
+#: elements/order_slip.php:138 single_pages/dashboard/store/orders.php:136
+msgid "Product Options"
+msgstr "Produkt optioner"
+
+#: elements/order_slip.php:141 elements/order_slip.php:181
+#: mail/new_order_notification.php:92 mail/order_receipt.php:98
+#: single_pages/dashboard/store/orders.php:139
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: elements/order_slip.php:186 mail/new_order_notification.php:132
+#: mail/order_receipt.php:168 single_pages/cart.php:233
+#: single_pages/checkout.php:353 single_pages/checkout.php:374
+#: single_pages/checkout.php:564 single_pages/dashboard/store.php:42
+#: single_pages/dashboard/store.php:68 single_pages/dashboard/store.php:148
+#: single_pages/dashboard/store/discounts.php:309
+#: single_pages/dashboard/store/orders.php:254
+#: single_pages/dashboard/store/products.php:62
+#: single_pages/dashboard/store/reports/sales.php:39
+#: single_pages/dashboard/store/reports/sales.php:65
+#: single_pages/dashboard/store/reports/sales.php:91
+#: single_pages/dashboard/store/reports/sales.php:153
+#: single_pages/dashboard/store/reports/sales.php:155
+#: single_pages/dashboard/store/reports/sales.php:203
+#: single_pages/dashboard/store/reports/sales.php:226
+#: single_pages/dashboard/store/settings.php:17
+msgid "Shipping"
+msgstr "Forsendelse"
+
+#: elements/order_slip.php:190 mail/new_order_notification.php:144
+#: mail/order_receipt.php:180
+msgid "Discounts"
+msgstr "Rabatter"
+
+#: elements/order_slip.php:190 mail/new_order_notification.php:144
+#: mail/order_receipt.php:180 single_pages/dashboard/store/discounts.php:30
+#: single_pages/dashboard/store/orders.php:198
+msgid "Discount"
+msgstr "Rabat"
+
+#: elements/order_slip.php:201 single_pages/dashboard/store/orders.php:270
+msgid "Grand Total"
+msgstr "Samlet Beløb"
+
+#: elements/order_slip.php:205 mail/new_order_notification.php:163
+#: mail/order_receipt.php:199 single_pages/dashboard/store/orders.php:273
+msgid "Payment Method"
+msgstr "Betalings Metode"
+
+#: elements/order_slip.php:207 mail/new_order_notification.php:133
+#: mail/order_receipt.php:169 single_pages/dashboard/store/orders.php:282
+msgid "Shipping Method"
+msgstr "Forsendelsesmetode:"
+
+#: elements/order_slip.php:214 mail/new_order_notification.php:138
+#: mail/order_receipt.php:174 single_pages/checkout.php:360
+#: single_pages/dashboard/store/orders.php:307
+msgid "Delivery Instructions"
+msgstr "Leverings Vejledning"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:9
+#: single_pages/dashboard/store/products.php:1200
+msgid "Base Price"
+msgstr "Grundpris"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:17
+msgid "Rate Based On"
+msgstr "Sats Baseret På"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:23
+msgid "Price per Item"
+msgstr "Pris pr vare"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:27
+msgid "Price per "
+msgstr "Pris pr"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:38
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:7
+msgid "Which Countries does this Apply to?"
+msgstr "Hvilke lande gælder dette til?"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:39
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:8
+msgid "All Countries"
+msgstr "Alle Lande"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:39
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:8
+msgid "Certain Countries"
+msgstr "Visse lande"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:44
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:13
+msgid "If Certain Countries, which?"
+msgstr "Hvis visse lande, hvilke?"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:57
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:26
+msgid "Minimum Purchase Amount for this rate to apply"
+msgstr "Minimal Købesum for anvendelse til denne sats"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:63
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:32
+msgid "Maximum Purchase Amount for this rate to apply"
+msgstr "Maksimal Købesum for anvendelse til denne sats"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:65
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:86
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:34
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:55
+msgid "Leave at 0 for no maximum"
+msgstr "Sæt til 0 for ingen maksimum"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:72
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:41
+msgid "Minimum Weight Amount for this rate to apply"
+msgstr "Minimal Vægt for anvendelse til denne sats"
+
+#: elements/shipping_method_types/flat_rate/dashboard_form.php:81
+#: elements/shipping_method_types/free_shipping/dashboard_form.php:50
+msgid "Maximum Weight Amount for this rate to apply"
+msgstr "Maksimal Vægt for anvendelse til denne sats"
+
+#: mail/new_order_notification.php:8
+#, php-format
+msgid "New Order Notification #%s"
+msgstr "Ny Ordre Meddelelse #%s"
+
+#: mail/new_order_notification.php:20
+msgid "An order has been placed"
+msgstr "En ordre er blevet oprettet."
+
+#: mail/new_order_notification.php:22 mail/order_receipt.php:28
+msgid "Order"
+msgstr "Ordre"
+
+#: mail/new_order_notification.php:28 mail/order_receipt.php:34
+msgid "Billing Information"
+msgstr "Faktureringsinformationer"
+
+#: mail/new_order_notification.php:48 mail/order_receipt.php:53
+msgid "Shipping Information"
+msgstr "Forsendelsesinformation"
+
+#: mail/new_order_notification.php:84 mail/order_receipt.php:90
+msgid "Order Details"
+msgstr "Ordre Detaljer"
+
+#: mail/new_order_notification.php:90 mail/order_receipt.php:96
+msgid "Qty"
+msgstr "Antal"
+
+#: mail/new_order_notification.php:113
+#: single_pages/dashboard/store/orders.php:163
+#: single_pages/dashboard/store/products.php:1665
+#: single_pages/dashboard/store/products/groups.php:38
+msgid "None"
+msgstr "Ingen"
+
+#: mail/new_order_notification.php:174 mail/order_receipt.php:224
+#: single_pages/dashboard/store/orders.php:397
+msgid "Payment Status"
+msgstr "Betalings Status"
+
+#: mail/new_order_notification.php:178
+#: single_pages/dashboard/store/orders.php:276
+#: single_pages/dashboard/store/orders.php:485
+msgid "Transaction Reference"
+msgstr "Transaktionsreference"
+
+#: mail/new_order_notification.php:185
+msgid "View this order within the Dashboard"
+msgstr "Se denne ordre i Kontrolpanelet"
+
+#: mail/new_order_notification.php:203
+msgid "Order #:"
+msgstr "Ordre #:"
+
+#: mail/new_order_notification.php:204
+msgid "A new order has been placed on your website"
+msgstr "En ny ordre er blevet oprettet på din hjemmeside"
+
+#: mail/new_user.php:4
+msgid "account Created"
+msgstr "konto Oprettet"
+
+#: mail/new_user.php:16 mail/new_user.php:39
+msgid "Thank you for your order, an account has been created for you at"
+msgstr "Tak for din bestilling, en konto er blevet oprettet til dig på"
+
+#: mail/order_receipt.php:7
+#, php-format
+msgid "Order Receipt #%s"
+msgstr "Ordre Kvittering #%s"
+
+#: mail/order_receipt.php:25
+msgid "Your Order"
+msgstr "Din Bestilling"
+
+#: mail/order_receipt.php:154 single_pages/checkout/complete.php:20
+msgid "Your Downloads"
+msgstr "Dine Downloads"
+
+#: single_pages/cart.php:17
+msgid "Your cart has been updated due to changes in stock levels"
+msgstr "Din kurv er blevet opdateret på grund af ændringer i lagerbeholdningen"
+
+#: single_pages/cart.php:47
+msgid "Remove"
+msgstr "Fjern"
+
+#: single_pages/cart.php:190
+msgid "Enter Discount Code"
+msgstr "Indtast Rabat Kode"
+
+#: single_pages/cart.php:194 single_pages/dashboard/store/discounts.php:531
+msgid "Code"
+msgstr "Kode"
+
+#: single_pages/cart.php:197 single_pages/checkout.php:534
+#: single_pages/dashboard/store/discounts.php:313
+msgid "Apply"
+msgstr "Anvend"
+
+#: single_pages/cart.php:202 single_pages/checkout.php:521
+msgid "Discount has been applied"
+msgstr "Rabat er blevet anvendt"
+
+#: single_pages/cart.php:206 single_pages/checkout.php:525
+msgid "Invalid code"
+msgstr "Ugyldig Kode"
+
+#: single_pages/cart.php:228
+msgid "Items Sub Total"
+msgstr "Vare Subtotal"
+
+#: single_pages/cart.php:235 single_pages/checkout.php:565
+msgid "to be determined"
+msgstr "skal bestemmes"
+
+#: single_pages/cart.php:244 single_pages/checkout.php:576
+#: single_pages/dashboard/store.php:39 single_pages/dashboard/store.php:65
+#: single_pages/dashboard/store.php:149
+#: single_pages/dashboard/store/reports/sales.php:36
+#: single_pages/dashboard/store/reports/sales.php:62
+#: single_pages/dashboard/store/reports/sales.php:88
+#: single_pages/dashboard/store/reports/sales.php:204
+#: single_pages/dashboard/store/reports/sales.php:227
+#: single_pages/dashboard/store/settings.php:16
+#: src/CommunityStore/Utilities/Installer.php:109
+msgid "Tax"
+msgstr "Afgift"
+
+#: single_pages/checkout.php:26
+msgid "Sign in, Register or Checkout as Guest"
+msgstr "Log ind Registrer eller Check-out som Gæst"
+
+#: single_pages/checkout.php:28
+msgid "Sign in or Register"
+msgstr "Log ind eller Register"
+
+#: single_pages/checkout.php:37
+msgid ""
+"In order to proceed, you'll need to either register, or sign in with your "
+"existing account."
+msgstr ""
+"For at fortsætte, skal du enten registrere, eller log ind med din "
+"eksisterende konto."
+
+#: single_pages/checkout.php:41
+msgid "Register"
+msgstr "Registrer"
+
+#: single_pages/checkout.php:46
+msgid "Or optionally, you may choose to checkout as a guest."
+msgstr "Eller eventuelt kan du vælge at check-out som gæst."
+
+#: single_pages/checkout.php:48
+msgid "Checkout as Guest"
+msgstr "Check-out som gæst"
+
+#: single_pages/checkout.php:61
+msgid "Customer Information"
+msgstr "Kundeinformation"
+
+#: single_pages/checkout.php:73 single_pages/checkout.php:208
+#: single_pages/dashboard/store/settings.php:316
+msgid "Billing Details"
+msgstr "Faktureringsdetaljer"
+
+#: single_pages/checkout.php:91 single_pages/checkout.php:99
+#: single_pages/checkout.php:219 single_pages/checkout.php:273
+#: single_pages/dashboard/store/orders.php:98
+#: single_pages/dashboard/store/orders.php:119
+msgid "Company"
+msgstr "Virksomhed"
+
+#: single_pages/checkout.php:93
+msgid "Company (optional)"
+msgstr "Virksomhed (valgfrit)"
+
+#: single_pages/checkout.php:107 single_pages/checkout.php:111
+#: single_pages/checkout.php:285
+msgid "Street Address"
+msgstr "Vejnavn og hus nr"
+
+#: single_pages/checkout.php:116 single_pages/checkout.php:290
+msgid "Apartment, unit, etc (optional)"
+msgstr "Lejlighed, enhed, etc (valgfrit)"
+
+#: single_pages/checkout.php:123 single_pages/checkout.php:124
+#: single_pages/checkout.php:297 single_pages/checkout.php:298
+#: single_pages/dashboard/store/settings/tax.php:82
+msgid "City"
+msgstr "By"
+
+#: single_pages/checkout.php:131 single_pages/checkout.php:305
+#: single_pages/dashboard/store/settings/tax.php:64
+msgid "Country"
+msgstr "Land"
+
+#: single_pages/checkout.php:138 single_pages/checkout.php:312
+#: src/CommunityStore/Utilities/States.php:53
+msgid "State / Province"
+msgstr "Region"
+
+#: single_pages/checkout.php:146 single_pages/checkout.php:147
+#: single_pages/checkout.php:320 single_pages/checkout.php:321
+msgid "Postal Code"
+msgstr "Postnummer"
+
+#: single_pages/checkout.php:155 single_pages/checkout.php:156
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#: single_pages/checkout.php:167
+msgid "Use these details for shipping"
+msgstr "Brug disse informationer til forsendelse"
+
+#: single_pages/checkout.php:175 single_pages/dashboard/store/discounts.php:250
+#: single_pages/dashboard/store/products.php:102
+#: single_pages/dashboard/store/products.php:322
+#: single_pages/dashboard/store/products.php:566
+#: single_pages/dashboard/store/products.php:746
+#: single_pages/dashboard/store/products.php:756
+#: single_pages/dashboard/store/settings.php:125
+#: single_pages/dashboard/store/settings/shipping.php:33
+#: single_pages/dashboard/store/settings/shipping.php:112
+#: single_pages/dashboard/store/settings/tax.php:21
+#: single_pages/dashboard/store/settings/tax.php:179
+msgid "No"
+msgstr "Nej"
+
+#: single_pages/checkout.php:175 single_pages/dashboard/store/discounts.php:250
+#: single_pages/dashboard/store/products.php:102
+#: single_pages/dashboard/store/products.php:322
+#: single_pages/dashboard/store/products.php:401
+#: single_pages/dashboard/store/products.php:410
+#: single_pages/dashboard/store/products.php:566
+#: single_pages/dashboard/store/products.php:585
+#: single_pages/dashboard/store/products.php:746
+#: single_pages/dashboard/store/products.php:756
+#: single_pages/dashboard/store/settings.php:125
+#: single_pages/dashboard/store/settings/shipping.php:33
+#: single_pages/dashboard/store/settings/shipping.php:112
+#: single_pages/dashboard/store/settings/tax.php:21
+#: single_pages/dashboard/store/settings/tax.php:179
+msgid "Yes"
+msgstr "Ja"
+
+#: single_pages/checkout.php:201 single_pages/checkout.php:327
+#: single_pages/checkout.php:367 single_pages/checkout.php:405
+msgid "Next"
+msgstr "Næste"
+
+#: single_pages/checkout.php:224 single_pages/checkout.php:281
+#: single_pages/checkout.php:342
+msgid "Address"
+msgstr "Adresse"
+
+#: single_pages/checkout.php:326 single_pages/checkout.php:366
+#: single_pages/checkout.php:404 single_pages/checkout.php:467
+msgid "Previous"
+msgstr "Forrige"
+
+#: single_pages/checkout.php:355
+msgid "Please select a shipping method"
+msgstr "Vælg forsendelsesmetode"
+
+#: single_pages/checkout.php:398
+msgid "VAT Number (if applicable)"
+msgstr "Momsnummer (hvis relevant)"
+
+#: single_pages/checkout.php:415
+msgid "Applied VAT Number"
+msgstr "Anvendt Moms Nummer"
+
+#: single_pages/checkout.php:416
+msgid "Not entered"
+msgstr "Ikke indtastet"
+
+#: single_pages/checkout.php:468
+msgid "Complete Order"
+msgstr "Afslut Ordre"
+
+#: single_pages/checkout.php:476
+msgid "There are currently no payment methods available to process your order."
+msgstr "Der er i øjeblikket ingen betalingsmetoder til at behandle din ordre."
+
+#: single_pages/checkout.php:492
+msgid "Your Cart"
+msgstr "Din Indkøbskurv"
+
+#: single_pages/checkout.php:528
+msgid "Enter discount code"
+msgstr "Indtast rabat kode"
+
+#: single_pages/checkout.php:532
+msgid "Enter code"
+msgstr "Indtast kode"
+
+#: single_pages/checkout.php:556 single_pages/dashboard/store/orders.php:181
+msgid "Items Subtotal"
+msgstr "Kurvens samlede pris"
+
+#: single_pages/checkout.php:558
+msgid "inc. taxes"
+msgstr "Inkl. afgifter"
+
+#: single_pages/checkout.php:598
+msgid "Click here if you are not automatically redirected"
+msgstr "Klik her, hvis du ikke automatisk omdirigeres"
+
+#: single_pages/checkout/complete.php:3
+#, php-format
+msgid "Order #%s has been placed"
+msgstr "Ordre #%s er blevet oprettet."
+
+#: single_pages/checkout/complete.php:5
+msgid "Thank you for your order. A receipt will be emailed to you shortly."
+msgstr "Tak for din ordre. En kvittering vil blive sendt til dig snarest."
+
+#: single_pages/dashboard/store.php:9
+#: single_pages/dashboard/store/reports/sales.php:11
+msgid "Incl."
+msgstr "Inkl."
+
+#: single_pages/dashboard/store.php:17
+#: single_pages/dashboard/store/orders.php:555
+msgid ""
+"Cart and Ordering features are currently disabled. This setting can be "
+"changed via the"
+msgstr ""
+"Indkøbskurv og Bestilling funktioner er i øjeblikket deaktiveret. Denne "
+"indstilling kan ændres via"
+
+#: single_pages/dashboard/store.php:17
+#: single_pages/dashboard/store/orders.php:555
+msgid "settings page."
+msgstr "Indstillingssiden"
+
+#: single_pages/dashboard/store.php:26
+#: single_pages/dashboard/store/reports/sales.php:23
+msgid "Today's Sales"
+msgstr "Dagens Salg"
+
+#: single_pages/dashboard/store.php:52
+#: single_pages/dashboard/store/reports/sales.php:75
+msgid "Year to Date"
+msgstr "År til Dato"
+
+#: single_pages/dashboard/store.php:78
+msgid "Sales this Week"
+msgstr "Salg denne Uge"
+
+#: single_pages/dashboard/store.php:98 single_pages/dashboard/store.php:100
+msgid "m/d"
+msgstr "d./m."
+
+#: single_pages/dashboard/store.php:141
+msgid "Recent Orders"
+msgstr "Seneste Ordrer"
+
+#: single_pages/dashboard/store.php:146
+#: single_pages/dashboard/store/orders.php:341
+#: single_pages/dashboard/store/reports/sales.php:224
+msgid "Date"
+msgstr "Dato"
+
+#: single_pages/dashboard/store/discounts.php:29
+msgid "Displayed Text"
+msgstr "Vist Tekst"
+
+#: single_pages/dashboard/store/discounts.php:31
+msgid "Applies"
+msgstr "Gælder"
+
+#: single_pages/dashboard/store/discounts.php:32
+msgid "Availability"
+msgstr "Tilgængelighed"
+
+#: single_pages/dashboard/store/discounts.php:33
+#: single_pages/dashboard/store/products.php:1609
+#: single_pages/dashboard/store/settings/shipping.php:101
+#: single_pages/dashboard/store/settings/tax.php:133
+#: single_pages/dashboard/store/settings/tax.php:170
+msgid "Actions"
+msgstr "Handlinger"
+
+#: single_pages/dashboard/store/discounts.php:49
+msgid "from all products"
+msgstr "fra alle produkter"
+
+#: single_pages/dashboard/store/discounts.php:53
+msgid "from matching products"
+msgstr "fra matchende produkter"
+
+#: single_pages/dashboard/store/discounts.php:57
+msgid "from shipping when at least one product matches"
+msgstr "fra forsendelse, når mindst et produkt matcher"
+
+#: single_pages/dashboard/store/discounts.php:61
+msgid "from each matching product"
+msgstr "fra hvert matchende produkt"
+
+#: single_pages/dashboard/store/discounts.php:65
+#: single_pages/dashboard/store/discounts.php:66
+#: single_pages/dashboard/store/orders.php:221
+msgid "from each product"
+msgstr "fra hvert produkt"
+
+#: single_pages/dashboard/store/discounts.php:70
+#: single_pages/dashboard/store/discounts.php:74
+#: single_pages/dashboard/store/orders.php:225
+#: single_pages/dashboard/store/orders.php:229
+msgid "from shipping"
+msgstr "fra forsendelse"
+
+#: single_pages/dashboard/store/discounts.php:78
+msgid "set as price for all matching products"
+msgstr "sæt som pris for alle matchende produkter"
+
+#: single_pages/dashboard/store/discounts.php:82
+msgid "set as price for all products"
+msgstr "sæt som pris for alle produkter"
+
+#: single_pages/dashboard/store/discounts.php:86
+#: single_pages/dashboard/store/orders.php:237
+msgid "set as price for shipping"
+msgstr "sæt som pris for fragt"
+
+#: single_pages/dashboard/store/discounts.php:94
+#: single_pages/dashboard/store/settings.php:297
+msgid "Disabled"
+msgstr "Deaktiveret"
+
+#: single_pages/dashboard/store/discounts.php:96
+#: single_pages/dashboard/store/discounts.php:249
+#: single_pages/dashboard/store/settings.php:123
+#: single_pages/dashboard/store/settings.php:286
+#: single_pages/dashboard/store/settings/shipping.php:32
+#: single_pages/dashboard/store/settings/shipping.php:100
+#: single_pages/dashboard/store/settings/tax.php:168
+msgid "Enabled"
+msgstr "Aktiveret"
+
+#: single_pages/dashboard/store/discounts.php:112
+msgid "automatically"
+msgstr "automatisk"
+
+#: single_pages/dashboard/store/discounts.php:115
+msgid "when single use code entered"
+msgstr "når engangsbrug kode indtastes"
+
+#: single_pages/dashboard/store/discounts.php:116
+msgid "of"
+msgstr "af"
+
+#: single_pages/dashboard/store/discounts.php:116
+msgid "codes available"
+msgstr "koder til rådighed"
+
+#: single_pages/dashboard/store/discounts.php:118
+msgid "when code entered"
+msgstr "når koden indtastes"
+
+#: single_pages/dashboard/store/discounts.php:119
+msgid "code"
+msgstr "kode"
+
+#: single_pages/dashboard/store/discounts.php:119
+msgid "codes"
+msgstr "koder"
+
+#: single_pages/dashboard/store/discounts.php:119
+msgid "configured"
+msgstr "konfigureret"
+
+#: single_pages/dashboard/store/discounts.php:129
+msgid "to specific product groups"
+msgstr "til specifikke produktgrupper"
+
+#: single_pages/dashboard/store/discounts.php:131
+msgid "when product groups found in cart"
+msgstr "når produktgrupper findes i indkøbskurv"
+
+#: single_pages/dashboard/store/discounts.php:138
+msgid "to specific user groups"
+msgstr "til specifikke brugergrupper"
+
+#: single_pages/dashboard/store/discounts.php:145
+#, php-format
+msgid "when %s to %s products in cart"
+msgstr "når %s til %s produkter i indkøbsvogn"
+
+#: single_pages/dashboard/store/discounts.php:147
+#, php-format
+msgid "when %s or more products in cart"
+msgstr "når %s eller flere produkter i indkøbsvogn"
+
+#: single_pages/dashboard/store/discounts.php:162
+msgid "starts"
+msgstr "starter"
+
+#: single_pages/dashboard/store/discounts.php:166
+msgid "expires"
+msgstr "udløber"
+
+#: single_pages/dashboard/store/discounts.php:170
+msgid "always"
+msgstr "altid"
+
+#: single_pages/dashboard/store/discounts.php:185
+msgid "Manage Codes"
+msgstr "Administrer Koder"
+
+#: single_pages/dashboard/store/discounts.php:223
+#: single_pages/dashboard/store/products/groups.php:67
+#: single_pages/dashboard/store/settings/shipping.php:120
+#: single_pages/dashboard/store/settings/tax.php:154
+#: single_pages/dashboard/store/settings/tax.php:183
+msgid "Delete"
+msgstr "Slet"
+
+#: single_pages/dashboard/store/discounts.php:254
+msgid "Display Text"
+msgstr "Vis Tekst"
+
+#: single_pages/dashboard/store/discounts.php:261
+msgid "Deduction Type"
+msgstr "Fratræknings Type"
+
+#: single_pages/dashboard/store/discounts.php:262
+msgid "Percentage"
+msgstr "Procentsats"
+
+#: single_pages/dashboard/store/discounts.php:263
+msgid "Deduct value once"
+msgstr "Fratræk værdien en gang"
+
+#: single_pages/dashboard/store/discounts.php:264
+msgid "Deduct value from each matching item"
+msgstr "Træk værdien fra hver matchende vare"
+
+#: single_pages/dashboard/store/discounts.php:265
+msgid "Change to value"
+msgstr "Skift til værdi"
+
+#: single_pages/dashboard/store/discounts.php:277
+msgid "Percentage Discount"
+msgstr "Procent Rabat"
+
+#: single_pages/dashboard/store/discounts.php:293
+msgid "Value"
+msgstr "Værdi"
+
+#: single_pages/dashboard/store/discounts.php:305
+msgid "Apply To"
+msgstr "Anvend på"
+
+#: single_pages/dashboard/store/discounts.php:309
+msgid "Items In Cart"
+msgstr "Vare i Kurven"
+
+#: single_pages/dashboard/store/discounts.php:314
+msgid "Automatically, (when matching all restrictions)"
+msgstr "Automatisk, (når det matcher alle restriktioner)"
+
+#: single_pages/dashboard/store/discounts.php:315
+msgid "When valid code entered"
+msgstr "Når gyldig kode indtastes"
+
+#: single_pages/dashboard/store/discounts.php:320
+msgid "Single use codes"
+msgstr "Enkelt brugs koder"
+
+#: single_pages/dashboard/store/discounts.php:323
+msgid "Codes can be entered after creating rule"
+msgstr "Koder kan indtastes efter oprettelse af regel"
+
+#: single_pages/dashboard/store/discounts.php:333
+msgid "Starts"
+msgstr "starter"
+
+#: single_pages/dashboard/store/discounts.php:336
+msgid "Immedately"
+msgstr "Omgående"
+
+#: single_pages/dashboard/store/discounts.php:336
+msgid "From a specified date"
+msgstr "Fra en bestemt dato"
+
+#: single_pages/dashboard/store/discounts.php:346
+msgid "Ends"
+msgstr "Stopper"
+
+#: single_pages/dashboard/store/discounts.php:349
+msgid "Never"
+msgstr "Aldrig"
+
+#: single_pages/dashboard/store/discounts.php:349
+msgid "At a specified date"
+msgstr "På en bestemt dato"
+
+#: single_pages/dashboard/store/discounts.php:363
+#: single_pages/dashboard/store/products.php:507
+msgid "No Product Groups Available"
+msgstr "Ingen Produktgrupper Tilgængelig"
+
+#: single_pages/dashboard/store/discounts.php:377
+msgid "User Groups"
+msgstr "Brugergrupper"
+
+#: single_pages/dashboard/store/discounts.php:379
+msgid "Select User Groups"
+msgstr "Vælg Brugergrupper"
+
+#: single_pages/dashboard/store/discounts.php:397
+msgid "Minimum Quantity in Cart"
+msgstr "Minimums Mængde i Indkøbsvogn"
+
+#: single_pages/dashboard/store/discounts.php:403
+msgid "Maximum Quantity in Cart"
+msgstr "Maksimal Mængde i Indkøbskurven"
+
+#: single_pages/dashboard/store/discounts.php:412
+msgid "Description / Notes"
+msgstr "Beskrivelse / Noter"
+
+#: single_pages/dashboard/store/discounts.php:422
+#: single_pages/dashboard/store/products/categories.php:49
+#: single_pages/dashboard/store/products/groups.php:151
+msgid "Cancel"
+msgstr "Annuller"
+
+#: single_pages/dashboard/store/discounts.php:432
+msgid "Are you sure you want to delete this discount rule?"
+msgstr "Er du sikker på at du vil slette denne rabat regel?"
+
+#: single_pages/dashboard/store/discounts.php:512
+msgid "The following codes are invalid or are already active:"
+msgstr "Følgende koder er  ugyldige eller er allerede aktive:"
+
+#: single_pages/dashboard/store/discounts.php:519
+msgid "Current Codes"
+msgstr "Aktuelle Koder"
+
+#: single_pages/dashboard/store/discounts.php:523
+msgid "Single Use Codes"
+msgstr "Enkelt Brugs Koder"
+
+#: single_pages/dashboard/store/discounts.php:525
+msgid "Codes can be repeatedly used"
+msgstr "Koder kan anvendes gentagne gange"
+
+#: single_pages/dashboard/store/discounts.php:534
+msgid "Used"
+msgstr "Brugt"
+
+#: single_pages/dashboard/store/discounts.php:545
+msgid "View Order"
+msgstr "Vis Ordre"
+
+#: single_pages/dashboard/store/discounts.php:551
+msgid "Available"
+msgstr "Tilgængelig"
+
+#: single_pages/dashboard/store/discounts.php:580
+msgid "No codes specified"
+msgstr "Ingen koder specificeret"
+
+#: single_pages/dashboard/store/discounts.php:586
+#: single_pages/dashboard/store/discounts.php:595
+msgid "Add Codes"
+msgstr "Tilføj Koder"
+
+#: single_pages/dashboard/store/discounts.php:589
+msgid "Code(s)"
+msgstr "Kode (r)"
+
+#: single_pages/dashboard/store/discounts.php:591
+msgid "Seperate codes via lines or commas. Codes are case-insensitive."
+msgstr ""
+"Separat koder via linjer eller kommaer. Koder er både store og små bogstaver."
+
+#: single_pages/dashboard/store/discounts.php:602
+msgid "Return to Discount Rules"
+msgstr "Retur til Rabat Regler"
+
+#: single_pages/dashboard/store/orders.php:14
+msgid "Print Order Slip"
+msgstr "Udskriv Ordre Kvittering"
+
+#: single_pages/dashboard/store/orders.php:197
+msgid "Displayed"
+msgstr "Vises"
+
+#: single_pages/dashboard/store/orders.php:200
+msgid "Triggered"
+msgstr "Udløst"
+
+#: single_pages/dashboard/store/orders.php:217
+msgid "from products"
+msgstr "fra produkter"
+
+#: single_pages/dashboard/store/orders.php:233
+msgid "set as price"
+msgstr "sæt som pris"
+
+#: single_pages/dashboard/store/orders.php:243
+msgid "by code"
+msgstr "efter kode"
+
+#: single_pages/dashboard/store/orders.php:243
+msgid "Automatically"
+msgstr "Automatisk"
+
+#: single_pages/dashboard/store/orders.php:293
+msgid "Carrier"
+msgstr "Transportør"
+
+#: single_pages/dashboard/store/orders.php:297
+msgid "Tracking Code"
+msgstr "Sporingskode"
+
+#: single_pages/dashboard/store/orders.php:301
+msgid "View shipment tracking"
+msgstr "Se forsendelsessporing"
+
+#: single_pages/dashboard/store/orders.php:336
+#: single_pages/dashboard/store/orders.php:595
+msgid "Fulfilment"
+msgstr "Opfyldelse"
+
+#: single_pages/dashboard/store/orders.php:340
+#: single_pages/dashboard/store/orders.php:410
+msgid "Status"
+msgstr "Status"
+
+#: single_pages/dashboard/store/orders.php:364
+msgid "Update Fulfilment Status"
+msgstr "Opdatering Indfrielses Status"
+
+#: single_pages/dashboard/store/orders.php:381
+msgid "Resend Notification Email"
+msgstr "Gensend Faktura Email"
+
+#: single_pages/dashboard/store/orders.php:390
+msgid "Resend Notification"
+msgstr "Gensend Faktura E-mail"
+
+#: single_pages/dashboard/store/orders.php:411
+msgid "Date / Reference"
+msgstr "Dato / Reference"
+
+#: single_pages/dashboard/store/orders.php:412
+msgid "By"
+msgstr "Af"
+
+#: single_pages/dashboard/store/orders.php:424
+msgid "Ref"
+msgstr "Ref."
+
+#: single_pages/dashboard/store/orders.php:431
+msgid "payment"
+msgstr "Betaling"
+
+#: single_pages/dashboard/store/orders.php:438
+msgid "Are you sure you wish to reverse this payment?"
+msgstr "Er du sikker på du ønsker at reverserer denne betaling?"
+
+#: single_pages/dashboard/store/orders.php:438
+#: single_pages/dashboard/store/orders.php:462
+msgid "reverse"
+msgstr "omvendt"
+
+#: single_pages/dashboard/store/orders.php:462
+msgid "Are you sure you wish to reverse this refund?"
+msgstr "Er du sikker på du ønsker at reverserer denne refusion?"
+
+#: single_pages/dashboard/store/orders.php:477
+msgid "Update Payment Status"
+msgstr "Opdater Betaling Status"
+
+#: single_pages/dashboard/store/orders.php:488
+msgid "Mark Paid"
+msgstr "Marker Betalt"
+
+#: single_pages/dashboard/store/orders.php:494
+msgid "Refund Reason"
+msgstr "Tilbagebetaling Årsag"
+
+#: single_pages/dashboard/store/orders.php:497
+msgid "Mark Refunded"
+msgstr "Marker Refunderet"
+
+#: single_pages/dashboard/store/orders.php:509
+msgid "Resend Invoice Email"
+msgstr "Gensend Faktura Email"
+
+#: single_pages/dashboard/store/orders.php:518
+msgid "Resend Invoice"
+msgstr "Gensend Faktura"
+
+#: single_pages/dashboard/store/orders.php:529
+#: single_pages/dashboard/store/orders.php:532
+msgid "Cancel Order"
+msgstr "Annuller Ordre"
+
+#: single_pages/dashboard/store/orders.php:532
+msgid "Are you sure you wish to cancel this order?"
+msgstr "Er du sikker på at du ønsker at annullere denne ordre?"
+
+#: single_pages/dashboard/store/orders.php:538
+msgid "Are you sure you wish to reverse this cancellation?"
+msgstr "Er du sikker på du ønsker at reverserer denne annullering?"
+
+#: single_pages/dashboard/store/orders.php:538
+msgid "Reverse Cancellation"
+msgstr "Reverser Annullering"
+
+#: single_pages/dashboard/store/orders.php:543
+#: single_pages/dashboard/store/orders.php:544
+msgid "Delete Order"
+msgstr "Slet Ordre"
+
+#: single_pages/dashboard/store/orders.php:544
+msgid ""
+"Are you sure you wish to completely delete this order? The order number will "
+"be reused."
+msgstr ""
+"Er du sikker på du ønsker at helt slette denne ordre? Ordrenummer vil blive "
+"genbrugt."
+
+#: single_pages/dashboard/store/orders.php:563
+msgid "All Statuses"
+msgstr "Alle Statusser"
+
+#: single_pages/dashboard/store/orders.php:577
+msgid "Search Orders"
+msgstr "﻿Søg Ordrer"
+
+#: single_pages/dashboard/store/orders.php:580
+#: single_pages/dashboard/store/products.php:1594
+msgid "Search"
+msgstr "Søg"
+
+#: single_pages/dashboard/store/orders.php:590
+#, php-format
+msgid "Order %s"
+msgstr "Ordre %s"
+
+#: single_pages/dashboard/store/orders.php:591
+msgid "Customer Name"
+msgstr "Kundenavn"
+
+#: single_pages/dashboard/store/orders.php:596
+#: single_pages/dashboard/store/orders.php:658
+msgid "View"
+msgstr "Vis"
+
+#: single_pages/dashboard/store/orders.php:629
+msgid "Not found"
+msgstr "Ikke fundet"
+
+#: single_pages/dashboard/store/orders.php:667
+msgid "No Orders Found"
+msgstr "Ingen Ordrer Fundet"
+
+#: single_pages/dashboard/store/products.php:34
+msgid "Delete Product"
+msgstr "Slet Produkt"
+
+#: single_pages/dashboard/store/products.php:46
+msgid "Are you sure you want to delete this product?"
+msgstr "Er du sikker på at du vil slette dette produkt?"
+
+#: single_pages/dashboard/store/products.php:60
+msgid "Overview"
+msgstr "Oversigt"
+
+#: single_pages/dashboard/store/products.php:61
+msgid "Categories and Groups"
+msgstr "Kategorier og Grupper"
+
+#: single_pages/dashboard/store/products.php:63
+msgid "Images"
+msgstr "Billeder"
+
+#: single_pages/dashboard/store/products.php:65
+#: single_pages/dashboard/store/products.php:1322
+msgid "Related Products"
+msgstr "Relaterede Produkter"
+
+#: single_pages/dashboard/store/products.php:66
+msgid "Attributes"
+msgstr "Attributter"
+
+#: single_pages/dashboard/store/products.php:67
+msgid "Memberships and Downloads"
+msgstr "Medlemskaber og Downloads"
+
+#: single_pages/dashboard/store/products.php:68
+msgid "Detail Page"
+msgstr "Detalje Side"
+
+#: single_pages/dashboard/store/products.php:82
+msgid "Code / SKU"
+msgstr "Varenummer / SKU"
+
+#: single_pages/dashboard/store/products.php:95
+#: single_pages/dashboard/store/products.php:96
+#: single_pages/dashboard/store/products.php:1604
+#: single_pages/dashboard/store/products.php:1629
+msgid "Active"
+msgstr "Aktiv"
+
+#: single_pages/dashboard/store/products.php:96
+#: single_pages/dashboard/store/products.php:1631
+#: single_pages/dashboard/store/products/categories.php:33
+msgid "Inactive"
+msgstr "Ikke Aktiv"
+
+#: single_pages/dashboard/store/products.php:101
+msgid "Featured Product"
+msgstr "Udvalgte Produkt"
+
+#: single_pages/dashboard/store/products.php:119
+msgid "Default Price"
+msgstr "Standard Pris"
+
+#: single_pages/dashboard/store/products.php:125
+msgid "No Price Set"
+msgstr "Ingen Pris Sat"
+
+#: single_pages/dashboard/store/products.php:131
+#: single_pages/dashboard/store/products.php:1224
+msgid "Sale Price"
+msgstr "Tilbudspris"
+
+#: single_pages/dashboard/store/products.php:141
+msgid "Price Suggestions"
+msgstr "Pris Forslag"
+
+#: single_pages/dashboard/store/products.php:164
+msgid "Minimum Price"
+msgstr "Minimum Pris"
+
+#: single_pages/dashboard/store/products.php:176
+msgid "Maximum Price"
+msgstr "Maksimum Pris"
+
+#: single_pages/dashboard/store/products.php:191
+msgid "Allow customer to enter price"
+msgstr "Tillad kunden at indtaste prisen"
+
+#: single_pages/dashboard/store/products.php:202
+msgid "Quantity based pricing"
+msgstr "Mængdebaseret prissætning"
+
+#: single_pages/dashboard/store/products.php:211
+#: single_pages/dashboard/store/reports/products.php:15
+msgid "From"
+msgstr "Fra"
+
+#: single_pages/dashboard/store/products.php:212
+#: single_pages/dashboard/store/reports/products.php:23
+msgid "To"
+msgstr "Til"
+
+#: single_pages/dashboard/store/products.php:219
+msgid "Add Tier"
+msgstr "Tilføj Tier"
+
+#: single_pages/dashboard/store/products.php:321
+msgid "Taxable"
+msgstr "Afgiftspligtig"
+
+#: single_pages/dashboard/store/products.php:327
+#: single_pages/dashboard/store/settings/tax.php:131
+msgid "Tax Class"
+msgstr "Afgift Class"
+
+#: single_pages/dashboard/store/products.php:335
+#: single_pages/dashboard/store/products.php:1172
+#: single_pages/dashboard/store/products.php:1605
+msgid "Stock Level"
+msgstr "Antal på Lager"
+
+#: single_pages/dashboard/store/products.php:341
+#: single_pages/dashboard/store/products.php:1185
+#: single_pages/dashboard/store/products.php:1639
+msgid "Unlimited"
+msgstr "Ubegrænset"
+
+#: single_pages/dashboard/store/products.php:395
+msgid "Allow Back Orders"
+msgstr "Tillad Restordrer"
+
+#: single_pages/dashboard/store/products.php:400
+msgid "Offer quantity selection"
+msgstr "Tilbyd valg af mængde"
+
+#: single_pages/dashboard/store/products.php:401
+msgid "No, only allow one of this product in a cart"
+msgstr "Nej, tillade kun et af dette produkt i inkøbskurven"
+
+#: single_pages/dashboard/store/products.php:409
+msgid "Allow Decimal Quantities"
+msgstr "Tillad decimal antal"
+
+#: single_pages/dashboard/store/products.php:410
+msgid "No, whole number quantities only"
+msgstr "Nej, kun hele nummer antal"
+
+#: single_pages/dashboard/store/products.php:415
+msgid "Maximum Quantity (as single cart item)"
+msgstr "Maksimal mængde (som enkelt indkøbsvogns-vare)"
+
+#: single_pages/dashboard/store/products.php:424
+msgid "Quantity Label"
+msgstr "Labeltekst for Antal"
+
+#: single_pages/dashboard/store/products.php:431
+msgid "Quantity Steps"
+msgstr "Antal Trin"
+
+#: single_pages/dashboard/store/products.php:455
+msgid "Short Description"
+msgstr "Kort Beskrivelse:"
+
+#: single_pages/dashboard/store/products.php:463
+msgid "Product Details (Long Description)"
+msgstr "Produktdetaljer (Lang Beskrivelse)"
+
+#: single_pages/dashboard/store/products.php:474
+msgid "Categorized under pages"
+msgstr "Kategoriseret under sider"
+
+#: single_pages/dashboard/store/products.php:504
+msgid "In product groups"
+msgstr "I produktgrupper"
+
+#: single_pages/dashboard/store/products.php:565
+msgid "Product is Shippable"
+msgstr "Produktet skal sendes med fragt"
+
+#: single_pages/dashboard/store/products.php:580
+msgid "Number Of Items"
+msgstr "Antal af Emner"
+
+#: single_pages/dashboard/store/products.php:584
+msgid "Product can be packaged with other items"
+msgstr "Produktet kan pakkes sammen med andre genstande"
+
+#: single_pages/dashboard/store/products.php:585
+msgid "No, must be shipped as seperate package"
+msgstr "Nej, skal sendes som separat pakke"
+
+#: single_pages/dashboard/store/products.php:591
+#: single_pages/dashboard/store/products.php:1258
+msgid "Length"
+msgstr "Længde"
+
+#: single_pages/dashboard/store/products.php:599
+#: single_pages/dashboard/store/products.php:1269
+msgid "Width"
+msgstr "Bredde"
+
+#: single_pages/dashboard/store/products.php:607
+#: single_pages/dashboard/store/products.php:1281
+msgid "Height"
+msgstr "Højde"
+
+#: single_pages/dashboard/store/products.php:620
+#: single_pages/dashboard/store/products.php:1294
+msgid "Or, Package(s) Data"
+msgstr "Eller Pakke(r) Data"
+
+#: single_pages/dashboard/store/products.php:621
+#: single_pages/dashboard/store/products.php:627
+#: single_pages/dashboard/store/products.php:1297
+#, php-format
+msgid "%s LENGTHxWIDTHxHEIGHT"
+msgstr "%s LÆNGDExBREDDExHØJDE"
+
+#: single_pages/dashboard/store/products.php:623
+msgid "Values entered will override individual set weights and sizes"
+msgstr ""
+"Indtastede værdier vil tilsidesætte individuelle indstillede vægte og "
+"størrelser"
+
+#: single_pages/dashboard/store/products.php:625
+msgid "Enter packages on new lines, using the format:"
+msgstr "Indtast pakker på nye linjer ved hjælp af formatet:"
+
+#: single_pages/dashboard/store/products.php:629
+msgid "E.g. 10 4x6x8"
+msgstr "F.eks. 10 4x6x8"
+
+#: single_pages/dashboard/store/products.php:640
+msgid "Primary Product Image"
+msgstr "Primær Produktbillede"
+
+#: single_pages/dashboard/store/products.php:642
+#: single_pages/dashboard/store/products.php:1216
+msgid "Choose Image"
+msgstr "Vælg Billede"
+
+#: single_pages/dashboard/store/products.php:645
+msgid "Additional Images"
+msgstr "Yderligere Billeder"
+
+#: single_pages/dashboard/store/products.php:659
+msgid "Choose Images"
+msgstr "Vælg Billeder"
+
+#: single_pages/dashboard/store/products.php:699
+#: single_pages/dashboard/store/products.php:839
+msgid "Option List"
+msgstr "Option Liste"
+
+#: single_pages/dashboard/store/products.php:700
+msgid "Text Field"
+msgstr "Tekstfelt"
+
+#: single_pages/dashboard/store/products.php:701
+msgid "Text Area"
+msgstr "Tekstområde"
+
+#: single_pages/dashboard/store/products.php:702
+#: single_pages/dashboard/store/products.php:842
+msgid "Checkbox"
+msgstr "Afkrydsningsboks"
+
+#: single_pages/dashboard/store/products.php:703
+#: single_pages/dashboard/store/products.php:843
+msgid "Hidden Value"
+msgstr "Skjult Værdi"
+
+#: single_pages/dashboard/store/products.php:716
+msgid "Delete the Option Group"
+msgstr "Slet Option Gruppe"
+
+#: single_pages/dashboard/store/products.php:725
+msgid "Option Name"
+msgstr "Option Navn"
+
+#: single_pages/dashboard/store/products.php:731
+msgid "Option Handle"
+msgstr "Option Handle"
+
+#: single_pages/dashboard/store/products.php:732
+#: single_pages/dashboard/store/settings.php:136
+#: single_pages/dashboard/store/settings.php:312
+#: single_pages/dashboard/store/settings/tax.php:73
+#: single_pages/dashboard/store/settings/tax.php:82
+msgid "Optional"
+msgstr "Valgfrit"
+
+#: single_pages/dashboard/store/products.php:736
+msgid "Display Type"
+msgstr "Visningstype"
+
+#: single_pages/dashboard/store/products.php:737
+msgid "Drop-down"
+msgstr "Dropdown"
+
+#: single_pages/dashboard/store/products.php:737
+msgid "Radio Buttons"
+msgstr "Radioknapper"
+
+#: single_pages/dashboard/store/products.php:745
+msgid "In Variations"
+msgstr "I Variationer"
+
+#: single_pages/dashboard/store/products.php:767
+msgid "Add Option"
+msgstr "Tilføj Option"
+
+#: single_pages/dashboard/store/products.php:840
+msgid "Text Input"
+msgstr "Tekst felt"
+
+#: single_pages/dashboard/store/products.php:841
+msgid "Text Area Input"
+msgstr "Tekst Område"
+
+#: single_pages/dashboard/store/products.php:988
+msgid "Option"
+msgstr "Option"
+
+#: single_pages/dashboard/store/products.php:996
+msgid "Hide"
+msgstr "Skjul"
+
+#: single_pages/dashboard/store/products.php:1100
+msgid "Variations"
+msgstr "Variationer"
+
+#: single_pages/dashboard/store/products.php:1102
+msgid "Options have different prices, SKUs or stock levels"
+msgstr "Optioner har forskellige priser, varenumre (SKU) og lagerbeholdning"
+
+#: single_pages/dashboard/store/products.php:1105
+msgid "After creating options add the product to configure product variations."
+msgstr ""
+"Når du har oprettet optioner tilføje produktet for at konfigurere produktet "
+"variationer."
+
+#: single_pages/dashboard/store/products.php:1114
+msgid ""
+"Warning: Product options have changed that will create different variations "
+"- any existing variation data will be lost"
+msgstr ""
+"Advarsel: Produktindstillingerne er ændret, som vil skabe forskellige "
+"variationer - alle eksisterende variationsdata vil gå tabt"
+
+#: single_pages/dashboard/store/products.php:1117
+msgid ""
+"Product options have changed, update the product to configure updated "
+"variations"
+msgstr ""
+"Produkt optioner er ændret, opdatere produktet for at konfigurere opdaterede "
+"variationer"
+
+#: single_pages/dashboard/store/products.php:1144
+msgid "More options"
+msgstr "Flere valg"
+
+#: single_pages/dashboard/store/products.php:1163
+msgid "SKU"
+msgstr "Varenummer (SKU)"
+
+#: single_pages/dashboard/store/products.php:1166
+msgid "Base SKU"
+msgstr "Grund Varenummer (SKU)"
+
+#: single_pages/dashboard/store/products.php:1207
+#: single_pages/dashboard/store/products.php:1602
+msgid "Primary Image"
+msgstr "Primær Billede"
+
+#: single_pages/dashboard/store/products.php:1231
+msgid "Base Sale Price"
+msgstr "Grund Udsalgspris"
+
+#: single_pages/dashboard/store/products.php:1243
+msgid "Base Weight"
+msgstr "Grund Vægt"
+
+#: single_pages/dashboard/store/products.php:1250
+msgid "Number of Items"
+msgstr "Antal af Emner"
+
+#: single_pages/dashboard/store/products.php:1253
+msgid "Base Number Of Items"
+msgstr "Grund Antal af Emner"
+
+#: single_pages/dashboard/store/products.php:1262
+msgid "Base Length"
+msgstr "Grund Længde"
+
+#: single_pages/dashboard/store/products.php:1274
+msgid "Base Width"
+msgstr "Grund Bredde"
+
+#: single_pages/dashboard/store/products.php:1285
+msgid "Base Height"
+msgstr "Grund Højde"
+
+#: single_pages/dashboard/store/products.php:1308
+msgid "Maximum variations reached"
+msgstr "Maksimum variationer nået"
+
+#: single_pages/dashboard/store/products.php:1312
+msgid "Update the product to display variations"
+msgstr "Opdater produktet for at vise variationer"
+
+#: single_pages/dashboard/store/products.php:1392
+msgid ""
+"While you can set and assign attributes, they're are currently only able to "
+"be accessed programmatically"
+msgstr ""
+"Mens du kan indstille og tildele attributter, kan de i øjeblikket kun tilgås "
+"via programmering"
+
+#: single_pages/dashboard/store/products.php:1411
+msgid "You haven't created product attributes"
+msgstr "Du har ikke oprettet produktattributter"
+
+#: single_pages/dashboard/store/products.php:1425
+msgid "File to download on purchase"
+msgstr "Fil til download efter køb"
+
+#: single_pages/dashboard/store/products.php:1426
+msgid "Choose File"
+msgstr "Vælg Fil"
+
+#: single_pages/dashboard/store/products.php:1434
+#, php-format
+msgid ""
+"In order to have digital downloads, you need to %sturn on advanced "
+"permissions%s."
+msgstr ""
+"For at have digitale downloads, skal du %sslå avancerede tilladelser til%s."
+
+#: single_pages/dashboard/store/products.php:1441
+msgid "Create user account on purchase"
+msgstr "Opret brugerkonto ved køb"
+
+#: single_pages/dashboard/store/products.php:1442
+msgid ""
+"When checked, if customer is guest, will create a user account on purchase"
+msgstr ""
+"Når dette er markeret, hvis kunden er gæst, vil oprette en brugerkonto ved "
+"køb"
+
+#: single_pages/dashboard/store/products.php:1446
+msgid "On purchase add user to user groups"
+msgstr "Ved køb føje brugeren til brugergrupper"
+
+#: single_pages/dashboard/store/products.php:1448
+msgid "Select user groups"
+msgstr "Vælg brugergrupper"
+
+#: single_pages/dashboard/store/products.php:1461
+msgid "Send customer directly to checkout when added to cart"
+msgstr "Send kunden direkte til check-out, når tilføjet til indkøbskurv"
+
+#: single_pages/dashboard/store/products.php:1466
+msgid "Prevent this item from being in the cart with other items"
+msgstr "Forhindre at denne vare er i indkøbsvognen med andre vare"
+
+#: single_pages/dashboard/store/products.php:1482
+msgid "Detail Page is set to: "
+msgstr "Detalje Side er sat til:"
+
+#: single_pages/dashboard/store/products.php:1487
+msgid "This product is missing a corresponding page in the sitemap"
+msgstr "Dette produkt er mangler en tilsvarende side i sitemap"
+
+#: single_pages/dashboard/store/products.php:1494
+msgid "Page Template"
+msgstr "Sideskabelon"
+
+#: single_pages/dashboard/store/products.php:1499
+msgid "Any changes to the product will not be saved. Create product page?"
+msgstr ""
+"Eventuelle ændringer i produktet vil ikke blive gemt. Opret produktside?"
+
+#: single_pages/dashboard/store/products.php:1499
+msgid "Generate a Product Page"
+msgstr "Opret en Produkt Side"
+
+#: single_pages/dashboard/store/products.php:1503
+msgid "A Page Type with the handle store_product was not found"
+msgstr "Der blev ikke fundet en sidetype med handle store_product"
+
+#: single_pages/dashboard/store/products.php:1508
+msgid "No page is configured as the parent page for new products"
+msgstr "Ingen side er konfigureret som den overordnede side for nye produkter"
+
+#: single_pages/dashboard/store/products.php:1520
+msgid "Cancel / View All Products"
+msgstr "Annuller / Vis alle produkter"
+
+#: single_pages/dashboard/store/products.php:1521
+#, php-format
+msgid "%s Product"
+msgstr "%s Produkt"
+
+#: single_pages/dashboard/store/products.php:1548
+msgid "Manage Attributes"
+msgstr "Administrer Attributter"
+
+#: single_pages/dashboard/store/products.php:1549
+msgid "Manage Groups"
+msgstr "Administrer Grupper"
+
+#: single_pages/dashboard/store/products.php:1560
+msgid "All Groups"
+msgstr "Alle Grupper"
+
+#: single_pages/dashboard/store/products.php:1574
+#, php-format
+msgid "Filtering By: %s"
+msgstr "Filtrere efter: %s"
+
+#: single_pages/dashboard/store/products.php:1574
+msgid "Filter By Product Group"
+msgstr "Filtrer efter Produktgrupper"
+
+#: single_pages/dashboard/store/products.php:1590
+msgid "Search by Name or SKU"
+msgstr "Søg efter Navn eller SKU"
+
+#: single_pages/dashboard/store/products.php:1607
+#: single_pages/dashboard/store/products.php:1652
+msgid "Featured"
+msgstr "Udvalgte"
+
+#: single_pages/dashboard/store/products.php:1608
+msgid "Groups"
+msgstr "Grupper"
+
+#: single_pages/dashboard/store/products.php:1637
+#: single_pages/dashboard/store/products.php:1644
+msgid "Multiple"
+msgstr "Multiple"
+
+#: single_pages/dashboard/store/products.php:1645
+msgid "Base price"
+msgstr "Grundpris"
+
+#: single_pages/dashboard/store/products.php:1654
+msgid "Not Featured"
+msgstr "Ikke Udvalgte"
+
+#: single_pages/dashboard/store/products.php:1693
+msgid "New Product Name"
+msgstr "Nyt Produktnavn"
+
+#: single_pages/dashboard/store/products.php:1694
+msgid "(Copy)"
+msgstr "(Kopi)"
+
+#: single_pages/dashboard/store/products.php:1698
+msgid "New Product SKU"
+msgstr "Nyt Produkt Varenummer (SKU)"
+
+#: single_pages/dashboard/store/products/categories.php:8
+msgid "The following pages have been used to categorise products:"
+msgstr "De følgende sider er blevet anvendt til at kategorisere produkter:"
+
+#: single_pages/dashboard/store/products/categories.php:10
+msgid "No pages have been used to categorise products"
+msgstr "Ingen sider er blevet brugt til at kategorisere produkter"
+
+#: single_pages/dashboard/store/products/categories.php:16
+#, php-format
+msgid "%d product"
+msgid_plural "%d products"
+msgstr[0] "%d produkt"
+msgstr[1] "%d produkter"
+
+#: single_pages/dashboard/store/products/categories.php:25
+msgid "Products within category"
+msgstr "Produkter i kategori"
+
+#: single_pages/dashboard/store/products/categories.php:50
+msgid "Save Category Product Order"
+msgstr "Gem Kategori Produkt Sorteringsrækkefølge"
+
+#: single_pages/dashboard/store/products/groups.php:2
+msgid "Access Denied."
+msgstr "Adgang Nægtet."
+
+#: single_pages/dashboard/store/products/groups.php:21
+#: single_pages/dashboard/store/products/groups.php:75
+msgid "Group Name"
+msgstr "Gruppenavn"
+
+#: single_pages/dashboard/store/products/groups.php:54
+msgid "You have not added a group yet"
+msgstr "Du har ikke tilføjet en gruppe endnu"
+
+#: single_pages/dashboard/store/products/groups.php:79
+msgid "Products within group"
+msgstr "Produkter inden i gruppe"
+
+#: single_pages/dashboard/store/products/groups.php:140
+msgid "Are you sure you want to delete this product group?"
+msgstr "Er du sikker på, at du vil slette denne produktgruppe?"
+
+#: single_pages/dashboard/store/reports/products.php:31
+msgid "Order By"
+msgstr "Sortering Efter"
+
+#: single_pages/dashboard/store/reports/products.php:33
+#: single_pages/dashboard/store/reports/products.php:48
+msgid "Quantity Sold"
+msgstr "Antal Solgt"
+
+#: single_pages/dashboard/store/reports/products.php:38
+msgid "Filter Results"
+msgstr "Filtrer Resultat"
+
+#: single_pages/dashboard/store/reports/products.php:75
+msgid "Export CSV"
+msgstr "Eksporter CSV"
+
+#: single_pages/dashboard/store/reports/products.php:155
+msgid "Total Quantity Sold"
+msgstr "Samlet mængde Solgt"
+
+#: single_pages/dashboard/store/reports/sales.php:49
+msgid "Past 30 Days"
+msgstr "Sidste 30 dage"
+
+#: single_pages/dashboard/store/reports/sales.php:183
+msgid "View Orders by Date"
+msgstr "Vis ordrer efter dato"
+
+#: single_pages/dashboard/store/reports/sales.php:198
+msgid "Summary"
+msgstr "Sum"
+
+#: single_pages/dashboard/store/reports/sales.php:206
+msgid "Export"
+msgstr "Eksportér"
+
+#: single_pages/dashboard/store/reports/sales.php:215
+msgid "Export to CSV"
+msgstr "Eksportér til CSV fil"
+
+#: single_pages/dashboard/store/settings.php:4
+msgid "Shipping Methods"
+msgstr "Forsendelse Metoder"
+
+#: single_pages/dashboard/store/settings.php:5
+msgid "Tax Rates"
+msgstr "Afgifts Sats"
+
+#: single_pages/dashboard/store/settings.php:15
+msgid "Currency"
+msgstr "Valuta"
+
+#: single_pages/dashboard/store/settings.php:18
+msgid "Payments"
+msgstr "Betalinger"
+
+#: single_pages/dashboard/store/settings.php:19
+#: single_pages/dashboard/store/settings.php:174
+msgid "Fulfilment Statuses"
+msgstr "Opfyldelse Statusser"
+
+#: single_pages/dashboard/store/settings.php:20
+msgid "Notifications and Receipts"
+msgstr "Bemærkninger og Kvitteringer"
+
+#: single_pages/dashboard/store/settings.php:22
+msgid "Cart and Checkout"
+msgstr "Kurv og Check-out"
+
+#: single_pages/dashboard/store/settings.php:29
+msgid "Currency Settings"
+msgstr "Valuta Indstillinger"
+
+#: single_pages/dashboard/store/settings.php:32
+msgid "Currency Symbol"
+msgstr "Valuta Symbol"
+
+#: single_pages/dashboard/store/settings.php:37
+msgid "Currency Code"
+msgstr "Valuta Kode"
+
+#: single_pages/dashboard/store/settings.php:43
+msgid "Thousands Separator"
+msgstr "Separator for tusinder"
+
+#: single_pages/dashboard/store/settings.php:45
+msgid "e.g. , or a space"
+msgstr "f.eks eller et mellemrum"
+
+#: single_pages/dashboard/store/settings.php:48
+msgid "Whole Number Separator"
+msgstr "Hele tal Separator"
+
+#: single_pages/dashboard/store/settings.php:50
+msgid "e.g. period or a comma"
+msgstr "f.eks punktum eller et komma"
+
+#: single_pages/dashboard/store/settings.php:57
+msgid "Tax Settings"
+msgstr "Afgifts Indstillinger"
+
+#: single_pages/dashboard/store/settings.php:60
+msgid "Are Prices Entered with Tax Included?"
+msgstr "Er Priser Indtastede med afgift inkluderet?"
+
+#: single_pages/dashboard/store/settings.php:61
+msgid "No, I will enter product prices EXCLUSIVE of tax"
+msgstr "Nej, jeg vil skrive produktpriser UDEN afgift"
+
+#: single_pages/dashboard/store/settings.php:61
+msgid "Yes, I will enter product prices INCLUSIVE of tax"
+msgstr "Ja, jeg vil indtaste produktpriser inklusive afgifter"
+
+#: single_pages/dashboard/store/settings.php:65
+msgid "Enable EU VAT Number Options?"
+msgstr "Aktivér EU-Momsnummer Optioner?"
+
+#: single_pages/dashboard/store/settings.php:66
+msgid "No, I don't need this"
+msgstr "Nej, jeg har ikke brug for dette"
+
+#: single_pages/dashboard/store/settings.php:66
+msgid "Yes, enable VAT Number options"
+msgstr "Ja, aktiver Momsnummer Optioner"
+
+#: single_pages/dashboard/store/settings.php:73
+msgid "Shipping Units"
+msgstr "Forsendelses Enheder"
+
+#: single_pages/dashboard/store/settings.php:77
+msgid "Units for Weight"
+msgstr "Enheder for Vægt"
+
+#: single_pages/dashboard/store/settings.php:79
+msgid "oz"
+msgstr "oz"
+
+#: single_pages/dashboard/store/settings.php:79
+msgid "lb"
+msgstr "pund"
+
+#: single_pages/dashboard/store/settings.php:79
+msgid "kg"
+msgstr "kg"
+
+#: single_pages/dashboard/store/settings.php:79
+msgid "g"
+msgstr "g"
+
+#: single_pages/dashboard/store/settings.php:84
+msgid "Units for Size"
+msgstr "Enheder for Størrelse"
+
+#: single_pages/dashboard/store/settings.php:86
+msgid "in"
+msgstr "i"
+
+#: single_pages/dashboard/store/settings.php:86
+msgid "cm"
+msgstr "cm"
+
+#: single_pages/dashboard/store/settings.php:86
+msgid "mm"
+msgstr "mm"
+
+#: single_pages/dashboard/store/settings.php:94
+msgid "Include Delivery Instructions field in checkout"
+msgstr "Medtag felt for Leverings Instruktioner i checkout"
+
+#: single_pages/dashboard/store/settings.php:98
+msgid "Multiple Packages Support"
+msgstr "Understøtter Flere pakker"
+
+#: single_pages/dashboard/store/settings.php:102
+msgid "Enable Package(s) Data fields"
+msgstr "Aktiver pakke(r) data felter"
+
+#: single_pages/dashboard/store/settings.php:112
+msgid "Payment Methods"
+msgstr "Betalings Metoder"
+
+#: single_pages/dashboard/store/settings.php:131
+msgid "Display Name (on checkout)"
+msgstr "Vist Navn (ved check-out)"
+
+#: single_pages/dashboard/store/settings.php:135
+msgid "Button Label"
+msgstr "Knappens Tekst"
+
+#: single_pages/dashboard/store/settings.php:155
+msgid "No Payment Methods are Installed"
+msgstr "Ingen betalingsmetoder er Installeret"
+
+#: single_pages/dashboard/store/settings.php:184
+msgid "Default Status"
+msgstr "Standard Status"
+
+#: single_pages/dashboard/store/settings.php:185
+msgid "Send Change Notifications to..."
+msgstr "Send Ændringsmeddelelser til…"
+
+#: single_pages/dashboard/store/settings.php:188
+msgid "Site"
+msgstr "Hjemmeside"
+
+#: single_pages/dashboard/store/settings.php:189
+msgid "Customer"
+msgstr "Kunde"
+
+#: single_pages/dashboard/store/settings.php:220
+msgid "No Fulfilment Statuses are available"
+msgstr "Ingen Opfyldte Statusangivelser er tilgængelige"
+
+#: single_pages/dashboard/store/settings.php:228
+msgid "Notification Emails"
+msgstr "Underretnings E-mails"
+
+#: single_pages/dashboard/store/settings.php:231
+#, php-format
+msgid ""
+"Send order notification to email %sseparate multiple emails with commas%s"
+msgstr ""
+"Send ordre meddelelse til e-mail %sadskille flere e-mails med kommaer%s"
+
+#: single_pages/dashboard/store/settings.php:232
+msgid "Email Address"
+msgstr "E-mail adresse"
+
+#: single_pages/dashboard/store/settings.php:235
+msgid "Emails Sent From"
+msgstr "E-mails sendt fra"
+
+#: single_pages/dashboard/store/settings.php:240
+msgid "From Email"
+msgstr "Fra E-mail"
+
+#: single_pages/dashboard/store/settings.php:241
+msgid "From Email Address"
+msgstr "Fra E-mail Adresse"
+
+#: single_pages/dashboard/store/settings.php:247
+#: single_pages/dashboard/store/settings.php:248
+msgid "From Name"
+msgstr "Fra Navn"
+
+#: single_pages/dashboard/store/settings.php:253
+msgid "Receipt Emails"
+msgstr "Kvitterings E-mails"
+
+#: single_pages/dashboard/store/settings.php:256
+msgid "Receipt Email Header Content"
+msgstr "Kvittering E-mail Header indhold"
+
+#: single_pages/dashboard/store/settings.php:262
+msgid "Receipt Email Footer Content"
+msgstr "Kvittering E-mail Footer indhold"
+
+#: single_pages/dashboard/store/settings.php:274
+msgid "Page to Publish Product Pages Under"
+msgstr "Side hvor Produktet skal Udgives Under"
+
+#: single_pages/dashboard/store/settings.php:282
+msgid "Cart and Ordering"
+msgstr "Kurv og Bestilling"
+
+#: single_pages/dashboard/store/settings.php:287
+msgid "Disabled (Catalog Mode)"
+msgstr "Deaktiveret (Katalog Mode)"
+
+#: single_pages/dashboard/store/settings.php:290
+msgid "Guest Checkout"
+msgstr "Gæste Check-out"
+
+#: single_pages/dashboard/store/settings.php:295
+msgid "Always (unless login required for products in cart)"
+msgstr "Altid (medmindre login kræves for produkter i indkøbskurven)"
+
+#: single_pages/dashboard/store/settings.php:296
+msgid "Offer as checkout option"
+msgstr "Tilbyd som check-out option"
+
+#: single_pages/dashboard/store/settings.php:300
+msgid "Address Auto-Complete"
+msgstr "Automatisk Fuldførelse af Adresse"
+
+#: single_pages/dashboard/store/settings.php:302
+msgid "Address Auto-Complete API Key (Google Places)"
+msgstr "Automatisk Fuldførelse af Adresse API-nøgle (Google Places)"
+
+#: single_pages/dashboard/store/settings.php:306
+msgid "Company Name"
+msgstr "Virksomhedsnavn"
+
+#: single_pages/dashboard/store/settings.php:311
+msgid "Hidden"
+msgstr "Skjult"
+
+#: single_pages/dashboard/store/settings.php:321
+msgid "Do not save billing details to user on order"
+msgstr "Gem ikke faktureringsdetaljer til brugeren ved bestilling"
+
+#: single_pages/dashboard/store/settings.php:328
+#: single_pages/dashboard/store/settings.php:345
+msgid "For users in groups"
+msgstr "For brugere i grupper"
+
+#: single_pages/dashboard/store/settings.php:328
+#: single_pages/dashboard/store/settings.php:345
+msgid "All Users/Groups"
+msgstr "Alle Brugere/Grupper"
+
+#: single_pages/dashboard/store/settings.php:334
+msgid "Shipping Details"
+msgstr "Forsendelsesdetaljer"
+
+#: single_pages/dashboard/store/settings.php:338
+msgid "Do not save shipping details to user on order"
+msgstr "Gem ikke forsendelsesdetaljer til brugeren ved bestilling"
+
+#: single_pages/dashboard/store/settings.php:366
+msgid ""
+"Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)"
+msgstr ""
+"Vis ordrer med ufuldstændige betalinger (f.eks. annullerede PayPal-"
+"transaktioner)"
+
+#: single_pages/dashboard/store/settings.php:374
+msgid "Save Settings"
+msgstr "Gem Indstillinger"
+
+#: single_pages/dashboard/store/settings/shipping.php:26
+msgid "Method Name"
+msgstr "Metode Navn"
+
+#: single_pages/dashboard/store/settings/shipping.php:38
+msgid "Details"
+msgstr "Detaljer"
+
+#: single_pages/dashboard/store/settings/shipping.php:60
+#, php-format
+msgid "%s Shipping Method"
+msgstr "%s Shipping Metode"
+
+#: single_pages/dashboard/store/settings/shipping.php:81
+#: single_pages/dashboard/store/settings/tax.php:123
+msgid "General Settings"
+msgstr "Generelle Indstillinger"
+
+#: single_pages/dashboard/store/settings/shipping.php:99
+#, php-format
+msgid "%s Methods"
+msgstr "%s Metoder"
+
+#: single_pages/dashboard/store/settings/shipping.php:115
+#: single_pages/dashboard/store/settings/tax.php:152
+#: single_pages/dashboard/store/settings/tax.php:182
+msgid "Edit"
+msgstr "Redigér"
+
+#: single_pages/dashboard/store/settings/shipping.php:117
+msgid "Disable"
+msgstr "Deaktivér"
+
+#: single_pages/dashboard/store/settings/shipping.php:133
+msgid "No shipping methods are configured"
+msgstr "Ingen forsendelsesmetoder er konfigureret"
+
+#: single_pages/dashboard/store/settings/shipping.php:138
+msgid "No shipping methods are currently enabled"
+msgstr "Ingen forsendelsesmetoder er i øjeblikket aktiveret"
+
+#: single_pages/dashboard/store/settings/tax.php:20
+msgid "Enable Tax Rate"
+msgstr "Aktiver Afgifter"
+
+#: single_pages/dashboard/store/settings/tax.php:26
+msgid "Tax Label"
+msgstr "Afgift Label"
+
+#: single_pages/dashboard/store/settings/tax.php:32
+msgid "Tax Rate %"
+msgstr "Afgifts Sats %"
+
+#: single_pages/dashboard/store/settings/tax.php:42
+msgid "Tax is Based on the"
+msgstr "Afgift er baseret på"
+
+#: single_pages/dashboard/store/settings/tax.php:43
+msgid "Product Total"
+msgstr "Product Total"
+
+#: single_pages/dashboard/store/settings/tax.php:43
+msgid "Product Total + Shipping"
+msgstr "Produkt Total + Fragt"
+
+#: single_pages/dashboard/store/settings/tax.php:46
+msgid "When to Charge Tax"
+msgstr "Hvornår skal der Beregnes Afgift"
+
+#: single_pages/dashboard/store/settings/tax.php:54
+msgid "If the Customers..."
+msgstr "Hvis Kunder..."
+
+#: single_pages/dashboard/store/settings/tax.php:62
+msgid "Matches..."
+msgstr "Matches..."
+
+#: single_pages/dashboard/store/settings/tax.php:73
+msgid "Region"
+msgstr "Region"
+
+#: single_pages/dashboard/store/settings/tax.php:92
+msgid "VAT Number Options"
+msgstr "Moms Nummer Indstillinger"
+
+#: single_pages/dashboard/store/settings/tax.php:99
+msgid "Do not apply tax if a valid VAT number is supplied"
+msgstr "Anvend ikke afgift, hvis et gyldigt momsnummer er indtastet"
+
+#: single_pages/dashboard/store/settings/tax.php:101
+msgid ""
+"If the customer has entered a correctly formatted VAT Number then this tax "
+"will not be applied at checkout."
+msgstr ""
+"Hvis kunden har indtastet et korrekt formateret momsnummer, vil denne afgift "
+"ikke blive anvendt ved checkout."
+
+#: single_pages/dashboard/store/settings/tax.php:113
+#: single_pages/dashboard/store/settings/tax.php:242
+#, php-format
+msgid "%s Tax Rate"
+msgstr "%s Afgifts Sats"
+
+#: single_pages/dashboard/store/settings/tax.php:122
+msgid "Add Tax Class"
+msgstr "Tilføj Afgifts Class"
+
+#: single_pages/dashboard/store/settings/tax.php:132
+msgid "Associated Tax Rates"
+msgstr "Associerede Afgifts Satser"
+
+#: single_pages/dashboard/store/settings/tax.php:166
+msgid "Tax Rate"
+msgstr "Momssats."
+
+#: single_pages/dashboard/store/settings/tax.php:167
+msgid "Rate"
+msgstr "Sats"
+
+#: single_pages/dashboard/store/settings/tax.php:169
+msgid "Applies To"
+msgstr "Gælder for"
+
+#: single_pages/dashboard/store/settings/tax.php:201
+msgid "Tax Class Name"
+msgstr "Afgift Class Navn"
+
+#: single_pages/dashboard/store/settings/tax.php:206
+#, php-format
+msgid ""
+"Since you're prices INCLUDE Tax, you can only specify one tax rate per "
+"class. If you need more, you must change this setting in the %stax setting "
+"here%s"
+msgstr ""
+"Da dine priserne INDEHOLDER Afgift, kan du kun angive én afgiftssats per "
+"class. Hvis du har brug for mere, skal du ændre denne indstilling i%safgift "
+"indstilling her%s"
+
+#: single_pages/dashboard/store/settings/tax.php:210
+msgid "Select Tax Class Rates"
+msgstr "Vælg Afgift Class Satser"
+
+#: single_pages/dashboard/store/settings/tax.php:241
+msgid "Cancel / View Taxes"
+msgstr "Annuller / Vis Afgifter"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:42
+msgid ""
+"Are you sure you want to remove all products, orders and discounts from "
+"Community Store? (y/n)"
+msgstr ""
+"Er du sikker på du vil fjerne alle produkter, ordrer og rabatter fra "
+"Community Store Webshoppe? (y/n)"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:46
+msgid ""
+"Are you sure you want to remove all products from Community Store? (y/n)"
+msgstr ""
+"Er du sikker på du vil fjerne alle produkter fra Community Store Webshoppe? "
+"(y/n)"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:50
+msgid "Are you sure you want to remove all orders from Community Store? (y/n)"
+msgstr ""
+"Er du sikker på du vil fjerne alle ordrer fra Community Store Webshoppe? (y/"
+"n)"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:54
+msgid ""
+"Are you sure you want to remove all discounts from Community Store? (y/n)"
+msgstr ""
+"Er du sikker på du vil fjerne alle rabatter fra Community Store Webshoppe? "
+"(y/n)"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:63
+msgid "Operation aborted."
+msgstr "Operation afbrudt."
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:74
+#, php-format
+msgid "%d order deleted"
+msgid_plural "%d orders deleted"
+msgstr[0] "%d ordre slettet"
+msgstr[1] "%d ordrer slettet"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:87
+#, php-format
+msgid "%d product deleted"
+msgid_plural "%d products deleted"
+msgstr[0] "%d produkt slettet"
+msgstr[1] "%d produkter slettet"
+
+#: src/CommunityStore/Console/Command/ResetCommand.php:101
+#, php-format
+msgid "%d discount deleted"
+msgid_plural "%d discounts deleted"
+msgstr[0] "%d rabat slettet"
+msgstr[1] "%d rabatter slettet"
+
+#: src/CommunityStore/Discount/DiscountRule.php:511
+#: src/CommunityStore/Discount/DiscountRule.php:515
+msgid "off"
+msgstr "slået fra"
+
+#: src/CommunityStore/Order/Order.php:771
+#, php-format
+msgid "Community Store: a new user email failed sending to %s"
+msgstr "Community Store: en ny brugers e-mail kunne ikke sende til %s"
+
+#: src/CommunityStore/Order/Order.php:906
+#, php-format
+msgid "Community Store: a notification email failed sending to %s"
+msgstr "Community Store: en meddelelses e-mail kunne ikke sendes til %s"
+
+#: src/CommunityStore/Order/Order.php:957
+#, php-format
+msgid "Community Store: a receipt email failed sending to %s"
+msgstr "Community Store: en kvitterings e-mail kunne ikke sendes til %s"
+
+#: src/CommunityStore/Payment/Methods/Invoice/InvoicePaymentMethod.php:12
+msgid "Invoice"
+msgstr "Faktura"
+
+#: src/CommunityStore/Payment/Methods/Invoice/InvoicePaymentMethod.php:46
+msgid "Processing..."
+msgstr "Behandler..."
+
+#: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:217
+msgid "Please set a Base Rate"
+msgstr "Venligst sætte en Grund Sats"
+
+#: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:220
+msgid "Base Rate should be a number"
+msgstr "Grund Sats skal være et tal"
+
+#: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:224
+msgid ""
+"The Price Per Item doesn't have to be set, but it does have to be numeric"
+msgstr "Pris pr. vare skal ikke angives, men det skal være numerisk"
+
+#: src/CommunityStore/Shipping/Method/Types/FlatRateShippingMethod.php:359
+msgid "Flat Rate"
+msgstr "Fast Beløb"
+
+#: src/CommunityStore/Shipping/Method/Types/FreeShippingShippingMethod.php:244
+msgid "Free Shipping"
+msgstr "Gratis Forsendelse"
+
+#: src/CommunityStore/Utilities/Checkout.php:77
+msgid ""
+"The email address you have entered has already been used to create an "
+"account. Please login first or enter a different email address."
+msgstr ""
+"Den e-mail adresse du har indtastet er allerede blevet brugt til at oprette "
+"en konto. Venligst login først eller indtaste en anden e-mail adresse."
+
+#: src/CommunityStore/Utilities/Checkout.php:154
+msgid "You must enter a valid VAT Number"
+msgstr "Du skal indtaste et gyldigt Momsnummer"
+
+#: src/CommunityStore/Utilities/Checkout.php:297
+msgid "You must enter a valid email address"
+msgstr "Du skal indtaste en gyldig e-mail adresse"
+
+#: src/CommunityStore/Utilities/Checkout.php:303
+msgid "You must enter a first name"
+msgstr "Du skal indtaste et fornavn"
+
+#: src/CommunityStore/Utilities/Checkout.php:306
+msgid "Please enter a first name under 255 characters"
+msgstr "Indtast et fornavn under 255 karakterer"
+
+#: src/CommunityStore/Utilities/Checkout.php:309
+msgid "You must enter a Last Name"
+msgstr "Du skal angive et efternavn"
+
+#: src/CommunityStore/Utilities/Checkout.php:312
+msgid "Please enter a last name under 255 characters"
+msgstr "Indtast et efternavn under 255 karakterer"
+
+#: src/CommunityStore/Utilities/Checkout.php:315
+msgid "You must enter an address"
+msgstr "Du skal angive en adresse"
+
+#: src/CommunityStore/Utilities/Checkout.php:318
+msgid "Please enter a street name under 255 characters"
+msgstr "Indtast et gadenavn under 255 karakterer"
+
+#: src/CommunityStore/Utilities/Checkout.php:321
+msgid "You must enter a Country"
+msgstr "Du skal angive et land"
+
+#: src/CommunityStore/Utilities/Checkout.php:324
+msgid "You did not select a Country from the list"
+msgstr "Du ikke vælge et land fra listen"
+
+#: src/CommunityStore/Utilities/Checkout.php:327
+msgid "You must enter a City"
+msgstr "Du skal indtaste en by"
+
+#: src/CommunityStore/Utilities/Checkout.php:330
+msgid "You must enter a valid City"
+msgstr "Du skal indtaste et gyldigt bynavn"
+
+#: src/CommunityStore/Utilities/Checkout.php:333
+#: src/CommunityStore/Utilities/Checkout.php:336
+msgid "You must enter a valid Postal Code"
+msgstr "Du skal angive et gyldigt postnummer"
+
+#: src/CommunityStore/Utilities/Installer.php:197
+msgid "Registered Customer in your store"
+msgstr "Registrerede Kunder i din butik"
+
+#: src/CommunityStore/Utilities/Installer.php:210
+#: src/CommunityStore/Utilities/Installer.php:270
+msgid "Store Customer Info"
+msgstr "Shop Kundeninformationen"
+
+#: src/CommunityStore/Utilities/Installer.php:271
+msgid "Other Customer Choices"
+msgstr "Andre Kunde Valgmuligheder"
+
+#: src/CommunityStore/Utilities/Installer.php:343
+#: src/CommunityStore/Utilities/Installer.php:345
+msgid "Digital Downloads"
+msgstr "Digitale Downloads"
+
+#: src/CommunityStore/Utilities/Installer.php:355
+msgid "Awaiting Processing"
+msgstr "Afventer Behandling"
+
+#: src/CommunityStore/Utilities/Installer.php:356
+msgid "Processing"
+msgstr "Behandler"
+
+#: src/CommunityStore/Utilities/Installer.php:357
+msgid "Shipped"
+msgstr "Afsendt"
+
+#: src/CommunityStore/Utilities/Installer.php:358
+msgid "Delivered"
+msgstr "Leveret"
+
+#: src/CommunityStore/Utilities/Installer.php:359
+msgid "Will not deliver"
+msgstr "Vil ikke levere"
+
+#: src/CommunityStore/Utilities/Installer.php:360
+msgid "Returned"
+msgstr "Returneret"
+
+#: src/CommunityStore/Utilities/Installer.php:375
+msgid "Default"
+msgstr "Standard"
+
+#~ msgid "Order Attributes"
+#~ msgstr "Ordre Atributter"
+
+#~ msgid "Invalid attribute ID."
+#~ msgstr "Ugyldigt attribut ID."
+
+#~ msgid "Attribute Deleted"
+#~ msgstr "Attribut Slettet."
+
+#~ msgid "Create Order Attribute"
+#~ msgstr "Opret Order Attribut"
+
+#~ msgid "Attribute Created"
+#~ msgstr "Attribut Oprettet."
+
+#~ msgid "Attribute Updated"
+#~ msgstr "Attribut Opdateret."
+
+#~ msgid "Product Attributes"
+#~ msgstr "Produkt Attributter"
+
+#~ msgid "Create Product Attribute"
+#~ msgstr "Opret Product Attribut"
+
+#~ msgid "Add Attribute"
+#~ msgstr "Tilføj Attribut"
+
+#~ msgctxt "TemplateFileName"
+#~ msgid "Product Breadcrumb"
+#~ msgstr "Produkt Breadcrumb"
+
+#~ msgid "Categories"
+#~ msgstr "Kategorier"
+
+#~ msgid "Shipping method removed"
+#~ msgstr "Forsendelsesmetode fjernet"
+
+#~ msgid "Successfully added a new Tax Rate"
+#~ msgstr "Tilføjet en ny Afgiftssats"
+
+#~ msgid "Successfully updated"
+#~ msgstr "Succesfuldt opdateret"
+
+#~ msgid "Successfully removed"
+#~ msgstr "Succesfuldt fjernet"
+
+#~ msgid "Tax Rate must be set, and a number"
+#~ msgstr "Afgift skal være sat, og et tal"
+
+#~ msgid "Shipping Base Rate must be set, and a number"
+#~ msgstr "Forsendelsesomkostninger skal specificeres og være numerisk"
+
+#~ msgid "Shipping Base Rate must be set, and a number (even if just zero)"
+#~ msgstr ""
+#~ "Forsendelsesomkostninger skal specificeres og være numerisk (selv om det "
+#~ "er nul)"
+
+#~ msgid "Display"
+#~ msgstr "Vis"
+
+#~ msgid "from"
+#~ msgstr "fra"
+
+#~ msgid "Value Discount"
+#~ msgstr "Værdi Rabat"
+
+#~ msgid "Deduct From"
+#~ msgstr "Fratrække Fra"
+
+#~ msgid "Items Sub-total"
+#~ msgstr "Vare Subtotal"
+
+#~ msgid "Add a Group"
+#~ msgstr "Tilføj en Gruppe"
+
+#~ msgid "Add Group"
+#~ msgstr "Tilføj Gruppe"
+
+#~ msgid "Address Line 1"
+#~ msgstr "Adresselinje 1"
+
+#~ msgid "Address Line 2"
+#~ msgstr "Adresselinje 2"

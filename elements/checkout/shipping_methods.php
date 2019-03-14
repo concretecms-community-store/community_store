@@ -4,13 +4,13 @@ use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
-
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $eligibleMethods = StoreShippingMethod::getEligibleMethods();
 $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
 
-
+$csm = $app->make('cs/helper/multilingual');
 ?>
 
 <?php if (!empty($eligibleMethods)) { ?>
@@ -30,17 +30,18 @@ $foundOffer = false;
                             <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
                             <div class="store-shipping-details">
                                 <?php $rate = $offer->getDiscountedRate(); ?>
-                                <p class="store-shipping-details-label"><?= ($offer->getLabel()) ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName', false, $method->getID()); ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
                                 <?php $details = $offer->getOfferDetails();
                                 if ($details) { ?>
-                                <p  class="store-shipping-details-details"><?= $details; ?></p>
+                                <p class="store-shipping-details-details"><?= $details; ?></p>
                                 <?php } ?>
                             </div>
                         </label>
                     </div>
                 </div>
             <?php } ?>
-            <?= $method->getDetails(); ?>
+            <?= $csm->t($method->getDetails(), 'shippingDetails', false, $method->getID()); ?>
+
         <?php } ?>
     <?php } ?>
 <?php } ?>

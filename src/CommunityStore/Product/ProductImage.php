@@ -1,40 +1,41 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
-use File;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\File\File;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductImages")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductImages")
  */
 class ProductImage
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $piID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="images",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="images",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pifID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $piSort;
 
@@ -52,6 +53,7 @@ class ProductImage
     {
         $this->pifID = $pifID;
     }
+
     private function setSort($piSort)
     {
         $this->piSort = $piSort;
@@ -61,14 +63,17 @@ class ProductImage
     {
         return $this->piID;
     }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
     public function getFileID()
     {
         return $this->pifID;
     }
+
     public function getSort()
     {
         return $this->piSort;
@@ -76,20 +81,22 @@ class ProductImage
 
     public static function getByID($piID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $piID);
     }
 
     public static function getImagesForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
     public static function getImageObjectsForProduct(StoreProduct $product)
     {
         $images = self::getImagesForProduct($product);
-        $imageObjects = array();
+        $imageObjects = [];
         foreach ($images as $img) {
             $imageObjects[] = File::getByID($img->getFileID());
         }
@@ -128,7 +135,8 @@ class ProductImage
         return $productImage;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);
@@ -137,14 +145,14 @@ class ProductImage
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

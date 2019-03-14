@@ -5,3 +5,5 @@ thumbs.db
 /.settings/
 /.buildpath
 vendor
+.php_cs.cache
+products.php.orig

@@ -1,47 +1,47 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Doctrine\ORM\Mapping\Column;
-use Database;
-use Core;
-use Session;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Support\Facade\Application;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreDiscountCodes")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreDiscountCodes")
  */
 class DiscountCode
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $dcID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule", inversedBy="codes")
-     * @JoinColumn(name="drID", referencedColumnName="drID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule", inversedBy="codes")
+     * @ORM\JoinColumn(name="drID", referencedColumnName="drID", onDelete="CASCADE")
      */
     private $discountRule;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $dcCode;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $oID;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $dcDateAdded;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -49,7 +49,7 @@ class DiscountCode
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCode()
     {
@@ -57,7 +57,7 @@ class DiscountCode
     }
 
     /**
-     * @param mixed $dcCode
+     * @ORM\param mixed $dcCode
      */
     public function setCode($dcCode)
     {
@@ -65,7 +65,7 @@ class DiscountCode
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDiscountRule()
     {
@@ -73,7 +73,7 @@ class DiscountCode
     }
 
     /**
-     * @param mixed $discountRule
+     * @ORM\param mixed $discountRule
      */
     public function setDiscountRule($discountRule)
     {
@@ -81,7 +81,7 @@ class DiscountCode
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOID()
     {
@@ -89,7 +89,7 @@ class DiscountCode
     }
 
     /**
-     * @param mixed $oID
+     * @ORM\param mixed $oID
      */
     public function setOID($oID)
     {
@@ -97,7 +97,7 @@ class DiscountCode
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDateAdded()
     {
@@ -110,7 +110,7 @@ class DiscountCode
     }
 
     /**
-     * @param mixed $dcDateAdded
+     * @ORM\param mixed $dcDateAdded
      */
     public function setDateAdded($dcDateAdded)
     {
@@ -119,14 +119,16 @@ class DiscountCode
 
     public static function getByID($dcID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $dcID);
     }
 
     public static function getByCode($code)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('dcCode' => $code));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findOneBy(['dcCode' => $code]);
     }
 
     public static function add($discountRule, $code)
@@ -142,21 +144,21 @@ class DiscountCode
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function validate($args)
     {
-        $e = Core::make('helper/validation/error');
+        $e = Application::getFacadeApplication()->make('helper/validation/error');
 
         return $e;
     }

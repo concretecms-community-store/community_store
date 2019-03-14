@@ -46,7 +46,7 @@ class DiscountRuleList extends ItemList
         }
 
         if ($this->search) {
-            $query->andWhere('drName like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $query->andWhere('drName like ?')->setParameter($paramcount++, '%' . $this->search . '%');
         }
 
         $query->andWhere('drDeleted is NULL');
@@ -68,7 +68,7 @@ class DiscountRuleList extends ItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct r.drID)')->setMaxResults(1);
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct r.drID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -79,6 +79,6 @@ class DiscountRuleList extends ItemList
     {
         $query = $this->deliverQueryObject();
 
-        return $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct r.drID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct r.drID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 }

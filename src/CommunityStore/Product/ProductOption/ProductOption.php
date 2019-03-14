@@ -1,66 +1,73 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductOptions")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductOptions")
  */
 class ProductOption
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $poID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="options",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="options",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"all"}, orphanRemoval=true)
-     * @OrderBy({"poiSort" = "ASC"})
+     * @ORM\OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"all"}, orphanRemoval=true)
+     * @ORM\OrderBy({"poiSort" = "ASC"})
      */
     protected $optionItems;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $poName;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $poType;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $poDisplayType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $poHandle;
 
     /**
-     * @Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $poRequired;
 
     /**
-     * @Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $poIncludeVariations;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $poSort;
 
@@ -78,6 +85,7 @@ class ProductOption
     {
         $this->poName = $name;
     }
+
     private function setSort($sort)
     {
         $this->poSort = $sort;
@@ -87,25 +95,40 @@ class ProductOption
     {
         return $this->poID;
     }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
     public function getName()
     {
         return $this->poName;
     }
+
     public function getSort()
     {
         return $this->poSort;
     }
+
     public function getType()
     {
         return $this->poType;
     }
+
     public function setType($type)
     {
         $this->poType = $type;
+    }
+
+    public function getDisplayType()
+    {
+        return $this->poDisplayType;
+    }
+
+    public function setDisplayType($type)
+    {
+        $this->poDisplayType = $type;
     }
 
     public function getHandle()
@@ -130,7 +153,7 @@ class ProductOption
 
     public function getIncludeVariations()
     {
-        return (int)(is_null($this->poIncludeVariations) || $this->poIncludeVariations == 1);
+        return (int) (is_null($this->poIncludeVariations) || 1 == $this->poIncludeVariations);
     }
 
     public function setIncludeVariations($poIncludeVariations)
@@ -143,26 +166,29 @@ class ProductOption
         $this->optionItems = new ArrayCollection();
     }
 
-    public function getOptionItems(){
+    public function getOptionItems()
+    {
         return $this->optionItems;
     }
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function removeOptionsForProduct(StoreProduct $product, $excluding = array())
+    public static function removeOptionsForProduct(StoreProduct $product, $excluding = [])
     {
         if (!is_array($excluding)) {
-            $excluding = array();
+            $excluding = [];
         }
 
         //clear out existing product option groups
@@ -174,38 +200,43 @@ class ProductOption
         }
     }
 
-    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
+    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
     {
         $ProductOption = new self();
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
     }
-    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false)
+
+    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
     {
         $ProductOption = $this;
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
     }
-    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $obj)
+
+    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $obj)
     {
         $obj->setProduct($product);
         $obj->setName($name);
         $obj->setSort($sort);
         $obj->setType($type);
+        $obj->setDisplayType($displayType);
         $obj->setHandle($handle);
         $obj->setRequired($required);
         $obj->setIncludeVariations($includeVariations);
         $obj->save();
+
         return $obj;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         $this->setID(null);
         $this->setProduct(null);
 
         $optionItems = $this->getOptionItems();
         $this->optionItems = new ArrayCollection();
-        if(count($optionItems) > 0){
+        if (count($optionItems) > 0) {
             foreach ($optionItems as $optionItem) {
                 $cloneOptionItem = clone $optionItem;
                 $cloneOptionItem->originalID = $optionItem->getID();
@@ -217,7 +248,7 @@ class ProductOption
 
     public function save($persistonly = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
 
         if (!$persistonly) {
@@ -227,7 +258,7 @@ class ProductOption
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -239,7 +270,7 @@ class ProductOption
 
         if (is_array($data['poSort'])) {
             $count = count($data['poSort']);
-            $ii = 0;//set counter for items
+            $ii = 0; //set counter for items
 
             if ($count > 0) {
                 for ($i = 0; $i < $count; ++$i) {
@@ -247,13 +278,13 @@ class ProductOption
                         $option = self::getByID($data['poID'][$i]);
 
                         if ($option) {
-                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
                         }
                     }
 
                     if (!$option) {
                         if ($data['poName'][$i]) {
-                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i]);
+                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
                             $product->getOptions()->add($option);
                         }
                     }
@@ -280,7 +311,7 @@ class ProductOption
                     }
                 }
 
-                $em = \ORM::entityManager();
+                $em = dbORM::entityManager();
                 $em->flush();
             }
         }

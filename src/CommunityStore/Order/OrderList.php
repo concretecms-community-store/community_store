@@ -8,11 +8,11 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
 use Concrete\Core\Support\Facade\Application;
 
-class OrderList  extends AttributedItemList
+class OrderList extends AttributedItemList
 {
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreOrderKey';
+        return '\\Concrete\\Package\\CommunityStore\\Entity\\Attribute\\Key\\StoreOrderKey';
     }
 
     public function createQuery()
@@ -27,19 +27,20 @@ class OrderList  extends AttributedItemList
         $paramcount = 0;
 
         if (isset($this->search)) {
-            $this->query->where('oID like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $this->query->where('oID = ?')->setParameter($paramcount++, $this->search);
+            $this->query->orWhere('transactionReference = ?')->setParameter($paramcount++, $this->search);
 
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
-            $matchingOrders = $db->query("SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?", array('%'.$this->search.'%'));
+            $matchingOrders = $db->query("SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?", ['%' . $this->search . '%']);
 
-            $orderIDs = array();
+            $orderIDs = [];
             while ($value = $matchingOrders->fetchRow()) {
                 $orderIDs[] = $value['oID'];
             }
 
             if (!empty($orderIDs)) {
-               $this->query->orWhere('o.oID in ('.implode(',', $orderIDs).')');
+                $this->query->orWhere('o.oID in (' . implode(',', $orderIDs) . ')');
             }
         }
 
@@ -50,8 +51,8 @@ class OrderList  extends AttributedItemList
                                             WHERE oshStatus = ? and
                                                 t1.oshDate = (SELECT MAX(t2.oshDate)
                                                              FROM CommunityStoreOrderStatusHistories t2
-                                                             WHERE t2.oID = t1.oID)", array($this->status));
-            $orderIDs = array();
+                                                             WHERE t2.oID = t1.oID)", [$this->status]);
+            $orderIDs = [];
 
             while ($value = $matchingOrders->fetchRow()) {
                 $orderIDs[] = $value['oID'];
@@ -59,9 +60,9 @@ class OrderList  extends AttributedItemList
 
             if (!empty($orderIDs)) {
                 if ($paramcount > 0) {
-                    $this->query->addWhere('o.oID in ('.implode(',', $orderIDs).')');
+                    $this->query->addWhere('o.oID in (' . implode(',', $orderIDs) . ')');
                 } else {
-                    $this->query->where('o.oID in ('.implode(',', $orderIDs).')');
+                    $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
                 }
             } else {
                 $this->query->where('1 = 0');
@@ -123,7 +124,7 @@ class OrderList  extends AttributedItemList
 
     public function setSearch($search)
     {
-        $this->search = $search;
+        $this->search = trim($search);
     }
 
     public function setStatus($status)
@@ -143,6 +144,7 @@ class OrderList  extends AttributedItemList
         }
         $this->fromDate = $date;
     }
+
     public function setToDate($date = null)
     {
         if (!$date) {
@@ -150,6 +152,7 @@ class OrderList  extends AttributedItemList
         }
         $this->toDate = $date;
     }
+
     public function setLimit($limit = 0)
     {
         $this->limit = $limit;
@@ -170,7 +173,8 @@ class OrderList  extends AttributedItemList
         $this->refunded = $bool;
     }
 
-    public function setIsShippable($bool){
+    public function setIsShippable($bool)
+    {
         $this->shippable = $bool;
     }
 
@@ -187,7 +191,7 @@ class OrderList  extends AttributedItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct o.oID)')->setMaxResults(1);
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -198,7 +202,7 @@ class OrderList  extends AttributedItemList
     {
         $query = $this->deliverQueryObject();
 
-        return $query->resetQueryParts(array('groupBy', 'orderBy'))->select('count(distinct o.oID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     public static function getDateOfFirstOrder()
@@ -209,10 +213,11 @@ class OrderList  extends AttributedItemList
 
         return $date['oDate'];
     }
+
     public function getOrderItems()
     {
         $orders = $this->getResults();
-        $orderItems = array();
+        $orderItems = [];
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         foreach ($orders as $order) {

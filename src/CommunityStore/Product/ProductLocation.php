@@ -1,52 +1,54 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Page\Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductLocations")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductLocations")
  */
 class ProductLocation
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $id;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="locations",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $cID;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $categorySortOrder;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $productSortOrder;
-
 
     private function setProductID($pID)
     {
         $this->pID = $pID;
     }
+
     private function setCollectionID($cID)
     {
         $this->cID = $cID;
@@ -99,27 +101,29 @@ class ProductLocation
 
     public static function getByID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $cID);
     }
 
     public static function getLocationsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()), array('productSortOrder'=>'asc'));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
     }
 
     public static function getProductsForLocation($cID)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('cID' => $cID), array('categorySortOrder'=>'asc'));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
 
     public static function addLocationsForProduct(array $locations, StoreProduct $product)
     {
-        $saveLocations = array();
-        $existingLocationID = array();
-
+        $saveLocations = [];
+        $existingLocationID = [];
 
         if (!empty($locations['cID'])) {
             foreach ($locations['cID'] as $cID) {
@@ -129,7 +133,7 @@ class ProductLocation
 
         $existingLocations = self::getLocationsForProduct($product);
 
-        foreach($existingLocations as $existingLocation) {
+        foreach ($existingLocations as $existingLocation) {
             if (!in_array($existingLocation->getCollectionID(), $saveLocations)) {
                 // no longer in list, so remove
                 $existingLocation->delete();
@@ -143,7 +147,7 @@ class ProductLocation
 
         //add new ones.
         if (!empty($locations['cID'])) {
-            foreach ($locations['cID'] as $key=>$cID) {
+            foreach ($locations['cID'] as $key => $cID) {
                 if ($cID > 0 && !in_array($cID, $existingLocationID)) {
                     self::add($product, $cID, $key);
                 }
@@ -161,18 +165,19 @@ class ProductLocation
 
     // returns an associated array of pages, with the page name as the key, alphabetically sorted
     // each value is an array that includes a page object and product count for that category
-    public static function getLocationPages() {
+    public static function getLocationPages()
+    {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
         $query = $db->query('select count(*) as productCount, max(cID) as cID from CommunityStoreProductLocations group by cID');
 
-        $pages = array();
-        while($row = $query->fetchRow()) {
-           $page = \Page::getByID($row['cID']);
+        $pages = [];
+        while ($row = $query->fetchRow()) {
+            $page = Page::getByID($row['cID']);
 
             if ($page) {
-                $pages[$page->getCollectionName()] = array('page'=>$page, 'productCount' =>$row['productCount']);
+                $pages[$page->getCollectionName()] = ['page' => $page, 'productCount' => $row['productCount']];
             }
         }
 
@@ -192,7 +197,8 @@ class ProductLocation
         return $location;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);
@@ -201,14 +207,14 @@ class ProductLocation
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

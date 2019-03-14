@@ -1,10 +1,18 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 
-$dh = Core::make('helper/date');
+$locale = $order->getLocale();
+if ($locale) {
+    \Concrete\Core\Localization\Localization::changeLocale($locale);
+}
+
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use \Concrete\Core\Support\Facade\Config;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
+$csm = $app->make('cs/helper/multilingual');
 $subject = t("Order Receipt #%s", $order->getOrderID());
 
 /**
@@ -18,7 +26,7 @@ ob_start();
     <head>
     </head>
     <body>
-    <?php $header = trim(\Config::get('community_store.receiptHeader')); ?>
+    <?php $header = $csm->t(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptHeader')), 'receiptEmailHeader'); ?>
 
     <?php if ($header) {
         echo $header;
@@ -29,20 +37,53 @@ ob_start();
     <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
     <p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
 
+    <?php
+    $items = $order->getOrderItems();
+
+    $downloads = array();
+    foreach ($items as $item) {
+        $pObj = $item->getProductObject();
+
+        if (is_object($pObj)) {
+            if ($pObj->hasDigitalDownload()) {
+                $fileObjs = $pObj->getDownloadFileObjects();
+                $downloads[$item->getProductName()] = $fileObjs[0];
+            }
+        }
+    }
+    if (count($downloads) > 0) {
+        ?>
+
+        <h3><?= t("Your Downloads") ?></h3>
+        <ul class="order-downloads">
+            <?php
+            foreach ($downloads as $name => $file) {
+                if (is_object($file)) {
+                    echo '<li><a href="' . \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::buildDownloadURL($file, $order) . '">' . $name . '</a></li>';
+                }
+            } ?>
+        </ul>
+
+    <?php } ?>
+
+
     <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
-            <td width="50%" style="vertical-align: top; padding: 0; padding-right: 10px;">
+            <td width="50%" style="vertical-align: top; padding: 0 10px 0 0;">
                 <h3><?= t('Billing Information') ?></h3>
                 <p>
-                    <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
+                    <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")) ?><br>
+                    <?php if ($order->getAttribute("billing_company")) { ?>
+                        <?= h($order->getAttribute("billing_company")) ?><br>
+                    <?php } ?>
                     <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
                     <?= nl2br($address); ?>
                     <br><br>
-                    <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?><br>
+                    <strong><?= t('Phone') ?></strong>: <?= h($order->getAttribute("billing_phone")) ?><br>
                     <?php
                     $vat_number = $order->getAttribute("vat_number");
                     if ($vat_number) { ?>
-                    <strong><?= t('VAT Number') ?></strong>: <?= $vat_number ?><br>
+                        <strong><?= t('VAT Number') ?></strong>: <?= h($vat_number) ?><br>
                     <?php } ?>
                 </p>
             </td>
@@ -50,8 +91,10 @@ ob_start();
                 <?php if ($order->isShippable()) { ?>
                     <h3><?= t('Shipping Information') ?></h3>
                     <p>
-                        <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-                        <br>
+                        <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")) ?><br>
+                        <?php if ($order->getAttribute("shipping_company")) { ?>
+                            <?= h($order->getAttribute("shipping_company")) ?><br>
+                        <?php } ?>
                         <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                         <?php if ($shippingaddress) {
                             $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
@@ -68,7 +111,7 @@ ob_start();
                 <td colspan="2">
                     <h3><?= t("Other Choices")?></h3>
                     <?php foreach ($orderChoicesAttList as $ak) {
-                        $orderOtherAtt = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                        $orderOtherAtt = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
                         if ($orderOtherAtt) {
                             $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
                             if ($attvalue) { ?>
@@ -96,7 +139,7 @@ ob_start();
         </thead>
         <tbody>
         <?php
-        $items = $order->getOrderItems();
+
         if ($items) {
             foreach ($items as $item) {
                 ?>
@@ -120,7 +163,7 @@ ob_start();
                         }
                         ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?> <?= h($item->getQtyLabel());?></td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()) ?></td>
                     <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()) ?></td>
                 </tr>
@@ -131,33 +174,6 @@ ob_start();
         </tbody>
     </table>
 
-
-    <?php
-    $downloads = array();
-    foreach ($items as $item) {
-        $pObj = $item->getProductObject();
-
-        if (is_object($pObj)) {
-            if ($pObj->hasDigitalDownload()) {
-                $fileObjs = $pObj->getDownloadFileObjects();
-                $downloads[$item->getProductName()] = $fileObjs[0];
-            }
-        }
-    }
-    if (count($downloads) > 0) {
-        ?>
-
-        <h3><?= t("Your Downloads") ?></h3>
-        <ul class="order-downloads">
-            <?php
-            foreach ($downloads as $name => $file) {
-                if (is_object($file)) {
-                    echo '<li><a href="' . $file->getForceDownloadURL() . '">' . $name . '</a></li>';
-                }
-            } ?>
-        </ul>
-
-    <?php } ?>
 
     <p>
         <?php if ($order->isShippable()) { ?>
@@ -221,9 +237,13 @@ ob_start();
         <?php } ?>
     </p>
 
-    <?php echo $paymentInstructions; ?>
-
-    <?php echo trim(\Config::get('community_store.receiptFooter')); ?>
+    <?php
+    if ($paymentInstructions && $paymentMethodID) {
+        $paymentInstructions = $csm->t($paymentInstructions, 'paymentInstructions', false, $paymentMethodID);
+    }
+    ?>
+    <?= $paymentInstructions; ?>
+    <?= $csm->t(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
 
     </body>
     </html>

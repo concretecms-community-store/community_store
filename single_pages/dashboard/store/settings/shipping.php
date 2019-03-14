@@ -1,17 +1,19 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $addViews = array('add','add_method','edit');
 $editViews = array('edit');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-
-if(in_array($controller->getTask(),$addViews)){
+if(in_array($controller->getAction(),$addViews)){
 /// Add Shipping Method View
 ?>
 
 
-<form action="<?=URL::to('/dashboard/store/settings/shipping','add_method')?>" method="post">
-
+<form action="<?=Url::to('/dashboard/store/settings/shipping','add_method')?>" method="post">
+    <?= $token->output('community_store'); ?>
     <div class="row">
         <div class="col-xs-12 col-md-12">
         <?php //echo var_dump($smt); ?>
@@ -37,7 +39,7 @@ if(in_array($controller->getTask(),$addViews)){
                     <div class="form-group">
                         <?= $form->label('methodDetails',t("Details")); ?>
                         <?php
-                        $editor = Core::make('editor');
+                        $editor = $app->make('editor');
                         echo $editor->outputStandardEditor('methodDetails', is_object($sm)?$sm->getDetails():'');
                         ?>
                         <style>
@@ -72,13 +74,13 @@ if(in_array($controller->getTask(),$addViews)){
         <ul class="dropdown-menu" role="menu">
             <?php foreach($methodTypes as $smt){?>
                 <?php if(!$smt->isHiddenFromAddMenu()){?>
-                    <li><a href="<?=URL::to('/dashboard/store/settings/shipping/add',$smt->getShippingMethodTypeID())?>"><?= $smt->getMethodTypeController()->getShippingMethodTypeName()?></a></li>
+                    <li><a href="<?=Url::to('/dashboard/store/settings/shipping/add',$smt->getShippingMethodTypeID())?>"><?= $smt->getMethodTypeController()->getShippingMethodTypeName()?></a></li>
                 <?php } ?>
             <?php } ?>
         </ul>
     </div>
     <?php } ?>
-    <a href="<?= \URL::to('/dashboard/store/settings#settings-shipping')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
+    <a href="<?= Url::to('/dashboard/store/settings#settings-shipping')?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings")?></a>
 </div>
 
 <div class="dashboard-shipping-methods">
@@ -111,12 +113,12 @@ if(in_array($controller->getTask(),$addViews)){
                             <td><?= $method->getName() ?></td>
                             <td style="width: 20%;"><?= $method->isEnabled() ? t('Yes') : t('No') ?></td>
                             <td class="text-right" style="width: 20%;">
-                                <a href="<?= URL::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
+                                <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
                                    class="btn btn-default"><?= t("Edit") ?></a>
                                 <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
                                     <a href="" class="btn btn-default"><?= t("Disable") ?></a>
                                 <?php } else { ?>
-                                    <a href="<?= URL::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
+                                    <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
                                        class="btn btn-danger"><?= t("Delete") ?></a>
                                 <?php } ?>
                             </td>

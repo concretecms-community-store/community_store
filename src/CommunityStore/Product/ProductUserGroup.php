@@ -1,37 +1,37 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductUserGroups")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductUserGroups")
  */
 class ProductUserGroup
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pugID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $gID;
-
 
     public function setProduct($product)
     {
@@ -47,6 +47,7 @@ class ProductUserGroup
     {
         return $this->pID;
     }
+
     public function getUserGroupID()
     {
         return $this->gID;
@@ -54,20 +55,22 @@ class ProductUserGroup
 
     public static function getByID($pgID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup', $pgID);
     }
 
     public static function getUserGroupsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(array('pID' => $product->getID()));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(['pID' => $product->getID()]);
     }
 
     public static function getUserGroupIDsForProduct($product)
     {
         $userGroups = self::getUserGroupsForProduct($product);
-        $groupIDs = array();
+        $groupIDs = [];
         foreach ($userGroups as $userGroup) {
             $groupIDs[] = $userGroup->getUserGroupID();
         }
@@ -98,7 +101,6 @@ class ProductUserGroup
 
     public static function add($product, $gID)
     {
-
         $productUserGroup = new self();
         $productUserGroup->setProduct($product);
         $productUserGroup->setUserGroupID($gID);
@@ -107,7 +109,8 @@ class ProductUserGroup
         return $productUserGroup;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);
@@ -116,14 +119,14 @@ class ProductUserGroup
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

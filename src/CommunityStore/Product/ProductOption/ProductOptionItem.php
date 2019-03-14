@@ -1,29 +1,30 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductOptionItems")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductOptionItems")
  */
 class ProductOptionItem
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $poiID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $poID;
 
     /**
-     * @ManyToOne(targetEntity="ProductOption",inversedBy="optionItems",cascade={"persist"})
-     * @JoinColumn(name="poID", referencedColumnName="poID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="ProductOption",inversedBy="optionItems",cascade={"persist"})
+     * @ORM\JoinColumn(name="poID", referencedColumnName="poID", onDelete="CASCADE")
      */
     protected $option;
 
@@ -33,22 +34,22 @@ class ProductOptionItem
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $poiName;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $poiSort;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $poiHidden = 0;
 
-    /** @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="option", cascade={"persist", "remove"})
-     * @JoinColumn(name="poiID", referencedColumnName="poiID", onDelete="CASCADE")
+    /** @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="option", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="poiID", referencedColumnName="poiID", onDelete="CASCADE")
      */
     private $variationoptionitems;
 
@@ -56,10 +57,12 @@ class ProductOptionItem
     {
         $this->poiName = $name;
     }
+
     private function setSort($sort)
     {
         $this->poiSort = $sort;
     }
+
     private function setHidden($hidden)
     {
         $this->poiHidden = (bool) $hidden;
@@ -69,22 +72,27 @@ class ProductOptionItem
     {
         return $this->poiID;
     }
+
     public function getOptionID()
     {
         return $this->poID;
     }
+
     public function getName()
     {
         return $this->poiName;
     }
+
     public function getSort()
     {
         return $this->poiSort;
     }
+
     public function getHidden()
     {
         return $this->poiHidden;
     }
+
     public function isHidden()
     {
         return (bool) $this->poiHidden;
@@ -92,20 +100,22 @@ class ProductOptionItem
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
 
-    public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = array())
+    public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = [])
     {
         if (!is_array($excluding)) {
-            $excluding = array();
+            $excluding = [];
         }
         //clear out existing product option items
         $options = $product->getOptions();
@@ -126,7 +136,7 @@ class ProductOptionItem
 
     public static function add($option, $name, $sort, $hidden = false, $persistonly = false)
     {
-        $productOptionItem = new self();;
+        $productOptionItem = new self();
         $productOptionItem->setOption($option);
         $productOptionItem->setName($name);
         $productOptionItem->setSort($sort);
@@ -146,7 +156,8 @@ class ProductOptionItem
         return $this;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setOption(null);
@@ -155,7 +166,7 @@ class ProductOptionItem
 
     public function save($persistonly = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
 
         if (!$persistonly) {
@@ -165,7 +176,7 @@ class ProductOptionItem
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

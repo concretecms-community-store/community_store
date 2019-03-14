@@ -1,77 +1,87 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use PageController;
-use Config;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-
-defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Illuminate\Filesystem\Filesystem;
+use Concrete\Core\View\View;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 
 class Cart extends PageController
 {
     public function view($action = '')
     {
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
-            $this->redirect("/");
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
+            return Redirect::to("/");
         }
 
         $codeerror = false;
         $codesuccess = false;
 
-        $returndata = array();
+        $returndata = [];
 
-        if ($this->post()) {
-            if ($this->post('action') == 'code') {
+        $token = $this->app->make('token');
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            if ('code' == $this->request->request->get('action')) {
                 $codeerror = false;
                 $codesuccess = false;
 
-                if ($this->post('code')) {
-                    $codesuccess = StoreDiscountCode::storeCartCode($this->post('code'));
+                if ($this->request->request->get('code')) {
+                    $codesuccess = StoreDiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
                 } else {
                     StoreDiscountCode::clearCartCode();
                 }
             }
 
-            if ($this->post('action') == 'update') {
-                $data = $this->post();
-
+            if ('update' == $this->request->request->get('action')) {
+                $data = $this->request->request->all();
                 if (is_array($data['instance'])) {
                     $result = StoreCart::updateMutiple($data);
                     $quantity = 0;
-                    foreach($data['pQty'] as $q) {
-                        $quantity +=  $q;
+                    foreach ($data['pQty'] as $q) {
+                        $quantity += $q;
                     }
 
                     $added = 0;
-                    foreach($result as $r) {
+                    foreach ($result as $r) {
                         $added += $r['added'];
                     }
-
                 } else {
                     $result = StoreCart::update($data);
                     $added = $result['added'];
-                    $quantity = (int)$data['pQty'];
+                    $quantity = (int) $data['pQty'];
                 }
 
-                $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
+                $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
             }
 
-            if ($this->post('action') == 'clear') {
+            if ('clear' == $this->request->request->get('action')) {
                 StoreCart::clear();
-                $returndata = array('success' => true, 'action' => 'clear');
+                $returndata = ['success' => true, 'action' => 'clear'];
             }
 
-            if ($this->post('action') == 'remove') {
-                $data = $this->post();
+            if ('remove' == $this->request->request->get('action')) {
+                $data = $this->request->request->all();
                 if (isset($data['instance'])) {
                     StoreCart::remove($data['instance']);
-                    $returndata = array('success' => true, 'action' => 'remove');
+                    $returndata = ['success' => true, 'action' => 'remove'];
                 }
             }
         }
@@ -92,10 +102,10 @@ class Cart extends PageController
         if (StoreCart::isShippable()) {
             $this->set('shippingEnabled', true);
 
-            if (\Session::get('community_store.smID')) {
-                $this->set('shippingtotal',$totals['shippingTotal']);
+            if (Session::get('community_store.smID')) {
+                $this->set('shippingtotal', $totals['shippingTotal']);
             } else {
-                $this->set('shippingtotal',false);
+                $this->set('shippingtotal', false);
             }
         } else {
             $this->set('shippingEnabled', false);
@@ -103,6 +113,8 @@ class Cart extends PageController
 
         $this->set('total', $totals['total']);
         $this->set('subTotal', $totals['subTotal']);
+        $this->set('taxes', $totals['taxes']);
+        $this->set('taxtotal', $totals['taxTotal']);
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
@@ -112,12 +124,17 @@ class Cart extends PageController
 
         $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
         $this->set("discountsWithCodesExist", $discountsWithCodesExist);
+
+        $this->set('token', $this->app->make('token'));
+        $this->set('langpath', $langpath);
     }
 
     public function add()
     {
-        if ($this->post()) {
-            $data = $this->post();
+        $token = $this->app->make('token');
+
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $data = $this->request->request->all();
             $result = StoreCart::add($data);
 
             $added = $result['added'];
@@ -131,24 +148,31 @@ class Cart extends PageController
             $product = StoreProduct::getByID($data['pID']);
             $productdata['pAutoCheckout'] = $product->autoCheckout();
             $productdata['pName'] = $product->getName();
+            $productdata['pID'] = $product->getID();
 
-            $returndata = array('quantity' => (int)$data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error);
+            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error];
             echo json_encode($returndata);
         }
         exit();
-
     }
 
     public function code()
     {
-        StoreDiscountCode::storeCartCode($this->post('code'));
+        $token = $this->app->make('token');
+
+        if ($token->validate('community_store')) {
+            StoreDiscountCode::storeCartCode($this->request->request->get('code'));
+        }
+
         exit();
     }
 
     public function update()
     {
-        if ($this->post()) {
-            $data = $this->post();
+        $token = $this->app->make('token');
+
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $data = $this->request->request->all();
 
             if (is_array($data['instance'])) {
                 $result = StoreCart::updateMutiple($data);
@@ -161,14 +185,13 @@ class Cart extends PageController
                 foreach ($result as $r) {
                     $added += $r['added'];
                 }
-
             } else {
                 $result = StoreCart::update($data);
                 $added = $result['added'];
-                $quantity = (int)$data['pQty'];
+                $quantity = (int) $data['pQty'];
             }
 
-            $returndata = array('success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added);
+            $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
 
             echo json_encode($returndata);
         }
@@ -177,10 +200,11 @@ class Cart extends PageController
 
     public function remove()
     {
-        if ($this->post()) {
-            $instanceID = $_POST['instance'];
+        $token = $this->app->make('token');
+        if ($this->request->request->all() && $token->validate('community_store')) {
+            $instanceID = $this->request->request->get('instance');
             StoreCart::remove($instanceID);
-            $returndata = array('success' => true, 'action' => 'remove');
+            $returndata = ['success' => true, 'action' => 'remove'];
             echo json_encode($returndata);
         }
         exit();
@@ -188,11 +212,71 @@ class Cart extends PageController
 
     public function clear()
     {
-        if ($this->post()) {
+        $token = $this->app->make('token');
+
+        if ($this->request->request->all() && $token->validate('community_store')) {
             StoreCart::clear();
-            $returndata = array('success' => true, 'action' => 'clear');
+            $returndata = ['success' => true, 'action' => 'clear'];
             echo json_encode($returndata);
         }
+        exit();
+    }
+
+    public function getmodal()
+    {
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
+        $cart = StoreCart::getCart();
+        $discounts = StoreCart::getDiscounts();
+        $totals = StoreCalculator::getTotals();
+
+        $total = $totals['subTotal'];
+
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $token = $app->make('token');
+
+        if (Filesystem::exists(DIR_BASE . '/application/elements/cart_modal.php')) {
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
+        } else {
+            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
+        }
+
+        exit();
+    }
+
+    public function getCartSummary()
+    {
+        $totals = StoreCalculator::getTotals();
+        $itemCount = StoreCart::getTotalItemsInCart();
+        $total = $totals['total'];
+        $subTotal = $totals['subTotal'];
+        $shippingTotal = $totals['shippingTotal'];
+        $csm = $this->app->make('cs/helper/multilingual');
+
+        $taxes = $totals['taxes'];
+        $formattedtaxes = [];
+
+        foreach ($taxes as $tax) {
+            // translate tax name
+            $tax['name'] = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+            $tax['taxamount'] = StorePrice::format($tax['taxamount']);
+            $formattedtaxes[] = $tax;
+        }
+
+        if (!Session::get('community_store.smID')) {
+            $shippingTotalRaw = false;
+        } else {
+            $shippingTotalRaw = $shippingTotal;
+        }
+
+        $data = ['subTotal' => StorePrice::format($subTotal), 'total' => StorePrice::format($total), 'itemCount' => $itemCount, 'totalCents' => $total * 100, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => StorePrice::format($shippingTotal)];
+        echo json_encode($data);
+
         exit();
     }
 }
