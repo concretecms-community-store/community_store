@@ -8,7 +8,7 @@ $editor = $app->make('editor');
 ?>
 
 
-<?if (count($locales) > 0) { ?>
+<?php if (count($locales) > 0) { ?>
 <form method="post" action="<?= $view->action('save') ?>">
     <?= $token->output('community_store'); ?>
     <fieldset>

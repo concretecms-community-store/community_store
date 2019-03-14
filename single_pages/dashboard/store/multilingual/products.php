@@ -8,7 +8,7 @@ $editor = $app->make('editor');
 
 if ($action == 'view') { ?>
 
-<?if (count($locales) > 0) { ?>
+<?php if (count($locales) > 0) { ?>
 
         <div class="ccm-dashboard-header-buttons">
 
