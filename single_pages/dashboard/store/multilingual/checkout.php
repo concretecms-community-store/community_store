@@ -1,4 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
 $action = $controller->getAction();
@@ -26,11 +27,16 @@ $editor = $app->make('editor');
             </tr>
 
             <?php
+
             foreach ($paymentMethods as $paymentMethod) {
+
                 $rowcount = 2;
+
                  if ($paymentMethod->getMethodController()->getPaymentInstructions()) {
                      $rowcount = 3;
                  }
+
+
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
@@ -137,7 +143,9 @@ $editor = $app->make('editor');
             </tr>
 
             <?php
+
             foreach ($shippingMethods as $shippingMethod) {
+
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
@@ -217,7 +225,9 @@ $editor = $app->make('editor');
             </tr>
 
             <?php
+
             foreach ($taxRates as $taxRate) {
+
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
@@ -270,7 +280,9 @@ $editor = $app->make('editor');
                 </tr>
 
                 <?php
+
                 foreach ($discountRules as $discountRule) {
+
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -323,7 +335,9 @@ $editor = $app->make('editor');
                 </tr>
 
                 <?php
+
                 foreach ($orderAttributes as $attr) {
+
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>

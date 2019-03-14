@@ -1,9 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Support\Facade\Url;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $action = $controller->getAction();
 $csm = $app->make('cs/helper/multilingual');
 $editor = $app->make('editor');
+
 if ($action == 'view') { ?>
 
 <?php if (count($locales) > 0) { ?>
@@ -120,6 +122,7 @@ if ($action == 'view') { ?>
                         </td>
 
                         <?php foreach ($locales
+
                         as $lp) { ?>
                         <td>
                             <?= $csm->t(null, 'productName', $product->getID(), null, $lp->getLocale()); ?>
@@ -150,7 +153,9 @@ if ($action == 'view') { ?>
 <?php } ?>
 
 <?php if ($action == 'translate') {
+
 $localecount = count($locales);
+
 ?>
 <form method="post" action="<?= $view->action('save') ?>">
     <?= $token->output('community_store'); ?>
@@ -171,6 +176,7 @@ $localecount = count($locales);
         </tr>
 
         <?php
+
         $firstrow = true;
         foreach ($locales as $lp) { ?>
             <tr>
@@ -196,6 +202,7 @@ $localecount = count($locales);
         <?php } ?>
 
         <?php
+
         $firstrow = true;
         foreach ($locales as $lp) { ?>
             <tr>
@@ -224,6 +231,7 @@ $localecount = count($locales);
         <?php } ?>
 
         <?php
+
         $firstrow = true;
         foreach ($locales as $lp) { ?>
             <tr>
@@ -249,6 +257,7 @@ $localecount = count($locales);
         <?php } ?>
 
         <?php
+
         $firstrow = true;
         foreach ($locales as $lp) { ?>
             <tr>
@@ -297,6 +306,7 @@ $localecount = count($locales);
 
 
             <?php foreach ($product->getOptions() as $option) {
+
             $firstrow = true;
             foreach ($locales as $lp) { ?>
                 <tr>
@@ -375,7 +385,9 @@ $localecount = count($locales);
 
 
             <?php
+
             foreach ($attrList as $attr) {
+
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
@@ -403,6 +415,8 @@ $localecount = count($locales);
                     </tr>
                 <?php } ?>
             <?php }
+
+
             foreach ($attrOptions as $type => $attrOptions) {
                 foreach ($attrOptions as $attrOption => $x) {
                     $firstrow = true;
