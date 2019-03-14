@@ -26,7 +26,7 @@ ob_start();
     <head>
     </head>
     <body>
-    <?php $header = $csm->t(trim(\Config::get('community_store.receiptHeader')), 'receiptEmailHeader'); ?>
+    <?php $header = $csm->t(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptHeader')), 'receiptEmailHeader'); ?>
 
     <?php if ($header) {
         echo $header;
@@ -36,6 +36,36 @@ ob_start();
 
     <p><strong><?= t("Order") ?>#:</strong> <?= $order->getOrderID() ?></p>
     <p><?= t('Order placed');?>: <?= $dh->formatDateTime($order->getOrderDate())?></p>
+
+    <?php
+    $items = $order->getOrderItems();
+
+    $downloads = array();
+    foreach ($items as $item) {
+        $pObj = $item->getProductObject();
+
+        if (is_object($pObj)) {
+            if ($pObj->hasDigitalDownload()) {
+                $fileObjs = $pObj->getDownloadFileObjects();
+                $downloads[$item->getProductName()] = $fileObjs[0];
+            }
+        }
+    }
+    if (count($downloads) > 0) {
+        ?>
+
+        <h3><?= t("Your Downloads") ?></h3>
+        <ul class="order-downloads">
+            <?php
+            foreach ($downloads as $name => $file) {
+                if (is_object($file)) {
+                    echo '<li><a href="' . \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::buildDownloadURL($file, $order) . '">' . $name . '</a></li>';
+                }
+            } ?>
+        </ul>
+
+    <?php } ?>
+
 
     <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
@@ -109,7 +139,7 @@ ob_start();
         </thead>
         <tbody>
         <?php
-        $items = $order->getOrderItems();
+
         if ($items) {
             foreach ($items as $item) {
                 ?>
@@ -213,35 +243,7 @@ ob_start();
     }
     ?>
     <?= $paymentInstructions; ?>
-
-    <?php
-    $downloads = array();
-    foreach ($items as $item) {
-        $pObj = $item->getProductObject();
-
-        if (is_object($pObj)) {
-            if ($pObj->hasDigitalDownload()) {
-                $fileObjs = $pObj->getDownloadFileObjects();
-                $downloads[$item->getProductName()] = $fileObjs[0];
-            }
-        }
-    }
-    if (count($downloads) > 0) {
-        ?>
-
-        <h3><?= t("Your Downloads") ?></h3>
-        <ul class="order-downloads">
-            <?php
-            foreach ($downloads as $name => $file) {
-                if (is_object($file)) {
-                    echo '<li><a href="' . \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::buildDownloadURL($file, $order) . '">' . $name . '</a></li>';
-                }
-            } ?>
-        </ul>
-
-    <?php } ?>
-
-    <?= $csm->t(trim(Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
+    <?= $csm->t(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptFooter')), 'receiptEmailFooter'); ?>
 
     </body>
     </html>

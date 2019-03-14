@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
@@ -23,8 +24,8 @@ class Checkout extends DashboardSitePageController
         $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');
         $this->set('orderAttributes', $orderAttributes);
 
-        $this->set('receiptHeader', trim(\Config::get('community_store.receiptHeader')));
-        $this->set('receiptFooter', trim(\Config::get('community_store.receiptFooter')));
+        $this->set('receiptHeader', trim(Config::get('community_store.receiptHeader')));
+        $this->set('receiptFooter', trim(Config::get('community_store.receiptFooter')));
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);

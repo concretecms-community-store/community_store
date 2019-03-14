@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\File\File;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;

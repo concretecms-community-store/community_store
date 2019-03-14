@@ -26,13 +26,16 @@ $dh = $app->make('helper/date');
         }
     }
     if(count($downloads) > 0){?>
-        <h3><?= t("Your Downloads")?></h3>
+    <fieldset>
+        <legend><?= t("Your Downloads")?></legend>
         <ul class="order-downloads">
             <?php
             foreach($downloads as $name=>$file){
                 echo '<li><a href="'. \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::buildDownloadURL($file, $order) .'">'.$name.'</a></li>';
             }?>
         </ul>
+    </fieldset>
+        <br>
     <?php }
 
 

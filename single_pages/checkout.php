@@ -437,11 +437,11 @@ $csm = $app->make('cs/helper/multilingual');
                                  class="<?= count($enabledPaymentMethods) == 1 ? "hidden" : ""; ?>">
                                 <?php
                                 $i = 1;
-                                foreach ($enabledPaymentMethods as $pm):
+                                foreach ($enabledPaymentMethods as $pm) {
                                     if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
-                                        $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
+                                        $props = ['data-payment-method-id' => $pm->getID(), 'checked' => 'checked'];
                                     } else {
-                                        $props = array('data-payment-method-id' => $pm->getID());
+                                        $props = ['data-payment-method-id' => $pm->getID()];
                                     }
                                     ?>
                                     <div class='radio'>
@@ -453,7 +453,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                     <?php
                                     $i++;
-                                endforeach; ?>
+                                } ?>
                             </div>
 
                             <?php
