@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
-
 /**
  * @Entity
  * @Table(name="CommunityStoreOrderItemDiscounts")

@@ -3,7 +3,6 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Doctrine\ORM\Mapping\Column;
-use Database;
 use Core;
 use Session;
 
@@ -120,13 +119,15 @@ class DiscountCode
     public static function getByID($dcID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $dcID);
     }
 
     public static function getByCode($code)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('dcCode' => $code));
+
+        return $em->getRepository(get_class())->findOneBy(['dcCode' => $code]);
     }
 
     public static function add($discountRule, $code)

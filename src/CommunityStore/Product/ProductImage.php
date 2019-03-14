@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use File;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
@@ -11,9 +10,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
  */
 class ProductImage
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $piID;
 
@@ -52,6 +51,7 @@ class ProductImage
     {
         $this->pifID = $pifID;
     }
+
     private function setSort($piSort)
     {
         $this->piSort = $piSort;
@@ -61,14 +61,17 @@ class ProductImage
     {
         return $this->piID;
     }
+
     public function getProductID()
     {
         return $this->pID;
     }
+
     public function getFileID()
     {
         return $this->pifID;
     }
+
     public function getSort()
     {
         return $this->piSort;
@@ -77,19 +80,21 @@ class ProductImage
     public static function getByID($piID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $piID);
     }
 
     public static function getImagesForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
     public static function getImageObjectsForProduct(StoreProduct $product)
     {
         $images = self::getImagesForProduct($product);
-        $imageObjects = array();
+        $imageObjects = [];
         foreach ($images as $img) {
             $imageObjects[] = File::getByID($img->getFileID());
         }
@@ -128,7 +133,8 @@ class ProductImage
         return $productImage;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

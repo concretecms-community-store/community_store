@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -85,6 +84,7 @@ class ProductPriceTier
     public static function getByID($ptID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier', $ptID);
     }
 
@@ -98,10 +98,10 @@ class ProductPriceTier
         //add new ones.
         if (!empty($data['ptFrom'])) {
             foreach ($data['ptFrom'] as $gID) {
-                if ($data['ptPrice'][$count] != '' && $data['ptFrom'][$count] && $data['ptTo'][$count]) {
+                if ('' != $data['ptPrice'][$count] && $data['ptFrom'][$count] && $data['ptTo'][$count]) {
                     self::add($product, $data['ptFrom'][$count], $data['ptTo'][$count], $data['ptPrice'][$count]);
                 }
-                $count++;
+                ++$count;
             }
         }
     }
@@ -109,7 +109,7 @@ class ProductPriceTier
     public static function removePriceTiersForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        $priceTiers = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier')->findBy(array('pID' => $product->getID()));
+        $priceTiers = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier')->findBy(['pID' => $product->getID()]);
 
         foreach ($priceTiers as $tier) {
             $tier->delete();
@@ -128,7 +128,8 @@ class ProductPriceTier
         return $productPriceTier;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

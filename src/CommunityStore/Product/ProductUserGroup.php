@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -10,9 +9,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
  */
 class ProductUserGroup
 {
-    /** 
-     * @Id @Column(type="integer") 
-     * @GeneratedValue 
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     protected $pugID;
 
@@ -32,7 +31,6 @@ class ProductUserGroup
      */
     protected $gID;
 
-
     public function setProduct($product)
     {
         return $this->product = $product;
@@ -47,6 +45,7 @@ class ProductUserGroup
     {
         return $this->pID;
     }
+
     public function getUserGroupID()
     {
         return $this->gID;
@@ -55,19 +54,21 @@ class ProductUserGroup
     public static function getByID($pgID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup', $pgID);
     }
 
     public static function getUserGroupsForProduct(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(array('pID' => $product->getID()));
+
+        return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(['pID' => $product->getID()]);
     }
 
     public static function getUserGroupIDsForProduct($product)
     {
         $userGroups = self::getUserGroupsForProduct($product);
-        $groupIDs = array();
+        $groupIDs = [];
         foreach ($userGroups as $userGroup) {
             $groupIDs[] = $userGroup->getUserGroupID();
         }
@@ -98,7 +99,6 @@ class ProductUserGroup
 
     public static function add($product, $gID)
     {
-
         $productUserGroup = new self();
         $productUserGroup->setProduct($product);
         $productUserGroup->setUserGroupID($gID);
@@ -107,7 +107,8 @@ class ProductUserGroup
         return $productUserGroup;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

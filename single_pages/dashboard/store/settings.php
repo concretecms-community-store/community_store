@@ -1,11 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 	    <div class="ccm-dashboard-header-buttons">
-            <a href="<?= \URL::to('/dashboard/store/settings/shipping')?>" class="btn btn-primary"><i class="fa fa-gift"></i> <?= t("Shipping Methods")?></a>
+            <a href="<?= \URL::to('/dashboard/store/settings/shipping')?>" class="btn btn-primary"><i class="fa fa-truck"></i> <?= t("Shipping Methods")?></a>
             <a href="<?= \URL::to('/dashboard/store/settings/tax')?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates")?></a>
         </div>
 
 	    <form method="post" action="<?= $view->action('save')?>">
+            <?= $token->output('community_store'); ?>
 
             <div class="row">
                 <div class="col-sm-3">
@@ -19,6 +20,7 @@
                             <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts')?></a></li>
                             <li><a href="#settings-products" data-pane-toggle><?= t('Products')?></a></li>
                             <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout')?></a></li>
+                            <li><a href="#settings-orders" data-pane-toggle><?= t('Orders')?></a></li>
                         </ul>
 
                 </div>
@@ -92,6 +94,16 @@
                                 <?= t('Include Delivery Instructions field in checkout');?></label>
                         </div>
                     </div>
+
+                    <h3><?= t("Multiple Packages Support")?></h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label><?= $form->checkbox('multiplePackages', '1',Config::get('community_store.multiplePackages') ? '1' : '0')?>
+                                <?= t('Enable Package(s) Data fields');?></label>
+                            <span class="help-block">Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods</span>
+                        </div>
+                    </div>
+
 
 
                 </div><!-- #settings-shipping -->
@@ -216,8 +228,9 @@
                     <h3><?= t('Notification Emails');?></h3>
 
                     <div class="form-group">
-                        <?= $form->label('notificationEmails',t('Send order notification to email %sseparate multiple emails with commas%s', '<small class="text-muted">','</small>')); ?>
+                        <?= $form->label('notificationEmails',t('Send order notification to email')); ?>
                         <?= $form->text('notificationEmails',Config::get('community_store.notificationemails'), array('placeholder'=>t('Email Address')));?>
+                        <span class="help-block"><?= t('separate multiple emails with commas'); ?></span>
                     </div>
 
                     <h4><?= t('Emails Sent From');?></h4>
@@ -275,9 +288,7 @@
                         <label><?= $form->radio('shoppingDisabled','all',$shoppingDisabled == 'all'); ?> <?php  echo t('Disabled (Catalog Mode)'); ?></label><br />
                     </div>
 
-
-
-                    <h3><?= t('Guest checkout');?></h3>
+                    <h3><?= t('Guest Checkout');?></h3>
                     <div class="form-group">
                         <?php $guestCheckout =  Config::get('community_store.guestCheckout');
                         $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
@@ -285,9 +296,23 @@
                         <label><?= $form->radio('guestCheckout','always', $guestCheckout == 'always'); ?> <?php  echo t('Always (unless login required for products in cart)'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','option',$guestCheckout == 'option'); ?> <?php  echo t('Offer as checkout option'); ?></label><br />
                         <label><?= $form->radio('guestCheckout','off', $guestCheckout == 'off' || $guestCheckout == '' ); ?> <?php  echo t('Disabled'); ?></label><br />
-
                     </div>
 
+                    <h3><?= t('Address Auto-Complete');?></h3>
+                    <div class="form-group">
+                        <?= $form->label('placesAPIKey',t('Address Auto-Complete API Key (Google Places)')); ?>
+                        <?= $form->text('placesAPIKey',Config::get('community_store.placesAPIKey'));?>
+                    </div>
+
+                    <h3><?= t('Company Name');?></h3>
+                    <div class="form-group">
+                        <?php $companyField =  Config::get('community_store.companyField');
+                        $companyField = ($companyField ? $companyField : 'off');
+                        ?>
+                        <label><?= $form->radio('companyField','off', $companyField == 'off' || $companyField == '' ); ?> <?php  echo t('Hidden'); ?></label><br />
+                        <label><?= $form->radio('companyField','optional',$companyField == 'optional'); ?> <?php  echo t('Optional'); ?></label><br />
+                        <label><?= $form->radio('companyField','required',$companyField == 'required'); ?> <?php  echo t('Required'); ?></label><br />
+                    </div>
 
                     <h3><?= t('Billing Details');?></h3>
 
@@ -324,12 +349,22 @@
                     </div>
 
 
+
                     <script>
                         $(document).ready(function() {
                             $('.existing-select2').select2();
                         });
                     </script>
 
+
+                </div>
+
+                <!-- #settings-orders -->
+                <div class="col-sm-9 store-pane" id="settings-orders">
+                    <h3><?= t('Orders');?></h3>
+                    <div class="form-group">
+                        <label><?= $form->checkbox('showUnpaidExternalPaymentOrders', '1',Config::get('community_store.showUnpaidExternalPaymentOrders') ? '1' : '0')?>
+                            <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)');?></label></div>
 
                 </div>
 

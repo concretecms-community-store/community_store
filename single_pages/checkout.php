@@ -55,59 +55,110 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </div>
             <?php } else { ?>
                 <form class="store-checkout-form-group store-active-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-billing" action="">
+                    <?= $token->output('community_store'); ?>
                     <div class="store-checkout-form-group-body">
-                        <h2><?= t("Billing Address") ?></h2>
+
+                        <?php if ($customer->isGuest()) { ?>
+                            <h2><?= t("Customer Information") ?></h2>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="store-email"><?= t("Email") ?></label>
+                                        <?= $form->email('store-email', $customer->getEmail(), array('required'=>'required','placeholder'=>t('Email'))); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+
+                        <h2><?= t("Billing Details") ?></h2>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-first-name"><?= t('First Name') ?></label>
                                     <?= $form->text('store-checkout-billing-first-name', $customer->getValue('billing_first_name'), array('required' => 'required', 'placeholder'=>t('First Name'))); ?>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-last-name"><?= t("Last Name") ?></label>
                                     <?= $form->text('store-checkout-billing-last-name', $customer->getValue('billing_last_name'), array('required'=>'required', 'placeholder'=>t('Last Name'))); ?>
                                 </div>
-                                <?php if ($customer->isGuest()) { ?>
+                            </div>
+                        </div>
+                        <?php if ($companyField == 'required' || $companyField == 'optional') {
+                            if ($companyField == 'required') {
+                                $companyOptions = array('required'=>'required','placeholder'=>t('Company'));
+                            } else {
+                                $companyOptions = array('placeholder'=>t('Company (optional)'));
+                            }
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="store-email"><?= t("Email") ?></label>
-                                    <?= $form->email('store-email', $customer->getEmail(), array('required'=>'required','placeholder'=>t('Email'))); ?>
-                                </div>
-                                <?php } ?>
-                                 <div class="form-group">
-                                    <label for="store-checkout-billing-phone"><?= t("Phone Number") ?></label>
-                                    <?= $form->telephone('store-checkout-billing-phone', $customer->getValue('billing_phone'), array('required'=>'required','placeholder'=>t('Phone Number'))); ?>
+                                    <label for="store-checkout-billing-company"><?= t("Company") ?></label>
+                                    <?= $form->text('store-checkout-billing-company', $customer->getValue('billing_company'), $companyOptions); ?>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <?php } ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="store-checkout-billing-address-1"><?= t("Street Address") ?></label>
+                            </div>
+                            <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="store-checkout-billing-address-1"><?= t("Address Line 1") ?></label>
-                                    <?= $form->text('store-checkout-billing-address-1', $customer->getAddressValue('billing_address', 'address1'), array('required'=>'required','placeholder'=>t('Address Line 1'))); ?>
+                                    <?= $form->text('store-checkout-billing-address-1', $customer->getAddressValue('billing_address', 'address1'), array('required'=>'required','placeholder'=>t('Street Address'))); ?>
                                 </div>
-                                 <div class="form-group">
-                                    <label for="store-checkout-billing-address-1"><?= t("Address Line 2") ?></label>
-                                    <?= $form->text('store-checkout-billing-address-2', $customer->getAddressValue('billing_address', 'address2'), array('placeholder'=>t('Address Line 2'))); ?>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <?= $form->text('store-checkout-billing-address-2', $customer->getAddressValue('billing_address', 'address2'), array('placeholder'=>t('Apartment, unit, etc (optional)'))); ?>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-city"><?= t("City") ?></label>
                                     <?= $form->text('store-checkout-billing-city', $customer->getAddressValue('billing_address', 'city'), array('required'=>'required','placeholder'=>t('City'))); ?>
                                 </div>
-                               <div class="form-group">
-                                    <label for="store-checkout-billing-state"><?= t("State / Province") ?></label>
-                                    <?php $billingState = $customer->getAddressValue('billing_address', 'state_province'); ?>
-                                    <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : ""); ?>
-                                </div>
-                                <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
-                                <div class="form-group">
-                                    <label for="store-checkout-billing-zip"><?= t("Postal Code") ?></label>
-                                    <?= $form->text('store-checkout-billing-zip', $customer->getAddressValue('billing_address', 'postal_code'), array('required'=>'required', 'placeholder'=>t('Postal Code'))); ?>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
                                     <?php $country = $customer->getAddressValue('billing_address', 'country') ?>
                                     <?= $form->select('store-checkout-billing-country', $billingCountries, $country && array_key_exists($country, $billingCountries) ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                               <div class="form-group">
+                                    <label for="store-checkout-billing-state"><?= t("State / Province") ?></label>
+                                    <?php $billingState = $customer->getAddressValue('billing_address', 'state_province'); ?>
+                                    <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : ""); ?>
+                                </div>
+                                <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="store-checkout-billing-zip"><?= t("Postal Code") ?></label>
+                                    <?= $form->text('store-checkout-billing-zip', $customer->getAddressValue('billing_address', 'postal_code'), array('required'=>'required', 'placeholder'=>t('Postal Code'))); ?>
+                                </div>
+                            </div>
+
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="store-checkout-billing-phone"><?= t("Phone Number") ?></label>
+                                    <?= $form->telephone('store-checkout-billing-phone', $customer->getValue('billing_phone'), array('required'=>'required','placeholder'=>t('Phone Number'))); ?>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <?php if ($shippingEnabled) { ?>
                             <div class="store-copy-billing-container col-md-12 text-right">
@@ -122,10 +173,9 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         </div>
 
                         <?php if ($orderChoicesEnabled) { ?>
-                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
+                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" data-yes-value="<?= t('Yes');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
 
                                 <div class="">
-                                    <h2><?= t("Other Choices") ?></h2>
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
@@ -156,50 +206,51 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <div class="store-checkout-form-group-summary panel panel-default ">
                         <div class="panel-heading">
-                            <?= t('Billing Address'); ?>
+                            <?= t('Billing Details'); ?>
                         </div>
                         <div class="row panel-body">
                             <div class="col-sm-6">
-                                <label><?= t('Name'); ?></label>
-
-                                <p class="store-summary-name"><?= $customer->getValue('billing_first_name') . ' ' . $customer->getValue('billing_last_name'); ?></p>
-
                                 <label><?= t('Email'); ?></label>
-
                                 <p class="store-summary-email"><?= $customer->getEmail(); ?></p>
 
-                                <label><?= t('Phone'); ?></label>
+                                <label><?= t('Name'); ?></label>
+                                <p class="store-summary-name"><?= $customer->getValue('billing_first_name') . ' ' . $customer->getValue('billing_last_name'); ?></p>
 
-                                <p class="store-summary-phone"><?= $customer->getValue('billing_phone'); ?></p>
+                                <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
+                                    <label><?= t('Company'); ?></label>
+                                    <p class="store-summary-company"><?= $customer->getValue('billing_company'); ?></p>
+                                <?php } ?>
                             </div>
-
                             <div class="col-sm-6">
                                 <label><?= t('Address'); ?></label>
                                 <p class="store-summary-address"><?= nl2br($customer->getAddress('billing_address')); ?></p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <?php if ($orderChoicesEnabled) { ?>
-                        <div class="store-checkout-form-group-summary <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?> panel panel-default ">
-                            <div class="panel-heading">
-                                <?= t('Other Choices'); ?>
+                                <label><?= t('Phone'); ?></label>
+                                <p class="store-summary-phone"><?= $customer->getValue('billing_phone'); ?></p>
                             </div>
-                            <div class="row panel-body">
-                                <div class="col-md-12">
+
+                            <?php if ($orderChoicesEnabled) { ?>
+
+                                <div class="col-sm-12">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <label><?= $ak->getAttributeKeyDisplayName()?></label>
                                         <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
                                     <?php } ?>
                                 </div>
-                            </div>
+
+                            <?php } ?>
+
                         </div>
-                    <?php } ?>
+
+
+                    </div>
+
+
 
                 </form>
                 <?php if ($shippingEnabled) { ?>
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping">
-
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
                             <div class="row">
@@ -208,39 +259,67 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                         <label for="store-checkout-shipping-first-name"><?= t("First Name") ?></label>
                                         <?= $form->text('store-checkout-shipping-first-name', $customer->getValue("shipping_first_name"), array('required'=>'required', 'placeholder'=>t('First Name'))); ?>
                                     </div>
-
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-last-name"><?= t("Last Name") ?></label>
                                         <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), array('required'=>'required', 'placeholder'=>t('Last Name'))); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="store-checkout-shipping-address-1"><?= t("Address Line 1") ?></label>
-                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), array('required'=>'required','placeholder'=>t('Address Line 1'))); ?>
+                            </div>
+                            <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="store-checkout-shipping-company"><?= t("Company") ?></label>
+                                            <?= $form->text('store-checkout-shipping-company', $customer->getValue('shipping_company'), $companyOptions); ?>
+                                        </div>
                                     </div>
+                                </div>
+                            <?php } ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="store-checkout-shipping-address-1"><?= t("Address") ?></label>
+                                </div>
+                                <div class="col-md-7">
                                     <div class="form-group">
-                                        <label for="store-checkout-shipping-address-1"><?= t("Address Line 2") ?></label>
-                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2'), array('placeholder'=>t('Address Line 2'))); ?>
+                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), array('required'=>'required','placeholder'=>t('Street Address'))); ?>
                                     </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2'), array('placeholder'=>t('Apartment, unit, etc (optional)'))); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-city"><?= t("City") ?></label>
                                         <?= $form->text('store-checkout-shipping-city', $customer->getAddressValue('shipping_address', 'city'), array('required'=>'required', 'placeholder'=>t('City'))); ?>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
+                                        <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
+                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-state"><?= t("State / Province") ?></label>
                                         <?php $shippingState = $customer->getAddressValue('shipping_address', 'state_province'); ?>
                                         <?= $form->select('store-checkout-shipping-state', $states, $shippingState ? $shippingState : ""); ?>
                                     </div>
                                     <input type="hidden" id="store-checkout-saved-shipping-state" value="<?= $shippingState ?>">
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-zip"><?= t("Postal Code") ?></label>
                                             <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), array('required'=>'required', 'placeholder'=>t('Postal Code'))); ?>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
-                                        <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
-                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +349,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     </form>
 
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping-method">
-
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
 
@@ -311,6 +390,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                 <?php if (Config::get('community_store.vat_number')) { ?>
                     <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-vat">
+                        <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("VAT Number") ?></h2>
                             <div class="row">
@@ -343,6 +423,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
                       action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                    <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Payment") ?></h2>
@@ -387,7 +468,8 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
 
-                                </div></div>
+                                </div>
+                                </div>
 
                             <?php    }
                         } else {  //if payment methods
@@ -447,6 +529,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
+                                <?= $token->output('community_store'); ?>
                                 <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
                                 <input type="hidden" name="action" value="code" />
                                 <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
@@ -500,7 +583,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 </ul>
 
                 <ul class="store-checkout-totals-line-items list-group">
-                    <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Grand Total") ?>:</strong> <span
+                    <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Total") ?>:</strong> <span
                             class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
                 </ul>
             </div>

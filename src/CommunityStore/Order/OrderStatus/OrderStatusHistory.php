@@ -131,7 +131,7 @@ class OrderStatusHistory
         }
         $sql = "SELECT * FROM " . self::$table . " WHERE oID=? ORDER BY oshDate DESC";
         $rows = \Database::connection()->getAll($sql, $order->getOrderID());
-        $history = array();
+        $history = [];
         if (count($rows) > 0) {
             foreach ($rows as $row) {
                 $history[] = self::getByID($row['oshID']);
@@ -144,7 +144,6 @@ class OrderStatusHistory
     public static function updateOrderStatusHistory(StoreOrder $order, $statusHandle)
     {
         $history = self::getForOrder($order);
-
 
         if (empty($history) || $history[0]->getOrderStatusHandle() != $statusHandle) {
             $previousStatus = $order->getStatusHandle();

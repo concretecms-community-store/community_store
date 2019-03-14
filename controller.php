@@ -5,7 +5,6 @@ use Package;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-use Whoops\Exception\ErrorException;
 use Route;
 use Asset;
 use AssetList;
@@ -16,7 +15,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '5.7.5';
-    protected $pkgVersion = '1.3.6';
+    protected $pkgVersion = '1.4.7';
 
     public function getPackageDescription()
     {
@@ -58,8 +57,8 @@ class Controller extends Package
     public function upgrade()
     {
         $pkg = Package::getByHandle('community_store');
-        Installer::upgrade($pkg);
         parent::upgrade();
+        Installer::upgrade($pkg);
         $cms = Core::make('app');
         $cms->clearCaches();
     }
@@ -75,41 +74,43 @@ class Controller extends Package
         Route::register('/checkout/setVatNumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::setVatNumber');
         Route::register('/checkout/selectShipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartTotal::getShippingTotal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
-        Route::register('/dashboard/store/orders/details/slip', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OrderSlip::renderOrderPrintSlip');
     }
+
     public function on_start()
     {
         $this->registerRoutes();
 
+        $version = $this->getPackageVersion();
+
         $al = AssetList::getInstance();
-        $al->register('css', 'community-store', 'css/community-store.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
-        $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
-        $al->register('javascript', 'community-store', 'js/communityStore.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
-        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
+        $al->register('css', 'community-store', 'css/community-store.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'community-store', 'js/communityStore.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'community-store-autocomplete', 'js/autoComplete.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-        $al->register('javascript', 'chartist', 'js/chartist.min.js', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
-        $al->register('css', 'chartist', 'css/chartist.min.css', array('version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
-        $al->register('javascript', 'chartist-tooltip', 'js/chartist-plugin-tooltip.min.js', array('version' => '0.0.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false), $this);
-        $al->register('css', 'chartist-tooltip', 'css/chartist-plugin-tooltip.css', array('version' => '0.0.12', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $this);
+        $al->register('javascript', 'chartist', 'js/chartist.min.js', ['version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist', 'css/chartist.min.css', ['version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'chartist-tooltip', 'js/chartist-plugin-tooltip.min.js', ['version' => '0.0.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist-tooltip', 'css/chartist-plugin-tooltip.css', ['version' => '0.0.12', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->registerGroup('chartist',
-            array(
-                array('javascript', 'chartist'),
-                array('javascript', 'chartist-tooltip'),
-                array('css', 'chartist'),
-                array('css', 'chartist-tooltip'),
-            )
+            [
+                ['javascript', 'chartist'],
+                ['javascript', 'chartist-tooltip'],
+                ['css', 'chartist'],
+                ['css', 'chartist-tooltip'],
+            ]
         );
-
 
         if (Core::make('app')->isRunThroughCommandLineInterface()) {
             try {
                 $app = Core::make('console');
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
-
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
-
     }
+
     public function uninstall()
     {
         $invoicepm = PaymentMethod::getByHandle('invoice');
@@ -146,8 +147,9 @@ class Controller extends Package
         return "
         <script type=\"text/javascript\">
             var PRODUCTMODAL = '" . URL::to('/productmodal') . "';
-            var CARTURL = '" . URL::to('/cart') . "';
-            var CHECKOUTURL = '" . URL::to('/checkout') . "';
+            var CARTURL = '" . rtrim(URL::to('/cart'), '/') . "';
+            var TRAILINGSLASH = '" . ((bool) \Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
+            var CHECKOUTURL = '" . rtrim(URL::to('/checkout'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
         </script>
         ";

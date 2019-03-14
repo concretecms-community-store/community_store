@@ -33,7 +33,7 @@
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">
-		<field name="bID" type="integer" size="10"><unsigned /></field>
-		<field name="gID" type="integer" size="10"><unsigned/></field>
+		<field name="bID" type="integer" size="10"><unsigned /><key /></field>
+		<field name="gID" type="integer" size="10"><unsigned/><key /></field>
 	</table>
 </schema>

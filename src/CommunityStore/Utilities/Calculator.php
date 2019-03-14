@@ -11,7 +11,6 @@ class Calculator
 {
     public static function getSubTotal($cart = false)
     {
-
         if (!$cart) {
             $cart = StoreCart::getCart();
         }
@@ -22,7 +21,6 @@ class Calculator
                 $product = $cartItem['product']['object'];
 
                 if (is_object($product)) {
-
                     if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
                         $price = $cartItem['product']['customerPrice'];
                     } elseif (isset($cartItem['product']['discountedPrice'])) {
@@ -39,6 +37,7 @@ class Calculator
 
         return round(max($subtotal, 0), 2);
     }
+
     public static function getShippingTotal($smID = null)
     {
         $cart = StoreCart::getCart();
@@ -62,6 +61,7 @@ class Calculator
 
         return round($shippingTotal, 2);
     }
+
     public static function getTaxTotals()
     {
         return StoreTax::getTaxes();
@@ -70,10 +70,11 @@ class Calculator
     public static function getGrandTotal()
     {
         $totals = self::getTotals();
+
         return $totals['total'];
     }
 
-        // returns an array of formatted cart totals
+    // returns an array of formatted cart totals
     public static function getTotals()
     {
         $subTotal = self::getSubTotal();
@@ -92,7 +93,7 @@ class Calculator
 
         if ($taxes) {
             foreach ($taxes as $tax) {
-                if ($taxCalc != 'extract') {
+                if ('extract' != $taxCalc) {
                     $addedTaxTotal += $tax['producttaxamount'];
                     $addedShippingTaxTotal += $tax['shippingtaxamount'];
                 } else {
@@ -104,28 +105,26 @@ class Calculator
 
         $adjustedSubtotal = $subTotal;
         $adjustedShippingTotal = $shippingTotal;
-		$discountRatio = 1;
+        $discountRatio = 1;
         $discountShippingRatio = 1;
 
-        $formattedtaxes = array();
+        $formattedtaxes = [];
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
-                if ($discount->getDeductFrom() == 'subtotal') {
-                    if ($discount->getDeductType() == 'value') {
+                if ('subtotal' == $discount->getDeductFrom()) {
+                    if ('value' == $discount->getDeductType()) {
                         $adjustedSubtotal -= $discount->getValue();
                     }
-
-                } elseif($discount->getDeductFrom() == 'shipping') {
-
-                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
+                } elseif ('shipping' == $discount->getDeductFrom()) {
+                    if ('value' == $discount->getDeductType() || 'value_all' == $discount->getDeductType()) {
                         $adjustedShippingTotal -= $discount->getValue();
                     }
-                    
-                    if ($discount->getDeductType() == 'percentage') {
+
+                    if ('percentage' == $discount->getDeductType()) {
                         $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
                     }
 
-                    if ($discount->getDeductType() == 'fixed') {
+                    if ('fixed' == $discount->getDeductType()) {
                         $adjustedShippingTotal = $discount->getValue();
                     }
                 }
@@ -139,15 +138,14 @@ class Calculator
                 $discountShippingRatio = $adjustedShippingTotal / $shippingTotal;
             }
 
-            $addedTaxTotal  = $discountRatio * $addedTaxTotal;
-            $addedShippingTaxTotal  =  $discountShippingRatio * $addedShippingTaxTotal;
+            $addedTaxTotal = $discountRatio * $addedTaxTotal;
+            $addedShippingTaxTotal = $discountShippingRatio * $addedShippingTaxTotal;
 
-            $includedTaxTotal  = $discountRatio * $includedTaxTotal ;
-            $includedShippingTaxTotal  =  $discountShippingRatio * $includedShippingTaxTotal;
+            $includedTaxTotal = $discountRatio * $includedTaxTotal;
+            $includedShippingTaxTotal = $discountShippingRatio * $includedShippingTaxTotal;
 
-
-            foreach($taxes as $tax) {
-                $tax['taxamount'] =  round(($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']),2);
+            foreach ($taxes as $tax) {
+                $tax['taxamount'] = round(($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']), 2);
                 $formattedtaxes[] = $tax;
             }
 
@@ -173,6 +171,6 @@ class Calculator
         $totalTax = round($totalTax, 2);
         $total = round($total, 2);
 
-        return array('discountRatio'=>$discountRatio,'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $totalTax, 'addedTaxTotal'=>$addedTaxTotal + $addedShippingTaxTotal,'includeTaxTotal'=>$includedTaxTotal + $includedShippingTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total);
+        return ['discountRatio' => $discountRatio, 'subTotal' => $adjustedSubtotal, 'taxes' => $taxes, 'taxTotal' => $totalTax, 'addedTaxTotal' => $addedTaxTotal + $addedShippingTaxTotal, 'includeTaxTotal' => $includedTaxTotal + $includedShippingTaxTotal, 'shippingTotal' => $adjustedShippingTotal, 'total' => $total];
     }
 }

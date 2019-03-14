@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
-use Database;
-
 /**
  * @Entity
  * @Table(name="CommunityStoreProductVariationOptionItems")

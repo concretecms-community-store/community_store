@@ -10,7 +10,7 @@ if(in_array($controller->getTask(),$addViews)){
 
 
 <form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','add_rate')?>" method="post" data-states-utility="<?=URL::to('/checkout/getstates')?>">
-
+    <?= $token->output('community_store'); ?>
     <div class="row">
         <div class="col-xs-12 col-md-12">
             <input type="hidden" name="taxRateID" value="<?= $taxRate->getTaxRateID()?>">
@@ -193,7 +193,7 @@ if(in_array($controller->getTask(),$addViews)){
 <?php } elseif(in_array($controller->getTask(),$addClassViews)){ ?>
 
 <form id="settings-tax" action="<?=URL::to('/dashboard/store/settings/tax','save_class')?>" method="post" data-states-utility="<?=URL::to('/checkout/getstates')?>">
-
+    <?= $token->output('community_store'); ?>
     <div class="row">
         <div class="col-xs-12 col-md-12">
             <input type="hidden" name="taxClassID" value="<?= $tc->getID()?>">

@@ -69,7 +69,7 @@ class OrderStatus
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $rows = $db->GetAll("SELECT osID FROM CommunityStoreOrderStatuses ORDER BY osSortOrder ASC, osID ASC");
-        $statuses = array();
+        $statuses = [];
         if (count($rows) > 0) {
             foreach ($rows as $row) {
                 $statuses[] = self::getByID($row['osID']);
@@ -81,7 +81,7 @@ class OrderStatus
 
     public static function getList()
     {
-        $statuses = array();
+        $statuses = [];
         foreach (self::getAll() as $status) {
             $statuses[$status->getHandle()] = t($status->getName());
         }
@@ -98,13 +98,13 @@ class OrderStatus
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $sql = "INSERT INTO CommunityStoreOrderStatuses (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
-        $values = array(
+        $values = [
             $osHandle,
             $osName,
             $osInformSite ? 1 : 0,
             $osInformCustomer ? 1 : 0,
-            $osIsStartingStatus ? 1 : 0
-        );
+            $osIsStartingStatus ? 1 : 0,
+        ];
         $db->query($sql, $values);
 
         if ($osIsStartingStatus) {
@@ -128,6 +128,7 @@ class OrderStatus
 
         return $textHelper->unhandle($this->osHandle);
     }
+
     public function getName()
     {
         return $this->osName;
@@ -192,7 +193,7 @@ class OrderStatus
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $sql = "UPDATE CommunityStoreOrderStatuses SET " . $column . "=? WHERE osID=?";
-        $db->Execute($sql, array($column, $value));
+        $db->Execute($sql, [$column, $value]);
     }
 
     public static function setNewStartingStatus($osHandle = null)
@@ -203,19 +204,20 @@ class OrderStatus
                 $app = Application::getFacadeApplication();
                 $db = $app->make('database')->connection();
                 $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=0 WHERE 1=1");
-                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=1 WHERE osHandle=?", array($osHandle));
+                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=1 WHERE osHandle=?", [$osHandle]);
             }
         }
     }
-    public function update($data = array(), $ignoreFilledColumns = false)
+
+    public function update($data = [], $ignoreFilledColumns = false)
     {
-        $orderStatusArray = array(
+        $orderStatusArray = [
             'osHandle' => $this->osHandle,
             'osName' => $this->osName,
             'osInformSite' => $this->osInformSite,
             'osInformCustomer' => $this->osInformCustomer,
             'osSortOrder' => $this->osSortOrder,
-        );
+        ];
         $startingStatusHandle = null;
         if (isset($data['osIsStartingStatus'])) {
             $startingStatusHandle = $this->osHandle;

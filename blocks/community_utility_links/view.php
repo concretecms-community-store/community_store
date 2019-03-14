@@ -1,7 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if (!$shoppingDisabled) { ?>
-<div class="store-utility-links <?= ($itemCount == 0 ? 'store-cart-empty' : ''); ?>">
-    <?php if ($showSignIn || $showGreeting) { ?>
+<?php if (!$shoppingDisabled) {
+    ?>
+<div class="store-utility-links <?= (0 == $itemCount ? 'store-cart-empty' : ''); ?>">
+    <?php if ($showSignIn || $showGreeting) {
+        ?>
     <p class="store-utility-links-login">
         <?php if ($showSignIn) {
             $u = new User();
@@ -21,36 +23,54 @@
             }
         } ?>
         </p>
-    <?php } ?>
+    <?php
+    } ?>
 
-    <?php if ($showCartItems || $showCartTotal) { ?>
+    <?php if ($showCartItems || $showCartTotal) {
+        ?>
         <p class="store-utility-links-totals">
-            <?php if ($showCartItems) { ?>
-                <span class="store-items-in-cart"><?= $itemsLabel ?> (<span class="store-items-counter"><?= $itemCount ?></span>)</span>
-            <?php } ?>
+            <?php if ($showCartItems) {
+            ?>
+                <span class="store-items-in-cart"><?= $itemsLabel; ?> (<span class="store-items-counter"><?= $itemCount; ?></span>)</span>
+            <?php
+        } ?>
 
-            <?php if ($showCartTotal) { ?>
-                <span class="store-total-cart-amount"><?= $total ?></span>
-            <?php } ?>
+            <?php if ($showCartTotal) {
+            ?>
+                <span class="store-total-cart-amount"><?= $total; ?></span>
+            <?php
+        } ?>
         </p>
-    <?php } ?>
+    <?php
+    } ?>
 
-    <?php if (!$inCart) { ?>
+    <?php if (!$inCart) {
+        ?>
         <p class="store-utility-links-cart-link">
-            <?php if ($popUpCart && !$inCheckout) { ?>
-                <a href="#" class="store-cart-link store-cart-link-modal"><?= $cartLabel ?></a>
-            <?php } else { ?>
-                <a href="<?= \URL::to('/cart') ?>" class="store-cart-link"><?= $cartLabel ?></a>
-            <?php } ?>
+            <?php if ($popUpCart && !$inCheckout) {
+            ?>
+                <a href="#" class="store-cart-link store-cart-link-modal"><?= $cartLabel; ?></a>
+            <?php
+        } else {
+            ?>
+                <a href="<?= \URL::to('/cart'); ?>" class="store-cart-link"><?= $cartLabel; ?></a>
+            <?php
+        } ?>
         </p>
-    <?php } ?>
+    <?php
+    } ?>
 
-    <?php if (!$inCheckout) { ?>
-        <?php if ($showCheckout) { ?>
+    <?php if (!$inCheckout) {
+        ?>
+        <?php if ($showCheckout) {
+            ?>
         <p  class="store-utility-links-checkout-link">
-            <a href="<?= \URL::to('/checkout') ?>" class="store-cart-link"><?= t("Checkout") ?></a>
+            <a href="<?= \URL::to('/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
         </p>
-        <?php } ?>
-    <?php } ?>
+        <?php
+        } ?>
+    <?php
+    } ?>
 </div>
-<?php } ?>
+<?php
+} ?>

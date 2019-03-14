@@ -19,4 +19,7 @@ extract($vars);
     echo $editor->outputStandardEditor('paymentInstructions', $paymentInstructions);?>
 </div>
 
-
+<div class="form-group">
+    <label><?= t("Mark Order As Paid")?></label>
+    <?= $form->select('markPaid', array('0'=>t('No, orders are left us unpaid'), '1'=>t('Yes, orders are immediately marked as paid')), $markPaid); ?>
+</div>

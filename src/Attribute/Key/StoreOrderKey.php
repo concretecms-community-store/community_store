@@ -13,7 +13,7 @@ class StoreOrderKey extends Key
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $values = $db->GetAll("select akID, avID from CommunityStoreOrderAttributeValues where oID = ?", array($oID));
+        $values = $db->GetAll("select akID, avID from CommunityStoreOrderAttributeValues where oID = ?", [$oID]);
         $avl = new AttributeValueList();
         foreach ($values as $val) {
             $ak = self::getByID($val['akID']);
@@ -31,7 +31,7 @@ class StoreOrderKey extends Key
         parent::load($akID);
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $row = $db->GetRow("select * from CommunityStoreOrderAttributeKeys where akID = ?", array($akID));
+        $row = $db->GetRow("select * from CommunityStoreOrderAttributeKeys where akID = ?", [$akID]);
         $this->setPropertiesFromArray($row);
     }
 
@@ -47,11 +47,12 @@ class StoreOrderKey extends Key
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $groups = array();
-        $allGroups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", array($this->akID));
+        $groups = [];
+        $allGroups = $db->GetAll("select gID from CommunityStoreOrderAttributeKeyUserGroups where akID = ?", [$this->akID]);
         foreach ($allGroups as $group) {
             $groups[] = $group['gID'];
         }
+
         return $groups;
     }
 
@@ -73,11 +74,11 @@ class StoreOrderKey extends Key
             INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
             WHERE ak.akHandle = ?
             AND akc.akCategoryHandle = 'store_order'";
-        $akID = $db->GetOne($q, array($akHandle));
+        $akID = $db->GetOne($q, [$akHandle]);
         if ($akID > 0) {
             $ak = self::getByID($akID);
         }
-        if ($ak === -1) {
+        if (-1 === $ak) {
             return false;
         }
 
@@ -99,7 +100,7 @@ class StoreOrderKey extends Key
             $uGroupIDs = array_keys($user->getUserGroups());
         }
 
-        $akList = array();
+        $akList = [];
         foreach (parent::getList('store_order') as $ak) {
             if (in_array($set, $ak->getAttributeSets())) {
                 $attributeGroups = $ak->getAttributeGroups();
@@ -119,12 +120,12 @@ class StoreOrderKey extends Key
         parent::saveAttribute($av, $value);
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $v = array($order->getOrderID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
-        $db->Replace('CommunityStoreOrderAttributeValues', array(
+        $v = [$order->getOrderID(), $this->getAttributeKeyID(), $av->getAttributeValueID()];
+        $db->Replace('CommunityStoreOrderAttributeValues', [
             'oID' => $order->getOrderID(),
             'akID' => $this->getAttributeKeyID(),
             'avID' => $av->getAttributeValueID(),
-        ), array('oID', 'akID'));
+        ], ['oID', 'akID']);
         unset($av);
     }
 
@@ -137,11 +138,11 @@ class StoreOrderKey extends Key
         $akID = $ak->getAttributeKeyID();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', array($akID, $required));
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', [$akID, $required]);
 
         if (is_array($groups) && !empty($groups)) {
             foreach ($groups as $gID) {
-                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', [$akID, $gID]);
             }
         }
 
@@ -155,16 +156,16 @@ class StoreOrderKey extends Key
     {
         $ak = parent::update($args);
         extract($args);
-        
+
         $akID = $ak->getAttributeKeyID();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', array($akID, $required));
+        $db->query('REPLACE INTO CommunityStoreOrderAttributeKeys (akID, required) VALUES (?, ?)', [$akID, $required]);
 
-        $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', array($akID));
+        $db->query('DELETE FROM CommunityStoreOrderAttributeKeyUserGroups where akID = ?', [$akID]);
         if (is_array($groups) && !empty($groups)) {
             foreach ($groups as $gID) {
-                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', array($akID, $gID));
+                $db->query('REPLACE INTO CommunityStoreOrderAttributeKeyUserGroups (akID, gID) VALUES (?, ?)', [$akID, $gID]);
             }
         }
     }
@@ -174,14 +175,15 @@ class StoreOrderKey extends Key
         parent::delete();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $r = $db->query('select avID from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $r = $db->query('select avID from CommunityStoreOrderAttributeValues where akID = ?', [$this->getAttributeKeyID()]);
         while ($row = $r->FetchRow()) {
-            $db->query('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->query('delete from AttributeValues where avID = ?', [$row['avID']]);
         }
-        $db->query('delete from CommunityStoreOrderAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->query('delete from CommunityStoreOrderAttributeValues where akID = ?', [$this->getAttributeKeyID()]);
     }
 
-    public function isRequired() {
-        return (bool)$this->required;
+    public function isRequired()
+    {
+        return (bool) $this->required;
     }
 }

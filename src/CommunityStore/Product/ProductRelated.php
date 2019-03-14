@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -42,7 +41,6 @@ class ProductRelated
      * @JoinColumn(name="relatedPID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $relatedProduct;
-
 
     public function getID()
     {
@@ -92,13 +90,15 @@ class ProductRelated
     public static function getByID($cID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $cID);
     }
 
     public static function getRelatedProducts(StoreProduct $product)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('pID' => $product->getID()));
+
+        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
     public static function addRelatedProducts(array $products, StoreProduct $product)
@@ -111,7 +111,7 @@ class ProductRelated
             foreach ($products['pRelatedProducts'] as $pID) {
                 if ($pID > 0) {
                     self::add($product, $pID, $count);
-                    $count++;
+                    ++$count;
                 }
             }
         }
@@ -139,7 +139,8 @@ class ProductRelated
         return $relation;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setProductID(null);

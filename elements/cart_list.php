@@ -31,6 +31,7 @@ if ($cart) {
                 $classes = "";
             }
             if (is_object($product)) {
+                $productPage = $product->getProductPage();
                 ?>
 
                 <tr class="store-cart-item <?= $classes ?>" data-instance-id="<?= $k ?>"
@@ -38,17 +39,25 @@ if ($cart) {
                     <?php $thumb = $product->getImageThumb(); ?>
                     <?php if ($thumb) { ?>
                     <td class="store-cart-list-thumb">
-                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                        <?php if ($productPage) { ?>
+                            <a href="<?= URL::to($productPage) ?>">
+                                <?= $thumb ?>
+                            </a>
+                        <?php } else { ?>
                             <?= $thumb ?>
-                        </a>
+                        <?php } ?>
                     </td>
                     <td class="store-cart-product-name">
                         <?php } else { ?>
                     <td colspan="2" class="store-cart-product-name">
                         <?php } ?>
-                        <a href="<?= URL::to(Page::getByID($product->getPageID())) ?>">
+                        <?php if ($productPage) { ?>
+                        <a href="<?= URL::to($productPage) ?>">
                             <?= $product->getName() ?>
                         </a>
+                        <?php } else { ?>
+                            <?= $product->getName() ?>
+                        <?php } ?>
 
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-item-attributes">
@@ -100,6 +109,10 @@ if ($cart) {
                     <td class="store-cart-product-qty text-center">
                         <?php if ($product->allowQuantity()) { ?>
                             <?= $qty ?>
+                        <?php } ?>
+                        <?php $quantityLabel = $product->getQtyLabel(); ?>
+                        <?php  if ($quantityLabel) { ?>
+                            <span class="store-cart-qty-label small"><?= $quantityLabel; ?></span>
                         <?php } ?>
                     </td>
 

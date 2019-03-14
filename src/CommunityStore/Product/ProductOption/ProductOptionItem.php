@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
-use Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
@@ -56,10 +55,12 @@ class ProductOptionItem
     {
         $this->poiName = $name;
     }
+
     private function setSort($sort)
     {
         $this->poiSort = $sort;
     }
+
     private function setHidden($hidden)
     {
         $this->poiHidden = (bool) $hidden;
@@ -69,22 +70,27 @@ class ProductOptionItem
     {
         return $this->poiID;
     }
+
     public function getOptionID()
     {
         return $this->poID;
     }
+
     public function getName()
     {
         return $this->poiName;
     }
+
     public function getSort()
     {
         return $this->poiSort;
     }
+
     public function getHidden()
     {
         return $this->poiHidden;
     }
+
     public function isHidden()
     {
         return (bool) $this->poiHidden;
@@ -93,19 +99,21 @@ class ProductOptionItem
     public static function getByID($id)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findBy(array('poID' => $po->getID()), array('poiSort' => 'asc'));
+
+        return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
 
-    public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = array())
+    public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = [])
     {
         if (!is_array($excluding)) {
-            $excluding = array();
+            $excluding = [];
         }
         //clear out existing product option items
         $options = $product->getOptions();
@@ -126,7 +134,7 @@ class ProductOptionItem
 
     public static function add($option, $name, $sort, $hidden = false, $persistonly = false)
     {
-        $productOptionItem = new self();;
+        $productOptionItem = new self();
         $productOptionItem->setOption($option);
         $productOptionItem->setName($name);
         $productOptionItem->setSort($sort);
@@ -146,7 +154,8 @@ class ProductOptionItem
         return $this;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->setID(null);
             $this->setOption(null);

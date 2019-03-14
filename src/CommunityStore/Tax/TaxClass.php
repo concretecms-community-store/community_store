@@ -2,7 +2,6 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
 use Core;
-use Database;
 
 /**
  * @Entity
@@ -41,10 +40,12 @@ class TaxClass
     {
         $this->taxClassHandle = $handle;
     }
+
     public function setTaxClassName($name)
     {
         $this->taxClassName = $name;
     }
+
     public function setTaxClassRates(array $rates = null)
     {
         if ($rates) {
@@ -54,6 +55,7 @@ class TaxClass
             $this->taxClassRates = '';
         }
     }
+
     public function setTaxClassLock($locked)
     {
         $this->locked = $locked;
@@ -63,26 +65,31 @@ class TaxClass
     {
         return $this->tcID;
     }
+
     public function getTaxClassHandle()
     {
         return $this->taxClassHandle;
     }
+
     public function getTaxClassName()
     {
         return $this->taxClassName;
     }
+
     public function getName()
     {
         return $this->getTaxClassName();
     }
+
     public function isLocked()
     {
         return $this->locked;
     }
+
     public function getTaxClassRates()
     {
         $taxRates = explode(',', $this->taxClassRates);
-        $taxes = array();
+        $taxes = [];
         foreach ($taxRates as $tr) {
             if ($tr) {
                 $taxrate = TaxRate::getByID($tr);
@@ -99,6 +106,7 @@ class TaxClass
     {
         return explode(',', $this->taxClassRates);
     }
+
     public function addTaxClassRate($trID)
     {
         $taxClassRates = $this->taxClassRates;
@@ -107,6 +115,7 @@ class TaxClass
         $this->setTaxClassRates($taxClassRates);
         $this->save();
     }
+
     public function taxClassContainsTaxRate(TaxRate $taxRate)
     {
         $trID = $taxRate->getTaxRateID();
@@ -116,21 +125,25 @@ class TaxClass
             return false;
         }
     }
+
     public static function getByID($tcID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('taxClassHandle' => $taxClassHandle));
+
+        return $em->getRepository(get_class())->findOneBy(['taxClassHandle' => $taxClassHandle]);
     }
 
     public static function getTaxClasses()
     {
         $em = \ORM::entityManager();
+
         return $em->createQuery('select u from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass u')->getResult();
     }
 

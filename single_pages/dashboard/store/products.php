@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $listViews = array('view','updated','removed','success');
 $addViews = array('add','edit','save');
-$groupViews = array('groups','groupadded','addgroup');
 $attributeViews = array('attributes','attributeadded','attributeremoved');
 $ps = Core::make('helper/form/page_selector');
 
@@ -31,7 +30,8 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <div class="ccm-dashboard-header-buttons">
 
         <form class="pull-right"  method="post" id="delete" action="<?= \URL::to('/dashboard/store/products/delete/', $pID)?>" >
-            &nbsp;<button class="btn btn-danger"><?= t("Delete Product")?></button>
+            <?= $token->output('community_store'); ?>&nbsp;
+            <button class="btn btn-danger"><?= t("Delete Product")?></button>
         </form>
 
         <form class="pull-right" method="get" id="duplicate" action="<?= \URL::to('/dashboard/store/products/duplicate/', $pID)?>" >
@@ -51,19 +51,21 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <?php } ?>
 
     <form method="post" action="<?= $view->action('save')?>">
+        <?= $token->output('community_store'); ?>
         <input type="hidden" name="pID" value="<?= $product->getID()?>"/>
 
         <div class="row">
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle ><?= t('Overview')?></a></li>
-                    <li><a href="#product-categories" data-pane-toggle><?= t('Categories')?></a></li>
+                    <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups')?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping')?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images')?></a></li>
-                    <li><a href="#product-options" data-pane-toggle><?= t('Options')?></a></li>
+                    <li><a href="#product-options" data-pane-toggle><?= t('Options and Variations')?></a></li>
                     <li><a href="#product-related" data-pane-toggle><?= t('Related Products')?></a></li>
                     <li><a href="#product-attributes" data-pane-toggle><?= t('Attributes')?></a></li>
-                    <li><a href="#product-digital" data-pane-toggle><?= t("Memberships and Downloads")?></a></li>
+                    <li><a href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups")?></a></li>
+                    <li><a href="#product-checkout" data-pane-toggle><?= t("Checkout Options")?></a></li>
                     <li><a href="#product-page" data-pane-toggle><?= t('Detail Page')?></a></li>
                 </ul>
             </div>
@@ -346,7 +348,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pQty", t("Stock Level"));?>
                             <?php $qty = $product->getQty(); ?>
                             <div class="input-group">
-                                <?= $form->number("pQty", $qty!==''?$qty:'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : '')));?>
+                                <?= $form->number("pQty", $qty!==''? round($qty, 3) :'999', array(($product->isUnlimited() ? 'disabled' : '')=>($product->isUnlimited() ? 'disabled' : ''),'step'=>0.001));?>
                                 <div class="input-group-addon">
                                     <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited())?>
                                     <?= $form->label('pQtyUnlim', t('Unlimited'))?>
@@ -360,10 +362,29 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         });
 
 
+                                        $('#pAllowDecimalQty').change(function(){
+                                            $('#quantitystepscontainer').toggleClass('hidden');
+                                        });
+
                                         $('#pQuantityPrice').change(function(){
                                             $('#tieredoptionscontainer').toggleClass('hidden');
                                         });
 
+                                        $('#pNoQty').change(function(){
+                                            if ($(this).val() == '1') {
+                                                $('#quantityoptions').addClass('hidden');
+                                                $('#quantitystepscontainer').addClass('hidden');
+                                            } else {
+                                                $('#quantityoptions').removeClass('hidden');
+
+                                                if ( $('#pAllowDecimalQty').val() == 1) {
+                                                    $('#quantitystepscontainer').removeClass('hidden');
+                                                } else {
+                                                    $('#quantitystepscontainer').addClass('hidden');
+                                                }
+                                            }
+
+                                        });
 
                                         $('#pVariations').change(function(){
                                             if ($(this).prop('checked')) {
@@ -394,6 +415,39 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                         </div>
                     </div>
                 </div>
+
+                <div class="row <?= !$product->allowQuantity() ? 'hidden': '';?>" id="quantityoptions">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pAllowDecimalQty", t("Allow Decimal Quantities"));?>
+                            <?= $form->select("pAllowDecimalQty",array('0'=>t('No, whole number quantities only'),'1'=>t('Yes')), $product->getAllowDecimalQty());?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pMaxQty", t("Maximum Quantity (as single cart item)"));?>
+                            <?= $form->number("pMaxQty", $product->getMaxQty(), array('min'=>0, 'step'=>0.01));?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pQtyLabel", t("Quantity Label"));?>
+                            <?= $form->text("pQtyLabel", $product->getQtyLabel(), array('placeholder'=>'e.g. cm'));?>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 <?= ($product->getAllowDecimalQty() ? '' : 'hidden');?>" id="quantitystepscontainer">
+                        <div class="form-group">
+                            <?= $form->label("pQtySteps", t("Quantity Steps"));?>
+                            <?= $form->number("pQtySteps",  $product->getQtySteps() > 0  ? round($product->getQtySteps(), 4) : '', array('min'=>0,'step'=>0.001, 'placeholder'=>'e.g. 0.1'));?>
+                        </div>
+                    </div>
+                </div>
+
+
                 <?php if ($controller->getTask() == 'edit') { ?>
                 <div class="row">
                     <div class="col-xs-12">
@@ -406,9 +460,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 z-index: 100 !important;
                             }
                         </style>
-                    </div>
-                    <div class="col-xs-6">
-
                     </div>
                 </div>
                 <?php } ?>
@@ -542,6 +593,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             <?= $form->label("pNumberItems", t("Number Of Items"));?>
                                 <?= $form->number('pNumberItems',$product->getNumberItems(), array('min'=>0, 'step'=>1))?>
                         </div>
+                        <div class="form-group">
+                            <?= $form->label("pSeperateShip", t("Product can be packaged with other items"));?>
+                            <?= $form->select("pSeperateShip",array('0'=>t('Yes'),'1'=>t('No, must be shipped as seperate package')), ($product->getSeperateShip() ? '1' : '0'));?>
+                        </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -571,7 +626,23 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $form->label("pPackageData", t("Or, Package(s) Data"));?>
+                            <?= $form->textarea('pPackageData',$product->getPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
+                            <span class="help-block">
+                                <?= t('Values entered will override individual set weights and sizes'); ?>
+                                <br />
+                                <?= t('Enter packages on new lines, using the format:');?>
+                                <br />
+                                <?= t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
+                                <br />
+                                <?= t('E.g. 10 4x6x8'); ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
             </div><!-- #product-shipping -->
@@ -673,6 +744,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                         <label><?= t('Option Handle');?></label>
                                         <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional');?>" value="<%=poHandle%>">
                                     </div>
+                                    <% if (poType == 'select') { %>
+                                    <div class="form-group">
+                                        <label><?= t('Display Type');?></label>
+                                        <select class="form-control" name="poDisplayType[]"><option value="select" <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down');?></option><option value="radio" <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons');?></option></select>
+                                    </div>
+                                    <% } %>
                                 </div>
 
                                 <% if (poType == 'select') { %>
@@ -766,6 +843,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             foreach ($options as $option) {
 
                             $type = $option->getType();
+                            $displayType = $option->getDisplayType();
                             $handle = $option->getHandle();
                             $required = $option->getRequired();
                             $includeVariations = $option->getIncludeVariations();
@@ -789,6 +867,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                             poName: '<?= h($option->getName()) ?>',
                             poID: '<?= $option->getID()?>',
                             poType: '<?= $type ?>',
+                            poDisplayType: '<?= $displayType ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
@@ -813,6 +892,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                 poName: '',
                                 poID: '',
                                 poType: 'select',
+                                poDisplayType: 'select',
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
                                 poRequired: '',
@@ -1108,9 +1188,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                          <div class="input-group">
                                              <?php
                                              if ($variation) {
-                                                 echo $form->number("pvQty[" . $varid . "]", $variation->getVariationQty(), array(($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : '')));
+                                                 echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), array(($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : ''),'step'=>0.001));
                                              } else {
-                                                 echo $form->number("pvQty[" . $varid . "]", '', array('readonly' => 'readonly'));
+                                                 echo $form->number("pvQty[" . $varid . "]", '', array('readonly' => 'readonly','step'=>0.001));
                                              }
                                              ?>
 
@@ -1148,6 +1228,21 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                     </div>
                                 </div>
 
+                                 <div class="row form-group">
+                                     <div class="col-md-4">
+                                         <?= $form->label('pfID[]', t("Primary Image")); ?>
+                                     </div>
+                                     <?php
+                                     $pvfID = null;
+                                     if ($variation) {
+                                         $pvfID = $variation->getVariationImageID();
+                                     }
+                                     ?>
+                                     <div class="col-md-8">
+                                         <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
+                                     </div>
+                                 </div>
+
                                  <div class="extrafields hidden">
 
                                      <div class="row form-group">
@@ -1165,18 +1260,6 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                      </div>
 
 
-                                     <div class="row form-group">
-                                         <div class="col-md-12">
-                                             <?= $form->label('pfID[]', t("Primary Image")); ?>
-                                             <?php
-                                             $pvfID = null;
-                                             if ($variation) {
-                                                 $pvfID = $variation->getVariationImageID();
-                                             }
-                                             ?>
-                                             <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
-                                         </div>
-                                     </div>
                                      <div class="row form-group">
                                          <div class="col-md-4">
                                              <?= $form->label("", t("Weight")); ?>
@@ -1227,6 +1310,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                                              <div class="input-group">
                                                  <?= $form->text('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', array('placeholder' => t('Base Height'))) ?>
                                                  <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
+                                         <div class="form-group">
+                                             <div class="col-md-4">
+                                                <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data"));?>
+                                             </div>
+                                             <div class="col-md-8">
+                                                 <?= $form->textarea('pvPackageData[' . $varid . ']',$variation->getVariationPackageData(), array('rows'=>4, 'placeholder'=>t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))))?>
                                              </div>
                                          </div>
                                      </div>
@@ -1388,6 +1482,16 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                 </div>
 
 
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('.select2-select').select2();
+                    });
+                </script>
+
+
+            </div><!-- #product-digital -->
+
+            <div class="col-sm-9 store-pane" id="product-checkout">
                 <div class="form-group">
                     <?= $form->checkbox('pAutoCheckout', '1', $product->autoCheckout())?>
                     <?= $form->label('pAutoCheckout', t('Send customer directly to checkout when added to cart'))?>
@@ -1398,27 +1502,30 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
                     <?= $form->label('pExclusive', t('Prevent this item from being in the cart with other items'))?>
                 </div>
 
+                <div class="form-group">
+                    <?= $form->label('pNotificationEmails',t('If order contains this product also send order notification to email(s)')); ?>
+                    <?= $form->text('pNotificationEmails',$product->getNotificationEmails(), array('placeholder'=>t('Email Address')));?>
+                    <span class="help-block"><?= t('separate multiple emails with commas'); ?></span>
+                </div>
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('.select2-select').select2();
-                    });
-                </script>
-
-
-            </div><!-- #product-digital -->
+            </div><!-- #checkout-digital -->
 
             <div class="col-sm-9 store-pane" id="product-page">
 
-                <?php if($page){ ?>
+                <?php if($page && !$page->isInTrash()){ ?>
                     <strong><?= t("Detail Page is set to: ")?><a href="<?= $page->getCollectionLink()?>" target="_blank"><?= $page->getCollectionName()?></a></strong>
+                    <?= $ps->selectPage('pageCID', $page->getCollectionID()); ?>
                 <?php } else { ?>
 
                     <?php if ($product->getID()) { ?>
                     <div class="alert alert-warning">
                         <?= t("This product is missing a corresponding page in the sitemap")?>
                     </div>
+                        <label for="pageCID"><?= t('Associate with an existing page'); ?></label>
+                        <?= $ps->selectPage('pageCID', ''); ?>
                     <?php } ?>
+                    <br />
+                    <label><?= t('Or, create a new product page') ;?></label>
 
                     <?php if ($productPublishTarget) { ?>
                         <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
@@ -1485,12 +1592,33 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
     <div class="ccm-dashboard-content-full">
         <form role="form" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
-                <?php if($grouplist){?>
+                <?php if($grouplist){
+                    $currentFilter = '';
+                    ?>
                     <ul id="group-filters" class="nav nav-pills">
-                        <li><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
-                        <?php foreach($grouplist as $group){ ?>
-                            <li><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
-                        <?php } ?>
+                        <li <?= (!$gID ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/')?>"><?= t('All Groups')?></a></li>
+
+                        <li role="presentation" class="dropdown <?= ($gID ? 'active' : '');?>">
+                            <?php
+                            if ($gID) {
+                                foreach($grouplist as $group) {
+                                    if ($gID == $group->getGroupID()) {
+                                        $currentFilter = $group->getGroupName();
+                                    }
+                                }
+                            } ?>
+
+
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <?= $currentFilter ? t('Filtering By: %s', $currentFilter) : t('Filter By Product Group'); ?> <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <?php foreach($grouplist as $group){ ?>
+                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/products/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
                     </ul>
                 <?php } ?>
             </div>
@@ -1595,44 +1723,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Store
 
     </div>
 
-<?php } elseif (in_array($controller->getTask(),$groupViews)){ ?>
-
-    <?php if($grouplist){ ?>
-        <h3><?= t("Groups")?></h3>
-        <ul class="list-unstyled group-list" data-delete-url="<?= \URL::to('/dashboard/store/products/deletegroup')?>" data-save-url="<?= \URL::to('/dashboard/store/products/editgroup')?>">
-            <?php foreach($grouplist as $group){?>
-                <li data-group-id="<?= $group->getGroupID()?>">
-                    <span class="group-name"><?= $group->getGroupName()?></span>
-                    <input class="hideme edit-group-name" type="text" value="<?= $group->getGroupName()?>">
-                    <span class="btn btn-default btn-edit-group-name"><i class="fa fa-pencil"></i></span>
-                    <span class="hideme btn btn-default btn-cancel-edit"><i class="fa fa-ban"></i></span>
-                    <span class="hideme btn btn-warning btn-save-group-name"><i class="fa fa-save"></i></span>
-                    <span class="btn btn-danger btn-delete-group"><i class="fa fa-trash"></i></span>
-                </li>
-            <?php } ?>
-        </ul>
-
-    <?php } else { ?>
-
-        <div class="alert alert-info"><?= t("You have not added a group yet")?></div>
-
-    <?php } ?>
-    <form method="post" action="<?= $view->action('addgroup')?>">
-        <h4><?= t('Add a Group')?></h4>
-        <hr>
-        <div class="form-group">
-            <?= $form->label('groupName',t("Group Name")); ?>
-            <?= $form->text('groupName',null,array('style'=>'width:200px')); ?>
-        </div>
-        <input type="submit" class="btn btn-primary" value="<?= t('Add Group');?>">
-    </form>
-
-<?php }  ?>
-
+<?php } ?>
 
 <?php if ($controller->getTask() == 'duplicate') { ?>
     <form method="post" action="<?= $view->action('duplicate', $product->getID())?>">
-
+        <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('newName',t("New Product Name")); ?>
             <?= $form->text('newName',$product->getName() . ' ' . t('(Copy)')); ?>

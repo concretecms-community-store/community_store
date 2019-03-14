@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use Database;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
@@ -129,27 +127,28 @@ class DiscountRule
 
     public function returnDiscountedPrice()
     {
-        if ($this->getDeductFrom() == 'subtotal') {
-            if ($this->getDeductType() == 'percentage') {
+        if ('subtotal' == $this->getDeductFrom()) {
+            if ('percentage' == $this->getDeductType()) {
                 $applicableTotal = $this->getApplicableTotal();
 
-                if ($applicableTotal != false) {
+                if (false != $applicableTotal) {
                     return $applicableTotal - ($this->getPercentage() / 100 * $applicableTotal);
                 }
             }
 
-            if ($this->getDeductType() == 'value_all') {
+            if ('value_all' == $this->getDeductType()) {
                 $applicableTotal = $this->getApplicableTotal();
 
-                if ($applicableTotal != false) {
+                if (false != $applicableTotal) {
                     return $applicableTotal - $this->getValue();
                 }
             }
 
-            if ($this->getDeductType() == 'fixed') {
+            if ('fixed' == $this->getDeductType()) {
                 return $this->getValue();
             }
         }
+
         return false;
     }
 
@@ -211,7 +210,7 @@ class DiscountRule
 
     public function isEnabled()
     {
-        return (bool)$this->drEnabled;
+        return (bool) $this->drEnabled;
     }
 
     /**
@@ -336,7 +335,7 @@ class DiscountRule
 
     public function requiresCode()
     {
-        return $this->drTrigger == 'code';
+        return 'code' == $this->drTrigger;
     }
 
     /**
@@ -349,7 +348,7 @@ class DiscountRule
 
     public function isSingleUse()
     {
-        return (bool)$this->drSingleUseCodes;
+        return (bool) $this->drSingleUseCodes;
     }
 
     /**
@@ -448,12 +447,10 @@ class DiscountRule
         }
     }
 
-
     public function getQuantity()
     {
         return $this->drQuantity;
     }
-
 
     public function setQuantity($drQuantity)
     {
@@ -464,7 +461,6 @@ class DiscountRule
     {
         return $this->drMaximumQuantity;
     }
-
 
     public function setMaximumQuantity($drMaximumQuantity)
     {
@@ -510,19 +506,22 @@ class DiscountRule
         if ($display) {
             return $display;
         } else {
-            if ($this->drDeductType == 'percentage') {
+            if ('percentage' == $this->drDeductType) {
                 return $this->drPercentage . ' ' . t('off');
             }
 
-            if ($this->drDeductType == 'value') {
+            if ('value' == $this->drDeductType) {
                 return StorePrice::format($this->drValue) . ' ' . t('off');
             }
         }
+
+        return '';
     }
 
     public static function getByID($drID)
     {
         $em = \ORM::entityManager();
+
         return $em->find(get_class(), $drID);
     }
 
@@ -537,8 +536,8 @@ class DiscountRule
 
     public static function findAutomaticDiscounts($user = null, $cartitems = false)
     {
-        if ($user === null) {
-            $user = new \User;
+        if (null === $user) {
+            $user = new \User();
         }
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -564,10 +563,9 @@ class DiscountRule
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 
-                if (count($matching) == 0) {
+                if (0 == count($matching)) {
                     $include = false;
                 }
-
             }
 
             if ($include) {
@@ -576,9 +574,9 @@ class DiscountRule
                     $count = 0;
 
                     if (is_array($cartitems)) {
-                        $discountProductGroups = array();
+                        $discountProductGroups = [];
 
-                        $dpg =  trim($row['drProductGroups']);
+                        $dpg = trim($row['drProductGroups']);
 
                         if ($dpg) {
                             $discountProductGroups = explode(',', $dpg);
@@ -630,8 +628,8 @@ class DiscountRule
 
     public static function findDiscountRuleByCode($code, $user = null)
     {
-        if ($user === null) {
-            $user = new \User;
+        if (null === $user) {
+            $user = new \User();
         }
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -659,7 +657,7 @@ class DiscountRule
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 
-                if (count($matching) == 0) {
+                if (0 == count($matching)) {
                     $include = false;
                 }
             }
@@ -683,8 +681,7 @@ class DiscountRule
 
     public static function loadData($discountRule, $data)
     {
-
-        if ($data['drDeductType'] == 'percentage') {
+        if ('percentage' == $data['drDeductType']) {
             $data['drValue'] = null;
         } else {
             $data['drPercentage'] = null;
@@ -706,20 +703,19 @@ class DiscountRule
         $discountRule->setQuantity($data['drQuantity'] ? $data['drQuantity'] : null);
         $discountRule->setMaximumQuantity($data['drMaximumQuantity'] ? $data['drMaximumQuantity'] : null);
 
-        if ($data['validFrom'] == 1) {
+        if (1 == $data['validFrom']) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m'] . (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));
             $discountRule->setValidFrom($from);
         } else {
             $discountRule->setValidFrom(null);
         }
 
-        if ($data['validTo'] == 1) {
+        if (1 == $data['validTo']) {
             $to = new \DateTime($data['drValidTo_dt'] . ' ' . $data['drValidTo_h'] . ':' . $data['drValidTo_m'] . (isset($data['drValidTo_a']) ? $data['drValidTo_a'] : ''));
             $discountRule->setValidTo($to);
         } else {
             $discountRule->setValidTo(null);
         }
-
     }
 
     public static function edit($drID, $data)

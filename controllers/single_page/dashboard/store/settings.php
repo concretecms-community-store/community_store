@@ -1,15 +1,13 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Package;
 use Core;
 use Config;
-
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 
 class Settings extends DashboardPageController
 {
@@ -31,14 +29,23 @@ class Settings extends DashboardPageController
             }
         }
 
-        $groupList = array();
+        $groupList = [];
 
-        $gl = new \GroupList;
+        $gl = new \GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
 
         $this->set('groupList', $groupList);
+
+        if ($targetCID) {
+            $publishTarget = \Page::getByID($targetCID);
+
+            if (!$publishTarget || $publishTarget->isError() || $publishTarget->isInTrash()) {
+                $targetCID = false;
+            }
+        }
+
         $this->set('productPublishTarget', $targetCID);
     }
 
@@ -52,23 +59,12 @@ class Settings extends DashboardPageController
         $this->requireAsset('select2');
     }
 
-    public function success()
-    {
-        $this->set('success', t('Settings Saved'));
-        $this->view();
-    }
-
-    public function failed()
-    {
-        $this->view();
-    }
-
     public function save()
     {
         $this->view();
         $args = $this->post();
 
-        if ($args) {
+        if ($args && $this->token->validate('community_store')) {
             $errors = $this->validate($args);
             $this->error = $errors;
 
@@ -94,23 +90,26 @@ class Settings extends DashboardPageController
                 Config::save('community_store.weightUnit', $args['weightUnit']);
                 Config::save('community_store.sizeUnit', $args['sizeUnit']);
                 Config::save('community_store.deliveryInstructions', $args['deliveryInstructions']);
+                Config::save('community_store.multiplePackages', $args['multiplePackages']);
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
+                Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
+                Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
                 Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
                 Config::save('community_store.noBillingSave', trim($args['noBillingSave']));
                 Config::save('community_store.noShippingSave', trim($args['noShippingSave']));
                 Config::save('community_store.noBillingSaveGroups', is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');
                 Config::save('community_store.noShippingSaveGroups', is_array($args['noShippingSaveGroups']) ? implode(',', $args['noShippingSaveGroups']) : '');
+                Config::save('community_store.showUnpaidExternalPaymentOrders', $args['showUnpaidExternalPaymentOrders']);
 
                 //save payment methods
                 if ($args['paymentMethodHandle']) {
-
-                    $paymentData = array();
+                    $paymentData = [];
 
                     foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
                         $paymentData[$pmID]['paymentMethodEnabled'] = $value;
@@ -141,10 +140,10 @@ class Settings extends DashboardPageController
                 }
 
                 $this->saveOrderStatuses($args);
-                $this->redirect('/dashboard/store/settings/success');
+                $this->flash('success', t('Settings Saved'));
+                $this->redirect('/dashboard/store/settings');
             }
         }
-
     }
 
     private function saveOrderStatuses($data)
@@ -152,13 +151,13 @@ class Settings extends DashboardPageController
         if (isset($data['osID'])) {
             foreach ($data['osID'] as $key => $id) {
                 $orderStatus = StoreOrderStatus::getByID($id);
-                $orderStatusSettings = array(
-                    'osName' => ((isset($data['osName'][$key]) && $data['osName'][$key] != '') ?
+                $orderStatusSettings = [
+                    'osName' => ((isset($data['osName'][$key]) && '' != $data['osName'][$key]) ?
                         $data['osName'][$key] : $orderStatus->getReadableHandle()),
                     'osInformSite' => isset($data['osInformSite'][$key]) ? 1 : 0,
                     'osInformCustomer' => isset($data['osInformCustomer'][$key]) ? 1 : 0,
-                    'osSortOrder' => $key
-                );
+                    'osSortOrder' => $key,
+                ];
                 $orderStatus->update($orderStatusSettings);
             }
             if (isset($data['osIsStartingStatus'])) {
@@ -174,17 +173,17 @@ class Settings extends DashboardPageController
     {
         $e = Core::make('helper/validation/error');
 
-        if ($args['symbol'] == "") {
+        if ("" == $args['symbol']) {
             $e->add(t('You must set a currency symbol'));
         }
 
         $paymentMethodsEnabled = 0;
         foreach ($args['paymentMethodEnabled'] as $method) {
-            if ($method == 1) {
-                $paymentMethodsEnabled++;
+            if (1 == $method) {
+                ++$paymentMethodsEnabled;
             }
         }
-        if ($paymentMethodsEnabled == 0) {
+        if (0 == $paymentMethodsEnabled) {
             $e->add(t('At least one payment method must be enabled'));
         }
         foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
@@ -198,7 +197,7 @@ class Settings extends DashboardPageController
         }
 
         //before changing tax settings to "Extract", make sure there's only one rate per class
-        if ($args['calculation'] == 'extract') {
+        if ('extract' == $args['calculation']) {
             $taxClasses = StoreTaxClass::getTaxClasses();
             foreach ($taxClasses as $taxClass) {
                 $taxClassRates = $taxClass->getTaxClassRates();
@@ -209,7 +208,5 @@ class Settings extends DashboardPageController
         }
 
         return $e;
-
     }
-
 }

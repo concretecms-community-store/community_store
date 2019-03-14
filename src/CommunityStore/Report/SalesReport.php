@@ -15,6 +15,7 @@ class SalesReport extends StoreOrderList
         $this->setCancelled(false);
         $this->setRefunded(false);
     }
+
     public static function getTotalsByRange($from, $to, $limit = 0)
     {
         $sr = new self();
@@ -35,23 +36,25 @@ class SalesReport extends StoreOrderList
             $shippingTotal = $shippingTotal + $order->getShippingTotal();
         }
 
-        $totals = array(
+        $totals = [
             "total" => $total,
             "productTotal" => $productTotal,
             "taxTotal" => $taxTotal,
             "includedTaxTotal" => $includedTaxTotal,
             "shippingTotal" => $shippingTotal,
             "orders" => $sr,
-        );
+        ];
 
         return $totals;
     }
+
     public static function getTodaysSales()
     {
         $today = date('Y-m-d');
 
         return self::getTotalsByRange($today, $today, 0);
     }
+
     public static function getThirtyDays()
     {
         $today = date('Y-m-d');
@@ -59,14 +62,16 @@ class SalesReport extends StoreOrderList
 
         return self::getTotalsByRange($thirtyDaysAgo, $today, 0);
     }
+
     public static function getYearToDate()
     {
         $today = date('Y-m-d');
-        $jan1 = new \DateTime(date("Y")."-01-01");
+        $jan1 = new \DateTime(date("Y") . "-01-01");
         $jan1 = $jan1->format("Y-m-d");
 
         return self::getTotalsByRange($jan1, $today, 0);
     }
+
     public static function getByMonth($date)
     {
         $from = date('Y-m-01', strtotime($date));

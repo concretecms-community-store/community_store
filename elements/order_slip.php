@@ -114,11 +114,10 @@ $dh = Core::make('helper/date');
                     <?php } ?>
                 </div>
 
-                <?php if ($orderChoicesEnabled) { ?>
+                <?php if (!empty($orderChoicesAttList)) { ?>
                     <div class="col-xs-12">
-                        <h4><?= t("Other Choices") ?></h4>
                         <?php foreach ($orderChoicesAttList as $ak) { ?>
-                            <label><?= $ak->getAttributeKeyDisplayName() ?></label>
+                            <h4><?= $ak->getAttributeKeyDisplayName() ?></h4>
                             <p><?= str_replace("\r\n", "<br>", $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()))->getValue('displaySanitized', 'display')); ?></p>
                         <?php } ?>
                     </div>
@@ -217,8 +216,6 @@ $dh = Core::make('helper/date');
 
 
         <?php } ?>
-        </p>
-
     </div>
 </div>
 </body>

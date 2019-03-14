@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
-use Database;
-
 class GroupList
 {
     public static function getGroupList()

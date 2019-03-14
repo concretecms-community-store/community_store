@@ -6,12 +6,11 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
-
+use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
 class ProductList extends AttributedItemList
 {
-    protected $gIDs = array();
+    protected $gIDs = [];
     protected $groupMatchAny = false;
     protected $sortBy = "alpha";
     protected $randomSeed = '';
@@ -19,12 +18,13 @@ class ProductList extends AttributedItemList
     protected $featuredOnly = false;
     protected $saleOnly = false;
     protected $activeOnly = true;
-    protected $cIDs = array();
+    protected $cIDs = [];
     protected $relatedProduct = false;
+    protected $attFilters = [];
 
     public function setGroupID($gID)
     {
-        $this->gIDs = array($gID);
+        $this->gIDs = [$gID];
     }
 
     public function setGroupIDs($groupIDs)
@@ -37,7 +37,8 @@ class ProductList extends AttributedItemList
         $this->sortBy = $sort;
     }
 
-    public function setRandomSeed($seed = '') {
+    public function setRandomSeed($seed = '')
+    {
         $this->randomSeed = $seed;
     }
 
@@ -46,7 +47,8 @@ class ProductList extends AttributedItemList
         $this->sortByDirection = $dir;
     }
 
-    public function getSortByDirection() {
+    public function getSortByDirection()
+    {
         return $this->sortByDirection;
     }
 
@@ -69,21 +71,83 @@ class ProductList extends AttributedItemList
     {
         $this->featuredOnly = $bool;
     }
+
     public function setSaleOnly($bool)
     {
         $this->saleOnly = $bool;
     }
+
     public function setActiveOnly($bool)
     {
         $this->activeOnly = $bool;
     }
+
     public function setShowOutOfStock($bool)
     {
         $this->showOutOfStock = $bool;
     }
+
     public function setRelatedProduct($product)
     {
         $this->relatedProduct = $product;
+    }
+
+    public function setAttributeFilters($filterArray)
+    {
+        $this->attFilters = $filterArray;
+
+        if (!empty($this->attFilters)) {
+            foreach ($this->attFilters as $handle => $value) {
+                if ('price' == $handle) {
+                    $this->filterByPrice($value);
+                } else {
+                    if (is_object(StoreProductKey::getByHandle($handle))) {
+                        $this->filterByAttribute($handle, $value);
+                    }
+                }
+            }
+        }
+    }
+
+    public function processUrlFilters(\Concrete\Core\Http\Request $request)
+    {
+        $service = \Core::make('helper/security');
+        $querystring = $request->getQueryString();
+
+        $params = explode('&', $querystring);
+
+        foreach ($params as $param) {
+            $values = explode('=', $param);
+
+            if (isset($values[1])) {
+                $filter = $values[0];
+                $filter = $service->sanitizeString($filter);
+                $items = $service->sanitizeString($values[1]);
+
+                if ('price' == $filter) {
+                    $this->filterByPrice($items);
+                } else {
+                    $items = str_replace('%7C', '%2C', $items);
+                    $items = explode('%2C', $items);
+
+                    if (is_object(StoreProductKey::getByHandle($filter))) {
+                        $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
+                    }
+                }
+            }
+        }
+    }
+
+    public function filterByPrice($pricestring)
+    {
+        $items = explode('-', $pricestring);
+
+        if (count($items) > 1) {
+            $this->getQueryObject()->andWhere('pPrice <= ' . (float) $items[1]);
+            $this->getQueryObject()->andWhere('pPrice >= ' . (float) $items[0]);
+        } elseif (isset($items[0])) {  // if single price, treat as max
+            $this->getQueryObject()->andWhere('pPrice <= ' . (float) $items[0]);
+        }
     }
 
     protected function getAttributeKeyClassName()
@@ -108,7 +172,7 @@ class ProductList extends AttributedItemList
         $paramcount = 0;
 
         if (!empty($this->gIDs)) {
-            $validgids = array();
+            $validgids = [];
 
             foreach ($this->gIDs as $gID) {
                 if ($gID > 0) {
@@ -120,32 +184,31 @@ class ProductList extends AttributedItemList
                 $query->innerJoin('p', 'CommunityStoreProductGroups', 'g', 'p.pID = g.pID and g.gID in (' . implode(',', $validgids) . ')');
 
                 if (!$this->groupMatchAny) {
-                    $query->having('count(g.gID) = '  . count($validgids));
+                    $query->having('count(g.gID) = ' . count($validgids));
                 }
             }
         }
 
-        $relatedids = array();
+        $relatedids = [];
 
         // if we have a true value for related, we don't have an object, meaning it couldn't find a product to look for related products for
         // this means we should return no products
-        if ($this->relatedProduct === true) {
+        if (true === $this->relatedProduct) {
             $query->andWhere("1 = 0");
-        }  elseif (is_object($this->relatedProduct)) {
-
+        } elseif (is_object($this->relatedProduct)) {
             $related = $this->relatedProduct->getRelatedProducts();
 
-            foreach($related as $r) {
+            foreach ($related as $r) {
                 $relatedids[] = $r->getRelatedProductID();
             }
 
             if (!empty($relatedids)) {
-                $query->andWhere('p.pID in ('. implode(',', $relatedids) .')');
+                $query->andWhere('p.pID in (' . implode(',', $relatedids) . ')');
             } else {
                 $query->andWhere('1 = 0');
             }
         } elseif (is_array($this->cIDs) && !empty($this->cIDs)) {
-            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' .  implode(',', $this->cIDs). ')');
+            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' . implode(',', $this->cIDs) . ')');
         }
 
         switch ($this->sortBy) {
@@ -177,7 +240,7 @@ class ProductList extends AttributedItemList
                 $pr = new StoreProductReport();
                 $pr->sortByPopularity();
                 $products = $pr->getProducts();
-                $pIDs = array();
+                $pIDs = [];
                 foreach ($products as $product) {
                     $pIDs[] = $product['pID'];
                 }
@@ -188,14 +251,14 @@ class ProductList extends AttributedItemList
                 break;
             case "related":
                 if (!empty($relatedids)) {
-                    $query->addOrderBy('FIELD (p.pID, '. implode(',', $relatedids) .')');
+                    $query->addOrderBy('FIELD (p.pID, ' . implode(',', $relatedids) . ')');
                 }
                 break;
             case "category":
                 $query->addOrderBy('categorySortOrder');
                 break;
             case "random":
-                $query->orderBy('RAND('. $this->randomSeed .')', null); break;
+                $query->orderBy('RAND(' . $this->randomSeed . ')', null); break;
                 break;
         }
         if ($this->featuredOnly) {
@@ -214,10 +277,10 @@ class ProductList extends AttributedItemList
         $query->groupBy('p.pID');
 
         if ($this->search) {
-            $query->andWhere('pName like ?')->setParameter($paramcount++, '%'. $this->search. '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%'. $this->search. '%');
+            $query->andWhere('pName like ?')->setParameter($paramcount++, '%' . $this->search . '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%' . $this->search . '%');
         }
 
-		$query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
+        $query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
 
         return $query;
     }
@@ -233,7 +296,7 @@ class ProductList extends AttributedItemList
             $values = $query->execute()->fetchAll();
             $count = count($values);
 
-            $query->resetQueryParts(array('groupBy', 'orderBy', 'having', 'join', 'where', 'from'))->from('DUAL')->select($count . ' c ');
+            $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count . ' c ');
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -246,6 +309,6 @@ class ProductList extends AttributedItemList
         $values = $query->execute()->fetchAll();
         $count = count($values);
 
-        return $query->resetQueryParts(array('groupBy', 'orderBy', 'having', 'join', 'where', 'from'))->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
     }
 }
