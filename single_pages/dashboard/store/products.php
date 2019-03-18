@@ -1494,7 +1494,7 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-9 store-pane" id="product-page">
 
                 <?php if ($page && !$page->isInTrash()) { ?>
-                    <strong><?= t("Detail Page is set to: ") ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong>
+                    <p><strong><?= t("Detail Page is set to: ") ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong></p>
                     <?= $ps->selectPage('pageCID', $page->getCollectionID()); ?>
                 <?php } else { ?>
 

@@ -207,7 +207,7 @@ if (6 == $productsPerRow) {
                 } ?>
                 <?php if ($showAddToCart) {
                     ?>
-
+                <div class="store-product-options">
                     <?php if ($product->allowQuantity() && $showQuantity) {
                         ?>
                         <div class="store-product-quantity form-group">
@@ -331,7 +331,7 @@ if (6 == $productsPerRow) {
                         } ?>
                         <?php
                     } ?>
-
+                    </div>
 
                     <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
 
