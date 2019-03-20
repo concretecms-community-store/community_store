@@ -98,6 +98,7 @@ class Tax extends DashboardPageController
 
     public function add_class()
     {
+        $this->set('pageTitle', t("Add Tax Class"));
         $this->set('task', t("Add"));
         $this->set('tc', new StoreTaxClass());
         $this->set('taxRates', StoreTax::getTaxRates());
@@ -106,6 +107,7 @@ class Tax extends DashboardPageController
 
     public function edit_class($tcID)
     {
+        $this->set('pageTitle', t("Edit Tax Class"));
         $this->set('task', t("Update"));
         $this->set('tc', StoreTaxClass::getByID($tcID));
         $this->set('taxRates', StoreTax::getTaxRates());
