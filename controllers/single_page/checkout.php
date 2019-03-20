@@ -315,30 +315,43 @@ class Checkout extends PageController
             $required = ' required="required" ';
         }
 
+        $ret = '';
         $list = $this->app->make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
         if ($list) {
             if ("tax" == $type) {
-                echo "<select name='taxState' id='taxState' class='{$class}'{$data}>";
+                $ret .= "<select name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
-                echo "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
+                $ret .= "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
             }
-            echo '<option value=""></option>';
+
+            $ret .= '<option {selected} value=""></option>';
+            $hasSelectedState = false;
 
             foreach ($list as $code => $country) {
-                if ($code == $selectedState) {
-                    echo "<option selected value='{$code}'>{$country}</option>";
+                if (!empty($selectedState) && $code == $selectedState) {
+                    $ret .= "<option selected value='{$code}'>{$country}</option>";
+                    $hasSelectedState = true;
                 } else {
-                    echo "<option value='{$code}'>{$country}</option>";
+                    $ret .= "<option value='{$code}'>{$country}</option>";
                 }
             }
-            echo "<select>";
+
+            $ret .= "</select>";
+
+            if ($hasSelectedState) {
+                $ret = str_replace('{selected}', '', $ret);
+            } else {
+                $ret = str_replace('{selected}', 'selected', $ret);
+            }
         } else {
             if ("tax" == $type) {
-                echo "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
+                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
-                echo "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
+                $ret .= "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
             }
         }
+
+        echo $ret;
 
         exit();
     }

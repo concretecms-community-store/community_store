@@ -50,7 +50,7 @@ class TaxRate
     protected $taxAddress;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     protected $taxCountry;
 
@@ -94,9 +94,15 @@ class TaxRate
         $this->taxAddress = $address;
     }
 
-    public function setTaxCountry($country)
+    public function setTaxCountry(array $countries = null)
     {
-        $this->taxCountry = $country;
+        if ($countries) {
+            $countries = array_map('trim', $countries);
+            $countries = implode(',', $countries);
+            $this->taxCountry = $countries;
+        } else {
+            $this->taxCountry = '';
+        }
     }
 
     public function setTaxState($state)
@@ -151,7 +157,7 @@ class TaxRate
 
     public function getTaxCountry()
     {
-        return $this->taxCountry;
+        return explode(',', $this->taxCountry);
     }
 
     public function getTaxState()
@@ -184,7 +190,8 @@ class TaxRate
     public function isTaxable()
     {
         $taxAddress = $this->getTaxAddress();
-        $taxCountry = strtolower($this->getTaxCountry());
+        $taxCountries = $this->getTaxCountry();
+        $taxCountries = array_map('strtolower', $taxCountries);
         $taxState = strtolower(trim($this->getTaxState()));
         $taxCity = strtolower(trim($this->getTaxCity()));
         $taxVatExclude = 1 == $this->getTaxVatExclude() ? true : false;
@@ -212,7 +219,7 @@ class TaxRate
                 break;
         }
 
-        if ($userCountry == $taxCountry) {
+        if (in_array($userCountry, $taxCountries)) {
             $customerIsTaxable = true;
             if (!empty($taxState)) {
                 if ($userState != $taxState) {
@@ -327,6 +334,10 @@ class TaxRate
         $tr->setTaxBasedOn($data['taxBased']);
         $tr->setTaxAddress($data['taxAddress']);
         $tr->setTaxCountry($data['taxCountry']);
+        if (is_array($data['taxCountry']) && count($data['taxCountry']) > 1) {
+            $data['taxState'] = '';
+            $data['taxCity'] = '';
+        }
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
         $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0);

@@ -67,26 +67,38 @@ if(in_array($controller->getAction(),$addViews)){
                                 <label for="taxCountry" class="col-sm-5 control-label"><?= t("Country")?> <small class="text-muted"><?= t("Required")?></small></label>
                                 <div class="col-sm-7">
                                     <?php $country = $taxRate->getTaxCountry(); ?>
-                                    <?= $form->select('taxCountry',$countries,$country?$country:'US',array("onchange"=>"updateTaxStates()")); ?>
+                                    <?= $form->selectMultiple('taxCountry', $countries, $country ? $country : ['US'], array('onchange' => 'updateTaxStates()', 'class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select countries'))); ?>
+
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('#taxCountry').selectize({
+                                                selectOnTab: true,
+                                                closeAfterSelect: true
+                                            });
+                                            $('.selectize').removeClass('form-control');
+                                        });
+                                    </script>
                                 </div>
                             </div>
 
+                            <div class="stateCityWrapper">
+                                <div class="form-group">
+                                    <label for="taxState" class="col-sm-5 control-label"><?= t("Region")?> <small class="text-muted"><?= t("Optional")?></small></label>
+                                    <div class="col-sm-7">
+                                        <?php $state = $taxRate->getTaxState(); ?>
+                                        <?= $form->select('taxState',$states,$state?$state:""); ?>
+                                        <?= $form->hidden("savedTaxState",$state); ?>
+                                    </div>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="taxState" class="col-sm-5 control-label"><?= t("Region")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                                <div class="col-sm-7">
-                                    <?php $state = $taxRate->getTaxState(); ?>
-                                    <?= $form->select('taxState',$states,$state?$state:""); ?>
-                                    <?= $form->hidden("savedTaxState",$state); ?>
+                                <div class="form-group">
+                                    <label for="taxState" class="col-sm-5 control-label"><?= t("City")?> <small class="text-muted"><?= t("Optional")?></small></label>
+                                    <div class="col-sm-7">
+                                        <?= $form->text('taxCity',$taxRate->getTaxCity());?>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="taxState" class="col-sm-5 control-label"><?= t("City")?> <small class="text-muted"><?= t("Optional")?></small></label>
-                                <div class="col-sm-7">
-                                    <?= $form->text('taxCity',$taxRate->getTaxCity());?>
-                                </div>
-                            </div>
+                            
                         </div>
                         </div>
                     </div>
@@ -183,7 +195,15 @@ if(in_array($controller->getAction(),$addViews)){
         				<td><?= $tr->getTaxLabel()?></td>
                         <td><?= $tr->getTaxRate()?>%</td>
                         <td><?= ($tr->isEnabled() ? t('Yes') : t('No'))?></td>
-                        <td><?= implode(", ", array_filter([$tr->getTaxCity(), $tr->getTaxState(), $tr->getTaxCountry()])); ?></td>
+                        <?php
+                        $countries = $tr->getTaxCountry();
+                        $locationInfo = array_filter([t('City') => $tr->getTaxCity(), t('Region') => $tr->getTaxState(), t2('Country', 'Countries', count($countries)) => implode(", ", $countries)]);
+                        foreach ($locationInfo as $key => $value) {
+                            $locationInfo[$key] = $key . ': ' . $value;
+                        }
+
+                        ?>
+                        <td><?= implode(", ", $locationInfo); ?></td>
                         <td class="text-right">
         					<a href="<?=Url::to('/dashboard/store/settings/tax/edit',$tr->getTaxRateID())?>" class="btn btn-default"><?= t("Edit")?></a>
         					<a href="<?=Url::to('/dashboard/store/settings/tax/delete',$tr->getTaxRateID())?>" class="btn btn-danger"><?= t("Delete")?></a>
@@ -233,6 +253,7 @@ if(in_array($controller->getAction(),$addViews)){
                 <script>
                     $(document).ready(function() {
                         $('.taxclassRates').selectize();
+                        $('.selectize').removeClass('form-control');
                     });
                 </script>
                 <?php } ?>

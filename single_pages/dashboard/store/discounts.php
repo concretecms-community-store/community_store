@@ -395,6 +395,7 @@ $currencySymbol = Config::get('community_store.symbol');
             <script>
                 $(document).ready(function() {
                     $('.selectize').selectize();
+                    $('.selectize').removeClass('form-control');
                 });
             </script>
 
