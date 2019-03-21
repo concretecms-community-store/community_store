@@ -235,7 +235,6 @@ var communityStore = {
                 var shippingTotal = values.shippingTotal;
                 var shippingTotalRaw = values.shippingTotalRaw;
 
-
                 if (itemCount == 0) {
                     $(".store-utility-links .store-items-counter").text(0);
                     $(".store-utility-links .store-total-cart-amount").text("");
@@ -255,14 +254,12 @@ var communityStore = {
                     $("#shipping-total").text(shippingTotal);
                 }
 
-
                 $("#store-taxes").html("");
                 for (var i = 0; i < taxes.length; i++) {
                     if (taxes[i].taxed === true) {
                         $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
                     }
                 }
-
 
                 $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
@@ -441,8 +438,6 @@ var communityStore = {
             var max = parseFloat(price.data('max'), 2);
 
             var pricerange = price.val();
-            console.log(min + '-' + max);
-            console.log(pricerange);
 
             if (min + '-' + max !== pricerange) {
                 strings.push('price=' + price.val());
@@ -621,7 +616,7 @@ $(document).ready(function() {
             success: function(result) {
                 //var test = null;
                 var response = JSON.parse(result);
-                console.log(response);
+
                 if (response.error == false) {
 
                     if ($('#store-copy-billing').is(":checked")) {

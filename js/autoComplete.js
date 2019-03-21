@@ -5,7 +5,7 @@ function initAutocomplete() {
     autocompletebilling.setFields(['address_components']);
     autocompletebilling.addListener('place_changed', function() {
         var place = autocompletebilling.getPlace();
-        // console.log(place.address_components);
+
         cs_completeAddress('billing', place);
     });
 
@@ -16,7 +16,7 @@ function initAutocomplete() {
         autocompleteshipping.setFields(['address_components']);
         autocompleteshipping.addListener('place_changed', function () {
             var place = autocompleteshipping.getPlace();
-            // console.log(place.address_components);
+
             cs_completeAddress('shipping', place);
         });
     }
@@ -28,8 +28,6 @@ function cs_completeAddress(type, place) {
     for(var i = 0; i < place.address_components.length; i++) {
         pieces[place.address_components[i].types[0]] = place.address_components[i];
     }
-
-    console.log(pieces);
 
     $('#store-checkout-'+ type + '-address-1').val(pieces.street_number['short_name'] + ' ' + pieces.route.long_name);
 
