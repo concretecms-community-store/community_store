@@ -1532,8 +1532,13 @@ class Product
         $newproduct->save();
 
         $attributes = $this->getAttributes();
-        foreach ($attributes as $att) {
-            $newproduct->setAttribute($att->getAttributeKey()->getAttributeKeyHandle(), $att->getValue());
+        if (count($attributes)) {
+            foreach ($attributes as $att) {
+                $ak = $att->getAttributeKey();
+                if ($ak && is_object($ak)) {
+                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $att->getValue());
+                }
+            }
         }
 
         $variations = $this->getVariations();
