@@ -28,7 +28,7 @@ class StoreProductValue extends AbstractValue
     }
 
     /**
-     * @param mixed $order
+     * @param mixed $product
      */
     public function setProduct($product)
     {

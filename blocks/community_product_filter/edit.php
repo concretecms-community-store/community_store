@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 ?>
 
@@ -53,7 +53,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     ?>
 
                     <div class="form-group">
-                        <?= $form->label('gID', t('Filter by Product Groups')); ?>
+                        <?= $form->label('setGroupIDs', t('Filter by Product Groups')); ?>
 
                         <div class="ccm-search-field-content ccm-search-field-content-select2">
                             <select multiple="multiple" name="filtergroups[]" id="groups-select"
@@ -352,6 +352,3 @@ if ($relatedProduct) {
 
 
 </script>
-
-
-
