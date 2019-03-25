@@ -16,11 +16,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as StoreTaxHelper;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\View\View;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
 
@@ -281,110 +279,6 @@ class Checkout extends PageController
         $this->set('action', $pm->getMethodController()->getAction());
     }
 
-    public function getShippingMethods()
-    {
-        if (Filesystem::exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
-            View::element("checkout/shipping_methods");
-        } else {
-            View::element("checkout/shipping_methods", null, "community_store");
-        }
-
-        exit();
-    }
-
-    public function getstates()
-    {
-        $service = $this->app->make('helper/security');
-        $countryCode = $service->sanitizeString($this->request->request->get('country'));
-        $selectedState = $service->sanitizeString($this->request->request->get('selectedState'));
-        $type = $service->sanitizeString($this->request->request->get('type'));
-        $class = empty($this->request->request->get('class')) ? 'form-control' : $service->sanitizeString($this->request->request->get('class'));
-        $dataList = $this->app->make('helper/json')->decode($this->request->request->get('data'), true);
-        $data = '';
-        if (is_array($dataList) && count($dataList)) {
-            foreach ($dataList as $name => $value) {
-                $data .= ' data-' . $name . '="' . $value . '"';
-            }
-        }
-
-        $requiresstate = ['US', 'AU', 'CA', 'CN', 'MX', 'MY'];
-
-        $required = '';
-
-        if (in_array($countryCode, $requiresstate)) {
-            $required = ' required="required" ';
-        }
-
-        $ret = '';
-        $list = $this->app->make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
-        if ($list) {
-            if ("tax" == $type) {
-                $ret .= "<select name='taxState' id='taxState' class='{$class}'{$data}>";
-            } else {
-                $ret .= "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
-            }
-
-            $ret .= '<option {selected} value=""></option>';
-            $hasSelectedState = false;
-
-            foreach ($list as $code => $country) {
-                if (!empty($selectedState) && $code == $selectedState) {
-                    $ret .= "<option selected value='{$code}'>{$country}</option>";
-                    $hasSelectedState = true;
-                } else {
-                    $ret .= "<option value='{$code}'>{$country}</option>";
-                }
-            }
-
-            $ret .= "</select>";
-
-            if ($hasSelectedState) {
-                $ret = str_replace('{selected}', '', $ret);
-            } else {
-                $ret = str_replace('{selected}', 'selected', $ret);
-            }
-        } else {
-            if ("tax" == $type) {
-                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
-            } else {
-                $ret .= "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
-            }
-        }
-
-        echo $ret;
-
-        exit();
-    }
-
-    public function setVatNumber()
-    {
-        $token = $this->app->make('token');
-
-        if ($this->request->request->all() && $token->validate('community_store')) {
-            $data = $this->request->request->all();
-            // VAT Number validation
-            if (Config::get('community_store.vat_number')) {
-                $vat_number = str_replace(' ', '', trim($data['vat_number']));
-                $e = StoreCheckout::validateVatNumber($vat_number);
-                if ($e->has()) {
-                    echo $e->outputJSON();
-
-                    exit();
-                } else {
-                    $this->updateVatNumber($data);
-                    echo json_encode([
-                        'vat_number' => $vat_number,
-                        'error' => false,
-                    ]);
-                }
-            }
-        } else {
-            echo "An error occured";
-        }
-
-        exit();
-    }
-
     public function updater()
     {
         $token = $this->app->make('token');
@@ -447,7 +341,8 @@ class Checkout extends PageController
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
                         $vat_number = $customer->getValue('vat_number');
-                        $e = StoreCheckout::validateVatNumber($vat_number);
+                        $taxHelper = $this->app->make(StoreTaxHelper::class);
+                        $e = $taxHelper->validateVatNumber($vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
 
@@ -533,20 +428,6 @@ class Checkout extends PageController
         Session::set('shipping_company', trim($data['company']));
         Session::set('vat_number', $data['vat_number']);
         Session::set('community_store.smID', false);
-    }
-
-    private function updatevatnumber($data)
-    {
-        $token = $this->app->make('token');
-
-        if (!$token->validate('community_store')) {
-            return false;
-        }
-
-        //update the users vat number
-        $customer = new StoreCustomer();
-        $customer->setValue("vat_number", trim($data['vat_number']));
-        Session::set('vat_number', trim($data['vat_number']));
     }
 
     public function validateAddress($data, $billing = null)
@@ -664,25 +545,5 @@ class Checkout extends PageController
         }
 
         Session::set('community_store.smID', false);
-    }
-
-    public function selectShipping()
-    {
-        $token = $this->app->make('token');
-
-        if ($this->request->request->all() && $token->validate('community_store')) {
-            $smID = $this->request->request->get('smID');
-            $sInstructions = $this->request->request->get('sInstructions');
-
-            StoreCart::setShippingInstructions($sInstructions);
-
-            $total = StoreCalculator::getShippingTotal($smID);
-            if ($total > 0) {
-                echo StorePrice::format($total);
-            } else {
-                echo 0;
-            }
-        }
-        exit();
     }
 }

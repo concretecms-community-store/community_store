@@ -4,12 +4,14 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as StoreTaxHelper;
 
 /**
  * @ORM\Entity
@@ -202,7 +204,8 @@ class TaxRate
         // If they have a vat_number check if it's valid and if so, don't apply tax
         $vatIsValid = false;
         $vat_number = $customer->getValue("vat_number");
-        if (!empty($vat_number) && StoreCheckout::validateVatNumber($vat_number)) {
+        $taxHelper = Application::getFacadeApplication()->make(StoreTaxHelper::class);
+        if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number)) {
             $vatIsValid = true;
         }
 

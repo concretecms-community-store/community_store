@@ -521,7 +521,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <script>
                 $(document).ready(function() {
-                    $('.selectize').selectize();
+                    $('.selectize').selectize({
+                        plugins: ['remove_button'],
+                        selectOnTab: true
+                    });
                     $('.selectize').removeClass('form-control');
                 });
             </script>

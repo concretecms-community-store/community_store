@@ -299,7 +299,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
+            url: HELPERSURL + "/stateprovince/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -323,7 +323,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
+            url: HELPERSURL + "/stateprovince/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -354,7 +354,7 @@ var communityStore = {
 
     showShippingMethods: function(callback) {
         $.ajax({
-            url: CHECKOUTURL + "/getShippingMethods" + TRAILINGSLASH,
+            url: HELPERSURL + "/shipping/getshippingmethods" + TRAILINGSLASH,
             cache: false,
             dataType: 'text',
             success: function(html) {
@@ -734,7 +734,7 @@ $(document).ready(function() {
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
-            url: CHECKOUTURL + "/setVatNumber" + TRAILINGSLASH,
+            url: HELPERSURL + "/tax/setvatnumber" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -794,7 +794,7 @@ $(document).ready(function() {
                     sInstructions: sInstructions,
                     ccm_token: ccm_token
                 },
-                url: CHECKOUTURL + "/selectShipping" + TRAILINGSLASH,
+                url: HELPERSURL + "/shipping/selectshipping" + TRAILINGSLASH,
                 success: function(total) {
                     communityStore.refreshCartTotals(function() {
                         communityStore.nextPane(obj);
