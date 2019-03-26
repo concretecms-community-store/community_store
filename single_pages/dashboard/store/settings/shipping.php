@@ -73,7 +73,7 @@ if(in_array($controller->getAction(),$addViews)){
         <a href="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><?= t('Add Shipping Method')?> <span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
             <?php foreach($methodTypes as $smt){?>
-                <?php if(!$smt->isHiddenFromAddMenu()){?>
+                <?php if($smt && !$smt->isHiddenFromAddMenu()){?>
                     <li><a href="<?=Url::to('/dashboard/store/settings/shipping/add',$smt->getShippingMethodTypeID())?>"><?= $smt->getMethodTypeController()->getShippingMethodTypeName()?></a></li>
                 <?php } ?>
             <?php } ?>
@@ -105,25 +105,27 @@ if(in_array($controller->getAction(),$addViews)){
                     </thead>
                     <tbody>
                     <?php foreach ($typemethods as $method) {
-                        if ($method->isEnabled()) {
-                            $shippingmethodenabledcount++;
-                        }
-                        ?>
-                        <tr>
-                            <td><?= $method->getName() ?></td>
-                            <td style="width: 20%;"><?= $method->isEnabled() ? t('Yes') : t('No') ?></td>
-                            <td class="text-right" style="width: 20%;">
-                                <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
-                                   class="btn btn-default"><?= t("Edit") ?></a>
-                                <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
-                                    <a href="" class="btn btn-default"><?= t("Disable") ?></a>
-                                <?php } else { ?>
-                                    <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
-                                       class="btn btn-danger"><?= t("Delete") ?></a>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
+                        if ($method) {
+                            if ($method->isEnabled()) {
+                                $shippingmethodenabledcount++;
+                            }
+                            ?>
+                            <tr>
+                                <td><?= $method->getName() ?></td>
+                                <td style="width: 20%;"><?= $method->isEnabled() ? t('Yes') : t('No') ?></td>
+                                <td class="text-right" style="width: 20%;">
+                                    <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
+                                       class="btn btn-default"><?= t("Edit") ?></a>
+                                    <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
+                                        <a href="" class="btn btn-default"><?= t("Disable") ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
+                                           class="btn btn-danger"><?= t("Delete") ?></a>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php }
+                    }?>
                     </tbody>
                 </table>
             <?php }
