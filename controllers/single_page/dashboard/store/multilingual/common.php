@@ -15,7 +15,7 @@ class Common extends DashboardSitePageController
 
         $query = $qb->select('o')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
-            ->groupBy('o.poName')->orderBy('o.poName');
+            ->groupBy('o.poName')->orderBy('o.poName')->getQuery()->getResult();
 
         $optionNames = [];
 
@@ -27,7 +27,7 @@ class Common extends DashboardSitePageController
 
         $query = $qb->select('oi')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'oi')
-            ->groupBy('oi.poiName')->orderBy('oi.poiName');
+            ->groupBy('oi.poiName')->orderBy('oi.poiName')->getQuery()->getResult();
 
         $optionItems = [];
 
