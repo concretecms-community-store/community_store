@@ -553,35 +553,60 @@ use \Concrete\Core\User\UserInfoRepository;
         <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 
-    <div class="ccm-dashboard-content-inner">
-        <form role="form" class="form-inline ccm-search-fields ">
-            <div class="ccm-search-fields-row">
-                <?php if ($statuses) { ?>
-                    <ul id="group-filters" class="nav nav-pills">
-                        <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/orders/') ?>"><?= t('All Statuses') ?></a></li>
+    <div class="ccm-dashboard-content-full">
+        <form role="form" class="form-inline ccm-search-fields">
 
-                        <?php foreach ($statuses as $statusoption) { ?>
-                            <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/orders/', $statusoption->getHandle()) ?>"><?= t($statusoption->getName()); ?></a></li>
-                        <?php } ?>
-                    </ul>
-                <?php } ?>
-            </div>
-            <br />
-
-            <div class="ccm-search-fields-row ccm-search-fields-submit">
-                <div class="form-group">
-                    <div class="ccm-search-main-lookup-field">
-                        <i class="fa fa-search"></i>
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders')]) ?>
+            <div class="ccm-search-fields-row row">
+                <div class="ccm-search-fields-submit col-xs-12 col-md-6">
+                    <div class="form-group">
+                        <div class="ccm-search-main-lookup-field">
+                            <i class="fa fa-search"></i>
+                            <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders')]) ?>
+                        </div>
                     </div>
+                    <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
                 </div>
-                <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
-            </div>
 
+                <div class="col-xs-12 col-md-6">
+                    <ul id="group-filters" class="nav nav-pills pull-right">
+                    <?php if($statuses){?>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <?= t('Order Status')?> <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
+                                <?php foreach($statuses as $statusoption){ ?>
+                                    <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle())?>"><?= t($statusoption->getName());?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
+    
+                    <?php if($enabledPaymentMethods){?>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <?= t('Payment Method')?> <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li <?= (!$enabledPaymentMethods ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Payment Methods')?></a></li>
+                                <?php foreach($enabledPaymentMethods as $paymentmethod){ ?>
+                                    <li <?= ($payment == $paymentmethod->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/nostatus/', $paymentmethod->getHandle())?>"><?= t($paymentmethod->getName());?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                </ul>
+                </div>
+            </div>
         </form>
 
+        <?php 
+
+        //var_dump($orderList, true); 
+
+        ?>
         <?php if (!empty($orderList)) { ?>
-            <div class="ccm-dashboard-content-full">
             <table class="ccm-search-results-table">
                 <thead>
                 <tr>
@@ -669,9 +694,10 @@ use \Concrete\Core\User\UserInfoRepository;
                 <?php } ?>
                 </tbody>
             </table>
-            </div>
         <?php } ?>
     </div>
+    
+
 
     <?php if (empty($orderList)) { ?>
         <br/><p class="alert alert-info"><?= t('No Orders Found'); ?></p>
