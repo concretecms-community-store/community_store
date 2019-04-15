@@ -152,23 +152,10 @@ class OrderList extends AttributedItemList
         $this->status = $status;
     }
 
-
-
-    /**
-        CAHUEYA MOD BEGIN
-    */
-
     public function setPaymentMethods($payment)
     {
         $this->payment = $payment;
     }
-
-
-    /**
-        CAHUEYA MOD END
-    */
-
-
 
     public function setIncludeExternalPaymentRequested($bool)
     {
