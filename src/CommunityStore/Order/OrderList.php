@@ -58,8 +58,26 @@ class OrderList extends AttributedItemList
                 $orderIDs[] = $value['oID'];
             }
 
+            if (!empty($orderIDs)) {
+                if ($paramcount > 0) {
+                    $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
+                } else {
+                    $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
+                }
+            } else {
+                $this->query->where('1 = 0');
+            }
+        }
 
+        if (isset($this->payment)) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE pmID IN (SELECT pmID FROM CommunityStorePaymentMethods WHERE pmHandle=?)", [$this->payment]);
 
+            $orderIDs = [];
+            while ($value = $matchingOrders->fetchRow()) {
+                $orderIDs[] = $value['oID'];
+            }
             if (!empty($orderIDs)) {
                 if ($paramcount > 0) {
                     $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
@@ -133,6 +151,24 @@ class OrderList extends AttributedItemList
     {
         $this->status = $status;
     }
+
+
+
+    /**
+        CAHUEYA MOD BEGIN
+    */
+
+    public function setPaymentMethods($payment)
+    {
+        $this->payment = $payment;
+    }
+
+
+    /**
+        CAHUEYA MOD END
+    */
+
+
 
     public function setIncludeExternalPaymentRequested($bool)
     {
