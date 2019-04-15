@@ -1569,7 +1569,7 @@ $ps = $app->make('helper/form/page_selector');
         <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
     </div>
 
-    <div class="ccm-dashboard-content-full">
+    <div class="cccm-dashboard-content-inner">
         <form role="form" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
                 <?php if ($grouplist) {
@@ -1614,7 +1614,7 @@ $ps = $app->make('helper/form/page_selector');
             </div>
 
         </form>
-
+        <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
             <thead>
             <tr>
@@ -1710,6 +1710,7 @@ $ps = $app->make('helper/form/page_selector');
             } ?>
             </tbody>
         </table>
+        </div>
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
             <div class="ccm-search-results-pagination">

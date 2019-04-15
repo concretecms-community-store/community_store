@@ -553,8 +553,8 @@ use \Concrete\Core\User\UserInfoRepository;
         <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 
-    <div class="ccm-dashboard-content-full">
-        <form role="form" class="form-inline ccm-search-fields">
+    <div class="ccm-dashboard-content-inner">
+        <form role="form" class="form-inline ccm-search-fields ">
             <div class="ccm-search-fields-row">
                 <?php if ($statuses) { ?>
                     <ul id="group-filters" class="nav nav-pills">
@@ -566,7 +566,7 @@ use \Concrete\Core\User\UserInfoRepository;
                     </ul>
                 <?php } ?>
             </div>
-
+            <br />
 
             <div class="ccm-search-fields-row ccm-search-fields-submit">
                 <div class="form-group">
@@ -576,12 +576,12 @@ use \Concrete\Core\User\UserInfoRepository;
                     </div>
                 </div>
                 <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
-
             </div>
 
         </form>
 
         <?php if (!empty($orderList)) { ?>
+            <div class="ccm-dashboard-content-full">
             <table class="ccm-search-results-table">
                 <thead>
                 <tr>
@@ -669,6 +669,7 @@ use \Concrete\Core\User\UserInfoRepository;
                 <?php } ?>
                 </tbody>
             </table>
+            </div>
         <?php } ?>
     </div>
 

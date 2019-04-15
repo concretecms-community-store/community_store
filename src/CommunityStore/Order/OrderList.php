@@ -58,9 +58,11 @@ class OrderList extends AttributedItemList
                 $orderIDs[] = $value['oID'];
             }
 
+
+
             if (!empty($orderIDs)) {
                 if ($paramcount > 0) {
-                    $this->query->addWhere('o.oID in (' . implode(',', $orderIDs) . ')');
+                    $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
                 } else {
                     $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
                 }
