@@ -235,7 +235,7 @@ class Product
     protected $pVariations;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $pNotificationEmails;
 
