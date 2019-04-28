@@ -284,7 +284,7 @@ class TaxRate
         }//if cart
 
         if ('grandtotal' == $this->getTaxBasedOn()) {
-            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+            $shippingTotal = floatval(StoreCalculator::getShippingTotal());
 
             if ('extract' == $taxCalc) {
                 $taxrate = 1 + ($this->getTaxRate() / 100);
