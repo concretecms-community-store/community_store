@@ -22,8 +22,21 @@ $token = $app->make('token');
             <img src="<?= $thumb->src; ?>">
         </p>
 
-
-        <p class="store-product-modal-price"><?= $product->getFormattedPrice(); ?></p>
+        <p class="store-product-modal-price">
+            <?php
+            $salePrice = $product->getSalePrice();
+            if (isset($salePrice) && "" != $salePrice) {
+                $formattedSalePrice = $product->getFormattedSalePrice();
+                $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+                echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
+                echo ' ' . t('was') . ' ' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+            } else {
+                $formattedPrice = $product->getFormattedPrice();
+                echo $formattedPrice;
+            }
+            ?>
+        </p>
+        
         <div class="store-product-modal-details">
             <?= $csm->t($product->getDesc(), 'productDetails', $product->getID()); ?>
         </div>
