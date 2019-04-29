@@ -17,9 +17,11 @@ $token = $app->make('token');
         <p class="store-product-modal-thumb">
             <?php
             $imgObj = $product->getImageObj();
-            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
-            ?>
-            <img src="<?= $thumb->src; ?>">
+            if (!empty($imgObj)) {
+                $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
+                ?>
+                <img src="<?= $thumb->src; ?>">
+            <?php } ?>
         </p>
 
         <p class="store-product-modal-price">
@@ -36,7 +38,7 @@ $token = $app->make('token');
             }
             ?>
         </p>
-        
+
         <div class="store-product-modal-details">
             <?= $csm->t($product->getDesc(), 'productDetails', $product->getID()); ?>
         </div>
