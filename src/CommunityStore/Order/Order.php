@@ -588,6 +588,9 @@ class Order
         $order->saveOrderChoices($order);
         $order->addOrderItems(StoreCart::getCart(), $discountRatio);
 
+        $event = new StoreOrderEvent($order);
+        Events::dispatch('on_community_store_order_created', $event);
+
         if (!$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference, true);
         }
