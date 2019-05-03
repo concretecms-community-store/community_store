@@ -242,7 +242,7 @@ if ($product->hasVariations()) {
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select').each(function(){
+                $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-modal-<?= $product->getID(); ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
                 });
 
