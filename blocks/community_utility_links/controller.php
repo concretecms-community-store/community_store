@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
-use Core;
-use Config;
-use Page;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
@@ -26,8 +25,16 @@ class Controller extends BlockController
     {
         return t("Utility Links");
     }
+
     public function view()
     {
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
         $itemcount = StoreCart::getTotalItemsInCart();
         $this->set("itemCount", $itemcount);
 
@@ -43,23 +50,25 @@ class Controller extends BlockController
             $this->set('total', '');
         }
 
-        $c = Page::getCurrentPage();
-        $path = $c->getCollectionPath();
+        $collectionHandle =  $c->getCollectionHandle();
 
         $inCheckout = false;
         $inCart = false;
 
-        if ($path == '/checkout') {
+        if ('checkout' == $collectionHandle) {
             $inCheckout = true;
         }
 
-        if ($path == '/cart') {
+        if ('cart' == $collectionHandle) {
             $inCart = true;
         }
 
         $this->set('inCheckout', $inCheckout);
         $this->set('inCart', $inCart);
+        $this->set('app', $this->app);
+        $this->set('langpath', $langpath);
     }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
@@ -68,6 +77,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
     }
+
     public function save($args)
     {
         $args['showCartItems'] = isset($args['showCartItems']) ? 1 : 0;
@@ -78,10 +88,11 @@ class Controller extends BlockController
         $args['popUpCart'] = isset($args['popUpCart']) ? 1 : 0;
         parent::save($args);
     }
+
     public function validate($args)
     {
-        $e = Core::make("helper/validation/error");
-        if ($args['cartLabel'] == "") {
+        $e = $this->app->make("helper/validation/error");
+        if ("" == $args['cartLabel']) {
             $e->add(t('Cart Label must be set'));
         }
         if (strlen($args['cartLabel']) > 255) {

@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
-
-use Package;
-use Core;
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
@@ -12,34 +11,34 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreFreeShippingMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreFreeShippingMethods")
  */
 class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumAmount;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumAmount;
 
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumWeight;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumWeight;
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $countries;
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $countriesSelected;
 
@@ -47,22 +46,27 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         $this->minimumAmount = $minAmount > 0 ? $minAmount : 0;
     }
+
     public function setMaximumAmount($maxAmount)
     {
         $this->maximumAmount = $maxAmount > 0 ? $maxAmount : 0;
     }
+
     public function setMinimumWeight($minWeight)
     {
         $this->minimumWeight = $minWeight > 0 ? $minWeight : 0;
     }
+
     public function setMaximumWeight($maxWeight)
     {
         $this->maximumWeight = $maxWeight > 0 ? $maxWeight : 0;
     }
+
     public function setCountries($countries)
     {
         $this->countries = $countries;
     }
+
     public function setCountriesSelected($countriesSelected)
     {
         $this->countriesSelected = $countriesSelected;
@@ -72,22 +76,27 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         return $this->minimumAmount;
     }
+
     public function getMaximumAmount()
     {
         return $this->maximumAmount;
     }
+
     public function getMinimumWeight()
     {
         return $this->minimumWeight;
     }
+
     public function getMaximumWeight()
     {
         return $this->maximumWeight;
     }
+
     public function getCountries()
     {
         return $this->countries;
     }
+
     public function getCountriesSelected()
     {
         return $this->countriesSelected;
@@ -97,6 +106,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         return $this->addOrUpdate('update', $data);
     }
+
     public function update($data)
     {
         return $this->addOrUpdate('update', $data);
@@ -104,7 +114,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     private function addOrUpdate($type, $data)
     {
-        if ($type == "update") {
+        if ("update" == $type) {
             $sm = $this;
         } else {
             $sm = new self();
@@ -119,7 +129,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         }
         $sm->setCountriesSelected($countriesSelected);
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($sm);
         $em->flush();
 
@@ -128,9 +138,10 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     public function dashboardForm($shippingMethod = null)
     {
-        $this->set('form', Core::make("helper/form"));
+        $app = Application::getFacadeApplication();
+        $this->set('form', $app->make("helper/form"));
         $this->set('smt', $this);
-        $this->set('countryList', Core::make('helper/lists/countries')->getCountries());
+        $this->set('countryList', $app->make('helper/lists/countries')->getCountries());
 
         if (is_object($shippingMethod)) {
             $smtm = $shippingMethod->getShippingMethodTypeMethod();
@@ -139,6 +150,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         }
         $this->set("smtm", $smtm);
     }
+
     public function validate($args, $e)
     {
         return $e;
@@ -166,7 +178,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         $subtotal = StoreCalculator::getSubTotal();
         $max = $this->getMaximumAmount();
-        if ($max != 0) {
+        if (0 != $max) {
             if ($subtotal >= $this->getMinimumAmount() && $subtotal <= $this->getMaximumAmount()) {
                 return true;
             } else {
@@ -183,7 +195,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         $totalWeight = StoreCart::getCartWeight();
         $maxWeight = $this->getMaximumWeight();
-        if ($maxWeight != 0) {
+        if (0 != $maxWeight) {
             if ($totalWeight >= $this->getMinimumWeight() && $totalWeight <= $this->getMaximumWeight()) {
                 return true;
             } else {
@@ -200,7 +212,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         $customer = new StoreCustomer();
         $custCountry = $customer->getValue('shipping_address')->country;
-        if ($this->getCountries() != 'all') {
+        if ('all' != $this->getCountries()) {
             $selectedCountries = explode(',', $this->getCountriesSelected());
             if (in_array($custCountry, $selectedCountries)) {
                 return true;
@@ -212,13 +224,15 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         }
     }
 
-    public function getOffers() {
-        $offers = array();
+    public function getOffers()
+    {
+        $offers = [];
 
         $offer = new StoreShippingMethodOffer();
         $offer->setRate($this->getRate());
 
         $offers[] = $offer;
+
         return $offers;
     }
 
@@ -227,7 +241,8 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         return 0;
     }
 
-    public function getShippingMethodTypeName() {
+    public function getShippingMethodTypeName()
+    {
         return t('Free Shipping');
     }
 }

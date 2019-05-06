@@ -1,10 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Core\Support\Facade\Url;
 
-$dh = Core::make('helper/date');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$dh = $app->make('helper/date');
 
 $subject = t("New Order Notification #%s", $order->getOrderID());
 /**
@@ -25,19 +26,22 @@ ob_start();
 
     <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
-            <td width="50%" valign="top" style="vertical-align: top; padding: 0; padding-right: 10px;">
+            <td width="50%" valign="top" style="vertical-align: top; padding: 0 10px 0 0;">
                 <h3><?= t('Billing Information') ?></h3>
                 <p>
-                    <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?><br>
+                    <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")) ?><br>
+                    <?php if ($order->getAttribute("billing_company")) { ?>
+                        <?= h($order->getAttribute("billing_company")) ?><br>
+                    <?php } ?>
                     <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
                     <?= nl2br($address); ?>
                     <br><br>
-                    <strong><?= t('Email') ?></strong>: <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
-                    <strong><?= t('Phone') ?></strong>: <?= $order->getAttribute("billing_phone") ?>
+                    <strong><?= t('Email') ?></strong>: <a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a><br>
+                    <strong><?= t('Phone') ?></strong>: <?= h($order->getAttribute("billing_phone")) ?>
                     <?php
                     $vat_number = $order->getAttribute("vat_number");
                     if ($vat_number) { ?>
-                    <br /><strong><?= t('VAT Number') ?></strong>: <?= $vat_number ?>
+                    <br /><strong><?= t('VAT Number') ?></strong>: <?= h($vat_number) ?>
                     <?php } ?>
                 </p>
             </td>
@@ -45,8 +49,10 @@ ob_start();
                 <?php if ($order->isShippable()) { ?>
                     <h3><?= t('Shipping Information') ?></h3>
                     <p>
-                        <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
-                        <br />
+                        <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")) ?><br />
+                        <?php if ($order->getAttribute("shipping_company")) { ?>
+                            <?= h($order->getAttribute("shipping_company")) ?><br>
+                        <?php } ?>
                         <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                         <?php if ($shippingaddress) {
                             $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
@@ -63,7 +69,7 @@ ob_start();
                 <td colspan="2">
                     <h3><?= t("Other Choices")?></h3>
                     <?php foreach ($orderChoicesAttList as $ak) {
-                        $orderOtherAtt = $order->getAttributeValueObject(StoreOrderKey::getByHandle($ak->getAttributeKeyHandle()));
+                        $orderOtherAtt = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
                         if ($orderOtherAtt) {
                             $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
                             if ($attvalue) { ?>
@@ -112,7 +118,7 @@ ob_start();
                         }
                         ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty() ?> <?= h($item->getQtyLabel());?></td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()) ?></td>
                     <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()) ?></td>
                 </tr>
@@ -178,7 +184,7 @@ ob_start();
         <?php } ?>
     </p>
 
-    <p><a href="<?= \URL::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
+    <p><a href="<?= Url::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
 
     </body>
     </html>

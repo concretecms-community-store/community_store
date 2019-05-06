@@ -1,15 +1,18 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
-use Core;
-use Config;
-use Page;
-use Database;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 
 class Controller extends BlockController
 {
@@ -18,6 +21,7 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
+    protected $attFilters = [];
 
     public function getBlockTypeDescription()
     {
@@ -28,13 +32,15 @@ class Controller extends BlockController
     {
         return t("Product List");
     }
+
     public function add()
     {
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
-        $this->set('groupfilters', array());
+        $this->set('groupfilters', []);
     }
+
     public function edit()
     {
         $this->requireAsset('css', 'select2');
@@ -50,11 +56,11 @@ class Controller extends BlockController
 
     public function getGroupFilters()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", array($this->bID));
+        // $app = Application::getFacadeApplication();
+        $db = $this->app->make('database')->connection();
+        $result = $db->query("SELECT gID FROM btCommunityStoreProductListGroups where bID = ?", [$this->bID]);
 
-        $list = array();
+        $list = [];
 
         if ($result) {
             foreach ($result as $g) {
@@ -70,22 +76,26 @@ class Controller extends BlockController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
     }
+
     public function view()
     {
+        // $app = Application::getFacadeApplication();
+        $request = $this->app->make(Request::class);
+
         $products = new StoreProductList();
 
         // checks in case sort order was inadvertantly set to an option that doesn't work with the current filter
-        if ($this->sortOrder == 'category' &&  !($this->filter == 'current' || $this->filter == 'page')) {
+        if ('category' == $this->sortOrder && !('current' == $this->filter || 'page' == $this->filter)) {
             $this->sortOrder = 'alpha';
         }
 
-        if ($this->sortOrder == 'related' &&  !($this->filter == 'related' || $this->filter == 'related_product')) {
+        if ('related' == $this->sortOrder && !('related' == $this->filter || 'related_product' == $this->filter)) {
             $this->sortOrder = 'related';
         }
 
-        $usersort = $this->get('sort' . $this->bID);
+        $usersort = $request->query->get('sort' . $this->bID);
 
-        if ($usersort && $usersort != '0') {
+        if ($usersort && '0' != $usersort) {
             $products->setSortBy($usersort);
             $this->set('usersort', $usersort);
         } else {
@@ -93,24 +103,39 @@ class Controller extends BlockController
             $this->set('usersort', '');
         }
 
-        if ($this->sortOrder == 'alpha') {
+        if ('alpha' == $this->sortOrder) {
             $products->setSortByDirection('asc');
         }
 
-        if ($this->filter == 'current' || $this->filter == 'current_children') {
+        if ('current' == $this->filter || 'current_children' == $this->filter) {
             $page = Page::getCurrentPage();
-            $products->setCID($page->getCollectionID());
+            $pageID  = $page->getCollectionID();
 
-            if ($this->filter == 'current_children') {
+            $site = $this->app->make('site')->getSite();
+            if ($site) {
+                $locale = $site->getDefaultLocale();
+
+                if ($locale) {
+                    $relatedPageID = Section::getRelatedCollectionIDForLocale($pageID, $locale->getLocale());
+                    if ($relatedPageID) {
+                        $pageID = $relatedPageID;
+                        $page = Page::getByID($pageID);
+                    }
+                }
+            }
+
+            $products->setCID($pageID);
+
+            if ('current_children' == $this->filter) {
                 $products->setCIDs($page->getCollectionChildrenArray());
             }
         }
 
-        if ($this->filter == 'page' || $this->filter == 'page_children') {
+        if ('page' == $this->filter || 'page_children' == $this->filter) {
             if ($this->filterCID) {
                 $products->setCID($this->filterCID);
 
-                if ($this->filter == 'page_children') {
+                if ('page_children' == $this->filter) {
                     $targetpage = Page::getByID($this->filterCID);
                     if ($targetpage) {
                         $products->setCIDs($targetpage->getCollectionChildrenArray());
@@ -119,11 +144,23 @@ class Controller extends BlockController
             }
         }
 
-        if ($this->filter == 'related' || $this->filter == 'related_product') {
-
-            if ($this->filter == 'related') {
+        if ('related' == $this->filter || 'related_product' == $this->filter) {
+            if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
                 $product = StoreProduct::getByCollectionID($cID);
+
+                // if product not found, look for it via multilingual related page
+                if (!$product) {
+                    $site = $this->app->make('site')->getSite();
+                    if ($site) {
+                        $locale = $site->getDefaultLocale();
+
+                        if ($locale) {
+                            $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
+                            $product = StoreProduct::getByCollectionID($originalcID);
+                        }
+                    }
+                }
             } else {
                 $product = StoreProduct::getByID($this->relatedPID);
             }
@@ -135,11 +172,11 @@ class Controller extends BlockController
             }
         }
 
-        if ($this->filter == 'random') {
+        if ('random' == $this->filter) {
             $products->setSortBy('random');
         }
 
-        if ($this->filter == 'random_daily') {
+        if ('random_daily' == $this->filter) {
             $products->setSortBy('random');
             $products->setRandomSeed(date('z'));
         }
@@ -150,19 +187,30 @@ class Controller extends BlockController
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
-        $paginator = $products->getPagination();
+
+        if (!empty($this->attFilters)) {
+            $products->setAttributeFilters($this->attFilters);
+        }
+
+        if ($request->getQueryString() && $this->enableExternalFiltering) {
+            $products->processUrlFilters($request);
+        }
+
+        $factory = new PaginationFactory(Request::createFromGlobals());
+        $paginator = $factory->createPaginationObject($products, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
         $codediscounts = false;
         $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
-        $code = trim(\Session::get('communitystore.code'));
+        $code = trim(Session::get('communitystore.code'));
 
         if ($code) {
             $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
         }
 
-        foreach($products as $key=>$product) {
+        foreach ($products as $key => $product) {
             if (!empty($automaticdiscounts)) {
                 $products[$key]->addDiscountRules($automaticdiscounts);
             }
@@ -177,13 +225,41 @@ class Controller extends BlockController
         $this->set('paginator', $paginator);
 
         //load some helpers
-        $this->set('ih', Core::make('helper/image'));
-        $this->set('th', Core::make('helper/text'));
+        $this->set('ih', $this->app->make('helper/image'));
+        $this->set('th', $this->app->make('helper/text'));
 
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('showAddToCart', false);
         }
+
+        $this->set('token', $this->app->make('token'));
+
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
+        $this->set('langpath', $langpath);
+        $this->set('app', $this->app);
+        $this->set('locale', Localization::activeLocale());
     }
+
+    public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
+    {
+        for ($i = 1; $i < 4; ++$i) {
+            $attitle = 'atthandle' . $i;
+            $atvalue = 'attvalue' . $i;
+            if ($$attitle) {
+                $this->attFilters[$$attitle] = $$atvalue;
+            }
+        }
+
+        $this->view();
+    }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
@@ -192,6 +268,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
     }
+
     public function save($args)
     {
         $args['showOutOfStock'] = isset($args['showOutOfStock']) ? 1 : 0;
@@ -207,39 +284,41 @@ class Controller extends BlockController
         $args['showButton'] = isset($args['showButton']) ? 1 : 0;
         $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
         $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['enableExternalFiltering'] = isset($args['enableExternalFiltering']) ? 1 : 0;
         $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
-        $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
+        $args['relatedPID'] = isset($args['relatedPID']) ? (int) $args['relatedPID'] : 0;
 
-        if ($args['filter'] != 'related_product') {
+        if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;
         }
 
         $filtergroups = $args['filtergroups'];
         unset($args['filtergroups']);
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $vals = array($this->bID);
+        // $app = Application::getFacadeApplication();
+        $db = $this->app->make('database')->connection();
+        $vals = [$this->bID];
         $db->query("DELETE FROM btCommunityStoreProductListGroups where bID = ?", $vals);
 
         //insert  groups
         if (!empty($filtergroups)) {
             foreach ($filtergroups as $gID) {
-                $vals = array($this->bID, (int) $gID);
+                $vals = [$this->bID, (int) $gID];
                 $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) VALUES (?,?)", $vals);
             }
         }
 
         parent::save($args);
     }
+
     public function validate($args)
     {
-        $e = Core::make("helper/validation/error");
-        $nh = Core::make("helper/number");
+        $e = $this->app->make("helper/validation/error");
+        $nh = $this->app->make("helper/number");
 
-        if (($args['filter'] == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0) {
+        if (('page' == $args['filter'] || 'page_children' == $args['filter']) && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));
         }
 

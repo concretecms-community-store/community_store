@@ -1,71 +1,72 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreOrderDiscounts")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrderDiscounts")
  */
 class OrderDiscount
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $odID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
-     * @JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
+     * @ORM\JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
     protected $order;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $odName;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $odDisplay;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $odDeductType;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $odValue;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $odPercentage;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $odDeductFrom;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $odCode;
 
     /**
-     * @return integer
+     * @ORM\return int
      */
     public function getID()
     {
         return $this->odID;
     }
-    
+
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOrder()
     {
@@ -73,7 +74,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $order
+     * @ORM\param mixed $order
      */
     public function setOrder($order)
     {
@@ -81,7 +82,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getName()
     {
@@ -89,7 +90,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odName
+     * @ORM\param mixed $odName
      */
     public function setName($odName)
     {
@@ -97,7 +98,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDisplay()
     {
@@ -105,7 +106,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odDisplay
+     * @ORM\param mixed $odDisplay
      */
     public function setDisplay($odDisplay)
     {
@@ -113,7 +114,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductType()
     {
@@ -121,16 +122,15 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odDeductType
+     * @ORM\param mixed $odDeductType
      */
     public function setDeductType($odDeductType)
     {
         $this->odDeductType = $odDeductType;
     }
 
-
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValue()
     {
@@ -138,7 +138,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odValue
+     * @ORM\param mixed $odValue
      */
     public function setValue($odValue)
     {
@@ -146,7 +146,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getPercentage()
     {
@@ -154,7 +154,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odPercentage
+     * @ORM\param mixed $odPercentage
      */
     public function setPercentage($odPercentage)
     {
@@ -162,7 +162,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductFrom()
     {
@@ -170,7 +170,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odDeductFrom
+     * @ORM\param mixed $odDeductFrom
      */
     public function setDeductFrom($odDeductFrom)
     {
@@ -178,7 +178,7 @@ class OrderDiscount
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCode()
     {
@@ -186,7 +186,7 @@ class OrderDiscount
     }
 
     /**
-     * @param mixed $odCode
+     * @ORM\param mixed $odCode
      */
     public function setCode($odCode)
     {
@@ -195,14 +195,14 @@ class OrderDiscount
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

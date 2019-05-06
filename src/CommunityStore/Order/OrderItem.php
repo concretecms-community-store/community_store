@@ -1,74 +1,81 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Core\Support\Facade\Application;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreOrderItems")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreOrderItems")
  */
 class OrderItem
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $oiID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
-
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
-     * @JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order")
+     * @ORM\JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
     protected $order;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $oiProductName;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $oiSKU;
 
     /**
-     * @Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="decimal", precision=10, scale=4)
      */
     protected $oiPricePaid;
 
     /**
-     * @Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiTax;
 
     /**
-     * @Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiTaxIncluded;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $oiTaxName;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="decimal", precision=12, scale=4)
      */
     protected $oiQty;
 
     /**
-     * @return mixed
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $oiQtyLabel;
+
+    /**
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -76,7 +83,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getProductName()
     {
@@ -84,7 +91,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oiProductName
+     * @ORM\param mixed $oiProductName
      */
     public function setProductName($oiProductName)
     {
@@ -92,7 +99,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getSKU()
     {
@@ -100,7 +107,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oiSKU
+     * @ORM\param mixed $oiSKU
      */
     public function setSKU($oiSKU)
     {
@@ -108,7 +115,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getPricePaid()
     {
@@ -116,7 +123,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oiPricePaid
+     * @ORM\param mixed $oiPricePaid
      */
     public function setPricePaid($oiPricePaid)
     {
@@ -124,7 +131,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getTax()
     {
@@ -132,7 +139,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oiTax
+     * @ORM\param mixed $oiTax
      */
     public function setTax($oitax)
     {
@@ -140,7 +147,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getTaxIncluded()
     {
@@ -148,7 +155,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oitaxIncluded
+     * @ORM\param mixed $oitaxIncluded
      */
     public function setTaxIncluded($oiTaxIncluded)
     {
@@ -156,7 +163,7 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getTaxName()
     {
@@ -164,7 +171,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $oiTaxName
+     * @ORM\param mixed $oiTaxName
      */
     public function setTaxName($oiTaxName)
     {
@@ -172,28 +179,44 @@ class OrderItem
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getQty()
     {
-        return $this->oiQty;
+        return round($this->oiQty, 4);
     }
 
     /**
-     * @param mixed $oiQty
+     * @ORM\param mixed $oiQty
      */
     public function setQty($oiQty)
     {
         $this->oiQty = $oiQty;
     }
 
+    /**
+     * @ORM\return mixed
+     */
+    public function getQtyLabel()
+    {
+        return $this->oiQtyLabel;
+    }
 
-    public function setProductID($productid) {
+    /**
+     * @ORM\param mixed $oiQtyLabel
+     */
+    public function setQtyLabel($oiQtyLabel)
+    {
+        $this->oiQtyLabel = $oiQtyLabel;
+    }
+
+    public function setProductID($productid)
+    {
         $this->pID = $productid;
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getOrder()
     {
@@ -201,7 +224,7 @@ class OrderItem
     }
 
     /**
-     * @param mixed $order
+     * @ORM\param mixed $order
      */
     public function setOrder($order)
     {
@@ -210,25 +233,30 @@ class OrderItem
 
     public static function getByID($oiID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $oiID);
     }
 
     public static function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)
     {
+        $app = Application::getFacadeApplication();
+        $csm = $app->make('cs/helper/multilingual');
+
         $product = $data['product']['object'];
 
-        $productName = $product->getName();
+        $productName = $csm->t($product->getName(), 'productName', $product->getID());
         $qty = $data['product']['qty'];
-        
+
         if (isset($data['product']['customerPrice'])) {
             $productPrice = $data['product']['customerPrice'];
         } else {
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $sku = $product->getSKU();
+        $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID());
 
+        $sku = $product->getSKU();
 
         $inStock = $product->getQty();
         $newStock = $inStock - $qty;
@@ -253,6 +281,7 @@ class OrderItem
         $orderItem->setTaxIncluded($taxIncluded);
         $orderItem->setTaxName($taxName);
         $orderItem->setQty($qty);
+        $orderItem->setQtyLabel($qtyLabel);
         $orderItem->setOrder($order);
 
         if ($product) {
@@ -262,24 +291,23 @@ class OrderItem
         $orderItem->save();
 
         foreach ($data['productAttributes'] as $groupID => $valID) {
-
-            if (substr($groupID, 0, 2) == 'po') {
+            if ('po' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("po", "", $groupID);
                 $optionvalue = StoreProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
-                    $optionvalue = $optionvalue->getName();
+                    $optionvalue = $csm->t($optionvalue->getName(), 'optionValue');
                 }
-            } elseif (substr($groupID, 0, 2) == 'pt')  {
+            } elseif ('pt' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pt", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'pa')  {
+            } elseif ('pa' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pa", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'ph')  {
+            } elseif ('ph' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("ph", "", $groupID);
                 $optionvalue = $valID;
-            } elseif (substr($groupID, 0, 2) == 'pc')  {
+            } elseif ('pc' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("pc", "", $groupID);
                 $optionvalue = $valID;
             }
@@ -288,7 +316,7 @@ class OrderItem
 
             $optiongroup = StoreProductOption::getByID($groupID);
             if ($optiongroup) {
-                $optionGroupName = $optiongroup->getName();
+                $optionGroupName = $csm->t($optiongroup->getName(), 'optionName', null, $groupID);
             }
 
             $orderItemOption = new StoreOrderItemOption();
@@ -317,7 +345,7 @@ class OrderItem
 
     public function getProductOptions()
     {
-        return \Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
+        return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
     }
 
     public function getProductObject()
@@ -327,14 +355,14 @@ class OrderItem
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

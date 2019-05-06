@@ -1,39 +1,40 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
-use Core;
-use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreTaxClasses")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreTaxClasses")
  */
 class TaxClass
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $tcID;
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $taxClassHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxClassName;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $taxClassRates;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $locked;
 
@@ -41,10 +42,12 @@ class TaxClass
     {
         $this->taxClassHandle = $handle;
     }
+
     public function setTaxClassName($name)
     {
         $this->taxClassName = $name;
     }
+
     public function setTaxClassRates(array $rates = null)
     {
         if ($rates) {
@@ -54,6 +57,7 @@ class TaxClass
             $this->taxClassRates = '';
         }
     }
+
     public function setTaxClassLock($locked)
     {
         $this->locked = $locked;
@@ -63,26 +67,31 @@ class TaxClass
     {
         return $this->tcID;
     }
+
     public function getTaxClassHandle()
     {
         return $this->taxClassHandle;
     }
+
     public function getTaxClassName()
     {
         return $this->taxClassName;
     }
+
     public function getName()
     {
         return $this->getTaxClassName();
     }
+
     public function isLocked()
     {
         return $this->locked;
     }
+
     public function getTaxClassRates()
     {
         $taxRates = explode(',', $this->taxClassRates);
-        $taxes = array();
+        $taxes = [];
         foreach ($taxRates as $tr) {
             if ($tr) {
                 $taxrate = TaxRate::getByID($tr);
@@ -99,6 +108,7 @@ class TaxClass
     {
         return explode(',', $this->taxClassRates);
     }
+
     public function addTaxClassRate($trID)
     {
         $taxClassRates = $this->taxClassRates;
@@ -107,6 +117,7 @@ class TaxClass
         $this->setTaxClassRates($taxClassRates);
         $this->save();
     }
+
     public function taxClassContainsTaxRate(TaxRate $taxRate)
     {
         $trID = $taxRate->getTaxRateID();
@@ -116,21 +127,25 @@ class TaxClass
             return false;
         }
     }
+
     public static function getByID($tcID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository(get_class())->findOneBy(array('taxClassHandle' => $taxClassHandle));
+        $em = dbORM::entityManager();
+
+        return $em->getRepository(get_class())->findOneBy(['taxClassHandle' => $taxClassHandle]);
     }
 
     public static function getTaxClasses()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->createQuery('select u from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass u')->getResult();
     }
 
@@ -141,7 +156,7 @@ class TaxClass
             $locked = $data['taxClassLocked'];
         }
         $tc = new self();
-        $th = Core::make("helper/text");
+        $th = Application::getFacadeApplication()->make("helper/text");
         $tc->setTaxClassHandle($th->handle($data['taxClassName']));
         $tc->setTaxClassName($data['taxClassName']);
         $tc->setTaxClassRates($data['taxClassRates']);
@@ -164,14 +179,14 @@ class TaxClass
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

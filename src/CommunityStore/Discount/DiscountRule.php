@@ -1,116 +1,117 @@
 <?php
-
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use Database;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreDiscountRules")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreDiscountRules")
  */
 class DiscountRule
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $drID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $drName;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $drEnabled;
 
     /**
-     * @Column(type="string", length=255,nullable=true)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     protected $drDisplay;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $drDescription;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drDeductType;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $drValue;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drPercentage;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drDeductFrom;
 
     /**
-     * @Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     protected $drTrigger;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $drSingleUseCodes;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drCurrency;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drValidFrom;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drValidTo;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drProductGroups;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $drUserGroups;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drQuantity;
 
     /**
-     * @Column(type="decimal", precision=5, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=2,nullable=true)
      */
     protected $drMaximumQuantity;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $drDateAdded;
 
     /**
-     * @Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime",nullable=true)
      */
     protected $drDeleted;
 
@@ -129,27 +130,28 @@ class DiscountRule
 
     public function returnDiscountedPrice()
     {
-        if ($this->getDeductFrom() == 'subtotal') {
-            if ($this->getDeductType() == 'percentage') {
+        if ('subtotal' == $this->getDeductFrom()) {
+            if ('percentage' == $this->getDeductType()) {
                 $applicableTotal = $this->getApplicableTotal();
 
-                if ($applicableTotal != false) {
+                if (false != $applicableTotal) {
                     return $applicableTotal - ($this->getPercentage() / 100 * $applicableTotal);
                 }
             }
 
-            if ($this->getDeductType() == 'value_all') {
+            if ('value_all' == $this->getDeductType()) {
                 $applicableTotal = $this->getApplicableTotal();
 
-                if ($applicableTotal != false) {
+                if (false != $applicableTotal) {
                     return $applicableTotal - $this->getValue();
                 }
             }
 
-            if ($this->getDeductType() == 'fixed') {
+            if ('fixed' == $this->getDeductType()) {
                 return $this->getValue();
             }
         }
+
         return false;
     }
 
@@ -159,12 +161,12 @@ class DiscountRule
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode", mappedBy="discountRule")
      */
     private $codes;
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCodes()
     {
@@ -178,7 +180,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getID()
     {
@@ -186,7 +188,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getName()
     {
@@ -194,7 +196,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drName
+     * @ORM\param mixed $drName
      */
     public function setName($drName)
     {
@@ -202,7 +204,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getEnabled()
     {
@@ -211,11 +213,11 @@ class DiscountRule
 
     public function isEnabled()
     {
-        return (bool)$this->drEnabled;
+        return (bool) $this->drEnabled;
     }
 
     /**
-     * @param mixed $drEnabled
+     * @ORM\param mixed $drEnabled
      */
     public function setEnabled($drEnabled)
     {
@@ -223,7 +225,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDisplay()
     {
@@ -231,7 +233,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDisplay
+     * @ORM\param mixed $drDisplay
      */
     public function setDisplay($drDisplay)
     {
@@ -239,7 +241,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDescription()
     {
@@ -247,7 +249,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDescription
+     * @ORM\param mixed $drDescription
      */
     public function setDescription($drDescription)
     {
@@ -255,7 +257,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductType()
     {
@@ -263,7 +265,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeductType
+     * @ORM\param mixed $drDeductType
      */
     public function setDeductType($drDeductType)
     {
@@ -271,7 +273,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValue()
     {
@@ -279,7 +281,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValue
+     * @ORM\param mixed $drValue
      */
     public function setValue($drValue)
     {
@@ -287,7 +289,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getPercentage()
     {
@@ -295,7 +297,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drPercentage
+     * @ORM\param mixed $drPercentage
      */
     public function setPercentage($drPercentage)
     {
@@ -303,7 +305,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeductFrom()
     {
@@ -311,7 +313,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeductFrom
+     * @ORM\param mixed $drDeductFrom
      */
     public function setDeductFrom($drDeductFrom)
     {
@@ -319,7 +321,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getTrigger()
     {
@@ -327,7 +329,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drTrigger
+     * @ORM\param mixed $drTrigger
      */
     public function setTrigger($drTrigger)
     {
@@ -336,11 +338,11 @@ class DiscountRule
 
     public function requiresCode()
     {
-        return $this->drTrigger == 'code';
+        return 'code' == $this->drTrigger;
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getSingleUseCodes()
     {
@@ -349,11 +351,11 @@ class DiscountRule
 
     public function isSingleUse()
     {
-        return (bool)$this->drSingleUseCodes;
+        return (bool) $this->drSingleUseCodes;
     }
 
     /**
-     * @param mixed $drSingleUseCodes
+     * @ORM\param mixed $drSingleUseCodes
      */
     public function setSingleUseCodes($drSingleUseCodes)
     {
@@ -361,7 +363,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getCurrency()
     {
@@ -369,7 +371,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drCurrency
+     * @ORM\param mixed $drCurrency
      */
     public function setCurrency($drCurrency)
     {
@@ -377,7 +379,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValidFrom()
     {
@@ -385,7 +387,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValidFrom
+     * @ORM\param mixed $drValidFrom
      */
     public function setValidFrom($drValidFrom)
     {
@@ -393,7 +395,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getValidTo()
     {
@@ -401,7 +403,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drValidTo
+     * @ORM\param mixed $drValidTo
      */
     public function setValidTo($drValidTo)
     {
@@ -409,7 +411,7 @@ class DiscountRule
     }
 
     /**
-     * @return array
+     * @ORM\return array
      */
     public function getProductGroups()
     {
@@ -417,7 +419,7 @@ class DiscountRule
     }
 
     /**
-     * @param array $drProductGroups
+     * @ORM\param array $drProductGroups
      */
     public function setProductGroups($drProductGroups)
     {
@@ -429,7 +431,7 @@ class DiscountRule
     }
 
     /**
-     * @return array
+     * @ORM\return array
      */
     public function getUserGroups()
     {
@@ -437,7 +439,7 @@ class DiscountRule
     }
 
     /**
-     * @param array $drUserGroups
+     * @ORM\param array $drUserGroups
      */
     public function setUserGroups($drUserGroups)
     {
@@ -448,12 +450,10 @@ class DiscountRule
         }
     }
 
-
     public function getQuantity()
     {
         return $this->drQuantity;
     }
-
 
     public function setQuantity($drQuantity)
     {
@@ -465,14 +465,13 @@ class DiscountRule
         return $this->drMaximumQuantity;
     }
 
-
     public function setMaximumQuantity($drMaximumQuantity)
     {
         $this->drMaximumQuantity = $drMaximumQuantity;
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDateAdded()
     {
@@ -480,7 +479,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDateAdded
+     * @ORM\param mixed $drDateAdded
      */
     public function setDateAdded($drDateAdded)
     {
@@ -488,7 +487,7 @@ class DiscountRule
     }
 
     /**
-     * @return mixed
+     * @ORM\return mixed
      */
     public function getDeleted()
     {
@@ -496,7 +495,7 @@ class DiscountRule
     }
 
     /**
-     * @param mixed $drDeleted
+     * @ORM\param mixed $drDeleted
      */
     public function setDeleted($drDeleted)
     {
@@ -510,25 +509,28 @@ class DiscountRule
         if ($display) {
             return $display;
         } else {
-            if ($this->drDeductType == 'percentage') {
+            if ('percentage' == $this->drDeductType) {
                 return $this->drPercentage . ' ' . t('off');
             }
 
-            if ($this->drDeductType == 'value') {
+            if ('value' == $this->drDeductType) {
                 return StorePrice::format($this->drValue) . ' ' . t('off');
             }
         }
+
+        return '';
     }
 
     public static function getByID($drID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
+
         return $em->find(get_class(), $drID);
     }
 
     public static function discountsWithCodesExist()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
 
@@ -537,11 +539,11 @@ class DiscountRule
 
     public static function findAutomaticDiscounts($user = null, $cartitems = false)
     {
-        if ($user === null) {
-            $user = new \User;
+        if (null === $user) {
+            $user = new User();
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
               WHERE drEnabled = 1
@@ -564,10 +566,9 @@ class DiscountRule
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 
-                if (count($matching) == 0) {
+                if (0 == count($matching)) {
                     $include = false;
                 }
-
             }
 
             if ($include) {
@@ -576,9 +577,9 @@ class DiscountRule
                     $count = 0;
 
                     if (is_array($cartitems)) {
-                        $discountProductGroups = array();
+                        $discountProductGroups = [];
 
-                        $dpg =  trim($row['drProductGroups']);
+                        $dpg = trim($row['drProductGroups']);
 
                         if ($dpg) {
                             $discountProductGroups = explode(',', $dpg);
@@ -618,7 +619,7 @@ class DiscountRule
 
     public function retrieveStatistics()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", [$this->drID]);
         $r = $r->fetchRow();
@@ -630,11 +631,11 @@ class DiscountRule
 
     public static function findDiscountRuleByCode($code, $user = null)
     {
-        if ($user === null) {
-            $user = new \User;
+        if (null === $user) {
+            $user = new User();
         }
 
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
         $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
@@ -659,7 +660,7 @@ class DiscountRule
 
                 $matching = array_intersect($usergroups, $discountusergroups);
 
-                if (count($matching) == 0) {
+                if (0 == count($matching)) {
                     $include = false;
                 }
             }
@@ -683,8 +684,7 @@ class DiscountRule
 
     public static function loadData($discountRule, $data)
     {
-
-        if ($data['drDeductType'] == 'percentage') {
+        if ('percentage' == $data['drDeductType']) {
             $data['drValue'] = null;
         } else {
             $data['drPercentage'] = null;
@@ -706,20 +706,19 @@ class DiscountRule
         $discountRule->setQuantity($data['drQuantity'] ? $data['drQuantity'] : null);
         $discountRule->setMaximumQuantity($data['drMaximumQuantity'] ? $data['drMaximumQuantity'] : null);
 
-        if ($data['validFrom'] == 1) {
+        if (1 == $data['validFrom']) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m'] . (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));
             $discountRule->setValidFrom($from);
         } else {
             $discountRule->setValidFrom(null);
         }
 
-        if ($data['validTo'] == 1) {
+        if (1 == $data['validTo']) {
             $to = new \DateTime($data['drValidTo_dt'] . ' ' . $data['drValidTo_h'] . ':' . $data['drValidTo_m'] . (isset($data['drValidTo_a']) ? $data['drValidTo_a'] : ''));
             $discountRule->setValidTo($to);
         } else {
             $discountRule->setValidTo(null);
         }
-
     }
 
     public static function edit($drID, $data)
@@ -738,15 +737,22 @@ class DiscountRule
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    public static function getRules()
+    {
+        $em = dbORM::entityManager();
+        $rules = $em->getRepository(get_called_class())->findAll();
+        return $rules;
     }
 }

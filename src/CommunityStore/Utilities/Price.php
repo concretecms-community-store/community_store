@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Config;
+use Concrete\Core\Support\Facade\Config;
 
 class Price
 {
@@ -63,19 +63,6 @@ class Price
         if (!self::isZeroDecimalCurrency($currency)) {
             $price = number_format($price * 100, 0, "", "");
         }
-
-        return $price;
-    }
-
-    public static function getFloat($price)
-    {
-        $symbol = Config::get('community_store.symbol');
-        $wholeSep = Config::get('community_store.whole');
-        $thousandSep = Config::get('community_store.thousand');
-
-        $price = str_replace($symbol, "", $price);
-        $price = str_replace($thousandSep, "", $price);
-        $price = str_replace($wholeSep, ".", $price);
 
         return $price;
     }
