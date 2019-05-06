@@ -116,7 +116,7 @@ if ($cart) {
             } ?>
             </td>
 
-            <td class="store-cart-item-price">
+            <td class="store-cart-item-price text-right">
                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                 <?= StorePrice::format($cartItem['product']['customerPrice']) ?>
                 <?php 
@@ -129,8 +129,10 @@ if ($cart) {
             <td class="store-cart-product-qty text-center">
                 <?php if ($product->allowQuantity()) { ?>
                 <?= $qty ?>
-                <?php 
-            } ?>
+                <?php
+                } else { ?>
+                    1
+                <?php } ?>
                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
                 <?php if ($quantityLabel) { ?>
                 <span class="store-cart-qty-label small">

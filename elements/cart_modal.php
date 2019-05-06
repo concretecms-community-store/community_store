@@ -48,8 +48,8 @@ $csm = $app->make('cs/helper/multilingual');
                 <thead>
                 <tr>
                     <th colspan="2" ><?= t('Product'); ?></th>
-                    <th><?= t('Price'); ?></th>
-                    <th><?= t('Quantity'); ?></th>
+                    <th class="text-right"><?= t('Price'); ?></th>
+                    <th class="text-right"><?= t('Quantity'); ?></th>
                     <th></th>
 
                 </tr>
@@ -77,7 +77,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $product->getID()?>">
                             <?php $thumb = $product->getImageThumb(); ?>
                             <?php if ($thumb) { ?>
-                            <td class="cart-list-thumb col-xs-2">
+                            <td class="cart-list-thumb col-xs-2 col-md-1">
                                 <?php if ($productPage) { ?>
                                     <a href="<?= URL::to($productPage) ?>">
                                         <?= $thumb ?>
@@ -86,7 +86,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     <?= $thumb ?>
                                 <?php } ?>
                             </td>
-                            <td class="checkout-cart-product-name col-xs-4">
+                            <td class="checkout-cart-product-name col-xs-3 col-md-4">
                                 <?php } else { ?>
                             <td colspan="2" class="checkout-cart-product-name">
                                 <?php } ?>
@@ -137,7 +137,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php } ?>
                             </td>
 
-                            <td class="store-cart-list-item-price col-xs-2">
+                            <td class="store-cart-list-item-price col-xs-2 text-right">
                                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                     <?=StorePrice::format($cartItem['product']['customerPrice'])?>
                                 <?php } else {  ?>
@@ -145,9 +145,9 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php } ?>
                             </td>
 
-                            <td class="store-cart-list-product-qty col-xs-3">
+                            <td class="store-cart-list-product-qty col-xs-3 text-right">
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
-                                <span class="store-qty-container
+                                <span class="store-qty-container pull-right
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>
                                 ">
@@ -155,9 +155,9 @@ $csm = $app->make('cs/helper/multilingual');
                                     $max = $product->getMaxCartQty();
                                     ?>
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } else { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } ?>
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
@@ -169,7 +169,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php } ?>
                                 </span>
                             </td>
-                            <td class="store-cart-list-remove-button col-xs-1 text-right">
+                            <td class="store-cart-list-remove-button col-xs-2 text-right">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
                             </td>
 

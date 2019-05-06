@@ -46,7 +46,7 @@ if ($cart) {
             <thead>
             <tr>
                 <th colspan="2"><?= t('Product'); ?></th>
-                <th><?= t('Price'); ?></th>
+                <th class="text-right"><?= t('Price'); ?></th>
                 <th class="text-right"><?= t('Quantity'); ?></th>
                 <th class="text-right"><?= t('Remove'); ?></th>
             </tr>
@@ -122,7 +122,7 @@ if ($cart) {
                             </div>
                         <?php } ?>
                         </td>
-                        <td class="store-cart-item-price">
+                        <td class="store-cart-item-price text-right">
                             <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                 <?=StorePrice::format($cartItem['product']['customerPrice'])?>
                             <?php } else {  ?>
@@ -136,7 +136,7 @@ if ($cart) {
                                 ?>
                             <?php } ?>
                         </td>
-                        <td class="store-cart-product-qty">
+                        <td class="store-cart-product-qty text-right">
                             <?php $quantityLabel = $product->getQtyLabel(); ?>
 
                             <span class="store-qty-container pull-right
@@ -147,9 +147,9 @@ if ($cart) {
                                 <?php if ($product->allowDecimalQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
                                 <?php } else { ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
                                 <?php } ?>
 
                                  <input type="hidden" name="instance[]" value="<?= $k ?>"/>
