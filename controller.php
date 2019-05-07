@@ -212,6 +212,7 @@ class Controller extends Package
             var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
             var HELPERSURL = '" . rtrim(Url::to('/helpers'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
+            var CHECKOUTSCROLLOFFSET = " . Config::get('community_store.checkout_scroll_offset', 0) . ";
         </script>
         ";
     }

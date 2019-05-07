@@ -282,7 +282,7 @@ var communityStore = {
             pane.addClass('store-active-form-group');
 
             $('html, body').animate({
-                scrollTop: pane.offset().top
+                scrollTop: pane.offset().top - CHECKOUTSCROLLOFFSET
             });
         }
     },
@@ -345,7 +345,7 @@ var communityStore = {
             $(obj).closest(".store-checkout-form-group").addClass('store-checkout-form-group-complete');
 
             $('html, body').animate({
-                scrollTop: pane.offset().top
+                scrollTop: pane.offset().top - CHECKOUTSCROLLOFFSET
             });
 
             pane.find('input').first().focus();
@@ -830,7 +830,7 @@ $(document).ready(function() {
         pane.addClass('store-active-form-group');
 
         $('html, body').animate({
-            scrollTop: pane.parent().offset().top
+            scrollTop: pane.parent().offset().top - CHECKOUTSCROLLOFFSET
         });
 
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");
