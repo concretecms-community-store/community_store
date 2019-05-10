@@ -147,7 +147,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                             <td class="store-cart-list-product-qty col-xs-3 text-right">
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
-                                <span class="store-qty-container pull-right
+                                <span class="store-qty-container
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>
                                 ">
@@ -155,9 +155,9 @@ $csm = $app->make('cs/helper/multilingual');
                                     $max = $product->getMaxCartQty();
                                     ?>
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } else { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } ?>
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
