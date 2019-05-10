@@ -615,6 +615,14 @@ $ps = $app->make('helper/form/page_selector');
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                 </div>
                             </div>
+							<div class="form-group">
+								<?= $form->label("pStackedHeight", t("Stacked Height")); ?>
+								<div class="input-group">
+									<?php $height = $product->getStackedHeight(); ?>
+									<?= $form->text('pStackedHeight', $height ? $height : '0') ?>
+									<div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>
