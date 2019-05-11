@@ -105,4 +105,13 @@ class StoreOrderKey extends Key
         }
     }
 
+    public static function getByHandle($handle)
+    {
+        $em = \ORM::entityManager();
+        $type = $em->getRepository(self::class)->findOneBy(
+            array('akHandle' => $handle,
+            ));
+
+        return $type;
+    }
 }

@@ -1,18 +1,20 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Core\Support\Facade\Application;
 
-class OrderList extends AttributedItemList
+class OrderList extends AttributedItemList implements PaginationProviderInterface
 {
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Entity\\Attribute\\Key\\StoreOrderKey';
+        return StoreOrderKey::class;
     }
 
     public function createQuery()
@@ -119,6 +121,8 @@ class OrderList extends AttributedItemList
             $this->query->andWhere('cID = ?')->setParameter($paramcount++, $this->cID);
         }
 
+        $this->query->leftJoin('o', 'CommunityStoreOrderSearchIndexAttributes', 'csi', 'o.oID = csi.oID');
+
         $this->query->orderBy('oID', 'DESC');
 
         return $this->query;
@@ -198,6 +202,15 @@ class OrderList extends AttributedItemList
         $pagination = new Pagination($this, $adapter);
 
         return $pagination;
+    }
+
+    public function getPaginationAdapter()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
+        });
+
+        return $adapter;
     }
 
     public function getTotalResults()
