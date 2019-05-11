@@ -443,6 +443,9 @@ class Products extends DashboardSitePageController
         if (!is_numeric($args['pHeight'])) {
             $e->add(t('The Product Height must be a number'));
         }
+		if (!is_numeric($args['pStackedHeight'])) {
+			$e->add(t('The Product Stacked Height must be a number'));
+		}
         if (!is_numeric($args['pLength'])) {
             $e->add(t('The Product Length must be a number'));
         }
