@@ -68,7 +68,7 @@ https://github.com/concrete5-community-store/community_store_worldpay_hosted
 ### Payrexx - https://www.payrexx.com/
 https://github.com/concrete5-community-store/community_store_payrexx
 
-### Sage Pay - hhttps://www.sagepay.co.uk/
+### Sage Pay - https://www.sagepay.co.uk/
 https://github.com/edbeeny/community_store_sagepay
 
 ## Shipping Methods
