@@ -46,7 +46,14 @@ class DiscountRuleList extends ItemList
         }
 
         if ($this->search) {
-            $query->andWhere('drName like ?')->setParameter($paramcount++, '%' . $this->search . '%');
+            $query->andWhere('drName like ?')->setParameter($paramcount++, '%' . $this->search . '%')
+                ->orWhere('drDisplay like ?')->setParameter($paramcount++, '%' . $this->search . '%');
+
+            $query->leftJoin('r', 'CommunityStoreDiscountCodes', 'rc', 'rc.drID = r.drID')
+                ->orWhere('dcCode like ?')->setParameter($paramcount++, '%' . $this->search . '%');
+
+            $query->groupBy('r.drID');
+
         }
 
         $query->andWhere('drDeleted is NULL');

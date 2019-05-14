@@ -21,7 +21,21 @@ $currencySymbol = Config::get('community_store.symbol');
 	</div>
 
 
-    <div class="ccm-dashboard-content-full">
+     <div class="ccm-dashboard-content-full">
+
+         <form role="form" class="form-inline ccm-search-fields">
+
+             <div class="ccm-search-fields-row ccm-search-fields-submit">
+                 <div class="form-group">
+                     <div class="ccm-search-main-lookup-field">
+                         <i class="fa fa-search"></i>
+                         <?= $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Search Discounts')))?>
+                     </div>
+
+                 </div>
+                 <button type="submit" class="btn btn-default"><?= t('Search')?></button>
+             </div>
+         </form>
         <table class="ccm-search-results-table">
             <thead>
                 <tr>
@@ -179,10 +193,10 @@ $currencySymbol = Config::get('community_store.symbol');
                             </td>
 
                             <td>
-                                <p><a class="btn btn-default" href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><i class="fa fa-pencil"></i></a></p>
+                                <p><a class="btn btn-primary btn-sm" href="<?= \URL::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= t('Manage'); ?></a></p>
                                 <?php
                                 if ($discountRule->getTrigger() == 'code') {
-                                    echo '<p>' . '<a class="btn btn-default btn-sm" href="'. \URL::to('/dashboard/store/discounts/codes/', $discountRule->getID()).'">'.t('Manage Codes').'</a></p>';
+                                    echo '<p>' . '<a class="btn btn-primary btn-sm" href="'. \URL::to('/dashboard/store/discounts/codes/', $discountRule->getID()).'"><i class="fa fa-key"></i> '.t('Manage Codes').'</a></p>';
                                 } ?>
 
                             </td>
@@ -194,6 +208,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
+        <div class="ccm-search-results-pagination">
         <div class="ccm-search-results-pagination">
             <?= $pagination ?>
         </div>
@@ -315,6 +330,7 @@ $currencySymbol = Config::get('community_store.symbol');
             <div class="radio"><label><?= $form->radio('drTrigger', 'code', ($discountRule->getTrigger() == 'code'))?> <?= t('When valid code entered'); ?></label></div>
         </div>
 
+
         <div id="codefields" <?= ($discountRule->getTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
             <div class="form-group">
                 <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single use codes'); ?></label>
@@ -323,6 +339,10 @@ $currencySymbol = Config::get('community_store.symbol');
             <p class="alert alert-info"><?= t('Codes can be entered after creating rule');?></p>
             <?php } ?>
         </div>
+
+        <?php if ($discountRule->getID() && $discountRule->getTrigger() == 'code') { ?>
+            <p><a class="btn btn-default btn-sm" href="<?= \URL::to('/dashboard/store/discounts/codes/', $discountRule->getID()); ?>"><?= t('Manage Codes'); ?></a></p><br>
+       <?php } ?>
 
 <!--       <field name="drCurrency" type="C" size="20"></field>-->
 
@@ -419,7 +439,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= \URL::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Cancel')?></a>
+            <a href="<?= \URL::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : ''))?>" class="btn btn-default"><?= t('Cancel / View All Discount Rules')?></a>
             <button class="pull-right btn btn-primary" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
@@ -599,7 +619,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= \URL::to('/dashboard/store/discounts')?>" class="btn btn-default"><?= t('Return to Discount Rules')?></a>
+            <a href="<?= \URL::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default"><?= t('Return to Discount Rules')?></a>
         </div>
     </div>
 
