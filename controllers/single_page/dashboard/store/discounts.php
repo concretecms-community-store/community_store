@@ -217,8 +217,8 @@ class Discounts extends DashboardPageController
                         return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
                     } else {
                         $this->flash('success', t('Discount Rule Added'));
-
-                        return Redirect::to('/dashboard/store/discounts/edit/' . $data['drID']);
+                        Session::remove('communitystore.dashboard.discounts.keywords');
+                        return Redirect::to('/dashboard/store/discounts/edit/' . $discountrule->getID());
                     }
                 }
             } else {
