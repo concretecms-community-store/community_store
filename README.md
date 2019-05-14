@@ -34,6 +34,10 @@ Additional gateways can be found at:
 ### Paypal Standard - https://www.paypal.com
 https://github.com/concrete5-community-store/community_store_paypal_standard
 
+### Stripe Checkout - https://stripe.com/docs/payments/checkout
+https://github.com/concrete5-community-store/community_store_stripe_checkout
+(if you need to meet SCA regulations, use this payment method for Stripe)
+
 ### Stripe - https://stripe.com
 https://github.com/concrete5-community-store/community_store_stripe
 
@@ -63,6 +67,9 @@ https://github.com/concrete5-community-store/community_store_worldpay_hosted
 
 ### Payrexx - https://www.payrexx.com/
 https://github.com/concrete5-community-store/community_store_payrexx
+
+### Sage Pay - https://www.sagepay.co.uk/
+https://github.com/edbeeny/community_store_sagepay
 
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
