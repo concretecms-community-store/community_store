@@ -174,7 +174,6 @@ class Settings extends DashboardPageController
                 Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
                 Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
-                Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
                 Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
                 Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
                 Config::save('community_store.noBillingSave', trim($args['noBillingSave']));
@@ -182,6 +181,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.noBillingSaveGroups', is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');
                 Config::save('community_store.noShippingSaveGroups', is_array($args['noShippingSaveGroups']) ? implode(',', $args['noShippingSaveGroups']) : '');
                 Config::save('community_store.showUnpaidExternalPaymentOrders', $args['showUnpaidExternalPaymentOrders']);
+                Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
 
                 //save payment methods
