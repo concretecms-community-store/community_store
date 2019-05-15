@@ -1,20 +1,18 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
+use Concrete\Core\Support\Facade\Application;
 
-class OrderList extends AttributedItemList implements PaginationProviderInterface
+class OrderList extends AttributedItemList
 {
     protected function getAttributeKeyClassName()
     {
-        return StoreOrderKey::class;
+        return '\\Concrete\\Package\\CommunityStore\\Entity\\Attribute\\Key\\StoreOrderKey';
     }
 
     public function createQuery()
@@ -60,7 +58,65 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
                 $orderIDs[] = $value['oID'];
             }
 
+        if (!empty($orderIDs)) {
+            if ($paramcount > 0) {
+                $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
+                } else {
+                    $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
+                    }
+                } else {
+                    $this->query->where('1 = 0');
+                    }
+                }
 
+        if (isset($this->payment)) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE pmName = ?", [$this->payment]);
+
+            $orderIDs = [];
+            while ($value = $matchingOrders->fetchRow()) {
+                $orderIDs[] = $value['oID'];
+            }
+
+            
+            if (!empty($orderIDs)) {
+                if ($paramcount > 0) {
+                    $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
+                } else {
+                    $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
+                }
+            } else {
+                $this->query->where('1 = 0');
+            }
+            
+        }
+
+        if (isset($this->paymentstatus)) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+
+            if ($this->paymentstatus === 'paid'){
+                $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE oPaid IS NOT NULL");
+            }
+
+            if ($this->paymentstatus === 'cancelled'){
+                $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE oCancelled IS NOT NULL");
+            }
+
+            if ($this->paymentstatus === 'refunded'){
+                $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE oRefunded IS NOT NULL");
+            }
+
+            if ($this->paymentstatus === 'incomplete'){
+                $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrders WHERE externalPaymentRequested IS NOT NULL");
+            }
+
+
+            $orderIDs = [];
+            while ($value = $matchingOrders->fetchRow()) {
+                $orderIDs[] = $value['oID'];
+            }
 
             if (!empty($orderIDs)) {
                 if ($paramcount > 0) {
@@ -121,8 +177,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
             $this->query->andWhere('cID = ?')->setParameter($paramcount++, $this->cID);
         }
 
-        $this->query->leftJoin('o', 'CommunityStoreOrderSearchIndexAttributes', 'csi', 'o.oID = csi.oID');
-
         $this->query->orderBy('oID', 'DESC');
 
         return $this->query;
@@ -136,6 +190,16 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    public function setPaymentMethods($payment)
+    {
+        $this->payment = $payment;
+    }
+
+    public function setPaymentStatus($paymentstatus)
+    {
+        $this->paymentstatus = $paymentstatus;
     }
 
     public function setIncludeExternalPaymentRequested($bool)
@@ -202,15 +266,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         $pagination = new Pagination($this, $adapter);
 
         return $pagination;
-    }
-
-    public function getPaginationAdapter()
-    {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
-        });
-
-        return $adapter;
     }
 
     public function getTotalResults()
