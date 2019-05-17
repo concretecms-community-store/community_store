@@ -546,11 +546,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Orders'); ?></h3>
             <div class="form-group">
                 <label><?= $form->checkbox('showUnpaidExternalPaymentOrders', '1', Config::get('community_store.showUnpaidExternalPaymentOrders') ? '1' : '0'); ?>
-                    <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)'); ?></label></div>
+                    <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)'); ?></label>
+            </div>
 
-            <h3><?= t('Number of Orders'); ?></h3>
             <div class="form-group">
-                <label><?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?></label>
+                <?= $form->label('numberOfOrders', t('Number of orders displayed per page on orders dashboard page')); ?>
+               <?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?>
             </div>
 
         </div>
