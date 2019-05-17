@@ -16,32 +16,42 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
 
 class Orders extends DashboardPageController
 {
-    public function view($status = '', $payment = '', $paymentstatus = '')
+    public function view($status = 'all', $paymentMethod = 'all', $paymentStatus = 'all')
     {
 
-        if ($status == 'nostatus') {
-            $status = '';
+        $statusFilter = $status;
+        $paymentMethodFilter  = $paymentMethod;
+        $paymentStatusFilter = $paymentStatus;
+
+        if ($status == 'all') {
+            $statusFilter = '';
         }
 
-        if ($paymentstatus == 'nopaymentstatus') {
-            $paymentstatus = '';
+        if ($paymentMethod == 'all') {
+            $paymentMethodFilter = '';
         }
+
+        if ($paymentStatus == 'all') {
+            $paymentStatusFilter = '';
+        }
+
         $orderList = new StoreOrderList();
 
         if ($this->request->query->get('keywords')) {
             $orderList->setSearch($this->request->query->get('keywords'));
+            $this->set('keywords', $this->request->query->get('keywords'));
         }
 
-        if ($status) {
-            $orderList->setStatus($status);
+        if ($statusFilter) {
+            $orderList->setStatus($statusFilter);
         }
 
-        if ($payment) {
-            $orderList->setPaymentMethods($payment);
+        if ($paymentMethodFilter) {
+            $orderList->setPaymentMethods($paymentMethodFilter);
         }
 
-        if ($paymentstatus) {
-            $orderList->setPaymentStatus($paymentstatus);
+        if ($paymentStatusFilter) {
+            $orderList->setPaymentStatus($paymentStatusFilter);
         }
 
         if (Config::get('community_store.numberOfOrders')) {
@@ -49,8 +59,6 @@ class Orders extends DashboardPageController
         } else {     
             $orderList->setItemsPerPage(20);
         }
-
-
 
 
         if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
@@ -70,9 +78,9 @@ class Orders extends DashboardPageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('statuses', StoreOrderStatus::getAll());
-        $this->set('payment', $payment);
+        $this->set('paymentMethod', $paymentMethod);
         $this->set("enabledPaymentMethods", $enabledMethods);
-        $this->set('paymentstatus', $paymentstatus);
+        $this->set('paymentStatus', $paymentStatus);
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('shoppingDisabled', true);

@@ -472,6 +472,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->text('placesAPIKey', Config::get('community_store.placesAPIKey')); ?>
             </div>
 
+            <h3><?= t('Checkout Scroll Offset'); ?></h3>
+            <div class="form-group">
+                <?= $form->label('checkoutScrollOffset', t('Amount to offset the automatic scroll in the checkout')); ?>
+                <div class="input-group">
+                <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
+                    <div class="input-group-addon"><?= t('px');?></div>
+                </div>
+                <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
+            </div>
+
             <h3><?= t('Company Name'); ?></h3>
             <div class="form-group">
                 <?php $companyField = Config::get('community_store.companyField');

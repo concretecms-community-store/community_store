@@ -553,161 +553,184 @@ use \Concrete\Core\User\UserInfoRepository;
         <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 
-    <div class="ccm-dashboard-content-full">
-        <form role="form" class="form-inline ccm-search-fields">
 
-            <div class="ccm-search-fields-row">
-                <div class="ccm-search-fields-submit col-xs-12 col-md-6">
-                    <div class="form-group">
-                        <div class="ccm-search-main-lookup-field">
-                            <i class="fa fa-search"></i>
-                            <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders')]) ?>
-                        </div>    
+    <form role="form" class="form-inline">
+        <div class="row">
+            <div class="ccm-search-fields-submit col-xs-12 col-md-4">
+                <div class="form-group">
+                    <div class="ccm-search-main-lookup-field">
+                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders'), 'style'=>""]) ?>
                     </div>
-                <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
+                </div>
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
             </div>
-                <div class="col-xs-12 col-md-6">
-                    <ul id="group-filters" class="nav nav-pills pull-right">
-                    <?php if($statuses){?>
-                        <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                <?= t('Order Status')?> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Statuses')?></a></li>
-                                <?php foreach($statuses as $statusoption){ ?>
-                                    <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle())?>"><?= t($statusoption->getName());?></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                    <?php } ?>
+            <div class="col-xs-12 col-md-8">
+                <ul id="group-filters" class="nav nav-pills">
+                <?php
+                $keywordsparam = '';
+                if ( $keywords) {
+                    $keywordsparam = '?keywords=' . urlencode($keywords);
 
-                    <?php if($enabledPaymentMethods){?>
-                        <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                <?= t('Payment Method')?> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li <?= (!$enabledPaymentMethods ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Payment Methods')?></a></li>
-                                <?php foreach($enabledPaymentMethods as $paymentmethod){ ?>
-                                    <li <?= ($payment == $paymentmethod->getName() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/nostatus/', $paymentmethod->getName())?>"><?= t($paymentmethod->getName());?></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <li role="presentation" class="dropdown">
+                }
+
+                if($enabledPaymentMethods){
+                    $paymentMethodName = '';
+                    foreach ($enabledPaymentMethods as $pm) {
+                        if ($paymentMethod == $pm->getID()) {
+                            $paymentMethodName = $pm->getName();
+                        }
+                    } ?>
+
+                    <li role="presentation" class="dropdown <?= ($paymentMethod != 'all' ? 'active' : ''); ?>">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <?= t('Payment Status')?> <span class="caret"></span>
+                            <?= $paymentMethod  != 'all' ? t('Payment Method: %s', $paymentMethodName) : t('Payment Method'); ?> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li <?= (!$enabledPaymentMethods ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/')?>"><?= t('All Payment Statuses')?></a></li>
-                                <li><a href="<?= \URL::to('/dashboard/store/orders/nostatus/nomethod/paid')?>"><?= t('Paid');?></a></li>
-                                <li><a href="<?= \URL::to('/dashboard/store/orders/nostatus/nomethod/incomplete')?>"><?= t('Incomplete');?></a></li>
-                                <li><a href="<?= \URL::to('/dashboard/store/orders/nostatus/nomethod/refunded')?>"><?= t('Refunded');?></a></li>
-                                <li><a href="<?= \URL::to('/dashboard/store/orders/nostatus/nomethod/cancelled')?>"><?= t('Cancelled');?></a></li>
+                            <li <?= (!$paymentMethod ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
+                            <?php foreach($enabledPaymentMethods as $pm){ ?>
+                                <li <?= ($paymentMethod == $pm->getName() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
+                            <?php } ?>
                         </ul>
                     </li>
-                </ul>
-                </div>
-            </div>
-
-
-
-        </form>
-
-        <?php if (!empty($orderList)) { ?>
-            <table class="ccm-search-results-table">
-                <thead>
-                <tr>
-                    <th><a><?= t("Order %s", "#") ?></a></th>
-                    <th><a><?= t("Customer Name") ?></a></th>
-                    <th><a><?= t("Order Date") ?></a></th>
-                    <th><a><?= t("Total") ?></a></th>
-                    <th><a><?= t("Payment") ?></a></th>
-                    <th><a><?= t("Fulfilment") ?></a></th>
-                    <th><a><?= t("View") ?></a></th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                foreach ($orderList as $order) {
-
-                    $cancelled = $order->getCancelled();
-                    $canstart = '';
-                    $canend = '';
-                    if ($cancelled) {
-                        $canstart = '<del>';
-                        $canend = '</del>';
-                    }
-                    ?>
-                    <tr>
-                        <td><?= $canstart; ?>
-                            <a href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
-
-                            <?php if ($cancelled) {
-                                echo '<span class="text-danger">' . t('Cancelled') . '</span>';
-                            }
-                            ?>
-                        </td>
-                        <td><?= $canstart; ?><?php
-
-                            $last = $order->getAttribute('billing_last_name');
-                            $first = $order->getAttribute('billing_first_name');
-
-                            $fullName = implode(', ', array_filter([$last, $first]));
-                            if (strlen($fullName) > 0) {
-                                echo h($fullName);
-                            } else {
-                                echo '<em>' . t('Not found') . '</em>';
-                            }
-
-                            ?><?= $canend; ?></td>
-                        <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate()) ?><?= $canend; ?></td>
-                        <td><?= $canstart; ?><?= Price::format($order->getTotal()) ?><?= $canend; ?></td>
-                        <td>
-                            <?php
-                            $refunded = $order->getRefunded();
-                            $paid = $order->getPaid();
-
-                            if ($refunded) {
-                                echo '<span class="label label-warning">' . t('Refunded') . '</span>';
-                            } elseif ($paid) {
-                                echo '<span class="label label-success">' . t('Paid') . '</span>';
-                            } elseif ($order->getTotal() > 0) {
-                                echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
-
-                                if ($order->getExternalPaymentRequested()) {
-                                    echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
-                                }
-                            } else {
-                                echo '<span class="label label-default">' . t('Free Order') . '</span>';
-                            }
-
-
-                            ?>
-                        </td>
-                        <td><?= t(ucwords($order->getStatus())) ?></td>
-                        <td>
-                            <div class="btn-group">
-                                <a class="btn btn-primary btn-sm"
-                                   href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
                 <?php } ?>
-                </tbody>
-            </table>
-        <?php } ?>
-    </div>
+                <li role="presentation" class="dropdown <?= ($paymentStatus != 'all' ? 'active' : ''); ?>">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <?= $paymentStatus != 'all' ? t('Payment Status: %s', title_case($paymentStatus)) : t('Payment Status'); ?> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li <?= ($paymentStatus == 'all' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )?>"><?= t('All Payment Statuses')?></a></li>
+                            <li <?= ($paymentStatus == 'paid' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/paid'.$keywordsparam)?>"><?= t('Paid');?></a></li>
+                            <li <?= ($paymentStatus == 'unpaid' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/unpaid'.$keywordsparam)?>"><?= t('Unpaid');?></a></li>
+                            <li <?= ($paymentStatus == 'refunded' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/refunded'.$keywordsparam)?>"><?= t('Refunded');?></a></li>
+                            <?php if (Config::get('community_store.showUnpaidExternalPaymentOrders')) { ?>
+                            <li <?= ($paymentStatus == 'incomplete' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/incomplete'.$keywordsparam)?>"><?= t('Incomplete');?></a></li>
+                            <?php } ?>
+                            <li <?= ($paymentStatus == 'cancelled' ? 'class="active"': '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/cancelled'.$keywordsparam)?>"><?= t('Cancelled');?></a></li>
+                    </ul>
+                </li>
+
+                <?php if($statuses){?>
+                    <li role="presentation" class="dropdown <?= ($status != 'all' ? 'active' : ''); ?>">
+                        <?php
+                        $statusFilter = '';
+                        foreach ($statuses as $statusoption) {
+                            if ($status == $statusoption->getHandle()) {
+                                $statusString = $statusoption->getName();
+                            }
+                        } ?>
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?= $status != 'all' ? t('Fulfilment: %s', $statusString) : t('Fulfilment'); ?> <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/all/' . $pm->getHandle() . '/' . $paymentStatus.$keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
+                            <?php foreach($statuses as $statusoption){ ?>
+                                <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                <?php } ?>
+            </ul>
+            </div>
+        </div>
+    </form>
+
+    <?php if (!empty($orderList)) { ?>
+        <div class="ccm-dashboard-content-full">
+        <table class="ccm-search-results-table">
+            <thead>
+            <tr>
+                <th><a><?= t("Order %s", "#") ?></a></th>
+                <th><a><?= t("Customer Name") ?></a></th>
+                <th><a><?= t("Order Date") ?></a></th>
+                <th><a><?= t("Total") ?></a></th>
+                <th><a><?= t("Payment") ?></a></th>
+                <th><a><?= t("Fulfilment") ?></a></th>
+                <th><a><?= t("View") ?></a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($orderList as $order) {
+
+                $cancelled = $order->getCancelled();
+                $canstart = '';
+                $canend = '';
+                if ($cancelled) {
+                    $canstart = '<del>';
+                    $canend = '</del>';
+                }
+                ?>
+                <tr>
+                    <td><?= $canstart; ?>
+                        <a href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= $order->getOrderID() ?></a><?= $canend; ?>
+
+                        <?php if ($cancelled) {
+                            echo '<span class="text-danger">' . t('Cancelled') . '</span>';
+                        }
+                        ?>
+                    </td>
+                    <td><?= $canstart; ?><?php
+
+                        $last = $order->getAttribute('billing_last_name');
+                        $first = $order->getAttribute('billing_first_name');
+
+                        $fullName = implode(', ', array_filter([$last, $first]));
+                        if (strlen($fullName) > 0) {
+                            echo h($fullName);
+                        } else {
+                            echo '<em>' . t('Not found') . '</em>';
+                        }
+
+                        ?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?= $dh->formatDateTime($order->getOrderDate()) ?><?= $canend; ?></td>
+                    <td><?= $canstart; ?><?= Price::format($order->getTotal()) ?><?= $canend; ?></td>
+                    <td>
+                        <?php
+                        $refunded = $order->getRefunded();
+                        $paid = $order->getPaid();
+
+                        if ($refunded) {
+                            echo '<span class="label label-warning">' . t('Refunded') . '</span>';
+                        } elseif ($paid) {
+                            echo '<span class="label label-success">' . t('Paid') . '</span>';
+                        } elseif ($order->getTotal() > 0) {
+                            echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
+
+                            if ($order->getExternalPaymentRequested()) {
+                                echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
+                            }
+                        } else {
+                            echo '<span class="label label-default">' . t('Free Order') . '</span>';
+                        }
+
+
+                        ?>
+                    </td>
+                    <td><?= t(ucwords($order->getStatus())) ?></td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-primary btn-sm"
+                               href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+        </div>
+    <?php } ?>
+
 
     <?php if (empty($orderList)) { ?>
-        <br/><br/><p class="alert alert-info"><?= t('No Orders Found'); ?></p>
+        <br/><p class="alert alert-info"><?= t('No Orders Found'); ?></p>
     <?php } ?>
 
     <?php if ($paginator->getTotalPages() > 1) { ?>

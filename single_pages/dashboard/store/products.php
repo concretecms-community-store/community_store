@@ -1578,50 +1578,51 @@ $ps = $app->make('helper/form/page_selector');
     </div>
 
     <div class="cccm-dashboard-content-inner">
-        <form role="form" class="form-inline ccm-search-fields">
-            <div class="ccm-search-fields-row">
-                <?php if ($grouplist) {
-                    $currentFilter = '';
-                    ?>
-                    <ul id="group-filters" class="nav nav-pills">
-                        <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
 
-                        <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
-                            <?php
-                            if ($gID) {
-                                foreach ($grouplist as $group) {
-                                    if ($gID == $group->getGroupID()) {
-                                        $currentFilter = $group->getGroupName();
-                                    }
-                                }
-                            } ?>
+        <form role="form" class="form-inline">
+            <div class="row">
+                <div class="ccm-search-fields-submit col-xs-12 col-md-6">
+                    <div class="form-group">
+                        <div class="ccm-search-main-lookup-field">
+                            <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
+                        </div>
 
-
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                <?= $currentFilter ? t('Filtering By: %s', $currentFilter) : t('Filter By Product Group'); ?> <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <?php foreach ($grouplist as $group) { ?>
-                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                    </ul>
-                <?php } ?>
-            </div>
-            <div class="ccm-search-fields-row ccm-search-fields-submit">
-                <div class="form-group">
-                    <div class="ccm-search-main-lookup-field">
-                        <i class="fa fa-search"></i>
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 300px"]) ?>
                     </div>
-
+                    <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
-                <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
-            </div>
+                <div class="col-xs-12 col-md-6">
+                    <?php if ($grouplist) {
+                        $currentFilter = '';
+                        ?>
+                        <ul id="group-filters" class="nav nav-pills">
 
+                            <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
+                                <?php
+                                if ($gID) {
+                                    foreach ($grouplist as $group) {
+                                        if ($gID == $group->getGroupID()) {
+                                            $currentFilter = $group->getGroupName();
+                                        }
+                                    }
+                                } ?>
+
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <?= $currentFilter ? t('Product Group: %s', $currentFilter) : t('Product Group'); ?> <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
+                                    <?php foreach ($grouplist as $group) { ?>
+                                        <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        </ul><br />
+                    <?php } ?>
+                </div>
+            </div>
         </form>
+
         <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
             <thead>
