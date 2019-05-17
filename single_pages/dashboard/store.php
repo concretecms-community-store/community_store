@@ -63,7 +63,7 @@ if ($taxCalc == 'extract') {
                 <div id="sales-chart"></div>
             </div>
             <div class="panel-footer">
-                <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> View Sales Report</a>
+                <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i><?= t(' View Sales Report') ?></a>
             </div>
         </div>
 
@@ -147,7 +147,7 @@ if ($taxCalc == 'extract') {
             </div>
         </form>
 
-        <p><a href="<?= Url::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i> View All Orders</a></p>
+        <p><a href="<?= Url::to('/dashboard/store/orders') ?>"><i class="fa fa-list"></i><?= t(' View All Orders') ?></a></p>
 
         <hr>
 
@@ -167,7 +167,7 @@ if ($taxCalc == 'extract') {
 
         <p class="pull-right"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
                 Add Product</a></p>
-        <p><a href="<?= Url::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> View All Products</a></p>
+        <p><a href="<?= Url::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i><?= t(' View All Products') ?></a></p>
 
         <hr>
 
@@ -175,7 +175,7 @@ if ($taxCalc == 'extract') {
         <h4><?= t("Discounts") ?></h4>
         <p class="pull-right"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 Add Discount Rule</a></p>
-        <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> View Discount Rules</a>
+        <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i><?= t(' View Discount Rules') ?></a>
         </p>
 
 
