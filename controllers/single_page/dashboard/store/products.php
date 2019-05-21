@@ -1,51 +1,63 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Core;
-use PageType;
-use GroupList;
-use Events;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile as StoreProductFile;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier as StoreProductPriceTier;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
-class Products extends DashboardPageController
+class Products extends DashboardSitePageController
 {
     public function view($gID = null)
     {
-        $products = new StoreProductList();
-        $products->setItemsPerPage(20);
-        $products->setGroupID($gID);
-        $products->setActiveOnly(false);
-        $products->setShowOutOfStock(true);
+        $productsList = new StoreProductList();
+        $productsList->setItemsPerPage(20);
+        $productsList->setGroupID($gID);
+        $productsList->setActiveOnly(false);
+        $productsList->setShowOutOfStock(true);
 
-        if ($this->get('ccm_order_by')) {
-            $products->setSortBy($this->get('ccm_order_by'));
-            $products->setSortByDirection($this->get('ccm_order_by_direction'));
+        if ($this->request->query->get('ccm_order_by')) {
+            $productsList->setSortBy($this->request->query->get('ccm_order_by'));
+            $productsList->setSortByDirection($this->request->query->get('ccm_order_by_direction'));
         } else {
-            $products->setSortBy('date');
-            $products->setSortByDirection('desc');
+            $productsList->setSortBy('date');
+            $productsList->setSortByDirection('desc');
         }
 
-        if ($this->get('keywords')) {
-            $products->setSearch(trim($this->get('keywords')));
+        $keywords = trim($this->request->query->get('keywords'));
+
+        if ($keywords) {
+            $productsList->setSearch($keywords);
+            Session::set('communitystore.dashboard.products.keywords', $keywords);
+        } else {
+            Session::remove('communitystore.dashboard.products.keywords');
         }
 
-        $this->set('productList', $products);
-        $paginator = $products->getPagination();
+        $this->set('productList', $productsList);
+
+        $factory = new PaginationFactory($this->app->make(Request::class));
+        $paginator = $factory->createPaginationObject($productsList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('products', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
@@ -56,6 +68,16 @@ class Products extends DashboardPageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
+
+        if ($gID) {
+            Session::set('communitystore.dashboard.products.group', $gID);
+        } else {
+            Session::remove('communitystore.dashboard.products.group');
+        }
+
+        $site = $this->getSite();
+        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+        $this->set('multilingualEnabled', (count($pages) > 1));
     }
 
     public function add()
@@ -83,12 +105,12 @@ class Products extends DashboardPageController
             }
         }
 
-        $targetCID = \Config::get('community_store.productPublishTarget');
+        $targetCID = Config::get('community_store.productPublishTarget');
 
         $productPublishTarget = false;
 
         if ($targetCID > 0) {
-            $parentPage = \Page::getByID($targetCID);
+            $parentPage = Page::getByID($targetCID);
             $productPublishTarget = ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
         }
 
@@ -107,7 +129,7 @@ class Products extends DashboardPageController
         $product = StoreProduct::getByID($pID);
 
         if (!$product) {
-            $this->redirect('/dashboard/store/products');
+            return Redirect::to('/dashboard/store/products');
         }
 
         $this->set('product', $product);
@@ -195,12 +217,12 @@ class Products extends DashboardPageController
             }
         }
 
-        $targetCID = \Config::get('community_store.productPublishTarget');
+        $targetCID = Config::get('community_store.productPublishTarget');
 
         $productPublishTarget = false;
 
         if ($targetCID > 0) {
-            $parentPage = \Page::getByID($targetCID);
+            $parentPage = Page::getByID($targetCID);
             $productPublishTarget = ($parentPage && !$parentPage->isError() && !$parentPage->isInTrash());
         }
 
@@ -210,7 +232,7 @@ class Products extends DashboardPageController
         $page = false;
 
         if ($pageID) {
-            $page = \Page::getByID($pageID);
+            $page = Page::getByID($pageID);
 
             if ($page->isError()) {
                 $page = false;
@@ -220,25 +242,30 @@ class Products extends DashboardPageController
 
         $this->set('pageTitle', t('Edit Product'));
         $this->set('usergroups', $usergrouparray);
+
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.products.keywords'));
+        $this->set('groupSearch', Session::get('communitystore.dashboard.products.group'));
     }
 
     public function generate($pID, $templateID = null)
     {
         StoreProduct::getByID($pID)->generatePage($templateID);
-        $this->redirect('/dashboard/store/products/edit', $pID);
+
+        return Redirect::to('/dashboard/store/products/edit', $pID);
     }
 
     public function duplicate($pID)
     {
         $product = StoreProduct::getByID($pID);
         if (!$product) {
-            $this->redirect('/dashboard/store/products');
+            return Redirect::to('/dashboard/store/products');
         }
 
-        if ($this->post() && $this->token->validate('community_store')) {
-            $newproduct = $product->duplicate($this->post('newName'), $this->post('newSKU'));
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
+            $newproduct = $product->duplicate($this->request->request->get('newName'), $this->request->request->get('newSKU'));
             $this->flash('success', t('Product Duplicated'));
-            $this->redirect('/dashboard/store/products/edit/' . $newproduct->getID());
+
+            return Redirect::to('/dashboard/store/products/edit/' . $newproduct->getID());
         }
 
         $this->set('pageTitle', t('Duplicate Product'));
@@ -253,23 +280,28 @@ class Products extends DashboardPageController
                 $product->remove();
             }
             $this->flash('success', t('Product Removed'));
-            $this->redirect('/dashboard/store/products');
+
+            return Redirect::to('/dashboard/store/products');
         }
+
+        $this->flash('success', t('Product Removed'));
+
+        return Redirect::to('/dashboard/store/products');
     }
 
     public function loadFormAssets()
     {
-        $this->requireAsset('core/file-manager');
-        $this->requireAsset('core/sitemap');
         $this->requireAsset('css', 'select2');
         $this->requireAsset('javascript', 'select2');
 
-        $this->set('al', Core::make('helper/concrete/asset_library'));
+        $this->set('al', $this->app->make('helper/concrete/asset_library'));
 
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
-        $attrList = StoreProductKey::getList();
+        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+
+        $attrList = $productCategory->getList();
         $this->set('attribs', $attrList);
 
         $pageType = PageType::getByHandle("store_product");
@@ -297,13 +329,13 @@ class Products extends DashboardPageController
 
     public function save()
     {
-        $data = $this->post();
+        $data = $this->request->request->all();
         if ($data['pID']) {
             $this->edit($data['pID']);
         } else {
             $this->add();
         }
-        if ($this->post() && $this->token->validate('community_store')) {
+        if ($this->request->request->all() && $this->token->validate('community_store')) {
             $errors = $this->validate($data);
             $this->error = null; //clear errors
             $this->error = $errors;
@@ -334,9 +366,13 @@ class Products extends DashboardPageController
                 //save the product
                 $product = StoreProduct::saveProduct($data);
                 //save product attributes
-                $aks = StoreProductKey::getList();
+                $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+                $aks = $productCategory->getList();
+
                 foreach ($aks as $uak) {
-                    $uak->saveAttributeForm($product);
+                    $controller = $uak->getController();
+                    $value = $controller->createAttributeValueFromRequest();
+                    $product->setAttribute($uak, $value);
                 }
                 //save images
                 StoreProductImage::addImagesForProduct($data, $product);
@@ -364,7 +400,7 @@ class Products extends DashboardPageController
 
                 StoreProductPriceTier::addPriceTiersForProduct($data, $product);
 
-                $product->reindex();
+                //$product->reindex();
 
                 // create product event and dispatch
                 if (!$originalProduct) {
@@ -377,10 +413,12 @@ class Products extends DashboardPageController
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
+
+                    return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));
-                    $this->redirect('/dashboard/store/products/edit/' . $product->getID());
+
+                    return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 }
             }//if no errors
         }//if post
@@ -388,7 +426,7 @@ class Products extends DashboardPageController
 
     public function validate($args)
     {
-        $e = Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
 
         if ("" == $args['pName']) {
             $e->add(t('Please enter a Product Name'));
@@ -405,6 +443,9 @@ class Products extends DashboardPageController
         if (!is_numeric($args['pHeight'])) {
             $e->add(t('The Product Height must be a number'));
         }
+		if (!is_numeric($args['pStackedHeight'])) {
+			$e->add(t('The Product Stacked Height must be a number'));
+		}
         if (!is_numeric($args['pLength'])) {
             $e->add(t('The Product Length must be a number'));
         }

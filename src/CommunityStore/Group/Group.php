@@ -1,22 +1,24 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreGroups")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreGroups")
  */
 class Group
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $gID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $groupName;
 
@@ -41,7 +43,7 @@ class Group
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
      */
     protected $products;
 
@@ -57,14 +59,14 @@ class Group
 
     public static function getByID($gID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_called_class(), $gID);
     }
 
     public static function getByName($gName)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['groupName' => $gName]);
     }
@@ -88,14 +90,14 @@ class Group
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

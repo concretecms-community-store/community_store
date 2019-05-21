@@ -1,13 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Package;
-use Page;
-use PageType;
-use PageTemplate;
-use File;
-use Config;
-use Events;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\File\File;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Events;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage as StoreProductImage;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
@@ -19,58 +21,62 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pro
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as StoreProductRelated;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Src\Attribute\Value\StoreProductValue;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
+use Concrete\Core\Multilingual\Page\Section\Section;
+
+use \Concrete\Core\Attribute\ObjectTrait;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProducts")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProducts")
  */
 class Product
 {
+
+    use ObjectTrait;
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pID;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $cID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pName;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $pSKU;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $pDesc;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $pDetail;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pPrice;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pWholesalePrice;
 
@@ -80,162 +86,167 @@ class Product
     protected $pSalePrice;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pCustomerPrice;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pPriceMaximum;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pPriceMinimum;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $pPriceSuggestions;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pQuantityPrice;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pFeatured;
 
     /**
-     * @Column(type="decimal", precision=12, scale=4)
+     * @ORM\Column(type="decimal", precision=12, scale=4)
      */
     protected $pQty;
 
     /**
-     * @Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pQtyUnlim;
 
     /**
-     * @Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pBackOrder;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pNoQty;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pAllowDecimalQty;
 
     /**
-     * @Column(type="decimal", precision=5, scale=4, nullable=true)
+     * @ORM\Column(type="decimal", precision=5, scale=4, nullable=true)
      */
     protected $pQtySteps;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pQtyLabel;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pMaxQty;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $pTaxClass;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pTaxable;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pfID;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pActive;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $pDateAdded;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pShippable;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pWidth;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pHeight;
 
+	/**
+	 * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
+	 */
+	protected $pStackedHeight;
+
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pLength;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2,nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     protected $pWeight;
 
     /**
-     * @Column(type="integer",nullable=true)
+     * @ORM\Column(type="integer",nullable=true)
      */
     protected $pNumberItems;
 
     /**
-     * @Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pSeperateShip;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $pPackageData;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pCreateUserAccount;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pAutoCheckout;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pExclusive;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pVariations;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $pNotificationEmails;
 
@@ -244,7 +255,7 @@ class Product
     protected $variation;
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
     protected $locations;
 
@@ -254,7 +265,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product",cascade={"persist"})
      */
     protected $groups;
 
@@ -264,7 +275,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product",cascade={"persist"}))
      */
     protected $files;
 
@@ -274,7 +285,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product",cascade={"persist"}))
      */
     protected $images;
 
@@ -284,7 +295,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product",cascade={"persist"}))
      */
     protected $userGroups;
 
@@ -294,8 +305,8 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product",cascade={"persist"}))
-     * @OrderBy({"poSort" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product",cascade={"persist"}))
+     * @ORM\OrderBy({"poSort" = "ASC"})
      */
     protected $options;
 
@@ -305,7 +316,7 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated", mappedBy="product",cascade={"persist"}))
      */
     protected $related;
 
@@ -315,8 +326,8 @@ class Product
     }
 
     /**
-     * @OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product",cascade={"persist"}))
-     * @OrderBy({"ptFrom" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product",cascade={"persist"}))
+     * @ORM\OrderBy({"ptFrom" = "ASC"})
      */
     protected $priceTiers;
 
@@ -655,6 +666,11 @@ class Product
         $this->pHeight = (float) $height;
     }
 
+	public function setStackedHeight($height)
+	{
+		$this->pStackedHeight = (float) $height;
+	}
+
     public function setLength($length)
     {
         $this->pLength = (float) $length;
@@ -722,25 +738,39 @@ class Product
         }
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getByID($pID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $pID);
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getBySKU($pSKU)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getByCollectionID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+    }
+
+    public function getAttributes()
+    {
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
     }
 
     public static function saveProduct($data)
@@ -778,6 +808,7 @@ class Product
         $product->setIsShippable($data['pShippable']);
         $product->setWidth($data['pWidth']);
         $product->setHeight($data['pHeight']);
+        $product->setStackedHeight($data['pStackedHeight']);
         $product->setLength($data['pLength']);
         $product->setWeight($data['pWeight']);
         $product->setPackageData($data['pPackageData']);
@@ -854,13 +885,35 @@ class Product
     public function getProductPage()
     {
         if ($this->getPageID()) {
-            $productPage = Page::getByID($this->getPageID());
-            if ($productPage && !$productPage->isInTrash()) {
+            $pageID = $this->getPageID();
+            $productPage = Page::getByID($pageID);
+            if ($productPage && !$productPage->isError() && !$productPage->isInTrash()) {
+
+                $c = Page::getCurrentPage();
+                $lang = Section::getBySectionOfSite($c);
+
+                if (is_object($lang)) {
+                    $relatedID = $lang->getTranslatedPageID($productPage);
+
+                    if ($relatedID && $relatedID != $pageID) {
+                        $translatedPage = Page::getByID($relatedID);
+
+                        if ($translatedPage && !$translatedPage->isError() && !$translatedPage->isInTrash()) {
+                            $productPage = $translatedPage;
+                        }
+                    }
+                }
+
                 return $productPage;
             }
         }
 
         return false;
+    }
+
+    public function getDescription()
+    {
+        return $this->pDesc;
     }
 
     public function getDesc()
@@ -931,7 +984,7 @@ class Product
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
-            if (!empty($priceTiers)) {
+            if (count($priceTiers) > 0) {
                 foreach ($priceTiers as $pt) {
                     if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
                         return $pt->getPrice();
@@ -949,7 +1002,7 @@ class Product
 
     public function getFormattedOriginalPrice()
     {
-        return StorePrice::format($this->getPrice());
+        return StorePrice::format($this->getPrice(1, true));
     }
 
     public function getFormattedPrice()
@@ -1120,6 +1173,12 @@ class Product
 
         return $this->pHeight;
     }
+
+
+	public function getStackedHeight()
+	{
+		return $this->pStackedHeight;
+	}
 
     public function getLength()
     {
@@ -1396,36 +1455,24 @@ class Product
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
-    public function reindex()
-    {
-        $attribs = StoreProductKey::getAttributes(
-            $this->pID,
-            'getSearchIndexValue'
-        );
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-
-        $db->Execute('DELETE FROM CommunityStoreProductSearchIndexAttributes WHERE pID = ?', [$this->pID]);
-        $searchableAttributes = ['pID' => $this->pID];
-
-        $key = new StoreProductKey();
-        $key->reindex('CommunityStoreProductSearchIndexAttributes', $searchableAttributes, $attribs);
-    }
-
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public function remove()
     {
+        // create product event and dispatch
+        $event = new StoreProductEvent($this);
+        Events::dispatch('on_community_store_product_delete', $event);
+
         StoreProductImage::removeImagesForProduct($this);
         StoreProductOption::removeOptionsForProduct($this);
         StoreProductOptionItem::removeOptionItemsForProduct($this);
@@ -1435,11 +1482,16 @@ class Product
         StoreProductUserGroup::removeUserGroupsForProduct($this);
         StoreProductVariation::removeVariationsForProduct($this);
 
-        // create product event and dispatch
-        $event = new StoreProductEvent($this);
-        Events::dispatch('on_community_store_product_delete', $event);
+        $em = dbORM::entityManager();
+        $attributes = $this->getAttributes();
 
-        $this->delete();
+        foreach($attributes as $attribute) {
+            $em->remove($attribute);
+        }
+
+        $em->remove($this);
+        $em->flush();
+
         $page = Page::getByID($this->cID);
         if (is_object($page)) {
             $page->delete();
@@ -1536,10 +1588,14 @@ class Product
         $newproduct->setDateAdded(new \DateTime());
         $newproduct->save();
 
-        $attributes = StoreProductKey::getAttributes($this->getID());
-        foreach ($attributes as $handle => $value) {
-            $spk = StoreProductKey::getByHandle($handle);
-            $spk->saveAttribute($newproduct, $value);
+        $attributes = $this->getAttributes();
+        if (count($attributes)) {
+            foreach ($attributes as $att) {
+                $ak = $att->getAttributeKey();
+                if ($ak && is_object($ak)) {
+                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $att->getValue());
+                }
+            }
         }
 
         $variations = $this->getVariations();
@@ -1579,10 +1635,8 @@ class Product
             StoreProductRelated::addRelatedProducts(['pRelatedProducts' => $related], $newproduct);
         }
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->flush();
-
-        $newproduct->reindex();
 
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
@@ -1684,58 +1738,34 @@ class Product
         return count($results);
     }
 
-    public function setAttribute($ak, $value)
+    public function getObjectAttributeCategory()
     {
-        if (!is_object($ak)) {
-            $ak = StoreProductKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
-        $this->reindex();
+        return Application::getFacadeApplication()->make('\Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
     }
 
-    public function getAttribute($ak, $displayMode = false)
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
+        $category = $this->getObjectAttributeCategory();
+
         if (!is_object($ak)) {
-            $ak = StoreProductKey::getByHandle($ak);
+            $ak = $category->getByHandle($ak);
         }
+
+        $value = false;
         if (is_object($ak)) {
-            $av = $this->getAttributeValueObject($ak);
-            if (is_object($av)) {
-                return $av->getValue($displayMode);
-            }
+            $value = $category->getAttributeValue($ak, $this);
+        }
+
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
+            $attributeValue = new StoreProductValue();
+            $attributeValue->setProduct($this);
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
         }
     }
 
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $av = false;
-        $v = [$this->getID(), $ak->getAttributeKeyID()];
-        $avID = $db->GetOne("SELECT avID FROM CommunityStoreProductAttributeValues WHERE pID=? AND akID=?", $v);
-        if ($avID > 0) {
-            $av = StoreProductValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setProduct($this);
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne("SELECT COUNT(avID) FROM CommunityStoreProductAttributeValues WHERE avID=?", $av->getAttributeValueID());
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $av = $ak->addAttributeValue();
-            }
-        }
-
-        return $av;
-    }
 
     public function getVariationData()
     {

@@ -1,10 +1,13 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrderKey;
+use \Concrete\Core\Support\Facade\Url;
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$csm = $app->make('cs/helper/multilingual');
 ?>
 <div class="store-checkout-page">
-<?php if ($controller->getTask() == "view" || $controller->getTask() == "failed") { ?>
+<?php if ($controller->getAction() == "view" || $controller->getAction() == "failed") { ?>
 
     <h1><?= t("Checkout") ?></h1>
 
@@ -36,17 +39,17 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <div class="row">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= \URL::to('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/register') ?>"><?= t("Register") ?></a>
+                                       href="<?= Url::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
                                     <a class="btn btn-default"
-                                       href="<?= \URL::to('/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
+                                       href="<?= Url::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -179,16 +182,16 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
                                             <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label><?= $ak->getAttributeKeyDisplayName(); ?></label><br />
+                                                <div class="form-group" id="store-att-<?= $ak->getAttributeKeyHandle(); ?>">
+                                                    <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
                                                      $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
                                                      if ($ak->isRequired()) {
-                                                         echo str_replace('<input', '<input required ', $fieldoutput);
-                                                     } else {
-                                                        echo $fieldoutput;
+                                                         $fieldoutput = str_replace('<input', '<input required ', $fieldoutput);
+                                                         $fieldoutput = str_replace('<select', '<select required ', $fieldoutput);
                                                      }
-                                                      ?>
+                                                     echo $fieldoutput;
+                                                     ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +202,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                         <?php } ?>
 
                         <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
@@ -233,8 +236,10 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                                 <div class="col-sm-12">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
-                                        <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                                        <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
+                                        <div id="store-att-display-<?= $ak->getAttributeKeyHandle(); ?>">
+                                            <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                                            <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
+                                        </div>
                                     <?php } ?>
                                 </div>
 
@@ -325,7 +330,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                             </div>
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -365,7 +370,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
@@ -422,7 +427,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                 <?php } ?>
 
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
-                      action="<?= \URL::to('/checkout/submit'. ($guest ? '/1' : '')) ?>">
+                      action="<?= Url::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
                     <?= $token->output('community_store'); ?>
 
                     <div class="store-checkout-form-group-body">
@@ -434,29 +439,30 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                  class="<?= count($enabledPaymentMethods) == 1 ? "hidden" : ""; ?>">
                                 <?php
                                 $i = 1;
-                                foreach ($enabledPaymentMethods as $pm):
+                                foreach ($enabledPaymentMethods as $pm) {
                                     if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
-                                        $props = array('data-payment-method-id' => $pm->getID(), 'checked' => 'checked');
+                                        $props = ['data-payment-method-id' => $pm->getID(), 'checked' => 'checked'];
                                     } else {
-                                        $props = array('data-payment-method-id' => $pm->getID());
+                                        $props = ['data-payment-method-id' => $pm->getID()];
                                     }
                                     ?>
                                     <div class='radio'>
                                         <label>
                                             <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                            <?= $pm->getDisplayName() ?>
+                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', false, $pm->getID()); ?>
+
                                         </label>
                                     </div>
                                     <?php
                                     $i++;
-                                endforeach; ?>
+                                } ?>
                             </div>
 
                             <?php
                             foreach ($enabledPaymentMethods as $pm) {
                                 echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
                                  if ($pm->getHandle() == $lastPaymentMethodHandle) { ?>
-                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getTask() == 'view') {
+                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getAction() == 'view') {
                                 echo "hidden";
                             } ?>"><?= $paymentErrors ?></div>
                                 <?php }
@@ -466,7 +472,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
                                  <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-default pull-right" value="<?= $pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") ?>">
+                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>
@@ -505,12 +511,11 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
                     <?php if (!empty($discounts)) { ?>
                         <li class="store-line-item store-discounts list-group-item">
-                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>
-                                :</strong>
+                            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
                             <?php
                             $discountstrings = array();
                             foreach ($discounts as $discount) {
-                                $discountstrings[] = h($discount->getDisplay());
+                                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
                             }
                             echo implode(', ', $discountstrings);
                             ?>
@@ -526,7 +531,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                                 <p><?= t('Invalid code');?></p>
                             <?php } ?>
 
-                            <a href="<?= \URL::to('/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
+                            <a href="<?= Url::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
                             <form method="post" action="" class="form-inline store-checkout-code-form">
                                 <?= $token->output('community_store'); ?>
@@ -572,9 +577,11 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
                     <?php
                     if ($taxtotal > 0) {
                         foreach ($taxes as $tax) {
-                            if ($tax['taxamount'] > 0) { ?>
+                            if ($tax['taxamount'] > 0) {
+                                $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+                                ?>
                                 <li class="store-line-item store-tax-item list-group-item">
-                                <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
                         }
@@ -591,7 +598,7 @@ use \Concrete\Package\CommunityStore\Src\Attribute\Key\StoreOrderKey as StoreOrd
 
     </div>
 
-<?php } elseif ($controller->getTask() == "external") { ?>
+<?php } elseif ($controller->getAction() == "external") { ?>
     <form id="store-checkout-redirect-form" action="<?= $action ?>" method="post">
         <?php
         $pm->renderRedirectForm(); ?>

@@ -1,5 +1,7 @@
-    <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use \Concrete\Core\Support\Facade\Url;
 ?>
 
 <?php
@@ -7,10 +9,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $groupViews = ['view','groupadded'];
 $groupEdits = ['add','edit'];
 
-if (in_array($controller->getTask(),$groupViews)){ ?>
+if (in_array($controller->getAction(),$groupViews)){ ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= \URL::to('/dashboard/store/products/groups/', 'add')?>" class="btn btn-primary"><?= t("Add Product Group")?></a>
+        <a href="<?= Url::to('/dashboard/store/products/groups/', 'add')?>" class="btn btn-primary"><?= t("Add Product Group")?></a>
     </div>
 
     <?php if($grouplist){ ?>
@@ -26,7 +28,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
              <?php foreach($grouplist as $group){?>
                <tr>
-                <td><a href="<?= \URL::to('/dashboard/store/products/groups/edit/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></td>
+                <td><a href="<?= Url::to('/dashboard/store/products/groups/edit/', $group->getGroupID())?>"><?= $group->getGroupName()?></a></td>
                 <td>
                 <?php
                     $products = $group->getProducts();
@@ -57,11 +59,11 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
 <?php }  ?>
 
-<?php if (in_array($controller->getTask(),$groupEdits)){ ?>
+<?php if (in_array($controller->getAction(),$groupEdits)){ ?>
 
-    <?php if ($controller->getTask() == 'edit') { ?>
+    <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
-            <form method="post" id="deletegroup" action="<?= \URL::to('/dashboard/store/products/groups/delete/')?>">
+            <form method="post" id="deletegroup" action="<?= Url::to('/dashboard/store/products/groups/delete/')?>">
                 <?= $token->output('community_store'); ?>
                 <input type="hidden" name="grID" value="<?= $group->getGroupID(); ?>" />
                 <button class="btn btn-danger" ><?= t('Delete'); ?></button>
@@ -69,7 +71,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
         </div>
     <?php } ?>
 
-    <form method="post" action="<?= $view->action($controller->getTask())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('groupName',t("Group Name")); ?>
@@ -98,7 +100,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
                     $(function(){
                         $("#product-select").select2({
                             ajax: {
-                                url: "<?= \URL::to('/productfinder')?>",
+                                url: "<?= Url::to('/productfinder')?>",
                                 dataType: 'json',
                                 quietMillis: 250,
                                 data: function (term, page) {
@@ -148,7 +150,7 @@ if (in_array($controller->getTask(),$groupViews)){ ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= \URL::to('/dashboard/store/products/groups')?>" class="btn btn-default"><?= t('Cancel')?></a>
+                <a href="<?= Url::to('/dashboard/store/products/groups')?>" class="btn btn-default"><?= t('Cancel')?></a>
                 <button class="pull-right btn btn-primary" type="submit"><?= ($group->getGroupID() > 0 ? t('Update') : t('Add'))?></button>
             </div>
         </div>

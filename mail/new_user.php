@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = $siteName.' - '.t('account Created');
+$subject = $siteName.' - '.t('account created');
 
 /**
  * HTML BODY START
@@ -15,11 +15,11 @@ ob_start();
 <body>
     <h2><?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?></h2>
 
-    <p>Your username is: <strong><?= $username; ?></strong></p>
-    <p>Your password is: <strong><?= $password; ?></strong></p>
+    <p><?= t('Your username is');?>: <strong><?= $username; ?></strong></p>
+    <p><?= t('Your password is');?>: <strong><?= $password; ?></strong></p>
 
 <?php if ($link) { ?>
-    <p>You can now access <?= $link; ?></p>
+    <p><?= t('You can now access'); ?><?= $link; ?></p>
 <?php } ?>
 </body>
 </html>
@@ -38,11 +38,11 @@ ob_start();
 ?>
 <?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?>
 
-    Your username is: <?= $username; ?>
-    Your password is: <?= $password; ?>
+    <?= t('Your username is');?>: <?= $username; ?>
+    <?= t('Your password is');?>: <?= $password; ?>
 
 <?php if ($link) { ?>
-    You can now access <?= $link; ?>
+    <?= t('You can now access'); ?><?= $link; ?>
 <?php } ?>
 
 <?php

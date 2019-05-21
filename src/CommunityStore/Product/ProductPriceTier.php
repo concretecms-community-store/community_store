@@ -1,43 +1,45 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductPriceTiers")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductPriceTiers")
  */
 class ProductPriceTier
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $ptID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $ptPrice;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $ptFrom;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $ptTo;
 
@@ -83,7 +85,7 @@ class ProductPriceTier
 
     public static function getByID($ptID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier', $ptID);
     }
@@ -108,7 +110,7 @@ class ProductPriceTier
 
     public static function removePriceTiersForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $priceTiers = $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier')->findBy(['pID' => $product->getID()]);
 
         foreach ($priceTiers as $tier) {
@@ -138,14 +140,14 @@ class ProductPriceTier
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

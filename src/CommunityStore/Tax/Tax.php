@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
@@ -14,7 +15,7 @@ class Tax
         if(Wholesale::isUserWholesale()){
             return $taxRates = [];
         }
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $taxRates = $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
 
         return $taxRates;
@@ -48,6 +49,7 @@ class Tax
                         'taxamount' => $taxAmount,
                         'based' => $taxRate->getTaxBasedOn(),
                         'taxed' => $tax,
+                        'id' => $taxRate->getID(),
                     ];
                 }
             }

@@ -1,33 +1,35 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductUserGroups")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductUserGroups")
  */
 class ProductUserGroup
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pugID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $gID;
 
@@ -53,14 +55,14 @@ class ProductUserGroup
 
     public static function getByID($pgID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup', $pgID);
     }
 
     public static function getUserGroupsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup')->findBy(['pID' => $product->getID()]);
     }
@@ -117,14 +119,14 @@ class ProductUserGroup
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

@@ -1,9 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use \Concrete\Core\Support\Facade\Url;
 ?>
 
 
-<?php if ($controller->getTask() == 'view') { ?>
+<?php if ($controller->getAction() == 'view') { ?>
     <?php if (count($pages) > 0) { ?>
     <p><?= t('The following pages have been used to categorise products:'); ?></p>
     <?php }  else { ?>
@@ -12,17 +14,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <ul class="list-group">
     <?php foreach ($pages as $key => $pageinfo) { ?>
         <li class="list-group-item">
-            <a href="<?= \URL::to('/dashboard/store/products/categories/manage/', $pageinfo['page']->getCollectionID()) ?>"><?= $key; ?></a>
+            <a href="<?= Url::to('/dashboard/store/products/categories/manage/', $pageinfo['page']->getCollectionID()) ?>"><?= $key; ?></a>
             - <?= t2('%d product', '%d products', $pageinfo['productCount'], $pageinfo['productCount']); ?></li>
     <?php } ?>
     </ul>
 <?php } ?>
 
 
-<?php if ($controller->getTask() == 'manage') { ?>
+<?php if ($controller->getAction() == 'manage') { ?>
     <form method="post" action="<?= $view->action('save', $cID)?>">
     <?= $token->output('community_store'); ?>
-    <p><?php echo t('Products within category'); ?></p>
+    <p><?= t('Products within category'); ?></p>
 
     <ul class="list-group" id="product-list">
     <?php foreach($products as $product) { ?>
@@ -46,7 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <a href="<?= \URL::to('/dashboard/store/products/categories')?>" class="btn btn-default pull-left"><?= t("Cancel")?></a>
+        <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default pull-left"><?= t("Cancel")?></a>
         <button class="pull-right btn btn-success"  type="submit" ><?= t('Save Category Product Order')?></button>
     </div>
 </div>

@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
 
-class ProductList extends AttributedItemList
+class ProductList extends AttributedItemList implements PaginationProviderInterface
 {
     protected $gIDs = [];
     protected $groupMatchAny = false;
@@ -95,14 +97,18 @@ class ProductList extends AttributedItemList
     public function setAttributeFilters($filterArray)
     {
         $this->attFilters = $filterArray;
+        $app = Application::getFacadeApplication();
+        $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
         if (!empty($this->attFilters)) {
             foreach ($this->attFilters as $handle => $value) {
                 if ('price' == $handle) {
                     $this->filterByPrice($value);
                 } else {
-                    if (is_object(StoreProductKey::getByHandle($handle))) {
-                        $this->filterByAttribute($handle, $value);
+                    $ak = $productCategory->getByHandle($handle);
+
+                    if (is_object($ak)) {
+                        $ak->getController()->filterByAttribute($this, $value);
                     }
                 }
             }
@@ -111,27 +117,63 @@ class ProductList extends AttributedItemList
 
     public function processUrlFilters(\Concrete\Core\Http\Request $request)
     {
-        $service = \Core::make('helper/security');
+        $service = Application::getFacadeApplication()->make('helper/security');
         $querystring = $request->getQueryString();
 
         $params = explode('&', $querystring);
 
+        $searchparams = [];
+
         foreach ($params as $param) {
             $values = explode('=', $param);
+            $handle = str_replace('%5B%5D', '', $values[0]);
+            $handle = $service->sanitizeString($handle);
 
-            if (isset($values[1])) {
-                $filter = $values[0];
-                $filter = $service->sanitizeString($filter);
-                $items = $service->sanitizeString($values[1]);
+            $type = 'or';
 
-                if ('price' == $filter) {
-                    $this->filterByPrice($items);
-                } else {
-                    $items = str_replace('%7C', '%2C', $items);
-                    $items = explode('%2C', $items);
+            if (strpos($values[1], '%3B')) {
+                $type = 'and';
+            }
 
-                    if (is_object(StoreProductKey::getByHandle($filter))) {
-                        $this->getQueryObject()->andWhere('ak_' . $filter . ' in ("' . implode('","', $items) . '")');
+            $value = str_replace('%7C', '%2C', $values[1]);
+            $value = str_replace('%3B', '%2C', $value);
+
+            $value = str_replace('%20', ' ', $value);
+            $value = $service->sanitizeString($value);
+            $values = explode('%2C', $value);
+
+            foreach ($values as $val) {
+                if ($val) {
+                    $searchparams[$handle]['type'] = $type;
+                    $searchparams[$handle]['values'][] = urldecode($val);
+                }
+            }
+        }
+
+        $app = Application::getFacadeApplication();
+        $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
+
+        foreach ($searchparams as $handle => $searchvalue) {
+            $type = $searchvalue['type'];
+            $value = $searchvalue['values'];
+
+            if ('price' == $handle) {
+                $this->filterByPrice($value[0]);
+            } else {
+                $ak = $productCategory->getByHandle($handle);
+
+                if (is_object($ak)) {
+                    $value = array_filter($value);
+                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = ' . $value[0]);
+                    } else {
+                        if ('and' == $type) {
+                            foreach ($value as $searchterm) {
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . $searchterm . '"');
+                            }
+                        } else {
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                        }
                     }
                 }
             }
@@ -152,7 +194,7 @@ class ProductList extends AttributedItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreProductKey';
+        return StoreProductKey::class;
     }
 
     public function createQuery()
@@ -274,7 +316,11 @@ class ProductList extends AttributedItemList
             $query->andWhere("pActive = 1");
         }
 
-        $query->groupBy('p.pID');
+        if ($this->sortBy == 'category') {
+            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
+        } else {
+            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
+        }
 
         if ($this->search) {
             $query->andWhere('pName like ?')->setParameter($paramcount++, '%' . $this->search . '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%' . $this->search . '%');
@@ -303,6 +349,15 @@ class ProductList extends AttributedItemList
         return $pagination;
     }
 
+    public function getPaginationAdapter()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1);
+        });
+
+        return $adapter;
+    }
+
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
@@ -310,5 +365,19 @@ class ProductList extends AttributedItemList
         $count = count($values);
 
         return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    public function getResultIDs()
+    {
+        $query = $this->deliverQueryObject();
+        $values = $query->execute()->fetchAll();
+
+        $productids = [];
+
+        foreach ($values as $val) {
+            $productids[] = $val['pID'];
+        }
+
+        return $productids;
     }
 }

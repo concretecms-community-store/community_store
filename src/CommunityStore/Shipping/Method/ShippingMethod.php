@@ -1,43 +1,46 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Package;
-use View;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Package\Package;
+use Concrete\Core\View\View;
+use Concrete\Core\Support\Facade\Session;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod as StoreShippingMethodTypeMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreShippingMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreShippingMethods")
  */
 class ShippingMethod
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
+    /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $smID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smtID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smtmID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $smName;
 
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $smDetails;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $smEnabled;
 
@@ -144,7 +147,7 @@ class ShippingMethod
         $ident = explode('_', $smID);
         $smID = $ident[0];
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $method = $em->find(get_called_class(), $smID);
 
         if ($method) {
@@ -160,7 +163,7 @@ class ShippingMethod
 
     public static function getAvailableMethods($methodTypeID = null)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         if ($methodTypeID) {
             $methods = $em->getRepository(get_called_class())->findBy(['smtID' => $methodTypeID, 'smEnabled' => '1']);
         } else {
@@ -172,7 +175,7 @@ class ShippingMethod
 
     public static function getMethods($methodTypeID = null)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         if ($methodTypeID) {
             $methods = $em->getRepository(get_called_class())->findBy(['smtID' => $methodTypeID]);
         } else {
@@ -183,12 +186,12 @@ class ShippingMethod
     }
 
     /**
-     * @param StoreShippingMethodTypeMethod $smtm
-     * @param StoreShippingMethodType $smt
-     * @param string $smName
-     * @param bool $smEnabled
+     * @ORM\param StoreShippingMethodTypeMethod $smtm
+     * @ORM\param StoreShippingMethodType $smt
+     * @ORM\param string $smName
+     * @ORM\param bool $smEnabled
      *
-     * @return ShippingMethod
+     * @ORM\return ShippingMethod
      */
     public static function add($smtm, $smt, $smName, $smEnabled, $smDetails)
     {
@@ -217,7 +220,7 @@ class ShippingMethod
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -225,7 +228,7 @@ class ShippingMethod
     public function delete()
     {
         $this->getShippingMethodTypeMethod()->delete();
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -256,7 +259,7 @@ class ShippingMethod
 
     public static function getActiveShippingMethod()
     {
-        $smID = \Session::get('community_store.smID');
+        $smID = Session::get('community_store.smID');
         if ($smID) {
             $sm = self::getByID($smID);
 

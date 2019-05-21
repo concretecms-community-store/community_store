@@ -18,6 +18,7 @@
 		<field name="showOutOfStock" type="boolean"></field>
 		<field name="productsPerRow" type="integer" size="2"></field>
 		<field name="showPagination" type="boolean"></field>
+		<field name="enableExternalFiltering" type="boolean"><default value="1"/></field>
 		<field name="showFeatured" type="boolean"></field>
 		<field name="showSale" type="boolean"></field>
 		<field name="showDescription" type="boolean"></field>
@@ -30,6 +31,7 @@
 		<field name="showAddToCart" type="boolean"><default value="1"/></field>
 		<field name="btnText" type="string" size="255"></field>
 		<field name="showQuantity" type="boolean"></field>
+		<field name="noProductsMessage" type="string" size="255"></field>
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">

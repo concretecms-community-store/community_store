@@ -88,34 +88,70 @@ class ProductReport extends AbstractItemList
     public function sortByPopularity($direction = 'desc')
     {
         $products = $this->products;
-        usort($products, create_function('$a, $b', '
-	        $a = $a["quantity"];
-	        $b = $b["quantity"];
-	
-	        if ($a == $b)
-	        {
-	            return 0;
-	        }
-	
-	        return ($a ' . ('desc' == $direction ? '>' : '<') . ' $b) ? -1 : 1;
-	    '));
+
+        if ($direction == 'desc') {
+            $func = function($a, $b) {
+                $a = $a["quantity"];
+                $b = $b["quantity"];
+
+                if ($a == $b)
+                {
+                    return 0;
+                }
+
+                return ($a > $b) ? -1 : 1;
+            };
+        } else {
+            $func = function($a, $b) {
+                $a = $a["quantity"];
+                $b = $b["quantity"];
+
+                if ($a == $b)
+                {
+                    return 0;
+                }
+
+                return ($a < $b) ? -1 : 1;
+            };
+        }
+
+        usort($products,$func);
+
         $this->products = $products;
     }
 
     public function sortByTotal($direction = 'desc')
     {
         $products = $this->products;
-        usort($products, create_function('$a, $b', '
-	        $a = $a["pricePaid"];
-	        $b = $b["pricePaid"];
-	
-	        if ($a == $b)
-	        {
-	            return 0;
-	        }
-	
-	        return ($a ' . ('desc' == $direction ? '>' : '<') . ' $b) ? -1 : 1;
-	    '));
+
+        if ($direction == 'desc') {
+            $func = function($a, $b) {
+                $a = $a["pricePaid"];
+                $b = $b["pricePaid"];
+
+                if ($a == $b)
+                {
+                    return 0;
+                }
+
+                return ($a > $b) ? -1 : 1;
+            };
+        } else {
+            $func = function($a, $b) {
+                $a = $a["pricePaid"];
+                $b = $b["pricePaid"];
+
+                if ($a == $b)
+                {
+                    return 0;
+                }
+
+                return ($a < $b) ? -1 : 1;
+            };
+        }
+
+        usort($products,$func);
+
         $this->products = $products;
     }
 

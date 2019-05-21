@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
-use Session;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -200,6 +201,7 @@ class Cart
             //since we removed the ID/qty, we're left with just the attributes
             $cartItem['productAttributes'] = $data;
 
+
             $removeexistingexclusive = false;
 
             foreach (self::getCart() as $k => $cart) {
@@ -333,7 +335,7 @@ class Cart
         return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
-    public function checkForExistingCartItem($cartItem)
+    public static function checkForExistingCartItem($cartItem)
     {
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.
@@ -506,7 +508,7 @@ class Cart
         }
 
         if ($unit) {
-            $storeweightunit = \Config::get('community_store.weightUnit');
+            $storeweightunit = Config::get('community_store.weightUnit');
 
             if ($storeweightunit != $unit) {
                 // convert to grams first
@@ -548,7 +550,7 @@ class Cart
             foreach (self::getCart() as $item) {
                 $product = StoreProduct::getByID($item['product']['pID']);
                 if ($product) {
-                    if (($product->hasUserGroups() || $product->hasDigitalDownload()) && !$product->createsLogin()) {
+                    if ($product->hasUserGroups() && !$product->createsLogin()) {
                         return true;
                     }
                 }
@@ -577,11 +579,11 @@ class Cart
 
     public static function setShippingInstructions($sInstructions)
     {
-        \Session::set('communitystore.sInstructions', $sInstructions);
+        Session::set('communitystore.sInstructions', $sInstructions);
     }
 
     public static function getShippingInstructions()
     {
-        return  \Session::get('communitystore.sInstructions');
+        return  Session::get('communitystore.sInstructions');
     }
 }

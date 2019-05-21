@@ -1,44 +1,46 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductRelated")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductRelated")
  */
 class ProductRelated
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $id;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="related",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="related",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $relatedPID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $relatedSort;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",cascade={"persist"})
-     * @JoinColumn(name="relatedPID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",cascade={"persist"})
+     * @ORM\JoinColumn(name="relatedPID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $relatedProduct;
 
@@ -89,14 +91,14 @@ class ProductRelated
 
     public static function getByID($cID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $cID);
     }
 
     public static function getRelatedProducts(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
@@ -149,14 +151,14 @@ class ProductRelated
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

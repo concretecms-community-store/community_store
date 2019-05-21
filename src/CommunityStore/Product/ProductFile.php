@@ -1,33 +1,38 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\File\File;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreDigitalFiles")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreDigitalFiles")
  */
 class ProductFile
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $dfID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="files",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="files",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $dffID;
 
@@ -63,14 +68,14 @@ class ProductFile
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $id);
     }
 
     public static function getFilesForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
@@ -80,7 +85,7 @@ class ProductFile
         $results = self::getFilesForProduct($product);
         $fileObjects = [];
         foreach ($results as $result) {
-            $fileObjects[] = \File::getByID($result->getFileID());
+            $fileObjects[] = File::getByID($result->getFileID());
         }
 
         return $fileObjects;
@@ -91,12 +96,15 @@ class ProductFile
         self::removeFilesForProduct($product);
         //add new ones.
         if (!empty($files['ddfID'])) {
+            $fs = FileSet::getByID(Config::get('community_store.digitalDownloadFileSet', 0));
+
             foreach ($files['ddfID'] as $fileID) {
                 if ($fileID) {
                     self::add($product, $fileID);
-                    $fileObj = \File::getByID($fileID);
-                    $fs = \FileSet::getByName("Digital Downloads");
-                    $fs->addFileToSet($fileObj);
+                    $fileObj = File::getByID($fileID);
+                    if (is_object($fs)) {
+                        $fs->addFileToSet($fileObj);
+                    }
                 }
             }
         }
@@ -130,14 +138,14 @@ class ProductFile
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

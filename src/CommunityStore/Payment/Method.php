@@ -1,43 +1,46 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
-use Core;
-use Package;
-use Controller;
-use View;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\View\View;
 
 /**
- * @Entity
- * @Table(name="CommunityStorePaymentMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStorePaymentMethods")
  */
 class Method extends Controller
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $pmID;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $pmHandle;
 
-    /** @Column(type="text") */
+    /** @ORM\Column(type="text") */
     protected $pmName;
 
-    /** @Column(type="text", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $pmDisplayName;
 
-    /** @Column(type="text", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $pmButtonLabel;
 
-    /** @Column(type="boolean") */
+    /** @ORM\Column(type="boolean") */
     protected $pmEnabled;
 
-    /** @Column(type="integer", nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $pmSortOrder;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pkgID;
 
@@ -124,7 +127,7 @@ class Method extends Controller
 
     public static function getByID($pmID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $method = $em->find(get_class(), $pmID);
 
         if ($method) {
@@ -136,7 +139,7 @@ class Method extends Controller
 
     public static function getByHandle($pmHandle)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
@@ -158,7 +161,7 @@ class Method extends Controller
 
     protected function setMethodController()
     {
-        $th = Core::make("helper/text");
+        $th = Application::getFacadeApplication()->make("helper/text");
         $namespace = "Concrete\\Package\\" . $th->camelcase(Package::getByID($this->pkgID)->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
 
         $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
@@ -172,11 +175,11 @@ class Method extends Controller
     }
 
     /*
-     * @param string $pmHandle
-     * @param string $pmName
-     * @pkg Package Object
-     * @param string $pmDisplayName
-     * @param bool $enabled
+     * @ORM\param string $pmHandle
+     * @ORM\param string $pmName
+     * @ORM\pkg Package Object
+     * @ORM\param string $pmDisplayName
+     * @ORM\param bool $enabled
      */
     public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel = '', $enabled = false)
     {
@@ -195,7 +198,7 @@ class Method extends Controller
 
     public static function getMethods($enabled = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         if ($enabled) {
             $methods = $em->getRepository(get_class())->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
         } else {
@@ -257,7 +260,7 @@ class Method extends Controller
 
     public function save(array $data = [])
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -269,7 +272,7 @@ class Method extends Controller
 
     public function remove()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

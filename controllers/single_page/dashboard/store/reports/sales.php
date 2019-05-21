@@ -1,10 +1,14 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Reports;
 
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport as StoreSalesReport;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
 
 class Sales extends DashboardPageController
 {
@@ -18,8 +22,8 @@ class Sales extends DashboardPageController
         $this->set('defaultFromDate', $thirtyDaysAgo);
         $this->set('defaultToDate', $today);
 
-        $dateFrom = $this->post('dateFrom');
-        $dateTo = $this->post('dateTo');
+        $dateFrom = $this->request->request->get('dateFrom');
+        $dateTo = $this->request->request->get('dateTo');
         if (!$dateFrom) {
             $dateFrom = $thirtyDaysAgo;
         }
@@ -32,14 +36,16 @@ class Sales extends DashboardPageController
         $ordersTotals = $sr::getTotalsByRange($dateFrom, $dateTo);
         $this->set('ordersTotals', $ordersTotals);
 
-        $orders = new StoreOrderList();
-        $orders->setFromDate($dateFrom);
-        $orders->setToDate($dateTo);
-        $orders->setItemsPerPage(10);
-        $orders->setPaid(true);
-        $orders->setCancelled(false);
+        $orderList = new StoreOrderList();
+        $orderList->setFromDate($dateFrom);
+        $orderList->setToDate($dateTo);
+        $orderList->setItemsPerPage(10);
+        $orderList->setPaid(true);
+        $orderList->setCancelled(false);
 
-        $paginator = $orders->getPagination();
+        $factory = new PaginationFactory($this->app->make(Request::class));
+        $paginator = $factory->createPaginationObject($orderList);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('orders', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
@@ -51,8 +57,8 @@ class Sales extends DashboardPageController
 
     public function export()
     {
-        $from = $this->get('fromDate');
-        $to = $this->get('toDate');
+        $from = $this->request->query->get('fromDate');
+        $to = $this->request->query->get('toDate');
 
         //TODO maybe get all existing orders if needed
         // set to and from
@@ -100,40 +106,18 @@ class Sales extends DashboardPageController
 
         // if we have something to export
         if (count($export) > 0) {
-            // timings for cache disabling in headers and the file name
-            $now = gmdate("D, d M Y H:i:s");
-            $expire = gmdate("D, d M Y H:i:s", strtotime("+1 day"));
             $filename = 'sale_report_' . date('Y-m-d') . ".csv";
 
-            // disable caching
-            header("Expires: {$expire} GMT");
-            header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-            header("Last-Modified: {$now} GMT");
-
-            // force download
-            header("Content-Type: application/force-download");
-            header("Content-Type: application/octet-stream");
-            header("Content-Type: application/download");
-
-            // disposition / encoding on response body
-            header("Content-Disposition: attachment;filename={$filename}");
-            header("Content-Transfer-Encoding: binary");
-
-            // start our output buffer and write to output
-            ob_start();
-            $df = fopen('php://output', 'w');
-            // output our keys
-            fputcsv($df, array_keys(reset($export)));
-            // output our data
-            foreach ($export as $row) {
-                fputcsv($df, $row);
-            }
-            fclose($df);
-            // finally output our data
-            echo ob_get_clean();
-            die();
+            $this->app->build(
+                CsvReportExporter::class,
+                [
+                    'filename' => $filename,
+                    'header' => array_keys(reset($export)),
+                    'rows' => $export
+                ]
+            )->getCsv();
         }
         // redirect if no data to output
-        $this->redirect('/dashboard/store/reports/sales');
+        return Redirect::to('/dashboard/store/reports/sales');
     }
 }

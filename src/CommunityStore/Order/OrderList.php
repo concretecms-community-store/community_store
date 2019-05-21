@@ -1,25 +1,27 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Core\Support\Facade\Application;
 
-class OrderList extends AttributedItemList
+class OrderList extends AttributedItemList implements PaginationProviderInterface
 {
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreOrderKey';
+        return StoreOrderKey::class;
     }
 
     public function createQuery()
     {
         $this->query
-        ->select('o.oID')
-        ->from('CommunityStoreOrders', 'o');
+            ->select('o.oID')
+            ->from('CommunityStoreOrders', 'o');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -27,7 +29,7 @@ class OrderList extends AttributedItemList
         $paramcount = 0;
 
         if (isset($this->search)) {
-            $this->query->where('oID = ?')->setParameter($paramcount++, $this->search);
+            $this->query->where('o.oID = ?')->setParameter($paramcount++, $this->search);
             $this->query->orWhere('transactionReference = ?')->setParameter($paramcount++, $this->search);
 
             $app = Application::getFacadeApplication();
@@ -60,12 +62,38 @@ class OrderList extends AttributedItemList
 
             if (!empty($orderIDs)) {
                 if ($paramcount > 0) {
-                    $this->query->addWhere('o.oID in (' . implode(',', $orderIDs) . ')');
+                    $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
                 } else {
-                    $this->query->where('o.oID in (' . implode(',', $orderIDs) . ')');
+                    $this->query->andWhere('o.oID in (' . implode(',', $orderIDs) . ')');
                 }
             } else {
                 $this->query->where('1 = 0');
+            }
+        }
+
+
+        if (isset($this->paymentStatus)) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+
+            if ($this->paymentStatus === 'paid') {
+                $this->query->andWhere('oPaid is not null and oRefunded is null');
+            }
+
+            if ($this->paymentStatus === 'unpaid') {
+                $this->query->andWhere('oPaid is null and oRefunded is null and externalPaymentRequested is null');
+            }
+
+            if ($this->paymentStatus === 'cancelled') {
+                $this->query->andWhere('oCancelled is not null');
+            }
+
+            if ($this->paymentStatus === 'refunded') {
+                $this->query->andWhere('oRefunded is not null');
+            }
+
+            if ($this->paymentStatus === 'incomplete') {
+                $this->query->andWhere('externalPaymentRequested is not null and oPaid is null');
             }
         }
 
@@ -114,9 +142,14 @@ class OrderList extends AttributedItemList
         }
 
         if (isset($this->cID)) {
-            $this->query->andWhere('cID = ?')->setParameter($paramcount++, $this->cID);
+            $this->query->andWhere('o.cID = ?')->setParameter($paramcount++, $this->cID);
         }
 
+        if (isset($this->paymentMethod)) {
+            $this->query->andWhere('o.pmID = ?')->setParameter($paramcount++, $this->paymentMethod);
+        }
+
+        $this->query->leftJoin('o', 'CommunityStoreOrderSearchIndexAttributes', 'csi', 'o.oID = csi.oID');
         $this->query->orderBy('oID', 'DESC');
 
         return $this->query;
@@ -130,6 +163,16 @@ class OrderList extends AttributedItemList
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    public function setPaymentMethods($payment)
+    {
+        $this->paymentMethod = $payment;
+    }
+
+    public function setPaymentStatus($paymentstatus)
+    {
+        $this->paymentStatus = $paymentstatus;
     }
 
     public function setIncludeExternalPaymentRequested($bool)
@@ -196,6 +239,15 @@ class OrderList extends AttributedItemList
         $pagination = new Pagination($this, $adapter);
 
         return $pagination;
+    }
+
+    public function getPaginationAdapter()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
+        });
+
+        return $adapter;
     }
 
     public function getTotalResults()

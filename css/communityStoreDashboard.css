@@ -6,7 +6,7 @@
     .group-list input[type="text"] { width: 180px; }
     .group-list .hideme { display: none !important; }
 
-#group-filters { margin: 0 0 30px; }
+
     #group-filters li a { transition: .2s ease all; }
 
 .store-pane { display: none; }

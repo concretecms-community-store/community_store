@@ -1,108 +1,60 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use View;
-use Core;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Package\CommunityStore\Src\Attribute\Key\StoreProductKey;
+use Concrete\Core\Attribute\Type;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
-class Attributes extends DashboardPageController
+class Attributes extends DashboardAttributesPageController
 {
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('store_product');
+    }
+
     public function view()
     {
-        $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
-        $attrTypes = AttributeType::getList('store_product');
-        $types = [];
-        foreach ($attrTypes as $at) {
-            $types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
-        }
-        $attrList = StoreProductKey::getList();
-        $this->set('attrList', $attrList);
-        $this->set('types', $types);
-        $this->set('pageTitle', t('Product Attributes'));
+        $this->renderList();
     }
 
-    public function update_attributes()
+    public function edit($akID = null)
     {
-        $uats = $_REQUEST['akID'];
-        StoreProductKey::updateAttributesDisplayOrder($uats);
-        exit;
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->renderEdit($key,
+            Url::to('/dashboard/store/products/attributes', 'view')
+        );
     }
 
-    public function delete($akID, $token = null)
+    public function update($akID = null)
     {
-        try {
-            $ak = StoreProductKey::getByID($akID);
-
-            if (!($ak instanceof StoreProductKey)) {
-                throw new Exception(t('Invalid attribute ID.'));
-            }
-
-            $valt = Core::make('helper/validation/token');
-
-            if (!$valt->validate('delete_attribute', $token)) {
-                throw new Exception($valt->getErrorMessage());
-            }
-
-            $ak->delete();
-
-            $this->flash('success', t('Attribute Deleted'));
-            $this->redirect("/dashboard/store/products/attributes");
-        } catch (Exception $e) {
-            $this->set('error', $e);
-        }
+        $this->edit($akID);
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->executeUpdate($key,
+            Url::to('/dashboard/store/products/attributes', 'view')
+        );
     }
 
-    public function select_type()
+    public function select_type($type = null)
     {
-        $atID = $this->request('atID');
-        $at = AttributeType::getByID($atID);
-        $this->set('type', $at);
-        $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
-        $this->set('pageTitle', t('Create Product Attribute'));
+        $type = Type::getByID($type);
+        $this->renderAdd($type,
+            Url::to('/dashboard/store/products/attributes', 'view')
+        );
     }
 
-    public function add()
+    public function add($type = null)
     {
-        $pkg = \Package::getByHandle('community_store');
-        $this->select_type();
-        $type = $this->get('type');
-        $cnt = $type->getController();
-        $e = $cnt->validateKey($this->post());
-        if ($e->has()) {
-            $this->set('error', $e);
-        } else {
-            $type = AttributeType::getByID($this->post('atID'), $pkg, 'store_product');
-            StoreProductKey::add('store_product', $type, $this->post(), $pkg);
-            $this->flash('success', t('Attribute Created'));
-            $this->redirect('/dashboard/store/products/attributes');
-        }
+        $this->select_type($type);
+        $type = Type::getByID($type);
+        $this->executeAdd($type, Url::to('/dashboard/store/products/attributes', 'view'));
     }
 
-    public function edit($akID = 0)
+    public function delete($akID = null)
     {
-            if ($this->post('akID')) {
-                $akID = $this->post('akID');
-            }
-            $key = StoreProductKey::getByID($akID);
-            $type = $key->getAttributeType();
-            $this->set('key', $key);
-            $this->set('type', $type);
-            $this->set('category', AttributeKeyCategory::getByHandle('store_product'));
-
-            if ($this->post()) {
-                $cnt = $type->getController();
-                $cnt->setAttributeKey($key);
-                $e = $cnt->validateKey($this->post());
-                if ($e->has()) {
-                    $this->set('error', $e);
-                } else {
-                    $key->update($this->post());
-                    $this->flash('success', t('Attribute Updated'));
-                    $this->redirect('/dashboard/store/products/attributes');
-                }
-            }
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $this->executeDelete($key,
+            Url::to('/dashboard/store/products/attributes', 'view')
+        );
     }
 }

@@ -1,24 +1,26 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Controller;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Controller\Controller;
 
 abstract class ShippingMethodTypeMethod extends Controller
 {
     /**
-     * @Id
-     * @Column(name="smtmID",type="integer",nullable=false)
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(name="smtmID",type="integer",nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $smtmID;
 
     /**
-     * @Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true)
      */
     protected $smID;
 
     /**
-     * @Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=true)
      * enables the option for it to be disabled instead of deleted
      */
     protected $disableEnabled;
@@ -60,7 +62,7 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public static function getByID($smtmID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_called_class())->find($smtmID);
     }
@@ -72,14 +74,14 @@ abstract class ShippingMethodTypeMethod extends Controller
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

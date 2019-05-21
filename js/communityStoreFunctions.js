@@ -131,8 +131,30 @@ function updateActiveTab(historyPopEvent) {
     }
 }
 
+function toggleTaxStatesAndCities(hide) {
+    hide = hide || false;
+    if (hide) {
+        $('.stateCityWrapper').addClass('hidden');
+    } else {
+        $('.stateCityWrapper').removeClass('hidden');
+    }
+}
+
 function updateTaxStates(){
     var countryCode = $("#taxCountry").val();
+    if (Array.isArray(countryCode)) {
+        if (countryCode.length > 1) {
+            toggleTaxStatesAndCities(true);
+            return;
+        } else if (countryCode.length == 1) {
+            countryCode = countryCode[0];
+        } else {
+            countryCode = '';
+        }
+    }
+
+    toggleTaxStatesAndCities();
+
     var selectedState = $("#savedTaxState").val();
     var stateutility = $("#settings-tax").attr("data-states-utility");
     $.ajax({
@@ -141,12 +163,6 @@ function updateTaxStates(){
        data: {country: countryCode, selectedState: selectedState, type: "tax"},
        success: function(states){
            $("#taxState").replaceWith(states);
-
-           if (states.indexOf(" selected ") >= 0) {
-               $("#taxState").prepend("<option value=''></option>");
-           } else {
-               $("#taxState").prepend("<option value='' selected='selected'></option>");
-           }
        } 
     });
 }

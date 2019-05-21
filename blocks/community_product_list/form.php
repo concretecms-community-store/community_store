@@ -22,14 +22,15 @@
 
             <div class="form-group" id="pageselector">
                 <div
-                    class="form-group" <?= ('page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'); ?> >
+                    class="form-group" <?= 'page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'; ?> >
                     <?php
-                    $ps = Core::make('helper/form/page_selector');
+                    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+                    $ps = $app->make('helper/form/page_selector');
                     echo $ps->selectPage('filterCID', ($filterCID > 0 ? $filterCID : false)); ?>
                 </div>
             </div>
 
-            <div class="form-group" id="product-search" <?= ('related_product' == $filter ? '' : 'style="display: none"'); ?>>
+            <div class="form-group" id="product-search" <?= 'related_product' == $filter ? '' : 'style="display: none"'; ?>>
                 <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?= t('Search for a Product'); ?>" />
             </div>
 
@@ -75,11 +76,11 @@
 
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <select multiple="multiple" name="filtergroups[]" id="groups-select"
-                                class="existing-select2 select2-select" style="width: 100%" placeholder="<?= t('Select Product Groups'); ?>">
+                                class="existing-select2 select2-select" autocomplete="off" style="width: 100%" placeholder="<?= t('Select Product Groups'); ?>">
                             <?php foreach ($productgroups as $pgkey => $pglabel) {
                     ?>
                                 <option
-                                    value="<?= $pgkey; ?>" <?= (in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''); ?>><?= $pglabel; ?></option>
+                                    value="<?= $pgkey; ?>" <?= in_array($pgkey, $groupfilters) ? 'selected="selected"' : ''; ?>><?= $pglabel; ?></option>
                             <?php
                 } ?>
                         </select>
@@ -113,6 +114,12 @@
                     <?= t('Include Out of Stock Products'); ?>
                 </label>
             </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?= $form->checkbox('enableExternalFiltering', 1, $enableExternalFiltering); ?>
+                    <?= t('Enable Other Blocks to Filter This Product List'); ?>
+                </label>
+            </div>
         </fieldset>
 
 
@@ -137,6 +144,10 @@
                 <?= $form->label('productsPerRow', t('Products per Row')); ?>
                 <?= $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
             </div>
+            <div class="form-group">
+                <?= $form->label('noProductsMessage', t("Display text when no products")); ?>
+                <?= $form->text('noProductsMessage', $noProductsMessage); ?>
+            </div>
             <div class="form-group checkbox">
                 <label>
                     <?= $form->checkbox('showName', 1, $showName); ?>
@@ -155,7 +166,7 @@
                 <?= t('Display Add To Cart Button'); ?>
                 </label>
             </div>
-            <div class="form-group <?= ($showAddToCart ? '' : 'hidden'); ?>" id="addToCartTextField">
+            <div class="form-group <?= $showAddToCart ? '' : 'hidden'; ?>" id="addToCartTextField">
                 <?= $form->label('btnText', t("Add To Cart Button Text")); ?>
                 <?= $form->text('btnText', $btnText, ['placeholder' => t("Defaults to: Add To Cart")]); ?>
             </div>
@@ -186,7 +197,7 @@
                     <?= t('Display Link To Product Page'); ?>
                 </label>
             </div>
-            <div class="form-group <?= ($showPageLink ? '' : 'hidden'); ?>" id="pageLinkTextField">
+            <div class="form-group <?= $showPageLink ? '' : 'hidden'; ?>" id="pageLinkTextField">
                 <?= $form->label('pageLinkText', t("Link To Product Page Text")); ?>
                 <?= $form->text('pageLinkText', $pageLinkText, ['placeholder' => t("Defaults to: More Details")]); ?>
             </div>
@@ -208,7 +219,7 @@ if ($relatedProduct) {
         $(function(){
             $("#product-select").select2({
                 ajax: {
-                    url: "<?= \URL::to('/productfinder'); ?>",
+                    url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
                     dataType: 'json',
                     quietMillis: 250,
                     data: function (term, page) {
@@ -232,7 +243,7 @@ if ($relatedProduct) {
                 },
                 minimumInputLength: 2,
                 initSelection: function(element, callback) {
-                    callback({text:<?php echo json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
+                    callback({text:<?= json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
                 }
             }).select2('val', []);
 
@@ -305,6 +316,3 @@ if ($relatedProduct) {
         });
     });
 </script>
-
-
-

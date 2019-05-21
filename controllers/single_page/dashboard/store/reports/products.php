@@ -1,18 +1,21 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Reports;
 
+use Concrete\Core\Http\Request;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
 
 class Products extends DashboardPageController
 {
     public function view()
     {
-        $dateFrom = $this->get('dateFrom');
-        $dateTo = $this->get('dateTo');
+        $dateFrom = $this->request->query->get('dateFrom');
+        $dateTo = $this->request->query->get('dateTo');
 
         if (!$dateFrom) {
             $dateFrom = StoreOrderList::getDateOfFirstOrder();
@@ -22,13 +25,13 @@ class Products extends DashboardPageController
         }
         $pr = new StoreProductReport($dateFrom, $dateTo);
 
-        $productSearch = $this->get('productSearch');
+        $productSearch = $this->request->query->get('productSearch');
 
         if ($productSearch) {
             $pr->setProductSearch($productSearch);
         }
 
-        $orderBy = $this->get('orderBy');
+        $orderBy = $this->request->query->get('orderBy');
         if (!$orderBy) {
             $orderBy = 'quantity';
         }
@@ -44,7 +47,9 @@ class Products extends DashboardPageController
 
         $pr->setItemsPerPage(20);
 
-        $paginator = $pr->getPagination();
+        $factory = new PaginationFactory($this->app->make(Request::class));
+        $paginator = $factory->createPaginationObject($pr);
+
         $pagination = $paginator->renderDefaultView();
         $this->set('products', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
@@ -94,11 +99,7 @@ class Products extends DashboardPageController
             $this->set('pageTitle', t('Orders of %s', $product->getName()));
 
             if ($export) {
-                header('Content-type: text/csv');
-                header('Content-Disposition: attachment; filename="' . t(/*i18n file name for product customer exports*/'product_orders') . '_' . $product->getID() . '.csv"');
-
-                $fp = fopen('php://output', 'w');
-                fputcsv($fp, $header);
+                $outputItems = [];
 
                 foreach ($orderItems as $item) {
                     $order = $item->getOrder();
@@ -149,11 +150,17 @@ class Products extends DashboardPageController
                     $outputItem[] = $order->getPaymentMethodName();
                     $outputItem[] = $item->getPricePaid() * $item->getQty();
 
-                    fputcsv($fp, $outputItem);
+                    $outputItems[] = $outputItem;
                 }
 
-                fclose($fp);
-                exit();
+                $this->app->build(
+                    CsvReportExporter::class,
+                    [
+                        'filename' => t('product_orders') . '_' . $product->getID(),
+                        'header' => $header,
+                        'rows' => $outputItems
+                    ]
+                )->getCsv();
             }
         }
     }

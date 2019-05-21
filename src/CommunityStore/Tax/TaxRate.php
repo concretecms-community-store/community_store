@@ -1,69 +1,73 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
-use Config;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as StoreTaxHelper;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreTaxRates")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreTaxRates")
  */
 class TaxRate
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $trID;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $taxEnabled;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxLabel;
 
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $taxRate;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxBasedOn;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxAddress;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="text")
      */
     protected $taxCountry;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxState;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $taxCity;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $taxVatExclude;
 
@@ -92,9 +96,15 @@ class TaxRate
         $this->taxAddress = $address;
     }
 
-    public function setTaxCountry($country)
+    public function setTaxCountry(array $countries = null)
     {
-        $this->taxCountry = $country;
+        if ($countries) {
+            $countries = array_map('trim', $countries);
+            $countries = implode(',', $countries);
+            $this->taxCountry = $countries;
+        } else {
+            $this->taxCountry = '';
+        }
     }
 
     public function setTaxState($state)
@@ -110,6 +120,11 @@ class TaxRate
     public function setTaxVatExclude($exclude)
     {
         $this->taxVatExclude = $exclude;
+    }
+
+    public function getID()
+    {
+        return $this->trID;
     }
 
     public function getTaxRateID()
@@ -144,7 +159,7 @@ class TaxRate
 
     public function getTaxCountry()
     {
-        return $this->taxCountry;
+        return explode(',', $this->taxCountry);
     }
 
     public function getTaxState()
@@ -164,7 +179,7 @@ class TaxRate
 
     public static function getByID($trID)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $trID);
     }
@@ -177,7 +192,8 @@ class TaxRate
     public function isTaxable()
     {
         $taxAddress = $this->getTaxAddress();
-        $taxCountry = strtolower($this->getTaxCountry());
+        $taxCountries = $this->getTaxCountry();
+        $taxCountries = array_map('strtolower', $taxCountries);
         $taxState = strtolower(trim($this->getTaxState()));
         $taxCity = strtolower(trim($this->getTaxCity()));
         $taxVatExclude = 1 == $this->getTaxVatExclude() ? true : false;
@@ -188,7 +204,8 @@ class TaxRate
         // If they have a vat_number check if it's valid and if so, don't apply tax
         $vatIsValid = false;
         $vat_number = $customer->getValue("vat_number");
-        if (!empty($vat_number) && StoreCheckout::validateVatNumber($vat_number)) {
+        $taxHelper = Application::getFacadeApplication()->make(StoreTaxHelper::class);
+        if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number)) {
             $vatIsValid = true;
         }
 
@@ -205,7 +222,7 @@ class TaxRate
                 break;
         }
 
-        if ($userCountry == $taxCountry) {
+        if (in_array($userCountry, $taxCountries)) {
             $customerIsTaxable = true;
             if (!empty($taxState)) {
                 if ($userState != $taxState) {
@@ -267,7 +284,7 @@ class TaxRate
         }//if cart
 
         if ('grandtotal' == $this->getTaxBasedOn()) {
-            $shippingTotal = StorePrice::getFloat(StoreCalculator::getShippingTotal());
+            $shippingTotal = floatval(StoreCalculator::getShippingTotal());
 
             if ('extract' == $taxCalc) {
                 $taxrate = 1 + ($this->getTaxRate() / 100);
@@ -320,6 +337,10 @@ class TaxRate
         $tr->setTaxBasedOn($data['taxBased']);
         $tr->setTaxAddress($data['taxAddress']);
         $tr->setTaxCountry($data['taxCountry']);
+        if (is_array($data['taxCountry']) && count($data['taxCountry']) > 1) {
+            $data['taxState'] = '';
+            $data['taxCity'] = '';
+        }
         $tr->setTaxState($data['taxState']);
         $tr->setTaxCity($data['taxCity']);
         $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0);
@@ -330,14 +351,14 @@ class TaxRate
 
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

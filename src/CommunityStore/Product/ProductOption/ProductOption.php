@@ -1,71 +1,73 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreProductOptions")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreProductOptions")
  */
 class ProductOption
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $poID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pID;
 
     /**
-     * @ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="options",cascade={"persist"})
-     * @JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="options",cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;
 
     /**
-     * @OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"all"}, orphanRemoval=true)
-     * @OrderBy({"poiSort" = "ASC"})
+     * @ORM\OneToMany(targetEntity="ProductOptionItem", mappedBy="option",cascade={"all"}, orphanRemoval=true)
+     * @ORM\OrderBy({"poiSort" = "ASC"})
      */
     protected $optionItems;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $poName;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $poType;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $poDisplayType;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $poHandle;
 
     /**
-     * @Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $poRequired;
 
     /**
-     * @Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $poIncludeVariations;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $poSort;
 
@@ -171,14 +173,14 @@ class ProductOption
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->find(get_class(), $id);
     }
 
     public static function getOptionsForProduct(StoreProduct $product)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
@@ -246,7 +248,7 @@ class ProductOption
 
     public function save($persistonly = false)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($this);
 
         if (!$persistonly) {
@@ -256,7 +258,7 @@ class ProductOption
 
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -309,7 +311,7 @@ class ProductOption
                     }
                 }
 
-                $em = \ORM::entityManager();
+                $em = dbORM::entityManager();
                 $em->flush();
             }
         }

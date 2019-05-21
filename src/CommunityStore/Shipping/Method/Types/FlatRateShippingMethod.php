@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
-use Core;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
@@ -10,51 +12,51 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as Stor
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
- * @Entity
- * @Table(name="CommunityStoreFlatRateMethods")
+ * @ORM\Entity
+ * @ORM\Table(name="CommunityStoreFlatRateMethods")
  */
 class FlatRateShippingMethod extends ShippingMethodTypeMethod
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $baseRate;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $rateType;
     /**
-     * @Column(type="float",nullable=true)
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $perItemRate;
     /**
-     * @Column(type="float",nullable=true)
+     * @ORM\Column(type="float",nullable=true)
      */
     protected $perWeightRate;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumAmount;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumAmount;
 
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $minimumWeight;
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     protected $maximumWeight;
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $countries;
     /**
-     * @Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     protected $countriesSelected;
 
@@ -189,7 +191,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         }
         $sm->setCountriesSelected($countriesSelected);
 
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $em->persist($sm);
         $em->flush();
 
@@ -198,9 +200,10 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function dashboardForm($shippingMethod = null)
     {
-        $this->set('form', Core::make("helper/form"));
+        $app = Application::getFacadeApplication();
+        $this->set('form', $app->make("helper/form"));
         $this->set('smt', $this);
-        $this->set('countryList', Core::make('helper/lists/countries')->getCountries());
+        $this->set('countryList', $app->make('helper/lists/countries')->getCountries());
 
         if (is_object($shippingMethod)) {
             $smtm = $shippingMethod->getShippingMethodTypeMethod();

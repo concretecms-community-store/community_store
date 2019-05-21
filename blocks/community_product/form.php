@@ -56,7 +56,7 @@
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showCartButton', 1, !isset($showCartButton) ? true : $showCartButton); ?>
-                <?= t('Show "Add to Cart" Button'); ?>
+                <?= t('Display Add To Cart Button'); ?>
             </label>
         </div>
         <div class="checkbox">
@@ -105,7 +105,7 @@
 
         $("#product-select").select2({
             ajax: {
-                url: "<?= \URL::to('/productfinder'); ?>",
+                url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
                 dataType: 'json',
                 quietMillis: 250,
                 data: function (term, page) {
