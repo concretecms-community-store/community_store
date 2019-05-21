@@ -109,7 +109,7 @@ class Controller extends BlockController
         $attrList = $productCategory->getList();
         $attrLookup = [];
         $selectedarray = [];
-
+        $groupfilters = [];
         if ('auto' == $this->filterSource) {
             $page = Page::getCurrentPage();
             $blocks = $page->getBlocks();

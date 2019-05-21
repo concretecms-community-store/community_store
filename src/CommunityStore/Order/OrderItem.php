@@ -50,12 +50,12 @@ class OrderItem
     protected $oiPricePaid;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiTax;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiTaxIncluded;
 

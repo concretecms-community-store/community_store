@@ -189,6 +189,11 @@ class Product
      */
     protected $pHeight;
 
+	/**
+	 * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
+	 */
+	protected $pStackedHeight;
+
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
@@ -235,7 +240,7 @@ class Product
     protected $pVariations;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $pNotificationEmails;
 
@@ -652,6 +657,11 @@ class Product
         $this->pHeight = (float) $height;
     }
 
+	public function setStackedHeight($height)
+	{
+		$this->pStackedHeight = (float) $height;
+	}
+
     public function setLength($length)
     {
         $this->pLength = (float) $length;
@@ -719,6 +729,9 @@ class Product
         }
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getByID($pID)
     {
         $em = dbORM::entityManager();
@@ -726,6 +739,9 @@ class Product
         return $em->find(get_class(), $pID);
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getBySKU($pSKU)
     {
         $em = dbORM::entityManager();
@@ -733,6 +749,9 @@ class Product
         return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
     }
 
+	/**
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 */
     public static function getByCollectionID($cID)
     {
         $em = dbORM::entityManager();
@@ -779,6 +798,7 @@ class Product
         $product->setIsShippable($data['pShippable']);
         $product->setWidth($data['pWidth']);
         $product->setHeight($data['pHeight']);
+        $product->setStackedHeight($data['pStackedHeight']);
         $product->setLength($data['pLength']);
         $product->setWeight($data['pWeight']);
         $product->setPackageData($data['pPackageData']);
@@ -1122,6 +1142,12 @@ class Product
 
         return $this->pHeight;
     }
+
+
+	public function getStackedHeight()
+	{
+		return $this->pStackedHeight;
+	}
 
     public function getLength()
     {
@@ -1532,8 +1558,13 @@ class Product
         $newproduct->save();
 
         $attributes = $this->getAttributes();
-        foreach ($attributes as $att) {
-            $newproduct->setAttribute($att->getAttributeKey()->getAttributeKeyHandle(), $att->getValue());
+        if (count($attributes)) {
+            foreach ($attributes as $att) {
+                $ak = $att->getAttributeKey();
+                if ($ak && is_object($ak)) {
+                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $att->getValue());
+                }
+            }
         }
 
         $variations = $this->getVariations();

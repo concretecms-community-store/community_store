@@ -57,6 +57,40 @@ $localecount = count($locales);
 
                 <?php } ?>
 
+
+                <?php
+
+                foreach ($optionDetails as $option) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Option Details'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= t($option->getDetails()); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][optionDetails][<?= h($option->getDetails()); ?>]"
+                                       value="<?= $csm->t($option->getDetails(), 'optionDetails', false, false, $lp->getLocale()); ?>"/>
+
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+
+                <?php } ?>
+
                 <?php
 
                 foreach ($optionItems as $option) {
@@ -82,6 +116,39 @@ $localecount = count($locales);
                                 <input type="text" class="form-control"
                                        name="translation[options][<?= $lp->getLocale(); ?>][text][optionValue][<?= h($option->getName()); ?>]"
                                        value="<?= $csm->t($option->getName(), 'optionValue', false, false, $lp->getLocale()); ?>"/>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+
+                <?php } ?>
+
+
+                <?php
+
+                foreach ($optionSelectorNames as $option) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Option Selector Display Label'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= t($option->getSelectorName()); ?></td>
+                            <?php } ?>
+
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][optionSelectorName][<?= h($option->getSelectorName()); ?>]"
+                                       value="<?= $csm->t($option->getSelectorName(), 'optionSelectorName', false, false, $lp->getLocale()); ?>"/>
                             </td>
 
                         </tr>

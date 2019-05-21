@@ -236,8 +236,10 @@ $csm = $app->make('cs/helper/multilingual');
 
                                 <div class="col-sm-12">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
-                                        <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                                        <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
+                                        <div id="store-att-display-<?= $ak->getAttributeKeyHandle(); ?>">
+                                            <label><?= $ak->getAttributeKeyDisplayName()?></label>
+                                            <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
+                                        </div>
                                     <?php } ?>
                                 </div>
 

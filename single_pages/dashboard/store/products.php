@@ -615,6 +615,14 @@ $ps = $app->make('helper/form/page_selector');
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                 </div>
                             </div>
+							<div class="form-group">
+								<?= $form->label("pStackedHeight", t("Stacked Height")); ?>
+								<div class="input-group">
+									<?php $height = $product->getStackedHeight(); ?>
+									<?= $form->text('pStackedHeight', $height ? $height : '0') ?>
+									<div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -779,6 +787,16 @@ $ps = $app->make('helper/form/page_selector');
                                 <input type="hidden" value="0" name="poRequired[]"/>
                                 <% } %>
                             </div>
+                            <% if (poType != 'hidden') { %>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label><?= t('Option Details');?></label>
+                                        <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
 
                             <% if (poType == 'select') { %>
                             <hr/>
@@ -851,6 +869,7 @@ $ps = $app->make('helper/form/page_selector');
                         $type = $option->getType();
                         $displayType = $option->getDisplayType();
                         $handle = $option->getHandle();
+                        $details = $option->getDetails();
                         $required = $option->getRequired();
                         $includeVariations = $option->getIncludeVariations();
 
@@ -876,6 +895,7 @@ $ps = $app->make('helper/form/page_selector');
                             poDisplayType: '<?= $displayType ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
+                            poDetails: '<?= h($details); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
                             poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                             sort: '<?= $optionsort ?>'
@@ -901,6 +921,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poDisplayType: 'select',
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 poIncludeVariations: '0',
                                 sort: temp
@@ -926,6 +947,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'text',
                                 poLabel: '<?= $labels['text']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -946,6 +968,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'textarea',
                                 poLabel: '<?= $labels['textarea']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -966,6 +989,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'checkbox',
                                 poLabel: '<?= $labels['checkbox']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -986,6 +1010,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'hidden',
                                 poLabel: '<?= $labels['hidden']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -1014,6 +1039,8 @@ $ps = $app->make('helper/form/page_selector');
                                             <input type="checkbox" class="optionHiddenToggle" name="poiHiddenToggle[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
                                     </div>
                                 </div>
+                                <br>
+                                <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control" value="<%=poiSelectorName%>">
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
                             </div>
                             <div class="col-sm-2">
@@ -1052,6 +1079,7 @@ $ps = $app->make('helper/form/page_selector');
                         optItemsContainer.append(optItemsTemplate({
                             //vars to pass to the template
                             poiName: '',
+                            poiSelectorName: '',
                             poiID: '',
                             optGroup: group,
                             sort: temp,
@@ -1095,6 +1123,7 @@ $ps = $app->make('helper/form/page_selector');
                         var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
                         optItemsContainer.append(optItemsTemplate({
                             poiName: '<?= h($optionItem->getName())?>',
+                            poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
                             poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
                             sort: <?= $optionItem->getSort()?>,
@@ -1494,7 +1523,7 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-9 store-pane" id="product-page">
 
                 <?php if ($page && !$page->isInTrash()) { ?>
-                    <strong><?= t("Detail Page is set to: ") ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong>
+                    <p><strong><?= t("Detail Page is set to: ") ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong></p>
                     <?= $ps->selectPage('pageCID', $page->getCollectionID()); ?>
                 <?php } else { ?>
 
@@ -1569,52 +1598,53 @@ $ps = $app->make('helper/form/page_selector');
         <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
     </div>
 
-    <div class="ccm-dashboard-content-full">
-        <form role="form" class="form-inline ccm-search-fields">
-            <div class="ccm-search-fields-row">
-                <?php if ($grouplist) {
-                    $currentFilter = '';
-                    ?>
-                    <ul id="group-filters" class="nav nav-pills">
-                        <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
+    <div class="cccm-dashboard-content-inner">
 
-                        <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
-                            <?php
-                            if ($gID) {
-                                foreach ($grouplist as $group) {
-                                    if ($gID == $group->getGroupID()) {
-                                        $currentFilter = $group->getGroupName();
-                                    }
-                                }
-                            } ?>
+        <form role="form" class="form-inline">
+            <div class="row">
+                <div class="ccm-search-fields-submit col-xs-12 col-md-6">
+                    <div class="form-group">
+                        <div class="ccm-search-main-lookup-field">
+                            <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
+                        </div>
 
-
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                <?= $currentFilter ? t('Filtering By: %s', $currentFilter) : t('Filter By Product Group'); ?> <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <?php foreach ($grouplist as $group) { ?>
-                                    <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                    </ul>
-                <?php } ?>
-            </div>
-            <div class="ccm-search-fields-row ccm-search-fields-submit">
-                <div class="form-group">
-                    <div class="ccm-search-main-lookup-field">
-                        <i class="fa fa-search"></i>
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 300px"]) ?>
                     </div>
-
+                    <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
-                <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
-            </div>
+                <div class="col-xs-12 col-md-6">
+                    <?php if ($grouplist) {
+                        $currentFilter = '';
+                        ?>
+                        <ul id="group-filters" class="nav nav-pills">
 
+                            <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
+                                <?php
+                                if ($gID) {
+                                    foreach ($grouplist as $group) {
+                                        if ($gID == $group->getGroupID()) {
+                                            $currentFilter = $group->getGroupName();
+                                        }
+                                    }
+                                } ?>
+
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <?= $currentFilter ? t('Product Group: %s', $currentFilter) : t('Product Group'); ?> <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
+                                    <?php foreach ($grouplist as $group) { ?>
+                                        <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        </ul><br />
+                    <?php } ?>
+                </div>
+            </div>
         </form>
 
+        <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
             <thead>
             <tr>
@@ -1710,6 +1740,7 @@ $ps = $app->make('helper/form/page_selector');
             } ?>
             </tbody>
         </table>
+        </div>
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
             <div class="ccm-search-results-pagination">

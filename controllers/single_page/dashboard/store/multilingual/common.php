@@ -15,7 +15,7 @@ class Common extends DashboardSitePageController
 
         $query = $qb->select('o')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
-            ->groupBy('o.poName')->orderBy('o.poName');
+            ->groupBy('o.poName')->orderBy('o.poName')->getQuery()->getResult();
 
         $optionNames = [];
 
@@ -23,11 +23,25 @@ class Common extends DashboardSitePageController
             $optionNames[$optionName->getName()] = $optionName;
         }
 
-        $this->set("optionNames", array_values($optionNames));
+        $this->set('optionNames', array_values($optionNames));
+
+        $query = $qb->select('od')
+            ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'od')
+            ->groupBy('od.poDetails')->orderBy('od.poDetails')->getQuery()->getResult();
+
+        $optionDetails = [];
+
+        foreach($query as $optionName) {
+            if ($optionName->getDetails()) {
+                $optionDetails[$optionName->getDetails()] = $optionName;
+            }
+        }
+
+        $this->set('optionDetails', array_values($optionDetails));
 
         $query = $qb->select('oi')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'oi')
-            ->groupBy('oi.poiName')->orderBy('oi.poiName');
+            ->groupBy('oi.poiName')->orderBy('oi.poiName')->getQuery()->getResult();
 
         $optionItems = [];
 
@@ -35,7 +49,22 @@ class Common extends DashboardSitePageController
             $optionItems[$optionItem->getName()] = $optionItem;
         }
 
-        $this->set("optionItems", array_values($optionItems));
+        $this->set('optionItems', array_values($optionItems));
+
+
+        $query = $qb->select('ois')
+            ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'ois')
+            ->groupBy('ois.poiSelectorName')->orderBy('ois.poiSelectorName')->getQuery()->getResult();
+
+        $optionSelectorNames = [];
+
+        foreach($query as $optionItem) {
+            if ($optionItem->getSelectorName()) {
+                $optionSelectorNames[$optionItem->getSelectorName()] = $optionItem;
+            }
+        }
+
+        $this->set('optionSelectorNames', array_values($optionSelectorNames));
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);

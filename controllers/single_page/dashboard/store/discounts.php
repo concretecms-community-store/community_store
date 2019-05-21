@@ -19,6 +19,15 @@ class Discounts extends DashboardPageController
         $discountRuleList = new StoreDiscountRuleList();
         $discountRuleList->setItemsPerPage(10);
 
+        $keywords = trim($this->request->query->get('keywords'));
+
+        if ($keywords) {
+            $discountRuleList->setSearch($keywords);
+            Session::set('communitystore.dashboard.discounts.keywords', $keywords);
+        } else {
+            Session::remove('communitystore.dashboard.discounts.keywords');
+        }
+
         $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($discountRuleList);
 
@@ -55,6 +64,7 @@ class Discounts extends DashboardPageController
             }
         }
 
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.discounts.keywords'));
         $this->set('usergroups', $usergrouparray);
         $this->set('selectedproductgroups', []);
         $this->set('selectedusergroups', []);
@@ -88,9 +98,9 @@ class Discounts extends DashboardPageController
             }
         }
 
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.discounts.keywords'));
         $this->set('selectedproductgroups', $discountRule->getProductGroups());
         $this->set('selectedusergroups', $discountRule->getUserGroups());
-
         $this->set('usergroups', $usergrouparray);
     }
 
@@ -109,6 +119,8 @@ class Discounts extends DashboardPageController
             $this->set('failedcodes', Session::get('communitystore.failedcodes'));
             Session::set('communitystore.failedcodes', null);
         }
+
+        $this->set('keywordsSearch', Session::get('communitystore.dashboard.discounts.keywords'));
     }
 
     public function delete()
@@ -119,10 +131,10 @@ class Discounts extends DashboardPageController
 
             if ($dr) {
                 $dr->delete();
+                $this->flash('success', t('Discount Rule Deleted'));
+                $keywordsSearch = Session::get('communitystore.dashboard.discounts.keywords');
+                return Redirect::to('/dashboard/store/discounts' . ($keywordsSearch ? '/?keywords='.urlencode($keywordsSearch) : ''));
             }
-            $this->flash('success', t('Discount Rule Deleted'));
-
-            return Redirect::to('/dashboard/store/discounts');
         }
 
         return Redirect::to('/dashboard/store/discounts');
@@ -137,12 +149,10 @@ class Discounts extends DashboardPageController
             if ($dc) {
                 $ruleid = $dc->getDiscountRule()->getID();
                 $dc->delete();
-
+                $this->flash('success', t('Code Deleted'));
                 return Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
             }
         }
-
-        $this->flash('success', t('Code Deleted'));
 
         return Redirect::to('/dashboard/store/discounts');
     }
@@ -200,15 +210,15 @@ class Discounts extends DashboardPageController
                     StoreDiscountRule::edit($data['drID'], $data);
                     $this->flash('success', t('Discount Rule Updated'));
 
-                    return Redirect::to('/dashboard/store/discounts');
+                    return Redirect::to('/dashboard/store/discounts/edit/' . $data['drID']);
                 } else {
                     $discountrule = StoreDiscountRule::add($data);
                     if ('code' == $discountrule->getTrigger()) {
                         return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
                     } else {
                         $this->flash('success', t('Discount Rule Added'));
-
-                        return Redirect::to('/dashboard/store/discounts');
+                        Session::remove('communitystore.dashboard.discounts.keywords');
+                        return Redirect::to('/dashboard/store/discounts/edit/' . $discountrule->getID());
                     }
                 }
             } else {

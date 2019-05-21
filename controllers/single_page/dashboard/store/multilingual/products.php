@@ -190,7 +190,7 @@ class Products extends DashboardSitePageController
                             $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
                             $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
 
-                            if ($key == 'optionName' || $key == 'optionValue' || $key == 'productAttributeName' ) {
+                            if ($key == 'optionName' || $key == 'optionValue' || $key == 'optionDetails' || $key == 'optionSelectorName' || $key == 'productAttributeName' ) {
                                 $query->andWhere('t.entityID = :entityID')->setParameter('entityID', $id);
                             }
 
@@ -212,7 +212,7 @@ class Products extends DashboardSitePageController
                                 $t->setProductID($productID);
                                 $t->setEntityType($key);
 
-                                if ($key == 'optionName' || $key == 'optionValue' || $key == 'productAttributeName') {
+                                if ($key == 'optionName' || $key == 'optionValue' || $key == 'optionDetails' || $key == 'optionSelectorName' || $key == 'productAttributeName') {
                                     $t->setEntityID($id);
                                 }
 

@@ -1,15 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Concrete\Core\Search\Pagination\Pagination;
-use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 
-class ProductList extends AttributedItemList
+class ProductList extends AttributedItemList implements PaginationProviderInterface
 {
     protected $gIDs = [];
     protected $groupMatchAny = false;
@@ -193,7 +194,7 @@ class ProductList extends AttributedItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\CommunityStore\\Src\\Attribute\\Key\\StoreProductKey';
+        return StoreProductKey::class;
     }
 
     public function createQuery()
@@ -346,6 +347,15 @@ class ProductList extends AttributedItemList
         $pagination = new Pagination($this, $adapter);
 
         return $pagination;
+    }
+
+    public function getPaginationAdapter()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1);
+        });
+
+        return $adapter;
     }
 
     public function getTotalResults()

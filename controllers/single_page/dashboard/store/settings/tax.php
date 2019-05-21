@@ -44,6 +44,7 @@ class Tax extends DashboardPageController
     {
         $this->set("countries", $this->app->make('helper/lists/countries')->getCountries());
         $this->set("states", $this->app->make('helper/lists/states_provinces')->getStates());
+        $this->requireAsset('selectize');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
 
@@ -54,19 +55,17 @@ class Tax extends DashboardPageController
         $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {
+            StoreTaxRate::add($data);
+
             if ($this->request->request->get('taxRateID')) {
-                //update
-                StoreTaxRate::add($data);
+                // update
                 $this->flash('success', t('Tax Rate Updated'));
-
-                return Redirect::to('/dashboard/store/settings/tax');
             } else {
-                //first we send the data to the shipping method type.
-                StoreTaxRate::add($data);
+                // add
                 $this->flash('success', t('Tax Rate Added'));
-
-                return Redirect::to('/dashboard/store/settings/tax');
             }
+
+            return Redirect::to('/dashboard/store/settings/tax');
         } else {
             if ($this->request->request->get('taxRateID')) {
                 $this->edit($this->request->request->get('taxRateID'));
@@ -98,6 +97,7 @@ class Tax extends DashboardPageController
 
     public function add_class()
     {
+        $this->set('pageTitle', t("Add Tax Class"));
         $this->set('task', t("Add"));
         $this->set('tc', new StoreTaxClass());
         $this->set('taxRates', StoreTax::getTaxRates());
@@ -106,6 +106,7 @@ class Tax extends DashboardPageController
 
     public function edit_class($tcID)
     {
+        $this->set('pageTitle', t("Edit Tax Class"));
         $this->set('task', t("Update"));
         $this->set('tc', StoreTaxClass::getByID($tcID));
         $this->set('taxRates', StoreTax::getTaxRates());

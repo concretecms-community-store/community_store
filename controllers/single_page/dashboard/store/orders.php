@@ -11,23 +11,55 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 
 class Orders extends DashboardPageController
 {
-    public function view($status = '')
+    public function view($status = 'all', $paymentMethod = 'all', $paymentStatus = 'all')
     {
+
+        $statusFilter = $status;
+        $paymentMethodFilter  = $paymentMethod;
+        $paymentStatusFilter = $paymentStatus;
+
+        if ($status == 'all') {
+            $statusFilter = '';
+        }
+
+        if ($paymentMethod == 'all') {
+            $paymentMethodFilter = '';
+        }
+
+        if ($paymentStatus == 'all') {
+            $paymentStatusFilter = '';
+        }
+
         $orderList = new StoreOrderList();
 
         if ($this->request->query->get('keywords')) {
             $orderList->setSearch($this->request->query->get('keywords'));
+            $this->set('keywords', $this->request->query->get('keywords'));
         }
 
-        if ($status) {
-            $orderList->setStatus($status);
+        if ($statusFilter) {
+            $orderList->setStatus($statusFilter);
         }
 
-        $orderList->setItemsPerPage(20);
+        if ($paymentMethodFilter) {
+            $orderList->setPaymentMethods($paymentMethodFilter);
+        }
+
+        if ($paymentStatusFilter) {
+            $orderList->setPaymentStatus($paymentStatusFilter);
+        }
+
+        if (Config::get('community_store.numberOfOrders')) {
+            $orderList->setItemsPerPage(Config::get('community_store.numberOfOrders'));
+        } else {     
+            $orderList->setItemsPerPage(20);
+        }
+
 
         if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
             $orderList->setIncludeExternalPaymentRequested(true);
@@ -35,6 +67,7 @@ class Orders extends DashboardPageController
 
         $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
+        $enabledMethods = StorePaymentMethod::getEnabledMethods();
 
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList', $paginator->getCurrentPageResults());
@@ -45,6 +78,9 @@ class Orders extends DashboardPageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('statuses', StoreOrderStatus::getAll());
+        $this->set('paymentMethod', $paymentMethod);
+        $this->set("enabledPaymentMethods", $enabledMethods);
+        $this->set('paymentStatus', $paymentStatus);
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('shoppingDisabled', true);

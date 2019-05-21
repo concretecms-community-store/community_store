@@ -46,7 +46,7 @@ if ($cart) {
             <thead>
             <tr>
                 <th colspan="2"><?= t('Product'); ?></th>
-                <th><?= t('Price'); ?></th>
+                <th class="text-right"><?= t('Price'); ?></th>
                 <th class="text-right"><?= t('Quantity'); ?></th>
                 <th class="text-right"><?= t('Remove'); ?></th>
             </tr>
@@ -122,7 +122,7 @@ if ($cart) {
                             </div>
                         <?php } ?>
                         </td>
-                        <td class="store-cart-item-price">
+                        <td class="store-cart-item-price text-right">
                             <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                 <?=StorePrice::format($cartItem['product']['customerPrice'])?>
                             <?php } else {  ?>
@@ -136,7 +136,7 @@ if ($cart) {
                                 ?>
                             <?php } ?>
                         </td>
-                        <td class="store-cart-product-qty">
+                        <td class="store-cart-product-qty text-right">
                             <?php $quantityLabel = $product->getQtyLabel(); ?>
 
                             <span class="store-qty-container pull-right
@@ -147,9 +147,9 @@ if ($cart) {
                                 <?php if ($product->allowDecimalQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
                                 <?php } else { ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
                                 <?php } ?>
 
                                  <input type="hidden" name="instance[]" value="<?= $k ?>"/>
@@ -198,43 +198,44 @@ if ($cart) {
 
 <?php } ?>
 
-<?php if ($discountsWithCodesExist && $cart) { ?>
-    <h3><?= t('Enter Discount Code'); ?></h3>
-    <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
-        <?= $token->output('community_store'); ?>
-        <div class="form-group">
-            <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
-        </div>
-        <input type="hidden" name="action" value="code"/>
-        <button type="submit" class="store-cart-page-discount-apply btn btn-default"><?= t('Apply'); ?></button>
-    </form>
-<?php } ?>
-
-<?php if ($codesuccess) { ?>
-    <p><?= t('Discount has been applied'); ?></p>
-<?php } ?>
-
-<?php if ($codeerror) { ?>
-    <p><?= t('Invalid code'); ?></p>
-<?php } ?>
-
-<?php if (!empty($discounts)) { ?>
-
-    <p class="store-cart-page-discounts text-right">
-        <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
-        <?php
-        $discountstrings = array();
-        foreach ($discounts as $discount) {
-            $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
-        }
-        echo implode(', ', $discountstrings);
-        ?>
-    </p>
-
-<?php } ?>
-
 
 <?php if ($cart && !empty($cart)) { ?>
+    <?php if ($discountsWithCodesExist && $cart) { ?>
+        <h3><?= t('Enter Discount Code'); ?></h3>
+        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
+            <?= $token->output('community_store'); ?>
+            <div class="form-group">
+                <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
+            </div>
+            <input type="hidden" name="action" value="code"/>
+            <button type="submit" class="store-cart-page-discount-apply btn btn-default"><?= t('Apply'); ?></button>
+        </form>
+    <?php } ?>
+
+    <?php if ($codesuccess) { ?>
+        <p><?= t('Discount has been applied'); ?></p>
+    <?php } ?>
+
+    <?php if ($codeerror) { ?>
+        <p><?= t('Invalid code'); ?></p>
+    <?php } ?>
+
+    <?php if (!empty($discounts)) { ?>
+
+        <p class="store-cart-page-discounts text-right">
+            <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
+            <?php
+            $discountstrings = array();
+            foreach ($discounts as $discount) {
+                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
+            }
+            echo implode(', ', $discountstrings);
+            ?>
+        </p>
+
+    <?php } ?>
+
+
     <p class="store-cart-page-cart-total text-right">
         <strong class="cart-grand-total-label"><?= t("Items Sub Total") ?>:</strong>
         <span class="cart-grand-total-value"><?= StorePrice::format($subTotal) ?></span>

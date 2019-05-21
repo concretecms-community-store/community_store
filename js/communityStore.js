@@ -152,8 +152,6 @@ var communityStore = {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
                 }
-
-                communityStore.refreshCartTotals();
             }
         });
     },
@@ -174,8 +172,6 @@ var communityStore = {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
                 }
-
-                communityStore.refreshCartTotals();
             }
         });
     },
@@ -193,8 +189,6 @@ var communityStore = {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
                 }
-
-                communityStore.refreshCartTotals();
             }
         });
     },
@@ -235,7 +229,6 @@ var communityStore = {
                 var shippingTotal = values.shippingTotal;
                 var shippingTotalRaw = values.shippingTotalRaw;
 
-
                 if (itemCount == 0) {
                     $(".store-utility-links .store-items-counter").text(0);
                     $(".store-utility-links .store-total-cart-amount").text("");
@@ -255,14 +248,12 @@ var communityStore = {
                     $("#shipping-total").text(shippingTotal);
                 }
 
-
                 $("#store-taxes").html("");
                 for (var i = 0; i < taxes.length; i++) {
                     if (taxes[i].taxed === true) {
                         $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
                     }
                 }
-
 
                 $(".store-sub-total-amount").text(subTotal);
                 $(".store-total-amount").text(total);
@@ -285,7 +276,7 @@ var communityStore = {
             pane.addClass('store-active-form-group');
 
             $('html, body').animate({
-                scrollTop: pane.offset().top
+                scrollTop: pane.offset().top - CHECKOUTSCROLLOFFSET
             });
         }
     },
@@ -302,7 +293,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
+            url: HELPERSURL + "/stateprovince/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -326,7 +317,7 @@ var communityStore = {
         }
 
         $.ajax({
-            url: CHECKOUTURL + "/getstates" + TRAILINGSLASH,
+            url: HELPERSURL + "/stateprovince/getstates" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -348,7 +339,7 @@ var communityStore = {
             $(obj).closest(".store-checkout-form-group").addClass('store-checkout-form-group-complete');
 
             $('html, body').animate({
-                scrollTop: pane.offset().top
+                scrollTop: pane.offset().top - CHECKOUTSCROLLOFFSET
             });
 
             pane.find('input').first().focus();
@@ -357,7 +348,7 @@ var communityStore = {
 
     showShippingMethods: function(callback) {
         $.ajax({
-            url: CHECKOUTURL + "/getShippingMethods" + TRAILINGSLASH,
+            url: HELPERSURL + "/shipping/getshippingmethods" + TRAILINGSLASH,
             cache: false,
             dataType: 'text',
             success: function(html) {
@@ -441,8 +432,6 @@ var communityStore = {
             var max = parseFloat(price.data('max'), 2);
 
             var pricerange = price.val();
-            console.log(min + '-' + max);
-            console.log(pricerange);
 
             if (min + '-' + max !== pricerange) {
                 strings.push('price=' + price.val());
@@ -516,8 +505,9 @@ var communityStore = {
 
             var value = '0';
             var displayvalue = '';
+            var isselect = false;
 
-            // look for checkbox
+            // look for checkbox or radio
             if (!field.length) {
                 field = $(el).find("[type=checkbox]").first();
                 var label = $(el).find(".checkbox label").first();
@@ -526,12 +516,17 @@ var communityStore = {
                     label = $(field).next();
                 }
 
-                if (field) {
+                if (field.length) {
                     if (field.is(':checked')) {
                         value = '1';
                         displayvalue = yesvalue;
                     } else {
                         displayvalue = novalue;
+                    }
+                } else {
+                    field = $(el).find('input[type=radio]:checked');
+                    if (field) {
+                        displayvalue = field.closest('label').text().trim();
                     }
                 }
             } else {
@@ -539,10 +534,12 @@ var communityStore = {
 
                 if (field.is('select')) {
                     displayvalue = field.children(':selected').text();
+                    var isselect = true;
                 } else {
                     displayvalue = value;
                 }
             }
+
 
             if (field.length) {
                 displayvalue = displayvalue.replace(/[\n\r]/g, '<br>').trim();
@@ -553,7 +550,16 @@ var communityStore = {
 
                 $('.store-summary-order-choices-' + akID).html(displayvalue);
                 $('#akIDinput' + akID).remove();
-                field.clone().hide().appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+
+                var newfield = field.clone();
+
+                if (isselect) {
+                    newfield.val(field.val());
+                }
+
+                newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+
+
             }
         });
 
@@ -621,7 +627,7 @@ $(document).ready(function() {
             success: function(result) {
                 //var test = null;
                 var response = JSON.parse(result);
-                console.log(response);
+
                 if (response.error == false) {
 
                     if ($('#store-copy-billing').is(":checked")) {
@@ -739,7 +745,7 @@ $(document).ready(function() {
         communityStore.waiting();
         var obj = $(this);
         $.ajax({
-            url: CHECKOUTURL + "/setVatNumber" + TRAILINGSLASH,
+            url: HELPERSURL + "/tax/setvatnumber" + TRAILINGSLASH,
             type: 'post',
             cache: false,
             dataType: 'text',
@@ -799,7 +805,7 @@ $(document).ready(function() {
                     sInstructions: sInstructions,
                     ccm_token: ccm_token
                 },
-                url: CHECKOUTURL + "/selectShipping" + TRAILINGSLASH,
+                url: HELPERSURL + "/shipping/selectshipping" + TRAILINGSLASH,
                 success: function(total) {
                     communityStore.refreshCartTotals(function() {
                         communityStore.nextPane(obj);
@@ -818,7 +824,7 @@ $(document).ready(function() {
         pane.addClass('store-active-form-group');
 
         $('html, body').animate({
-            scrollTop: pane.parent().offset().top
+            scrollTop: pane.parent().offset().top - CHECKOUTSCROLLOFFSET
         });
 
         $(this).closest(".store-checkout-form-group").prev().removeClass("store-checkout-form-group-complete");

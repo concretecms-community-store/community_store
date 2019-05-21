@@ -17,13 +17,28 @@ $token = $app->make('token');
         <p class="store-product-modal-thumb">
             <?php
             $imgObj = $product->getImageObj();
-            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
-            ?>
-            <img src="<?= $thumb->src; ?>">
+            if (!empty($imgObj)) {
+                $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
+                ?>
+                <img src="<?= $thumb->src; ?>">
+            <?php } ?>
         </p>
 
+        <p class="store-product-modal-price">
+            <?php
+            $salePrice = $product->getSalePrice();
+            if (isset($salePrice) && "" != $salePrice) {
+                $formattedSalePrice = $product->getFormattedSalePrice();
+                $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+                echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
+                echo ' ' . t('was') . ' ' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+            } else {
+                $formattedPrice = $product->getFormattedPrice();
+                echo $formattedPrice;
+            }
+            ?>
+        </p>
 
-        <p class="store-product-modal-price"><?= $product->getFormattedPrice(); ?></p>
         <div class="store-product-modal-details">
             <?= $csm->t($product->getDesc(), 'productDetails', $product->getID()); ?>
         </div>
@@ -227,7 +242,7 @@ if ($product->hasVariations()) {
                 var variationdata = <?= json_encode($varationData); ?>;
                 var ar = [];
 
-                $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select').each(function(){
+                $('#store-form-add-to-cart-modal-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-modal-<?= $product->getID(); ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
                 });
 

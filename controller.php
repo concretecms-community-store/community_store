@@ -18,7 +18,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.2.1';
-    protected $pkgVersion = '2.1.3';
+    protected $pkgVersion = '2.1.6.1';
 
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -105,9 +105,14 @@ class Controller extends Package
 
     public function registerRoutes()
     {
+        Route::register('/helpers/stateprovince/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\StateProvince::getStates');
+        Route::register('/helpers/shipping/getshippingmethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Shipping::getShippingMethods');
+        Route::register('/helpers/shipping/selectshipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Shipping::selectShipping');
+        Route::register('/helpers/tax/setvatnumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax::setVatNumber');
+
         Route::register('/productmodal', '\Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductModal::getProductModal');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
-        Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout::downloadFile');
+        Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::downloadFile');
     }
 
     public function registerHelpers()
@@ -205,7 +210,9 @@ class Controller extends Package
             var CARTURL = '" . rtrim(Url::to($langpath . '/cart'), '/') . "';
             var TRAILINGSLASH = '" . ((bool) Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
             var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
+            var HELPERSURL = '" . rtrim(Url::to('/helpers'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
+            var CHECKOUTSCROLLOFFSET = " . Config::get('community_store.checkout_scroll_offset', 0) . ";
         </script>
         ";
     }

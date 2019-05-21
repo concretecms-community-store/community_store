@@ -56,7 +56,7 @@
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showCartButton', 1, !isset($showCartButton) ? true : $showCartButton); ?>
-                <?= t('Show "Add to Cart" Button'); ?>
+                <?= t('Display Add To Cart Button'); ?>
             </label>
         </div>
         <div class="checkbox">

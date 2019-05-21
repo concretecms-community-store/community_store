@@ -472,6 +472,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->text('placesAPIKey', Config::get('community_store.placesAPIKey')); ?>
             </div>
 
+            <h3><?= t('Checkout Scroll Offset'); ?></h3>
+            <div class="form-group">
+                <?= $form->label('checkoutScrollOffset', t('Amount to offset the automatic scroll in the checkout')); ?>
+                <div class="input-group">
+                <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
+                    <div class="input-group-addon"><?= t('px');?></div>
+                </div>
+                <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
+            </div>
+
             <h3><?= t('Company Name'); ?></h3>
             <div class="form-group">
                 <?php $companyField = Config::get('community_store.companyField');
@@ -521,7 +531,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <script>
                 $(document).ready(function() {
-                    $('.selectize').selectize();
+                    $('.selectize').selectize({
+                        plugins: ['remove_button'],
+                        selectOnTab: true
+                    });
                     $('.selectize').removeClass('form-control');
                 });
             </script>
@@ -533,9 +546,22 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Orders'); ?></h3>
             <div class="form-group">
                 <label><?= $form->checkbox('showUnpaidExternalPaymentOrders', '1', Config::get('community_store.showUnpaidExternalPaymentOrders') ? '1' : '0'); ?>
-                    <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)'); ?></label></div>
+                    <?= t('Unhide orders with incomplete payments (i.e. cancelled Paypal transactions)'); ?></label>
+            </div>
+
+            <div class="form-group">
+                <?= $form->label('numberOfOrders', t('Number of orders displayed per page on orders dashboard page')); ?>
+               <?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?>
+            </div>
 
         </div>
+
+
+
+
+
+
+
 
     </div><!-- .row -->
 
