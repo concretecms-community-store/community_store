@@ -247,6 +247,7 @@ if (is_object($product) && $product->isActive()) {
                             $optionType = $option->getType();
                             $required = $option->getRequired();
                             $displayType = $option->getDisplayType();
+                            $details = $option->getDetails();
 
                             $requiredAttr = '';
 
@@ -258,6 +259,11 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+
+                                    <?php if ($details) { ?>
+                                        <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
+                                    <?php } ?>
+
                                     <?php if ('radio' != $displayType) {
                                     ?>
                                     <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
@@ -280,15 +286,24 @@ if (is_object($product) && $product->isActive()) {
                                                 $selected = '';
                                                 if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                                     $selected = 'selected="selected"';
-                                                } ?>
+                                                }
+
+                                                $optionLabel = $optionItem->getName();
+                                                $translateHandle = 'optionValue';
+
+                                                if ($optionItem->getSelectorName()) {
+                                                    $optionLabel = $optionItem->getSelectorName();
+                                                    $translateHandle = 'optionSelectorName';
+                                                }
+                                                ?>
 
                                                 <?php if ($displayType == 'radio') { ?>
                                                     <div class="radio">
                                                         <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                                <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>"/><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())); ?></label>
+                                                                <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>"/><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?></label>
                                                     </div>
                                                 <?php } else { ?>
-                                                    <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
+                                                    <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
 
                                                 <?php
@@ -411,6 +426,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php
                 } ?>
             </div>
+
     </form>
 
     <script type="text/javascript">

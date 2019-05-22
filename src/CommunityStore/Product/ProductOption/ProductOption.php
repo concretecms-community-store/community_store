@@ -57,6 +57,11 @@ class ProductOption
     protected $poHandle;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $poDetails;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $poRequired;
@@ -141,6 +146,16 @@ class ProductOption
         $this->poHandle = $poHandle;
     }
 
+    public function getDetails()
+    {
+        return $this->poDetails;
+    }
+
+    public function setDetails($poDetails)
+    {
+        $this->poDetails = $poDetails;
+    }
+
     public function getRequired()
     {
         return $this->poRequired;
@@ -200,30 +215,31 @@ class ProductOption
         }
     }
 
-    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
+    public static function add($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '', $details = '')
     {
         $ProductOption = new self();
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $details, $ProductOption);
     }
 
-    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '')
+    public function update($product, $name, $sort, $type = '', $handle = '', $required = false, $includeVariations = false, $displayType = '', $details = '')
     {
         $ProductOption = $this;
 
-        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $ProductOption);
+        return self::addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $details, $ProductOption);
     }
 
-    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $obj)
+    public static function addOrUpdate($product, $name, $sort, $type, $handle, $required, $includeVariations, $displayType, $details, $obj)
     {
         $obj->setProduct($product);
         $obj->setName($name);
         $obj->setSort($sort);
         $obj->setType($type);
-        $obj->setDisplayType($displayType);
         $obj->setHandle($handle);
         $obj->setRequired($required);
         $obj->setIncludeVariations($includeVariations);
+        $obj->setDetails($details);
+        $obj->setDisplayType($displayType);
         $obj->save();
 
         return $obj;
@@ -278,13 +294,13 @@ class ProductOption
                         $option = self::getByID($data['poID'][$i]);
 
                         if ($option) {
-                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
+                            $option->update($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i], $data['poDetails'][$i]);
                         }
                     }
 
                     if (!$option) {
                         if ($data['poName'][$i]) {
-                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i]);
+                            $option = self::add($product, $data['poName'][$i], $data['poSort'][$i], $data['poType'][$i], $data['poHandle'][$i], $data['poRequired'][$i], $data['poIncludeVariations'][$i], $data['poDisplayType'][$i], $data['poDetails'][$i]);
                             $product->getOptions()->add($option);
                         }
                     }
@@ -298,11 +314,11 @@ class ProductOption
                                 if ($data['poiID'][$ii] > 0) {
                                     $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
                                     if ($optionItem) {
-                                        $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
+                                        $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiSelectorName'][$ii], $data['poiHidden'][$ii], true);
                                     }
                                 } else {
                                     if ($data['poiName'][$ii]) {
-                                        $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiHidden'][$ii], true);
+                                        $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiSelectorName'][$ii], $data['poiHidden'][$ii], true);
                                         $option->getOptionItems()->add($optionItem);
                                     }
                                 }

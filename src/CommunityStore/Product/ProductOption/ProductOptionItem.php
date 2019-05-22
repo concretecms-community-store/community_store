@@ -39,6 +39,11 @@ class ProductOptionItem
     protected $poiName;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $poiSelectorName;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $poiSort;
@@ -56,6 +61,25 @@ class ProductOptionItem
     private function setName($name)
     {
         $this->poiName = $name;
+    }
+
+    private function setSelectorName($name)
+    {
+        $this->poiSelectorName = $name;
+    }
+
+    public function getSelectorName()
+    {
+        return $this->poiSelectorName;
+    }
+
+    public function getSelectorDisplayValue()
+    {
+        if ($this->poiSelectorName) {
+            return  $this->getSelectorName();
+        }
+
+        return $this->getName();
     }
 
     private function setSort($sort)
@@ -134,11 +158,12 @@ class ProductOptionItem
         }
     }
 
-    public static function add($option, $name, $sort, $hidden = false, $persistonly = false)
+    public static function add($option, $name, $sort, $selectorname, $hidden = false, $persistonly = false)
     {
         $productOptionItem = new self();
         $productOptionItem->setOption($option);
         $productOptionItem->setName($name);
+        $productOptionItem->setSelectorName($selectorname);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
         $productOptionItem->save($persistonly);
@@ -146,9 +171,10 @@ class ProductOptionItem
         return $productOptionItem;
     }
 
-    public function update($name, $sort, $hidden = false, $persistonly = false)
+    public function update($name, $sort, $selectorname, $hidden = false, $persistonly = false)
     {
         $this->setName($name);
+        $this->setSelectorName($selectorname);
         $this->setSort($sort);
         $this->setHidden($hidden);
         $this->save($persistonly);

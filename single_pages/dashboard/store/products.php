@@ -799,6 +799,16 @@ $ps = $app->make('helper/form/page_selector');
                                 <input type="hidden" value="0" name="poRequired[]"/>
                                 <% } %>
                             </div>
+                            <% if (poType != 'hidden') { %>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label><?= t('Option Details');?></label>
+                                        <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
 
                             <% if (poType == 'select') { %>
                             <hr/>
@@ -871,6 +881,7 @@ $ps = $app->make('helper/form/page_selector');
                         $type = $option->getType();
                         $displayType = $option->getDisplayType();
                         $handle = $option->getHandle();
+                        $details = $option->getDetails();
                         $required = $option->getRequired();
                         $includeVariations = $option->getIncludeVariations();
 
@@ -896,6 +907,7 @@ $ps = $app->make('helper/form/page_selector');
                             poDisplayType: '<?= $displayType ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
+                            poDetails: '<?= h($details); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
                             poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                             sort: '<?= $optionsort ?>'
@@ -921,6 +933,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poDisplayType: 'select',
                                 poLabel: '<?= $labels['select']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 poIncludeVariations: '0',
                                 sort: temp
@@ -946,6 +959,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'text',
                                 poLabel: '<?= $labels['text']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -966,6 +980,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'textarea',
                                 poLabel: '<?= $labels['textarea']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -986,6 +1001,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'checkbox',
                                 poLabel: '<?= $labels['checkbox']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -1006,6 +1022,7 @@ $ps = $app->make('helper/form/page_selector');
                                 poType: 'hidden',
                                 poLabel: '<?= $labels['hidden']; ?>',
                                 poHandle: '',
+                                poDetails: '',
                                 poRequired: '',
                                 sort: temp
                             }));
@@ -1034,6 +1051,8 @@ $ps = $app->make('helper/form/page_selector');
                                             <input type="checkbox" class="optionHiddenToggle" name="poiHiddenToggle[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
                                     </div>
                                 </div>
+                                <br>
+                                <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control" value="<%=poiSelectorName%>">
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
                             </div>
                             <div class="col-sm-2">
@@ -1072,6 +1091,7 @@ $ps = $app->make('helper/form/page_selector');
                         optItemsContainer.append(optItemsTemplate({
                             //vars to pass to the template
                             poiName: '',
+                            poiSelectorName: '',
                             poiID: '',
                             optGroup: group,
                             sort: temp,
@@ -1115,6 +1135,7 @@ $ps = $app->make('helper/form/page_selector');
                         var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
                         optItemsContainer.append(optItemsTemplate({
                             poiName: '<?= h($optionItem->getName())?>',
+                            poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
                             poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
                             sort: <?= $optionItem->getSort()?>,
