@@ -55,6 +55,13 @@ class Tax
     public static function getTaxForProduct($cartItem)
     {
         $product = StoreProduct::getByID($cartItem['product']['pID']);
+
+        if ($cartItem['product']['variation']) {
+            $product->shallowClone = true;
+            $product = clone $product;
+            $product->setVariation($cartItem['product']['variation']);
+        }
+
         $qty = $cartItem['product']['qty'];
         $taxRates = self::getTaxRates();
         $taxes = [];
