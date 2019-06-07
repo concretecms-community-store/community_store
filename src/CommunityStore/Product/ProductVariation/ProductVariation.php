@@ -232,7 +232,6 @@ class ProductVariation
     }
 
     /**
-<<<<<<< HEAD
      * @param mixed $pvWholesalePrice
      */
     public function setVariationWholesalePrice($pvWholesalePrice)
@@ -245,10 +244,7 @@ class ProductVariation
     }
 
     /**
-     * @return mixed
-=======
      * @ORM\return mixed
->>>>>>> v2.1.6
      */
     public function getVariationSalePrice()
     {
