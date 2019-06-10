@@ -1366,7 +1366,7 @@ $ps = $app->make('helper/form/page_selector');
                                                             <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data")); ?>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation->getVariationPackageData(), ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
+                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
                                                         </div>
                                                     </div>
                                                 </div>
