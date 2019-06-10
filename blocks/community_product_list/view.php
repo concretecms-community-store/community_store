@@ -27,7 +27,11 @@ if (4 == $productsPerRow) {
 
 if (6 == $productsPerRow) {
     $columnClass = 'col-md-2';
-} ?>
+}
+
+$isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale();
+
+?>
 
 <div class="store-product-list-block">
     <?php if ($products) { ?>
@@ -378,6 +382,12 @@ if (6 == $productsPerRow) {
                                         'available' => ($variation->isSellable()),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',];
+
+                                    if($isWholesale){
+                                        $varationData[$key]['price'] = $product->getFormattedWholesalePrice();
+                                    }
+
+
                                 } ?>
 
 
@@ -393,6 +403,7 @@ if (6 == $productsPerRow) {
 
                                     var pli = $(this).closest('.store-product-list-item');
 
+
                                     if (variationData[ar.join('_')]['saleprice']) {
                                         var pricing = '<span class="store-sale-price">' + variationData[ar.join('_')]['saleprice'] + '</span>' +
                                             ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variationData[ar.join('_')]['price'] + '</span>';
@@ -402,6 +413,7 @@ if (6 == $productsPerRow) {
                                     } else {
                                         pli.find('.store-product-list-price').html(variationData[ar.join('_')]['price']);
                                     }
+
 
                                     if (variationData[ar.join('_')]['available']) {
                                         pli.find('.store-out-of-stock-label').addClass('hidden');

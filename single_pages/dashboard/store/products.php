@@ -146,6 +146,18 @@ $ps = $app->make('helper/form/page_selector');
                             <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), ['placeholder' => 'e.g. 10,20,30']) ?>
                         </div>
                     </div>
+                    <div class="col-xs-6">
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
+                            <?= $form->label("pWholesalePrice", t("Wholesale Price"), array('class'=>$priceclass));?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?= Config::get('community_store.symbol');?>
+                                </div>
+                                <?php $wholesalePrice = $product->getWholesalePrice(); ?>
+                                <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>'No Wholesale Price Set'));?>
+                            </div>
+                        </div>
+                    </div>
 
                     <script>
                         $(document).ready(function () {
@@ -1245,6 +1257,19 @@ $ps = $app->make('helper/form/page_selector');
                                                             <?= Config::get('community_store.symbol'); ?>
                                                         </div>
                                                         <?= $form->text("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['placeholder' => t('Base Price')]); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-md-4">
+                                                    <?= $form->label("", t("Wholesale Price")); ?>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <?= Config::get('community_store.symbol'); ?>
+                                                        </div>
+                                                        <?= $form->text("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['placeholder' => t('Wholesale Price')]); ?>
                                                     </div>
                                                 </div>
                                             </div>

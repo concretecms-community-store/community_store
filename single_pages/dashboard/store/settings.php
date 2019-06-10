@@ -289,9 +289,15 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <div class="form-group">
                         <?= $form->label('customerGroup', t('User Group to Put Customers in')); ?>
                         <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
-                        <div class="alert alert-warning">
-                            <?= t("If you change group remember to switch your existing customers over to the new group"); ?>
-                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <?= $form->label('wholesaleCustomerGroup', t('User Group to Put Whole Customers in')); ?>
+                        <?= $form->select('wholesaleCustomerGroup', $groupList, $wholesaleCustomerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <?= t("If you change group remember to switch your existing customers over to the new group"); ?>
                     </div>
 
                 </div>

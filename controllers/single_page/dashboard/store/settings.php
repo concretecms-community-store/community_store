@@ -65,6 +65,19 @@ class Settings extends DashboardPageController
         $this->set('customerGroup', $customerGroupID);
         $this->set('customerGroupName', $customerGroupName);
 
+
+        $wholesaleCustomerGroupID = Config::get('community_store.wholesaleCustomerGroup');
+
+        if ($wholesaleCustomerGroupID) {
+            $wholesaleCustomerGroup = Group::getByID($wholesaleCustomerGroupID);
+
+            if (!$wholesaleCustomerGroup || !is_object($wholesaleCustomerGroup)) {
+                $wholesaleCustomerGroupID = null;
+            }
+        }
+
+        $this->set('wholesaleCustomerGroup', $wholesaleCustomerGroupID);
+
         $fsl = new SetList();
         $fileSets = $fsl->get();
         $sets = [];
@@ -156,6 +169,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
                 Config::save('community_store.customerGroup', $args['customerGroup']);
+                Config::save('community_store.wholesaleCustomerGroup', $args['wholesaleCustomerGroup']);
                 Config::save('community_store.digitalDownloadFileSet', $args['digitalDownloadFileSet']);
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
                 Config::save('community_store.defaultSingleProductThumbType', $args['defaultSingleProductThumbType']);

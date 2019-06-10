@@ -4,11 +4,17 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
+use Database;
+use Config;
 
 class Tax
 {
     public static function getTaxRates()
     {
+        if(Wholesale::isUserWholesale()){
+            return $taxRates = [];
+        }
         $em = dbORM::entityManager();
         $taxRates = $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
 
