@@ -361,12 +361,20 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
-                            $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
+                            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
+                            $imgDescription = $imgObj->getDescription();
+                            if ($imgDescription) {
+                                $imgTitle = $imgDescription;
+                            } else {
+                                $imgTitle = $imgObj->getTitle();
+                            }
+                            ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
-                                   title="<?= h($product->getName()); ?>"
+                                   title="<?= h($imgObj->getTitle()); ?>"
                                    class="store-product-thumb text-center center-block">
-                                    <img src="<?= $thumb->src; ?>">
+                                    <img src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
+                                         alt="<?= h($imgTitle); ?>">
                                 </a>
                             </div>
                             <?php
@@ -385,12 +393,19 @@ if (is_object($product) && $product->isActive()) {
 
                             foreach ($images as $secondaryImage) {
                                 if (is_object($secondaryImage)) {
-                                    $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage); ?>
+                                    $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage);
+                                    $imgDescription = $secondaryImage->getDescription();
+                                    if ($imgDescription) {
+                                        $imgTitle = $imgDescription;
+                                    } else {
+                                        $imgTitle = $secondaryImage->getTitle();
+                                    }
+                                    ?>
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
                                                 class="store-product-thumb text-center center-block"><img
-                                                    src="<?= $thumb->src; ?>"/></a></div>
+                                                    src="<?= $thumb->src; ?>" title="<?= h($secondaryImage->getTitle()) ?>" alt="<?= h($imgTitle); ?>"/></a></div>
                                     <?php
                                 }
 
