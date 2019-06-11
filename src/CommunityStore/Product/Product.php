@@ -1593,7 +1593,16 @@ class Product
             foreach ($attributes as $att) {
                 $ak = $att->getAttributeKey();
                 if ($ak && is_object($ak)) {
-                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $att->getValue());
+
+                    $value = $att->getValue();
+
+                    if (is_object($value)) {
+                        $newvalue = clone $value;
+                    } else {
+                        $newvalue = $value;
+                    }
+
+                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $newvalue);
                 }
             }
         }
