@@ -133,10 +133,15 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
+        $product = false;
+
         if ('page' == $this->productLocation) {
             $page = $this->getCollectionObject();
-            $cID = $page->getCollectionID();
-            $product = StoreProduct::getByCollectionID($cID);
+
+            if ($page) {
+                $cID = $page->getCollectionID();
+                $product = StoreProduct::getByCollectionID($cID);
+            }
         } else {
             $product = StoreProduct::getByID($this->pID);
         }
