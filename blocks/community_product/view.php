@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $communityStoreImageHelper = $app->make('cs/helper/image', ['single_product']);
 $csm = $app->make('cs/helper/multilingual');
 
+$isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale();
 
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
@@ -43,21 +44,31 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
-                            $salePrice = $product->getSalePrice();
-                            if (isset($salePrice) && "" != $salePrice) {
-                                $formattedSalePrice = $product->getFormattedSalePrice();
-                                $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-                                echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
-                                echo '&nbsp;' . t('was') . '&nbsp;';
-                                echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
-                                echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
+                            if($isWholesale){
+                                $msrp = $product->getFormattedOriginalPrice();
+                                $wholesalePrice = $product->getWholesalePrice();
+                                $formattedWholesalePrice = $product->getFormattedWholesalePrice();
+
+                                echo t('List Price'). ': '  .$msrp . '<br />' . t('Wholesale Price') .': ' . $formattedWholesalePrice;
+                                echo '<meta itemprop="price" content="' . $wholesalePrice .'" />';
+    
                             } else {
-                                $price = $product->getPrice();
+                                $salePrice = $product->getSalePrice();
+                                if (isset($salePrice) && "" != $salePrice) {
+                                    $formattedSalePrice = $product->getFormattedSalePrice();
+                                    $formattedOriginalPrice = $product->getFormattedOriginalPrice();
+                                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
+                                    echo '&nbsp;' . t('was') . '&nbsp;';
+                                    echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+                                    echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
+                                } else {
+                                    $price = $product->getPrice();
 
-                                $formattedPrice = $product->getFormattedPrice();
+                                    $formattedPrice = $product->getFormattedPrice();
 
-                                echo $formattedPrice;
-                                echo '<meta itemprop="price" content="' . $price . '" />';
+                                    echo $formattedPrice;
+                                    echo '<meta itemprop="price" content="' . $price . '" />';
+                                }
                             } ?>
                         </p>
                         <?php
@@ -361,12 +372,20 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         $imgObj = $product->getImageObj();
                         if (is_object($imgObj)) {
-                            $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
+                            $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
+                            $imgDescription = $imgObj->getDescription();
+                            if ($imgDescription) {
+                                $imgTitle = $imgDescription;
+                            } else {
+                                $imgTitle = $imgObj->getTitle();
+                            }
+                            ?>
                             <div class="store-product-primary-image ">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
-                                   title="<?= h($product->getName()); ?>"
+                                   title="<?= h($imgObj->getTitle()); ?>"
                                    class="store-product-thumb text-center center-block">
-                                    <img src="<?= $thumb->src; ?>">
+                                    <img src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
+                                         alt="<?= h($imgTitle); ?>">
                                 </a>
                             </div>
                             <?php
@@ -385,12 +404,19 @@ if (is_object($product) && $product->isActive()) {
 
                             foreach ($images as $secondaryImage) {
                                 if (is_object($secondaryImage)) {
-                                    $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage); ?>
+                                    $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage);
+                                    $imgDescription = $secondaryImage->getDescription();
+                                    if ($imgDescription) {
+                                        $imgTitle = $imgDescription;
+                                    } else {
+                                        $imgTitle = $secondaryImage->getTitle();
+                                    }
+                                    ?>
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
                                                 class="store-product-thumb text-center center-block"><img
-                                                    src="<?= $thumb->src; ?>"/></a></div>
+                                                    src="<?= $thumb->src; ?>" title="<?= h($secondaryImage->getTitle()) ?>" alt="<?= h($imgTitle); ?>"/></a></div>
                                     <?php
                                 }
 
@@ -451,6 +477,10 @@ if (is_object($product) && $product->isActive()) {
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                 ];
+
+                if($isWholesale){
+                    $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
+                }
             } ?>
 
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
@@ -464,14 +494,20 @@ if (is_object($product) && $product->isActive()) {
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
 
-                if (variationData[ar.join('_')]['saleprice']) {
-                    var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
-                        '<?= t('was'); ?>' +
-                        '&nbsp;<span class="store-original-price ">' + variationData[ar.join('_')]['price'] + '</span>';
-
-                    pdb.find('.store-product-price').html(pricing);
+                if(variationData[ar.join('_')]['wholesalePrice']){
+                    pdb.find('.store-product-price').html(
+                        '<?= t('List Price');?>: '+variationData[ar.join('_')]['price']+
+                        '<br /><?= t('Wholesale Price');?>: '+variationData[ar.join('_')]['wholesalePrice']);
                 } else {
-                    pdb.find('.store-product-price').html(variationData[ar.join('_')]['price']);
+                    if (variationData[ar.join('_')]['saleprice']) {
+                        var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
+                            '<?= t('was'); ?>' +
+                            '&nbsp;<span class="store-original-price ">' + variationData[ar.join('_')]['price'] + '</span>';
+
+                        pdb.find('.store-product-price').html(pricing);
+                    } else {
+                        pdb.find('.store-product-price').html(variationData[ar.join('_')]['price']);
+                    }
                 }
 
                 if (variationData[ar.join('_')]['available']) {

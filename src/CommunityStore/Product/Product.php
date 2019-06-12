@@ -23,6 +23,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated as
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent as StoreProductEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
@@ -76,6 +77,11 @@ class Product
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pWholesalePrice;
+
+    /**
+     * @Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pSalePrice;
 
@@ -462,7 +468,10 @@ class Product
     {
         $this->pPrice = ('' != $price ? $price : 0);
     }
-
+    public function setWholesalePrice($price)
+    {
+        $this->pWholesalePrice = ($price != '' ? $price : 0);
+    }
     public function setSalePrice($price)
     {
         $this->pSalePrice = ('' != $price ? $price : null);
@@ -784,6 +793,7 @@ class Product
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
+        $product->setWholesalePrice($data['pWholesalePrice']);
         $product->setSalePrice($data['pSalePrice']);
         $product->setIsFeatured($data['pFeatured']);
         $product->setQty($data['pQty']);
@@ -956,8 +966,21 @@ class Product
         return $price;
     }
 
-    private function getQuantityAdjustedPrice($qty = 1)
+    public function getWholesalePrice($qty = 1)
     {
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            if ($variation) {
+                $varWholesalePrice = $variation->getVariationWholesalePrice();
+
+                if ($varWholesalePrice) {
+                    return $varWholesalePrice;
+                }
+            }
+        }
+        return $this->pWholesalePrice;
+    }
+
+    private function getQuantityAdjustedPrice($qty = 1) {
         if ($this->hasQuantityPrice()) {
             $priceTiers = $this->getPriceTiers();
 
@@ -987,6 +1010,11 @@ class Product
         return StorePrice::format($this->getActivePrice());
     }
 
+    public function getFormattedWholesalePrice()
+    {
+        return StorePrice::format($this->getWholesalePrice());
+    }
+
     public function getSalePrice()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -1013,11 +1041,14 @@ class Product
     }
 
     public function getActivePrice($qty = 1)
-    {
-        $salePrice = $this->getSalePrice();
-        if ("" != $salePrice) {
-            return $salePrice;
+    {   
+        if(Wholesale::isUserWholesale()){
+            return $this->getWholesalePrice();
         } else {
+            $salePrice = $this->getSalePrice();
+            if ($salePrice != "") {
+                return $salePrice;
+            }
             return $this->getPrice($qty);
         }
     }
@@ -1562,7 +1593,16 @@ class Product
             foreach ($attributes as $att) {
                 $ak = $att->getAttributeKey();
                 if ($ak && is_object($ak)) {
-                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $att->getValue());
+
+                    $value = $att->getValue();
+
+                    if (is_object($value)) {
+                        $newvalue = clone $value;
+                    } else {
+                        $newvalue = $value;
+                    }
+
+                    $newproduct->setAttribute($ak->getAttributeKeyHandle(), $newvalue);
                 }
             }
         }

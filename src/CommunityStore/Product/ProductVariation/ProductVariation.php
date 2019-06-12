@@ -34,6 +34,11 @@ class ProductVariation
     protected $pvPrice;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pvWholesalePrice;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $pvSKU;
@@ -201,6 +206,14 @@ class ProductVariation
         return $this->pvPrice;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getVariationWholesalePrice()
+    {
+        return $this->pvWholesalePrice;
+    }
+
     public function getFormattedVariationPrice()
     {
         return StorePrice::format($this->pvPrice);
@@ -215,6 +228,18 @@ class ProductVariation
             $this->pvPrice = (float) $pvPrice;
         } else {
             $this->pvPrice = null;
+        }
+    }
+
+    /**
+     * @param mixed $pvWholesalePrice
+     */
+    public function setVariationWholesalePrice($pvWholesalePrice)
+    {
+        if ($pvWholesalePrice != '') {
+            $this->pvWholesalePrice = (float)$pvWholesalePrice;
+        } else {
+            $this->pvWholesalePrice = null;
         }
     }
 
@@ -453,6 +478,7 @@ class ProductVariation
                         [
                         'pvSKU' => '',
                         'pvPrice' => '',
+                        'pvWholesalePrice'=>'',
                         'pvSalePrice' => '',
                         'pvQty' => 0,
                         'pvQtyUnlim' => null,
@@ -481,6 +507,7 @@ class ProductVariation
 
                     $variation->setVariationSKU($data['pvSKU'][$key]);
                     $variation->setVariationPrice($data['pvPrice'][$key]);
+                    $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationQty($data['pvQty'][$key]);
                     $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
@@ -551,6 +578,7 @@ class ProductVariation
         $variation->setProductID($productID);
         $variation->setVariationSKU($data['pvSKU']);
         $variation->setVariationPrice($data['pvPrice']);
+        $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
         $variation->setVariationQty($data['pvQty']);
         $variation->setVariationQtyUnlim($data['pvQtyUnlim']);

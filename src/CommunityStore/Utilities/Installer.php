@@ -226,6 +226,15 @@ class Installer
         }
 
         Config::save('community_store.customerGroup', $group->getGroupID());
+
+        $group = Group::getByName('Wholesale Customer');
+        
+        if (!$group || $group->getGroupID() < 1) {
+            $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
+        }
+
+        Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
+
     }
 
     public static function installUserAttributes($pkg)
