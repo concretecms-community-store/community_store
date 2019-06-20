@@ -93,7 +93,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
 
         $productPage = $product->getProductPage();
 
-        if ($productPage->isError() || $productPage->isInTrash()) {
+        if (!$productPage || $productPage->isError() || $productPage->isInTrash()) {
             $productPage = false;
         } ?>
 
