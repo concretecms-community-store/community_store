@@ -1172,7 +1172,7 @@ msgstr "Salva ordine degli articoli nella categoria"
 #: packages/community_store/single_pages/dashboard/store/products/groups.php:13
 #: packages/community_store/controllers/single_page/dashboard/store/products/groups.php:23
 msgid "Add Product Group"
-msgstr ""
+msgstr "Aggiungi gruppo di prodotti"
 
 #: packages/community_store/single_pages/dashboard/store/products/groups.php:21
 #: packages/community_store/single_pages/dashboard/store/products/groups.php:64
@@ -1185,7 +1185,7 @@ msgstr "Non è stato ancora creato alcun gruppo"
 
 #: packages/community_store/single_pages/dashboard/store/products/groups.php:68
 msgid "Products within group"
-msgstr ""
+msgstr "Prodotti all'interno del gruppo"
 
 #: packages/community_store/single_pages/dashboard/store/products/groups.php:137
 #: packages/community_store/single_pages/dashboard/store/discounts.php:420
@@ -1241,7 +1241,7 @@ msgstr "Esporta CSV"
 #: packages/community_store/single_pages/dashboard/store/orders.php:636
 #: packages/community_store/controllers/single_page/dashboard/store/reports/products.php:136
 msgid "Incomplete"
-msgstr ""
+msgstr "Incompleto"
 
 #: packages/community_store/single_pages/dashboard/store/reports/products.php:155
 msgid "Total Quantity Sold"
@@ -1319,7 +1319,7 @@ msgstr "Aggiungi regola di sconto"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:29
 msgid "Displayed Text"
-msgstr ""
+msgstr "Testo visualizzato"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:31
 msgid "Applies"
@@ -1331,11 +1331,11 @@ msgstr "Disponibilità"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:49
 msgid "from all products"
-msgstr ""
+msgstr "da tutti i prodotti"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:53
 msgid "from matching products"
-msgstr ""
+msgstr "dai prodotti corrispondenti"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:57
 msgid "from shipping when at least one product matches"
@@ -1349,7 +1349,7 @@ msgstr ""
 #: packages/community_store/single_pages/dashboard/store/discounts.php:66
 #: packages/community_store/single_pages/dashboard/store/orders.php:221
 msgid "from each product"
-msgstr ""
+msgstr "da ogni prodotto"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:70
 #: packages/community_store/single_pages/dashboard/store/discounts.php:74
@@ -1369,7 +1369,7 @@ msgstr ""
 #: packages/community_store/single_pages/dashboard/store/discounts.php:86
 #: packages/community_store/single_pages/dashboard/store/orders.php:237
 msgid "set as price for shipping"
-msgstr ""
+msgstr "imposta come prezzo per tutti i prodotti"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:94
 #: packages/community_store/single_pages/dashboard/store/settings.php:296
@@ -1458,15 +1458,15 @@ msgstr "Percentuale"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:260
 msgid "Deduct value once"
-msgstr ""
+msgstr "Detrai un valore (una sola volta)"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:261
 msgid "Deduct value from each matching item"
-msgstr ""
+msgstr "Deduci un valore per ogni articolo corrispondente"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:262
 msgid "Change to value"
-msgstr ""
+msgstr "Cambia in valore"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:274
 msgid "Percentage Discount"
@@ -1478,7 +1478,7 @@ msgstr "Valore"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:302
 msgid "Apply To"
-msgstr ""
+msgstr "Applica a"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:306
 msgid "Items In Cart"
@@ -1554,11 +1554,11 @@ msgstr ""
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:394
 msgid "Minimum Quantity in Cart"
-msgstr ""
+msgstr "Quantità minima nel carrello"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:400
 msgid "Maximum Quantity in Cart"
-msgstr ""
+msgstr "Quantità massima nel carrello"
 
 #: packages/community_store/single_pages/dashboard/store/discounts.php:409
 msgid "Description / Notes"
@@ -1732,11 +1732,11 @@ msgstr "Aggiorna stato avanzamento"
 
 #: packages/community_store/single_pages/dashboard/store/orders.php:377
 msgid "Resend Notification Email"
-msgstr ""
+msgstr "Rinvia email di notifica"
 
 #: packages/community_store/single_pages/dashboard/store/orders.php:385
 msgid "Resend Notification"
-msgstr ""
+msgstr "Rinvia notifica"
 
 #: packages/community_store/single_pages/dashboard/store/orders.php:406
 msgid "Date / Reference"
@@ -1789,7 +1789,7 @@ msgstr "Invia nuovamente email della ricevuta"
 
 #: packages/community_store/single_pages/dashboard/store/orders.php:508
 msgid "Resend Invoice"
-msgstr "Re-invia ricevuta"
+msgstr "Rinvia ricevuta"
 
 #: packages/community_store/single_pages/dashboard/store/orders.php:519
 #: packages/community_store/single_pages/dashboard/store/orders.php:521
@@ -2682,7 +2682,7 @@ msgstr ""
 
 #: packages/community_store/single_pages/dashboard/store/settings.php:315
 msgid "Billing Details"
-msgstr ""
+msgstr "Dettagli (fatturazione)"
 
 #: packages/community_store/single_pages/dashboard/store/settings.php:320
 msgid "Do not save billing details to user on order"
@@ -2840,7 +2840,7 @@ msgstr "Acquista come ospite"
 
 #: packages/community_store/single_pages/checkout.php:61
 msgid "Customer Information"
-msgstr ""
+msgstr "Dati cliente"
 
 #: packages/community_store/single_pages/checkout.php:78
 #: packages/community_store/single_pages/checkout.php:79
@@ -2866,12 +2866,12 @@ msgstr ""
 #: packages/community_store/single_pages/checkout.php:111
 #: packages/community_store/single_pages/checkout.php:286
 msgid "Street Address"
-msgstr ""
+msgstr "Indirizzo"
 
 #: packages/community_store/single_pages/checkout.php:116
 #: packages/community_store/single_pages/checkout.php:291
 msgid "Apartment, unit, etc (optional)"
-msgstr ""
+msgstr "Piano, appartamento, etc. (opzionale)"
 
 #: packages/community_store/single_pages/checkout.php:138
 #: packages/community_store/single_pages/checkout.php:313
@@ -3249,15 +3249,15 @@ msgstr "Regola di sconto eliminata"
 
 #: packages/community_store/controllers/single_page/dashboard/store/discounts.php:140
 msgid "Code Deleted"
-msgstr ""
+msgstr "Codice cancellato"
 
 #: packages/community_store/controllers/single_page/dashboard/store/discounts.php:177
 msgid "Code Added"
-msgstr ""
+msgstr "Codice aggiunto"
 
 #: packages/community_store/controllers/single_page/dashboard/store/discounts.php:177
 msgid "Codes Added"
-msgstr ""
+msgstr "Codici aggiunti"
 
 #: packages/community_store/controllers/single_page/dashboard/store/discounts.php:194
 msgid "Discount Rule Updated"
@@ -3273,7 +3273,7 @@ msgstr ""
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:93
 msgid "Order Marked As Paid"
-msgstr ""
+msgstr "Ordine contrassegnato come pagato"
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:105
 msgid "Order Payment Reversed"
@@ -3281,7 +3281,7 @@ msgstr ""
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:119
 msgid "Order Marked As Refunded"
-msgstr ""
+msgstr "Ordine contrassegnato come rimborsato"
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:131
 msgid "Order Refund Reversed"
@@ -3289,7 +3289,7 @@ msgstr ""
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:144
 msgid "Order Cancelled"
-msgstr ""
+msgstr "Ordine cancellato"
 
 #: packages/community_store/controllers/single_page/dashboard/store/orders.php:155
 msgid "Order Cancellation Reversed"
