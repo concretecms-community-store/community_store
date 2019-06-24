@@ -50,7 +50,7 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
-        self::installSinglePage('/dashboard/store/manufactures/', $pkg);
+        self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
 
         if (!$upgrade) {
             self::installSinglePage('/cart', $pkg);
