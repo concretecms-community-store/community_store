@@ -40,33 +40,33 @@ if (is_object($product) && $product->isActive()) {
                         <?php
                         if ($product->getManufacturer() > 0) {
                             ?>
-                            <p><?= t("Brand: ") ?> <span class="store-product-brand" itemprop="brand"><?= t($manufacturer->getName()); ?> </span>
+                            <p><?= t('Brand') ?>: <span class="store-product-brand" itemprop="brand"><?= t($manufacturer->getName()); ?> </span>
                             </p>
                             <?php
                         }
                         if ($product->getUPC()) {
                             ?>
-                            <p><?= t("UPC: ") ?> <span class="store-product-upc" itemprop="gtin12"><?= t($product->getUPC()); ?> </span></p>
+                            <p><?= t('UPC') ?>: <span class="store-product-upc" itemprop="gtin12"><?= t($product->getUPC()); ?> </span></p>
                             <?php
                         }
                         if ($product->getEAN()) {
                             ?>
-                            <p><?= t("EAN : ") ?> <span class="store-product-ean" itemprop="gtin14"><?= t($product->getEAN()); ?> </span></p>
+                            <p><?= t('EAN') ?>: <span class="store-product-ean" itemprop="gtin14"><?= t($product->getEAN()); ?> </span></p>
                             <?php
                         }
                         if ($product->getISBN()) {
                             ?>
-                            <p><?= t("ISBN : ") ?> <span class="store-product-isbn" itemprop="gtin13"><?= t($product->getISBN()); ?> </span></p>
+                            <p><?= t('ISBN') ?>: <span class="store-product-isbn" itemprop="gtin13"><?= t($product->getISBN()); ?> </span></p>
                             <?php
                         }
                         if ($product->getJAN()) {
                             ?>
-                            <p><?= t("JAN : ") ?> <span class="store-product-jan" itemprop="gtin13"><?= t($product->getJAN()); ?> </span></p>
+                            <p><?= t('JAN') ?>: <span class="store-product-jan" itemprop="gtin13"><?= t($product->getJAN()); ?> </span></p>
                             <?php
                         }
                         if ($product->getMPN()) {
                             ?>
-                            <p><?= t("MPN : ") ?> <span class="store-product-mpn" itemprop="mpn"><?= t($product->getMPN()); ?> </span></p>
+                            <p><?= t('MPN') ?>: <span class="store-product-mpn" itemprop="mpn"><?= t($product->getMPN()); ?> </span></p>
                             <?php
                         }
                         ?>
