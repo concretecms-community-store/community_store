@@ -317,6 +317,11 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+
+                                    <?php if ($details) { ?>
+                                        <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
+                                    <?php } ?>
+
                                     <input class="store-product-option-entry form-control" <?= $requiredAttr; ?>
                                            name="pt<?= $option->getID(); ?>"/>
                                 </div>
@@ -325,6 +330,11 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+
+                                    <?php if ($details) { ?>
+                                        <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
+                                    <?php } ?>
+
                                     <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?>
                                               name="pa<?= $option->getID(); ?>"></textarea>
                                 </div>
@@ -339,6 +349,11 @@ if (is_object($product) && $product->isActive()) {
                                         <input type="checkbox" value="<?= t('yes'); ?>"
                                                class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> <?= $option->getHandle(); ?>"
                                                name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+
+                                    <?php if ($details) { ?>
+                                        <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
+                                    <?php } ?>
+
                                 </div>
                                 <?php
                             } elseif ('hidden' == $optionType) {
