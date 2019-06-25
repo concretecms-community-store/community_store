@@ -287,12 +287,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <?= $form->label('customerGroup', t('User Group to Put Customers in')); ?>
+                        <?= $form->label('customerGroup', t('Customers User Group')); ?>
                         <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label('wholesaleCustomerGroup', t('User Group to Put Whole Customers in')); ?>
+                        <?= $form->label('wholesaleCustomerGroup', t('Wholesale Customers User Group')); ?>
                         <?= $form->select('wholesaleCustomerGroup', $groupList, $wholesaleCustomerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
                     </div>
 
