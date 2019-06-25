@@ -710,7 +710,7 @@ use \Concrete\Core\User\UserInfoRepository;
                     </td>
                     <td><?= t(ucwords($order->getStatus())) ?></td>
                     <td>
-                        <div class="btn-group">
+                        <div class="btn-group" style="width:100px">
                             <a class="btn btn-primary btn-sm"
                                href="<?= Url::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

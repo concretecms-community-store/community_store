@@ -1740,7 +1740,7 @@ $ps = $app->make('helper/form/page_selector');
                             <?php } ?>
                         </td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group" style="width:120px">
                                 <a class="btn btn-sm btn-primary"
                                    href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= t("Manage") ?></a>
                                 <?php if ($multilingualEnabled) { ?>
