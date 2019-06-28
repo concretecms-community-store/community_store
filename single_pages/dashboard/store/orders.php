@@ -624,7 +624,7 @@ use \Concrete\Core\User\UserInfoRepository;
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/all/' . $pm->getHandle() . '/' . $paymentStatus.$keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
+                            <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
                             <?php foreach($statuses as $statusoption){ ?>
                                 <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
                             <?php } ?>
