@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Event;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
-class CommunityStoreBasketEvent extends CommunityStoreEvent {
+class CommunityStoreCartEvent extends CommunityStoreEvent {
     /** @var Product */
     private $product;
 
@@ -39,7 +39,7 @@ class CommunityStoreBasketEvent extends CommunityStoreEvent {
 
     /**
      * @param array|null $data
-     * @return CommunityStoreBasketEvent
+     * @return CommunityStoreCartEvent
      */
     public function setData($data)
     {
