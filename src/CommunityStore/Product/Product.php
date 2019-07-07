@@ -250,6 +250,36 @@ class Product
      */
     protected $pNotificationEmails;
 
+    /**
+     * @ORM\Column(type="integer",nullable=false)
+     */
+    protected $pManufacturer;
+
+    /**
+     * @ORM\Column(type="text",length=12,nullable=true)
+     */
+    protected $pUpc;
+
+    /**
+     * @ORM\Column(type="text",length=14,nullable=true)
+     */
+    protected $pEan;
+
+    /**
+     * @ORM\Column(type="text",length=13,nullable=true)
+     */
+    protected $pJan;
+
+    /**
+     * @ORM\Column(type="text",length=13,nullable=true)
+     */
+    protected $pIsbn;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $pMpn;
+
 
     // not stored, used for price/sku/etc lookup purposes
     protected $variation;
@@ -725,6 +755,67 @@ class Product
         $this->pNotificationEmails = trim($pNotificationEmails);
     }
 
+    public function getManufacturer()
+    {
+        return $this->pManufacturer;
+    }
+
+    public function setManufacturer($pManufacturer)
+    {
+        $this->pManufacturer = $pManufacturer;
+    }
+
+    public function getMPN()
+    {
+        return $this->pMpn;
+    }
+
+    public function setMPN($pMpn)
+    {
+        $this->pMpn = $pMpn;
+    }
+
+    public function getISBN()
+    {
+        return $this->pIsbn;
+    }
+
+    public function setISBN($pIsbn)
+    {
+        $this->pIsbn = $pIsbn;
+    }
+
+    public function getJAN()
+    {
+        return $this->pJan;
+    }
+
+    public function setJAN($pJan)
+    {
+        $this->pJan = $pJan;
+    }
+
+    public function getEAN()
+    {
+        return $this->pEan;
+    }
+
+    public function setEAN($pEan)
+    {
+        $this->pEan = $pEan;
+    }
+
+    public function getUPC()
+    {
+        return $this->pUpc;
+    }
+
+    public function setUPC($pUpc)
+    {
+        $this->pUpc = $pUpc;
+    }
+
+
     public function updateProductQty($qty)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -827,6 +918,12 @@ class Product
         $product->setMaxQty($data['pMaxQty']);
         $product->setPageID($data['pageCID']);
         $product->setNotificationEmails($data['pNotificationEmails']);
+        $product->setManufacturer($data['pManufacturer']);
+        $product->setMPN($data['pMpn']);
+        $product->setISBN($data['pIsbn']);
+        $product->setJAN($data['pJan']);
+        $product->setEAN($data['pEan']);
+        $product->setUPC($data['pUpc']);
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {
@@ -1593,15 +1690,12 @@ class Product
             foreach ($attributes as $att) {
                 $ak = $att->getAttributeKey();
                 if ($ak && is_object($ak)) {
-
                     $value = $att->getValue();
-
                     if (is_object($value)) {
                         $newvalue = clone $value;
                     } else {
                         $newvalue = $value;
                     }
-
                     $newproduct->setAttribute($ak->getAttributeKeyHandle(), $newvalue);
                 }
             }

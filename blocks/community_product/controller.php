@@ -9,6 +9,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
 
 class Controller extends BlockController
 {
@@ -75,6 +76,10 @@ class Controller extends BlockController
                 $product->setInitialVariation();
                 $this->set('variationLookup', $variationLookup);
             }
+
+            $manufacturer = Manufacturer::getByID($product->getManufacturer());
+
+            $this->set('manufacturer', $manufacturer);
 
             $codediscounts = false;
             $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();

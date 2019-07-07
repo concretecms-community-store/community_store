@@ -25,6 +25,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup as StoreProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Products extends DashboardSitePageController
 {
@@ -104,6 +105,15 @@ class Products extends DashboardSitePageController
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
+
+        $manufacturesList = ManufacturerList::getManufacturerList();
+
+        $this->set("manufacturesList", $manufacturesList);
+        $productmanufacturers = array("0" => t("None"));
+        foreach ($manufacturesList as $productmanufacturer) {
+            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+        }
+        $this->set("pManufacturer", $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -216,6 +226,14 @@ class Products extends DashboardSitePageController
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
+        $manufacturesList = ManufacturerList::getManufacturerList();
+
+        $this->set("manufacturesList", $manufacturesList);
+        $productmanufacturers = array("0" => t("None"));
+        foreach ($manufacturesList as $productmanufacturer) {
+            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+        }
+        $this->set("pManufacturer", $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -451,6 +469,21 @@ class Products extends DashboardSitePageController
         }
         if (!is_numeric($args['pWeight'])) {
             $e->add(t('The Product Weight must be a number'));
+        }
+        if (strlen($args['pEan']) > 13) {
+            $e->add(t('The EAN can not be greater than 13 Characters'));
+        }
+        if (strlen($args['pMpn']) > 255) {
+            $e->add(t('The MPN can not be greater than 255 Characters'));
+        }
+        if (strlen($args['pIsbn']) > 13) {
+            $e->add(t('The ISBN can not be greater than 13 Characters'));
+        }
+        if (strlen($args['pJan']) > 13) {
+            $e->add(t('The JAN can not be greater than 13 Characters'));
+        }
+        if (strlen($args['pUpc']) > 12) {
+            $e->add(t('The UPC can not be greater than 12 Characters'));
         }
 
         return $e;
