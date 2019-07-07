@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Config;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Event\CommunityStoreCartEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
@@ -143,9 +144,16 @@ class Cart
 
     public static function add($data)
     {
+
         $error = false;
         Session::set('community_store.smID', false);
         $product = StoreProduct::getByID((int) $data['pID']);
+
+        $event = new CommunityStoreCartEvent('add');
+        $event->setProduct($product);
+        $event->setData($data);
+
+        \Events::dispatch(CommunityStoreCartEvent::CART_PRE_ADD, $event);
 
         $customerPrice = false;
 
@@ -332,6 +340,9 @@ class Cart
             Session::set('communitystore.cart', $cart);
         }
 
+        \Events::dispatch(CommunityStoreCartEvent::CART_ACTION, $event);
+        \Events::dispatch(CommunityStoreCartEvent::CART_POST_ADD, $event);
+
         return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
@@ -392,7 +403,11 @@ class Cart
         $cart = self::getCart();
 
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
+        $event = new CommunityStoreCartEvent('update');
+        $event->setProduct($product);
+        $event->setData($data);
 
+        \Events::dispatch(CommunityStoreCartEvent::CART_PRE_UPDATE, $event);
         if ($product && !$product->allowDecimalQuantity()) {
             $qty = (int) $data['pQty'];
         }
@@ -423,25 +438,42 @@ class Cart
         Session::set('communitystore.cart', $cart);
         self::$cart = null;
 
+        \Events::dispatch(CommunityStoreCartEvent::CART_ACTION, $event);
+        \Events::dispatch(CommunityStoreCartEvent::CART_POST_UPDATE, $event);
+
         return ['added' => $added];
     }
 
     public static function remove($instanceID)
     {
         Session::set('community_store.smID', false);
+
         $cart = self::getCart();
+        $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
+        $event = new CommunityStoreCartEvent('remove');
+        $event->setProduct($product);
+
+        \Events::dispatch(CommunityStoreCartEvent::CART_PRE_REMOVE, $event);
+
         unset($cart[$instanceID]);
         Session::set('communitystore.cart', $cart);
         self::$cart = null;
+
+        \Events::dispatch(CommunityStoreCartEvent::CART_ACTION, $event);
+        \Events::dispatch(CommunityStoreCartEvent::CART_POST_REMOVE, $event);
     }
 
     public static function clear()
     {
+        $event = new CommunityStoreCartEvent('clear');
+        \Events::dispatch(CommunityStoreCartEvent::CART_PRE_CLEAR, $event);
         Session::set('community_store.smID', false);
         $cart = self::getCart();
         unset($cart);
         Session::set('communitystore.cart', null);
         self::$cart = null;
+        \Events::dispatch(CommunityStoreCartEvent::CART_ACTION, $event);
+        \Events::dispatch(CommunityStoreCartEvent::CART_POST_CLEAR, $event);
     }
 
     public static function getTotalItemsInCart()
