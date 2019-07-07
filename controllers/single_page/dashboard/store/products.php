@@ -423,10 +423,10 @@ class Products extends DashboardSitePageController
                 // create product event and dispatch
                 if (!$originalProduct) {
                     $event = new StoreProductEvent($product);
-                    Events::dispatch('on_community_store_product_add', $event);
+                    Events::dispatch(StoreProductEvent::PRODUCT_ADD, $event);
                 } else {
                     $event = new StoreProductEvent($originalProduct, $product);
-                    Events::dispatch('on_community_store_product_update', $event);
+                    Events::dispatch(StoreProductEvent::PRODUCT_UPDATE, $event);
                 }
 
                 if ($data['pID']) {

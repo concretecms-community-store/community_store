@@ -1568,7 +1568,7 @@ class Product
     {
         // create product event and dispatch
         $event = new StoreProductEvent($this);
-        Events::dispatch('on_community_store_product_delete', $event);
+        Events::dispatch(StoreProductEvent::PRODUCT_DELETE, $event);
 
         StoreProductImage::removeImagesForProduct($this);
         StoreProductOption::removeOptionsForProduct($this);
@@ -1743,7 +1743,7 @@ class Product
 
         // create product event and dispatch
         $event = new StoreProductEvent($this, $newproduct);
-        Events::dispatch('on_community_store_product_duplicate', $event);
+        Events::dispatch(StoreProductEvent::PRODUCT_DUPLICATE, $event);
 
         return $newproduct;
     }
