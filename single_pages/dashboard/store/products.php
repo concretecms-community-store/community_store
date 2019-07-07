@@ -61,6 +61,7 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
+                    <li><a href="#product-extra" data-pane-toggle><?= t('Extra details') ?></a></li>
                     <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
@@ -485,6 +486,57 @@ $ps = $app->make('helper/form/page_selector');
 
 
             </div><!-- #product-overview -->
+
+            <div class="col-sm-9 store-pane" id="product-extra">
+                <div class="row">
+                    <div class="col-xs-6">
+
+                        <div class="form-group">
+                            <?= $form->label("pManufacturer", t("Manufacturer")); ?>
+                            <?= $form->select('pManufacturer', $pManufacturer, $product->getManufacturer(),  ['class' => 'selectize']); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pEan", t("EAN")); ?>
+                            <?= $form->text("pEan", $product->getEAN(), ['placeholder' => 'European Article Number']); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pMpn", t("MPN")); ?>
+                            <?= $form->text("pMpn", $product->getMPN(), ['placeholder' => 'Manufacturer Part Number']); ?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pIsbn", t("ISBN")); ?>
+                            <?= $form->text("pIsbn", $product->getISBN(), ['placeholder' => 'International Standard Book Number']); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pJan", t("JAN")); ?>
+                            <?= $form->text("pJan", $product->getJAN(), ['placeholder' => 'Japanese Article Number']); ?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pUpc", t("UPC")); ?>
+                            <?= $form->text("pUpc", $product->getUPC(), ['placeholder' => 'Universal Product Number']); ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- #product-extra-details -->
+
 
             <div class="col-sm-9 store-pane" id="product-categories">
                 <?= $form->label('', t("Categorized under pages")); ?>

@@ -34,24 +34,58 @@ if (is_object($product) && $product->isActive()) {
                     } ?>
                     <?php if ($showProductName) {
                         ?>
-                        <h1 class="store-product-name" itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h1>
+                        <h1 class="store-product-name"
+                            itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h1>
                         <meta itemprop="sku" content="<?= $product->getSKU(); ?>"/>
                         <?php
-                    } ?>
+                        if ($product->getManufacturer() > 0) {
+                            ?>
+                            <p><?= t('Brand') ?>: <span class="store-product-brand" itemprop="brand"><?= t($manufacturer->getName()); ?> </span>
+                            </p>
+                            <?php
+                        }
+                        if ($product->getUPC()) {
+                            ?>
+                            <p><?= t('UPC') ?>: <span class="store-product-upc" itemprop="gtin12"><?= t($product->getUPC()); ?> </span></p>
+                            <?php
+                        }
+                        if ($product->getEAN()) {
+                            ?>
+                            <p><?= t('EAN') ?>: <span class="store-product-ean" itemprop="gtin14"><?= t($product->getEAN()); ?> </span></p>
+                            <?php
+                        }
+                        if ($product->getISBN()) {
+                            ?>
+                            <p><?= t('ISBN') ?>: <span class="store-product-isbn" itemprop="gtin13"><?= t($product->getISBN()); ?> </span></p>
+                            <?php
+                        }
+                        if ($product->getJAN()) {
+                            ?>
+                            <p><?= t('JAN') ?>: <span class="store-product-jan" itemprop="gtin13"><?= t($product->getJAN()); ?> </span></p>
+                            <?php
+                        }
+                        if ($product->getMPN()) {
+                            ?>
+                            <p><?= t('MPN') ?>: <span class="store-product-mpn" itemprop="mpn"><?= t($product->getMPN()); ?> </span></p>
+                            <?php
+                        }
+                        ?>
+
+                    <?php } ?>
 
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
                         ?>
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
-                            if($isWholesale){
+                            if ($isWholesale) {
                                 $msrp = $product->getFormattedOriginalPrice();
                                 $wholesalePrice = $product->getWholesalePrice();
                                 $formattedWholesalePrice = $product->getFormattedWholesalePrice();
 
-                                echo t('List Price'). ': '  .$msrp . '<br />' . t('Wholesale Price') .': ' . $formattedWholesalePrice;
-                                echo '<meta itemprop="price" content="' . $wholesalePrice .'" />';
-    
+                                echo t('List Price') . ': ' . $msrp . '<br />' . t('Wholesale Price') . ': ' . $formattedWholesalePrice;
+                                echo '<meta itemprop="price" content="' . $wholesalePrice . '" />';
+
                             } else {
                                 $salePrice = $product->getSalePrice();
                                 if (isset($salePrice) && "" != $salePrice) {
@@ -104,7 +138,8 @@ if (is_object($product) && $product->isActive()) {
                             <div class="input-group col-md-6 col-sm-6 col-xs-6">
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>
-                                    <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01" class="store-product-customer-price-entry-field form-control"
+                                    <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01"
+                                       class="store-product-customer-price-entry-field form-control"
                                        value="<?= $product->getBasePrice(); ?>" name="customerPrice"/>
                             </div>
                             <?php if ($min >= 0 || $max > 0) {
@@ -217,11 +252,14 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ($product->allowDecimalQuantity()) {
                                         ?>
-                                        <input type="number" name="quantity" class="store-product-qty form-control" min="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                                        <input type="number" name="quantity" class="store-product-qty form-control"
+                                               min="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>"
+                                               step="<?= $product->getQtySteps() ? $product->getQtySteps() : 0.001; ?>" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
                                         <?php
                                     } else {
                                         ?>
-                                        <input type="number" name="quantity" class="store-product-qty form-control" value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
+                                        <input type="number" name="quantity" class="store-product-qty form-control"
+                                               value="1" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
                                         <?php
                                     } ?>
 
@@ -298,11 +336,16 @@ if (is_object($product) && $product->isActive()) {
 
                                                 <?php if ($displayType == 'radio') { ?>
                                                     <div class="radio">
-                                                        <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                                <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>"/><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?></label>
+                                                        <label><input type="radio" required
+                                                                      class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
+                                                                <?= $disabled . ($selected ? 'checked' : ''); ?>
+                                                                      name="po<?= $option->getID(); ?>"
+                                                                      value="<?= $optionItem->getID(); ?>"/><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?>
+                                                        </label>
                                                     </div>
                                                 <?php } else { ?>
-                                                    <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
+                                                    <option
+                                                        <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
 
                                                 <?php
@@ -338,7 +381,8 @@ if (is_object($product) && $product->isActive()) {
                                                name="pc<?= $option->getID(); ?>"/>
                                         <input type="checkbox" value="<?= t('yes'); ?>"
                                                class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> <?= $option->getHandle(); ?>"
-                                               name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                                               name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?>
+                                    </label>
                                 </div>
                                 <?php
                             } elseif ('hidden' == $optionType) {
@@ -416,7 +460,9 @@ if (is_object($product) && $product->isActive()) {
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
                                                 class="store-product-thumb text-center center-block"><img
-                                                    src="<?= $thumb->src; ?>" title="<?= h($secondaryImage->getTitle()) ?>" alt="<?= h($imgTitle); ?>"/></a></div>
+                                                    src="<?= $thumb->src; ?>"
+                                                    title="<?= h($secondaryImage->getTitle()) ?>"
+                                                    alt="<?= h($imgTitle); ?>"/></a></div>
                                     <?php
                                 }
 
@@ -478,7 +524,7 @@ if (is_object($product) && $product->isActive()) {
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                 ];
 
-                if($isWholesale){
+                if ($isWholesale) {
                     $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
                 }
             } ?>
@@ -494,10 +540,10 @@ if (is_object($product) && $product->isActive()) {
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
 
-                if(variationData[ar.join('_')]['wholesalePrice']){
+                if (variationData[ar.join('_')]['wholesalePrice']) {
                     pdb.find('.store-product-price').html(
-                        '<?= t('List Price');?>: '+variationData[ar.join('_')]['price']+
-                        '<br /><?= t('Wholesale Price');?>: '+variationData[ar.join('_')]['wholesalePrice']);
+                        '<?= t('List Price');?>: ' + variationData[ar.join('_')]['price'] +
+                        '<br /><?= t('Wholesale Price');?>: ' + variationData[ar.join('_')]['wholesalePrice']);
                 } else {
                     if (variationData[ar.join('_')]['saleprice']) {
                         var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
