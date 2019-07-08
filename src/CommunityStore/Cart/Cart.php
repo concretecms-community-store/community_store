@@ -381,7 +381,7 @@ class Cart
         return ['exists' => false, 'cartItemKey' => null];
     }
 
-    public static function updateMutiple($data)
+    public static function updateMultiple($data)
     {
         Session::set('community_store.smID', false);
         $count = 0;
@@ -452,6 +452,7 @@ class Cart
         $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
         $event = new StoreCartEvent('remove');
         $event->setProduct($product);
+        $event->setData(['cartItem'=>$instanceID]);
 
         \Events::dispatch(StoreCartEvent::CART_PRE_REMOVE, $event);
 
@@ -465,6 +466,7 @@ class Cart
 
     public static function clear()
     {
+
         $event = new StoreCartEvent('clear');
         \Events::dispatch(StoreCartEvent::CART_PRE_CLEAR, $event);
         Session::set('community_store.smID', false);
@@ -481,7 +483,7 @@ class Cart
         $total = 0;
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $subtotal = min($item['product']['qty'], 1);
+                $subtotal = max($item['product']['qty'], 1);
                 $total = $total + $subtotal;
             }
         }

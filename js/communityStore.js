@@ -151,6 +151,7 @@ var communityStore = {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
+                    communityStore.refreshCartTotals();
                 }
             }
         });
@@ -171,6 +172,7 @@ var communityStore = {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
+                    communityStore.refreshCartTotals();
                 }
             }
         });
@@ -188,6 +190,7 @@ var communityStore = {
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
+                    communityStore.refreshCartTotals();
                 }
             }
         });
