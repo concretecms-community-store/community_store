@@ -1636,7 +1636,8 @@ class Product
                 $ak = $att->getAttributeKey();
                 if ($ak && is_object($ak)) {
                     $value = $att->getValue();
-                    if (is_object($value)) {
+
+                    if (is_object($value) && !is_subclass_of($value,  'Concrete\Core\Entity\File\File')) {
                         $newvalue = clone $value;
                     } else {
                         $newvalue = $value;
