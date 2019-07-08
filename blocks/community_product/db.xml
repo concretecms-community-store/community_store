@@ -11,6 +11,8 @@
 		<field name="productLocation" type="string" size="10"></field>
 		<field name="pID" type="integer"></field>
 		<field name="showProductName" type="boolean"></field>
+		<field name="showManufacturer" type="boolean"></field>
+		<field name="showManufacturerDescription" type="boolean"></field>
 		<field name="showProductDescription" type="boolean"></field>
 		<field name="showProductDetails" type="boolean"></field>
 		<field name="showProductPrice" type="boolean"></field>

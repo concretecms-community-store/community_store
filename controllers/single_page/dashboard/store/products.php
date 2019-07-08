@@ -108,12 +108,12 @@ class Products extends DashboardSitePageController
 
         $manufacturesList = ManufacturerList::getManufacturerList();
 
-        $this->set("manufacturesList", $manufacturesList);
+        $this->set('manufacturesList', $manufacturesList);
         $productmanufacturers = array("0" => t("None"));
         foreach ($manufacturesList as $productmanufacturer) {
-            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+            $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
-        $this->set("pManufacturer", $productmanufacturers);
+        $this->set('manufacturers', $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -231,9 +231,9 @@ class Products extends DashboardSitePageController
         $this->set("manufacturesList", $manufacturesList);
         $productmanufacturers = array("0" => t("None"));
         foreach ($manufacturesList as $productmanufacturer) {
-            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+            $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
-        $this->set("pManufacturer", $productmanufacturers);
+        $this->set('manufacturers', $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -431,7 +431,6 @@ class Products extends DashboardSitePageController
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-
                     return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));

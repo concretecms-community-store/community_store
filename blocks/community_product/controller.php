@@ -14,7 +14,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProduct';
-    protected $btInterfaceWidth = "450";
+    protected $btInterfaceWidth = "680";
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "538";
     protected $btDefaultSet = 'community_store';
@@ -77,10 +77,6 @@ class Controller extends BlockController
                 $this->set('variationLookup', $variationLookup);
             }
 
-            $manufacturer = Manufacturer::getByID($product->getManufacturer());
-
-            $this->set('manufacturer', $manufacturer);
-
             $codediscounts = false;
             $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
             $code = trim(Session::get('communitystore.code'));
@@ -101,6 +97,8 @@ class Controller extends BlockController
             $this->set('showProductName', $this->showProductName);
             $this->set('showProductPrice', $this->showProductPrice);
             $this->set('showProductDescription', $this->showProductDescription);
+            $this->set('showManufacturer', $this->showManufacturer);
+            $this->set('showManufacturerDescription', $this->showManufacturerDescription);
             $this->set('showDimensions', $this->showDimensions);
             $this->set('showWeight', $this->showWeight);
             $this->set('showGroups', $this->showGroups);
@@ -164,6 +162,8 @@ class Controller extends BlockController
     {
         $args['showProductName'] = isset($args['showProductName']) ? 1 : 0;
         $args['showProductDescription'] = isset($args['showProductDescription']) ? 1 : 0;
+        $args['showManufacturer'] = isset($args['showManufacturer']) ? 1 : 0;
+        $args['showManufacturerDescription'] = isset($args['showManufacturerDescription']) ? 1 : 0;
         $args['showProductDetails'] = isset($args['showProductDetails']) ? 1 : 0;
         $args['showProductPrice'] = isset($args['showProductPrice']) ? 1 : 0;
         $args['showWeight'] = isset($args['showWeight']) ? 1 : 0;

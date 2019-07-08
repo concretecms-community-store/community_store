@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Package\Package;
@@ -59,6 +60,11 @@ class Product
      * @ORM\Column(type="string",nullable=true)
      */
     protected $pSKU;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $pBarcode;
 
     /**
      * @ORM\Column(type="text",nullable=true)
@@ -251,34 +257,10 @@ class Product
     protected $pNotificationEmails;
 
     /**
-     * @ORM\Column(type="integer",nullable=false)
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer",inversedBy="products",cascade={"persist"})
+     * @ORM\JoinColumn(name="pManufacturer", referencedColumnName="mID", onDelete="CASCADE")
      */
-    protected $pManufacturer;
-
-    /**
-     * @ORM\Column(type="text",length=12,nullable=true)
-     */
-    protected $pUpc;
-
-    /**
-     * @ORM\Column(type="text",length=14,nullable=true)
-     */
-    protected $pEan;
-
-    /**
-     * @ORM\Column(type="text",length=13,nullable=true)
-     */
-    protected $pJan;
-
-    /**
-     * @ORM\Column(type="text",length=13,nullable=true)
-     */
-    protected $pIsbn;
-
-    /**
-     * @ORM\Column(type="text",nullable=true)
-     */
-    protected $pMpn;
+    protected $manufacturer;
 
 
     // not stored, used for price/sku/etc lookup purposes
@@ -482,6 +464,16 @@ class Product
     public function setSKU($sku)
     {
         $this->pSKU = $sku;
+    }
+
+    public function getBarcode()
+    {
+        return $this->pBarcode;
+    }
+
+    public function setBarcode($barcode)
+    {
+        $this->pBarcode = $barcode;
     }
 
     public function setDescription($description)
@@ -757,64 +749,13 @@ class Product
 
     public function getManufacturer()
     {
-        return $this->pManufacturer;
+        return $this->manufacturer;
     }
 
-    public function setManufacturer($pManufacturer)
+    public function setManufacturer($manufacturer)
     {
-        $this->pManufacturer = $pManufacturer;
+        $this->manufacturer = $manufacturer;
     }
-
-    public function getMPN()
-    {
-        return $this->pMpn;
-    }
-
-    public function setMPN($pMpn)
-    {
-        $this->pMpn = $pMpn;
-    }
-
-    public function getISBN()
-    {
-        return $this->pIsbn;
-    }
-
-    public function setISBN($pIsbn)
-    {
-        $this->pIsbn = $pIsbn;
-    }
-
-    public function getJAN()
-    {
-        return $this->pJan;
-    }
-
-    public function setJAN($pJan)
-    {
-        $this->pJan = $pJan;
-    }
-
-    public function getEAN()
-    {
-        return $this->pEan;
-    }
-
-    public function setEAN($pEan)
-    {
-        $this->pEan = $pEan;
-    }
-
-    public function getUPC()
-    {
-        return $this->pUpc;
-    }
-
-    public function setUPC($pUpc)
-    {
-        $this->pUpc = $pUpc;
-    }
-
 
     public function updateProductQty($qty)
     {
@@ -881,6 +822,7 @@ class Product
         }
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
+        $product->setBarCode($data['pBarcode']);
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
@@ -918,12 +860,15 @@ class Product
         $product->setMaxQty($data['pMaxQty']);
         $product->setPageID($data['pageCID']);
         $product->setNotificationEmails($data['pNotificationEmails']);
-        $product->setManufacturer($data['pManufacturer']);
-        $product->setMPN($data['pMpn']);
-        $product->setISBN($data['pIsbn']);
-        $product->setJAN($data['pJan']);
-        $product->setEAN($data['pEan']);
-        $product->setUPC($data['pUpc']);
+
+        if ($data['pManufacturer']) {
+            $manufacturer = Manufacturer::getByID($data['pManufacturer']);
+        } else {
+            $manufacturer = null;
+        }
+
+        $product->setManufacturer($manufacturer);
+
 
         // if we have no product groups, we don't have variations to offer
         if (empty($data['poName'])) {

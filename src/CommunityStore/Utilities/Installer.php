@@ -40,6 +40,7 @@ class Installer
         self::installSinglePage('/dashboard/store/products/groups', $pkg);
         self::installSinglePage('/dashboard/store/products/categories', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
+        self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
         self::installSinglePage('/dashboard/store/settings/', $pkg);
         self::installSinglePage('/dashboard/store/settings/shipping', $pkg);
         self::installSinglePage('/dashboard/store/settings/tax', $pkg);
@@ -50,7 +51,6 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
-        self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
 
         if (!$upgrade) {
             self::installSinglePage('/cart', $pkg);

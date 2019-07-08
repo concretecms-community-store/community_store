@@ -37,41 +37,46 @@ if (is_object($product) && $product->isActive()) {
                         <h1 class="store-product-name"
                             itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h1>
                         <meta itemprop="sku" content="<?= $product->getSKU(); ?>"/>
-                        <?php
-                        if ($product->getManufacturer() > 0) {
-                            ?>
-                            <p><?= t('Brand') ?>: <span class="store-product-brand" itemprop="brand"><?= t($manufacturer->getName()); ?> </span>
-                            </p>
-                            <?php
-                        }
-                        if ($product->getUPC()) {
-                            ?>
-                            <p><?= t('UPC') ?>: <span class="store-product-upc" itemprop="gtin12"><?= t($product->getUPC()); ?> </span></p>
-                            <?php
-                        }
-                        if ($product->getEAN()) {
-                            ?>
-                            <p><?= t('EAN') ?>: <span class="store-product-ean" itemprop="gtin14"><?= t($product->getEAN()); ?> </span></p>
-                            <?php
-                        }
-                        if ($product->getISBN()) {
-                            ?>
-                            <p><?= t('ISBN') ?>: <span class="store-product-isbn" itemprop="gtin13"><?= t($product->getISBN()); ?> </span></p>
-                            <?php
-                        }
-                        if ($product->getJAN()) {
-                            ?>
-                            <p><?= t('JAN') ?>: <span class="store-product-jan" itemprop="gtin13"><?= t($product->getJAN()); ?> </span></p>
-                            <?php
-                        }
-                        if ($product->getMPN()) {
-                            ?>
-                            <p><?= t('MPN') ?>: <span class="store-product-mpn" itemprop="mpn"><?= t($product->getMPN()); ?> </span></p>
-                            <?php
-                        }
-                        ?>
-
                     <?php } ?>
+
+                    <?php
+                    if ($showManufacturer) {
+                        $manufacturer = $product->getManufacturer();
+                        if ($manufacturer) { ?>
+                            <p><?= t('Manufacturer') ?>:
+                                <?php
+                                $manufacturerPage = $manufacturer->getManufacturerPage() ?>
+                                <?php if ($manufacturerPage) {
+                                    if ($manufacturerPage->getCollectionPointerExternalLink() != '') {
+                                        if ($manufacturerPage->openCollectionPointerExternalLinkInNewWindow()) {
+                                            $target = '_blank';
+                                        }
+                                    } else {
+                                        $target = $manufacturerPage->getAttribute('nav_target');
+                                    }
+
+                                    ?>
+                                    <a class="store-product-manufacturer" target="<?php echo h($target) ?>" itemprop="brand" href="<?= URL::to($manufacturerPage) ?>"><?= h($manufacturer->getName()); ?></a>
+                                <?php } else { ?>
+                                    <span class="store-product-manufacturer" itemprop="brand"><?= h($manufacturer->getName()); ?> </span>
+                                <?php } ?>
+                            </p>
+
+                        <?php }
+                    } ?>
+
+                    <?php
+                    if ($showManufacturerDescription) {
+                        $manufacturer = $product->getManufacturer();
+                        if ($manufacturer) {
+                            $manufacturerDescription = $manufacturer->getDescription();
+
+                            if ($manufacturerDescription) { ?>
+                                <div class="store-product-manufacturer-description"><?= $manufacturerDescription; ?></div>
+                            <?php }
+                        }
+                    }
+                    ?>
 
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
                         ?>
