@@ -49,6 +49,7 @@ class Manufacturers extends DashboardPageController
         $this->set('pageTitle', t('Edit Manufacturer'));
         $manufacturer = Manufacturer::getByID($id);
         $this->set('manufacturer', $manufacturer);
+        $this->set('mID', $id);
     }
 
     public function submit()
