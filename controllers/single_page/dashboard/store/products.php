@@ -8,6 +8,7 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -317,10 +318,7 @@ class Products extends DashboardSitePageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-
-        $attrList = $productCategory->getList();
-        $this->set('attribs', $attrList);
+        $this->set('productAttributeCategory', Category::getByHandle('store_product'));
 
         $pageType = PageType::getByHandle("store_product");
         $templates = [];

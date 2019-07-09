@@ -1475,13 +1475,16 @@ $ps = $app->make('helper/form/page_selector');
             </div><!-- #product-related -->
 
             <div class="col-sm-9 store-pane" id="product-attributes">
-                <div class="alert alert-info">
-                    <?= t("While you can set and assign attributes, they're are currently only able to be accessed programmatically") ?>
-                </div>
-                <?php
 
-                if (count($attribs) > 0) {
-                    foreach ($attribs as $ak) {
+                <?php
+                $hasKeys = false;
+                $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+
+                foreach ($sets as $set) {
+                    echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
+                    foreach ($set->getAttributeKeys() as $key => $ak) {
+                        $hasKeys = true;
+
                         if (is_object($product)) {
                             $caValue = $product->getAttributeValueObject($ak);
                         }
@@ -1492,11 +1495,33 @@ $ps = $app->make('helper/form/page_selector');
                                 <?= $ak->render('composer', $caValue, true) ?>
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php  }
+                }
 
-                <?php } else { ?>
-                    <em><?= t('You haven\'t created product attributes') ?></em>
+                $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
+                if (count($attributeKeys) > 0) {
+                    if (count($sets) > 0) {
+                        echo '<h4>' . t('Other') . '</h4>';
+                    }
 
+                    foreach ($attributeKeys as $key => $ak) {
+                        $hasKeys = true;
+
+                        if (is_object($product)) {
+                            $caValue = $product->getAttributeValueObject($ak);
+                        }
+                        ?>
+                        <div class="form-group">
+                            <?= $ak->render('label'); ?>
+                            <div class="input">
+                                <?= $ak->render('composer', $caValue, true) ?>
+                            </div>
+                        </div>
+                 <?php   }
+                }
+
+                if (!$hasKeys) { ?>
+                    <p><?= t('No product attributes defined') ?></p>
                 <?php } ?>
 
             </div>
