@@ -10,6 +10,8 @@ $th = $app->make('helper/text');
 if ($controller->getAction() == 'add' ||
     $controller->getAction() == 'edit' ||
     $controller->getAction() == 'submit') {
+
+    $mID = $manufacturer->getID();
     ?>
 
 
