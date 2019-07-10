@@ -107,11 +107,11 @@ class Products extends DashboardSitePageController
             }
         }
 
-        $manufacturesList = ManufacturerList::getManufacturerList();
+       $manufacturersList = ManufacturerList::getManufacturerList();
 
-        $this->set('manufacturesList', $manufacturesList);
+        $this->set('manufacturersList', $manufacturersList);
         $productmanufacturers = array("0" => t("None"));
-        foreach ($manufacturesList as $productmanufacturer) {
+        foreach ($manufacturersList as $productmanufacturer) {
             $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
         $this->set('manufacturers', $productmanufacturers);
@@ -227,11 +227,11 @@ class Products extends DashboardSitePageController
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
-        $manufacturesList = ManufacturerList::getManufacturerList();
+        $manufacturersList = ManufacturerList::getManufacturerList();
 
-        $this->set("manufacturesList", $manufacturesList);
+        $this->set("manufacturersList", $manufacturersList);
         $productmanufacturers = array("0" => t("None"));
-        foreach ($manufacturesList as $productmanufacturer) {
+        foreach ($manufacturersList as $productmanufacturer) {
             $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
         $this->set('manufacturers', $productmanufacturers);
