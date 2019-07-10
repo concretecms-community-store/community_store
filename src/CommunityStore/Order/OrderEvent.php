@@ -1,10 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Event\Event as StoreEvent;
 
-class OrderEvent extends GenericEvent
+class OrderEvent extends StoreEvent
 {
+    const ORDER_CREATED = 'on_community_store_order_created';
+    const ORDER_PLACED = 'on_community_store_order';
+    const ORDER_STATUS_UPDATE = 'on_community_store_order_status_update';
+    const ORDER_PAYMENT_COMPLETE = 'on_community_store_payment_complete';
+
     protected $event;
 
     protected $notificationEmails;

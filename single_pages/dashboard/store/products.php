@@ -61,7 +61,6 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
-                    <li><a href="#product-extra" data-pane-toggle><?= t('Extra details') ?></a></li>
                     <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
@@ -94,6 +93,21 @@ $ps = $app->make('helper/form/page_selector');
 
 
             <div class="col-sm-9 store-pane active" id="product-overview">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pManufacturer", t("Brand / Manufacturer")); ?>
+                            <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '',  ['class' => 'selectize']); ?>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <?= $form->label("pBarcode", t("Barcode")); ?>
+                            <?= $form->text("pBarcode", $product->getBarcode()); ?>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -486,57 +500,6 @@ $ps = $app->make('helper/form/page_selector');
 
 
             </div><!-- #product-overview -->
-
-            <div class="col-sm-9 store-pane" id="product-extra">
-                <div class="row">
-                    <div class="col-xs-6">
-
-                        <div class="form-group">
-                            <?= $form->label("pManufacturer", t("Manufacturer")); ?>
-                            <?= $form->select('pManufacturer', $pManufacturer, $product->getManufacturer(),  ['class' => 'selectize']); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pEan", t("EAN")); ?>
-                            <?= $form->text("pEan", $product->getEAN(), ['placeholder' => 'European Article Number']); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pMpn", t("MPN")); ?>
-                            <?= $form->text("pMpn", $product->getMPN(), ['placeholder' => 'Manufacturer Part Number']); ?>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pIsbn", t("ISBN")); ?>
-                            <?= $form->text("pIsbn", $product->getISBN(), ['placeholder' => 'International Standard Book Number']); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pJan", t("JAN")); ?>
-                            <?= $form->text("pJan", $product->getJAN(), ['placeholder' => 'Japanese Article Number']); ?>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pUpc", t("UPC")); ?>
-                            <?= $form->text("pUpc", $product->getUPC(), ['placeholder' => 'Universal Product Number']); ?>
-                        </div>
-                    </div>
-                </div>
-
-            </div><!-- #product-extra-details -->
-
 
             <div class="col-sm-9 store-pane" id="product-categories">
                 <?= $form->label('', t("Categorized under pages")); ?>
@@ -1512,13 +1475,16 @@ $ps = $app->make('helper/form/page_selector');
             </div><!-- #product-related -->
 
             <div class="col-sm-9 store-pane" id="product-attributes">
-                <div class="alert alert-info">
-                    <?= t("While you can set and assign attributes, they're are currently only able to be accessed programmatically") ?>
-                </div>
-                <?php
 
-                if (count($attribs) > 0) {
-                    foreach ($attribs as $ak) {
+                <?php
+                $hasKeys = false;
+                $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+
+                foreach ($sets as $set) {
+                    echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
+                    foreach ($set->getAttributeKeys() as $key => $ak) {
+                        $hasKeys = true;
+
                         if (is_object($product)) {
                             $caValue = $product->getAttributeValueObject($ak);
                         }
@@ -1529,11 +1495,33 @@ $ps = $app->make('helper/form/page_selector');
                                 <?= $ak->render('composer', $caValue, true) ?>
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php  }
+                }
 
-                <?php } else { ?>
-                    <em><?= t('You haven\'t created product attributes') ?></em>
+                $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
+                if (count($attributeKeys) > 0) {
+                    if (count($sets) > 0) {
+                        echo '<h4>' . t('Other') . '</h4>';
+                    }
 
+                    foreach ($attributeKeys as $key => $ak) {
+                        $hasKeys = true;
+
+                        if (is_object($product)) {
+                            $caValue = $product->getAttributeValueObject($ak);
+                        }
+                        ?>
+                        <div class="form-group">
+                            <?= $ak->render('label'); ?>
+                            <div class="input">
+                                <?= $ak->render('composer', $caValue, true) ?>
+                            </div>
+                        </div>
+                 <?php   }
+                }
+
+                if (!$hasKeys) { ?>
+                    <p><?= t('No product attributes defined') ?></p>
                 <?php } ?>
 
             </div>
@@ -1792,7 +1780,7 @@ $ps = $app->make('helper/form/page_selector');
                             <?php } ?>
                         </td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group" style="width:120px">
                                 <a class="btn btn-sm btn-primary"
                                    href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= t("Manage") ?></a>
                                 <?php if ($multilingualEnabled) { ?>

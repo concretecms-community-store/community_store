@@ -53,7 +53,7 @@ class Cart extends PageController
             if ('update' == $this->request->request->get('action')) {
                 $data = $this->request->request->all();
                 if (is_array($data['instance'])) {
-                    $result = StoreCart::updateMutiple($data);
+                    $result = StoreCart::updateMultiple($data);
                     $quantity = 0;
                     foreach ($data['pQty'] as $q) {
                         $quantity += $q;
@@ -175,7 +175,7 @@ class Cart extends PageController
             $data = $this->request->request->all();
 
             if (is_array($data['instance'])) {
-                $result = StoreCart::updateMutiple($data);
+                $result = StoreCart::updateMultiple($data);
                 $quantity = 0;
                 foreach ($data['pQty'] as $q) {
                     $quantity += $q;

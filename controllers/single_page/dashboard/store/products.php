@@ -8,6 +8,7 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -108,12 +109,12 @@ class Products extends DashboardSitePageController
 
         $manufacturesList = ManufacturerList::getManufacturerList();
 
-        $this->set("manufacturesList", $manufacturesList);
+        $this->set('manufacturesList', $manufacturesList);
         $productmanufacturers = array("0" => t("None"));
         foreach ($manufacturesList as $productmanufacturer) {
-            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+            $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
-        $this->set("pManufacturer", $productmanufacturers);
+        $this->set('manufacturers', $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -231,9 +232,9 @@ class Products extends DashboardSitePageController
         $this->set("manufacturesList", $manufacturesList);
         $productmanufacturers = array("0" => t("None"));
         foreach ($manufacturesList as $productmanufacturer) {
-            $productmanufacturers[$productmanufacturer->getMID()] = $productmanufacturer->getName();
+            $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
-        $this->set("pManufacturer", $productmanufacturers);
+        $this->set('manufacturers', $productmanufacturers);
 
         $targetCID = Config::get('community_store.productPublishTarget');
 
@@ -317,10 +318,7 @@ class Products extends DashboardSitePageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-
-        $attrList = $productCategory->getList();
-        $this->set('attribs', $attrList);
+        $this->set('productAttributeCategory', Category::getByHandle('store_product'));
 
         $pageType = PageType::getByHandle("store_product");
         $templates = [];
@@ -423,15 +421,14 @@ class Products extends DashboardSitePageController
                 // create product event and dispatch
                 if (!$originalProduct) {
                     $event = new StoreProductEvent($product);
-                    Events::dispatch('on_community_store_product_add', $event);
+                    Events::dispatch(StoreProductEvent::PRODUCT_ADD, $event);
                 } else {
                     $event = new StoreProductEvent($originalProduct, $product);
-                    Events::dispatch('on_community_store_product_update', $event);
+                    Events::dispatch(StoreProductEvent::PRODUCT_UPDATE, $event);
                 }
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-
                     return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));

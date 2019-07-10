@@ -18,31 +18,48 @@
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showProductName', 1, !isset($showProductName) ? true : $showProductName); ?>
-                <?= t('Show Product Name'); ?>
+                <?= t('Display Product Name'); ?>
             </label>
-        </div>    
+        </div>
+
+
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showProductDescription', 1, !isset($showProductDescription) ? true : $showProductDescription); ?>
-                <?= t('Show Short Description'); ?>
+                <?= t('Display Short Description'); ?>
             </label>
         </div> 
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showProductDetails', 1, !isset($showProductDetails) ? true : $showProductDetails); ?>
-                <?= t('Show Product Details'); ?>
+                <?= t('Display Product Details'); ?>
             </label>
-        </div>   
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showManufacturer', 1, !isset($showManufacturer) ? false : $showManufacturer); ?>
+                <?= t('Display Manufacturer Name'); ?>
+            </label>
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('showManufacturerDescription', 1, !isset($showManufacturerDescription) ? false : $showManufacturerDescription); ?>
+                <?= t('Display Manufacturer Description'); ?>
+            </label>
+        </div>
+
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showProductPrice', 1, !isset($showProductPrice) ? true : $showProductPrice); ?>
-                <?= t('Show Price'); ?>
+                <?= t('Display Price'); ?>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showWeight', 1, $showWeight); ?>
-                <?= t('Show Weight'); ?>
+                <?= t('Display Weight'); ?>
             </label>
         </div>
     </div>
@@ -50,7 +67,7 @@
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showImage', 1, !isset($showImage) ? true : $showImage); ?>
-                <?= t('Show Product Image'); ?>
+                <?= t('Display Product Image'); ?>
             </label>
         </div>
         <div class="checkbox">
@@ -62,19 +79,19 @@
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured); ?>
-                <?= t('Show If Featured'); ?>
+                <?= t('Display If Featured'); ?>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showDimensions', 1, $showDimensions); ?>
-                <?= t('Show Dimensions'); ?>
+                <?= t('Display Dimensions'); ?>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
-                <?= t('Show Quantity Selector'); ?>
+                <?= t('Display Quantity Selector'); ?>
             </label>
         </div>
         

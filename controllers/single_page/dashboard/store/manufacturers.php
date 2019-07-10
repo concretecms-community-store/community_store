@@ -29,12 +29,12 @@ class Manufacturers extends DashboardPageController
 
         $paginator = $factory->createPaginationObject($manufacturerList);
         $pagination = $paginator->renderDefaultView();
-        $this->set('entries', $paginator->getCurrentPageResults());
+        $this->set('manufacturers', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
 
 
-        $this->set('pageTitle', t('Manufactures'));
+        $this->set('pageTitle', t('Manufacturers'));
     }
 
     public function add()
@@ -48,10 +48,7 @@ class Manufacturers extends DashboardPageController
     {
         $this->set('pageTitle', t('Edit Manufacturer'));
         $manufacturer = Manufacturer::getByID($id);
-        $this->set('mID', $manufacturer->getMID());
-        $this->set('name', $manufacturer->getName());
-        $this->set('description', $manufacturer->getDescription());
-
+        $this->set('manufacturer', $manufacturer);
     }
 
     public function submit()
@@ -68,8 +65,15 @@ class Manufacturers extends DashboardPageController
             }
             $manufacturer->setName($this->post('name'));
             $manufacturer->setDescription($this->post('description'));
+            $manufacturer->setCollectionID($this->post('pageCID'));
             $manufacturer->save();
-            $this->flash('success', t('Manufacturer saved successfully.'));
+
+            if ($this->post('mID')) {
+                $this->flash('success', t('Manufacturer Updated'));
+            } else {
+                $this->flash('success', t('Manufacturer Added'));
+            }
+
             $factory = $this->app->make(ResponseFactory::class);
             return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
         }
@@ -78,10 +82,21 @@ class Manufacturers extends DashboardPageController
     public function delete($mid)
     {
 
-        Manufacturer::getByID($mid)->delete();
+        $manufacturer = Manufacturer::getByID($mid);
 
-        $this->flash('success', t('Manufacturer deleted successfully.'));
-        $factory = $this->app->make(ResponseFactory::class);
+
+        if ($manufacturer) {
+
+            foreach($manufacturer->getProducts() as $product) {
+                $product->setManufacturer(null);
+                $product->save();
+            }
+
+            $manufacturer->delete();
+
+            $this->flash('success', t('Manufacturer Deleted'));
+            $factory = $this->app->make(ResponseFactory::class);
+        }
         return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
 
     }

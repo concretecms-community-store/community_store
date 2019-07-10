@@ -589,7 +589,7 @@ class Order
         $order->addOrderItems(StoreCart::getCart(), $discountRatio);
 
         $event = new StoreOrderEvent($order);
-        Events::dispatch('on_community_store_order_created', $event);
+        Events::dispatch(StoreOrderEvent::ORDER_CREATED, $event);
 
         if (!$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference, true);
@@ -665,7 +665,7 @@ class Order
 
         // create order event and dispatch
         $event = new StoreOrderEvent($this);
-        Events::dispatch('on_community_store_order', $event);
+        Events::dispatch(StoreOrderEvent::ORDER_PLACED, $event);
 
         // notifications
         $this->sendNotifications();
@@ -686,7 +686,7 @@ class Order
 
         // create payment event and dispatch
         $event = new StoreOrderEvent($this);
-        Events::dispatch('on_community_store_payment_complete', $event);
+        Events::dispatch(StoreOrderEvent::ORDER_PAYMENT_COMPLETE, $event);
     }
 
     public function completePostPaymentProcesses($sameRequest = false)

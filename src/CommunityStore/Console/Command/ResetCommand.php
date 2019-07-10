@@ -69,7 +69,7 @@ EOT
             $orderCount = count($orders);
 
             foreach ($orders as $order) {
-                $order->delete();
+                $order->remove();
             }
             $output->writeln('<info>' . t2('%d order deleted', '%d orders deleted', $orderCount) . '</info>');
         }

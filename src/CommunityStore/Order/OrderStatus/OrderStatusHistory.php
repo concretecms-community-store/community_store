@@ -154,7 +154,7 @@ class OrderStatusHistory
 
             if (!empty($history)) {
                 $event = new StoreOrderEvent($order, $previousStatus);
-                Events::dispatch('on_community_store_order_status_update', $event);
+                Events::dispatch(StoreOrderEvent::ORDER_STATUS_UPDATE, $event);
             }
         }
     }
