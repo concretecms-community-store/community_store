@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
 use Concrete\Core\Page\Page;
@@ -13,6 +14,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreP
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Controller extends BlockController
 {
@@ -39,6 +41,8 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', []);
+        $this->getManufacturerList();
+
     }
 
     public function edit()
@@ -47,7 +51,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
-
+        $this->getManufacturerList();
         if ($this->relatedPID) {
             $relatedProduct = StoreProduct::getByID($this->relatedPID);
             $this->set('relatedProduct', $relatedProduct);
@@ -75,6 +79,12 @@ class Controller extends BlockController
     {
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
+    }
+
+    public function getManufacturerList()
+    {
+        $manufacturesList = ManufacturerList::getManufacturerList();
+        $this->set('manufacturersList', $manufacturesList);
     }
 
     public function view()
@@ -109,7 +119,7 @@ class Controller extends BlockController
 
         if ('current' == $this->filter || 'current_children' == $this->filter) {
             $page = Page::getCurrentPage();
-            $pageID  = $page->getCollectionID();
+            $pageID = $page->getCollectionID();
 
             $site = $this->app->make('site')->getSite();
             if ($site) {
@@ -187,6 +197,7 @@ class Controller extends BlockController
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
+        $products->setFilterManufacturers($this->filtermanufacturer);
 
         if (!empty($this->attFilters)) {
             $products->setAttributeFilters($this->attFilters);
@@ -289,6 +300,7 @@ class Controller extends BlockController
         $args['showSale'] = isset($args['showSale']) ? 1 : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
         $args['relatedPID'] = isset($args['relatedPID']) ? (int) $args['relatedPID'] : 0;
+        $args['filtermanufacturer'] = $args['filtermanufacturer'];
 
         if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;
