@@ -22,7 +22,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $activeOnly = true;
     protected $cIDs = [];
     protected $relatedProduct = false;
-    protected $setFilterManufacturers = '';
+    protected $manufacturer = '';
     protected $attFilters = [];
 
     public function setGroupID($gID)
@@ -75,9 +75,9 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         $this->featuredOnly = $bool;
     }
 
-    public function setFilterManufacturers($manufacturer)
+    public function setManufacturer($manufacturer)
     {
-        $this->FilterManufacturers = $manufacturer;
+        $this->manufacturer = $manufacturer;
     }
 
     public function setSaleOnly($bool)
@@ -312,8 +312,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         if ($this->featuredOnly) {
             $query->andWhere("pFeatured = 1");
         }
-        if ($this->FilterManufacturers) {
-            $query->andWhere("pManufacturer =  $this->FilterManufacturers " );
+        if ($this->manufacturer) {
+            $query->andWhere("pManufacturer = ?")->setParameter($paramcount++, $this->manufacturer);
         }
         if ($this->saleOnly) {
             $query->andWhere("pSalePrice is not null");
