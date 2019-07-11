@@ -106,8 +106,8 @@
             <?php if (!empty($productmanufacturer)) {
             ?>
             <div class="form-group">
-                <?= $form->label('mID', t('Filter by Product Manufacturer')); ?>
-                <?= $form->select('filtermanufacturer', $productmanufacturers, $filtermanufacturer,  ['class' => 'selectize']); ?>
+                <?= $form->label('mID', t('Filter by Brand / Manufacturer')); ?>
+                <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer,  ['class' => 'selectize']); ?>
             </div>
                 <?php
             } ?>
