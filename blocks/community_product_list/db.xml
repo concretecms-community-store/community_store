@@ -32,7 +32,7 @@
 		<field name="btnText" type="string" size="255"></field>
 		<field name="showQuantity" type="boolean"></field>
 		<field name="noProductsMessage" type="string" size="255"></field>
-		<field name="filtermanufacturer" type="integer" size="2"></field>
+		<field name="filterManufacturer" type="integer" size="2"></field>
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">
