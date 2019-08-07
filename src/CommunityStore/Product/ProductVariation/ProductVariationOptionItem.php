@@ -23,7 +23,7 @@ class ProductVariationOptionItem
     protected $variation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem", inversedBy="variationoptionitems")
      * @ORM\JoinColumn(name="poiID", referencedColumnName="poiID", onDelete="CASCADE")
      */
     protected $option;

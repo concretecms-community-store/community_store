@@ -23,7 +23,7 @@ class ProductPriceTier
     protected $pID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product",inversedBy="userGroups",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product", inversedBy="priceTiers", cascade={"persist"})
      * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $product;

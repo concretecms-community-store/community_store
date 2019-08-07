@@ -338,7 +338,7 @@ class Product
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product",cascade={"persist"}))
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product", cascade={"persist"}))
      * @ORM\OrderBy({"ptFrom" = "ASC"})
      */
     protected $priceTiers;
