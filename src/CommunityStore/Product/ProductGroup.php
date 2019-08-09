@@ -35,7 +35,7 @@ class ProductGroup
     protected $gID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group", inversedBy="products")
      * @ORM\JoinColumn(name="gID", referencedColumnName="gID", onDelete="CASCADE")
      */
     protected $group;
