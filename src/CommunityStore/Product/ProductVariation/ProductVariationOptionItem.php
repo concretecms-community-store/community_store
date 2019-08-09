@@ -43,12 +43,12 @@ class ProductVariationOptionItem
         return $this->variation;
     }
 
-    public function setOption($option)
+    public function setOptionItem($option)
     {
         $this->option = $option;
     }
 
-    public function getOption()
+    public function getOptionItem()
     {
         return $this->option;
     }

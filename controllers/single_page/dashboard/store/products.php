@@ -194,7 +194,7 @@ class Products extends DashboardSitePageController
             $optionids = [];
 
             foreach ($options as $varoption) {
-                $option = $varoption->getOption();
+                $option = $varoption->getOptionItem();
 
                 if ($option) {
                     $optionids[] = $option->getID();

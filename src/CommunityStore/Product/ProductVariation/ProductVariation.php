@@ -497,7 +497,7 @@ class ProductVariation
 
                         if ($option) {
                             $variationoption = new StoreProductVariationOptionItem();
-                            $variationoption->setOption($option);
+                            $variationoption->setOptionItem($option);
                             $variationoption->setVariation($variation);
                             $variationoption->save(true);
                         }
@@ -524,7 +524,7 @@ class ProductVariation
                     $options = $variation->getOptions();
 
                     foreach ($options as $opt) {
-                        if (!in_array($opt->getOption()->getID(), $optioncombo)) {
+                        if (!in_array($opt->getOptionItem()->getID(), $optioncombo)) {
                             $opt->delete();
                         }
                     }

@@ -33,6 +33,11 @@ class ProductOptionItem
         return $this->option = $option;
     }
 
+    public function getOption()
+    {
+        return $this->option;
+    }
+
     /**
      * @ORM\Column(type="string")
      */

@@ -9,6 +9,14 @@ $task = $controller->getAction();
 
 <?php if ($task == 'view') { ?>
 
+
+    <div class="ccm-dashboard-header-buttons">
+        <form class="pull-right" method="get" id="duplicate" action="<?= Url::to(' /dashboard/store/reports/products/sheet', $pID) ?>">
+            <button class="btn btn-primary"><?= t("View Product Price/Shipping Sheet") ?></button>
+        </form>
+    </div>
+
+
     <form action="<?= Url::to('/dashboard/store/reports/products') ?>" method="get">
 
         <div class="row">

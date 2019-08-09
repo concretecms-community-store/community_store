@@ -4,11 +4,12 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Http\Request;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
 
 class Products extends DashboardPageController
 {
@@ -171,4 +172,20 @@ class Products extends DashboardPageController
             $this->detail($productid, true);
         }
     }
+
+    public function sheet() {
+        $productsList = new StoreProductList();
+        $productsList->setItemsPerPage(20);
+        $productsList->setActiveOnly(false);
+        $productsList->setShowOutOfStock(true);
+        $productsList->setSortBy('alpha');
+        $productsList->setSortByDirection('asc');
+
+        $allproducts = $productsList->getResults();
+
+        $this->set('products', $allproducts);
+        $this->set('pageTitle', 'Product Price/Shipping Sheet');
+        $this->render('/dashboard/store/reports/products/sheet');
+    }
+
 }
