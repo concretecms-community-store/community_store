@@ -158,6 +158,7 @@ class Installer
     {
         self::installShippingMethod('flat_rate', 'Flat Rate', $pkg);
         self::installShippingMethod('free_shipping', 'Free Shipping', $pkg);
+        self::installShippingMethod('electronic_delivery_fee', 'Electronic Delivery Fee', $pkg);
     }
 
     public static function installShippingMethod($handle, $name, $pkg)

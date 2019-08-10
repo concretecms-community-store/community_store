@@ -178,6 +178,10 @@ class Controller extends Package
         if (is_object($shippingMethodType)) {
             $shippingMethodType->delete();
         }
+        $shippingMethodType = ShippingMethodType::getByHandle('electronic_delivery_fee');
+        if (is_object($shippingMethodType)) {
+            $shippingMethodType->delete();
+        }
 
         // change existing product pages back to standard page type to prevent broken pages
         $list = new \Concrete\Core\Page\PageList();

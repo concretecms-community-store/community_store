@@ -95,7 +95,7 @@ class Order
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $oTotal;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $transactionReference;
 
     /** @ORM\Column(type="datetime", nullable=true) */
