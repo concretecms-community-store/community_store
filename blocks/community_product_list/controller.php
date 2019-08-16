@@ -207,21 +207,11 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
-        $codediscounts = false;
         $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
-        $code = trim(Session::get('communitystore.code'));
-
-        if ($code) {
-            $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
-        }
 
         foreach ($products as $key => $product) {
             if (!empty($automaticdiscounts)) {
                 $products[$key]->addDiscountRules($automaticdiscounts);
-            }
-
-            if (!empty($codediscounts)) {
-                $products[$key]->addDiscountRules($codediscounts);
             }
         }
 

@@ -352,6 +352,12 @@ class Product
 
     protected $discountRuleIDs;
 
+
+    public function clearDiscountRules() {
+        $this->discountRules = [];
+        $this->discountRuleIDs = [];
+    }
+
     public function addDiscountRules($rules)
     {
         foreach ($rules as $rule) {
