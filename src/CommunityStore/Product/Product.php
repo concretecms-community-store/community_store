@@ -1083,7 +1083,7 @@ class Product
     }
 
     public function getActivePrice($qty = 1)
-    {   
+    {
         if(Wholesale::isUserWholesale()){
             return $this->getWholesalePrice();
         } else {
@@ -1829,7 +1829,7 @@ class Product
                     $variationOptions = $variation->getOptions();
 
                     foreach ($variationOptions as $variationOption) {
-                        $opt = $variationOption->getOption();
+                        $opt = $variationOption->getOptionItem();
                         if ($opt->isHidden()) {
                             $isAvailable = false;
                             break;
