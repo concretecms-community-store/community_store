@@ -564,7 +564,8 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
-        $order->setUserAgent($userAgent);
+        
+        Config::get('community_store.logUserAgent') ? $order->setUserAgent($userAgent) : '';
 
         $order->setLocale(Localization::activeLocale());
 
