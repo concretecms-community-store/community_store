@@ -509,6 +509,8 @@ class Order
     {
         $app = Application::getFacadeApplication();
         $csm = $app->make('cs/helper/multilingual');
+        
+        $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
 
         $customer = new StoreCustomer();
         $now = new \DateTime();
@@ -562,6 +564,7 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
+        $order->setUserAgent($userAgent);
 
         $order->setLocale(Localization::activeLocale());
 
