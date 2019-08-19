@@ -124,6 +124,9 @@ class Order
 
     /** @ORM\Column(type="string", nullable=true) */
     protected $locale;
+    
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $userAgent;
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
@@ -384,6 +387,16 @@ class Order
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+    
+    public function getUserAgent()
+    {
+        return $this->userAgent;
+    }
+
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
     }
 
     public function getTaxes()
