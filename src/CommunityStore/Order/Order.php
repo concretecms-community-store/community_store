@@ -124,6 +124,9 @@ class Order
 
     /** @ORM\Column(type="string", nullable=true) */
     protected $locale;
+    
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $userAgent;
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
@@ -385,6 +388,16 @@ class Order
     {
         $this->locale = $locale;
     }
+    
+    public function getUserAgent()
+    {
+        return $this->userAgent;
+    }
+
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
+    }
 
     public function getTaxes()
     {
@@ -496,6 +509,8 @@ class Order
     {
         $app = Application::getFacadeApplication();
         $csm = $app->make('cs/helper/multilingual');
+        
+        $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
 
         $customer = new StoreCustomer();
         $now = new \DateTime();
@@ -549,6 +564,8 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
+        
+        Config::get('community_store.logUserAgent') ? $order->setUserAgent($userAgent) : '';
 
         $order->setLocale(Localization::activeLocale());
 

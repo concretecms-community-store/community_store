@@ -198,6 +198,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.showUnpaidExternalPaymentOrders', $args['showUnpaidExternalPaymentOrders']);
                 Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
+                Config::save('community_store.logUserAgent', (bool) $args['logUserAgent']);
 
                 //save payment methods
                 if ($args['paymentMethodHandle']) {
