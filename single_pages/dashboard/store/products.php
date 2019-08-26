@@ -153,12 +153,12 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $salePrice = $product->getSalePrice(); ?>
-                                <?= $form->text("pSalePrice", $salePrice, ['placeholder' => 'No Sale Price Set']); ?>
+                                <?= $form->text("pSalePrice", $salePrice, ['placeholder' => t('No Sale Price Set')]); ?>
                             </div>
                         </div>
                         <div class="form-group priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
                             <?= $form->label('pPriceSuggestions', t('Price Suggestions')) ?>
-                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), ['placeholder' => 'e.g. 10,20,30']) ?>
+                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), ['placeholder' => t('e.g. 10,20,30')]) ?>
                         </div>
                     </div>
                     <div class="col-xs-6">
@@ -169,7 +169,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $wholesalePrice = $product->getWholesalePrice(); ?>
-                                <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>'No Wholesale Price Set'));?>
+                                <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>t('No Wholesale Price Set')));?>
                             </div>
                         </div>
                     </div>
@@ -198,7 +198,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $minimumPrice = $product->getPriceMinimum(); ?>
-                                <?= $form->text("pPriceMinimum", $minimumPrice, ['placeholder' => 'No Minimum Price Set']); ?>
+                                <?= $form->text("pPriceMinimum", $minimumPrice, ['placeholder' => t('No Minimum Price Set')]); ?>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $maximumPrice = $product->getPriceMaximum(); ?>
-                                <?= $form->text("pPriceMaximum", $maximumPrice, ['placeholder' => 'No Maximum Price Set']); ?>
+                                <?= $form->text("pPriceMaximum", $maximumPrice, ['placeholder' => t('No Maximum Price Set')]); ?>
                             </div>
                         </div>
                     </div>
