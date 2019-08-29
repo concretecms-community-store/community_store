@@ -321,6 +321,11 @@ use \Concrete\Core\User\UserInfoRepository;
         if ($locale) { ?>
             <br /><p><strong><?= t("Order Locale") ?>: </strong><?= \Punic\Language::getName($locale) ?></p>
         <?php } ?>
+        
+        <?php $userAgent = $order->getUserAgent();
+        if ($userAgent) { ?>
+            <br /><p><strong><?= t("Browser User Agent") ?>: </strong><?= $userAgent ?></p>
+        <?php } ?>
 
         
     </fieldset>

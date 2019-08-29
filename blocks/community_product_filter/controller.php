@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Database;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Controller extends BlockController
 {
@@ -35,6 +36,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', []);
+        $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         $this->set('attributes', $this->getAvailableAttributes());
         $this->set('app', $this->app);
     }
@@ -45,6 +47,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
+        $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         $this->set('attributes', $this->getAvailableAttributes());
         $this->set('app', $this->app);
 
@@ -110,6 +113,7 @@ class Controller extends BlockController
         $attrLookup = [];
         $selectedarray = [];
         $groupfilters = [];
+        $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         if ('auto' == $this->filterSource) {
             $page = Page::getCurrentPage();
             $blocks = $page->getBlocks();
@@ -126,7 +130,7 @@ class Controller extends BlockController
                     $this->showOutOfStock = $blockcontroller->showOutOfStock;
                     $this->groupMatchAny = $blockcontroller->groupMatchAny;
                     $groupfilters = $blockcontroller->getGroupFilters();
-
+                    $this->filterManufacturer = $blockcontroller->filterManufacturer;
                     break;
                 }
             }
@@ -225,6 +229,7 @@ class Controller extends BlockController
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
         $products->setGroupMatchAny($this->groupMatchAny);
+        $products->setManufacturer($this->filterManufacturer);
 
         $unfilteredIDs = $products->getResultIDs();
 

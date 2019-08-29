@@ -5,6 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 
@@ -537,12 +538,8 @@ class DiscountRule
         return $data['codecount'] > 0;
     }
 
-    public static function findAutomaticDiscounts($user = null, $cartitems = false)
+    public static function findAutomaticDiscounts($cartItems = false)
     {
-        if (null === $user) {
-            $user = new User();
-        }
-
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
@@ -555,7 +552,39 @@ class DiscountRule
               ORDER BY drPercentage DESC, drValue DESC
               ");
 
+        return self::filterDiscounts($result, $cartItems);
+    }
+
+
+    public static function findDiscountRuleByCode($code, $cartItems = false)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+
+        $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
+        LEFT JOIN CommunityStoreDiscountRules as dr on dc.drID = dr.drID
+        WHERE dcCode = ?
+        AND oID IS NULL
+        AND drDeleted IS NULL
+        AND  drEnabled = '1'
+        AND drTrigger = 'code'
+        AND (drValidFrom IS NULL OR drValidFrom <= NOW())
+        AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", [$code]);
+
+
+        return self::filterDiscounts($result, $cartItems);
+    }
+
+
+    private static function filterDiscounts($result, $cartItems = false) {
+        $user = new User();
+
         $discounts = [];
+
+        if (!$cartItems) {
+            $cartItems = \Concrete\Core\Support\Facade\Session::get('communitystore.cart');
+        }
+
         while ($row = $result->fetchRow()) {
             $include = true;
 
@@ -576,7 +605,7 @@ class DiscountRule
                     $include = false;
                     $count = 0;
 
-                    if (is_array($cartitems)) {
+                    if (is_array($cartItems)) {
                         $discountProductGroups = [];
 
                         $dpg = trim($row['drProductGroups']);
@@ -586,14 +615,16 @@ class DiscountRule
                         }
 
                         if (!empty($discountProductGroups)) {
-                            foreach ($cartitems as $ci) {
-                                $groupids = $ci['product']['object']->getGroupIDs();
-                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                    $count += $ci['product']['qty'];
+                            foreach ($cartItems as $ci) {
+                                if ($ci['product']['object']) {
+                                    $groupids = $ci['product']['object']->getGroupIDs();
+                                    if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                        $count += $ci['product']['qty'];
+                                    }
                                 }
                             }
                         } else {
-                            foreach ($cartitems as $ci) {
+                            foreach ($cartItems as $ci) {
                                 $count += $ci['product']['qty'];
                             }
                         }
@@ -617,6 +648,8 @@ class DiscountRule
         return $discounts;
     }
 
+
+
     public function retrieveStatistics()
     {
         $app = Application::getFacadeApplication();
@@ -627,50 +660,6 @@ class DiscountRule
         $this->availableCodes = $r['available'];
 
         return $r;
-    }
-
-    public static function findDiscountRuleByCode($code, $user = null)
-    {
-        if (null === $user) {
-            $user = new User();
-        }
-
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-
-        $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
-        LEFT JOIN CommunityStoreDiscountRules as dr on dc.drID = dr.drID
-        WHERE dcCode = ?
-        AND oID IS NULL
-        AND drDeleted IS NULL
-        AND  drEnabled = '1'
-        AND drTrigger = 'code'
-        AND (drValidFrom IS NULL OR drValidFrom <= NOW())
-        AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", [$code]);
-
-        $discounts = [];
-
-        while ($row = $result->fetchRow()) {
-            $include = true;
-
-            if ($row['drUserGroups']) {
-                $discountusergroups = explode(',', $row['drUserGroups']);
-
-                $usergroups = $user->getUserGroups();
-
-                $matching = array_intersect($usergroups, $discountusergroups);
-
-                if (0 == count($matching)) {
-                    $include = false;
-                }
-            }
-
-            if ($include) {
-                $discounts[] = self::getByID($row['drID']);
-            }
-        }
-
-        return $discounts;
     }
 
     public static function add($data)

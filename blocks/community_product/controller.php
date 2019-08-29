@@ -79,18 +79,9 @@ class Controller extends BlockController
 
             $codediscounts = false;
             $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
-            $code = trim(Session::get('communitystore.code'));
-
-            if ($code) {
-                $codediscounts = StoreDiscountRule::findDiscountRuleByCode($code);
-            }
 
             if (!empty($automaticdiscounts)) {
                 $product->addDiscountRules($automaticdiscounts);
-            }
-
-            if (!empty($codediscounts)) {
-                $product->addDiscountRules($codediscounts);
             }
 
             $this->set('product', $product);

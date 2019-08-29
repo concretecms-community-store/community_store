@@ -81,17 +81,21 @@ class Cart
 
             self::$discounts = [];
 
-            $rules = StoreDiscountRule::findAutomaticDiscounts(null, $checkeditems);
+            $rules = StoreDiscountRule::findAutomaticDiscounts($checkeditems);
 
             $code = trim(Session::get('communitystore.code'));
             if ($code) {
-                $coderules = StoreDiscountRule::findDiscountRuleByCode($code);
-
+                $coderules = StoreDiscountRule::findDiscountRuleByCode($code, $checkeditems);
                 if (count($coderules)) {
                     $rules = array_merge($rules, $coderules);
                 } else {
                     Session::set('communitystore.code', '');
                 }
+            }
+
+            // remove any previously applied discounts, in case cart quantities have changed and they no longer apply
+            foreach ($checkeditems as $key => $cartitem) {
+                $cartitem['product']['object']->clearDiscountRules();
             }
 
             if (count($rules) > 0) {
@@ -102,6 +106,7 @@ class Cart
 
                     if (!empty($discountProductGroups)) {
                         $include = false;
+
                         foreach ($checkeditems as $cartitem) {
                             $groupids = $cartitem['product']['object']->getGroupIDs();
 
@@ -436,6 +441,7 @@ class Cart
         }
 
         Session::set('communitystore.cart', $cart);
+
         self::$cart = null;
 
         \Events::dispatch(StoreCartEvent::CART_ACTION, $event);

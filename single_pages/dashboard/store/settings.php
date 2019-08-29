@@ -110,7 +110,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-xs-12">
                     <label><?= $form->checkbox('multiplePackages', '1', Config::get('community_store.multiplePackages') ? '1' : '0'); ?>
                         <?= t('Enable Package(s) Data fields'); ?></label>
-                    <span class="help-block">Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods</span>
+                    <span class="help-block"> <?= t('Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods'); ?></span>
                 </div>
             </div>
 
@@ -558,6 +558,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('numberOfOrders', t('Number of orders displayed per page on orders dashboard page')); ?>
                <?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?>
+            </div>
+            
+             <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('logUserAgent', '1', (bool) Config::get('community_store.logUserAgent')) ?>
+                    <?= t('Log User Agent') ?>
+                    <span class="small text-muted"><br /><?= t('Log the user agent against the order (this will effect your GDPR compliance).') ?></span>
+                </label>
             </div>
 
         </div>

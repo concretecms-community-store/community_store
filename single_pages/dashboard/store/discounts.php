@@ -555,7 +555,8 @@ $currencySymbol = Config::get('community_store.symbol');
     <?php } ?>
 </p>
 
-<?php if (!empty($codes)) { ?>
+
+<?php if (count($codes) > 0) { ?>
         <table class="table table-bordered">
             <tr><th><?= t('Code'); ?></th>
 
@@ -606,7 +607,7 @@ $currencySymbol = Config::get('community_store.symbol');
         </table>
 
     <?php } else { ?>
-    <p><?= t('No codes specified');?></p>
+    <p class="alert alert-warning"><?= t('No codes specified');?></p>
 
     <?php } ?>
 <br />

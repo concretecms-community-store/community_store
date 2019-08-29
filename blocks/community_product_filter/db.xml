@@ -24,6 +24,7 @@
         <field name="clearButtonText" type="string" size="255"></field>
         <field name="showTotals" type="boolean"></field>
         <field name="jumpAnchor" type="boolean"></field>
+        <field name="filterManufacturer" type="integer" size="2"></field>
 
     </table>
 

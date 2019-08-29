@@ -20,6 +20,7 @@
                 ], $filter); ?>
             </div>
 
+
             <div class="form-group" id="pageselector">
                 <div
                     class="form-group" <?= 'page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'; ?> >
@@ -94,6 +95,21 @@
                 </div>
 
             <?php
+            } ?>
+
+            <?php
+            $productmanufacturers = array("0" => t("None"));
+            foreach ($manufacturersList as $productmanufacturer) {
+                $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
+            }
+            ?>
+            <?php if (!empty($productmanufacturer)) {
+            ?>
+            <div class="form-group">
+                <?= $form->label('mID', t('Filter by Brand / Manufacturer')); ?>
+                <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer,  ['class' => 'selectize']); ?>
+            </div>
+                <?php
             } ?>
 
             <div class="form-group checkbox">
