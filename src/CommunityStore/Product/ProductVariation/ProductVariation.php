@@ -44,6 +44,11 @@ class ProductVariation
     protected $pvSKU;
 
     /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $pvBarcode;
+
+    /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pvSalePrice;
@@ -188,6 +193,22 @@ class ProductVariation
     public function setVariationSKU($pvSKU)
     {
         $this->pvSKU = $pvSKU;
+    }
+
+    /**
+     * @ORM\return mixed
+     */
+    public function getVariationBarcode()
+    {
+        return $this->pvBarcode;
+    }
+
+    /**
+     * @ORM\param mixed $pvBarcode
+     */
+    public function setVariationBarcode($pvBarcode)
+    {
+        $this->pvBarcode = $pvBarcode;
     }
 
     /**
@@ -477,6 +498,7 @@ class ProductVariation
                         $product->getID(),
                         [
                         'pvSKU' => '',
+                        'pvBarcode' => '',
                         'pvPrice' => '',
                         'pvWholesalePrice'=>'',
                         'pvSalePrice' => '',
@@ -506,6 +528,7 @@ class ProductVariation
                     $key = $variation->getID();
 
                     $variation->setVariationSKU($data['pvSKU'][$key]);
+                    $variation->setVariationBarcode($data['pvBarcode'][$key]);
                     $variation->setVariationPrice($data['pvPrice'][$key]);
                     $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
@@ -577,6 +600,7 @@ class ProductVariation
         $variation = new self();
         $variation->setProductID($productID);
         $variation->setVariationSKU($data['pvSKU']);
+        $variation->setVariationBarcode($data['pvBarcode']);
         $variation->setVariationPrice($data['pvPrice']);
         $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
