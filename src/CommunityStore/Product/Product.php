@@ -1675,8 +1675,8 @@ class Product
 
         foreach ($newvariations as $variation) {
             foreach ($variation->getOptions() as $option) {
-                $optionid = $option->getOption()->getID();
-                $option->setOption($optionMap[$optionid]);
+                $optionid = $option->getOptionItem()->getID();
+                $option->setOptionItem($optionMap[$optionid]);
                 $option->save(true);
             }
         }
