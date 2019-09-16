@@ -474,7 +474,19 @@ class Product
 
     public function getBarcode()
     {
-        return $this->pBarcode;
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            if ($variation) {
+                $vbarcode = $variation->getVariationBarcode();
+
+                if ($vbarcode) {
+                    return $vbarcode;
+                } else {
+                    return $this->pBarcode;
+                }
+            }
+        } else {
+            return $this->pBarcode;
+        }
     }
 
     public function setBarcode($barcode)
