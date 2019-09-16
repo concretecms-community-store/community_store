@@ -1243,6 +1243,15 @@ $ps = $app->make('helper/form/page_selector');
 
                                             <div class="row form-group">
                                                 <div class="col-md-4">
+                                                    <?= $form->label("", t("Barcode")); ?>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <?= $form->text("pvBarcode[" . $varid . "]", $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-md-4">
                                                     <?= $form->label("", t("Stock Level")); ?>
                                                 </div>
                                                 <div class="col-md-8">
