@@ -56,7 +56,7 @@ class Orders extends DashboardPageController
 
         if (Config::get('community_store.numberOfOrders')) {
             $orderList->setItemsPerPage(Config::get('community_store.numberOfOrders'));
-        } else {     
+        } else {
             $orderList->setItemsPerPage(20);
         }
 
@@ -224,7 +224,7 @@ class Orders extends DashboardPageController
 
             if ($order && $this->request->request->get('email')) {
                 $order->sendOrderReceipt($this->request->request->get('email'));
-                $this->flash('success', t('Receipt Email Resent to %s', $this->request->request->get('email')));
+                $this->flash('success', t('Receipt Email resent to %s', $this->request->request->get('email')));
             }
 
             return Redirect::to('/dashboard/store/orders/order', $oID);
@@ -241,7 +241,7 @@ class Orders extends DashboardPageController
                 $order->sendNotifications($this->request->request->get('email'));
                 $notificationEmails = explode(",", trim($emails));
                 $notificationEmails = array_map('trim', $notificationEmails);
-                $this->flash('success', t('Notification Email Resent to %s', implode(', ', $notificationEmails)));
+                $this->flash('success', t('Notification Email resent to %s', implode(', ', $notificationEmails)));
             }
 
             return Redirect::to('/dashboard/store/orders/order', $oID);

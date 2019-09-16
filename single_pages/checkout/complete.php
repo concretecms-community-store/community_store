@@ -212,7 +212,7 @@ $dh = $app->make('helper/date');
             <tfoot>
             <tr>
                 <td colspan="4" class="text-right"><strong><?= t("Items Subtotal"); ?>:</strong></td>
-                <td colspan="1" class="text-right" ><?= StorePrice::format($order->getSubTotal()); ?></td>
+                <td class="text-right" ><?= StorePrice::format($order->getSubTotal()); ?></td>
             </tr>
             </tfoot>
         </table>
