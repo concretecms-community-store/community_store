@@ -53,7 +53,7 @@ class Shipping extends DashboardPageController
                 if ($shippingMethod) {
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                     $shippingMethodTypeMethod->update($this->request->request->all());
-                    $shippingMethod->update($this->request->request->get('methodName'), $this->request->request->get('methodEnabled'), $this->request->request->get('methodDetails'));
+                    $shippingMethod->update($this->request->request->get('methodName'), $this->request->request->get('methodEnabled'), $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
                     $this->flash('success', t('Shipping Method Updated'));
 
                     return Redirect::to('/dashboard/store/settings/shipping');
@@ -65,7 +65,7 @@ class Shipping extends DashboardPageController
                 $shippingMethodType = StoreShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->request->request->all());
                 //make a shipping method that correlates with it.
-                StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'));
+                StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
                 $this->flash('success', t('Shipping Method Created'));
 
                 return Redirect::to('/dashboard/store/settings/shipping');
