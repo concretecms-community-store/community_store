@@ -156,6 +156,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             }
         }
 
+
         $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
@@ -175,10 +176,10 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     } else {
                         if ('and' == $type) {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . $searchterm . '"');
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . $searchterm . '($|\n)"');
                             }
                         } else {
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "' . implode('|', $value) . '"');
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . implode('($|\n)|(^|\n)', $value ) . '($|\n)"');
                         }
                     }
                 }
