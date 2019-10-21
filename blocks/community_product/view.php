@@ -83,7 +83,7 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
-                            $stockstatus = $variation->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
+                            $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
                             if ($isWholesale) {
                                 $msrp = $product->getFormattedOriginalPrice();
                                 $wholesalePrice = $product->getWholesalePrice();
