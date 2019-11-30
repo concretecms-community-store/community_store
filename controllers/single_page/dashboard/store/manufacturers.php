@@ -53,22 +53,23 @@ class Manufacturers extends DashboardPageController
 
     public function submit()
     {
-        $data = $this->post();
+        $request = $this->request;
+
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        if (!$this->error->has() && $this->isPost()) {
-            if ($this->post('mID')) {
-                $manufacturer = Manufacturer::getByID($this->post('mID'));
+        if (!$this->error->has() && $request->isPost()) {
+            if ($request->request->get('mID')) {
+                $manufacturer = Manufacturer::getByID($request->request->get('mID'));
             } else {
                 $manufacturer = new Manufacturer();
             }
-            $manufacturer->setName($this->post('name'));
-            $manufacturer->setDescription($this->post('description'));
-            $manufacturer->setCollectionID($this->post('pageCID'));
+            $manufacturer->setName($request->request->get('name'));
+            $manufacturer->setDescription($request->request->get('description'));
+            $manufacturer->setCollectionID($request->request->get('pageCID'));
             $manufacturer->save();
 
-            if ($this->post('mID')) {
+            if ($request->request->get('mID')) {
                 $this->flash('success', t('Manufacturer Updated'));
             } else {
                 $this->flash('success', t('Manufacturer Added'));
@@ -100,5 +101,5 @@ class Manufacturers extends DashboardPageController
         return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
 
     }
-    
+
 }
