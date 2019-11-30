@@ -564,6 +564,10 @@ class Product
 
     public function setQty($qty)
     {
+        if ($qty > 99999999.9999) {
+            $qty = 99999999.9999;
+        }
+
         $this->pQty = ($qty ? $qty : 0);
     }
 
