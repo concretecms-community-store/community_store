@@ -131,6 +131,7 @@ class Orders extends DashboardPageController
             $user = new User();
 
             $order->completePayment();
+            $order->setExternalPaymentRequested(null);
             $order->setPaidByUID($user->getUserID());
             $order->save();
 
