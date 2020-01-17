@@ -815,7 +815,7 @@ class Order
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    Log::addWarning(t('Community Store: a new user email failed sending to %s', $email));
+                    Log::addWarning(t('Community Store: a new user email failed sending to %s, with error %s', $email, $e->getMessage()));
                 }
             }
         }
@@ -963,7 +963,7 @@ class Order
             try {
                 $mh->sendMail();
             } catch (\Exception $e) {
-                Log::addWarning(t('Community Store: a notification email failed sending to %s', [implode(', ', $notificationEmails)]));
+                Log::addWarning(t('Community Store: a notification email failed sending to %s, with error %s', [implode(', ', $notificationEmails)], $e->getMessage()));
             }
         }
     }
@@ -1017,7 +1017,7 @@ class Order
         try {
             $mh->sendMail();
         } catch (\Exception $e) {
-            Log::addWarning(t('Community Store: a receipt email failed sending to %s', $email));
+            Log::addWarning(t('Community Store: a receipt email failed sending to %s, with error %s', $email, $e->getMessage()));
         }
     }
 
