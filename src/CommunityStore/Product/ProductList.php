@@ -362,7 +362,14 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1);
+
+            $reset = ['groupBy', 'orderBy'];
+
+            if (!$this->groupMatchAny) {
+                $reset[] = 'having';
+            }
+
+            $query->resetQueryParts($reset)->select('count(distinct p.pID)')->setMaxResults(1);
         });
 
         return $adapter;

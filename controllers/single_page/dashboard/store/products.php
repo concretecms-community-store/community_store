@@ -37,6 +37,7 @@ class Products extends DashboardSitePageController
         $productsList->setGroupID($gID);
         $productsList->setActiveOnly(false);
         $productsList->setShowOutOfStock(true);
+        $productsList->setGroupMatchAny(true);
 
         if ($this->request->query->get('ccm_order_by')) {
             $productsList->setSortBy($this->request->query->get('ccm_order_by'));
