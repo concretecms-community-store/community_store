@@ -29,10 +29,16 @@ if(in_array($controller->getAction(),$addViews)){
                         <?= $form->text('methodName',is_object($sm)?$sm->getName():''); ?>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-6">
+                <div class="col-xs-12 col-sm-3">
                     <div class="form-group">
                         <?= $form->label('methodEnabled',t("Enabled")); ?>
                         <?= $form->select('methodEnabled',array(true=>t('Yes'),false=>t('No')),is_object($sm)?$sm->isEnabled():''); ?>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="form-group">
+                        <?= $form->label('methodSortOrder',t("Sort Order")); ?>
+                        <?= $form->text('methodSortOrder',is_object($sm)?$sm->getSortOrder():''); ?>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12">
@@ -100,6 +106,7 @@ if(in_array($controller->getAction(),$addViews)){
                     <tr>
                         <th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName()) ?></th>
                         <th style="width: 20%;"><?= t("Enabled") ?></th>
+                        <th style="width: 20%;"><?= t("Sort Order") ?></th>
                         <th class="text-right" style="width: 20%;"><?= t("Actions") ?></th>
                     </tr>
                     </thead>
@@ -113,6 +120,7 @@ if(in_array($controller->getAction(),$addViews)){
                             <tr>
                                 <td><?= $method->getName() ?></td>
                                 <td style="width: 20%;"><?= $method->isEnabled() ? t('Yes') : t('No') ?></td>
+                                <td style="width: 20%;"><?= $method->getSortOrder() ?></td>
                                 <td class="text-right" style="width: 20%;">
                                     <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
                                        class="btn btn-default"><?= t("Edit") ?></a>

@@ -474,7 +474,19 @@ class Product
 
     public function getBarcode()
     {
-        return $this->pBarcode;
+        if ($this->hasVariations() && $variation = $this->getVariation()) {
+            if ($variation) {
+                $vbarcode = $variation->getVariationBarcode();
+
+                if ($vbarcode) {
+                    return $vbarcode;
+                } else {
+                    return $this->pBarcode;
+                }
+            }
+        } else {
+            return $this->pBarcode;
+        }
     }
 
     public function setBarcode($barcode)
@@ -552,6 +564,10 @@ class Product
 
     public function setQty($qty)
     {
+        if ($qty > 99999999.9999) {
+            $qty = 99999999.9999;
+        }
+
         $this->pQty = ($qty ? $qty : 0);
     }
 
@@ -1675,8 +1691,8 @@ class Product
 
         foreach ($newvariations as $variation) {
             foreach ($variation->getOptions() as $option) {
-                $optionid = $option->getOption()->getID();
-                $option->setOption($optionMap[$optionid]);
+                $optionid = $option->getOptionItem()->getID();
+                $option->setOptionItem($optionMap[$optionid]);
                 $option->save(true);
             }
         }

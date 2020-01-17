@@ -94,6 +94,7 @@ class Controller extends BlockController
             $this->set('showWeight', $this->showWeight);
             $this->set('showGroups', $this->showGroups);
             $this->set('showCartButton', $this->showCartButton);
+            $this->set('showQuantity', $this->showQuantity);
             $this->set('showImage', $this->showImage);
             $this->set('showProductDetails', $this->showProductDetails);
             $this->set('btnText', $this->btnText);
@@ -163,6 +164,7 @@ class Controller extends BlockController
         $args['showIsFeatured'] = isset($args['showIsFeatured']) ? 1 : 0;
         $args['showGroups'] = isset($args['showGroups']) ? 1 : 0;
         $args['showDimensions'] = isset($args['showDimensions']) ? 1 : 0;
+        $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
         if ('search' == $args['productLocation']) {
             if (!is_numeric($args['pID']) || $args['pID'] < 1) {
                 $args['productLocation'] = "page";

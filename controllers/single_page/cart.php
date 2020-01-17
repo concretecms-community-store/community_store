@@ -94,8 +94,7 @@ class Cart extends PageController
         $this->set('codeerror', $codeerror);
         $this->set('codesuccess', $codesuccess);
 
-
-        $this->set('cart', StoreCart::getCart());
+        $this->set('cart', StoreCart::getCart(true));
         $this->set('discounts', StoreCart::getDiscounts());
 
         $totals = StoreCalculator::getTotals();

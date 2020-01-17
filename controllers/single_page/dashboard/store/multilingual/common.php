@@ -11,8 +11,8 @@ class Common extends DashboardSitePageController
     public function view()
     {
         $this->set('pageTitle', t('Common Translations'));
-        $qb = $this->entityManager->createQueryBuilder();
 
+        $qb = $this->entityManager->createQueryBuilder();
         $query = $qb->select('o')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
             ->groupBy('o.poName')->orderBy('o.poName')->getQuery()->getResult();
@@ -25,6 +25,7 @@ class Common extends DashboardSitePageController
 
         $this->set('optionNames', array_values($optionNames));
 
+        $qb = $this->entityManager->createQueryBuilder();
         $query = $qb->select('od')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'od')
             ->groupBy('od.poDetails')->orderBy('od.poDetails')->getQuery()->getResult();
@@ -39,6 +40,7 @@ class Common extends DashboardSitePageController
 
         $this->set('optionDetails', array_values($optionDetails));
 
+        $qb = $this->entityManager->createQueryBuilder();
         $query = $qb->select('oi')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'oi')
             ->groupBy('oi.poiName')->orderBy('oi.poiName')->getQuery()->getResult();
@@ -51,7 +53,7 @@ class Common extends DashboardSitePageController
 
         $this->set('optionItems', array_values($optionItems));
 
-
+        $qb = $this->entityManager->createQueryBuilder();
         $query = $qb->select('ois')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'ois')
             ->groupBy('ois.poiSelectorName')->orderBy('ois.poiSelectorName')->getQuery()->getResult();

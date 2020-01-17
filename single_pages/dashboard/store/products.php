@@ -1243,6 +1243,15 @@ $ps = $app->make('helper/form/page_selector');
 
                                             <div class="row form-group">
                                                 <div class="col-md-4">
+                                                    <?= $form->label("", t("Barcode")); ?>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <?= $form->text("pvBarcode[" . $varid . "]", $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-md-4">
                                                     <?= $form->label("", t("Stock Level")); ?>
                                                 </div>
                                                 <div class="col-md-8">
@@ -1780,9 +1789,9 @@ $ps = $app->make('helper/form/page_selector');
                             <?php } ?>
                         </td>
                         <td>
-                            <div class="btn-group" style="width:120px">
-                                <a class="btn btn-sm btn-primary"
-                                   href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= t("Manage") ?></a>
+                            <div class="btn-group" style="width:100px">
+                                <a class="btn btn-sm btn-primary" title="<?= t('Manage'); ?>"
+                                   href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><i class="fa fa-pencil"></i></a>
                                 <?php if ($multilingualEnabled) { ?>
                                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>

@@ -124,7 +124,7 @@ class Order
 
     /** @ORM\Column(type="string", nullable=true) */
     protected $locale;
-    
+
     /** @ORM\Column(type="string", nullable=true) */
     protected $userAgent;
 
@@ -388,7 +388,7 @@ class Order
     {
         $this->locale = $locale;
     }
-    
+
     public function getUserAgent()
     {
         return $this->userAgent;
@@ -509,7 +509,7 @@ class Order
     {
         $app = Application::getFacadeApplication();
         $csm = $app->make('cs/helper/multilingual');
-        
+
         $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
 
         $customer = new StoreCustomer();
@@ -564,7 +564,7 @@ class Order
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
-        
+
         Config::get('community_store.logUserAgent') ? $order->setUserAgent($userAgent) : '';
 
         $order->setLocale(Localization::activeLocale());
@@ -800,7 +800,7 @@ class Order
                 $fromName = Config::get('community_store.emailalertsname');
                 $fromEmail = Config::get('community_store.emailalerts');
                 if (!$fromEmail) {
-                    $fromEmail = "store@" . $request->getHost();
+                    $fromEmail = "store@" . str_replace('www.', '', $request->getHost());
                 }
 
                 // new user password email
@@ -921,7 +921,7 @@ class Order
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
-            $fromEmail = "store@" . $request->getHost();
+            $fromEmail = "store@" . str_replace('www.', '', $request->getHost());
         }
 
         //order notification
@@ -977,7 +977,7 @@ class Order
 
         $fromEmail = Config::get('community_store.emailalerts');
         if (!$fromEmail) {
-            $fromEmail = "store@" . $request->getHost();
+            $fromEmail = "store@" . str_replace('www.', '', $request->getHost());
         }
 
         if ($fromName) {

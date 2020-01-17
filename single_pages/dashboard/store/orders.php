@@ -189,7 +189,7 @@ use \Concrete\Core\User\UserInfoRepository;
             <tfoot>
             <tr>
                 <td colspan="4" class="text-right"><strong><?= t("Items Subtotal") ?>:</strong></td>
-                <td colspan="1" class="text-right"><?= Price::format($order->getSubTotal()) ?></td>
+                <td class="text-right"><?= Price::format($order->getSubTotal()) ?></td>
             </tr>
             </tfoot>
         </table>
@@ -321,13 +321,13 @@ use \Concrete\Core\User\UserInfoRepository;
         if ($locale) { ?>
             <br /><p><strong><?= t("Order Locale") ?>: </strong><?= \Punic\Language::getName($locale) ?></p>
         <?php } ?>
-        
+
         <?php $userAgent = $order->getUserAgent();
         if ($userAgent) { ?>
             <br /><p><strong><?= t("Browser User Agent") ?>: </strong><?= $userAgent ?></p>
         <?php } ?>
 
-        
+
     </fieldset>
     <br/>
 

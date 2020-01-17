@@ -118,7 +118,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                 <?php
                             } elseif ($showPageLink && $productPage) {
                                 ?>
-                                <a href="<?= \Concrete\Core\Support\Facade\Url::to(Page::getByID($product->getPageID())); ?>">
+                                <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
                                     <img src="<?= $thumb->src; ?>" class="img-responsive">
                                 </a>
                                 <?php

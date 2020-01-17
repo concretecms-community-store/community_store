@@ -8,7 +8,6 @@ class Wholesale {
 
     public static function isUserWholesale(){
         $user = new \User();
-        $wholesale = Group::getByName('Wholesale Customer');
 
         $wholesaleCustomerGroupID = Config::get('community_store.wholesaleCustomerGroup');
 
@@ -16,12 +15,10 @@ class Wholesale {
             $wholesaleCustomerGroup = Group::getByID($wholesaleCustomerGroupID);
 
             if ($wholesaleCustomerGroup && is_object($wholesaleCustomerGroup)) {
-                return $user->inGroup($wholesale);
+                return $user->inGroup($wholesaleCustomerGroup);
             }
         }
 
         return false;
-
-
     }
 }

@@ -542,7 +542,7 @@ class DiscountRule
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $result = $db->query("SELECT * FROM CommunityStoreDiscountRules
+        $result = $db->query("SELECT drID FROM CommunityStoreDiscountRules
               WHERE drEnabled = 1
               AND drDeleted IS NULL
               AND drTrigger = 'auto'
@@ -561,16 +561,15 @@ class DiscountRule
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
 
-        $result = $db->query("SELECT * FROM CommunityStoreDiscountCodes as dc
-        LEFT JOIN CommunityStoreDiscountRules as dr on dc.drID = dr.drID
-        WHERE dcCode = ?
+        $result = $db->query("SELECT dr.drID FROM CommunityStoreDiscountCodes as dc, CommunityStoreDiscountRules as dr WHERE 
+        dc.drID = dr.drID
+        and dcCode = ?
         AND oID IS NULL
         AND drDeleted IS NULL
-        AND  drEnabled = '1'
+        AND drEnabled = '1'
         AND drTrigger = 'code'
         AND (drValidFrom IS NULL OR drValidFrom <= NOW())
         AND (drValidTo IS NULL OR drValidTo > NOW()) GROUP BY dr.drID", [$code]);
-
 
         return self::filterDiscounts($result, $cartItems);
     }
@@ -586,14 +585,20 @@ class DiscountRule
         }
 
         while ($row = $result->fetchRow()) {
+            $discountRule = self::getByID($row['drID']);
+
+            if (!$discountRule) {
+                continue;
+            }
+
             $include = true;
 
-            if ($row['drUserGroups']) {
-                $discountusergroups = explode(',', $row['drUserGroups']);
+            $discountUserGroups =  $discountRule->getUserGroups();
 
-                $usergroups = $user->getUserGroups();
+            if (count($discountUserGroups) > 0) {
+                $userGroups = $user->getUserGroups();
 
-                $matching = array_intersect($usergroups, $discountusergroups);
+                $matching = array_intersect($userGroups, $discountUserGroups);
 
                 if (0 == count($matching)) {
                     $include = false;
@@ -601,7 +606,7 @@ class DiscountRule
             }
 
             if ($include) {
-                if ($row['drQuantity'] > 0 || $row['drMaximumQuantity'] > 0) {
+                if ($discountRule->getQuantity() > 0 || $discountRule->getMaximumQuantity() > 0) {
                     $include = false;
                     $count = 0;
 
@@ -609,10 +614,7 @@ class DiscountRule
                         $discountProductGroups = [];
 
                         $dpg = trim($row['drProductGroups']);
-
-                        if ($dpg) {
-                            $discountProductGroups = explode(',', $dpg);
-                        }
+                        $discountProductGroups = $discountRule->getProductGroups();
 
                         if (!empty($discountProductGroups)) {
                             foreach ($cartItems as $ci) {
@@ -630,18 +632,18 @@ class DiscountRule
                         }
                     }
 
-                    if ($count >= $row['drQuantity']) {
+                    if ($count >= $discountRule->getQuantity()) {
                         $include = true;
                     }
 
-                    if ($row['drMaximumQuantity'] && ($count > $row['drMaximumQuantity'])) {
+                    if ($discountRule->getMaximumQuantity() && ($count > $discountRule->getMaximumQuantity())) {
                         $include = false;
                     }
                 }
             }
 
             if ($include) {
-                $discounts[] = self::getByID($row['drID']);
+                $discounts[] = $discountRule;
             }
         }
 

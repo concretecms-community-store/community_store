@@ -44,6 +44,11 @@ class ShippingMethod
      */
     protected $smEnabled;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $smSortOrder;
+
     protected $smOfferKey;
 
     public function setOfferKey($key)
@@ -83,6 +88,11 @@ class ShippingMethod
     public function setDetails($details)
     {
         $this->smDetails = $details;
+    }
+
+    public function setSortOrder($smSortOrder)
+    {
+        $this->smSortOrder = $smSortOrder;
     }
 
     public function getID()
@@ -142,6 +152,11 @@ class ShippingMethod
         return $this->smEnabled;
     }
 
+    public function getSortOrder()
+    {
+        return $this->smSortOrder;
+    }
+
     public static function getByID($smID)
     {
         $ident = explode('_', $smID);
@@ -167,7 +182,7 @@ class ShippingMethod
         if ($methodTypeID) {
             $methods = $em->getRepository(get_called_class())->findBy(['smtID' => $methodTypeID, 'smEnabled' => '1']);
         } else {
-            $methods = $em->createQuery('select sm from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod sm where sm.smEnabled = 1')->getResult();
+            $methods = $em->createQuery('select sm from \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod sm where sm.smEnabled = 1 order by sm.smSortOrder')->getResult();
         }
 
         return $methods;
@@ -193,7 +208,7 @@ class ShippingMethod
      *
      * @ORM\return ShippingMethod
      */
-    public static function add($smtm, $smt, $smName, $smEnabled, $smDetails)
+    public static function add($smtm, $smt, $smName, $smEnabled, $smDetails, $smSortOrder)
     {
         $sm = new self();
         $sm->setShippingMethodTypeMethodID($smtm);
@@ -201,6 +216,7 @@ class ShippingMethod
         $sm->setName($smName);
         $sm->setEnabled($smEnabled);
         $sm->setDetails($smDetails);
+        $sm->setSortOrder($smSortOrder);
         $sm->save();
         $smtm->setShippingMethodID($sm->getID());
         $smtm->save();
@@ -208,10 +224,11 @@ class ShippingMethod
         return $sm;
     }
 
-    public function update($smName, $smEnabled, $smDetails)
+    public function update($smName, $smEnabled, $smDetails, $smSortOrder)
     {
         $this->setName($smName);
         $this->setEnabled($smEnabled);
+        $this->setSortOrder($smSortOrder);
         $this->setDetails($smDetails);
         $this->save();
 

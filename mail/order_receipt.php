@@ -147,9 +147,9 @@ ob_start();
         <tr>
             <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Product Name'); ?></th>
             <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Options'); ?></th>
-            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Qty'); ?></th>
-            <th style="border-bottom: 1px solid #aaa; text-align: left; padding-right: 10px;"><?= t('Price'); ?></th>
-            <th style="border-bottom: 1px solid #aaa; text-align: left;"><?= t('Subtotal'); ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: right; padding-right: 10px;"><?= t('Qty'); ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: right; padding-right: 10px;"><?= t('Price'); ?></th>
+            <th style="border-bottom: 1px solid #aaa; text-align: right;"><?= t('Subtotal'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -177,15 +177,21 @@ ob_start();
                     echo implode('<br>', $optionOutput);
                 } ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getQty(); ?> <?= h($item->getQtyLabel()); ?></td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= StorePrice::format($item->getPricePaid()); ?></td>
-                    <td style="vertical-align: top; padding: 5px 0 5px 0;"><?= StorePrice::format($item->getSubTotal()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= $item->getQty(); ?> <?= h($item->getQtyLabel()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= StorePrice::format($item->getPricePaid()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 0 5px 0; text-align: right"><?= StorePrice::format($item->getSubTotal()); ?></td>
                 </tr>
                 <?php
             }
         }
         ?>
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4" style="text-align: right"><strong><?= t("Items Subtotal")?>:</strong></td>
+            <td style="text-align: right"><?= StorePrice::format($order->getSubTotal())?></td>
+        </tr>
+        </tfoot>
     </table>
 
 

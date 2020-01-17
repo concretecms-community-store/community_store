@@ -83,6 +83,7 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
+                            $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
                             if ($isWholesale) {
                                 $msrp = $product->getFormattedOriginalPrice();
                                 $wholesalePrice = $product->getWholesalePrice();
@@ -90,6 +91,7 @@ if (is_object($product) && $product->isActive()) {
 
                                 echo t('List Price') . ': ' . $msrp . '<br />' . t('Wholesale Price') . ': ' . $formattedWholesalePrice;
                                 echo '<meta itemprop="price" content="' . $wholesalePrice . '" />';
+                                echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
 
                             } else {
                                 $salePrice = $product->getSalePrice();
@@ -100,6 +102,7 @@ if (is_object($product) && $product->isActive()) {
                                     echo '&nbsp;' . t('was') . '&nbsp;';
                                     echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
+                                    echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
                                 } else {
                                     $price = $product->getPrice();
 
@@ -107,6 +110,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     echo $formattedPrice;
                                     echo '<meta itemprop="price" content="' . $price . '" />';
+                                    echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
                                 }
                             } ?>
                         </p>

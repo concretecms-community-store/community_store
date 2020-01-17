@@ -313,6 +313,9 @@ var communityStore = {
     updateShippingStates: function(load, callback) {
         var countryCode = $("#store-checkout-shipping-country").val();
         var selectedState;
+        var classList = $("#store-checkout-shipping-state").attr('class').toString();
+        var dataList = JSON.stringify($("#store-checkout-shipping-state").data());
+
         if (load) {
             selectedState = $("#store-checkout-saved-shipping-state").val();
         } else {
@@ -324,7 +327,7 @@ var communityStore = {
             type: 'post',
             cache: false,
             dataType: 'text',
-            data: { country: countryCode, selectedState: selectedState, type: "shipping" },
+            data: { country: countryCode, selectedState: selectedState, type: "shipping", class: classList, data: dataList },
             success: function(states) {
                 $("#store-checkout-shipping-state").replaceWith(states);
                 if (callback) {
