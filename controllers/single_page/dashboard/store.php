@@ -35,6 +35,16 @@ class Store extends DashboardPageController
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('shoppingDisabled', true);
         }
+
+        if (!Config::get('community_store.notificationemails')) {
+            $this->set('missingNotificationEmails', true);
+        }
+
+        if(!Config::get('community_store.emailalerts')) {
+            $this->set('missingFromEmail', true);
+        }
+
+
         $this->set('pageTitle', t('Store'));
     }
 }

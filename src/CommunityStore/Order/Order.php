@@ -963,7 +963,7 @@ class Order
             try {
                 $mh->sendMail();
             } catch (\Exception $e) {
-                Log::addWarning(t('Community Store: a notification email failed sending to %s, with error %s', [implode(', ', $notificationEmails)], $e->getMessage()));
+                Log::addWarning(t('Community Store: a notification email failed sending to %s, with error %s', implode(', ', $notificationEmails), $e->getMessage()));
             }
         }
     }

@@ -252,7 +252,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-xs-6">
                     <div class="form-group">
                         <?= $form->label('emailAlert', t('From Email')); ?>
-                        <?= $form->text('emailAlert', Config::get('community_store.emailalerts'), ['placeholder' => t('From Email Address')]); ?>
+                        <?= $form->email('emailAlert', Config::get('community_store.emailalerts'), ['placeholder' => t('From Email Address')]); ?>
                     </div>
                 </div>
 
@@ -288,12 +288,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-xs-12">
                     <div class="form-group">
                         <?= $form->label('customerGroup', t('Customers User Group')); ?>
-                        <?= $form->select('customerGroup', $groupList, $customerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                        <?= $form->select('customerGroup', $groupList, $customerGroup, [  'placeholder' => t('Select a Group')]); ?>
                     </div>
 
                     <div class="form-group">
                         <?= $form->label('wholesaleCustomerGroup', t('Wholesale Customers User Group')); ?>
-                        <?= $form->select('wholesaleCustomerGroup', $groupList, $wholesaleCustomerGroup, ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select a Group')]); ?>
+                        <?= $form->select('wholesaleCustomerGroup', $groupList, $wholesaleCustomerGroup, ['placeholder' => t('Select a Group')]); ?>
                     </div>
 
                     <div class="alert alert-warning">
@@ -335,8 +335,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 </div>
             </div>
             <div class="row">
-                <div class="alert alert-info">
-                    <?= t("%sThumbnail types will be used if selected because they offer better performance. %sIf they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption. %sReasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type.%s", '<p>', '</p><p>', '</p><p>', '</p>'); ?>
+                <div class="form-group col-md-12">
+                    <div class="alert alert-info small">
+                        <?= t("%sThumbnail types will be used if selected because they offer better performance. %sIf they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption. %sReasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type.%s", '<p>', '</p><p>', '</p><p>', '</p>'); ?>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -429,7 +431,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 </div>
             </div>
         </div>
-        
+
         <!-- #settings-digital-downloads -->
         <div class="col-sm-9 store-pane" id="settings-digital-downloads">
             <h3><?= t("Digital Downloads"); ?></h3>
@@ -559,7 +561,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('numberOfOrders', t('Number of orders displayed per page on orders dashboard page')); ?>
                <?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?>
             </div>
-            
+
              <div class="checkbox">
                 <label>
                     <?= $form->checkbox('logUserAgent', '1', (bool) Config::get('community_store.logUserAgent')) ?>
