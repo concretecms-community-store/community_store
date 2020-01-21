@@ -1207,7 +1207,22 @@ class Product
                 return $length;
                 break;
             default:
-                return $length . "x" . $width . "x" . $height;
+
+                $dimensions = [];
+
+                if ($length > 0) {
+                    $dimensions[] = $length;
+                }
+
+                if ($width > 0) {
+                    $dimensions[] = $width;
+                }
+
+                if ($height > 0) {
+                    $dimensions[] = $height;
+                }
+
+                return implode('&times;', $dimensions);
                 break;
         }
     }
