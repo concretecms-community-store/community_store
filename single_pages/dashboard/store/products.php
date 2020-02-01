@@ -737,11 +737,12 @@ $ps = $app->make('helper/form/page_selector');
 
                 <div class="clearfix">
                     <h4><?= t('Add'); ?></h4>
-                    <span class="btn btn-primary" id="btn-add-option-group"><?= t('Option List') ?></span>
-                    <span class="btn btn-primary" id="btn-add-text"><?= t('Text Field') ?></span>
-                    <span class="btn btn-primary" id="btn-add-textarea"><?= t('Text Area') ?></span>
-                    <span class="btn btn-primary" id="btn-add-checkbox"><?= t('Checkbox') ?></span>
-                    <span class="btn btn-primary" id="btn-add-hidden"><?= t('Hidden Value') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-option-group"><?= t('Option List') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-text"><?= t('Text Field') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-textarea"><?= t('Text Area') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-checkbox"><?= t('Checkbox') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-hidden"><?= t('Hidden Value') ?></span>
+                    <span class="btn btn-sm btn-primary" id="btn-add-static"><?= t('Static HTML') ?></span>
                 </div>
 
                 <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
@@ -761,6 +762,11 @@ $ps = $app->make('helper/form/page_selector');
                         <div class="panel-body">
 
                             <div class="row">
+                                <% if (poType == 'static') { %>
+                                <input type="hidden" class="form-control" name="poName[]" value="<%=poType%>">
+                                <% } %>
+
+                                <% if (poType != 'static') { %>
                                 <div class="col-xs-5">
                                     <div class="form-group">
                                         <label for="poName<%=sort%>"><?= t('Option Name'); ?></label>
@@ -785,6 +791,8 @@ $ps = $app->make('helper/form/page_selector');
                                     <input type="hidden" value="" name="poDisplayType[]"/>
                                     <% } %>
                                 </div>
+                                <% } %>
+
 
                                 <% if (poType == 'select') { %>
                                 <div class="col-xs-3">
@@ -800,7 +808,7 @@ $ps = $app->make('helper/form/page_selector');
                                 <% } else { %>
                                 <input type="hidden" value="0" name="poIncludeVariations[]"/>
                                 <% } %>
-                                <% if (poType != 'select' && poType != 'checkbox') { %>
+                                <% if (poType != 'select' && poType != 'checkbox' && poType != 'static') { %>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label><?= t('Required'); ?></label>
@@ -814,12 +822,23 @@ $ps = $app->make('helper/form/page_selector');
                                 <input type="hidden" value="0" name="poRequired[]"/>
                                 <% } %>
                             </div>
-                            <% if (poType != 'hidden') { %>
+                            <% if (poType != 'hidden'  && poType != 'static') { %>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
                                         <label><?= t('Option Details');?></label>
                                         <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+
+                            <% if (poType == 'static') { %>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label><?= t('Static HTML');?></label>
+                                        <textarea rows="3" placeholder="<?= t(''); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -906,6 +925,7 @@ $ps = $app->make('helper/form/page_selector');
                         $labels['textarea'] = t('Text Area Input');
                         $labels['checkbox'] = t('Checkbox');
                         $labels['hidden'] = t('Hidden Value');
+                        $labels['static'] = t('Static Text');
 
 
                         if (!$type) {
@@ -1036,6 +1056,27 @@ $ps = $app->make('helper/form/page_selector');
                                 poID: '',
                                 poType: 'hidden',
                                 poLabel: '<?= $labels['hidden']; ?>',
+                                poHandle: '',
+                                poDetails: '',
+                                poRequired: '',
+                                sort: temp
+                            }));
+
+                            //Init Index
+                            indexOptionGroups();
+                        });
+
+                        $('#btn-add-static').click(function () {
+
+                            //Use the template to create a new item.
+                            var temp = $(".option-group").length;
+                            temp = (temp);
+                            optionsContainer.append(optionsTemplate({
+                                //vars to pass to the template
+                                poName: '',
+                                poID: '',
+                                poType: 'static',
+                                poLabel: '<?= $labels['static']; ?>',
                                 poHandle: '',
                                 poDetails: '',
                                 poRequired: '',

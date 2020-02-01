@@ -301,7 +301,7 @@ if (is_object($product) && $product->isActive()) {
                                 $requiredAttr = ' required="required" placeholder="' . t('Required') . '" ';
                             } ?>
 
-                            <?php if (!$optionType || 'select' == $optionType) {
+                            <?php if (!$optionType || $optionType == 'select') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -365,7 +365,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php } ?>
                                 </div>
                                 <?php
-                            } elseif ('text' == $optionType) {
+                            } elseif ($optionType == 'text') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -378,7 +378,7 @@ if (is_object($product) && $product->isActive()) {
                                            name="pt<?= $option->getID(); ?>"/>
                                 </div>
                                 <?php
-                            } elseif ('textarea' == $optionType) {
+                            } elseif ($optionType == 'textarea') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -391,7 +391,7 @@ if (is_object($product) && $product->isActive()) {
                                               name="pa<?= $option->getID(); ?>"></textarea>
                                 </div>
                                 <?php
-                            } elseif ('checkbox' == $optionType) {
+                            } elseif ($optionType == 'checkbox') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
@@ -408,10 +408,16 @@ if (is_object($product) && $product->isActive()) {
 
                                 </div>
                                 <?php
-                            } elseif ('hidden' == $optionType) {
+                            } elseif ($optionType == 'hidden') {
                                 ?>
                                 <input type="hidden" class="store-product-option-hidden <?= $option->getHandle(); ?>"
                                        name="ph<?= $option->getID(); ?>"/>
+                                <?php
+                            }  elseif ($optionType == 'static') {
+                                ?>
+                                <div class="store-product-option-static">
+                                    <?= $csm->t($details, 'optionDetails', $product->getID(), $option->getID()); ?>
+                                </div>
                                 <?php
                             } ?>
                             <?php

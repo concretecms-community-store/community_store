@@ -13,19 +13,19 @@ $c = \Concrete\Core\Page\Page::getCurrentPage();
 
 $columnClass = 'col-md-12';
 
-if (2 == $productsPerRow) {
+if ($productsPerRow == 2) {
     $columnClass = 'col-md-6';
 }
 
-if (3 == $productsPerRow) {
+if ($productsPerRow == 3) {
     $columnClass = 'col-md-4';
 }
 
-if (4 == $productsPerRow) {
+if ($productsPerRow == 4) {
     $columnClass = 'col-md-3';
 }
 
-if (6 == $productsPerRow) {
+if ($productsPerRow == 6) {
     $columnClass = 'col-md-2';
 }
 
@@ -263,7 +263,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                 $requiredAttr = ' required="required" placeholder="' . t('Required') . '" ';
                             } ?>
 
-                            <?php if (!$optionType || 'select' == $optionType) {
+                            <?php if (!$optionType || $optionType == 'select') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -320,7 +320,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                 <?php } ?>
                                 </div>
                                 <?php
-                            } elseif ('text' == $optionType) {
+                            } elseif ($optionType == 'text' ) {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -332,7 +332,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                     <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID(); ?>"/>
                                 </div>
                                 <?php
-                            } elseif ('textarea' == $optionType) {
+                            } elseif ($optionType == 'textarea') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -344,7 +344,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                     <textarea class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pa<?= $option->getID(); ?>"></textarea>
                                 </div>
                                 <?php
-                            } elseif ('checkbox' == $optionType) {
+                            } elseif ($optionType == 'checkbox') {
                                 ?>
                                 <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
@@ -357,11 +357,17 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
 
                                 </div>
                                 <?php
-                            } elseif ('hidden' == $optionType) {
+                            } elseif ($optionType == 'hidden') {
                                 ?>
                                 <input type="hidden" class="store-product-option-hidden <?= $option->getHandle(); ?>" name="ph<?= $option->getID(); ?>"/>
                                 <?php
-                            } ?>
+                            } elseif ($optionType == 'static') {
+                            ?>
+                                <div class="store-product-option-static">
+                                    <?= $csm->t($details, 'optionDetails', $product->getID(), $option->getID()); ?>
+                                </div>
+                                <?php
+                        } ?>
                             <?php
                         } ?>
                         </div>
@@ -457,7 +463,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
             </div><!-- .product-list-item -->
 
         <?php
-        if (0 == $i % $productsPerRow) {
+        if ($i % $productsPerRow ==  0) {
             echo "</div>";
             echo '<div class="store-product-list row store-product-list-per-row-' . $productsPerRow . '">';
         }
