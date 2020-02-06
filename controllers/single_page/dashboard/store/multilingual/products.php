@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Database;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
@@ -230,6 +232,36 @@ class Products extends DashboardSitePageController
                                 $t->save();
                             }
                         }
+                    }
+                }
+            }
+
+
+            $productID = $this->request->request->get('pID');
+
+            $mlist = Section::getList();
+            $product = StoreProduct::getByID($productID);
+
+            $productPage = $product->getProductPage();
+
+            if ($productPage) {
+                $csm = $this->app->make('cs/helper/multilingual');
+
+                foreach ($mlist as $m) {
+                    $relatedID = $m->getTranslatedPageID($productPage);
+                    $translatedPage = Page::getByID($relatedID);
+                    $productName = $csm->t(null, 'productName', $product->getID(), false, $m->getLocale());
+
+                    if ($productName) {
+                        $translatedPage->update(['cName' => $productName]);
+                    }
+
+                    $pageDescription = trim($translatedPage->getAttribute('meta_description'));
+
+                    $newDescription = $csm->t(null, 'productDescription', $product->getID(), false, $m->getLocale());
+
+                    if ($newDescription && !$pageDescription) {
+                        $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
                     }
                 }
             }

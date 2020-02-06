@@ -1733,7 +1733,8 @@ class Product
 
     public function generatePage($templateID = null)
     {
-        $pkg = Package::getByHandle('community_store');
+        $app = Application::getFacadeApplication();
+        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
         $targetCID = Config::get('community_store.productPublishTarget');
 
         if ($targetCID > 0) {
@@ -1762,6 +1763,17 @@ class Product
 
                     $this->savePageID($newProductPage->getCollectionID());
                     $this->setPageDescription($this->getDesc());
+
+                    $mlist = Section::getList();
+
+                    foreach($mlist as $m) {
+                        $relatedID = $m->getTranslatedPageID($parentPage);
+
+                        if ($targetCID != $relatedID) {
+                            $parentPage = Page::getByID($relatedID);
+                            $transCopy = $newProductPage->duplicate($parentPage);
+                        }
+                    }
 
                     return true;
                 }
