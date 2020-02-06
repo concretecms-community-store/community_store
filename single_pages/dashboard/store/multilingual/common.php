@@ -20,6 +20,7 @@ $localecount = count($locales);
                     <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                         (<?= $defaultLocale->getLocale() ?>)
                     </th>
+                    <th></th>
                     <th><?= t('Locale') ?></th>
                     <th style="width: 50%"><?= t('Translations'); ?></th>
                 </tr>
@@ -41,7 +42,7 @@ $localecount = count($locales);
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= t($option->getName()); ?></td>
                                 <?php } ?>
-
+                                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
                                     <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                                 </td>
@@ -82,7 +83,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= t($option->getDetails()); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -115,7 +116,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= t($option->getName()); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -148,7 +149,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= t($option->getSelectorName()); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -183,6 +184,7 @@ $localecount = count($locales);
                     <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                         (<?= $defaultLocale->getLocale() ?>)
                     </th>
+                    <th></th>
                     <th><?= t('Locale') ?></th>
                     <th style="width: 50%"><?= t('Translations'); ?></th>
                 </tr>
@@ -203,7 +205,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($quantityLabel); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -237,6 +239,7 @@ $localecount = count($locales);
                     <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                         (<?= $defaultLocale->getLocale() ?>)
                     </th>
+                    <th></th>
                     <th><?= t('Locale') ?></th>
                     <th style="width: 50%"><?= t('Translations'); ?></th>
                 </tr>
@@ -257,7 +260,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -293,7 +296,7 @@ $localecount = count($locales);
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= $attrOption; ?></td>
                                 <?php } ?>
-
+                                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
                                     <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                                 </td>
@@ -326,3 +329,19 @@ $localecount = count($locales);
 <?php } else { ?>
     <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
 <?php } ?>
+
+
+<style>
+    .copytext {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        $('.copytext').click(function(){
+            var content = $(this).parent().prev().html();
+            $(this).parent().next().next().find('input, textarea').val(content);
+        });
+    });
+</script>

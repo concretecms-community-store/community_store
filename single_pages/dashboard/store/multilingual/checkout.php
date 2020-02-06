@@ -22,6 +22,7 @@ $editor = $app->make('editor');
                 <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                     (<?= $defaultLocale->getLocale() ?>)
                 </th>
+                <th></th>
                 <th><?= t('Locale') ?></th>
                 <th style="width: 50%"><?= t('Translations'); ?></th>
             </tr>
@@ -49,7 +50,7 @@ $editor = $app->make('editor');
                             </td>
                             <td rowspan="<?= $localecount; ?>"><?= h($paymentMethod->getDisplayName()); ?></td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -76,7 +77,7 @@ $editor = $app->make('editor');
                             </td>
                             <td rowspan="<?= $localecount; ?>"><?= h($paymentMethod->getButtonLabel()); ?></td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -104,7 +105,7 @@ $editor = $app->make('editor');
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= $paymentMethod->getMethodController()->getPaymentInstructions(); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -138,6 +139,7 @@ $editor = $app->make('editor');
                 <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                     (<?= $defaultLocale->getLocale() ?>)
                 </th>
+                <th></th>
                 <th><?= t('Locale') ?></th>
                 <th style="width: 50%"><?= t('Translations'); ?></th>
             </tr>
@@ -158,7 +160,7 @@ $editor = $app->make('editor');
                             </td>
                             <td rowspan="<?= $localecount; ?>"><?= h($shippingMethod->getName()); ?></td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -185,7 +187,7 @@ $editor = $app->make('editor');
                             </td>
                             <td rowspan="<?= $localecount; ?>"><?= $shippingMethod->getDetails(); ?></td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -220,6 +222,7 @@ $editor = $app->make('editor');
                 <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                     (<?= $defaultLocale->getLocale() ?>)
                 </th>
+                <th></th>
                 <th><?= t('Locale') ?></th>
                 <th style="width: 50%"><?= t('Translations'); ?></th>
             </tr>
@@ -240,7 +243,7 @@ $editor = $app->make('editor');
                             </td>
                             <td rowspan="<?= $localecount; ?>"><?= h($taxRate->getTaxLabel()); ?></td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -275,6 +278,7 @@ $editor = $app->make('editor');
                     <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                         (<?= $defaultLocale->getLocale() ?>)
                     </th>
+                    <th></th>
                     <th><?= t('Locale') ?></th>
                     <th style="width: 50%"><?= t('Translations'); ?></th>
                 </tr>
@@ -295,7 +299,7 @@ $editor = $app->make('editor');
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($discountRule->getDisplay()); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -330,6 +334,7 @@ $editor = $app->make('editor');
                     <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                         (<?= $defaultLocale->getLocale() ?>)
                     </th>
+                    <th></th>
                     <th><?= t('Locale') ?></th>
                     <th style="width: 50%"><?= t('Translations'); ?></th>
                 </tr>
@@ -350,7 +355,7 @@ $editor = $app->make('editor');
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -383,6 +388,7 @@ $editor = $app->make('editor');
                         <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
                             (<?= $defaultLocale->getLocale() ?>)
                         </th>
+                        <th></th>
                         <th><?= t('Locale') ?></th>
                         <th style="width: 50%"><?= t('Translations'); ?></th>
                     </tr>
@@ -404,7 +410,7 @@ $editor = $app->make('editor');
 
                                 </td>
                             <?php } ?>
-
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
                                 <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
@@ -434,7 +440,7 @@ $editor = $app->make('editor');
                                 <?= $receiptFooter; ?>
                             </td>
                         <?php } ?>
-
+                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
                             <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                         </td>
@@ -466,3 +472,18 @@ $editor = $app->make('editor');
 <?php } else { ?>
     <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
 <?php } ?>
+
+<style>
+    .copytext {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        $('.copytext').click(function(){
+            var content = $(this).parent().prev().html();
+            $(this).parent().next().next().find('input, textarea').val(content);
+        });
+    });
+</script>
