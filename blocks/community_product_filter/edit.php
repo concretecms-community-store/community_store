@@ -71,7 +71,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
                     <div class="form-group">
                         <?= $form->label('groupMatchAny', t('Matching')); ?>
-                        <?= $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected')], $groupMatchAny); ?>
+                        <?= $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected'), '-1' => t("Excluding all groups selected")], $groupMatchAny); ?>
                     </div>
 
                     <?php

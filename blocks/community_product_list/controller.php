@@ -190,7 +190,13 @@ class Controller extends BlockController
         $products->setFeaturedOnly($this->showFeatured);
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
-        $products->setGroupMatchAny($this->groupMatchAny);
+
+        if ($this->groupMatchAny === '-1') {
+            $products->setGroupNoMatchAny(true);
+        } else {
+            $products->setGroupMatchAny($this->groupMatchAny);
+        }
+
         $products->setManufacturer($this->filterManufacturer);
 
         if (!empty($this->attFilters)) {

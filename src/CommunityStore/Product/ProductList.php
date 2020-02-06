@@ -14,6 +14,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 {
     protected $gIDs = [];
     protected $groupMatchAny = false;
+    protected $groupNoMatchAny = false;
     protected $sortBy = "alpha";
     protected $randomSeed = '';
     protected $sortByDirection = "desc";
@@ -68,6 +69,11 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function setGroupMatchAny($match)
     {
         $this->groupMatchAny = (bool) $match;
+    }
+
+    public function setGroupNoMatchAny($match)
+    {
+        $this->groupNoMatchAny = (bool) $match;
     }
 
     public function setFeaturedOnly($bool)
@@ -230,10 +236,14 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             }
 
             if (!empty($validgids)) {
-                $query->innerJoin('p', 'CommunityStoreProductGroups', 'g', 'p.pID = g.pID and g.gID in (' . implode(',', $validgids) . ')');
+                if ($this->groupNoMatchAny) {
+                     $query->andWhere('p.pID not in (select pID from CommunityStoreProductGroups g where g.gID in (' . implode(',', $validgids) . '))');
+                } else {
+                    $query->innerJoin('p', 'CommunityStoreProductGroups', 'g', 'p.pID = g.pID and g.gID in (' . implode(',', $validgids) . ')');
 
-                if (!$this->groupMatchAny) {
-                    $query->having('count(g.gID) = ' . count($validgids));
+                    if (!$this->groupMatchAny) {
+                        $query->having('count(g.gID) = ' . count($validgids));
+                    }
                 }
             }
         }
