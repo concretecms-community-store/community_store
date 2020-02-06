@@ -304,6 +304,7 @@ $localecount = count($locales);
 
             $firstrow = true;
             foreach ($locales as $lp) { ?>
+                <?php if ($option->getType() != 'static') { ?>
                 <tr>
                     <?php if ($firstrow) {
                         $firstrow = false;
@@ -328,10 +329,19 @@ $localecount = count($locales);
                     </td>
 
                 </tr>
+                <?php } ?>
+
                 <tr>
 
                     <td rowspan="<?= $localecount; ?>"><span
-                                class="label label-primary"><?= t('Option Details'); ?></span>
+                                class="label label-primary">
+                    <?php if ($option->getType() != 'static') { ?>
+                        <?= t('Option Details'); ?>
+                    <?php } else { ?>
+                        <?= t('Static HTML'); ?>
+                    <?php } ?>
+
+                    </span>
                     </td>
                     <td rowspan="<?= $localecount; ?>"><?= t($option->getDetails()); ?></td>
 
