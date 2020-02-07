@@ -1764,6 +1764,7 @@ class Product
                     $this->savePageID($newProductPage->getCollectionID());
                     $this->setPageDescription($this->getDesc());
 
+                    $csm = $app->make('cs/helper/multilingual');
                     $mlist = Section::getList();
 
                     foreach($mlist as $m) {
@@ -1771,7 +1772,21 @@ class Product
 
                         if ($targetCID != $relatedID) {
                             $parentPage = Page::getByID($relatedID);
-                            $transCopy = $newProductPage->duplicate($parentPage);
+                            $translatedPage = $newProductPage->duplicate($parentPage);
+
+
+                            $productName = $csm->t(null, 'productName', $this->getID(), false, $m->getLocale());
+
+                            if ($productName) {
+                                $translatedPage->update(['cName' => $productName]);
+                            }
+
+                            $pageDescription = trim($translatedPage->getAttribute('meta_description'));
+                            $newDescription = $csm->t(null, 'productDescription', $this->getID(), false, $m->getLocale());
+
+                            if ($newDescription && !$pageDescription) {
+                                $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
+                            }
                         }
                     }
 
