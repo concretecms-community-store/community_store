@@ -576,8 +576,10 @@ var communityStore = {
 $(document).ready(function() {
     if ($('.store-checkout-form-shell form').length > 0) {
         communityStore.updateBillingStates(true);
-        communityStore.updateShippingStates(true);
-        communityStore.showShippingMethods();
+        if ($('#store-checkout-form-group-shipping').length > 0) {
+            communityStore.updateShippingStates(true);
+            communityStore.showShippingMethods();
+        }
         communityStore.showPaymentForm();
     }
 
