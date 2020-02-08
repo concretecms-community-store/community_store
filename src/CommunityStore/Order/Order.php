@@ -697,6 +697,9 @@ class Order
 
     public function completePayment($sameRequest = false)
     {
+		$event = new StoreOrderEvent($this);
+		Events::dispatch(StoreOrderEvent::ORDER_BEFORE_PAYMENT_COMPLETE, $event);
+
         $this->setPaid(new \DateTime());
         $this->completePostPaymentProcesses($sameRequest);
         $this->save();
@@ -772,6 +775,21 @@ class Order
                     }
                     $newusername .= rand(0, 9);
                 }
+
+				$event = new StoreOrderEvent($this);
+                /* @var $uae \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent */
+				$uae = Events::dispatch(StoreOrderEvent::ORDER_BEFORE_USER_ADD, $event);
+
+				// Did the event modify the user data?
+				if ($uae->userDataUpdated()) {
+					$newUserData = $uae->getUserData();
+					if (array_key_exists('uName', $newUserData) && !empty($newUserData['uName'])) {
+						$newusername = $newUserData['uName'];
+					}
+					if (array_key_exists('uPassword', $newUserData) && !empty($newUserData['uPassword'])) {
+						$password = $newUserData['uPassword'];
+					}
+				}
 
                 $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);
