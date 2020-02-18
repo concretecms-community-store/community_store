@@ -42,6 +42,10 @@ class Customer
     {
         if ($this->isGuest()) {
             $addressraw = Session::get('community_' . $handle);
+            
+            if (is_array($addressraw)) {
+                $addressraw = (object) $addressraw;
+            }
 
             return self::formatAddress($addressraw);
         } else {
