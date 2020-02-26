@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
+use Session;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
  * @Entity
@@ -659,6 +661,51 @@ class DiscountRule
 
                 if (0 == count($matching)) {
                     $include = false;
+                }
+            }
+
+            if ($include) {
+
+                $cartitems = Session::get('communitystore.cart');
+
+                if ($row['drQuantity'] > 0 || $row['drMaximumQuantity'] > 0) {
+                    $include = false;
+                    $count = 0;
+
+                    if (is_array($cartitems)) {
+                        $discountProductGroups = [];
+
+                        $dpg = trim($row['drProductGroups']);
+
+                        if ($dpg) {
+                            $discountProductGroups = explode(',', $dpg);
+                        }
+
+
+                        if (!empty($discountProductGroups)) {
+                            foreach ($cartitems as $ci) {
+
+                                $ci['product']['object'] = StoreProduct::getByID((int) $ci['product']['pID']);
+
+                                $groupids = $ci['product']['object']->getGroupIDs();
+                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                    $count += $ci['product']['qty'];
+                                }
+                            }
+                        } else {
+                            foreach ($cartitems as $ci) {
+                                $count += $ci['product']['qty'];
+                            }
+                        }
+                    }
+
+                    if ($count >= $row['drQuantity']) {
+                        $include = true;
+                    }
+
+                    if ($row['drMaximumQuantity'] && ($count > $row['drMaximumQuantity'])) {
+                        $include = false;
+                    }
                 }
             }
 
