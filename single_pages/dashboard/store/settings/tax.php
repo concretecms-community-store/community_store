@@ -128,7 +128,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default pull-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-success" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
+            <button class="pull-right btn btn-primary" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
         </div>
     </div>
 

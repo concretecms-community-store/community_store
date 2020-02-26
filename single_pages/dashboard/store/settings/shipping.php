@@ -65,7 +65,7 @@ if(in_array($controller->getAction(),$addViews)){
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-success" type="submit" ><?= t('%s Shipping Method',$task)?></button>
+            <button class="pull-right btn btn-primary" type="submit" ><?= t('%s Shipping Method',$task)?></button>
         </div>
     </div>
 

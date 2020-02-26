@@ -778,18 +778,7 @@ $ps = $app->make('helper/form/page_selector');
                                         <label><?= t('Option Handle'); ?></label>
                                         <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional'); ?>" value="<%=poHandle%>">
                                     </div>
-                                    <% if (poType == 'select') { %>
-                                    <div class="form-group">
-                                        <label><?= t('Display Type'); ?></label>
-                                        <select class="form-control" name="poDisplayType[]">
-                                            <option value="select"
-                                            <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down'); ?></option>
-                                            <option value="radio"
-                                            <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons'); ?></option></select>
-                                    </div>
-                                    <% } else { %>
-                                    <input type="hidden" value="" name="poDisplayType[]"/>
-                                    <% } %>
+
                                 </div>
                                 <% } %>
 
@@ -824,12 +813,28 @@ $ps = $app->make('helper/form/page_selector');
                             </div>
                             <% if (poType != 'hidden'  && poType != 'static') { %>
                             <div class="row">
-                                <div class="col-xs-12">
+                                <div class="col-xs-9">
                                     <div class="form-group">
                                         <label><?= t('Option Details');?></label>
                                         <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
                                     </div>
                                 </div>
+
+                                <% if (poType == 'select') { %>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label><?= t('Display Type'); ?></label>
+                                        <select class="form-control" name="poDisplayType[]">
+                                            <option value="select"
+                                            <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down'); ?></option>
+                                            <option value="radio"
+                                            <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons'); ?></option></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <input type="hidden" value="" name="poDisplayType[]"/>
+                                <% } %>
+
                             </div>
                             <% } %>
 
@@ -894,6 +899,7 @@ $ps = $app->make('helper/form/page_selector');
                         //Make items sortable. If we re-sort them, re-index them.
                         $("#product-options-container").sortable({
                             handle: ".panel-heading",
+                            axis: 'y',
                             update: function () {
                                 indexOptionGroups();
                             }
@@ -1095,24 +1101,43 @@ $ps = $app->make('helper/form/page_selector');
                 <script type="text/template" id="option-item-template">
                     <div class="option-item clearfix form-horizontal" data-order="<%=sort%>" data-option-group="<%=optGroup%>">
                         <div class="form-group">
-                            <div class="col-sm-3 text-right">
+                            <div class="col-sm-2 text-right">
                                 <label class="grabme"><i class="fa fa-arrows drag-handle pull-left"></i><?= t('Option') ?></label>
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-sm-9">
                                 <div class="input-group">
-                                    <input type="text" name="poiName[]" class="form-control" value="<%=poiName%>">
-                                    <div class="input-group-addon">
+                                    <input type="text" name="poiName[]" class="form-control input-sm" value="<%=poiName%>">
+                                    <div class="input-group-addon input-sm">
                                         <label>
                                             <input type="hidden" name="poiHidden[]" value="<%=poiHiddenValue%>"/>
                                             <input type="checkbox" class="optionHiddenToggle" name="poiHiddenToggle[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
                                     </div>
                                 </div>
-                                <br>
-                                <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control" value="<%=poiSelectorName%>">
+                                <br class="smallbreak">
+                                <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control input-sm" value="<%=poiSelectorName%>">
+                                <br class="smallbreak">
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-addon input-sm">
+                                            <?= Config::get('community_store.symbol'); ?>
+                                        </div>
+                                        <input type="number" step="0.01" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
+                                    </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
+                                        <div class="input-group-addon input-sm"><?= Config::get('community_store.weightUnit') ?></div>
+                                    </div>
+                                    </div>
+                                </div>
+
                                 <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
                             </div>
-                            <div class="col-sm-2">
-                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>)" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                            <div class="col-sm-1">
+                                <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>)" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
                             </div>
                         </div>
                         <input type="hidden" name="optGroup<%=optGroup%>[]" class="optGroupID" value="">
@@ -1148,6 +1173,8 @@ $ps = $app->make('helper/form/page_selector');
                             //vars to pass to the template
                             poiName: '',
                             poiSelectorName: '',
+                            poiPriceAdjust: 0,
+                            poiWeightAdjust: 0,
                             poiID: '',
                             optGroup: group,
                             sort: temp,
@@ -1192,6 +1219,8 @@ $ps = $app->make('helper/form/page_selector');
                         optItemsContainer.append(optItemsTemplate({
                             poiName: '<?= h($optionItem->getName())?>',
                             poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
+                            poiPriceAdjust: '<?= h($optionItem->getPriceAdjust())?>',
+                            poiWeightAdjust: '<?= h($optionItem->getWeightAdjust())?>',
                             poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
                             sort: <?= $optionItem->getSort()?>,
@@ -1682,7 +1711,7 @@ $ps = $app->make('helper/form/page_selector');
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default pull-left"><?= t("Cancel / View All Products") ?></a>
-                <button class="pull-right btn btn-success" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
+                <button class="pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
 
@@ -1690,7 +1719,7 @@ $ps = $app->make('helper/form/page_selector');
             $(window).load(function () {
                 setTimeout(
                     function () {
-                        $('.ccm-dashboard-form-actions .btn-success').removeAttr('disabled');
+                        $('.ccm-dashboard-form-actions .btn-primary').removeAttr('disabled');
                     }, 500);
             });
 
@@ -1892,5 +1921,11 @@ $ps = $app->make('helper/form/page_selector');
             margin-left: -20px !important;
             margin-right: -20px !important;
         }
+    }
+
+    .smallbreak {
+       height: 10px;
+        display: block;
+        content: '';
     }
 </style>

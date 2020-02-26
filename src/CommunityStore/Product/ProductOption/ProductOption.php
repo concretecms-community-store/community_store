@@ -314,11 +314,26 @@ class ProductOption
                                 if ($data['poiID'][$ii] > 0) {
                                     $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
                                     if ($optionItem) {
-                                        $optionItem->update($data['poiName'][$ii], $data['poiSort'][$ii], $data['poiSelectorName'][$ii], $data['poiHidden'][$ii], true);
+                                        $optionItem->update(
+                                            $data['poiName'][$ii],
+                                            $data['poiSort'][$ii],
+                                            $data['poiSelectorName'][$ii],
+                                            $data['poiPriceAdjust'][$ii],
+                                            $data['poiWeightAdjust'][$ii],
+                                            $data['poiHidden'][$ii],
+                                            true);
                                     }
                                 } else {
                                     if ($data['poiName'][$ii]) {
-                                        $optionItem = StoreProductOptionItem::add($option, $data['poiName'][$ii], $data['poiSort'][$ii], $data['poiSelectorName'][$ii], $data['poiHidden'][$ii], true);
+                                        $optionItem = StoreProductOptionItem::add(
+                                            $option,
+                                            $data['poiName'][$ii],
+                                            $data['poiSort'][$ii],
+                                            $data['poiSelectorName'][$ii],
+                                            $data['poiPriceAdjust'][$ii],
+                                            $data['poiWeightAdjust'][$ii],
+                                            $data['poiHidden'][$ii],
+                                            true);
                                         $option->getOptionItems()->add($optionItem);
                                     }
                                 }
