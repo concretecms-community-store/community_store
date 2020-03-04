@@ -1,4 +1,4 @@
-# Products
+# Managing Products
 
 ## Groups
 

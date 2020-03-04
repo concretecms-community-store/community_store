@@ -6,5 +6,3 @@
 
 ## Customizating Emails
 
-
-

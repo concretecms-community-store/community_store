@@ -11,5 +11,3 @@
 ## Autonav Template
 
 
-## Customizing Blocks
-
