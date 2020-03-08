@@ -38,6 +38,9 @@ use \Concrete\Core\Attribute\ObjectTrait;
  */
 class Product
 {
+    // not stored, used for price/sku/etc lookup purposes
+    public $adjustment = 0;
+    public $variation;
 
     use ObjectTrait;
     /**
@@ -263,9 +266,6 @@ class Product
     protected $manufacturer;
 
 
-    // not stored, used for price/sku/etc lookup purposes
-    protected $variation;
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
@@ -408,6 +408,14 @@ class Product
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
         $this->priceTiers = new ArrayCollection();
+    }
+
+    public function setAdjustment($adjustment){
+        $this->adjustment = $adjustment;
+    }
+
+    public function getAdjustment(){
+        return $this->adjustment;
     }
 
     public function setVariation($variation)
@@ -1027,7 +1035,7 @@ class Product
             }
         }
 
-        return $price;
+        return $price + $this->getAdjustment();
     }
 
     public function getWholesalePrice($qty = 1)
@@ -1913,7 +1921,20 @@ class Product
             }
         }
 
-        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids];
+        $adjustment = 0;
+
+        foreach($this->getOptions() as $option) {
+           $optionItems = $option->getOptionItems();
+
+           foreach($optionItems as $optionItem) {
+               if (!$optionItem->isHidden()) {
+                   $adjustment += $optionItem->getPriceAdjustment();
+                   break;
+               }
+           }
+        }
+
+        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids, 'priceAdjustment'=>$adjustment];
     }
 
     // helper function for working with variation options

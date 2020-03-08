@@ -268,10 +268,6 @@ class Settings extends DashboardPageController
         $e = $this->app->make('helper/validation/error');
         $nv = $this->app->make('helper/validation/numbers');
 
-        if ("" == $args['symbol']) {
-            $e->add(t('You must set a currency symbol'));
-        }
-
         $paymentMethodsEnabled = 0;
         foreach ($args['paymentMethodEnabled'] as $method) {
             if (1 == $method) {

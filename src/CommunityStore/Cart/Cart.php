@@ -5,6 +5,7 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartEvent as StoreCartEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
@@ -55,6 +56,7 @@ class Cart
                         }
                     }
 
+
                     // if the cart has greater stock than available
                     if (!$product->isUnlimited() && !$product->allowBackOrders() && $cartitem['product']['qty'] > $product->getQty()) {
                         if ($product->getQty() > 0) {
@@ -66,7 +68,8 @@ class Cart
                     }
 
                     if ($include) {
-                        $cartitem['product']['object'] = $product;
+                        $cartitem['product']['object'] = clone $product;
+                        $cartitem['product']['object']->setAdjustment($cartitem['adjustment']);
                         $checkeditems[] = $cartitem;
                     }
                 } else {
@@ -229,6 +232,8 @@ class Cart
             $optionItemIds = [];
             $optionsInVariations = [];
 
+            $adjustment = 0;
+
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
                 $groupID = false;
@@ -237,6 +242,10 @@ class Cart
                 if ('po' == substr($name, 0, 2)) {
                     $isOptionList = true;
                     $groupID = str_replace("po", "", $name);
+
+                    $optionListItem = ProductOptionItem::getByID($value);
+
+                    $adjustment += $optionListItem->getPriceAdjustment();
 
                     if (!$value) {
                         $error = true;  // if we have select option but no value
@@ -264,6 +273,10 @@ class Cart
                     }
                 }
             }
+
+            $cartItem['adjustment'] = $adjustment;
+            $product->setAdjustment($adjustment);
+
 
             if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options

@@ -4,8 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $communityStoreImageHelper = $app->make('cs/helper/image', ['single_product']);
 $csm = $app->make('cs/helper/multilingual');
 
-$isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale();
-
 if (is_object($product) && $product->isActive()) {
     $options = $product->getOptions();
     $variationLookup = $product->getVariationLookup();
@@ -17,6 +15,7 @@ if (is_object($product) && $product->isActive()) {
         $product = $firstAvailableVariation;
     }
 
+    $product->setAdjustment($variationData['priceAdjustment']);
     $isSellable = $product->isSellable(); ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID(); ?>"
@@ -79,8 +78,12 @@ if (is_object($product) && $product->isActive()) {
                     ?>
 
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
+                        $salePrice = $product->getSalePrice();
+                        $price = $product->getPrice();
+
+                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getAdjustment();
                         ?>
-                        <p class="store-product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                        <p class="store-product-price" data-price="<?= $activePrice; ?>" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
                             $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
@@ -94,7 +97,7 @@ if (is_object($product) && $product->isActive()) {
                                 echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
 
                             } else {
-                                $salePrice = $product->getSalePrice();
+
                                 if (isset($salePrice) && "" != $salePrice) {
                                     $formattedSalePrice = $product->getFormattedSalePrice();
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
@@ -104,7 +107,6 @@ if (is_object($product) && $product->isActive()) {
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
                                     echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
                                 } else {
-                                    $price = $product->getPrice();
 
                                     $formattedPrice = $product->getFormattedPrice();
 
@@ -349,12 +351,18 @@ if (is_object($product) && $product->isActive()) {
                                                                       class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
                                                                 <?= $disabled . ($selected ? 'checked' : ''); ?>
                                                                       name="po<?= $option->getID(); ?>"
-                                                                      value="<?= $optionItem->getID(); ?>"/><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?>
+                                                                      value="<?= $optionItem->getID(); ?>"
+                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment(); ?>" />
+
+                                                            <?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?>
                                                         </label>
                                                     </div>
                                                 <?php } else { ?>
                                                     <option
-                                                        <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
+                                                        <?= $disabled . ' ' . $selected; ?> value="<?= $optionItem->getID(); ?>"
+                                                                                    data-adjustment="<?= $optionItem->getPriceAdjustment(); ?>"
+
+                                                    ><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
 
                                                 <?php
@@ -525,8 +533,6 @@ if (is_object($product) && $product->isActive()) {
                 gallery: {enabled: true}
             });
 
-            <?php if ($product->hasVariations() && !empty($variationLookup)) {
-            ?>
 
             <?php
             $varationData = [];
@@ -546,8 +552,8 @@ if (is_object($product) && $product->isActive()) {
                 }
 
                 $varationData[$key] = [
-                    'price' => $product->getFormattedOriginalPrice(),
-                    'saleprice' => $product->getFormattedSalePrice(),
+                    'price' => $product->getPrice(),
+                    'saleprice' => $product->getSalePrice(),
                     'available' => ($variation->isSellable()),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
@@ -558,9 +564,17 @@ if (is_object($product) && $product->isActive()) {
                 }
             } ?>
 
+            var variationData = <?= json_encode($varationData); ?>;
+
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
                 var variationData = <?= json_encode($varationData); ?>;
                 var ar = [];
+
+                var priceAdjust = 0;
+
+                $('#product-options-<?= $bID; ?> select option:selected').each(function(){
+                    priceAdjust += parseFloat($(this).data('adjustment'));
+                });
 
                 $('#product-options-<?= $bID; ?> select.store-product-variation, #product-options-<?= $bID; ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
@@ -568,46 +582,54 @@ if (is_object($product) && $product->isActive()) {
 
                 ar.sort(communityStore.sortNumber);
                 var pdb = $(this).closest('.store-product-block');
+                var variation = variationData[ar.join('_')];
+                var priceHolder = pdb.find('.store-product-price');
 
-                if (variationData[ar.join('_')]['wholesalePrice']) {
-                    pdb.find('.store-product-price').html(
-                        '<?= t('List Price');?>: ' + variationData[ar.join('_')]['price'] +
-                        '<br /><?= t('Wholesale Price');?>: ' + variationData[ar.join('_')]['wholesalePrice']);
-                } else {
-                    if (variationData[ar.join('_')]['saleprice']) {
-                        var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variationData[ar.join('_')]['saleprice'] + '</span>&nbsp;' +
-                            '<?= t('was'); ?>' +
-                            '&nbsp;<span class="store-original-price ">' + variationData[ar.join('_')]['price'] + '</span>';
-
-                        pdb.find('.store-product-price').html(pricing);
+                if (variation) {
+                    if (variation['wholesalePrice']) {
+                        priceHolder.html(
+                            '<?= t('List Price');?>: ' + variation['price'] +
+                            '<br /><?= t('Wholesale Price');?>: ' + variation['wholesalePrice']);
                     } else {
-                        pdb.find('.store-product-price').html(variationData[ar.join('_')]['price']);
-                    }
-                }
+                        if (variationData[ar.join('_')]['saleprice']) {
+                            var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variation['saleprice'] + '</span>&nbsp;' +
+                                '<?= t('was'); ?>' +
+                                '&nbsp;<span class="store-original-price ">' + variation['price'] + '</span>';
 
-                if (variationData[ar.join('_')]['available']) {
-                    pdb.find('.store-out-of-stock-label').addClass('hidden');
-                    pdb.find('.store-btn-add-to-cart').removeClass('hidden');
-                } else {
-                    pdb.find('.store-out-of-stock-label').removeClass('hidden');
-                    pdb.find('.store-btn-add-to-cart').addClass('hidden');
-                }
-                if (variationData[ar.join('_')]['imageThumb']) {
-                    var image = pdb.find('.store-product-primary-image img');
-
-                    if (image) {
-                        image.attr('src', variationData[ar.join('_')]['imageThumb']);
-                        var link = image.parent();
-                        if (link) {
-                            link.attr('href', variationData[ar.join('_')]['image'])
+                            priceHolder.html(pricing);
+                        } else {
+                            var total = parseFloat(variation['price']) + priceAdjust;
+                            var result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+                            priceHolder.html(result);
                         }
                     }
+
+                    if (variationData[ar.join('_')]['available']) {
+                        pdb.find('.store-out-of-stock-label').addClass('hidden');
+                        pdb.find('.store-btn-add-to-cart').removeClass('hidden');
+                    } else {
+                        pdb.find('.store-out-of-stock-label').removeClass('hidden');
+                        pdb.find('.store-btn-add-to-cart').addClass('hidden');
+                    }
+
+                    if (variationData[ar.join('_')]['imageThumb']) {
+                        var image = pdb.find('.store-product-primary-image img');
+
+                        if (image) {
+                            image.attr('src', variationData[ar.join('_')]['imageThumb']);
+                            var link = image.parent();
+                            if (link) {
+                                link.attr('href', variationData[ar.join('_')]['image'])
+                            }
+                        }
+                    }
+
+                } else {
+                    var total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                    var result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+                    priceHolder.html(result);
                 }
-
             });
-            <?php
-            } ?>
-
         });
     </script>
 

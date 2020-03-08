@@ -113,6 +113,7 @@ class Controller extends BlockController
             $langpath = $al->getCollectionHandle();
         }
         $this->set('langpath', $langpath);
+        $this->set('isWholesale', \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale());
         $this->set('app', $this->app);
     }
 

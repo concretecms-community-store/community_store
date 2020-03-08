@@ -621,13 +621,25 @@ class DiscountRule
                                 if ($ci['product']['object']) {
                                     $groupids = $ci['product']['object']->getGroupIDs();
                                     if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                        $count += $ci['product']['qty'];
+                                        $multiplier =  $ci['product']['object']->getNumberItems();
+
+                                        if (!$multiplier) {
+                                            $multiplier = 1;
+                                        }
+
+                                        $count += $ci['product']['qty'] * $multiplier;
                                     }
                                 }
                             }
                         } else {
                             foreach ($cartItems as $ci) {
-                                $count += $ci['product']['qty'];
+                                $multiplier =  $ci['product']['object']->getNumberItems();
+                                
+                                if (!$multiplier) {
+                                    $multiplier = 1;
+                                }
+
+                                $count += $ci['product']['qty'] * $multiplier;
                             }
                         }
                     }

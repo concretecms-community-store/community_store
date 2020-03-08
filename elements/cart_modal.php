@@ -61,7 +61,6 @@ $csm = $app->make('cs/helper/multilingual');
                 $allowUpdate = false;
                 foreach ($cart as $k=>$cartItem){
 
-
                     $qty = $cartItem['product']['qty'];
                     $product = $cartItem['product']['object'];
 
