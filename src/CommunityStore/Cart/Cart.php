@@ -77,8 +77,9 @@ class Cart
                 }
             }
 
+            Session::set('communitystore.cart', $checkeditems);
+
             if ($update) {
-                Session::set('communitystore.cart', $checkeditems);
                 self::$hasChanged = true;
             }
 

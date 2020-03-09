@@ -621,7 +621,10 @@ class DiscountRule
                                 if ($ci['product']['object']) {
                                     $groupids = $ci['product']['object']->getGroupIDs();
                                     if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                        $multiplier =  $ci['product']['object']->getNumberItems();
+
+                                        if ($ci['product']['object']) {
+                                            $multiplier = $ci['product']['object']->getNumberItems();
+                                        }
 
                                         if (!$multiplier) {
                                             $multiplier = 1;
@@ -633,8 +636,11 @@ class DiscountRule
                             }
                         } else {
                             foreach ($cartItems as $ci) {
-                                $multiplier =  $ci['product']['object']->getNumberItems();
-                                
+
+                                if ($ci['product']['object']) {
+                                    $multiplier = $ci['product']['object']->getNumberItems();
+                                }
+
                                 if (!$multiplier) {
                                     $multiplier = 1;
                                 }

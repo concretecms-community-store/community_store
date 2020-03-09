@@ -1775,25 +1775,27 @@ class Product
                     $csm = $app->make('cs/helper/multilingual');
                     $mlist = Section::getList();
 
-                    foreach($mlist as $m) {
-                        $relatedID = $m->getTranslatedPageID($parentPage);
+                    // if we have multilingual pages to also create
+                    if (count($mlist) > 1) {
+                        foreach ($mlist as $m) {
+                            $relatedID = $m->getTranslatedPageID($parentPage);
 
-                        if ($targetCID != $relatedID) {
-                            $parentPage = Page::getByID($relatedID);
-                            $translatedPage = $newProductPage->duplicate($parentPage);
+                            if (!empty($relatedID) && $targetCID != $relatedID) {
+                                $parentPage = Page::getByID($relatedID);
+                                $translatedPage = $newProductPage->duplicate($parentPage);
 
+                                $productName = $csm->t(null, 'productName', $this->getID(), false, $m->getLocale());
 
-                            $productName = $csm->t(null, 'productName', $this->getID(), false, $m->getLocale());
+                                if ($productName) {
+                                    $translatedPage->update(['cName' => $productName]);
+                                }
 
-                            if ($productName) {
-                                $translatedPage->update(['cName' => $productName]);
-                            }
+                                $pageDescription = trim($translatedPage->getAttribute('meta_description'));
+                                $newDescription = $csm->t(null, 'productDescription', $this->getID(), false, $m->getLocale());
 
-                            $pageDescription = trim($translatedPage->getAttribute('meta_description'));
-                            $newDescription = $csm->t(null, 'productDescription', $this->getID(), false, $m->getLocale());
-
-                            if ($newDescription && !$pageDescription) {
-                                $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
+                                if ($newDescription && !$pageDescription) {
+                                    $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
+                                }
                             }
                         }
                     }
