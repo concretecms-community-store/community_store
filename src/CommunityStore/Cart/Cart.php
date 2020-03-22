@@ -69,7 +69,8 @@ class Cart
 
                     if ($include) {
                         $cartitem['product']['object'] = clone $product;
-                        $cartitem['product']['object']->setAdjustment($cartitem['adjustment']);
+                        $cartitem['product']['object']->setPriceAdjustment($cartitem['priceAdjustment']);
+                        $cartitem['product']['object']->setWeightAdjustment($cartitem['weightAdjustment']);
                         $checkeditems[] = $cartitem;
                     }
                 } else {
@@ -233,7 +234,8 @@ class Cart
             $optionItemIds = [];
             $optionsInVariations = [];
 
-            $adjustment = 0;
+            $priceAdjustment = 0;
+            $weightAdjustment = 0;
 
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
@@ -246,7 +248,8 @@ class Cart
 
                     $optionListItem = ProductOptionItem::getByID($value);
 
-                    $adjustment += $optionListItem->getPriceAdjustment();
+                    $priceAdjustment += $optionListItem->getPriceAdjustment();
+                    $weightAdjustment += $optionListItem->getWeightAdjustment();
 
                     if (!$value) {
                         $error = true;  // if we have select option but no value
@@ -275,8 +278,10 @@ class Cart
                 }
             }
 
-            $cartItem['adjustment'] = $adjustment;
-            $product->setAdjustment($adjustment);
+            $cartItem['priceAdjustment'] = $priceAdjustment;
+            $cartItem['weightAdjustment'] = $weightAdjustment;
+            $product->setPriceAdjustment($priceAdjustment);
+            $product->setWeightAdjustment($weightAdjustment);
 
 
             if (!empty($optionsInVariations) && $product->hasVariations()) {
@@ -548,11 +553,7 @@ class Cart
         $totalWeight = 0;
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $product = StoreProduct::getByID($item['product']['pID']);
-
-                if ($item['product']['variation']) {
-                    $product->setVariation($item['product']['variation']);
-                }
+                $product = $item['product']['object'];
 
                 if ($product->isShippable()) {
                     $totalProductWeight = $product->getWeight() * $item['product']['qty'];

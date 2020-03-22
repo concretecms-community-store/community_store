@@ -84,7 +84,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
             $product->setInitialVariation();
         }
 
-        $product->setAdjustment($variationData['priceAdjustment']);
+        $product->setPriceAdjustment($variationData['priceAdjustment']);
 
         $isSellable = $product->isSellable();
 
@@ -136,7 +136,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
 
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getAdjustment();
+                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
                         ?>
                         <p class="store-product-list-price" data-price="<?= $activePrice; ?>">
                             <?php

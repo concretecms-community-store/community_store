@@ -107,12 +107,12 @@ class ProductOptionItem
         $this->pPriceAdjust = $priceAdjust;
     }
 
-    public function getWeightAdjust()
+    public function getWeightAdjustment()
     {
         return $this->pWeightAdjust;
     }
 
-    public function setWeightAdjust($weightAdjust)
+    public function setWeightAdjustment($weightAdjust)
     {
         $this->pWeightAdjust = $weightAdjust;
     }
@@ -200,7 +200,7 @@ class ProductOptionItem
         $productOptionItem->setName($name);
         $productOptionItem->setSelectorName($selectorname);
         $productOptionItem->setPriceAdjustment($priceAdjust);
-        $productOptionItem->setWeightAdjust($weightAdjust);
+        $productOptionItem->setWeightAdjustment($weightAdjust);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
         $productOptionItem->save($persistonly);
@@ -213,7 +213,7 @@ class ProductOptionItem
         $this->setName($name);
         $this->setSelectorName($selectorname);
         $this->setPriceAdjustment($priceAdjust);
-        $this->setWeightAdjust($weightAdjust);
+        $this->setWeightAdjustment($weightAdjust);
         $this->setSort($sort);
         $this->setHidden($hidden);
         $this->save($persistonly);

@@ -15,7 +15,7 @@ if (is_object($product) && $product->isActive()) {
         $product = $firstAvailableVariation;
     }
 
-    $product->setAdjustment($variationData['priceAdjustment']);
+    $product->setPriceAdjustment($variationData['priceAdjustment']);
     $isSellable = $product->isSellable(); ?>
 
     <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID(); ?>"
@@ -81,7 +81,8 @@ if (is_object($product) && $product->isActive()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
 
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getAdjustment();
+
+                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
                         ?>
                         <p class="store-product-price" data-price="<?= $activePrice; ?>" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
@@ -543,6 +544,7 @@ if (is_object($product) && $product->isActive()) {
 
             foreach ($variationLookup as $key => $variation) {
                 $product->setVariation($variation);
+                $product->setPriceAdjustment(0);
                 $imgObj = $product->getImageObj();
 
                 $thumb = false;
@@ -562,7 +564,10 @@ if (is_object($product) && $product->isActive()) {
                 if ($isWholesale) {
                     $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
                 }
-            } ?>
+            }
+
+            ?>
+
 
             var variationData = <?= json_encode($varationData); ?>;
 
@@ -576,6 +581,7 @@ if (is_object($product) && $product->isActive()) {
                     priceAdjust += parseFloat($(this).data('adjustment'));
                 });
 
+
                 $('#product-options-<?= $bID; ?> select.store-product-variation, #product-options-<?= $bID; ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
                 });
@@ -584,6 +590,7 @@ if (is_object($product) && $product->isActive()) {
                 var pdb = $(this).closest('.store-product-block');
                 var variation = variationData[ar.join('_')];
                 var priceHolder = pdb.find('.store-product-price');
+
 
                 if (variation) {
                     if (variation['wholesalePrice']) {

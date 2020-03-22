@@ -39,7 +39,8 @@ use \Concrete\Core\Attribute\ObjectTrait;
 class Product
 {
     // not stored, used for price/sku/etc lookup purposes
-    public $adjustment = 0;
+    public $priceAdjustment = 0;
+    public $weightAdjustment = 0;
     public $variation;
 
     use ObjectTrait;
@@ -410,12 +411,20 @@ class Product
         $this->priceTiers = new ArrayCollection();
     }
 
-    public function setAdjustment($adjustment){
-        $this->adjustment = $adjustment;
+    public function setPriceAdjustment($adjustment){
+        $this->priceAdjustment = $adjustment;
     }
 
-    public function getAdjustment(){
-        return $this->adjustment;
+    public function getPriceAdjustment(){
+        return $this->priceAdjustment;
+    }
+
+    public function setWeightAdjustment($adjustment){
+        $this->weightAdjustment = $adjustment;
+    }
+
+    public function getWeightAdjustment(){
+        return $this->weightAdjustment;
     }
 
     public function setVariation($variation)
@@ -1035,7 +1044,7 @@ class Product
             }
         }
 
-        return $price + $this->getAdjustment();
+        return $price + $this->getPriceAdjustment();
     }
 
     public function getWholesalePrice($qty = 1)
@@ -1287,10 +1296,11 @@ class Product
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $varWeight = $variation->getVariationWeight();
             if ($varWeight) {
-                return $varWeight;
+                $weight = $varWeight;
             }
         }
 
+        $weight += $this->getWeightAdjustment();
         return $weight;
     }
 
