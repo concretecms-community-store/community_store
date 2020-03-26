@@ -34,7 +34,7 @@ class ManufacturerList extends ItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct m.mID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
         return $pagination;
