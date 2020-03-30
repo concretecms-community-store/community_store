@@ -310,7 +310,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if (true === $exists['exists'] && !isset($cartItem['product']['customerPrice'])) {
+            if (true === $exists['exists']) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty
@@ -331,7 +331,14 @@ class Cart
                 } else {
                     $added = 1;
                     $newquantity = 1;
+
+                    // if item can only have one in the cart, and it's a customer entered price, update to new price
+                    if (isset($cartItem['product']['customerPrice'])) {
+                        $cart[$exists['cartItemKey']]['product']['customerPrice'] = $cartItem['product']['customerPrice'];
+                    }
                 }
+
+
 
                 $cart[$exists['cartItemKey']]['product']['qty'] = $newquantity;
             } else {
@@ -348,6 +355,7 @@ class Cart
                 }
 
                 $cartItem['product']['qty'] = $newquantity;
+
 
                 if ($cartItem['product']['qty'] > 0) {
                     if ($product->isExclusive()) {
