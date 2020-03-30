@@ -1102,14 +1102,16 @@ class Product
             if ($variation) {
                 $varprice = $variation->getVariationSalePrice();
                 if ($varprice) {
-                    return $varprice;
+                    $price = $varprice;
                 } else {
-                    return $this->pSalePrice;
+                    $price = $this->pSalePrice;
                 }
             }
         } else {
-            return $this->pSalePrice;
+            $price = $this->pSalePrice;
         }
+
+        return $price + $this->getPriceAdjustment();
     }
 
     public function getFormattedSalePrice()

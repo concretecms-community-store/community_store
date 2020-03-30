@@ -55,7 +55,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
         <script type="text/javascript">
             $(function () {
                 $('#sort<?= $bID; ?>').change(function () {
-                    var sortstring = '<?= $app->make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
+                    let sortstring = '<?= $app->make('helper/url')->setVariable(['sort' . $bID => '%sort%']); ?>';
                     window.location.href = sortstring.replace('%sort%', $(this).val());
                 });
             });
@@ -405,7 +405,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                 $varationData = [];
                                 foreach ($variationLookup as $key => $variation) {
                                     $product->setVariation($variation);
-
+                                    $product->setPriceAdjustment(0);
                                     $imgObj = $product->getImageObj();
 
                                     if ($imgObj) {
@@ -428,15 +428,15 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
 
 
                                 $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select, #store-form-add-to-cart-list-<?= $product->getID(); ?> input').change(function () {
-                                    var variationData = <?= json_encode($varationData); ?>;
-                                    var ar = [];
+                                    let variationData = <?= json_encode($varationData); ?>;
+                                    let ar = [];
 
 
                                     $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-list-<?= $product->getID(); ?> .store-product-variation:checked').each(function () {
                                         ar.push($(this).val());
                                     });
 
-                                    var priceAdjust = 0;
+                                    let priceAdjust = 0;
 
                                     $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select option:selected').each(function(){
                                         priceAdjust += parseFloat($(this).data('adjustment'));
@@ -444,20 +444,27 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
 
                                     ar.sort(communityStore.sortNumber);
 
-                                    var pli = $(this).closest('.store-product-list-item');
-                                    var variation = variationData[ar.join('_')];
-                                    var priceHolder = pli.find('.store-product-list-price');
+                                    let pli = $(this).closest('.store-product-list-item');
+                                    let variation = variationData[ar.join('_')];
+                                    let priceHolder = pli.find('.store-product-list-price');
 
 
                                     if (variation) {
+
+                                        let total = parseFloat(variation['price']) + priceAdjust;
+                                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+
                                         if (variation['saleprice']) {
-                                            var pricing = '<span class="store-sale-price">' + variation['saleprice'] + '</span>' +
-                                                ' <?= t('was'); ?> ' + '<span class="store-original-price">' + variation['price'] + '</span>';
+                                            let saletotal = parseFloat(variation['saleprice']) + priceAdjust;
+                                            let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                                            let pricing = '<span class="store-sale-price">' + saleresult + '</span>' +
+                                                ' <?= t('was'); ?> ' + '<span class="store-original-price">' + result + '</span>';
 
                                             pli.find('.store-product-list-price').html(pricing);
 
                                         } else {
-                                            pli.find('.store-product-list-price').html(variation['price']);
+                                            pli.find('.store-product-list-price').html(result);
                                         }
 
 
@@ -470,7 +477,7 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                         }
 
                                         if (variation['imageThumb']) {
-                                            var image = pli.find('.store-product-list-thumbnail img');
+                                            let image = pli.find('.store-product-list-thumbnail img');
 
                                             if (image) {
                                                 image.attr('src', variationData[ar.join('_')]['imageThumb']);
@@ -478,8 +485,8 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                             }
                                         }
                                     } else {
-                                        var total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                                        var result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                                        let total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
                                         priceHolder.html(result);
                                     }
 

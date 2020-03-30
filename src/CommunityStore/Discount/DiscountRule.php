@@ -136,7 +136,7 @@ class DiscountRule
                 $applicableTotal = $this->getApplicableTotal();
 
                 if (false != $applicableTotal) {
-                    return $applicableTotal - ($this->getPercentage() / 100 * $applicableTotal);
+                    return round($applicableTotal - ($this->getPercentage() / 100 * $applicableTotal), 2);
                 }
             }
 

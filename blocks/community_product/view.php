@@ -569,44 +569,47 @@ if (is_object($product) && $product->isActive()) {
             ?>
 
 
-            var variationData = <?= json_encode($varationData); ?>;
+            let variationData = <?= json_encode($varationData); ?>;
 
             $('#product-options-<?= $bID; ?> select, #product-options-<?= $bID; ?> input').change(function () {
-                var variationData = <?= json_encode($varationData); ?>;
-                var ar = [];
+                let variationData = <?= json_encode($varationData); ?>;
+                let ar = [];
 
-                var priceAdjust = 0;
+                let priceAdjust = 0;
 
                 $('#product-options-<?= $bID; ?> select option:selected').each(function(){
                     priceAdjust += parseFloat($(this).data('adjustment'));
                 });
-
 
                 $('#product-options-<?= $bID; ?> select.store-product-variation, #product-options-<?= $bID; ?> .store-product-variation:checked').each(function () {
                     ar.push($(this).val());
                 });
 
                 ar.sort(communityStore.sortNumber);
-                var pdb = $(this).closest('.store-product-block');
-                var variation = variationData[ar.join('_')];
-                var priceHolder = pdb.find('.store-product-price');
-
+                let pdb = $(this).closest('.store-product-block');
+                let variation = variationData[ar.join('_')];
+                let priceHolder = pdb.find('.store-product-price');
 
                 if (variation) {
+                    let total = parseFloat(variation['price']) + priceAdjust;
+                    let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+
                     if (variation['wholesalePrice']) {
                         priceHolder.html(
-                            '<?= t('List Price');?>: ' + variation['price'] +
+                            '<?= t('List Price');?>: ' + result +
                             '<br /><?= t('Wholesale Price');?>: ' + variation['wholesalePrice']);
                     } else {
                         if (variationData[ar.join('_')]['saleprice']) {
-                            var pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + variation['saleprice'] + '</span>&nbsp;' +
+
+                            let saletotal = parseFloat(variation['saleprice']) + priceAdjust;
+                            let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                            let pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + saleresult + '</span>&nbsp;' +
                                 '<?= t('was'); ?>' +
-                                '&nbsp;<span class="store-original-price ">' + variation['price'] + '</span>';
+                                '&nbsp;<span class="store-original-price ">' + result + '</span>';
 
                             priceHolder.html(pricing);
                         } else {
-                            var total = parseFloat(variation['price']) + priceAdjust;
-                            var result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
                             priceHolder.html(result);
                         }
                     }
@@ -620,11 +623,11 @@ if (is_object($product) && $product->isActive()) {
                     }
 
                     if (variationData[ar.join('_')]['imageThumb']) {
-                        var image = pdb.find('.store-product-primary-image img');
+                        let image = pdb.find('.store-product-primary-image img');
 
                         if (image) {
                             image.attr('src', variationData[ar.join('_')]['imageThumb']);
-                            var link = image.parent();
+                            let link = image.parent();
                             if (link) {
                                 link.attr('href', variationData[ar.join('_')]['image'])
                             }
@@ -632,8 +635,8 @@ if (is_object($product) && $product->isActive()) {
                     }
 
                 } else {
-                    var total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                    var result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+                    let total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                    let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
                     priceHolder.html(result);
                 }
             });
