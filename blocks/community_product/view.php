@@ -80,20 +80,23 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
-
-
                         $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
+
+                        if ($isWholesale) {
+                            $msrp = $product->getFormattedOriginalPrice();
+                            $wholesalePrice = $product->getWholesalePrice() - $product->getPriceAdjustment();
+                            $formattedWholesalePrice = $product->getFormattedWholesalePrice();
+                        }
+
                         ?>
-                        <p class="store-product-price" data-price="<?= $activePrice; ?>" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                        <p class="store-product-price" data-price="<?= $activePrice; ?>" data-original-price="<?= $salePrice ? $price : ''; ?>" data-list-price="<?= ($isWholesale && $wholesalePrice) ? $price : ''; ?>"
+                           itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency'); ?>"/>
                             <?php
                             $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
-                            if ($isWholesale) {
-                                $msrp = $product->getFormattedOriginalPrice();
-                                $wholesalePrice = $product->getWholesalePrice();
-                                $formattedWholesalePrice = $product->getFormattedWholesalePrice();
 
-                                echo t('List Price') . ': ' . $msrp . '<br />' . t('Wholesale Price') . ': ' . $formattedWholesalePrice;
+                            if ($isWholesale && $wholesalePrice > 0) {
+                                echo t('List Price') . ': <span class="store-list-price">' . $msrp . '</span><br />' . t('Wholesale Price') . ': <span class="store-wholesale-price">' . $formattedWholesalePrice . '</span>';
                                 echo '<meta itemprop="price" content="' . $wholesalePrice . '" />';
                                 echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
 
@@ -102,7 +105,7 @@ if (is_object($product) && $product->isActive()) {
                                 if (isset($salePrice) && "" != $salePrice) {
                                     $formattedSalePrice = $product->getFormattedSalePrice();
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-                                    echo '<span class="store-sale-price">' . t("On Sale: ") . $formattedSalePrice . '</span>';
+                                    echo t("On Sale") . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                     echo '&nbsp;' . t('was') . '&nbsp;';
                                     echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
@@ -555,14 +558,14 @@ if (is_object($product) && $product->isActive()) {
 
                 $varationData[$key] = [
                     'price' => $product->getPrice(),
-                    'saleprice' => $product->getSalePrice(),
+                    'salePrice' => $product->getSalePrice(),
                     'available' => ($variation->isSellable()),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                 ];
 
                 if ($isWholesale) {
-                    $varationData[$key]['wholesalePrice'] = $product->getFormattedWholesalePrice();
+                    $varationData[$key]['wholesalePrice'] = $product->getWholesalePrice();
                 }
             }
 
@@ -595,26 +598,26 @@ if (is_object($product) && $product->isActive()) {
                     let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
 
                     if (variation['wholesalePrice']) {
-                        priceHolder.html(
-                            '<?= t('List Price');?>: ' + result +
-                            '<br /><?= t('Wholesale Price');?>: ' + variation['wholesalePrice']);
-                    } else {
-                        if (variationData[ar.join('_')]['saleprice']) {
+                        let wholesale = parseFloat(variation['wholesalePrice']) + priceAdjust;
+                        let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
 
-                            let saletotal = parseFloat(variation['saleprice']) + priceAdjust;
+                        priceHolder.find('.store-list-price').html(result);
+                        priceHolder.find('.store-wholesale-price').html(wholesaleresult);
+
+                    } else {
+                        if (variation['salePrice']) {
+                            let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
                             let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
 
-                            let pricing = '<span class="store-sale-price"><?= t("On Sale: "); ?>' + saleresult + '</span>&nbsp;' +
-                                '<?= t('was'); ?>' +
-                                '&nbsp;<span class="store-original-price ">' + result + '</span>';
+                            priceHolder.find('.store-sale-price').html(saleresult);
+                            priceHolder.find('.store-original-price').html(result);
 
-                            priceHolder.html(pricing);
                         } else {
                             priceHolder.html(result);
                         }
                     }
 
-                    if (variationData[ar.join('_')]['available']) {
+                    if (variation['available']) {
                         pdb.find('.store-out-of-stock-label').addClass('hidden');
                         pdb.find('.store-btn-add-to-cart').removeClass('hidden');
                     } else {
@@ -622,22 +625,45 @@ if (is_object($product) && $product->isActive()) {
                         pdb.find('.store-btn-add-to-cart').addClass('hidden');
                     }
 
-                    if (variationData[ar.join('_')]['imageThumb']) {
+                    if (variation['imageThumb']) {
                         let image = pdb.find('.store-product-primary-image img');
 
                         if (image) {
-                            image.attr('src', variationData[ar.join('_')]['imageThumb']);
+                            image.attr('src', variation['imageThumb']);
                             let link = image.parent();
                             if (link) {
-                                link.attr('href', variationData[ar.join('_')]['image'])
+                                link.attr('href', variation['image'])
                             }
                         }
                     }
 
                 } else {
-                    let total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                    let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
-                    priceHolder.html(result);
+
+                    if (priceHolder.data('original-price')) {
+                        let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
+                        let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                        let total = parseFloat(priceHolder.data('original-price')) + priceAdjust;
+                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+
+                        priceHolder.find('.store-sale-price').html(saleresult);
+                        priceHolder.find('.store-original-price').html(result);
+
+                    } if (priceHolder.data('list-price')) {
+                        let wholesale = parseFloat(priceHolder.data('price')) + priceAdjust;
+                        let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
+
+                        let total = parseFloat(priceHolder.data('list-price')) + priceAdjust;
+                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+
+                        priceHolder.find('.store-list-price').html(result);
+                        priceHolder.find('.store-wholesale-price').html(wholesaleresult);
+
+                    } else {
+                        let total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                        priceHolder.html(result);
+                    }
                 }
             });
         });

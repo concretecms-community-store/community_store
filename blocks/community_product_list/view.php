@@ -29,8 +29,6 @@ if ($productsPerRow == 6) {
     $columnClass = 'col-md-2';
 }
 
-$isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale();
-
 ?>
 
 <div class="store-product-list-block">
@@ -135,10 +133,9 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                     <?php if ($showPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
-
                         $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
                         ?>
-                        <p class="store-product-list-price" data-price="<?= $activePrice; ?>">
+                        <p class="store-product-list-price" data-price="<?= $activePrice; ?>" data-original-price="<?= ($salePrice ? $price : ''); ?>" >
                             <?php
                             $salePrice = $product->getSalePrice();
                             if (isset($salePrice) && "" != $salePrice) {
@@ -414,15 +411,14 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
 
                                     $varationData[$key] = [
                                         'price' => $product->getPrice(),
-                                        'saleprice' => $product->getSalePrice(),
+                                        'salePrice' => $product->getSalePrice(),
                                         'available' => ($variation->isSellable()),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',];
 
                                     if($isWholesale){
-                                        $varationData[$key]['price'] = $product->getFormattedWholesalePrice();
+                                        $varationData[$key]['price'] = $product->getWholesalePrice();
                                     }
-
 
                                 } ?>
 
@@ -430,7 +426,6 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                 $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select, #store-form-add-to-cart-list-<?= $product->getID(); ?> input').change(function () {
                                     let variationData = <?= json_encode($varationData); ?>;
                                     let ar = [];
-
 
                                     $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-list-<?= $product->getID(); ?> .store-product-variation:checked').each(function () {
                                         ar.push($(this).val());
@@ -448,23 +443,21 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                     let variation = variationData[ar.join('_')];
                                     let priceHolder = pli.find('.store-product-list-price');
 
-
                                     if (variation) {
 
                                         let total = parseFloat(variation['price']) + priceAdjust;
                                         let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
 
-                                        if (variation['saleprice']) {
-                                            let saletotal = parseFloat(variation['saleprice']) + priceAdjust;
-                                            let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
 
-                                            let pricing = '<span class="store-sale-price">' + saleresult + '</span>' +
-                                                ' <?= t('was'); ?> ' + '<span class="store-original-price">' + result + '</span>';
+                                        if (variation['salePrice']) {
+                                            let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
+                                            let saleresult = Intl.NumberFormat('en', {style: 'currency', currency: CURRENCYCODE}).format(saletotal);
 
-                                            pli.find('.store-product-list-price').html(pricing);
+                                            priceHolder.find('.store-sale-price').html(saleresult);
+                                            priceHolder.find('.store-original-price').html(result);
 
                                         } else {
-                                            pli.find('.store-product-list-price').html(result);
+                                            priceHolder.html(result);
                                         }
 
 
@@ -480,14 +473,27 @@ $isWholesale = \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Who
                                             let image = pli.find('.store-product-list-thumbnail img');
 
                                             if (image) {
-                                                image.attr('src', variationData[ar.join('_')]['imageThumb']);
+                                                image.attr('src', variation['imageThumb']);
 
                                             }
                                         }
                                     } else {
-                                        let total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
-                                        priceHolder.html(result);
+                                        if (priceHolder.data('original-price')) {
+                                            let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
+                                            let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                                            let total = parseFloat(priceHolder.data('original-price')) + priceAdjust;
+                                            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+
+                                            priceHolder.find('.store-sale-price').html(saleresult);
+                                            priceHolder.find('.store-original-price').html(result);
+
+                                        }  else {
+                                            let total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                                            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                                            priceHolder.html(result);
+                                        }
+
                                     }
 
                                 });

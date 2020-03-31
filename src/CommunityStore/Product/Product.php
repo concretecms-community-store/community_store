@@ -1060,11 +1060,13 @@ class Product
                 $varWholesalePrice = $variation->getVariationWholesalePrice();
 
                 if ($varWholesalePrice) {
-                    return $varWholesalePrice;
+                    $price = $varWholesalePrice;
                 }
             }
         }
-        return $this->pWholesalePrice;
+        $price = $this->pWholesalePrice;
+
+        return $price + $this->getPriceAdjustment();
     }
 
     private function getQuantityAdjustedPrice($qty = 1) {
@@ -1916,10 +1918,15 @@ class Product
     public function getVariationData()
     {
         $firstAvailableVariation = false;
+        $adjustment = 0;
+        $availableOptionsids = [];
+        $foundOptionids = [];
 
         if ($this->hasVariations()) {
-            $availableOptionsids = false;
+            $availableOptionsids = [];
             foreach ($this->getVariations() as $variation) {
+                $foundOptionids = [];
+                $adjustment = 0;
                 $isAvailable = false;
 
                 if ($variation->isSellable()) {
@@ -1927,15 +1934,20 @@ class Product
 
                     foreach ($variationOptions as $variationOption) {
                         $opt = $variationOption->getOptionItem();
+
+                        $foundOptionids[] = $variationOption->getOptionItem()->getOption()->getID() ;
+
                         if ($opt->isHidden()) {
                             $isAvailable = false;
                             break;
                         } else {
                             $isAvailable = true;
+                            $adjustment += $opt->getPriceAdjustment();
                         }
                     }
                     if ($isAvailable) {
                         $availableOptionsids = $variation->getOptionItemIDs();
+
                         $this->shallowClone = true;
                         $firstAvailableVariation = clone $this;
                         $firstAvailableVariation->setVariation($variation);
@@ -1946,17 +1958,17 @@ class Product
             }
         }
 
-        $adjustment = 0;
-
         foreach($this->getOptions() as $option) {
-           $optionItems = $option->getOptionItems();
+            if (!in_array($option->getID(), $foundOptionids)) {
+                $optionItems = $option->getOptionItems();
 
-           foreach($optionItems as $optionItem) {
-               if (!$optionItem->isHidden()) {
-                   $adjustment += $optionItem->getPriceAdjustment();
-                   break;
-               }
-           }
+                foreach ($optionItems as $optionItem) {
+                    if (!$optionItem->isHidden()) {
+                        $adjustment += $optionItem->getPriceAdjustment();
+                        break;
+                    }
+                }
+            }
         }
 
         return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids, 'priceAdjustment'=>$adjustment];

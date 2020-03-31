@@ -246,6 +246,8 @@ class Controller extends BlockController
         $this->set('langpath', $langpath);
         $this->set('app', $this->app);
         $this->set('locale', Localization::activeLocale());
+
+        $this->set('isWholesale', \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale());
     }
 
     public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
