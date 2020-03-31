@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Routing\Redirect;
@@ -15,6 +17,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Punic\Currency;
 
 class Settings extends DashboardPageController
 {
@@ -99,11 +102,14 @@ class Settings extends DashboardPageController
         }
 
         $this->set('digitalDownloadFileSet', $fsID);
+
+        $currencyList = Currency::getAllCurrencies(false, false,Localization::activeLanguage());
+        $this->set('currencyList', $currencyList);
     }
 
     public function loadFormAssets()
     {
-        $pkg = Package::getByHandle('community_store');
+        $pkg = $this->app->make(PackageService::class)->getByHandle('community_store');
         $pkgconfig = $pkg->getConfig();
         $this->set('pkgconfig', $pkgconfig);
         $this->requireAsset('css', 'communityStoreDashboard');
@@ -143,6 +149,8 @@ class Settings extends DashboardPageController
             $this->error = $errors;
 
             if (!$errors->has()) {
+                $startingCurrency =  Config::get('community_store.currency');
+
                 Config::save('community_store.symbol', $args['symbol']);
                 Config::save('community_store.currency', $args['currency']);
                 Config::save('community_store.whole', $args['whole']);
@@ -199,6 +207,11 @@ class Settings extends DashboardPageController
                 Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
                 Config::save('community_store.logUserAgent', (bool) $args['logUserAgent']);
+
+                if ($args['currency']) {
+                    $symbol = Currency::getSymbol($args['currency']);
+                    Config::save('community_store.symbol', $symbol);
+                }
 
                 //save payment methods
                 if ($args['paymentMethodHandle']) {
@@ -267,10 +280,6 @@ class Settings extends DashboardPageController
     {
         $e = $this->app->make('helper/validation/error');
         $nv = $this->app->make('helper/validation/numbers');
-
-        if ("" == $args['symbol']) {
-            $e->add(t('You must set a currency symbol'));
-        }
 
         $paymentMethodsEnabled = 0;
         foreach ($args['paymentMethodEnabled'] as $method) {

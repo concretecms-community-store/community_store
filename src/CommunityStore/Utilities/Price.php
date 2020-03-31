@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Support\Facade\Config;
+use Punic\Number;
 
 class Price
 {
@@ -35,13 +36,18 @@ class Price
 
     public static function format($price)
     {
-        $price = floatval($price);
+        $currency = Config::get('community_store.currency');
         $symbol = Config::get('community_store.symbol');
-        $wholeSep = Config::get('community_store.whole');
-        $thousandSep = Config::get('community_store.thousand');
-        $currency = Config::get('community_store_stripe.currency');
-        $decimals = self::isZeroDecimalCurrency($currency) ? 0 : 2;
-        $price = $symbol . number_format($price, $decimals, $wholeSep, $thousandSep);
+
+        if ($currency) {
+            return \Punic\Number::formatCurrency($price, $currency);
+        } else {
+            $price = floatval($price);
+            $wholeSep = Config::get('community_store.whole');
+            $thousandSep = Config::get('community_store.thousand');
+            $decimals = self::isZeroDecimalCurrency($currency) ? 0 : 2;
+            $price = $symbol . number_format($price, $decimals, $wholeSep, $thousandSep);
+        }
 
         return $price;
     }

@@ -38,6 +38,10 @@ use \Concrete\Core\Attribute\ObjectTrait;
  */
 class Product
 {
+    // not stored, used for price/sku/etc lookup purposes
+    public $priceAdjustment = 0;
+    public $weightAdjustment = 0;
+    public $variation;
 
     use ObjectTrait;
     /**
@@ -263,9 +267,6 @@ class Product
     protected $manufacturer;
 
 
-    // not stored, used for price/sku/etc lookup purposes
-    protected $variation;
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
@@ -408,6 +409,22 @@ class Product
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
         $this->priceTiers = new ArrayCollection();
+    }
+
+    public function setPriceAdjustment($adjustment){
+        $this->priceAdjustment = $adjustment;
+    }
+
+    public function getPriceAdjustment(){
+        return $this->priceAdjustment;
+    }
+
+    public function setWeightAdjustment($adjustment){
+        $this->weightAdjustment = $adjustment;
+    }
+
+    public function getWeightAdjustment(){
+        return $this->weightAdjustment;
     }
 
     public function setVariation($variation)
@@ -1027,7 +1044,7 @@ class Product
             }
         }
 
-        return $price;
+        return $price + $this->getPriceAdjustment();
     }
 
     public function getWholesalePrice($qty = 1)
@@ -1085,14 +1102,16 @@ class Product
             if ($variation) {
                 $varprice = $variation->getVariationSalePrice();
                 if ($varprice) {
-                    return $varprice;
+                    $price = $varprice;
                 } else {
-                    return $this->pSalePrice;
+                    $price = $this->pSalePrice;
                 }
             }
         } else {
-            return $this->pSalePrice;
+            $price = $this->pSalePrice;
         }
+
+        return $price + $this->getPriceAdjustment();
     }
 
     public function getFormattedSalePrice()
@@ -1279,10 +1298,11 @@ class Product
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             $varWeight = $variation->getVariationWeight();
             if ($varWeight) {
-                return $varWeight;
+                $weight = $varWeight;
             }
         }
 
+        $weight += $this->getWeightAdjustment();
         return $weight;
     }
 
@@ -1915,7 +1935,20 @@ class Product
             }
         }
 
-        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids];
+        $adjustment = 0;
+
+        foreach($this->getOptions() as $option) {
+           $optionItems = $option->getOptionItems();
+
+           foreach($optionItems as $optionItem) {
+               if (!$optionItem->isHidden()) {
+                   $adjustment += $optionItem->getPriceAdjustment();
+                   break;
+               }
+           }
+        }
+
+        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids, 'priceAdjustment'=>$adjustment];
     }
 
     // helper function for working with variation options

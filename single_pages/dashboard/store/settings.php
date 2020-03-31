@@ -37,29 +37,49 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
         <div class="col-sm-9 store-pane active" id="settings-currency">
             <h3><?= t('Currency Settings'); ?></h3>
+
             <div class="row">
-                <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
+                        <?= $form->label('currency', t('Currency')); ?>
+
+                        <?php
+                        $currencies = [''=> '-- '. t('Unspecified') . ' --'];
+                        $currencyList = array_merge($currencies, $currencyList);
+                        ?>
+
+                        <?= $form->select('currency', $currencyList, Config::get('community_store.currency')); ?>
+                    </div>
+            </div>
+
+            <div id="extra-currency" class="row <?= (Config::get('community_store.currency') ? 'hidden' : ''); ?>">
+                <div class="form-group col-md-4">
                     <?= $form->label('symbol', t('Currency Symbol')); ?>
                     <?= $form->text('symbol', Config::get('community_store.symbol')); ?>
                 </div>
-
-                <div class="form-group col-md-6">
-                    <?= $form->label('currency', t('Currency Code')); ?>
-                    <?= $form->text('currency', Config::get('community_store.currency')); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <?= $form->label('thousand', t('Thousands Separator')); ?>
                     <?= $form->text('thousand', Config::get('community_store.thousand')); ?>
                     <span class="help-block"><?= t('e.g. , or a space'); ?></span>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <?= $form->label('whole', t('Whole Number Separator')); ?>
                     <?= $form->text('whole', Config::get('community_store.whole')); ?>
                     <span class="help-block"><?= t('e.g. period or a comma'); ?></span>
                 </div>
             </div>
+
+            <script>
+                $(function() {
+                    $('#currency').change(function(){
+                        if ($(this).val()) {
+                            $('#extra-currency').addClass('hidden');
+                        } else {
+                            $('#extra-currency').removeClass('hidden');
+                        }
+                    });
+
+                });
+            </script>
 
         </div><!-- #settings-currency -->
 
@@ -583,7 +603,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-success" type="submit"><?= t('Save Settings'); ?></button>
+            <button class="pull-right btn btn-primary" type="submit"><?= t('Save'); ?></button>
         </div>
     </div>
 

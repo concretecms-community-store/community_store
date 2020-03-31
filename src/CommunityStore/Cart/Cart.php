@@ -5,6 +5,7 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartEvent as StoreCartEvent;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
@@ -55,6 +56,7 @@ class Cart
                         }
                     }
 
+
                     // if the cart has greater stock than available
                     if (!$product->isUnlimited() && !$product->allowBackOrders() && $cartitem['product']['qty'] > $product->getQty()) {
                         if ($product->getQty() > 0) {
@@ -66,7 +68,9 @@ class Cart
                     }
 
                     if ($include) {
-                        $cartitem['product']['object'] = $product;
+                        $cartitem['product']['object'] = clone $product;
+                        $cartitem['product']['object']->setPriceAdjustment($cartitem['priceAdjustment']);
+                        $cartitem['product']['object']->setWeightAdjustment($cartitem['weightAdjustment']);
                         $checkeditems[] = $cartitem;
                     }
                 } else {
@@ -230,6 +234,9 @@ class Cart
             $optionItemIds = [];
             $optionsInVariations = [];
 
+            $priceAdjustment = 0;
+            $weightAdjustment = 0;
+
             // search for product options, if found, collect the id
             foreach ($cartItem['productAttributes'] as $name => $value) {
                 $groupID = false;
@@ -238,6 +245,11 @@ class Cart
                 if ('po' == substr($name, 0, 2)) {
                     $isOptionList = true;
                     $groupID = str_replace("po", "", $name);
+
+                    $optionListItem = ProductOptionItem::getByID($value);
+
+                    $priceAdjustment += $optionListItem->getPriceAdjustment();
+                    $weightAdjustment += $optionListItem->getWeightAdjustment();
 
                     if (!$value) {
                         $error = true;  // if we have select option but no value
@@ -266,6 +278,12 @@ class Cart
                 }
             }
 
+            $cartItem['priceAdjustment'] = $priceAdjustment;
+            $cartItem['weightAdjustment'] = $weightAdjustment;
+            $product->setPriceAdjustment($priceAdjustment);
+            $product->setWeightAdjustment($weightAdjustment);
+
+
             if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options
                 $variation = StoreProductVariation::getByOptionItemIDs($optionsInVariations);
@@ -292,7 +310,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if (true === $exists['exists'] && !isset($cartItem['product']['customerPrice'])) {
+            if (true === $exists['exists']) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty
@@ -313,7 +331,14 @@ class Cart
                 } else {
                     $added = 1;
                     $newquantity = 1;
+
+                    // if item can only have one in the cart, and it's a customer entered price, update to new price
+                    if (isset($cartItem['product']['customerPrice'])) {
+                        $cart[$exists['cartItemKey']]['product']['customerPrice'] = $cartItem['product']['customerPrice'];
+                    }
                 }
+
+
 
                 $cart[$exists['cartItemKey']]['product']['qty'] = $newquantity;
             } else {
@@ -330,6 +355,7 @@ class Cart
                 }
 
                 $cartItem['product']['qty'] = $newquantity;
+
 
                 if ($cartItem['product']['qty'] > 0) {
                     if ($product->isExclusive()) {
@@ -535,11 +561,7 @@ class Cart
         $totalWeight = 0;
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $product = StoreProduct::getByID($item['product']['pID']);
-
-                if ($item['product']['variation']) {
-                    $product->setVariation($item['product']['variation']);
-                }
+                $product = $item['product']['object'];
 
                 if ($product->isShippable()) {
                     $totalProductWeight = $product->getWeight() * $item['product']['qty'];

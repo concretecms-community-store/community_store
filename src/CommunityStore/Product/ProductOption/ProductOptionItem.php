@@ -49,6 +49,16 @@ class ProductOptionItem
     protected $poiSelectorName;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pPriceAdjust;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pWeightAdjust;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $poiSort;
@@ -85,6 +95,26 @@ class ProductOptionItem
         }
 
         return $this->getName();
+    }
+
+    public function getPriceAdjustment()
+    {
+        return $this->pPriceAdjust;
+    }
+
+    public function setPriceAdjustment($priceAdjust)
+    {
+        $this->pPriceAdjust = $priceAdjust;
+    }
+
+    public function getWeightAdjustment()
+    {
+        return $this->pWeightAdjust;
+    }
+
+    public function setWeightAdjustment($weightAdjust)
+    {
+        $this->pWeightAdjust = $weightAdjust;
     }
 
     private function setSort($sort)
@@ -163,12 +193,14 @@ class ProductOptionItem
         }
     }
 
-    public static function add($option, $name, $sort, $selectorname, $hidden = false, $persistonly = false)
+    public static function add($option, $name, $sort, $selectorname, $priceAdjust, $weightAdjust, $hidden = false, $persistonly = false)
     {
         $productOptionItem = new self();
         $productOptionItem->setOption($option);
         $productOptionItem->setName($name);
         $productOptionItem->setSelectorName($selectorname);
+        $productOptionItem->setPriceAdjustment($priceAdjust);
+        $productOptionItem->setWeightAdjustment($weightAdjust);
         $productOptionItem->setSort($sort);
         $productOptionItem->setHidden($hidden);
         $productOptionItem->save($persistonly);
@@ -176,10 +208,12 @@ class ProductOptionItem
         return $productOptionItem;
     }
 
-    public function update($name, $sort, $selectorname, $hidden = false, $persistonly = false)
+    public function update($name, $sort, $selectorname, $priceAdjust, $weightAdjust, $hidden = false, $persistonly = false)
     {
         $this->setName($name);
         $this->setSelectorName($selectorname);
+        $this->setPriceAdjustment($priceAdjust);
+        $this->setWeightAdjustment($weightAdjust);
         $this->setSort($sort);
         $this->setHidden($hidden);
         $this->save($persistonly);

@@ -33,6 +33,17 @@ class OrderItemOption
     protected $oioValue;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $oioPriceAdjust;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $oioWeightAdjust;
+
+
+    /**
      * @ORM\return mixed
      */
     public function getID()
@@ -87,6 +98,40 @@ class OrderItemOption
     {
         $this->oioValue = $oioValue;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderItemOptionPriceAdjust()
+    {
+        return $this->oioPriceAdjust;
+    }
+
+    /**
+     * @param mixed $oioPriceAdjust
+     */
+    public function setOrderItemOptionPriceAdjust($priceAdjust)
+    {
+        $this->oioPriceAdjust = $priceAdjust;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderItemOptionWeightAdjust()
+    {
+        return $this->oioWeightAdjust;
+    }
+
+    /**
+     * @param mixed $oioWeightAdjust
+     */
+    public function setOrderItemOptionWeightAdjust($weightAdjust)
+    {
+        $this->oioWeightAdjust = $weightAdjust;
+    }
+
+
 
     public static function getByID($oioID)
     {
