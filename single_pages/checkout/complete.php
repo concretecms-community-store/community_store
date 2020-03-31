@@ -51,7 +51,7 @@ $dh = $app->make('helper/date');
      *  $orderItems = $order->getOrderItems();
      *  foreach($orderItems as $item){
      *      echo $item->getProductName();
-     *      echo $item->getQty();
+     *      echo $item->getQuantity();
      *      echo $item->getPricePaid();
      *  }
      *
@@ -201,7 +201,7 @@ $dh = $app->make('helper/date');
                     } ?>
                         </td>
                         <td class="text-right"><?= StorePrice::format($item->getPricePaid()); ?></td>
-                        <td class="text-right"><?= $item->getQty(); ?> <?= h($item->getQtyLabel()); ?></td>
+                        <td class="text-right"><?= $item->getQuantity(); ?> <?= h($item->getQuantityLabel()); ?></td>
                         <td class="text-right"><?= StorePrice::format($item->getSubTotal()); ?></td>
                     </tr>
                     <?php

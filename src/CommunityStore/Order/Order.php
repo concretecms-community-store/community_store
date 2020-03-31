@@ -18,6 +18,7 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
@@ -30,6 +31,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
 
 /**
  * @ORM\Entity
@@ -452,7 +454,7 @@ class Order
         $subtotal = 0;
         if ($items) {
             foreach ($items as $item) {
-                $subtotal = $subtotal + ($item->getPricePaid() * $item->getQty());
+                $subtotal = $subtotal + ($item->getPricePaid() * $item->getQuantity());
             }
         }
 
@@ -677,6 +679,34 @@ class Order
             }
         }
 
+        foreach($this->getOrderItems() as $orderItem) {
+            $product = StoreProduct::getByID($orderItem->getProductID());
+
+            if ($product) {
+                $variationID = $orderItem->getVariationID();
+
+                if ($variationID) {
+                    $variation = StoreProductVariation::getByID($variationID);
+
+
+                    if ($variation) {
+                        if (!$variation->isUnlimited()) {
+                            $inStock = $product->getQty();
+                            $newStock = $inStock - $orderItem->getQuantity();
+
+                            $product->setVariation($variation);
+                            $product->updateProductQty($newStock);
+                        }
+                    } elseif (!$product->isUnlimited()) {
+                        $inStock = $product->getQty();
+                        $newStock = $inStock - $orderItem->getQuantity();
+                        $product->updateProductQty($newStock);
+                    }
+                }
+            }
+        }
+
+
         $this->setExternalPaymentRequested(null);
         $this->save();
 
@@ -742,7 +772,7 @@ class Order
 
         if ($createlogin && !$user) {
             $email = $this->getAttribute('email');
-            $user = UserInfo::getByEmail($email);
+            $user = $app->make('Concrete\Core\User\UserInfoRepository')->getByEmail($email);
 
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);

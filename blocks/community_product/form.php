@@ -28,7 +28,7 @@
                 <?= $form->checkbox('showProductDescription', 1, !isset($showProductDescription) ? true : $showProductDescription); ?>
                 <?= t('Display Short Description'); ?>
             </label>
-        </div> 
+        </div>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('showProductDetails', 1, !isset($showProductDetails) ? true : $showProductDetails); ?>
@@ -94,7 +94,7 @@
                 <?= t('Display Quantity Selector'); ?>
             </label>
         </div>
-        
+
     </div>
 </div>
 <br />
@@ -146,7 +146,7 @@
             },
             minimumInputLength: 2,
             initSelection: function(element, callback) {
-                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? $product->getName() : ''); ?>' });
+                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? addslashes($product->getName()) : ''); ?>' });
             }
         }).select2('val', []);
     });

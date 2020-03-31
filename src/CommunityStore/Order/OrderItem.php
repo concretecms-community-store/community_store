@@ -29,6 +29,11 @@ class OrderItem
     protected $pID;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $pvID;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order", inversedBy="orderItems")
      * @ORM\JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
@@ -181,39 +186,86 @@ class OrderItem
     /**
      * @ORM\return mixed
      */
+    public function getQuantity() {
+        return round($this->oiQty, 4);
+    }
+
+    /**
+     * @deprecated
+     */
     public function getQty()
     {
-        return round($this->oiQty, 4);
+       $this->getQuantity();
     }
 
     /**
      * @ORM\param mixed $oiQty
      */
-    public function setQty($oiQty)
+    public function setQuantity($oiQty)
     {
         $this->oiQty = $oiQty;
     }
 
     /**
+     * @deprecated
+     */
+    public function setQty($oiQty)
+    {
+        $this->setQuantity($oiQty);
+    }
+
+    /**
      * @ORM\return mixed
      */
-    public function getQtyLabel()
+    public function getQuantityLabel()
     {
         return $this->oiQtyLabel;
     }
 
     /**
+     * @deprecated
+     */
+    public function getQtyLabel()
+    {
+        return $this->getQuantityLabel();
+    }
+
+    /**
      * @ORM\param mixed $oiQtyLabel
+     */
+    public function setQuantityLabel($oiQtyLabel)
+    {
+        $this->oiQtyLabel = $oiQtyLabel;
+    }
+
+    /**
+     * @deprecated
      */
     public function setQtyLabel($oiQtyLabel)
     {
-        $this->oiQtyLabel = $oiQtyLabel;
+        $this->setQuantityLabel($oiQtyLabel);
     }
 
     public function setProductID($productid)
     {
         $this->pID = $productid;
     }
+
+    public function getProductID()
+    {
+        return $this->pID;
+    }
+
+    public function setVariationID($variationID)
+    {
+        $this->pvID = $variationID;
+    }
+
+    public function getVariationID()
+    {
+        return $this->pvID;
+    }
+
 
     /**
      * @ORM\return mixed
@@ -258,18 +310,7 @@ class OrderItem
 
         $sku = $product->getSKU();
 
-        $inStock = $product->getQty();
-        $newStock = $inStock - $qty;
-
         $variation = $product->getVariation();
-
-        if ($variation) {
-            if (!$variation->isUnlimited()) {
-                $product->updateProductQty($newStock);
-            }
-        } elseif (!$product->isUnlimited()) {
-            $product->updateProductQty($newStock);
-        }
 
         $order = StoreOrder::getByID($oID);
 
@@ -286,6 +327,10 @@ class OrderItem
 
         if ($product) {
             $orderItem->setProductID($product->getID());
+        }
+
+        if ($variation) {
+            $orderItem->setVariationID($variation->getID());
         }
 
         $orderItem->save();
@@ -327,11 +372,6 @@ class OrderItem
         }
 
         return $orderItem;
-    }
-
-    public function getProductID()
-    {
-        return $this->pID;
     }
 
     public function getSubTotal()

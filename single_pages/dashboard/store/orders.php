@@ -178,7 +178,7 @@ use \Concrete\Core\User\UserInfoRepository;
                             ?>
                         </td>
                         <td class="text-right"><?= Price::format($item->getPricePaid()) ?></td>
-                        <td class="text-right"><?= $item->getQty() ?> <?= h($item->getQtyLabel()); ?></td>
+                        <td class="text-right"><?= $item->getQuantity() ?> <?= h($item->getQuantityLabel()); ?></td>
                         <td class="text-right"><?= Price::format($item->getSubTotal()) ?></td>
                     </tr>
                     <?php

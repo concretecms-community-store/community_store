@@ -129,7 +129,7 @@ $task = $controller->getAction();
 					} ?>
 				</td>
 				<td><?php
-					$qty = $item->getQty();
+					$qty = $item->getQuantity();
                     $totalSoldAll += $qty;
 					echo $qty; ?></td>
 				<td>
@@ -174,7 +174,7 @@ $task = $controller->getAction();
                      <?= $order->getPaymentMethodName(); ?>
                 </td>
                 <td>
-                     <?= Price::format($item->getPricePaid() * $item->getQty()); ?>
+                     <?= Price::format($item->getPricePaid() * $item->getQuantity()); ?>
                 </td>
 
 			</tr>

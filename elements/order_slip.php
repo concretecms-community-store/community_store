@@ -192,7 +192,7 @@ $dh = $app->make('helper/date');
                                 ?>
                             </td>
                             <td class="text-right"><?=StorePrice::format($item->getPricePaid()) ?></td>
-                            <td class="text-right"><?= $item->getQty() ?></td>
+                            <td class="text-right"><?= $item->getQuantity() ?></td>
                             <td class="text-right"><?=StorePrice::format($item->getSubTotal()) ?></td>
                         </tr>
                         <?php

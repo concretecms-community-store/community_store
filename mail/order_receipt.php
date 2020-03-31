@@ -177,7 +177,7 @@ ob_start();
                     echo implode('<br>', $optionOutput);
                 } ?>
                     </td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= $item->getQty(); ?> <?= h($item->getQtyLabel()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= $item->getQuantity(); ?> <?= h($item->getQuantityLabel()); ?></td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= StorePrice::format($item->getPricePaid()); ?></td>
                     <td style="vertical-align: top; padding: 5px 0 5px 0; text-align: right"><?= StorePrice::format($item->getSubTotal()); ?></td>
                 </tr>

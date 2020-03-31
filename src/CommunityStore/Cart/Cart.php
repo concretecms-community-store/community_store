@@ -338,8 +338,6 @@ class Cart
                     }
                 }
 
-
-
                 $cart[$exists['cartItemKey']]['product']['qty'] = $newquantity;
             } else {
                 $newquantity = $cartItem['product']['qty'];

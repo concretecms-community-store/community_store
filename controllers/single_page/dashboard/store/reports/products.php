@@ -119,7 +119,7 @@ class Products extends DashboardPageController
                     }
 
                     $outputItem[] = $productName;
-                    $outputItem[] = $item->getQty();
+                    $outputItem[] = $item->getQuantity();
 
                     $options = $item->getProductOptions();
                     $optionStrings = [];
@@ -149,7 +149,7 @@ class Products extends DashboardPageController
                     }
                     $outputItem[] = $paidstatus;
                     $outputItem[] = $order->getPaymentMethodName();
-                    $outputItem[] = $item->getPricePaid() * $item->getQty();
+                    $outputItem[] = $item->getPricePaid() * $item->getQuantity();
 
                     $outputItems[] = $outputItem;
                 }

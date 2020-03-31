@@ -108,6 +108,7 @@ class ProductVariation
      */
     protected $options;
 
+
     /**
      * @ORM\return mixed
      */

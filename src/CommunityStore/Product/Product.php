@@ -866,7 +866,13 @@ class Product
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
         $product->setWholesalePrice($data['pWholesalePrice']);
-        $product->setSalePrice($data['pSalePrice']);
+
+        if ($data['pSalePrice'] > 0) {
+            $product->setSalePrice($data['pSalePrice']);
+        } else {
+            $product->setSalePrice('');
+        }
+
         $product->setIsFeatured($data['pFeatured']);
         $product->setQty($data['pQty']);
         $product->setIsUnlimited($data['pQtyUnlim']);
@@ -1111,7 +1117,12 @@ class Product
             $price = $this->pSalePrice;
         }
 
-        return $price + $this->getPriceAdjustment();
+        $priceAdjustment = $this->getPriceAdjustment();
+
+        if ($price && $priceAdjustment != 0) {
+            return $price + $priceAdjustment;
+        }
+        return $price;
     }
 
     public function getFormattedSalePrice()
