@@ -397,7 +397,6 @@ if ($productsPerRow == 6) {
                     <?php if (count($product->getOptions()) > 0) {
                         ?>
                         <script>
-                            $(function () {
                                 <?php
                                 $varationData = [];
                                 foreach ($variationLookup as $key => $variation) {
@@ -422,82 +421,9 @@ if ($productsPerRow == 6) {
 
                                 } ?>
 
+                                var variationData = variationData || [];
+                                variationData[<?= $product->getID(); ?>] = <?= json_encode($varationData); ?>;
 
-                                $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select, #store-form-add-to-cart-list-<?= $product->getID(); ?> input').change(function () {
-                                    let variationData = <?= json_encode($varationData); ?>;
-                                    let ar = [];
-
-                                    $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select.store-product-variation, #store-form-add-to-cart-list-<?= $product->getID(); ?> .store-product-variation:checked').each(function () {
-                                        ar.push($(this).val());
-                                    });
-
-                                    let priceAdjust = 0;
-
-                                    $('#store-form-add-to-cart-list-<?= $product->getID(); ?> select option:selected').each(function(){
-                                        priceAdjust += parseFloat($(this).data('adjustment'));
-                                    });
-
-                                    ar.sort(communityStore.sortNumber);
-
-                                    let pli = $(this).closest('.store-product-list-item');
-                                    let variation = variationData[ar.join('_')];
-                                    let priceHolder = pli.find('.store-product-list-price');
-
-                                    if (variation) {
-
-                                        let total = parseFloat(variation['price']) + priceAdjust;
-                                        let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
-
-
-                                        if (variation['salePrice']) {
-                                            let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
-                                            let saleresult = Intl.NumberFormat('en', {style: 'currency', currency: CURRENCYCODE}).format(saletotal);
-
-                                            priceHolder.find('.store-sale-price').html(saleresult);
-                                            priceHolder.find('.store-original-price').html(result);
-
-                                        } else {
-                                            priceHolder.html(result);
-                                        }
-
-
-                                        if (variation['available']) {
-                                            pli.find('.store-out-of-stock-label').addClass('hidden');
-                                            pli.find('.store-btn-add-to-cart').removeClass('hidden');
-                                        } else {
-                                            pli.find('.store-out-of-stock-label').removeClass('hidden');
-                                            pli.find('.store-btn-add-to-cart').addClass('hidden');
-                                        }
-
-                                        if (variation['imageThumb']) {
-                                            let image = pli.find('.store-product-list-thumbnail img');
-
-                                            if (image) {
-                                                image.attr('src', variation['imageThumb']);
-
-                                            }
-                                        }
-                                    } else {
-                                        if (priceHolder.data('original-price')) {
-                                            let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
-                                            let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
-
-                                            let total = parseFloat(priceHolder.data('original-price')) + priceAdjust;
-                                            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
-
-                                            priceHolder.find('.store-sale-price').html(saleresult);
-                                            priceHolder.find('.store-original-price').html(result);
-
-                                        }  else {
-                                            let total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                                            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
-                                            priceHolder.html(result);
-                                        }
-
-                                    }
-
-                                });
-                            });
                         </script>
                         <?php
                     } ?>

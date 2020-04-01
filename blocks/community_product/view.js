@@ -1,0 +1,97 @@
+$(function () {
+    $('.store-product-block .store-product-options select, .store-product-block .store-product-options input').change(function () {
+
+        let pdb = $(this).closest('.store-product-block');
+        let pID = pdb.data('product-id');
+        let ar = [];
+
+        let priceAdjust = 0;
+
+        pdb.find('.store-product-options select option:selected').each(function(){
+            priceAdjust += parseFloat($(this).data('adjustment'));
+        });
+
+        pdb.find('.store-product-options select.store-product-variation, .store-product-options .store-product-variation:checked').each(function () {
+            ar.push($(this).val());
+        });
+
+        ar.sort(communityStore.sortNumber);
+
+        let variation = variationData[pID][ar.join('_')];
+        let priceHolder = pdb.find('.store-product-price');
+
+        if (variation) {
+            let total = parseFloat(variation['price']) + priceAdjust;
+            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+
+            if (variation['wholesalePrice']) {
+                let wholesale = parseFloat(variation['wholesalePrice']) + priceAdjust;
+                let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
+
+                priceHolder.find('.store-list-price').html(result);
+                priceHolder.find('.store-wholesale-price').html(wholesaleresult);
+
+            } else {
+                if (variation['salePrice']) {
+                    let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
+                    let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                    priceHolder.find('.store-sale-price').html(saleresult);
+                    priceHolder.find('.store-original-price').html(result);
+
+                } else {
+                    priceHolder.html(result);
+                }
+            }
+
+            if (variation['available']) {
+                pdb.find('.store-out-of-stock-label').addClass('hidden');
+                pdb.find('.store-btn-add-to-cart').removeClass('hidden');
+            } else {
+                pdb.find('.store-out-of-stock-label').removeClass('hidden');
+                pdb.find('.store-btn-add-to-cart').addClass('hidden');
+            }
+
+            if (variation['imageThumb']) {
+                let image = pdb.find('.store-product-primary-image img');
+
+                if (image) {
+                    image.attr('src', variation['imageThumb']);
+                    let link = image.parent();
+                    if (link) {
+                        link.attr('href', variation['image'])
+                    }
+                }
+            }
+
+        } else {
+
+            if (priceHolder.data('original-price')) {
+                let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
+                let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+
+                let total = parseFloat(priceHolder.data('original-price')) + priceAdjust;
+                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+
+                priceHolder.find('.store-sale-price').html(saleresult);
+                priceHolder.find('.store-original-price').html(result);
+
+            } if (priceHolder.data('list-price')) {
+                let wholesale = parseFloat(priceHolder.data('price')) + priceAdjust;
+                let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
+
+                let total = parseFloat(priceHolder.data('list-price')) + priceAdjust;
+                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+
+                priceHolder.find('.store-list-price').html(result);
+                priceHolder.find('.store-wholesale-price').html(wholesaleresult);
+
+            } else {
+                let total = parseFloat(priceHolder.data('price')) + priceAdjust;
+                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                priceHolder.html(result);
+            }
+        }
+    });
+
+});
