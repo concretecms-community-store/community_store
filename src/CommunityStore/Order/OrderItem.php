@@ -309,7 +309,6 @@ class OrderItem
         $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID());
 
         $sku = $product->getSKU();
-
         $variation = $product->getVariation();
 
         $order = StoreOrder::getByID($oID);
@@ -321,19 +320,20 @@ class OrderItem
         $orderItem->setTax($tax);
         $orderItem->setTaxIncluded($taxIncluded);
         $orderItem->setTaxName($taxName);
-        $orderItem->setQty($qty);
-        $orderItem->setQtyLabel($qtyLabel);
+        $orderItem->setQuantity($qty);
+        $orderItem->setQuantityLabel($qtyLabel);
         $orderItem->setOrder($order);
 
-        if ($product) {
-            $orderItem->setProductID($product->getID());
-        }
+        $orderItem->setProductID($data['product']['pID']);
 
         if ($variation) {
             $orderItem->setVariationID($variation->getID());
         }
 
+
         $orderItem->save();
+
+
 
         foreach ($data['productAttributes'] as $groupID => $valID) {
             if ('po' == substr($groupID, 0, 2)) {
