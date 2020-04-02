@@ -7,11 +7,11 @@ $(function () {
 
         let priceAdjust = 0;
 
-        pdb.find('.store-product-options select option:selected').each(function(){
+        pdb.find('.store-product-options select option:selected,  .store-product-options input:checked').each(function(){
             priceAdjust += parseFloat($(this).data('adjustment'));
         });
 
-        pdb.find('.store-product-options select.store-product-variation, .store-product-options .store-product-variation:checked').each(function () {
+        pdb.find('.store-product-options select.store-product-variation, .store-product-options input:checked').each(function () {
             ar.push($(this).val());
         });
 
@@ -21,6 +21,7 @@ $(function () {
         let priceHolder = pdb.find('.store-product-price');
 
         if (variation) {
+
             let total = parseFloat(variation['price']) + priceAdjust;
             let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
 
@@ -65,7 +66,6 @@ $(function () {
             }
 
         } else {
-
             if (priceHolder.data('original-price')) {
                 let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
                 let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
@@ -76,7 +76,7 @@ $(function () {
                 priceHolder.find('.store-sale-price').html(saleresult);
                 priceHolder.find('.store-original-price').html(result);
 
-            } if (priceHolder.data('list-price')) {
+            } else if (priceHolder.data('list-price')) {
                 let wholesale = parseFloat(priceHolder.data('price')) + priceAdjust;
                 let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
 

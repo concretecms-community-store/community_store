@@ -7,16 +7,16 @@ $(function () {
 
         let priceAdjust = 0;
 
-        pdb.find('.store-product-options select option:selected').each(function(){
+        pdb.find('.store-product-options select option:selected, .store-product-options input:checked').each(function(){
             priceAdjust += parseFloat($(this).data('adjustment'));
         });
 
-        pdb.find('.store-product-options select.store-product-variation, .store-product-options .store-product-variation:checked').each(function () {
+        pdb.find('.store-product-options select.store-product-option, .store-product-options input:checked').each(function () {
             ar.push($(this).val());
         });
 
         let variation = variationData[pID][ar.join('_')];
-        let priceHolder = pdb.find('.store-product-list-price');
+        let priceHolder = pdb.find('.store-product-price');
 
         if (variation) {
             let total = parseFloat(variation['price']) + priceAdjust;
@@ -74,7 +74,7 @@ $(function () {
                 priceHolder.find('.store-sale-price').html(saleresult);
                 priceHolder.find('.store-original-price').html(result);
 
-            } if (priceHolder.data('list-price')) {
+            } else if (priceHolder.data('list-price')) {
                 let wholesale = parseFloat(priceHolder.data('price')) + priceAdjust;
                 let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
 

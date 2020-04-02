@@ -135,7 +135,7 @@ if ($productsPerRow == 6) {
                         $price = $product->getPrice();
                         $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
                         ?>
-                        <p class="store-product-list-price" data-price="<?= $activePrice; ?>" data-original-price="<?= ($salePrice ? $price : ''); ?>" >
+                        <p class="store-product-price store-product-list-price" data-price="<?= $activePrice; ?>" data-original-price="<?= ($salePrice ? $price : ''); ?>" >
                             <?php
                             $salePrice = $product->getSalePrice();
                             if (isset($salePrice) && "" != $salePrice) {
