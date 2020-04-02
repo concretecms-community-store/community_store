@@ -31,16 +31,30 @@ class Cart
             $checkeditems = [];
             $update = false;
             // loop through and check if product hasn't been deleted. Remove from cart session if not found.
+
+            $quantitySummary = [];
+
+            $stockTotals = [];
+
             foreach ($cart as $cartitem) {
                 $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
 
-                $product = StoreProduct::getByID((int) $cartitem['product']['pID']);
+                $product = StoreProduct::getByID((int)$cartitem['product']['pID']);
+
+                $maxQuantity = 10000000;
 
                 if ($product) {
+
+                    $stockLimited = false;
+
                     // check that we dont have a non-quantity product in cart with a quantity > 1
-                    if (!$product->allowQuantity() && $cartitem['product']['qty'] > 1) {
-                        $cartitem['product']['qty'] = 1;
-                        $update = true;
+                    if (!$product->allowQuantity()) {
+                        if ($cartitem['product']['qty'] > 1) {
+                            $cartitem['product']['qty'] = 1;
+                            $update = true;
+                        }
+                        $stockLimited = true;
+                        $maxQuantity = 1;
                     }
 
                     $include = true;
@@ -58,13 +72,20 @@ class Cart
 
 
                     // if the cart has greater stock than available
-                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $cartitem['product']['qty'] > $product->getQty()) {
-                        if ($product->getQty() > 0) {
-                            $cartitem['product']['qty'] = $product->getQty(); // set to how many are left
-                        } else {
-                            $include = false; // otherwise none left, remove from cart
+                    if (!$product->isUnlimited() && !$product->allowBackOrders()) {
+                        $stockLimited = true;
+                        $availableProductQuantity = $product->getQty();
+                        if ($cartitem['product']['qty'] > $availableProductQuantity) {
+                            if ($availableProductQuantity > 0) {
+                                $cartitem['product']['qty'] = $availableProductQuantity; // set to how many are left
+                            } else {
+                                $include = false; // otherwise none left, remove from cart
+                            }
+                            $update = true;
                         }
-                        $update = true;
+
+                        $maxQuantity = $availableProductQuantity;
+                        $stockLimited = true;
                     }
 
                     if ($include) {
@@ -72,11 +93,70 @@ class Cart
                         $cartitem['product']['object']->setPriceAdjustment($cartitem['priceAdjustment']);
                         $cartitem['product']['object']->setWeightAdjustment($cartitem['weightAdjustment']);
                         $checkeditems[] = $cartitem;
+
+                        if ($stockLimited) {
+                            if ($cartitem['product']['variation']) {
+                                if (!isset($stockTotals['variations'][$cartitem['product']['variation']])) {
+                                    $stockTotals['variations'][$cartitem['product']['variation']] = ['cartQuantity' => $cartitem['product']['qty'], 'maxQuantity' => $maxQuantity];
+                                } else {
+                                    $stockTotals['variations'][$cartitem['product']['variation']]['cartQuantity'] += $cartitem['product']['qty'];
+                                }
+                            } else {
+                                if (!isset($stockTotals['products'][$cartitem['product']['pID']])) {
+                                    $stockTotals['products'][$cartitem['product']['pID']] = ['cartQuantity' => $cartitem['product']['qty'], 'maxQuantity' => $maxQuantity];
+                                } else {
+                                    $stockTotals['products'][$cartitem['product']['pID']]['cartQuantity'] += $cartitem['product']['qty'];
+                                }
+                            }
+                        }
+
                     }
                 } else {
                     $update = true;
                 }
             }
+
+            $variationsToReduce = [];
+            $productsToReduce = [];
+
+            if (isset($stockTotals['variations'])) {
+                foreach ($stockTotals['variations'] as $variationID => $data) {
+                    if ($data['cartQuantity'] > $data['maxQuantity']) {
+                        $variationsToReduce[] = $variationID;
+                    }
+                }
+
+                if (count($variationsToReduce) > 0) {
+                    foreach(array_reverse($checkeditems) as $key=>$item) {
+                        if (in_array($item['product']['variation'], $variationsToReduce)) {
+                            unset($checkeditems[$key]);
+                            $update = true;
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+
+            if (isset($stockTotals['products'])) {
+                foreach ($stockTotals['products'] as $productID => $data) {
+                    if ($data['cartQuantity'] > $data['maxQuantity']) {
+                        $productsToReduce[] = $productID;
+                    }
+                }
+
+                if (count($productsToReduce) > 0) {
+                    foreach(array_reverse($checkeditems) as $key=>$item) {
+                        if (in_array($item['product']['pID'], $productsToReduce)) {
+                            unset($checkeditems[$key]);
+                            $update = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
 
             Session::set('communitystore.cart', $checkeditems);
 
@@ -541,8 +621,10 @@ class Cart
     {
         $shippableItems = [];
         //go through items
-        if (self::getCart()) {
-            foreach (self::getCart() as $item) {
+        $items = self::getCart();
+
+        if ($items) {
+            foreach ($items as $item) {
                 //check if items are shippable
                 $product = StoreProduct::getByID($item['product']['pID']);
                 if ($product->isShippable()) {

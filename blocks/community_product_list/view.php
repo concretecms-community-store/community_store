@@ -142,7 +142,7 @@ if ($productsPerRow == 6) {
                                 $formattedSalePrice = $product->getFormattedSalePrice();
                                 $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                                 echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
-                                echo ' ' . t('was') . ' ' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
+                                echo '&nbsp;' . t('was') . '&nbsp;' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                             } else {
                                 $formattedPrice = $product->getFormattedPrice();
                                 echo $formattedPrice;
@@ -413,7 +413,9 @@ if ($productsPerRow == 6) {
                                         'salePrice' => $product->getSalePrice(),
                                         'available' => ($variation->isSellable()),
                                         'imageThumb' => $thumb ? $thumb->src : '',
-                                        'image' => $imgObj ? $imgObj->getRelativePath() : '',];
+                                        'image' => $imgObj ? $imgObj->getRelativePath() : '',
+                                        'saleTemplate'=>'<span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
+                                        ];
 
                                     if($isWholesale){
                                         $varationData[$key]['price'] = $product->getWholesalePrice();

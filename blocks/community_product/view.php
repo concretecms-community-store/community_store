@@ -562,10 +562,12 @@ if (is_object($product) && $product->isActive()) {
                     'available' => ($variation->isSellable()),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
+                    'saleTemplate'=> t("On Sale") .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
                 ];
 
                 if ($isWholesale) {
                     $varationData[$key]['wholesalePrice'] = $product->getWholesalePrice();
+                    $varationData[$key]['wholesaleTemplate'] =  t('List Price') . ':&nbsp;<span class="store-list-price"></span><br />' . t('Wholesale Price') . ':&nbsp;<span class="store-wholesale-price"></span>';
                 }
             }
 

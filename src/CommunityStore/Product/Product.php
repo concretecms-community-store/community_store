@@ -527,7 +527,7 @@ class Product
     }
     public function setWholesalePrice($price)
     {
-        $this->pWholesalePrice = ($price != '' ? $price : 0);
+        $this->pWholesalePrice = ($price != '' ? $price : null);
     }
     public function setSalePrice($price)
     {
@@ -865,7 +865,12 @@ class Product
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
-        $product->setWholesalePrice($data['pWholesalePrice']);
+
+        if ($data['pWholesalePrice'] > 0) {
+            $product->setWholesalePrice($data['pWholesalePrice']);
+        } else {
+            $product->setWholesalePrice( null);
+        }
 
         if ($data['pSalePrice'] > 0) {
             $product->setSalePrice($data['pSalePrice']);
@@ -1055,6 +1060,7 @@ class Product
 
     public function getWholesalePrice($qty = 1)
     {
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
                 $varWholesalePrice = $variation->getVariationWholesalePrice();
@@ -1063,10 +1069,17 @@ class Product
                     $price = $varWholesalePrice;
                 }
             }
+        } else {
+            $price = $this->pWholesalePrice;
         }
-        $price = $this->pWholesalePrice;
 
-        return $price + $this->getPriceAdjustment();
+        $priceAdjustment = $this->getPriceAdjustment();
+
+        if ($price && $priceAdjustment != 0) {
+            return $price + $priceAdjustment;
+        }
+
+        return $price;
     }
 
     private function getQuantityAdjustedPrice($qty = 1) {

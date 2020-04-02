@@ -301,6 +301,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
     private function getRate()
     {
         $shippableItems = StoreCart::getShippableItems();
+
         if (count($shippableItems) > 0) {
             if ('quantity' == $this->getRateType()) {
                 $shippingTotal = $this->getQuantityBasedRate($shippableItems);
@@ -319,11 +320,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         $baserate = $this->getBaseRate();
         $totalWeight = 0;
         foreach ($shippableItems as $item) {
-            $product = StoreProduct::getByID($item['product']['pID']);
-
-            if ($item['product']['variation']) {
-                $product->setVariation($item['product']['variation']);
-            }
+            $product = $item['product']['object'];
 
             if ($product->isShippable()) {
                 $totalProductWeight = $product->getWeight() * $item['product']['qty'];

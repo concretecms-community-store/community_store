@@ -8,10 +8,14 @@ $(function () {
         let priceAdjust = 0;
 
         pdb.find('.store-product-options select option:selected,  .store-product-options input:checked').each(function(){
-            priceAdjust += parseFloat($(this).data('adjustment'));
+            let optionAdjustment = $(this).data('adjustment');
+
+            if (optionAdjustment) {
+                priceAdjust += parseFloat($(this).data('adjustment'));
+            }
         });
 
-        pdb.find('.store-product-options select.store-product-variation, .store-product-options input:checked').each(function () {
+        pdb.find('.store-product-options select.store-product-variation, input.store-product-variation:checked').each(function () {
             ar.push($(this).val());
         });
 
@@ -21,7 +25,6 @@ $(function () {
         let priceHolder = pdb.find('.store-product-price');
 
         if (variation) {
-
             let total = parseFloat(variation['price']) + priceAdjust;
             let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
 
@@ -29,6 +32,7 @@ $(function () {
                 let wholesale = parseFloat(variation['wholesalePrice']) + priceAdjust;
                 let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
 
+                priceHolder.html(variation['wholesaleTemplate']);
                 priceHolder.find('.store-list-price').html(result);
                 priceHolder.find('.store-wholesale-price').html(wholesaleresult);
 
@@ -37,6 +41,7 @@ $(function () {
                     let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
                     let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
 
+                    priceHolder.html(variation['saleTemplate']);
                     priceHolder.find('.store-sale-price').html(saleresult);
                     priceHolder.find('.store-original-price').html(result);
 

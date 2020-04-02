@@ -443,7 +443,7 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pMaxQty", t("Maximum Quantity (as single cart item)")); ?>
+                            <?= $form->label("pMaxQty", t("Maximum Quantity In Cart")); ?>
                             <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
                         </div>
                     </div>

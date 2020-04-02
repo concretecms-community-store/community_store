@@ -333,8 +333,6 @@ class OrderItem
 
         $orderItem->save();
 
-
-
         foreach ($data['productAttributes'] as $groupID => $valID) {
             if ('po' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("po", "", $groupID);
