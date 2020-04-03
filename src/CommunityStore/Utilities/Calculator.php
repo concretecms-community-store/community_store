@@ -12,6 +12,7 @@ class Calculator
     public static function getCartItemPrice($cartItem)
     {
         $product = $cartItem['product']['object'];
+        $qty = $cartItem['product']['qty'];
         if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
             $price = $cartItem['product']['customerPrice'];
         } elseif (isset($cartItem['product']['discountedPrice'])) {
