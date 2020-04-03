@@ -265,7 +265,7 @@ class TaxRate
                         if (is_object($product->getTaxClass())) {
                             if ($product->getTaxClass()->taxClassContainsTaxRate($this)) {
                                 $taxCalc = Config::get('community_store.calculation');
-                                $productSubTotal = $product->getActivePrice($qty) * $qty;
+                                $productSubTotal = StoreCalculator::getCartItemPrice($cartItem) * $qty;
 
                                 if ('extract' == $taxCalc) {
                                     $taxrate = 1 + ($this->getTaxRate() / 100);

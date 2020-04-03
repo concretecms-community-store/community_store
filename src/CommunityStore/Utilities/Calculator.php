@@ -9,6 +9,20 @@ use Concrete\Core\Support\Facade\Session;
 
 class Calculator
 {
+    public static function getCartItemPrice($cartItem)
+    {
+        $product = $cartItem['product']['object'];
+        $qty = $cartItem['product']['qty'];
+        if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
+            $price = $cartItem['product']['customerPrice'];
+        } elseif (isset($cartItem['product']['discountedPrice'])) {
+            $price = $cartItem['product']['discountedPrice'];
+        } else {
+            $price = $product->getActivePrice($qty);
+        }
+        return $price;
+    }
+    
     public static function getSubTotal($cart = false)
     {
         if (!$cart) {
@@ -21,13 +35,7 @@ class Calculator
                 $product = $cartItem['product']['object'];
 
                 if (is_object($product)) {
-                    if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice'] > 0) {
-                        $price = $cartItem['product']['customerPrice'];
-                    } elseif (isset($cartItem['product']['discountedPrice'])) {
-                        $price = $cartItem['product']['discountedPrice'];
-                    } else {
-                        $price = $product->getActivePrice($qty);
-                    }
+                    $price = Calculator::getCartItemPrice($cartItem);
 
                     $productSubTotal = $price * $qty;
                     $subtotal = $subtotal + $productSubTotal;
