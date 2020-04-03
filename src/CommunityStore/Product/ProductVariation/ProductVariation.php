@@ -1,15 +1,16 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\File\File;
+use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
 
 /**
  * @ORM\Entity
@@ -471,8 +472,16 @@ class ProductVariation
         if (!empty($options)) {
             foreach ($options as $option) {
                 if ($option->getIncludeVariations()) {
-                    foreach ($option->getOptionItems() as $optItem) {
+
+                    $optionItems = $option->getOptionItems();
+                    $sortedItems = [];
+                    foreach($optionItems as $optionItem) {
+                        $sortedItems[$optionItem->getSort()] = $optionItem;
+                    }
+
+                    foreach ($sortedItems as $optItem) {
                         $optionArrays[$option->getID()][] = $optItem->getID();
+                        $tempoptionArrays[] = ['id'=>$optItem->getID(), 'order'=>$optItem->getSort()];
                     }
                 }
             }
