@@ -294,7 +294,7 @@ class Checkout extends PageController
                 $billing = true;
 
                 $u = new User();
-                $guest = !$u->isLoggedIn();
+                $guest = !$u->isRegistered();
 
                 $requiresLoginOrDifferentEmail = false;
 
@@ -486,7 +486,7 @@ class Checkout extends PageController
 
     private function validateAccountEmail($email)
     {
-        $user = UserInfo::getByEmail($email);
+        $user = $this->app->make('Concrete\Core\User\UserInfoRepository')->getByEmail($email);
 
         if ($user) {
             return true;

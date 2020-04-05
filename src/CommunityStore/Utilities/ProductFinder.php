@@ -9,7 +9,7 @@ class ProductFinder extends Controller
     public function getProductMatch()
     {
         $u = new User();
-        if (!$u->isLoggedIn()) {
+        if (!$u->isRegistered()) {
             echo "Access Denied";
             exit;
         }

@@ -280,9 +280,9 @@ $localecount = count($locales);
 
 
                 <?php
-                foreach ($attrOptions as $type=>$attrOptions) {
+                foreach ($attrOptions as $type => $typeAttrOptions) {
 
-                    foreach ($attrOptions as $attrOption=>$x) {
+                    foreach ($typeAttrOptions as $attrOption=>$x) {
 
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>

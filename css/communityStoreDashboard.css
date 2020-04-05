@@ -1,6 +1,6 @@
 
 .group-list { margin: 30px 0 50px !important; }
-    
+
     .group-list li { margin-bottom: 8px; }
     .group-name { display: inline-block; padding-right: 30px; width: 180px; }
     .group-list input[type="text"] { width: 180px; }
@@ -23,11 +23,11 @@
 /* Options */
 #product-options-container {  }
     .option-group {  }
-    
+
         .option-group .panel-heading, .option-group .panel-heading .fa-arrows { cursor: move; }
         .option-group .panel-heading .fa-arrows { margin: 3px 0 0; }
         .option-group .panel-heading label { display: block; margin-top: 4px; }
-        
+
 #tax-rules-group select { margin-bottom: 8px; }
 
 /* Sales reports */
@@ -39,5 +39,5 @@
 .ct-chart-line .ct-series.ct-series-a .ct-point { stroke: #4674a1; }
 .ct-chart-line .ct-series.ct-series-b .ct-line { stroke: #4674a1; stroke-width: 2px; stroke-linecap: round; }
 .ct-chart-line .ct-series.ct-series-b .ct-point { stroke: #414d59; }
-.ct-chart-line .ct-series.ct-series-c .ct-line { stroke: #414d59; stroke-width: 2px; stroke-linecap: round; stroke-dasharray: 30px 10px; }
+.ct-chart-line .ct-series.ct-series-c .ct-line { stroke: #414d59; stroke-width: 2px; stroke-linecap: round; stroke-dasharray: 30px; }
 .ct-chart-line .ct-series.ct-series-c .ct-point { stroke: #303b48; }

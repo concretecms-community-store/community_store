@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Package\Package;
@@ -328,6 +329,6 @@ class ShippingMethod
 
     public function getPackageHandle()
     {
-        return Package::getByID($this->getShippingMethodType()->getPackageID())->getPackageHandle();
+        return Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->getShippingMethodType()->getPackageID())->getPackageHandle();
     }
 }

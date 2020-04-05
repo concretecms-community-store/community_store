@@ -98,7 +98,7 @@ class Products extends DashboardSitePageController
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
         $gl->filterByAssignable();
-        $usergroups = $gl->get();
+        $usergroups = $gl->getResults();
 
         $usergrouparray = [];
 
@@ -219,7 +219,7 @@ class Products extends DashboardSitePageController
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
         $gl->filterByAssignable();
-        $usergroups = $gl->get();
+        $usergroups = $gl->getResults();
 
         $usergrouparray = [];
 

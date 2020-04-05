@@ -464,8 +464,8 @@ $localecount = count($locales);
             <?php }
 
 
-            foreach ($attrOptions as $type => $attrOptions) {
-                foreach ($attrOptions as $attrOption => $x) {
+            foreach ($attrOptions as $type => $typeAttrOptions) {
+                foreach ($typeAttrOptions as $attrOption => $x) {
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>

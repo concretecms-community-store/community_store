@@ -533,7 +533,7 @@ class DiscountRule
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' "); // TODO
+        $data = $db->GetRow("SELECT count(*) as codecount FROM CommunityStoreDiscountRules WHERE drEnabled =1 and drTrigger = 'code' ");
 
         return $data['codecount'] > 0;
     }

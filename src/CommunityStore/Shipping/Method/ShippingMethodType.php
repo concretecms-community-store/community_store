@@ -59,14 +59,15 @@ class ShippingMethodType
 
     public function setMethodTypeController()
     {
-        $package = Package::getByID($this->pkgID);
+        $app = Application::getFacadeApplication();
+        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
 
-        if (!$package) {
+        if (!$pkg) {
             return false;
         }
 
-        $th = Application::getFacadeApplication()->make("helper/text");
-        $namespace = "Concrete\\Package\\" . $th->camelcase($package->getPackageHandle()) . "\\Src\\CommunityStore\\Shipping\\Method\\Types";
+        $th = $app->make("helper/text");
+        $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Shipping\\Method\\Types";
 
         $className = $th->camelcase($this->smtHandle) . "ShippingMethod";
         $obj = $namespace . '\\' . $className;
@@ -179,14 +180,14 @@ class ShippingMethodType
     {
         $controller = $this->getMethodTypeController();
         $controller->dashboardForm($sm);
-        $pkg = Package::getByID($this->pkgID);
+        $app = Application::getFacadeApplication();
+        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
         View::element('shipping_method_types/' . $this->smtHandle . '/dashboard_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
 
     public function addMethod($data)
     {
         $sm = $this->getMethodTypeController()->addMethodTypeMethod($data);
-
         return $sm;
     }
 }

@@ -375,7 +375,7 @@ class OrderItem
     public function getSubTotal()
     {
         $price = $this->getPricePaid();
-        $qty = $this->getQty();
+        $qty = $this->getQuantity();
         $subtotal = $qty * $price;
 
         return $subtotal;

@@ -152,7 +152,7 @@ class Method extends Controller
     public function getMethodDirectory()
     {
         if ($this->pkgID > 0) {
-            $pkg = Package::getByID($this->pkgID);
+            $pkg = Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
             $dir = $pkg->getPackagePath() . "/src/CommunityStore/Payment/Methods/" . $this->pmHandle . "/";
         }
 
@@ -161,8 +161,12 @@ class Method extends Controller
 
     protected function setMethodController()
     {
-        $th = Application::getFacadeApplication()->make("helper/text");
-        $namespace = "Concrete\\Package\\" . $th->camelcase(Package::getByID($this->pkgID)->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
+        $app = Application::getFacadeApplication();
+
+        $th = $app->make("helper/text");
+        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
+
+        $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
 
         $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
         $namespace = $namespace . '\\' . $className;
@@ -220,7 +224,7 @@ class Method extends Controller
     {
         $class = $this->getMethodController();
         $class->checkoutForm();
-        $pkg = Package::getByID($this->pkgID);
+        $pkg = Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
         View::element($this->pmHandle . '/checkout_form', ['vars' => $class->getSets()], $pkg->getPackageHandle());
     }
 
@@ -228,7 +232,7 @@ class Method extends Controller
     {
         $controller = $this->getMethodController();
         $controller->dashboardForm();
-        $pkg = Package::getByID($this->pkgID);
+        $pkg = Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
         View::element($this->pmHandle . '/dashboard_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
 
@@ -236,7 +240,7 @@ class Method extends Controller
     {
         $controller = $this->getMethodController();
         $controller->redirectForm();
-        $pkg = Package::getByID($this->pkgID);
+        $pkg = Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
         View::element($this->pmHandle . '/redirect_form', ['vars' => $controller->getSets()], $pkg->getPackageHandle());
     }
 

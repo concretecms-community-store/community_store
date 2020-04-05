@@ -839,7 +839,7 @@ class Order
                 $user = new User();
 
                 // login the newly created user if in same request as customer
-                if (!$user->isLoggedIn() && $sameRequest) {
+                if (!$user->isRegistered() && $sameRequest) {
                     User::loginByUserID($newuser->getUserID());
                 }
 
