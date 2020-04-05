@@ -137,7 +137,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         }
 
         if (isset($this->externalPaymentRequested) && $this->externalPaymentRequested) {
-            
+
         } else {
             $this->query->andWhere('o.externalPaymentRequested is null');
         }

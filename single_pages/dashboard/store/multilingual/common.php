@@ -40,7 +40,9 @@ $localecount = count($locales);
                                     <td rowspan="<?= $localecount; ?>"><span
                                             class="label label-primary"><?= t('Option Name'); ?></span>
                                     </td>
-                                    <td rowspan="<?= $localecount; ?>"><?= t($option->getName()); ?></td>
+                                    <td rowspan="<?= $localecount; ?>"><?= h($option->getName()); ?></td>
+                                <?php } else { ?>
+                                    <td class="hidden"><?= h($option->getName()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -81,7 +83,9 @@ $localecount = count($locales);
                                     <?php } ?>
                                     </span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>"><?= t($option->getDetails()); ?></td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($option->getDetails()); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($option->getDetails()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -114,7 +118,9 @@ $localecount = count($locales);
                                 <td rowspan="<?= $localecount; ?>"><span
                                             class="label label-primary"><?= t('Option Value'); ?></span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>"><?= t($option->getName()); ?></td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($option->getName()); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($option->getName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -147,7 +153,9 @@ $localecount = count($locales);
                                 <td rowspan="<?= $localecount; ?>"><span
                                             class="label label-primary"><?= t('Option Selector Display Label'); ?></span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>"><?= t($option->getSelectorName()); ?></td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($option->getSelectorName()); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($option->getSelectorName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -204,6 +212,8 @@ $localecount = count($locales);
                                             class="label label-primary"><?= t('Quantity Label'); ?></span>
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($quantityLabel); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($quantityLabel); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -258,7 +268,9 @@ $localecount = count($locales);
                                 <td rowspan="<?= $localecount; ?>"><span
                                         class="label label-primary"><?= t('Attribute Name'); ?></span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($attr->getAttributeKeyName()); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($attr->getAttributeKeyName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -294,7 +306,9 @@ $localecount = count($locales);
                                     <td rowspan="<?= $localecount; ?>"><span
                                                 class="label label-primary"><?= t('Attribute Value'); ?></span>
                                     </td>
-                                    <td rowspan="<?= $localecount; ?>"><?= $attrOption; ?></td>
+                                    <td rowspan="<?= $localecount; ?>"><?= h($attrOption); ?></td>
+                                <?php } else { ?>
+                                    <td class="hidden"><?= h($attrOption); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>

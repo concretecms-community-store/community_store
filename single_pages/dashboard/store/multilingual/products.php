@@ -1,4 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
 use \Concrete\Core\Support\Facade\Url;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -8,7 +9,7 @@ $editor = $app->make('editor');
 
 if ($action == 'view') { ?>
 
-<?php if (count($locales) > 0) { ?>
+    <?php if (count($locales) > 0) { ?>
 
         <div class="ccm-dashboard-header-buttons">
 
@@ -20,7 +21,7 @@ if ($action == 'view') { ?>
                     <div class="ccm-search-fields-submit col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="ccm-search-main-lookup-field">
-                                <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
+                                <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style' => "min-width: 220px"]) ?>
                             </div>
 
                         </div>
@@ -53,96 +54,98 @@ if ($action == 'view') { ?>
                                         <?php } ?>
                                     </ul>
                                 </li>
-                            </ul><br />
+                            </ul><br/>
                         <?php } ?>
                     </div>
                 </div>
             </form>
         </div>
         <div class="ccm-dashboard-content-full">
-        <table class="ccm-search-results-table">
-            <thead>
-            <tr>
-                <th><a><?= t('Product') ?></a></th>
-                <th><a><?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
-                        (<?= $defaultLocale->getLocale() ?>)</a></th>
+            <table class="ccm-search-results-table">
+                <thead>
+                <tr>
+                    <th><a><?= t('Product') ?></a></th>
+                    <th><a><?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                            (<?= $defaultLocale->getLocale() ?>)</a></th>
 
-                <th><a href="<?= $productList->getSortURL('active'); ?>"><?= t('Active') ?></a></th>
-                <th><a><?= t('Groups') ?></a></th>
+                    <th><a href="<?= $productList->getSortURL('active'); ?>"><?= t('Active') ?></a></th>
+                    <th><a><?= t('Groups') ?></a></th>
 
-                <?php
-                foreach ($locales  as $lp) { ?>
-                <th><a><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</a>
-                <th>
-                    <?php } ?>
+                    <?php
+                    foreach ($locales
+
+                    as $lp) { ?>
+                    <th><a><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</a>
+                    <th>
+                        <?php } ?>
 
 
-                <th><a><?= t('Translate') ?></a></th>
-            </tr>
-            </thead>
-            <tbody>
+                    <th><a><?= t('Translate') ?></a></th>
+                </tr>
+                </thead>
+                <tbody>
 
-            <?php if (count($products) > 0) {
-                foreach ($products as $product) {
-                    ?>
-                    <tr>
-                        <td><?= $product->getImageThumb(); ?></td>
-                        <td>
-                            <strong><a href="<?= Url::to('/dashboard/store/multilingual/products/translate/', $product->getID()) ?>"><?= $product->getName();
-                                    $sku = $product->getSKU();
-                                    if ($sku) {
-                                        echo ' (' . $sku . ')';
-                                    }
-                                    ?>
-                                </a></strong></td>
-                        <td>
-                            <?php
-                            if ($product->isActive()) {
-                                echo "<span class='label label-success'>" . t('Active') . "</span>";
-                            } else {
-                                echo "<span class='label label-default'>" . t('Inactive') . "</span>";
-                            }
-                            ?>
-                        </td>
+                <?php if (count($products) > 0) {
+                    foreach ($products as $product) {
+                        ?>
+                        <tr>
+                            <td><?= $product->getImageThumb(); ?></td>
+                            <td>
+                                <strong><a href="<?= Url::to('/dashboard/store/multilingual/products/translate/', $product->getID()) ?>"><?= $product->getName();
+                                        $sku = $product->getSKU();
+                                        if ($sku) {
+                                            echo ' (' . $sku . ')';
+                                        }
+                                        ?>
+                                    </a></strong></td>
+                            <td>
+                                <?php
+                                if ($product->isActive()) {
+                                    echo "<span class='label label-success'>" . t('Active') . "</span>";
+                                } else {
+                                    echo "<span class='label label-default'>" . t('Inactive') . "</span>";
+                                }
+                                ?>
+                            </td>
 
-                        <td>
-                            <?php $productgroups = $product->getGroups();
-                            foreach ($productgroups as $pg) { ?>
-                                <span class="label label-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
-                            <?php } ?>
+                            <td>
+                                <?php $productgroups = $product->getGroups();
+                                foreach ($productgroups as $pg) { ?>
+                                    <span class="label label-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
+                                <?php } ?>
 
-                            <?php if (empty($productgroups)) { ?>
-                                <em><?= t('None'); ?></em>
-                            <?php } ?>
-                        </td>
+                                <?php if (empty($productgroups)) { ?>
+                                    <em><?= t('None'); ?></em>
+                                <?php } ?>
+                            </td>
 
-                        <?php foreach ($locales
+                            <?php foreach ($locales
 
-                        as $lp) { ?>
-                        <td>
-                            <?= $csm->t(null, 'productName', $product->getID(), null, $lp->getLocale()); ?>
-                        <td>
-                            <?php } ?>
-                        <td>
-                            <a class="btn btn-sm btn-primary"
-                               href="<?= Url::to('/dashboard/store/multilingual/products/translate', $product->getID()) ?>"><?= t('Translate'); ?></i></a>
-                        </td>
-                    </tr>
-                <?php }
-            } ?>
-            </tbody>
-        </table>
+                            as $lp) { ?>
+                            <td>
+                                <?= $csm->t(null, 'productName', $product->getID(), null, $lp->getLocale()); ?>
+                            <td>
+                                <?php } ?>
+                            <td>
+                                <a class="btn btn-sm btn-primary"
+                                   href="<?= Url::to('/dashboard/store/multilingual/products/translate', $product->getID()) ?>"><?= t('Translate'); ?></i></a>
+                            </td>
+                        </tr>
+                    <?php }
+                } ?>
+                </tbody>
+            </table>
 
-        <?php if ($paginator->getTotalPages() > 1) { ?>
-            <div class="ccm-search-results-pagination">
-                <?= $pagination ?>
-            </div>
-        <?php } ?>
+            <?php if ($paginator->getTotalPages() > 1) { ?>
+                <div class="ccm-search-results-pagination">
+                    <?= $pagination ?>
+                </div>
+            <?php } ?>
 
-    </div>
+        </div>
 
     <?php } else { ?>
-    <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
+        <p class="alert alert-info"><?= t('No additional locales have been defined'); ?></p>
     <?php } ?>
 
 <?php } ?>
@@ -160,135 +163,6 @@ $localecount = count($locales);
     <fieldset>
         <legend><a target="_blank" title="<?= t('Manage Product'); ?>" href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= h($product->getName()); ?></a></legend>
         <p class="help-block"><?= t('Product specific translations'); ?></p>
-    <table class="table table-bordered table-condensed">
-        <tr>
-            <th><?= t('Context'); ?></th>
-            <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
-                (<?= $defaultLocale->getLocale() ?>)
-            </th>
-            <th></th>
-            <th><?= t('Locale') ?></th>
-            <th style="width: 50%"><?= t('Translations'); ?></th>
-        </tr>
-
-        <?php
-
-        $firstrow = true;
-        foreach ($locales as $lp) { ?>
-            <tr>
-                <?php if ($firstrow) {
-                    $firstrow = false;
-                    ?>
-                    <td rowspan="<?= $localecount; ?>"><span class="label label-primary"><?= t('Product Name') ?></span>
-                    </td>
-                    <td rowspan="<?= $localecount; ?>"><?= $product->getName() ?></td>
-                <?php } ?>
-                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                <td>
-                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                </td>
-
-                <td>
-                    <input type="text" class="form-control"
-                           name="translation[<?= $lp->getLocale(); ?>][text][productName]"
-                           value="<?= $csm->t(null, 'productName', $product->getID(), false, $lp->getLocale()); ?>"/>
-                </td>
-
-            </tr>
-        <?php } ?>
-
-        <?php
-
-        $firstrow = true;
-        foreach ($locales as $lp) { ?>
-            <tr>
-                <?php if ($firstrow) {
-                    $firstrow = false;
-                    ?>
-                    <td rowspan="<?= $localecount; ?>"><span
-                                class="label label-primary"><?= t('Short Description') ?></span>
-                    </td>
-                    <td rowspan="<?= $localecount; ?>"><?= $product->getDescription() ?></td>
-                <?php } ?>
-                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                <td>
-                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                </td>
-
-                <td>
-
-                    <?php
-                    echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
-                    ?>
-
-                </td>
-
-            </tr>
-        <?php } ?>
-
-        <?php
-
-        $firstrow = true;
-        foreach ($locales as $lp) { ?>
-            <tr>
-                <?php if ($firstrow) {
-                    $firstrow = false;
-                    ?>
-                    <td rowspan="<?= $localecount; ?>"><span class="label label-primary"><?= t('Details') ?></span>
-                    </td>
-                    <td rowspan="<?= $localecount; ?>"><?= $product->getDetail() ?></td>
-                <?php } ?>
-                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                <td>
-                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                </td>
-
-                <td>
-                    <?php
-                    echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
-                    ?>
-                </td>
-
-            </tr>
-        <?php } ?>
-
-        <?php
-
-        $firstrow = true;
-        foreach ($locales as $lp) { ?>
-            <tr>
-                <?php if ($firstrow) {
-                    $firstrow = false;
-                    ?>
-                    <td rowspan="<?= $localecount; ?>"><span
-                                class="label label-primary"><?= t('Quantity Label') ?></span>
-                    </td>
-                    <td rowspan="<?= $localecount; ?>"><?= $product->getQtyLabel() ?></td>
-                <?php } ?>
-                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                <td>
-                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                </td>
-
-                <td>
-                    <input type="text" class="form-control"
-                           name="translation[<?= $lp->getLocale(); ?>][text][productQuantityLabel]"
-                           value="<?= $csm->t(null, 'productQuantityLabel', $product->getID(), false, $lp->getLocale(), false); ?>"
-                            placeholder="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale()); ?>" />
-                </td>
-
-            </tr>
-        <?php } ?>
-    </table>
-    </fieldset>
-
-
-    <fieldset>
-        <legend><?= t('Options and Option Values'); ?></legend>
-        <p class="help-block"><?= t('Translations entered below will override common translations for this product only. It is recommended to enter common translations first.'); ?></p>
-
-        <?php $productOptions = $product->getOptions(); ?>
-        <?php if (count($productOptions) > 0) { ?>
         <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Context'); ?></th>
@@ -300,41 +174,186 @@ $localecount = count($locales);
                 <th style="width: 50%"><?= t('Translations'); ?></th>
             </tr>
 
-            <?php foreach ($product->getOptions() as $option) {
+            <?php
 
             $firstrow = true;
             foreach ($locales as $lp) { ?>
-                <?php if ($option->getType() != 'static') { ?>
                 <tr>
                     <?php if ($firstrow) {
                         $firstrow = false;
                         ?>
-
-                        <td rowspan="<?= $localecount; ?>"><span
-                                    class="label label-primary"><?= t('Option Name'); ?></span>
+                        <td rowspan="<?= $localecount; ?>"><span class="label label-primary"><?= t('Product Name') ?></span>
                         </td>
-                        <td rowspan="<?= $localecount; ?>"><?= t($option->getName()); ?></td>
+                        <td rowspan="<?= $localecount; ?>"><?= h($product->getName()) ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= h($product->getName()) ?></td>
                     <?php } ?>
                     <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                     <td>
                         <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                     </td>
-                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+
                     <td>
                         <input type="text" class="form-control"
-                               placeholder="<?= $csm->t($option->getName(), 'optionName', false, false, $lp->getLocale()); ?>"
-                               name="translation[<?= $lp->getLocale(); ?>][text][optionName][<?= $option->getID(); ?>]"
-                               value="<?= $csm->t($option->getName(), 'optionName', $product->getID(), $option->getID(), $lp->getLocale(), false); ?>"/>
+                               name="translation[<?= $lp->getLocale(); ?>][text][productName]"
+                               value="<?= $csm->t(null, 'productName', $product->getID(), false, $lp->getLocale()); ?>"/>
+                    </td>
+
+                </tr>
+            <?php } ?>
+
+            <?php
+
+            $firstrow = true;
+            foreach ($locales as $lp) { ?>
+                <tr>
+                    <?php if ($firstrow) {
+                        $firstrow = false;
+                        ?>
+                        <td rowspan="<?= $localecount; ?>"><span
+                                    class="label label-primary"><?= t('Short Description') ?></span>
+                        </td>
+                        <td rowspan="<?= $localecount; ?>"><?= $product->getDescription() ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= $product->getDescription() ?></td>
+                    <?php } ?>
+                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                    <td>
+                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                    </td>
+
+                    <td>
+
+                        <?php
+                        echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
+                        ?>
 
                     </td>
 
                 </tr>
-                <?php } ?>
+            <?php } ?>
 
+            <?php
+
+            $firstrow = true;
+            foreach ($locales as $lp) { ?>
                 <tr>
+                    <?php if ($firstrow) {
+                        $firstrow = false;
+                        ?>
+                        <td rowspan="<?= $localecount; ?>"><span class="label label-primary"><?= t('Details') ?></span>
+                        </td>
+                        <td rowspan="<?= $localecount; ?>"><?= $product->getDetail() ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= $product->getDetail() ?></td>
+                    <?php } ?>
+                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                    <td>
+                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                    </td>
 
-                    <td rowspan="<?= $localecount; ?>"><span
-                                class="label label-primary">
+                    <td>
+                        <?php
+                        echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
+                        ?>
+                    </td>
+
+                </tr>
+            <?php } ?>
+
+            <?php
+
+            $firstrow = true;
+            foreach ($locales as $lp) { ?>
+                <tr>
+                    <?php if ($firstrow) {
+                        $firstrow = false;
+                        ?>
+                        <td rowspan="<?= $localecount; ?>"><span
+                                    class="label label-primary"><?= t('Quantity Label') ?></span>
+                        </td>
+                        <td rowspan="<?= $localecount; ?>"><?= h($product->getQtyLabel()) ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= h($product->getQtyLabel()) ?></td>
+                    <?php } ?>
+                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                    <td>
+                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                    </td>
+
+                    <td>
+                        <input type="text" class="form-control"
+                               name="translation[<?= $lp->getLocale(); ?>][text][productQuantityLabel]"
+                               value="<?= $csm->t(null, 'productQuantityLabel', $product->getID(), false, $lp->getLocale(), false); ?>"
+                               placeholder="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale()); ?>"/>
+                    </td>
+
+                </tr>
+            <?php } ?>
+        </table>
+    </fieldset>
+
+
+    <fieldset>
+        <legend><?= t('Options and Option Values'); ?></legend>
+        <p class="help-block"><?= t('Translations entered below will override common translations for this product only. It is recommended to enter common translations first.'); ?></p>
+
+        <?php $productOptions = $product->getOptions(); ?>
+        <?php if (count($productOptions) > 0) { ?>
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th></th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php foreach ($product->getOptions() as $option) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <?php if ($option->getType() != 'static') { ?>
+                            <tr>
+                                <?php if ($firstrow) {
+                                    $firstrow = false;
+                                    ?>
+
+                                    <td rowspan="<?= $localecount; ?>"><span
+                                                class="label label-primary"><?= t('Option Name'); ?></span>
+                                    </td>
+                                    <td rowspan="<?= $localecount; ?>"><?= h($option->getName()); ?></td>
+                                <?php } else { ?>
+                                    <td class="hidden"><?= h($option->getName()); ?></td>
+                                <?php } ?>
+                                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                                <td>
+                                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control"
+                                           placeholder="<?= $csm->t($option->getName(), 'optionName', false, false, $lp->getLocale()); ?>"
+                                           name="translation[<?= $lp->getLocale(); ?>][text][optionName][<?= $option->getID(); ?>]"
+                                           value="<?= $csm->t($option->getName(), 'optionName', $product->getID(), $option->getID(), $lp->getLocale(), false); ?>"/>
+
+                                </td>
+
+                            </tr>
+                        <?php } ?>
+                    <?php } ?>
+
+
+                    <?php
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary">
                     <?php if ($option->getType() != 'static') { ?>
                         <?= t('Option Details'); ?>
                     <?php } else { ?>
@@ -342,76 +361,97 @@ $localecount = count($locales);
                     <?php } ?>
 
                     </span>
-                    </td>
-                    <td rowspan="<?= $localecount; ?>"><?= t($option->getDetails()); ?></td>
-                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                                </td>
 
-                    <td>
-                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                    </td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($option->getDetails()); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($option->getDetails()); ?></td>
+                            <?php } ?>
 
-                    <td>
-                        <input type="text" class="form-control"
-                               placeholder="<?= $csm->t($option->getDetails(), 'optionDetails', false, false, $lp->getLocale()); ?>"
-                               name="translation[<?= $lp->getLocale(); ?>][text][optionDetails][<?= $option->getID(); ?>]"
-                               value="<?= $csm->t($option->getDetails(), 'optionDetails', $product->getID(), $option->getID(), $lp->getLocale(), false); ?>"/>
 
-                    </td>
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
 
-                </tr>
-            <?php }
-            foreach ($option->getOptionItems() as $optionValue) {
-                $firstrow = true;
-                foreach ($locales as $lp) { ?>
-                    <tr>
-                        <?php if ($firstrow) {
-                            $firstrow = false;
-                            ?>
-
-                            <td rowspan="<?= $localecount; ?>">&nbsp;-&nbsp;<span
-                                        class="label label-primary"><?= t('Option Value'); ?></span>
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                             </td>
-                            <td rowspan="<?= $localecount; ?>"><?= t($optionValue->getName()); ?></td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       placeholder="<?= $csm->t($option->getDetails(), 'optionDetails', false, false, $lp->getLocale()); ?>"
+                                       name="translation[<?= $lp->getLocale(); ?>][text][optionDetails][<?= $option->getID(); ?>]"
+                                       value="<?= $csm->t($option->getDetails(), 'optionDetails', $product->getID(), $option->getID(), $lp->getLocale(), false); ?>"/>
+
+                            </td>
+
+                        </tr>
+
+                    <?php } ?>
+
+                    <?php
+                    foreach ($option->getOptionItems() as $optionValue) {
+                        $firstrow = true;
+                        foreach ($locales as $lp) { ?>
+                            <tr>
+                                <?php if ($firstrow) {
+                                    $firstrow = false;
+                                    ?>
+
+                                    <td rowspan="<?= $localecount; ?>">&nbsp;-&nbsp;<span
+                                                class="label label-primary"><?= t('Option Value'); ?></span>
+                                    </td>
+                                    <td rowspan="<?= $localecount; ?>"><?= h($optionValue->getName()); ?></td>
+                                <?php } else { ?>
+                                    <td class="hidden"><?= h($optionValue->getName()); ?></td>
+                                <?php } ?>
+                                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                                <td>
+                                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control"
+                                           placeholder="<?= $csm->t($optionValue->getName(), 'optionValue', false, false, $lp->getLocale()); ?>"
+                                           name="translation[<?= $lp->getLocale(); ?>][text][optionValue][<?= $optionValue->getID(); ?>]"
+                                           value="<?= $csm->t($optionValue->getName(), 'optionValue', $product->getID(), $optionValue->getID(), $lp->getLocale(), false); ?>"/>
+                                </td>
+                            </tr>
+
                         <?php } ?>
-                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                        <td>
-                            <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                        </td>
+                        <?php
+                        $firstrow = true;
+                        foreach ($locales as $lp) { ?>
+                            <tr>
 
-                        <td>
-                            <input type="text" class="form-control"
-                                   placeholder="<?= $csm->t($optionValue->getName(), 'optionValue', false, false, $lp->getLocale()); ?>"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][optionValue][<?= $optionValue->getID(); ?>]"
-                                   value="<?= $csm->t($optionValue->getName(), 'optionValue', $product->getID(), $optionValue->getID(), $lp->getLocale(), false); ?>"/>
-                        </td>
-                    </tr>
-                    <tr>
+                                <?php if ($firstrow) {
+                                    $firstrow = false;
+                                    ?>
+                                    <td rowspan="<?= $localecount; ?>">&nbsp;-&nbsp;<span
+                                                class="label label-primary"><?= t('Option Selector Display Label'); ?></span>
+                                    </td>
+                                    <td rowspan="<?= $localecount; ?>"><?= h($optionValue->getSelectorName()); ?></td>
+                                <?php } else { ?>
+                                    <td class="hidden"><?= h($optionValue->getSelectorName()); ?></td>
+                                <?php } ?>
 
+                                <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                                <td>
+                                    <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                                </td>
 
-                        <td rowspan="<?= $localecount; ?>">&nbsp;-&nbsp;<span
-                                    class="label label-primary"><?= t('Option Selector Display Label'); ?></span>
-                        </td>
-                        <td rowspan="<?= $localecount; ?>"><?= t($optionValue->getSelectorName()); ?></td>
-
-                        <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
-                        <td>
-                            <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
-                        </td>
-
-                        <td>
-                            <input type="text" class="form-control"
-                                   placeholder="<?= $csm->t($optionValue->getSelectorName(), 'optionSelectorName', false, false, $lp->getLocale()); ?>"
-                                   name="translation[<?= $lp->getLocale(); ?>][text][optionSelectorName][<?= $optionValue->getID(); ?>]"
-                                   value="<?= $csm->t($optionValue->getSelectorName(), 'optionSelectorName', $product->getID(), $optionValue->getID(), $lp->getLocale(), false); ?>"/>
-                        </td>
-                    </tr>
+                                <td>
+                                    <input type="text" class="form-control"
+                                           placeholder="<?= $csm->t($optionValue->getSelectorName(), 'optionSelectorName', false, false, $lp->getLocale()); ?>"
+                                           name="translation[<?= $lp->getLocale(); ?>][text][optionSelectorName][<?= $optionValue->getID(); ?>]"
+                                           value="<?= $csm->t($optionValue->getSelectorName(), 'optionSelectorName', $product->getID(), $optionValue->getID(), $lp->getLocale(), false); ?>"/>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    <?php } ?>
                 <?php } ?>
-            <?php } ?>
-        <?php } ?>
 
-    </table>
+            </table>
         <?php } else { ?>
-        <p class="alert alert-info"><?= t('No options have been created for this product');?></p>
+            <p class="alert alert-info"><?= t('No options have been created for this product'); ?></p>
         <?php } ?>
     </fieldset>
 
@@ -445,7 +485,9 @@ $localecount = count($locales);
                             <td rowspan="<?= $localecount; ?>"><span
                                         class="label label-primary"><?= t('Attribute Name'); ?></span>
                             </td>
-                            <td rowspan="<?= $localecount; ?>"><?= $attr->getAttributeKeyName(); ?></td>
+                            <td rowspan="<?= $localecount; ?>"><?= h($attr->getAttributeKeyName()); ?></td>
+                        <?php } else { ?>
+                            <td class="hidden"><?= h($attr->getAttributeKeyName()); ?></td>
                         <?php } ?>
                         <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                         <td>
@@ -476,7 +518,9 @@ $localecount = count($locales);
                                 <td rowspan="<?= $localecount; ?>"><span
                                             class="label label-primary"><?= t('Attribute Value'); ?></span>
                                 </td>
-                                <td rowspan="<?= $localecount; ?>"><?= $attrOption; ?></td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($attrOption); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($attrOption); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -502,7 +546,7 @@ $localecount = count($locales);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>"
+            <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>"
                class="btn btn-default pull-left"><?= t("Cancel") ?></a>
             <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
         </div>
@@ -516,11 +560,10 @@ $localecount = count($locales);
     </style>
 
     <script>
-            $(document).ready(function(){
-                $('.copytext').click(function(){
-                    var content = $(this).parent().prev().html();
-                    $(this).parent().next().next().find('input, textarea').val(content);
-                });
+        $(document).ready(function () {
+            $('.copytext').click(function () {
+                var content = $(this).parent().prev().html();
+                $(this).parent().next().next().find('input, textarea').val(content);
             });
-
+        });
     </script>
