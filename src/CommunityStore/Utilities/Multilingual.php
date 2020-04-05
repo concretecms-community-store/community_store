@@ -82,7 +82,7 @@ class Multilingual
                 } else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionDetails' == $context || 'optionSelectorName' == $context || 'optionValue' == $context || 'productQuantityLabel' == $context ) {
+            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionDetails' == $context || 'optionSelectorName' == $context || 'optionValue' == $context  ) {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 
