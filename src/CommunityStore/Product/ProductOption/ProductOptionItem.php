@@ -97,8 +97,19 @@ class ProductOptionItem
         return $this->getName();
     }
 
-    public function getPriceAdjustment()
+    public function getPriceAdjustment($discounts = false)
     {
+        if ($this->pPriceAdjust && $discounts &&!empty($discounts)) {
+            foreach ($discounts as $discount) {
+                $discount->setApplicableTotal($this->pPriceAdjust);
+                $discountedprice = $discount->returnDiscountedPrice();
+
+                if (false !== $discountedprice) {
+                    return $discountedprice;
+                }
+            }
+        }
+
         return $this->pPriceAdjust;
     }
 

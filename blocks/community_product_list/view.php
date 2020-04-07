@@ -133,7 +133,7 @@ if ($productsPerRow == 6) {
                     <?php if ($showPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
+                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment($product->getDiscountRules());
                         ?>
                         <p class="store-product-price store-product-list-price" data-price="<?= $activePrice; ?>" data-original-price="<?= ($salePrice ? $price : ''); ?>" >
                             <?php
@@ -312,7 +312,7 @@ if ($productsPerRow == 6) {
                                                                 <?= $disabled . ($selected ? 'checked' : ''); ?>
                                                                       name="po<?= $option->getID(); ?>"
                                                                       value="<?= $optionItem->getID(); ?>"
-                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment(); ?>"
+                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment($product->getDiscountRules()); ?>"
                                                             /><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?>
 
                                                         </label>
@@ -320,7 +320,7 @@ if ($productsPerRow == 6) {
                                                 <?php } else { ?>
                                                     <option <?= $disabled . ' ' . $selected; ?>
                                                             value="<?= $optionItem->getID(); ?>"
-                                                            data-adjustment="<?= (float)$optionItem->getPriceAdjustment(); ?>"
+                                                            data-adjustment="<?= (float)$optionItem->getPriceAdjustment($product->getDiscountRules()); ?>"
                                                     ><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
 

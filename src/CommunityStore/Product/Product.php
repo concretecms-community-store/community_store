@@ -415,7 +415,18 @@ class Product
         $this->priceAdjustment = $adjustment;
     }
 
-    public function getPriceAdjustment(){
+    public function getPriceAdjustment($discounts = false){
+        if ($this->priceAdjustment && $discounts &&!empty($discounts)) {
+            foreach ($discounts as $discount) {
+                $discount->setApplicableTotal($this->priceAdjustment);
+                $discountedprice = $discount->returnDiscountedPrice();
+
+                if (false !== $discountedprice) {
+                    return $discountedprice;
+                }
+            }
+        }
+
         return $this->priceAdjustment;
     }
 
@@ -1040,6 +1051,8 @@ class Product
             $price = $this->getQuantityAdjustedPrice($qty);
         }
 
+        $price += $this->getPriceAdjustment();
+
         $discounts = $this->getDiscountRules();
 
         if (!$ignoreDiscounts) {
@@ -1055,11 +1068,12 @@ class Product
             }
         }
 
-        return $price + $this->getPriceAdjustment();
+        return $price;
     }
 
     public function getWholesalePrice($qty = 1)
     {
+        $price = $this->pPrice;
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
@@ -1071,6 +1085,10 @@ class Product
             }
         } else {
             $price = $this->pWholesalePrice;
+
+            if (!$price) {
+                $price = $this->pPrice;
+            }
         }
 
         $priceAdjustment = $this->getPriceAdjustment();

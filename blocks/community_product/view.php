@@ -80,11 +80,11 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment();
+                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment($product->getDiscountRules());
 
                         if ($isWholesale) {
                             $msrp = $product->getFormattedOriginalPrice();
-                            $wholesalePrice = $product->getWholesalePrice() - $product->getPriceAdjustment();
+                            $wholesalePrice = $product->getWholesalePrice() - $product->getPriceAdjustment($product->getDiscountRules());
                             $formattedWholesalePrice = $product->getFormattedWholesalePrice();
                         }
 
@@ -95,7 +95,7 @@ if (is_object($product) && $product->isActive()) {
                             <?php
                             $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
 
-                            if ($isWholesale && $wholesalePrice > 0) {
+                            if ($isWholesale && $wholesalePrice > 0 && $wholesalePrice != $activePrice) {
                                 echo t('List Price') . ': <span class="store-list-price">' . $msrp . '</span><br />' . t('Wholesale Price') . ': <span class="store-wholesale-price">' . $formattedWholesalePrice . '</span>';
                                 echo '<meta itemprop="price" content="' . $wholesalePrice . '" />';
                                 echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
@@ -356,7 +356,7 @@ if (is_object($product) && $product->isActive()) {
                                                                 <?= $disabled . ($selected ? 'checked' : ''); ?>
                                                                       name="po<?= $option->getID(); ?>"
                                                                       value="<?= $optionItem->getID(); ?>"
-                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment(); ?>" />
+                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment($product->getDiscountRules()); ?>" />
 
                                                             <?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?>
                                                         </label>
@@ -364,7 +364,7 @@ if (is_object($product) && $product->isActive()) {
                                                 <?php } else { ?>
                                                     <option
                                                         <?= $disabled . ' ' . $selected; ?> value="<?= $optionItem->getID(); ?>"
-                                                                                    data-adjustment="<?= $optionItem->getPriceAdjustment(); ?>"
+                                                                                    data-adjustment="<?= $optionItem->getPriceAdjustment($product->getDiscountRules()); ?>"
 
                                                     ><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
