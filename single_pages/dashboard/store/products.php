@@ -1173,8 +1173,8 @@ $ps = $app->make('helper/form/page_selector');
                             //vars to pass to the template
                             poiName: '',
                             poiSelectorName: '',
-                            poiPriceAdjust: 0,
-                            poiWeightAdjust: 0,
+                            poiPriceAdjust: '',
+                            poiWeightAdjust: '',
                             poiID: '',
                             optGroup: group,
                             sort: temp,

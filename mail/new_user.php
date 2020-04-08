@@ -19,7 +19,7 @@ ob_start();
     <p><?= t('Your password is');?>: <strong><?= $password; ?></strong></p>
 
 <?php if ($link) { ?>
-    <p><?= t('You can now access'); ?><?= $link; ?></p>
+    <p><?= t('You can now access'); ?> <a href="<?= $link; ?>"><?= $link; ?></a></p>
 <?php } ?>
 </body>
 </html>
@@ -42,7 +42,7 @@ ob_start();
     <?= t('Your password is');?>: <?= $password; ?>
 
 <?php if ($link) { ?>
-    <?= t('You can now access'); ?><?= $link; ?>
+    <?= t('You can now access'); ?> <?= $link; ?>
 <?php } ?>
 
 <?php
