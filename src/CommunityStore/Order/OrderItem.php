@@ -195,7 +195,7 @@ class OrderItem
      */
     public function getQty()
     {
-       $this->getQuantity();
+       return $this->getQuantity();
     }
 
     /**
