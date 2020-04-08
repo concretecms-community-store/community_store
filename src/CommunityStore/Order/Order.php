@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use Concrete\Core\Page\Page;
@@ -237,7 +238,7 @@ class Order
 
     public function setShippingTotal($shippingTotal)
     {
-        $this->oShippingTotal = (float) $shippingTotal;
+        $this->oShippingTotal = (float)$shippingTotal;
     }
 
     public function setTaxTotal($taxTotal)
@@ -426,7 +427,7 @@ class Order
         $taxes = $this->getTaxes();
         $taxTotal = 0;
         foreach ($taxes as $tax) {
-            $taxTotal = $taxTotal + (float) $tax['amount'];
+            $taxTotal = $taxTotal + (float)$tax['amount'];
         }
 
         return $taxTotal;
@@ -437,7 +438,7 @@ class Order
         $taxes = $this->getTaxes();
         $taxTotal = 0;
         foreach ($taxes as $tax) {
-            $taxTotal = $taxTotal + (float) $tax['amountIncluded'];
+            $taxTotal = $taxTotal + (float)$tax['amountIncluded'];
         }
 
         return $taxTotal;
@@ -679,7 +680,7 @@ class Order
             }
         }
 
-        foreach($this->getOrderItems() as $orderItem) {
+        foreach ($this->getOrderItems() as $orderItem) {
             $product = StoreProduct::getByID($orderItem->getProductID());
 
             if ($product) {
@@ -687,7 +688,6 @@ class Order
 
                 if ($variationID) {
                     $variation = StoreProductVariation::getByID($variationID);
-
 
                     if ($variation) {
                         if (!$variation->isUnlimited()) {
@@ -697,12 +697,14 @@ class Order
                             $product->setVariation($variation);
                             $product->updateProductQty($newStock);
                         }
-                    } elseif (!$product->isUnlimited()) {
-                        $inStock = $product->getQty();
-                        $newStock = $inStock - $orderItem->getQuantity();
-                        $product->updateProductQty($newStock);
                     }
+
+                } elseif (!$product->isUnlimited()) {
+                    $inStock = $product->getQty();
+                    $newStock = $inStock - $orderItem->getQuantity();
+                    $product->updateProductQty($newStock);
                 }
+                
             }
         }
 
@@ -727,8 +729,8 @@ class Order
 
     public function completePayment($sameRequest = false)
     {
-		$event = new StoreOrderEvent($this);
-		Events::dispatch(StoreOrderEvent::ORDER_BEFORE_PAYMENT_COMPLETE, $event);
+        $event = new StoreOrderEvent($this);
+        Events::dispatch(StoreOrderEvent::ORDER_BEFORE_PAYMENT_COMPLETE, $event);
 
         $this->setPaid(new \DateTime());
         $this->completePostPaymentProcesses($sameRequest);
@@ -806,20 +808,20 @@ class Order
                     $newusername .= rand(0, 9);
                 }
 
-				$event = new StoreOrderEvent($this);
+                $event = new StoreOrderEvent($this);
                 /* @var $uae \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent */
-				$uae = Events::dispatch(StoreOrderEvent::ORDER_BEFORE_USER_ADD, $event);
+                $uae = Events::dispatch(StoreOrderEvent::ORDER_BEFORE_USER_ADD, $event);
 
-				// Did the event modify the user data?
-				if ($uae->userDataUpdated()) {
-					$newUserData = $uae->getUserData();
-					if (array_key_exists('uName', $newUserData) && !empty($newUserData['uName'])) {
-						$newusername = $newUserData['uName'];
-					}
-					if (array_key_exists('uPassword', $newUserData) && !empty($newUserData['uPassword'])) {
-						$password = $newUserData['uPassword'];
-					}
-				}
+                // Did the event modify the user data?
+                if ($uae->userDataUpdated()) {
+                    $newUserData = $uae->getUserData();
+                    if (array_key_exists('uName', $newUserData) && !empty($newUserData['uName'])) {
+                        $newusername = $newUserData['uName'];
+                    }
+                    if (array_key_exists('uPassword', $newUserData) && !empty($newUserData['uPassword'])) {
+                        $password = $newUserData['uPassword'];
+                    }
+                }
 
                 $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);

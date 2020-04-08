@@ -168,7 +168,7 @@ $ps = $app->make('helper/form/page_selector');
                                 <div class="input-group-addon">
                                     <?= Config::get('community_store.symbol');?>
                                 </div>
-                                <?php $wholesalePrice = $product->getWholesalePrice(); ?>
+                                <?php $wholesalePrice = $product->getWholesalePriceValue(); ?>
                                 <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>t('No Wholesale Price Set')));?>
                             </div>
                         </div>

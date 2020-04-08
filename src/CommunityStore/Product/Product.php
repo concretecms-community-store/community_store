@@ -1071,6 +1071,10 @@ class Product
         return $price;
     }
 
+    public function getWholesalePriceValue() {
+        $this->pWholesalePrice;
+    }
+
     public function getWholesalePrice($qty = 1)
     {
         $price = $this->pPrice;
