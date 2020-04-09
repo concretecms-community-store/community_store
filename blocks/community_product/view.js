@@ -6,7 +6,15 @@ $(function () {
         let ar = [];
         let priceAdjust = 0;
         let lang = CCM_ACTIVE_LOCALE.replace('_', '-');
-        let numberFormatter = Intl.NumberFormat(lang, { style: 'currency', currency: CURRENCYCODE });
+        let numberFormatter = {};
+
+        if (!CURRENCYCODE) {
+            numberFormatter.format = function(amount) {
+                return CURRENCYSYMBOL + communityStore.number_format(amount, 2, CURRENCYDECIMAL, CURRENCYGROUP);
+            }
+        } else {
+            numberFormatter = Intl.NumberFormat(lang, { style: 'currency', currency: CURRENCYCODE })
+        }
 
         pdb.find('.store-product-options select option:selected,  .store-product-options input:checked').each(function(){
             let optionAdjustment = $(this).data('adjustment');

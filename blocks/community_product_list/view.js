@@ -5,7 +5,15 @@ $(function () {
         let pID = pdb.data('product-id');
         let ar = [];
         let lang = CCM_ACTIVE_LOCALE.replace('_', '-');
-        let numberFormatter = Intl.NumberFormat(lang, { style: 'currency', currency: CURRENCYCODE });
+        let numberFormatter = {};
+
+        if (!CURRENCYCODE) {
+            numberFormatter.format = function(amount) {
+                return CURRENCYSYMBOL + communityStore.number_format(amount, 2, CURRENCYDECIMAL, CURRENCYGROUP);
+            }
+        } else {
+            numberFormatter = Intl.NumberFormat(lang, { style: 'currency', currency: CURRENCYCODE })
+        }
 
         let priceAdjust = 0;
 
