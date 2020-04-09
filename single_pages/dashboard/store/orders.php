@@ -249,7 +249,7 @@ use \Concrete\Core\User\UserInfoRepository;
                             ?>
                             <?= $discountRuleDeduct; ?>
                         </td>
-                        <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : $discount['odPercentage'] . '%'); ?></td>
+                        <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : \Punic\Number::formatPercent($discount['odPercentage'] / 100) ); ?></td>
                         <td><?= ($discount['odCode'] ? t('by code') . ' <em>' . $discount['odCode'] . '</em>' : t('Automatically')); ?></td>
                     </tr>
                 <?php } ?>

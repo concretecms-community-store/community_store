@@ -237,7 +237,7 @@ $dh = $app->make('helper/date');
                 ?>
                     <tr>
                         <td><?= h($discount['odDisplay']); ?></td>
-                        <td><?= ($discount['odValue'] > 0 ? StorePrice::format($discount['odValue']) : $discount['odPercentage'] . '%'); ?></td>
+                        <td><?= ($discount['odValue'] > 0 ? StorePrice::format($discount['odValue']) : \Punic\Number::formatPercent($discount['odPercentage'] / 100)); ?></td>
                     </tr>
                 <?php
             } ?>
