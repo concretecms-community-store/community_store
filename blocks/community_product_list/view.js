@@ -4,6 +4,8 @@ $(function () {
         let pdb = $(this).closest('.store-product-list-item').find('form');
         let pID = pdb.data('product-id');
         let ar = [];
+        let lang = CCM_ACTIVE_LOCALE.replace('_', '-');
+        let numberFormatter = Intl.NumberFormat(lang, { style: 'currency', currency: CURRENCYCODE });
 
         let priceAdjust = 0;
 
@@ -26,18 +28,18 @@ $(function () {
         if (variation) {
 
             let total = parseFloat(variation['price']) + priceAdjust;
-            let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(total);
+            let result = numberFormatter.format(total);
 
             if (variation['wholesalePrice']) {
                 let wholesale = parseFloat(variation['wholesalePrice']) + priceAdjust;
-                let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
+                let wholesaleresult = numberFormatter.format(wholesale);
 
                 priceHolder.html(wholesaleresult);
 
             } else {
                 if (variation['salePrice']) {
                     let saletotal = parseFloat(variation['salePrice']) + priceAdjust;
-                    let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+                    let saleresult = numberFormatter.format(saletotal);
 
                     priceHolder.html(variation['saleTemplate']);
                     priceHolder.find('.store-sale-price').html(saleresult);
@@ -72,27 +74,27 @@ $(function () {
 
             if (priceHolder.data('original-price')) {
                 let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;
-                let saleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(saletotal);
+                let saleresult = numberFormatter.format(saletotal);
 
                 let total = parseFloat(priceHolder.data('original-price')) + priceAdjust;
-                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                let result = numberFormatter.format(total);
 
                 priceHolder.find('.store-sale-price').html(saleresult);
                 priceHolder.find('.store-original-price').html(result);
 
             } else if (priceHolder.data('list-price')) {
                 let wholesale = parseFloat(priceHolder.data('price')) + priceAdjust;
-                let wholesaleresult = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE }).format(wholesale);
+                let wholesaleresult = numberFormatter.format(wholesale);
 
                 let total = parseFloat(priceHolder.data('list-price')) + priceAdjust;
-                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                let result = numberFormatter.format(total);
 
                 priceHolder.find('.store-list-price').html(result);
                 priceHolder.find('.store-wholesale-price').html(wholesaleresult);
 
             } else {
                 let total = parseFloat(priceHolder.data('price')) + priceAdjust;
-                let result = Intl.NumberFormat('en', { style: 'currency', currency: CURRENCYCODE}).format(total);
+                let result = numberFormatter.format(total);
                 priceHolder.html(result);
             }
         }
