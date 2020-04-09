@@ -807,17 +807,25 @@ class Product
         $this->manufacturer = $manufacturer;
     }
 
-    public function updateProductQty($qty)
+
+    public function setStockLevel($qty)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
-                $variation->setVariationQty($qty);
+                $variation->setStockLevel($qty);
                 $variation->save();
             }
         } else {
             $this->setQty($qty);
             $this->save();
         }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function updateProductQty($qty) {
+        $this->setStockLevel($qty);
     }
 
 	/**
@@ -1524,13 +1532,20 @@ class Product
         }
     }
 
-    public function getQty()
-    {
+    public function getStockLevel() {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationQty();
         } else {
             return $this->pQty;
         }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getQty()
+    {
+        return $this->getStockLevel();
     }
 
     public function getMaxCartQty()

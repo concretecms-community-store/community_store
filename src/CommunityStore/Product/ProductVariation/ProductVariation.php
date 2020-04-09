@@ -294,17 +294,32 @@ class ProductVariation
     /**
      * @ORM\return mixed
      */
-    public function getVariationQty()
+    public function getStockLevel()
     {
         return $this->pvQty;
     }
 
     /**
+     * @deprecated
+     */
+    public function getVariationQty()
+    {
+        return $this->getStockLevel();
+    }
+
+    /**
      * @ORM\param mixed $pvQty
      */
-    public function setVariationQty($pvQty)
+    public function setStockLevel($pvQty)
     {
         $this->pvQty = $pvQty ? $pvQty : 0;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function setVariationQty($pvQty) {
+        $this->setStockLevel($pvQty);
     }
 
     /**

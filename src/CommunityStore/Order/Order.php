@@ -691,11 +691,10 @@ class Order
 
                     if ($variation) {
                         if (!$variation->isUnlimited()) {
-                            $inStock = $product->getQty();
-                            $newStock = $inStock - $orderItem->getQuantity();
-
                             $product->setVariation($variation);
-                            $product->updateProductQty($newStock);
+                            $inStock = $product->getStockLevel();
+                            $newStock = $inStock - $orderItem->getQuantity();
+                            $product->setStockLevel($newStock);
                         }
                     }
 
@@ -704,7 +703,7 @@ class Order
                     $newStock = $inStock - $orderItem->getQuantity();
                     $product->updateProductQty($newStock);
                 }
-                
+
             }
         }
 
