@@ -912,6 +912,13 @@ $ps = $app->make('helper/form/page_selector');
                         //load up existing option groups
                         <?php
 
+                        $labels = [];
+                        $labels['select'] = t('Option List');
+                        $labels['text'] = t('Text Input');
+                        $labels['textarea'] = t('Text Area Input');
+                        $labels['checkbox'] = t('Checkbox');
+                        $labels['hidden'] = t('Hidden Value');
+                        $labels['static'] = t('Static Text');
 
 
                         if($options) {
@@ -924,14 +931,6 @@ $ps = $app->make('helper/form/page_selector');
                         $details = $option->getDetails();
                         $required = $option->getRequired();
                         $includeVariations = $option->getIncludeVariations();
-
-                        $labels = [];
-                        $labels['select'] = t('Option List');
-                        $labels['text'] = t('Text Input');
-                        $labels['textarea'] = t('Text Area Input');
-                        $labels['checkbox'] = t('Checkbox');
-                        $labels['hidden'] = t('Hidden Value');
-                        $labels['static'] = t('Static Text');
 
 
                         if (!$type) {
