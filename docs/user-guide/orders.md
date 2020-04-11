@@ -1,4 +1,6 @@
-# Viewing and Managing Orders
+# Orders
+
+## Viewing and Managing
 
 ## Refunding and Cancelling
 

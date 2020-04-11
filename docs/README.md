@@ -6,11 +6,11 @@ actionLink: /start/
 tagline: An open, free and community developed eCommerce system for concrete5
 features:
 - title: Powerful eCommerce 
-  details: Minimal setup with markdown-centered project structure helps you focus on writing.
+  details: 
 - title: Highly Customizable
-  details: Enjoy the dev experience of Vue + webpack, use Vue components in markdown, and develop custom themes with Vue.
+  details: Style, override and configure blocks, pages and other elements with freedom
 - title: Open Source 
-  details: VuePress generates pre-rendered static HTML for each page, and runs as an SPA once a page is loaded.
+  details: MIT licenced and community supported, just like concrete5
 
 footer: MIT Licensed
 ---

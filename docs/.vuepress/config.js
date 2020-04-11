@@ -3,14 +3,13 @@ module.exports = {
     description: '',
     themeConfig: {
         nav: [
-            { text: 'Getting Started', link: '/start/' },
-            { text: 'User Guide', link: '/user-guide/' },
-            { text: 'How-Tos', link: '/how-tos/' },
-            { text: 'Developers', link: '/developers/' },
-            { text: 'Github', link: 'https://github.com/concrete5-community-store' }
+            {text: 'User Guide', link: '/user-guide/'},
+            {text: 'How-Tos', link: '/how-tos/'},
+            {text: 'Developers', link: '/developers/'},
+            {text: 'Github', link: 'https://github.com/concrete5-community-store'}
         ],
         sidebar: {
-            '/start/':
+            '/user-guide/':
                 [{
                     title: 'Getting Started',
                     collapsable: false,
@@ -18,43 +17,30 @@ module.exports = {
                         '',
                         'essentials',
                         'setup',
-                        'config',
+                        'configuration',
                     ]
-                }]
-            ,
-            '/user-guide/': [
-                {
-                title: 'Dashboard',
-                collapsable: false,
-                children: [
-                    'store-overview',
-                    'orders',
-                    'products',
-                    'manufacturers',
-                    'discounts',
-                    'settings',
-                    'reports',
-                    'multilingual'
+                },
+                    {
+                        title: 'Store Management',
+                        collapsable: false,
+                        children: [
+                            'products',
+                            'orders',
+                            'discounts'
+
+                        ]
+                    } ,
+                    {
+                        title: 'Going Live',
+                        collapsable: false,
+                        children: [
+                            'going-live',
+                        ]
+                    }
+
                 ]
-                },
-                {
-                    title: 'Blocks',
-                    collapsable: false,
-                    children: [
-                        'blocks'
-                    ]
-                },
-                {
-                    title: 'Going Live',
-                    collapsable: false,
-                    children: [
-                        'going-live',
-                    ]
-                }
-
-            ],
-
-            '/how-tos/' :
+            ,
+            '/how-tos/':
                 [{
                     title: 'How-Tos',
                     collapsable: false,
@@ -65,6 +51,7 @@ module.exports = {
                         'donations',
                         'category-pages',
                         'related-products',
+                        'multilingual',
                     ]
                 }],
             '/developers/':
@@ -76,8 +63,10 @@ module.exports = {
                         '',
                         'customizations',
                         'events',
-                        'cli-commands',
-                        'contributing'
+                        'attributes',
+                        'shipping_methods',
+                        'payment_methods',
+                        'cli-commands'
                     ]
                 }]
             ,
