@@ -16,7 +16,7 @@ module.exports = {
                     children: [
                         '',
                         'essentials',
-                        'setup',
+                        'installation',
                         'configuration',
                     ]
                 },

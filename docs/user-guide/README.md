@@ -1,6 +1,6 @@
 # Introduction
  
-Community Store is a free and open-source online shop/cart add-on for the content management system [concrete5](https://www.concrete5.org/).
+Community Store is a free and open-source online shop/cart add-on for the PHP based content management system [concrete5](https://www.concrete5.org/).
 
 The add-on includes common online shop components such as a shopping cart, product lists, a checkout mechanism and ways to track orders. It is not a stand-alone system - it integrates tightly with concrete5, with blocks and pages uses to present products.
 
