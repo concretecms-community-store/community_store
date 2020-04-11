@@ -6,16 +6,7 @@ The add-on includes common online shop components such as a shopping cart, produ
 
 There is a 'core' Community Store package, which can then be expanded with further add-ons. Therefore the [concrete5-community-store organisation](https://github.com/concrete5-community-store) contains multiple projects.
 
-## Goals
 
-Community Store aims to be a highly configurable eCommerce solution for concrete5. 
-
-Whilst it has sensible defaults and styling using concrete5's default theme Elemental, it aims to be as free as possible of its own styling - allowing it to be styled and customized freely to match a custom theme.
-
-Another goal is to provide shop components that can take full advantage of concrete5's strengths. For example, products or lists of products as blocks which allows for advanced permissioning, layouts and easy template overriding. There is also support for member creation and user group adding on the purchase of products, which then combined with concrete5's broader permissioning powerfully handles the control of pay-online content.
- 
-On a technical level, Community Store aims to follow concrete5's 'best practices' and coding convensions. 
- 
 ## Key features 
 
 - Highly configurable blocks for products, product lists, product filters and for cart links
@@ -33,4 +24,11 @@ On a technical level, Community Store aims to follow concrete5's 'best practices
 - Events support, allowing developers to develop solutions to complex processing needs
 
 
+## Goals
 
+Community Store aims to be a highly configurable eCommerce solution for concrete5. 
+Whilst it has sensible defaults and styling using concrete5's default theme Elemental, it aims to be as free as possible of its own styling - allowing it to be styled and customized freely to match a custom theme.
+Another goal is to provide shop components that can take full advantage of concrete5's strengths. For example, products or lists of products as blocks which allows for advanced permissioning, layouts and easy template overriding. There is also support for member creation and user group adding on the purchase of products, which then combined with concrete5's broader permissioning powerfully handles the control of pay-online content. 
+On a technical level, Community Store aims to follow concrete5's 'best practices' and coding convensions. 
+
+## Documentation Scope
