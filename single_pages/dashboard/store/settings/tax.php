@@ -250,7 +250,7 @@ if (in_array($controller->getAction(), $addViews)) {
             <?php
         } ?>
             <div class="form-group">
-                <?= $form->label('taxClassRates[]', t("Select Tax Class Rates"));
+                <?= $form->label('taxClassRates[]', t("Tax Rates"));
         $sizeswap = 10; ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                 <select name="taxClassRates[]" class="taxclassRates select2-select <?= (count($taxRates) < $sizeswap ? '' : 'form-control'); ?>" multiple="multiple"  style="width: 100%; <?= (count($taxRates) < $sizeswap ? '' : 'height: 200px;'); ?>">
@@ -289,7 +289,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default pull-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-success" type="submit"><?= t('%s Tax Class', $task); ?></button>
+            <button class="pull-right btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
         </div>
     </div>
 

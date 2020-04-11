@@ -53,7 +53,7 @@ $ps = $app->make('helper/form/page_selector');
         </div>
     <?php } ?>
 
-    <form method="post" action="<?= $view->action('save') ?>">
+    <form method="post">
         <?= $token->output('community_store'); ?>
         <input type="hidden" name="pID" value="<?= $product->getID() ?>"/>
 

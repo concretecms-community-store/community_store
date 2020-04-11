@@ -12,7 +12,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-primary"><i class="fa fa-money"></i> <?= t("Tax Rates"); ?></a>
 </div>
 
-<form method="post" action="<?= $view->action('save'); ?>">
+<form method="post">
     <?= $token->output('community_store'); ?>
 
     <div class="row">

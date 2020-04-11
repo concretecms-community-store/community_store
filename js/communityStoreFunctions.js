@@ -1,5 +1,5 @@
 $(function(){
-    
+
     var url = window.location.pathname.toString();
 
     $('#group-filters li a').each(function(){
@@ -8,11 +8,11 @@ $(function(){
            $(this).parent().addClass("active");
         }
     });
-    
+
     $("a[data-pane-toggle]").click(function(e){
         e.preventDefault();
         var paneTarget = $(this).attr('href');
-        paneTarget = paneTarget.replace('#','');     
+        paneTarget = paneTarget.replace('#','');
         $(".store-pane").removeClass('active');
         $('a[data-pane-toggle]').parent().removeClass('active');
         $('#'+paneTarget).addClass("active");
@@ -31,7 +31,7 @@ $(function(){
         var confirmDelete = confirm('Are you sure?');
         if(confirmDelete == true) {
             var deleteurl = $(".group-list").attr("data-delete-url");
-            $.ajax({ 
+            $.ajax({
                 url: deleteurl+"/"+groupID,
                 success: function() {
                     $("li[data-group-id='"+groupID+"']").remove();
@@ -39,14 +39,14 @@ $(function(){
                 error: function(){
                     alert("Something went wrong");
                 }
-            });             
+            });
         }
     });
     $(".btn-save-group-name").click(function(){
         var groupID = $(this).parent().attr("data-group-id");
         var saveurl = $(".group-list").attr("data-save-url");
         var gName = $(this).parent().find(".edit-group-name").val();
-        $.ajax({ 
+        $.ajax({
             url: saveurl+"/"+groupID,
             data: {gName: gName},
             type: 'post',
@@ -58,17 +58,17 @@ $(function(){
             error: function(){
                 alert("something went wrong");
             }
-        });    
+        });
     });
     $(".btn-edit-group-name").click(function(){
         $(this).parent().find(".btn-edit-group-name,.group-name").hide();
-        $(this).parent().find(".edit-group-name, .btn-cancel-edit, .btn-save-group-name").attr("style","display: inline-block !important"); 
+        $(this).parent().find(".edit-group-name, .btn-cancel-edit, .btn-save-group-name").attr("style","display: inline-block !important");
     });
     $(".btn-cancel-edit").click(function(){
        $(this).parent().find(".btn-edit-group-name,.group-name").show();
-       $(this).parent().find(".edit-group-name, .btn-cancel-edit, .btn-save-group-name").attr("style","display: none");  
+       $(this).parent().find(".edit-group-name, .btn-cancel-edit, .btn-save-group-name").attr("style","display: none");
     });
-    
+
     $("#btn-delete-order").click(function(e){
         e.preventDefault();
         var url = $(this).attr("href");
@@ -92,10 +92,10 @@ $(function(){
         var pageTemplate = $("#selectPageTemplate").val();
         var confirmDelete = confirm($(this).data('confirm-message'));
         if(confirmDelete == true) {
-            window.location = url+'/'+pageTemplate;        
+            window.location = url+'/'+pageTemplate;
         }
     });
-    
+
     window.addEventListener('popstate', function(e) {
         if ($('a[data-pane-toggle]').length > 0) {
             updateActiveTab(true);
@@ -103,32 +103,26 @@ $(function(){
     });
 
 });
+
 function updateActiveTab(historyPopEvent) {
-    historyPopEvent = historyPopEvent || false;
     var url = window.location.pathname.toString();
     var hash = window.location.hash;
     var urlArray = url.split('/');
-    var saveSuccess = urlArray[urlArray.length - 1];
-    var hashArray = saveSuccess.split('#');
 
-    if(!historyPopEvent && saveSuccess != "success" && saveSuccess != "updated" && saveSuccess != "added" && hash == "" || isNaN(parseInt(localStorage.getItem("selectedTabIndex")))){
-        localStorage.removeItem("selectedTab");
-        localStorage.removeItem("selectedTabIndex");
-    }
-    else{
-        $(".store-pane").removeClass('active'); 
-        $('a[data-pane-toggle]').parent().removeClass('active');
-        if (typeof hash != "undefined" && hash != null && hash != "") {
-            var link = $('a[data-pane-toggle][href="'+hash+'"]');
-            var paneTarget = hash.replace('#','');  
-            var paneTargetIndex = $('a[data-pane-toggle]').index( link );
-        } else {
-            var paneTarget = historyPopEvent ? $('a[data-pane-toggle]').eq(0).attr('href').replace('#','') : localStorage.getItem("selectedTab");
-            var paneTargetIndex = historyPopEvent ? 0 : parseInt(localStorage.getItem("selectedTabIndex"));
-        }
+    if (hash) {
+        $(".store-pane").removeClass('active');
+        var toggle = $('a[data-pane-toggle]');
+        toggle.parent().removeClass('active');
+
+        var link = $('a[data-pane-toggle][href="'+hash+'"]');
+        var paneTarget = hash.replace('#','');
+        var paneTargetIndex = toggle.index( link );
+
         $('#'+paneTarget).addClass("active");
         $('a[data-pane-toggle]:eq('+paneTargetIndex+')').parent().addClass("active");
+        window.location = '#';
     }
+
 }
 
 function toggleTaxStatesAndCities(hide) {
@@ -163,10 +157,12 @@ function updateTaxStates(){
        data: {country: countryCode, selectedState: selectedState, type: "tax"},
        success: function(states){
            $("#taxState").replaceWith(states);
-       } 
+       }
     });
 }
 if ($('a[data-pane-toggle]').length > 0) {
-    updateActiveTab();
+     updateActiveTab();
+
 }
+
 updateTaxStates();

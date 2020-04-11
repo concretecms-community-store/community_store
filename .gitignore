@@ -7,3 +7,5 @@ thumbs.db
 vendor
 .php_cs.cache
 products.php.orig
+/node_modules/
+package-lock.json

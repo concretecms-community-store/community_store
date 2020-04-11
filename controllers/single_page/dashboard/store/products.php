@@ -85,6 +85,10 @@ class Products extends DashboardSitePageController
 
     public function add()
     {
+        if ($this->request->getMethod() == 'POST') {
+           return $this->save();
+        }
+
         $this->loadFormAssets();
         $this->set("actionType", t("Add"));
 
@@ -134,6 +138,10 @@ class Products extends DashboardSitePageController
 
     public function edit($pID)
     {
+        if ($this->request->getMethod() == 'POST') {
+            $this->save();
+        }
+
         $this->loadFormAssets();
         $this->set("actionType", t("Update"));
 
@@ -347,11 +355,7 @@ class Products extends DashboardSitePageController
     public function save()
     {
         $data = $this->request->request->all();
-        if ($data['pID']) {
-            $this->edit($data['pID']);
-        } else {
-            $this->add();
-        }
+
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $errors = $this->validate($data);
             $this->error = null; //clear errors
@@ -433,7 +437,6 @@ class Products extends DashboardSitePageController
                     return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 } else {
                     $this->flash('success', t('Product Added'));
-
                     return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 }
             }//if no errors

@@ -23,6 +23,10 @@ class Settings extends DashboardPageController
 {
     public function view()
     {
+        if ($this->request->getMethod() == 'POST') {
+            $this->save();
+        }
+
         $this->loadFormAssets();
         $this->set('thumbnailTypes', $this->getThumbTypesList());
         $this->set("pageSelector", $this->app->make('helper/form/page_selector'));
@@ -141,7 +145,6 @@ class Settings extends DashboardPageController
 
     public function save()
     {
-        $this->view();
         $args = $this->request->request->all();
 
         if ($args && $this->token->validate('community_store')) {
