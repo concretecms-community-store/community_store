@@ -3,20 +3,20 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
 
 class Shipping extends DashboardPageController
 {
     public function view()
     {
-        $this->set("methodTypes", StoreShippingMethodType::getAvailableMethodTypes());
+        $this->set("methodTypes", ShippingMethodType::getAvailableMethodTypes());
     }
 
     public function add($smtID)
     {
         $this->set('pageTitle', t("Add Shipping Method"));
-        $smt = StoreShippingMethodType::getByID($smtID);
+        $smt = ShippingMethodType::getByID($smtID);
         $this->set('smt', $smt);
         $this->set("task", t("Add"));
     }
@@ -24,7 +24,7 @@ class Shipping extends DashboardPageController
     public function edit($smID)
     {
         $this->set('pageTitle', t("Edit Shipping Method"));
-        $sm = StoreShippingMethod::getByID($smID);
+        $sm = ShippingMethod::getByID($smID);
         $smt = $sm->getShippingMethodType();
         $this->set('sm', $sm);
         $this->set('smt', $smt);
@@ -33,7 +33,7 @@ class Shipping extends DashboardPageController
 
     public function delete($smID)
     {
-        $sm = StoreShippingMethod::getByID($smID);
+        $sm = ShippingMethod::getByID($smID);
         $sm->delete();
         $this->flash('success', t('Shipping Method Deleted'));
 
@@ -49,7 +49,7 @@ class Shipping extends DashboardPageController
         if (!$errors->has()) {
             if ($this->request->request->get('shippingMethodID')) {
                 //update
-                $shippingMethod = StoreShippingMethod::getByID($this->request->request->get('shippingMethodID'));
+                $shippingMethod = ShippingMethod::getByID($this->request->request->get('shippingMethodID'));
                 if ($shippingMethod) {
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                     $shippingMethodTypeMethod->update($this->request->request->all());
@@ -62,10 +62,10 @@ class Shipping extends DashboardPageController
                 }
             } else {
                 //first we send the data to the shipping method type.
-                $shippingMethodType = StoreShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
+                $shippingMethodType = ShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->request->request->all());
                 //make a shipping method that correlates with it.
-                StoreShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
+                ShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
                 $this->flash('success', t('Shipping Method Created'));
 
                 return Redirect::to('/dashboard/store/settings/shipping');
@@ -90,7 +90,7 @@ class Shipping extends DashboardPageController
         }
 
         //pass the validator to the shipping method to check for it's own errors
-        $shippingMethodType = StoreShippingMethodType::getByID($data['shippingMethodTypeID']);
+        $shippingMethodType = ShippingMethodType::getByID($data['shippingMethodTypeID']);
         $e = $shippingMethodType->getMethodTypeController()->validate($data, $e);
 
         return $e;

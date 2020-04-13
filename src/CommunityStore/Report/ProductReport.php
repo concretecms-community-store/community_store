@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Report;
 
-use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
-use Concrete\Core\Search\Pagination\Pagination;
 use Pagerfanta\Adapter\ArrayAdapter;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 
 class ProductReport extends AbstractItemList
 {
@@ -21,12 +21,12 @@ class ProductReport extends AbstractItemList
     public function setOrderItemsByRange($from = null, $to = null)
     {
         if (!isset($from)) {
-            $from = StoreOrderList::getDateOfFirstOrder();
+            $from = OrderList::getDateOfFirstOrder();
         }
         if (!$to) {
             $to = date('Y-m-d');
         }
-        $orders = new StoreOrderList();
+        $orders = new OrderList();
         $orders->setFromDate($from);
         $orders->setToDate($to);
         $orders->setPaid(true);
@@ -65,7 +65,7 @@ class ProductReport extends AbstractItemList
                 $pID = $oi->getProductID();
 
                 if ($pID) {
-                    $product = StoreProduct::getByID($pID);
+                    $product = Product::getByID($pID);
                     if (is_object($product)) {
                         $name = $product->getName();
                     } else {

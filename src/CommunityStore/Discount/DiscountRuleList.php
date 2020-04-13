@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\ItemList;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 
 class DiscountRuleList extends ItemList
 {
@@ -63,7 +63,7 @@ class DiscountRuleList extends ItemList
 
     public function getResult($queryRow)
     {
-        $dr = StoreDiscountRule::getByID($queryRow['drID']);
+        $dr = DiscountRule::getByID($queryRow['drID']);
 
         if ($dr) {
             $dr->retrieveStatistics();

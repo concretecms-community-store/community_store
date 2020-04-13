@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 /**
  * @ORM\Entity
@@ -158,7 +158,7 @@ class DiscountRule
 
     public function returnFormattedDiscountedPrice()
     {
-        return StorePrice::format($this->returnDiscountedPrice());
+        return Price::format($this->returnDiscountedPrice());
     }
 
     /**
@@ -515,7 +515,7 @@ class DiscountRule
             }
 
             if ('value' == $this->drDeductType) {
-                return StorePrice::format($this->drValue) . ' ' . t('off');
+                return Price::format($this->drValue) . ' ' . t('off');
             }
         }
 

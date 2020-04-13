@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
@@ -199,7 +200,7 @@ $token = $app->make('token');
 
 <?php
 if ($product->hasVariations()) {
-                $variations = StoreProductVariation::getVariationsForProduct($product);
+                $variations = ProductVariation::getVariationsForProduct($product);
 
                 $variationLookup = [];
 

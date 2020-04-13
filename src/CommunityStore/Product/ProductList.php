@@ -7,8 +7,8 @@ use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as ProductReport;
 
 class ProductList extends AttributedItemList implements PaginationProviderInterface
 {
@@ -296,7 +296,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                 $query->orderBy('pDateAdded', $this->getSortByDirection());
                 break;
             case "popular":
-                $pr = new StoreProductReport();
+                $pr = new ProductReport();
                 $pr->sortByPopularity();
                 $products = $pr->getProducts();
                 $pIDs = [];
@@ -353,7 +353,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
     public function getResult($queryRow)
     {
-        return StoreProduct::getByID($queryRow['pID']);
+        return Product::getByID($queryRow['pID']);
     }
 
     protected function createPaginationObject()

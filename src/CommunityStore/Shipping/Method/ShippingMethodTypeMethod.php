@@ -2,8 +2,8 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 abstract class ShippingMethodTypeMethod extends Controller
 {

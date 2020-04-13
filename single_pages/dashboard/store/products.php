@@ -1,10 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use \Concrete\Core\Page\Page;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use \Concrete\Core\Page\Page;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $listViews = ['view', 'updated', 'removed', 'success'];
@@ -16,7 +16,7 @@ $ps = $app->make('helper/form/page_selector');
 
 <?php if (in_array($controller->getAction(), $addViews)) { //if adding or editing a product
     if (!is_object($product)) {
-        $product = new StoreProduct();
+        $product = new Product();
         $product->setIsUnlimited(true);
         $product->setIsTaxable(true);
         $product->setIsShippable(true);

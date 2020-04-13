@@ -4,21 +4,21 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation as StoreProductLocation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation;
 
 class Categories extends DashboardPageController
 {
     public function view()
     {
-        $pages = StoreProductLocation::getLocationPages();
+        $pages = ProductLocation::getLocationPages();
         $this->set('pageTitle', t('Product Categories'));
         $this->set('pages', $pages);
     }
 
     public function manage($cID)
     {
-        $products = new StoreProductList();
+        $products = new ProductList();
 
         $page = Page::getByID($cID);
 
@@ -44,7 +44,7 @@ class Categories extends DashboardPageController
 
             $count = 0;
 
-            $productLocations = StoreProductLocation::getProductsForLocation($cID);
+            $productLocations = ProductLocation::getProductsForLocation($cID);
 
             $productPositions = $data['products'];
             $productPositions = array_flip($productPositions);

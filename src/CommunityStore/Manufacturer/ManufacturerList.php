@@ -2,11 +2,11 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer;
 
-use Concrete\Core\Search\ItemList\Database\ItemList;
-use Concrete\Core\Search\Pagination\Pagination;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
+use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\ItemList\Database\ItemList;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
 
 class ManufacturerList extends ItemList
 {

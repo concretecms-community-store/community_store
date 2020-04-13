@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
-use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
 
 class Complete extends PageController
 {
@@ -21,11 +21,11 @@ class Complete extends PageController
 
     public function view()
     {
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $lastorderid = $customer->getLastOrderID();
 
         if ($lastorderid) {
-            $order = StoreOrder::getByID($customer->getLastOrderID());
+            $order = Order::getByID($customer->getLastOrderID());
         }
 
         if (is_object($order)) {
@@ -34,8 +34,8 @@ class Complete extends PageController
             return Redirect::to("/cart");
         }
 
-        StoreCart::clear();
-        StoreDiscountCode::clearCartCode();
+        Cart::clear();
+        DiscountCode::clearCartCode();
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();

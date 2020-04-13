@@ -4,9 +4,9 @@ namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 
 class Controller extends BlockController
 {
@@ -35,14 +35,14 @@ class Controller extends BlockController
             $langpath = $al->getCollectionHandle();
         }
 
-        $itemcount = StoreCart::getTotalItemsInCart();
+        $itemcount = Cart::getTotalItemsInCart();
         $this->set("itemCount", $itemcount);
 
         if ($itemcount > 0) {
-            $totals = StoreCalculator::getTotals();
+            $totals = Calculator::getTotals();
 
             if ($totals['total'] > 0) {
-                $this->set('total', StorePrice::format($totals['total']));
+                $this->set('total', Price::format($totals['total']));
             } else {
                 $this->set('total', '');
             }

@@ -5,13 +5,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Checkout as StoreCheckout;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as StoreTaxHelper;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
 
 /**
  * @ORM\Entity
@@ -198,13 +196,13 @@ class TaxRate
         $taxCity = strtolower(trim($this->getTaxCity()));
         $taxVatExclude = 1 == $this->getTaxVatExclude() ? true : false;
         $taxSettingEnabled = '1' == Config::get('community_store.vat_number') ? true : false;
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $customerIsTaxable = false;
 
         // If they have a vat_number check if it's valid and if so, don't apply tax
         $vatIsValid = false;
         $vat_number = $customer->getValue("vat_number");
-        $taxHelper = Application::getFacadeApplication()->make(StoreTaxHelper::class);
+        $taxHelper = Application::getFacadeApplication()->make(TaxHelper::class);
         if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number)) {
             $vatIsValid = true;
         }
@@ -244,14 +242,14 @@ class TaxRate
 
     public function calculate()
     {
-        $cart = StoreCart::getCart();
+        $cart = Cart::getCart();
         $producttaxtotal = 0;
         $shippingtaxtotal = 0;
         if ($cart) {
             foreach ($cart as $cartItem) {
                 $pID = $cartItem['product']['pID'];
                 $qty = $cartItem['product']['qty'];
-                $product = StoreProduct::getByID($pID);
+                $product = Product::getByID($pID);
 
                 if ($cartItem['product']['variation']) {
                     $product->shallowClone = true;
@@ -265,7 +263,7 @@ class TaxRate
                         if (is_object($product->getTaxClass())) {
                             if ($product->getTaxClass()->taxClassContainsTaxRate($this)) {
                                 $taxCalc = Config::get('community_store.calculation');
-                                $productSubTotal = StoreCalculator::getCartItemPrice($cartItem) * $qty;
+                                $productSubTotal = Calculator::getCartItemPrice($cartItem) * $qty;
 
                                 if ('extract' == $taxCalc) {
                                     $taxrate = 1 + ($this->getTaxRate() / 100);
@@ -284,7 +282,7 @@ class TaxRate
         }//if cart
 
         if ('grandtotal' == $this->getTaxBasedOn()) {
-            $shippingTotal = floatval(StoreCalculator::getShippingTotal());
+            $shippingTotal = floatval(Calculator::getShippingTotal());
 
             if ('extract' == $taxCalc) {
                 $taxrate = 1 + ($this->getTaxRate() / 100);

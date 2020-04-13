@@ -5,9 +5,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Database;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Controller extends BlockController
@@ -54,7 +54,7 @@ class Controller extends BlockController
         $this->set('selectedAttributes', $this->getAttributes());
 
         if ($this->relatedPID) {
-            $relatedProduct = StoreProduct::getByID($this->relatedPID);
+            $relatedProduct = Product::getByID($this->relatedPID);
             $this->set('relatedProduct', $relatedProduct);
         }
     }
@@ -92,7 +92,7 @@ class Controller extends BlockController
 
     public function getGroupList()
     {
-        $grouplist = StoreGroupList::getGroupList();
+        $grouplist = GroupList::getGroupList();
         $this->set("grouplist", $grouplist);
     }
 
@@ -176,7 +176,7 @@ class Controller extends BlockController
             }
         }
 
-        $products = new StoreProductList();
+        $products = new ProductList();
 
         if ('current' == $this->filter || 'current_children' == $this->filter) {
             $page = Page::getCurrentPage();
@@ -203,9 +203,9 @@ class Controller extends BlockController
         if ('related' == $this->filter || 'related_product' == $this->filter) {
             if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
-                $product = StoreProduct::getByCollectionID($cID);
+                $product = Product::getByCollectionID($cID);
             } else {
-                $product = StoreProduct::getByID($this->relatedPID);
+                $product = Product::getByID($this->relatedPID);
             }
 
             if (is_object($product)) {

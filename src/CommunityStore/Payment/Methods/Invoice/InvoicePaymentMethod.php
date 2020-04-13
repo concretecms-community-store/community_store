@@ -3,9 +3,9 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Methods\Inv
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 
-class InvoicePaymentMethod extends StorePaymentMethod
+class InvoicePaymentMethod extends PaymentMethod
 {
     public function getName()
     {
@@ -37,7 +37,7 @@ class InvoicePaymentMethod extends StorePaymentMethod
 
     public function checkoutForm()
     {
-        $pmID = StorePaymentMethod::getByHandle('invoice')->getID();
+        $pmID = PaymentMethod::getByHandle('invoice')->getID();
 
         $this->addFooterItem("
             <script type=\"text/javascript\">

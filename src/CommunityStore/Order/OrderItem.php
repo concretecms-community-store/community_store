@@ -2,14 +2,14 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Database;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption as StoreOrderItemOption;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 
 /**
  * @ORM\Entity
@@ -311,7 +311,7 @@ class OrderItem
         $sku = $product->getSKU();
         $variation = $product->getVariation();
 
-        $order = StoreOrder::getByID($oID);
+        $order = Order::getByID($oID);
 
         $orderItem = new self();
         $orderItem->setProductName($productName);
@@ -336,7 +336,7 @@ class OrderItem
         foreach ($data['productAttributes'] as $groupID => $valID) {
             if ('po' == substr($groupID, 0, 2)) {
                 $groupID = str_replace("po", "", $groupID);
-                $optionvalue = StoreProductOptionItem::getByID($valID);
+                $optionvalue = ProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
                     $optionvalue = $csm->t($optionvalue->getName(), 'optionValue');
@@ -357,12 +357,12 @@ class OrderItem
 
             $optionGroupName = '';
 
-            $optiongroup = StoreProductOption::getByID($groupID);
+            $optiongroup = ProductOption::getByID($groupID);
             if ($optiongroup) {
                 $optionGroupName = $csm->t($optiongroup->getName(), 'optionName', null, $groupID);
             }
 
-            $orderItemOption = new StoreOrderItemOption();
+            $orderItemOption = new OrderItemOption();
             $orderItemOption->setOrderItemOptionKey($optionGroupName);
             $orderItemOption->setOrderItemOptionValue($optionvalue);
             $orderItemOption->setOrderItem($orderItem);
@@ -388,7 +388,7 @@ class OrderItem
 
     public function getProductObject()
     {
-        return StoreProduct::getByID($this->getProductID());
+        return Product::getByID($this->getProductID());
     }
 
     public function save()

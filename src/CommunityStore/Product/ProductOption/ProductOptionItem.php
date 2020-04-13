@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOpti
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -182,7 +182,7 @@ class ProductOptionItem
         return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
 
-    public static function removeOptionItemsForProduct(StoreProduct $product, $excluding = [])
+    public static function removeOptionItemsForProduct(Product $product, $excluding = [])
     {
         if (!is_array($excluding)) {
             $excluding = [];

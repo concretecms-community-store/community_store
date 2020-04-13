@@ -1,31 +1,31 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
-use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Template as PageTemplate;
-use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\File\Set\Set as FileSet;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
-use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
+use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
 
 class Installer
 {
@@ -107,7 +107,7 @@ class Installer
             PageType::add(
                 [
                     'handle' => 'store_product',
-                    'name' => 'Product Page',
+                    'name' => t('Product'),
                     'defaultTemplate' => $template,
                     'allowedTemplates' => 'C',
                     'templates' => [$template],
@@ -148,9 +148,9 @@ class Installer
 
     public static function installPaymentMethod($handle, $name, $pkg = null, $displayName = null, $enabled = true)
     {
-        $pm = StorePaymentMethod::getByHandle($handle);
+        $pm = PaymentMethod::getByHandle($handle);
         if (!is_object($pm)) {
-            StorePaymentMethod::add($handle, $name, $pkg, $displayName, $enabled);
+            PaymentMethod::add($handle, $name, $pkg, $displayName, $enabled);
         }
     }
 
@@ -162,9 +162,9 @@ class Installer
 
     public static function installShippingMethod($handle, $name, $pkg)
     {
-        $smt = StoreShippingMethodType::getByHandle($handle);
+        $smt = ShippingMethodType::getByHandle($handle);
         if (!is_object($smt)) {
-            StoreShippingMethodType::add($handle, $name, $pkg);
+            ShippingMethodType::add($handle, $name, $pkg);
         }
     }
 
@@ -407,7 +407,7 @@ class Installer
 
     public static function installOrderStatuses($pkg)
     {
-        $table = StoreOrderStatus::getTableName();
+        $table = OrderStatus::getTableName();
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $statuses = [
@@ -422,19 +422,19 @@ class Installer
         $db->query("DELETE FROM " . $table);
 
         foreach ($statuses as $status) {
-            StoreOrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
+            OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
         }
     }
 
     public static function installDefaultTaxClass($pkg)
     {
-        $defaultTaxClass = StoreTaxClass::getByHandle("default");
+        $defaultTaxClass = TaxClass::getByHandle("default");
         if (!is_object($defaultTaxClass)) {
             $data = [
                 'taxClassName' => t('Default'),
                 'taxClassLocked' => true,
             ];
-            $defaultTaxClass = StoreTaxClass::add($data);
+            $defaultTaxClass = TaxClass::add($data);
         }
     }
 

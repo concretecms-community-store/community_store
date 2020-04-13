@@ -1,15 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Concrete\Core\Support\Facade\Application;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Package\Package;
 use Concrete\Core\View\View;
-use Concrete\Core\Support\Facade\Session;
+use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod as StoreShippingMethodTypeMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as StoreShippingMethodType;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 
 /**
  * @ORM\Entity
@@ -103,7 +101,7 @@ class ShippingMethod
 
     public function getShippingMethodType()
     {
-        return StoreShippingMethodType::getByID($this->smtID);
+        return ShippingMethodType::getByID($this->smtID);
     }
 
     public function getShippingMethodTypeMethod()

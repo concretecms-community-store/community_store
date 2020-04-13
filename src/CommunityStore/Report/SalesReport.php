@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Report;
 
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 
-class SalesReport extends StoreOrderList
+class SalesReport extends OrderList
 {
     public function __construct()
     {

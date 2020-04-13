@@ -1,23 +1,22 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Package\PackageService;
+use Punic\Currency;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Package\Package;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\File\Set\SetList;
-use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use Punic\Currency;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as OrderStatus;
 
 class Settings extends DashboardPageController
 {
@@ -32,8 +31,8 @@ class Settings extends DashboardPageController
         $this->set("pageSelector", $this->app->make('helper/form/page_selector'));
         $this->set("countries", $this->app->make('helper/lists/countries')->getCountries());
         $this->set("states", $this->app->make('helper/lists/states_provinces')->getStates());
-        $this->set("installedPaymentMethods", StorePaymentMethod::getMethods());
-        $this->set("orderStatuses", StoreOrderStatus::getAll());
+        $this->set("installedPaymentMethods", PaymentMethod::getMethods());
+        $this->set("orderStatuses", OrderStatus::getAll());
 
         $groupList = [];
 
@@ -237,7 +236,7 @@ class Settings extends DashboardPageController
                     }
 
                     foreach ($paymentData as $pmID => $data) {
-                        $pm = StorePaymentMethod::getByID($pmID);
+                        $pm = PaymentMethod::getByID($pmID);
                         $pm->setEnabled($data['paymentMethodEnabled']);
                         $pm->setDisplayName($data['paymentMethodDisplayName']);
                         $pm->setButtonLabel($data['paymentMethodButtonLabel']);
@@ -260,7 +259,7 @@ class Settings extends DashboardPageController
     {
         if (isset($data['osID'])) {
             foreach ($data['osID'] as $key => $id) {
-                $orderStatus = StoreOrderStatus::getByID($id);
+                $orderStatus = OrderStatus::getByID($id);
                 $orderStatusSettings = [
                     'osName' => ((isset($data['osName'][$key]) && '' != $data['osName'][$key]) ?
                         $data['osName'][$key] : $orderStatus->getReadableHandle()),
@@ -271,10 +270,10 @@ class Settings extends DashboardPageController
                 $orderStatus->update($orderStatusSettings);
             }
             if (isset($data['osIsStartingStatus'])) {
-                StoreOrderStatus::setNewStartingStatus(StoreOrderStatus::getByID($data['osIsStartingStatus'])->getHandle());
+                OrderStatus::setNewStartingStatus(OrderStatus::getByID($data['osIsStartingStatus'])->getHandle());
             } else {
-                $orderStatuses = StoreOrderStatus::getAll();
-                StoreOrderStatus::setNewStartingStatus($orderStatuses[0]->getHandle());
+                $orderStatuses = OrderStatus::getAll();
+                OrderStatus::setNewStartingStatus($orderStatuses[0]->getHandle());
             }
         }
     }
@@ -294,7 +293,7 @@ class Settings extends DashboardPageController
             $e->add(t('At least one payment method must be enabled'));
         }
         foreach ($args['paymentMethodEnabled'] as $pmID => $value) {
-            $pm = StorePaymentMethod::getByID($pmID);
+            $pm = PaymentMethod::getByID($pmID);
             $controller = $pm->getMethodController();
             $e = $controller->validate($args, $e);
         }
@@ -305,7 +304,7 @@ class Settings extends DashboardPageController
 
         //before changing tax settings to "Extract", make sure there's only one rate per class
         if ('extract' == $args['calculation']) {
-            $taxClasses = StoreTaxClass::getTaxClasses();
+            $taxClasses = TaxClass::getTaxClasses();
             foreach ($taxClasses as $taxClass) {
                 $taxClassRates = $taxClass->getTaxClassRates();
                 if (count($taxClassRates) > 1) {

@@ -2,12 +2,11 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Package\Package;
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\View\View;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 /**
  * @ORM\Entity

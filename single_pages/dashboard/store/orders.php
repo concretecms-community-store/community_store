@@ -3,10 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $dh = $app->make('helper/date');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
-use \Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\User\UserInfoRepository;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 ?>
 

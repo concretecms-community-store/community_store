@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -60,7 +60,7 @@ class ProductUserGroup
         return $em->find('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup', $pgID);
     }
 
-    public static function getUserGroupsForProduct(StoreProduct $product)
+    public static function getUserGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
@@ -78,7 +78,7 @@ class ProductUserGroup
         return $groupIDs;
     }
 
-    public static function addUserGroupsForProduct(array $data, StoreProduct $product)
+    public static function addUserGroupsForProduct(array $data, Product $product)
     {
         //clear out existing groups
         self::removeUserGroupsForProduct($product);
@@ -91,7 +91,7 @@ class ProductUserGroup
         }
     }
 
-    public static function removeUserGroupsForProduct(StoreProduct $product)
+    public static function removeUserGroupsForProduct(Product $product)
     {
         $existingUserGroups = self::getUserGroupsForProduct($product);
         foreach ($existingUserGroups as $group) {

@@ -9,16 +9,16 @@ use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
 
 class Products extends DashboardSitePageController
 {
     public function view($gID = null)
     {
-        $productsList = new StoreProductList();
+        $productsList = new ProductList();
         $productsList->setItemsPerPage(20);
         $productsList->setGroupID($gID);
         $productsList->setActiveOnly(false);
@@ -57,7 +57,7 @@ class Products extends DashboardSitePageController
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
 
-        $grouplist = StoreGroupList::getGroupList();
+        $grouplist = GroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
 
@@ -70,7 +70,7 @@ class Products extends DashboardSitePageController
 
     public function translate($pID)
     {
-        $product = StoreProduct::getByID($pID);
+        $product = Product::getByID($pID);
 
         if (!$product) {
             return Redirect::to('/dashboard/store/multilingual/');
@@ -240,7 +240,7 @@ class Products extends DashboardSitePageController
             $productID = $this->request->request->get('pID');
 
             $mlist = Section::getList();
-            $product = StoreProduct::getByID($productID);
+            $product = Product::getByID($productID);
 
             $productPage = $product->getProductPage();
 

@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 $csm = $app->make('cs/helper/multilingual');
 
 ?>
@@ -68,14 +68,14 @@ $csm = $app->make('cs/helper/multilingual');
                                         if (method_exists($checkboxSettings, 'getCheckboxLabel')) {
                                             $checkboxLabel = $checkboxSettings->getCheckboxLabel();
                                         }
-                                        
+
                                         $checkboxLabel = empty($checkboxLabel) ? $option : $checkboxLabel;
-                                        
+
                                         echo h($csm->t($checkboxLabel, 'productAttributeLabel'));
                                     } else {
                                         echo h($csm->t($option, 'productAttributeValue'));
                                     }
-                                    
+
                                     ?>
                                     <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
                                     <span class="store-product-filter-block-count">(<?= $count; ?>)</span>
@@ -118,7 +118,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         </script>
                     <?php } else { ?>
-                        <?php echo StorePrice::format($minPrice); ?>
+                        <?php echo Price::format($minPrice); ?>
                     <?php } ?>
 
                     <?php } ?>

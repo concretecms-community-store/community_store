@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Console\Command;
 
+use Exception;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Exception;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList;
 
 class ResetCommand extends Command
 {
@@ -64,7 +64,7 @@ EOT
         }
 
         if ('all' == $operationType || 'orders' == $operationType) {
-            $orderList = new StoreOrderList();
+            $orderList = new OrderList();
             $orders = $orderList->getResults();
             $orderCount = count($orders);
 
@@ -75,7 +75,7 @@ EOT
         }
 
         if ('all' == $operationType || 'products' == $operationType) {
-            $productList = new StoreProductList();
+            $productList = new ProductList();
             $productList->setActiveOnly(false);
             $productList->setShowOutOfStock(true);
             $products = $productList->getResults();
@@ -88,7 +88,7 @@ EOT
         }
 
         if ('all' == $operationType || 'discounts' == $operationType) {
-            $discountList = new StoreDiscountRuleList();
+            $discountList = new DiscountRuleList();
             $discounts = $discountList->getResults();
 
             $discountCount = 0;

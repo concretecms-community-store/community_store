@@ -7,7 +7,6 @@ use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
 use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\Core\Attribute\ObjectTrait;
@@ -17,22 +16,23 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey as StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue as StoreOrderValue;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount as StoreOrderDiscount;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory as StoreOrderStatusHistory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as Tax;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderDiscount;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatusHistory;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
 /**
  * @ORM\Entity
@@ -515,13 +515,13 @@ class Order
 
         $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
 
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $now = new \DateTime();
-        $smName = StoreShippingMethod::getActiveShippingLabel();
-        $sShipmentID = StoreShippingMethod::getActiveShipmentID();
-        $sRateID = StoreShippingMethod::getActiveRateID();
-        $sInstructions = StoreCart::getShippingInstructions();
-        $totals = StoreCalculator::getTotals();
+        $smName = ShippingMethod::getActiveShippingLabel();
+        $sShipmentID = ShippingMethod::getActiveShipmentID();
+        $sRateID = ShippingMethod::getActiveRateID();
+        $sInstructions = Cart::getShippingInstructions();
+        $totals = Calculator::getTotals();
         $shippingTotal = $totals['shippingTotal'];
         $taxes = $totals['taxes'];
         $total = $totals['total'];
@@ -578,15 +578,15 @@ class Order
 
         $order->save();
 
-        $discounts = StoreCart::getDiscounts();
+        $discounts = Cart::getDiscounts();
         foreach ($discounts as $discount) {
-            $orderDiscount = new StoreOrderDiscount();
+            $orderDiscount = new OrderDiscount();
             $orderDiscount->setOrder($order);
             if ('code' == $discount->getTrigger()) {
                 $orderDiscount->setCode(Session::get('communitystore.code'));
 
                 if ($discount->isSingleUse()) {
-                    $code = StoreDiscountCode::getByCode(Session::get('communitystore.code'));
+                    $code = DiscountCode::getByCode(Session::get('communitystore.code'));
                     if ($code) {
                         $code->setOID($order->getOrderID());
                         $code->save();
@@ -606,10 +606,10 @@ class Order
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
         $order->saveOrderChoices($order);
-        $order->addOrderItems(StoreCart::getCart(), $discountRatio);
+        $order->addOrderItems(Cart::getCart(), $discountRatio);
 
-        $event = new StoreOrderEvent($order);
-        Events::dispatch(StoreOrderEvent::ORDER_CREATED, $event);
+        $event = new OrderEvent($order);
+        Events::dispatch(OrderEvent::ORDER_CREATED, $event);
 
         if (!$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference, true);
@@ -624,8 +624,8 @@ class Order
      */
     public function addCustomerAddress($customer = null, $includeShipping = true)
     {
-        if (!$customer instanceof StoreCustomer) {
-            $customer = new StoreCustomer();
+        if (!$customer instanceof Customer) {
+            $customer = new Customer();
         }
         $email = $customer->getEmail();
         $billing_first_name = Session::get('billing_first_name');
@@ -669,7 +669,7 @@ class Order
 
         $sendReceipt = true;
         if ($pmID) {
-            $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
+            $paymentMethodUsed = PaymentMethod::getByID($this->getPaymentMethodID());
 
             if ($paymentMethodUsed) {
                 // if the payment method actually is a payment (as opposed to an invoice), mark order as paid
@@ -681,13 +681,13 @@ class Order
         }
 
         foreach ($this->getOrderItems() as $orderItem) {
-            $product = StoreProduct::getByID($orderItem->getProductID());
+            $product = Product::getByID($orderItem->getProductID());
 
             if ($product) {
                 $variationID = $orderItem->getVariationID();
 
                 if ($variationID) {
-                    $variation = StoreProductVariation::getByID($variationID);
+                    $variation = ProductVariation::getByID($variationID);
 
                     if ($variation) {
                         if (!$variation->isUnlimited()) {
@@ -699,9 +699,9 @@ class Order
                     }
 
                 } elseif (!$product->isUnlimited()) {
-                    $inStock = $product->getQty();
+                    $inStock = $product->getStockLevel();
                     $newStock = $inStock - $orderItem->getQuantity();
-                    $product->updateProductQty($newStock);
+                    $product->setStockLevel($newStock);
                 }
 
             }
@@ -712,8 +712,8 @@ class Order
         $this->save();
 
         // create order event and dispatch
-        $event = new StoreOrderEvent($this);
-        Events::dispatch(StoreOrderEvent::ORDER_PLACED, $event);
+        $event = new OrderEvent($this);
+        Events::dispatch(OrderEvent::ORDER_PLACED, $event);
 
         // notifications
         $this->sendNotifications();
@@ -728,16 +728,16 @@ class Order
 
     public function completePayment($sameRequest = false)
     {
-        $event = new StoreOrderEvent($this);
-        Events::dispatch(StoreOrderEvent::ORDER_BEFORE_PAYMENT_COMPLETE, $event);
+        $event = new OrderEvent($this);
+        Events::dispatch(OrderEvent::ORDER_BEFORE_PAYMENT_COMPLETE, $event);
 
         $this->setPaid(new \DateTime());
         $this->completePostPaymentProcesses($sameRequest);
         $this->save();
 
         // create payment event and dispatch
-        $event = new StoreOrderEvent($this);
-        Events::dispatch(StoreOrderEvent::ORDER_PAYMENT_COMPLETE, $event);
+        $event = new OrderEvent($this);
+        Events::dispatch(OrderEvent::ORDER_PAYMENT_COMPLETE, $event);
     }
 
     public function completePostPaymentProcesses($sameRequest = false)
@@ -764,9 +764,9 @@ class Order
         }
 
         if ($sameRequest) {
-            $customer = new StoreCustomer();  // fetch current customer
+            $customer = new Customer();  // fetch current customer
         } else {
-            $customer = new StoreCustomer($this->getCustomerID()); // find customer from order as it's a remote call
+            $customer = new Customer($this->getCustomerID()); // find customer from order as it's a remote call
         }
 
         $user = $customer->getUserInfo();
@@ -807,9 +807,9 @@ class Order
                     $newusername .= rand(0, 9);
                 }
 
-                $event = new StoreOrderEvent($this);
+                $event = new OrderEvent($this);
                 /* @var $uae \Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent */
-                $uae = Events::dispatch(StoreOrderEvent::ORDER_BEFORE_USER_ADD, $event);
+                $uae = Events::dispatch(OrderEvent::ORDER_BEFORE_USER_ADD, $event);
 
                 // Did the event modify the user data?
                 if ($uae->userDataUpdated()) {
@@ -987,7 +987,7 @@ class Order
         }
 
         // Create "on_before_community_store_order_notification_emails" event and dispatch
-        $event = new StoreOrderEvent($this);
+        $event = new OrderEvent($this);
         $event->setNotificationEmails($notificationEmails);
         $event = Events::dispatch('on_before_community_store_order_notification_emails', $event);
         $notificationEmails = $event->getNotificationEmails();
@@ -1044,7 +1044,7 @@ class Order
         $pmID = $this->getPaymentMethodID();
 
         if ($pmID) {
-            $paymentMethodUsed = StorePaymentMethod::getByID($this->getPaymentMethodID());
+            $paymentMethodUsed = PaymentMethod::getByID($this->getPaymentMethodID());
         }
 
         $paymentInstructions = '';
@@ -1075,7 +1075,7 @@ class Order
     {
         $taxCalc = Config::get('community_store.calculation');
         foreach ($cart as $cartItem) {
-            $taxes = StoreTax::getTaxForProduct($cartItem);
+            $taxes = Tax::getTaxForProduct($cartItem);
             $taxProductTotal = [];
             $taxProductIncludedTotal = [];
             $taxProductLabels = [];
@@ -1094,7 +1094,7 @@ class Order
             $taxProductIncludedTotal = implode(',', $taxProductIncludedTotal);
             $taxProductLabels = implode(',', $taxProductLabels);
 
-            $orderItem = StoreOrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels, $discountRatio);
+            $orderItem = OrderItem::add($cartItem, $this->getOrderID(), $taxProductTotal, $taxProductIncludedTotal, $taxProductLabels, $discountRatio);
             $this->orderItems->add($orderItem);
         }
     }
@@ -1143,20 +1143,20 @@ class Order
     public function updateStatus($status = null)
     {
         if ($status) {
-            StoreOrderStatusHistory::updateOrderStatusHistory($this, $status);
+            OrderStatusHistory::updateOrderStatusHistory($this, $status);
         } else {
-            StoreOrderStatusHistory::updateOrderStatusHistory($this, StoreOrderStatus::getStartingStatus()->getHandle());
+            OrderStatusHistory::updateOrderStatusHistory($this, OrderStatus::getStartingStatus()->getHandle());
         }
     }
 
     public function getStatusHistory()
     {
-        return StoreOrderStatusHistory::getForOrder($this);
+        return OrderStatusHistory::getForOrder($this);
     }
 
     public function getStatus()
     {
-        $history = StoreOrderStatusHistory::getForOrder($this);
+        $history = OrderStatusHistory::getForOrder($this);
 
         if (!empty($history)) {
             $laststatus = $history[0];
@@ -1169,7 +1169,7 @@ class Order
 
     public function getStatusHandle()
     {
-        $history = StoreOrderStatusHistory::getForOrder($this);
+        $history = OrderStatusHistory::getForOrder($this);
 
         if (!empty($history)) {
             $laststatus = $history[0];

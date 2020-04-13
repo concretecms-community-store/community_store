@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $dh = $app->make('helper/date');
@@ -200,9 +200,9 @@ $dh = $app->make('helper/date');
                         echo "</ul>";
                     } ?>
                         </td>
-                        <td class="text-right"><?= StorePrice::format($item->getPricePaid()); ?></td>
+                        <td class="text-right"><?= Price::format($item->getPricePaid()); ?></td>
                         <td class="text-right"><?= $item->getQuantity(); ?> <?= h($item->getQuantityLabel()); ?></td>
-                        <td class="text-right"><?= StorePrice::format($item->getSubTotal()); ?></td>
+                        <td class="text-right"><?= Price::format($item->getSubTotal()); ?></td>
                     </tr>
                     <?php
                 }
@@ -212,7 +212,7 @@ $dh = $app->make('helper/date');
             <tfoot>
             <tr>
                 <td colspan="4" class="text-right"><strong><?= t("Items Subtotal"); ?>:</strong></td>
-                <td class="text-right" ><?= StorePrice::format($order->getSubTotal()); ?></td>
+                <td class="text-right" ><?= Price::format($order->getSubTotal()); ?></td>
             </tr>
             </tfoot>
         </table>
@@ -237,7 +237,7 @@ $dh = $app->make('helper/date');
                 ?>
                     <tr>
                         <td><?= h($discount['odDisplay']); ?></td>
-                        <td><?= ($discount['odValue'] > 0 ? StorePrice::format($discount['odValue']) : \Punic\Number::formatPercent($discount['odPercentage'] / 100)); ?></td>
+                        <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : \Punic\Number::formatPercent($discount['odPercentage'] / 100)); ?></td>
                     </tr>
                 <?php
             } ?>
@@ -250,7 +250,7 @@ $dh = $app->make('helper/date');
         <?php if ($order->isShippable()) {
             ?>
             <p>
-                <strong><?= t("Shipping"); ?>: </strong><?= StorePrice::format($order->getShippingTotal()); ?>
+                <strong><?= t("Shipping"); ?>: </strong><?= Price::format($order->getShippingTotal()); ?>
             </p>
         <?php
         } ?>
@@ -264,7 +264,7 @@ $dh = $app->make('helper/date');
                 <?php foreach ($order->getTaxes() as $tax) {
                 ?>
                     <strong><?= h($tax['label']); ?>
-                        :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']); ?><br>
+                        :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']); ?><br>
                 <?php
             } ?>
             </p>
@@ -273,7 +273,7 @@ $dh = $app->make('helper/date');
 
 
         <p>
-            <strong><?= t("Grand Total"); ?>: </strong><?= StorePrice::format($order->getTotal()); ?>
+            <strong><?= t("Grand Total"); ?>: </strong><?= Price::format($order->getTotal()); ?>
         </p>
         <p>
             <strong><?= t("Payment Method"); ?>: </strong><?= t($order->getPaymentMethodName()); ?><br>

@@ -2,11 +2,9 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
-use Database;
-use Config;
 
 class Tax
 {
@@ -40,7 +38,7 @@ class Tax
                         $tax = false;
                     }
                     if (true == $format) {
-                        $taxAmount = StorePrice::format($taxAmount);
+                        $taxAmount = Price::format($taxAmount);
                     }
                     $taxes[] = [
                         'name' => $taxRate->getTaxLabel(),
@@ -60,7 +58,7 @@ class Tax
 
     public static function getTaxForProduct($cartItem)
     {
-        $product = StoreProduct::getByID($cartItem['product']['pID']);
+        $product = Product::getByID($cartItem['product']['pID']);
 
         if ($cartItem['product']['variation']) {
             $product->shallowClone = true;

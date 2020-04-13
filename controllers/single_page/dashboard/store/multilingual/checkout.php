@@ -5,20 +5,20 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as ShippingMethod;
 
 class Checkout extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set("paymentMethods", StorePaymentMethod::getMethods());
-        $this->set("shippingMethods", StoreShippingMethod::getMethods());
-        $this->set("taxRates", StoreTax::getTaxRates());
+        $this->set("paymentMethods", PaymentMethod::getMethods());
+        $this->set("shippingMethods", ShippingMethod::getMethods());
+        $this->set("taxRates", Tax::getTaxRates());
         $this->set("discountRules", DiscountRule::getRules());
 
         $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');

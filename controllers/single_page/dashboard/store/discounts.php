@@ -7,16 +7,16 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList as StoreDiscountRuleList;
 
 class Discounts extends DashboardPageController
 {
     public function view()
     {
-        $discountRuleList = new StoreDiscountRuleList();
+        $discountRuleList = new DiscountRuleList();
         $discountRuleList->setItemsPerPage(10);
 
         $keywords = trim($this->request->query->get('keywords'));
@@ -73,7 +73,7 @@ class Discounts extends DashboardPageController
     public function edit($drID)
     {
         $this->requireAsset('selectize');
-        $discountRule = StoreDiscountRule::getByID($drID);
+        $discountRule = DiscountRule::getByID($drID);
 
         $this->set('discountRule', $discountRule);
         $this->set('pageTitle', t('Edit Discount Rule'));
@@ -106,7 +106,7 @@ class Discounts extends DashboardPageController
 
     public function codes($drID)
     {
-        $discountRule = StoreDiscountRule::getByID($drID);
+        $discountRule = DiscountRule::getByID($drID);
 
         $this->set('discountRule', $discountRule);
         if ($discountRule) {
@@ -127,7 +127,7 @@ class Discounts extends DashboardPageController
     {
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $data = $this->request->request->all();
-            $dr = StoreDiscountRule::getByID($data['drID']);
+            $dr = DiscountRule::getByID($data['drID']);
 
             if ($dr) {
                 $dr->delete();
@@ -144,7 +144,7 @@ class Discounts extends DashboardPageController
     {
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $data = $this->request->request->all();
-            $dc = StoreDiscountCode::getByID($data['dcID']);
+            $dc = DiscountCode::getByID($data['dcID']);
 
             if ($dc) {
                 $ruleid = $dc->getDiscountRule()->getID();
@@ -164,7 +164,7 @@ class Discounts extends DashboardPageController
 
             $codes = trim($data['codes']);
 
-            $discountRule = StoreDiscountRule::getByID($drID);
+            $discountRule = DiscountRule::getByID($drID);
             if ($codes && $discountRule) {
                 $codes = str_replace(",", "\n", $codes);
                 $codes = explode("\n", $codes);
@@ -176,7 +176,7 @@ class Discounts extends DashboardPageController
                     $code = trim($code);
 
                     if ($code) {
-                        if (!StoreDiscountCode::add($discountRule, $code)) {
+                        if (!DiscountCode::add($discountRule, $code)) {
                             $failed[] = $code;
                         } else {
                             ++$successcount;
@@ -204,15 +204,15 @@ class Discounts extends DashboardPageController
                 $this->edit($data['drID']);
             }
 
-            $errors = StoreDiscountCode::validate($data);
+            $errors = DiscountCode::validate($data);
             if (!$errors->has()) {
                 if ($data['drID']) {
-                    StoreDiscountRule::edit($data['drID'], $data);
+                    DiscountRule::edit($data['drID'], $data);
                     $this->flash('success', t('Discount Rule Updated'));
 
                     return Redirect::to('/dashboard/store/discounts/edit/' . $data['drID']);
                 } else {
-                    $discountrule = StoreDiscountRule::add($data);
+                    $discountrule = DiscountRule::add($data);
                     if ('code' == $discountrule->getTrigger()) {
                         return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
                     } else {

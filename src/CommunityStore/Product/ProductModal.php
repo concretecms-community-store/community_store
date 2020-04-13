@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\View\View;
 use Concrete\Core\Routing\Redirect;
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Core\Controller\Controller;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 class ProductModal extends Controller
 {
@@ -19,7 +19,7 @@ class ProductModal extends Controller
         }
 
         if ($pID) {
-            $product = StoreProduct::getByID($pID);
+            $product = Product::getByID($pID);
 
             if ($product) {
                 if (Filesystem::exists(DIR_BASE . "/application/elements/product_modal.php")) {

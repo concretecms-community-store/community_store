@@ -4,8 +4,8 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOpti
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 
 /**
  * @ORM\Entity
@@ -193,14 +193,14 @@ class ProductOption
         return $em->find(get_class(), $id);
     }
 
-    public static function getOptionsForProduct(StoreProduct $product)
+    public static function getOptionsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function removeOptionsForProduct(StoreProduct $product, $excluding = [])
+    public static function removeOptionsForProduct(Product $product, $excluding = [])
     {
         if (!is_array($excluding)) {
             $excluding = [];
@@ -282,7 +282,7 @@ class ProductOption
     public static function addProductOptions($data, $product)
     {
         self::removeOptionsForProduct($product, $data['poID']);
-        StoreProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
+        ProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
 
         if (is_array($data['poSort'])) {
             $count = count($data['poSort']);
@@ -312,7 +312,7 @@ class ProductOption
                         if ($itemsInGroup > 0) {
                             for ($gi = 0; $gi < $itemsInGroup; $gi++, $ii++) {
                                 if ($data['poiID'][$ii] > 0) {
-                                    $optionItem = StoreProductOptionItem::getByID($data['poiID'][$ii]);
+                                    $optionItem = ProductOptionItem::getByID($data['poiID'][$ii]);
                                     if ($optionItem) {
                                         $optionItem->update(
                                             $data['poiName'][$ii],
@@ -325,7 +325,7 @@ class ProductOption
                                     }
                                 } else {
                                     if ($data['poiName'][$ii]) {
-                                        $optionItem = StoreProductOptionItem::add(
+                                        $optionItem = ProductOptionItem::add(
                                             $option,
                                             $data['poiName'][$ii],
                                             $data['poiSort'][$ii],

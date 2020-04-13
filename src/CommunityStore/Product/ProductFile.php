@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -73,14 +73,14 @@ class ProductFile
         return $em->find(get_class(), $id);
     }
 
-    public static function getFilesForProduct(StoreProduct $product)
+    public static function getFilesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function getFileObjectsForProduct(StoreProduct $product)
+    public static function getFileObjectsForProduct(Product $product)
     {
         $results = self::getFilesForProduct($product);
         $fileObjects = [];
@@ -91,7 +91,7 @@ class ProductFile
         return $fileObjects;
     }
 
-    public static function addFilesForProduct(array $files, StoreProduct $product)
+    public static function addFilesForProduct(array $files, Product $product)
     {
         self::removeFilesForProduct($product);
         //add new ones.
@@ -110,7 +110,7 @@ class ProductFile
         }
     }
 
-    public static function removeFilesForProduct(StoreProduct $product)
+    public static function removeFilesForProduct(Product $product)
     {
         $existingFiles = self::getFilesForProduct($product);
         foreach ($existingFiles as $file) {

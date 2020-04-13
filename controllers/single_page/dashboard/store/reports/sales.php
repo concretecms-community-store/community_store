@@ -6,15 +6,15 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport as StoreSalesReport;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
 
 class Sales extends DashboardPageController
 {
     public function view()
     {
-        $sr = new StoreSalesReport();
+        $sr = new SalesReport();
         $this->set('sr', $sr);
         $this->requireAsset('chartist');
         $today = date('Y-m-d');
@@ -36,7 +36,7 @@ class Sales extends DashboardPageController
         $ordersTotals = $sr::getTotalsByRange($dateFrom, $dateTo);
         $this->set('ordersTotals', $ordersTotals);
 
-        $orderList = new StoreOrderList();
+        $orderList = new OrderList();
         $orderList->setFromDate($dateFrom);
         $orderList->setToDate($dateTo);
         $orderList->setItemsPerPage(10);
@@ -70,7 +70,7 @@ class Sales extends DashboardPageController
         }
 
         // get orders and set the from and to
-        $orders = new StoreOrderList();
+        $orders = new OrderList();
         $orders->setFromDate($from);
         $orders->setToDate($to);
         //$orders->setItemsPerPage(10);

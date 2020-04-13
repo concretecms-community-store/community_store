@@ -6,11 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem as StoreProductVariationOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem;
 
 /**
  * @ORM\Entity
@@ -239,7 +238,7 @@ class ProductVariation
 
     public function getFormattedVariationPrice()
     {
-        return StorePrice::format($this->pvPrice);
+        return Price::format($this->pvPrice);
     }
 
     /**
@@ -276,7 +275,7 @@ class ProductVariation
 
     public function getFormattedVariationSalePrice()
     {
-        return StorePrice::format($this->pvSalePrice);
+        return Price::format($this->pvSalePrice);
     }
 
     /**
@@ -478,7 +477,7 @@ class ProductVariation
         }
     }
 
-    public static function addVariations(array $data, StoreProduct $product)
+    public static function addVariations(array $data, Product $product)
     {
         $options = $product->getOptions();
 
@@ -540,10 +539,10 @@ class ProductVariation
                     );
 
                     foreach ($optioncombo as $optionvalue) {
-                        $option = StoreProductOptionItem::getByID($optionvalue);
+                        $option = ProductOptionItem::getByID($optionvalue);
 
                         if ($option) {
-                            $variationoption = new StoreProductVariationOptionItem();
+                            $variationoption = new ProductVariationOptionItem();
                             $variationoption->setOptionItem($option);
                             $variationoption->setVariation($variation);
                             $variationoption->save(true);
@@ -671,7 +670,7 @@ class ProductVariation
         }
     }
 
-    public static function getVariationsForProduct(StoreProduct $product)
+    public static function getVariationsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
@@ -685,7 +684,7 @@ class ProductVariation
         $em->flush();
     }
 
-    public static function removeVariationsForProduct(StoreProduct $product, $excluding = [])
+    public static function removeVariationsForProduct(Product $product, $excluding = [])
     {
         if (!is_array($excluding)) {
             $excluding = [];

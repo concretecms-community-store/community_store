@@ -2,13 +2,13 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
 
 /**
  * @ORM\Entity
@@ -176,7 +176,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinRange()
     {
-        $subtotal = StoreCalculator::getSubTotal();
+        $subtotal = Calculator::getSubTotal();
         $max = $this->getMaximumAmount();
         if (0 != $max) {
             if ($subtotal >= $this->getMinimumAmount() && $subtotal <= $this->getMaximumAmount()) {
@@ -193,7 +193,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinWeight()
     {
-        $totalWeight = StoreCart::getCartWeight();
+        $totalWeight = Cart::getCartWeight();
         $maxWeight = $this->getMaximumWeight();
         if (0 != $maxWeight) {
             if ($totalWeight >= $this->getMinimumWeight() && $totalWeight <= $this->getMaximumWeight()) {
@@ -210,7 +210,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinSelectedCountries()
     {
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $custCountry = $customer->getValue('shipping_address')->country;
         if ('all' != $this->getCountries()) {
             $selectedCountries = explode(',', $this->getCountriesSelected());
@@ -228,7 +228,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
     {
         $offers = [];
 
-        $offer = new StoreShippingMethodOffer();
+        $offer = new ShippingMethodOffer();
         $offer->setRate($this->getRate());
 
         $offers[] = $offer;

@@ -6,14 +6,13 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Controller extends BlockController
@@ -53,7 +52,7 @@ class Controller extends BlockController
         $this->set('groupfilters', $this->getGroupFilters());
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         if ($this->relatedPID) {
-            $relatedProduct = StoreProduct::getByID($this->relatedPID);
+            $relatedProduct = Product::getByID($this->relatedPID);
             $this->set('relatedProduct', $relatedProduct);
         }
     }
@@ -77,7 +76,7 @@ class Controller extends BlockController
 
     public function getGroupList()
     {
-        $grouplist = StoreGroupList::getGroupList();
+        $grouplist = GroupList::getGroupList();
         $this->set("grouplist", $grouplist);
     }
 
@@ -86,7 +85,7 @@ class Controller extends BlockController
         // $app = Application::getFacadeApplication();
         $request = $this->app->make(Request::class);
 
-        $products = new StoreProductList();
+        $products = new ProductList();
 
         // checks in case sort order was inadvertantly set to an option that doesn't work with the current filter
         if ('category' == $this->sortOrder && !('current' == $this->filter || 'page' == $this->filter)) {
@@ -151,7 +150,7 @@ class Controller extends BlockController
         if ('related' == $this->filter || 'related_product' == $this->filter) {
             if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
-                $product = StoreProduct::getByCollectionID($cID);
+                $product = Product::getByCollectionID($cID);
 
                 // if product not found, look for it via multilingual related page
                 if (!$product) {
@@ -161,12 +160,12 @@ class Controller extends BlockController
 
                         if ($locale) {
                             $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
-                            $product = StoreProduct::getByCollectionID($originalcID);
+                            $product = Product::getByCollectionID($originalcID);
                         }
                     }
                 }
             } else {
-                $product = StoreProduct::getByID($this->relatedPID);
+                $product = Product::getByID($this->relatedPID);
             }
 
             if (is_object($product)) {
@@ -213,7 +212,7 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
-        $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
+        $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
         foreach ($products as $key => $product) {
             if (!empty($automaticdiscounts)) {

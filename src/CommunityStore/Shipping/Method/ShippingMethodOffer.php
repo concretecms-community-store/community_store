@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 
 class ShippingMethodOffer
 {
@@ -96,7 +96,7 @@ class ShippingMethodOffer
 
     public function getDiscountedRate()
     {
-        $discounts = StoreCart::getDiscounts();
+        $discounts = Cart::getDiscounts();
         $deduct = 0;
         $percentage = 1;
 

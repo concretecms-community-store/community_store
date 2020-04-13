@@ -8,11 +8,11 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 
 class Orders extends DashboardPageController
 {
@@ -35,7 +35,7 @@ class Orders extends DashboardPageController
             $paymentStatusFilter = '';
         }
 
-        $orderList = new StoreOrderList();
+        $orderList = new OrderList();
 
         if ($this->request->query->get('keywords')) {
             $orderList->setSearch($this->request->query->get('keywords'));
@@ -67,17 +67,17 @@ class Orders extends DashboardPageController
 
         $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
-        $enabledMethods = StorePaymentMethod::getEnabledMethods();
+        $enabledMethods = PaymentMethod::getEnabledMethods();
 
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
-        $this->set('orderStatuses', StoreOrderStatus::getList());
+        $this->set('orderStatuses', OrderStatus::getList());
         $this->set('status', $status);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        $this->set('statuses', StoreOrderStatus::getAll());
+        $this->set('statuses', OrderStatus::getAll());
         $this->set('paymentMethod', $paymentMethod);
         $this->set("enabledPaymentMethods", $enabledMethods);
         $this->set('paymentStatus', $paymentStatus);
@@ -90,11 +90,11 @@ class Orders extends DashboardPageController
 
     public function order($oID)
     {
-        $order = StoreOrder::getByID($oID);
+        $order = Order::getByID($oID);
 
         if ($order) {
             $this->set("order", $order);
-            $this->set('orderStatuses', StoreOrderStatus::getList());
+            $this->set('orderStatuses', OrderStatus::getList());
             $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
                 $this->set("orderChoicesAttList", $orderChoicesAttList);
@@ -113,7 +113,7 @@ class Orders extends DashboardPageController
     {
         $data = $this->request->request->all();
         if ($this->token->validate('community_store')) {
-            StoreOrder::getByID($oID)->updateStatus($data['orderStatus']);
+            Order::getByID($oID)->updateStatus($data['orderStatus']);
             $this->flash('success', t('Fulfilment Status Updated'));
 
             return Redirect::to('/dashboard/store/orders/order', $oID);
@@ -123,7 +123,7 @@ class Orders extends DashboardPageController
     public function markpaid($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             if ($this->request->request->get('transactionReference')) {
                 $order->setTransactionReference($this->request->request->get('transactionReference'));
             }
@@ -144,7 +144,7 @@ class Orders extends DashboardPageController
     public function reversepaid($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $order->setPaid(null);
             $order->setPaidByUID(null);
             $order->setTransactionReference(null);
@@ -159,7 +159,7 @@ class Orders extends DashboardPageController
     public function markrefunded($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $user = new User();
 
             $order->setRefunded(new \DateTime());
@@ -176,7 +176,7 @@ class Orders extends DashboardPageController
     public function reverserefund($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $order->setRefunded(null);
             $order->setRefundedByUID(null);
             $order->setRefundReason(null);
@@ -191,7 +191,7 @@ class Orders extends DashboardPageController
     public function markcancelled($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $user = new User();
 
             $order->setCancelled(new \DateTime());
@@ -207,7 +207,7 @@ class Orders extends DashboardPageController
     public function reversecancel($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $order->setCancelled(null);
             $order->setCancelledByUID(null);
             $order->save();
@@ -221,7 +221,7 @@ class Orders extends DashboardPageController
     public function resendinvoice($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
 
             if ($order && $this->request->request->get('email')) {
                 $order->sendOrderReceipt($this->request->request->get('email'));
@@ -235,7 +235,7 @@ class Orders extends DashboardPageController
     public function resendnotification($oID)
     {
         if ($this->token->validate('community_store')) {
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
             $emails = $this->request->request->get('email');
 
             if ($order && $emails) {
@@ -252,7 +252,7 @@ class Orders extends DashboardPageController
     public function remove($oID)
     {
         if ($this->token->validate('community_store')) {
-            StoreOrder::getByID($oID)->remove();
+            Order::getByID($oID)->remove();
             $this->flash('success', t('Order Deleted'));
         }
 
@@ -261,7 +261,7 @@ class Orders extends DashboardPageController
 
     public function printslip($oID)
     {
-        $o = StoreOrder::getByID($oID);
+        $o = Order::getByID($oID);
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($o->getCustomerID()));
 
         if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . "/application/elements/order_slip.php")) {

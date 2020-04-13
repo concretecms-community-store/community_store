@@ -3,9 +3,9 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 
 /**
  * @ORM\Entity
@@ -165,7 +165,7 @@ class DiscountCode
 
     public static function storeCartCode($code)
     {
-        $rule = StoreDiscountRule::findDiscountRuleByCode($code);
+        $rule = DiscountRule::findDiscountRuleByCode($code);
 
         if (!empty($rule)) {
             Session::set('communitystore.code', $code);

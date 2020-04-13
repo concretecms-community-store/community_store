@@ -4,9 +4,9 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 use Concrete\Core\Controller\Controller;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\View\View;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 
 class Shipping extends Controller
 {
@@ -29,11 +29,11 @@ class Shipping extends Controller
             $smID = $this->request->request->get('smID');
             $sInstructions = $this->request->request->get('sInstructions');
 
-            StoreCart::setShippingInstructions($sInstructions);
+            Cart::setShippingInstructions($sInstructions);
 
-            $total = StoreCalculator::getShippingTotal($smID);
+            $total = Calculator::getShippingTotal($smID);
             if ($total > 0) {
-                echo StorePrice::format($total);
+                echo Price::format($total);
             } else {
                 echo 0;
             }

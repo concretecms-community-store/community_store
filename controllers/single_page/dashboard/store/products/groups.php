@@ -3,9 +3,9 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup as StoreProductGroup;
 
 class Groups extends DashboardPageController
 {
@@ -38,7 +38,7 @@ class Groups extends DashboardPageController
                     $productids = array_unique($productids);
 
                     foreach ($productids as $productid) {
-                        StoreProductGroup::add($productid, $newproductgroup->getID());
+                        ProductGroup::add($productid, $newproductgroup->getID());
                     }
                 }
 
@@ -69,7 +69,7 @@ class Groups extends DashboardPageController
             if (!$errors->has()) {
                 $group->update($this->request->request->get('groupName'));
 
-                StoreProductGroup::removeProductsForGroup($group);
+                ProductGroup::removeProductsForGroup($group);
 
                 $productids = $this->request->request->get('products');
 
@@ -77,7 +77,7 @@ class Groups extends DashboardPageController
                     $productids = array_unique($productids);
 
                     foreach ($productids as $productid) {
-                        StoreProductGroup::add($productid, $group->getID());
+                        ProductGroup::add($productid, $group->getID());
                     }
                 }
 

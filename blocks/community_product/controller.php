@@ -6,10 +6,10 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
 class Controller extends BlockController
 {
@@ -38,7 +38,7 @@ class Controller extends BlockController
             $cID = $page->getCollectionID();
 
             if ($cID) {
-                $product = StoreProduct::getByCollectionID($cID);
+                $product = Product::getByCollectionID($cID);
             }
 
             // if product not found, look for it via multilingual related page
@@ -49,19 +49,19 @@ class Controller extends BlockController
 
                     if ($locale) {
                         $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
-                        $product = StoreProduct::getByCollectionID($originalcID);
+                        $product = Product::getByCollectionID($originalcID);
                     }
                 }
             }
         } else {
             if ($this->pID) {
-                $product = StoreProduct::getByID($this->pID);
+                $product = Product::getByID($this->pID);
             }
         }
 
         if ($product) {
             if ($product->hasVariations()) {
-                $variations = StoreProductVariation::getVariationsForProduct($product);
+                $variations = ProductVariation::getVariationsForProduct($product);
 
                 $variationLookup = [];
 
@@ -78,7 +78,7 @@ class Controller extends BlockController
             }
 
             $codediscounts = false;
-            $automaticdiscounts = StoreDiscountRule::findAutomaticDiscounts();
+            $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
             if (!empty($automaticdiscounts)) {
                 $product->addDiscountRules($automaticdiscounts);
@@ -136,10 +136,10 @@ class Controller extends BlockController
 
             if ($page) {
                 $cID = $page->getCollectionID();
-                $product = StoreProduct::getByCollectionID($cID);
+                $product = Product::getByCollectionID($cID);
             }
         } else {
-            $product = StoreProduct::getByID($this->pID);
+            $product = Product::getByID($this->pID);
         }
 
         if ($product) {
@@ -186,7 +186,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'select2');
 
         if ($this->pID) {
-            $this->set('product', StoreProduct::getByID($this->pID));
+            $this->set('product', Product::getByID($this->pID));
         } else {
             $this->set('product', false);
         }

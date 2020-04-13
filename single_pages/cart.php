@@ -1,8 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 use \Concrete\Core\Support\Facade\Url;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -90,7 +91,7 @@ if ($cart) {
 
                                     if (substr($groupID, 0, 2) == 'po') {
                                         $groupID = str_replace("po", "", $groupID);
-                                        $optionvalue = StoreProductOptionItem::getByID($valID);
+                                        $optionvalue = ProductOptionItem::getByID($valID);
 
                                         if ($optionvalue) {
                                             $optionvalue = $optionvalue->getName();
@@ -109,7 +110,7 @@ if ($cart) {
                                         $optionvalue = $valID;
                                     }
 
-                                    $optiongroup = StoreProductOption::getByID($groupID);
+                                    $optiongroup = ProductOption::getByID($groupID);
 
                                     ?>
                                     <?php if ($optionvalue) { ?>
@@ -124,14 +125,14 @@ if ($cart) {
                         </td>
                         <td class="store-cart-item-price text-right">
                             <?php if (isset($cartItem['product']['customerPrice'])) { ?>
-                                <?=StorePrice::format($cartItem['product']['customerPrice'])?>
+                                <?=Price::format($cartItem['product']['customerPrice'])?>
                             <?php } else {  ?>
                                 <?php
                                 $salePrice = $product->getSalePrice();
                                 if (isset($salePrice) && $salePrice != "") {
-                                    echo '<span class="sale-price">' . StorePrice::format($salePrice) . '</span>';
+                                    echo '<span class="sale-price">' . Price::format($salePrice) . '</span>';
                                 } else {
-                                    echo StorePrice::format($product->getActivePrice());
+                                    echo Price::format($product->getActivePrice());
                                 }
                                 ?>
                             <?php } ?>
@@ -238,13 +239,13 @@ if ($cart) {
 
     <p class="store-cart-page-cart-total text-right">
         <strong class="cart-grand-total-label"><?= t("Items Sub Total") ?>:</strong>
-        <span class="cart-grand-total-value"><?= StorePrice::format($subTotal) ?></span>
+        <span class="cart-grand-total-value"><?= Price::format($subTotal) ?></span>
     </p>
 
     <?php if ($shippingEnabled) { ?>
         <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong>
         <span id="store-shipping-total">
-         <?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
+         <?= $shippingtotal !== false ? ($shippingtotal > 0 ? Price::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
         </span></p>
     <?php } ?>
 
@@ -253,7 +254,7 @@ if ($cart) {
         foreach ($taxes as $tax) {
             if ($tax['taxamount'] > 0) { ?>
                 <p class="store-cart-page-tax text-right">
-                    <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                    <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                 </p>
             <?php }
         }
@@ -262,7 +263,7 @@ if ($cart) {
 
     <p class="store-cart-page-cart-total text-right">
         <strong class="store-cart-grand-total-label"><?= t("Total") ?>:</strong>
-        <span class="store-cart-grand-total-value"><?= StorePrice::format($total) ?></span>
+        <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>
 
     <div class="store-cart-page-cart-links pull-right">

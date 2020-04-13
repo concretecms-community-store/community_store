@@ -3,8 +3,8 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
 
 /**
  * @ORM\Entity
@@ -97,7 +97,7 @@ class ProductGroup
         return $em->find(get_class(), $pgID);
     }
 
-    public static function getGroupsForProduct(StoreProduct $product)
+    public static function getGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
         $productGroups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
@@ -111,7 +111,7 @@ class ProductGroup
         return $groups;
     }
 
-    public static function isProductInGroup(StoreProduct $product, StoreGroup $group)
+    public static function isProductInGroup(Product $product, StoreGroup $group)
     {
         $em = dbORM::entityManager();
         $gID = $group->getGroupID();
@@ -124,7 +124,7 @@ class ProductGroup
         return false;
     }
 
-    public static function getGroupIDsForProduct(StoreProduct $product)
+    public static function getGroupIDsForProduct(Product $product)
     {
         $groups = self::getGroupsForProduct($product);
         $ids = [];
@@ -137,7 +137,7 @@ class ProductGroup
         return $ids;
     }
 
-    public static function addGroupsForProduct(array $data, StoreProduct $product)
+    public static function addGroupsForProduct(array $data, Product $product)
     {
         self::removeGroupsForProduct($product);
         //add new ones.
@@ -148,7 +148,7 @@ class ProductGroup
         }
     }
 
-    public static function removeGroupsForProduct(StoreProduct $product)
+    public static function removeGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
         $groups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);

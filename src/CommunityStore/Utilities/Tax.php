@@ -4,7 +4,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 
 class Tax extends Controller
 {
@@ -57,7 +57,7 @@ class Tax extends Controller
     private function updateVatNumber($data)
     {
         //update the users vat number
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $customer->setValue("vat_number", trim($data['vat_number']));
         Session::set('vat_number', trim($data['vat_number']));
     }

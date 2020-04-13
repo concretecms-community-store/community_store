@@ -2,12 +2,12 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\File\File;
-use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 
 class Download extends Controller
 {
@@ -25,7 +25,7 @@ class Download extends Controller
             $file->trackDownload(null);
             $fv = $file->getVersion();
 
-            $order = StoreOrder::getByID($oID);
+            $order = Order::getByID($oID);
 
             $expiryhours = Config::get('community_store.download_expiry_hours');
             if (!$expiryhours) {

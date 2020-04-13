@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
 class Calculator
 {
@@ -22,11 +22,11 @@ class Calculator
         }
         return $price;
     }
-    
+
     public static function getSubTotal($cart = false)
     {
         if (!$cart) {
-            $cart = StoreCart::getCart();
+            $cart = Cart::getCart();
         }
         $subtotal = 0;
         if ($cart) {
@@ -48,17 +48,17 @@ class Calculator
 
     public static function getShippingTotal($smID = null)
     {
-        $cart = StoreCart::getCart();
+        $cart = Cart::getCart();
         if (empty($cart)) {
             return false;
         }
 
         $existingShippingMethodID = Session::get('community_store.smID');
         if ($smID) {
-            $shippingMethod = StoreShippingMethod::getByID($smID);
+            $shippingMethod = ShippingMethod::getByID($smID);
             Session::set('community_store.smID', $smID);
         } elseif ($existingShippingMethodID) {
-            $shippingMethod = StoreShippingMethod::getByID($existingShippingMethodID);
+            $shippingMethod = ShippingMethod::getByID($existingShippingMethodID);
         }
 
         if (is_object($shippingMethod) && $shippingMethod->getCurrentOffer()) {
@@ -72,7 +72,7 @@ class Calculator
 
     public static function getTaxTotals()
     {
-        return StoreTax::getTaxes();
+        return Tax::getTaxes();
     }
 
     public static function getGrandTotal()
@@ -87,10 +87,10 @@ class Calculator
     {
         $subTotal = self::getSubTotal();
 
-        $taxes = StoreTax::getTaxes();
+        $taxes = Tax::getTaxes();
 
         $shippingTotal = self::getShippingTotal();
-        $discounts = StoreCart::getDiscounts();
+        $discounts = Cart::getDiscounts();
 
         $addedTaxTotal = 0;
         $includedTaxTotal = 0;

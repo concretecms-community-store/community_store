@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\User\User;
+use Concrete\Core\Controller\Controller;
 
 class ProductFinder extends Controller
 {

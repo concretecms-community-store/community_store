@@ -1,26 +1,24 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\User\User;
-use Concrete\Core\User\UserInfo;
-use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as StorePaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as StoreTaxHelper;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
-use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 
 class Checkout extends PageController
 {
@@ -39,10 +37,10 @@ class Checkout extends PageController
                 $codesuccess = false;
 
                 if ($this->request->request->get('code')) {
-                    $codesuccess = StoreDiscountCode::storeCartCode($this->request->request->get('code'));
+                    $codesuccess = DiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
                 } else {
-                    StoreDiscountCode::clearCartCode();
+                    DiscountCode::clearCartCode();
                 }
             }
 
@@ -54,21 +52,21 @@ class Checkout extends PageController
             return Redirect::to($langpath . '/');
         }
 
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $this->set('customer', $customer);
         $guestCheckout = Config::get('community_store.guestCheckout');
         $this->set('guestCheckout', ($guestCheckout ? $guestCheckout : 'off'));
         $this->set('guest', isset($guest) && (bool) $guest);
-        $this->set('requiresLogin', StoreCart::requiresLogin());
+        $this->set('requiresLogin', Cart::requiresLogin());
         $this->set('companyField', Config::get('community_store.companyField'));
 
-        $cart = StoreCart::getCart();
+        $cart = Cart::getCart();
 
-        if (StoreCart::hasChanged()) {
+        if (Cart::hasChanged()) {
             return Redirect::to($langpath . '/cart/changed');
         }
 
-        if (0 == StoreCart::getTotalItemsInCart()) {
+        if (0 == Cart::getTotalItemsInCart()) {
             return Redirect::to($langpath . '/cart');
         }
         $this->set('form', $this->app->make("helper/form"));
@@ -107,12 +105,12 @@ class Checkout extends PageController
             $shippingCountries = $allcountries;
         }
 
-        $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
+        $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
 
         $this->set("discountsWithCodesExist", $discountsWithCodesExist);
         $this->set('cart', $cart);
-        $this->set('discounts', StoreCart::getDiscounts());
-        $this->set('hasCode', StoreDiscountCode::hasCartCode());
+        $this->set('discounts', Cart::getDiscounts());
+        $this->set('hasCode', DiscountCode::hasCartCode());
 
         $this->set("billingCountries", $billingCountries);
         $this->set("shippingCountries", $shippingCountries);
@@ -130,7 +128,7 @@ class Checkout extends PageController
             $this->set("orderChoicesAttList", $orderChoicesAttList);
         }
 
-        $totals = StoreCalculator::getTotals();
+        $totals = Calculator::getTotals();
 
         $this->set('subtotal', $totals['subTotal']);
         $this->set('taxes', $totals['taxes']);
@@ -144,8 +142,8 @@ class Checkout extends PageController
         }
 
         $this->set('total', $totals['total']);
-        $this->set('shippingEnabled', StoreCart::isShippable());
-        $this->set('shippingInstructions', StoreCart::getShippingInstructions());
+        $this->set('shippingEnabled', Cart::isShippable());
+        $this->set('shippingInstructions', Cart::getShippingInstructions());
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
@@ -160,7 +158,7 @@ class Checkout extends PageController
             </script>
         ");
 
-        $enabledMethods = StorePaymentMethod::getEnabledMethods();
+        $enabledMethods = PaymentMethod::getEnabledMethods();
 
         $availableMethods = [];
 
@@ -191,10 +189,10 @@ class Checkout extends PageController
 
     public function failed($guest = false)
     {
-        $this->set('shippingInstructions', StoreCart::getShippingInstructions());
+        $this->set('shippingInstructions', Cart::getShippingInstructions());
         $this->set('paymentErrors', Session::get('paymentErrors'));
-        $this->set('activeShippingLabel', StoreShippingMethod::getActiveShippingLabel());
-        $this->set('shippingTotal', StoreCalculator::getShippingTotal());
+        $this->set('activeShippingLabel', ShippingMethod::getActiveShippingLabel());
+        $this->set('shippingTotal', Calculator::getShippingTotal());
         $this->set('lastPaymentMethodHandle', Session::get('paymentMethod'));
         $this->view($guest);
     }
@@ -219,16 +217,16 @@ class Checkout extends PageController
 
         //process payment
         $pmHandle = $data['payment-method'];
-        $pm = StorePaymentMethod::getByHandle($pmHandle);
+        $pm = PaymentMethod::getByHandle($pmHandle);
 
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
-        if (false === $pm || (StoreCart::isShippable() && !Session::get('community_store.smID'))) {
+        if (false === $pm || (Cart::isShippable() && !Session::get('community_store.smID'))) {
             return Redirect::to($langpath . '/checkout');
         }
 
         if ($pm->getMethodController()->isExternal()) {
-            if (0 != StoreCart::getTotalItemsInCart()) {
-                $order = StoreOrder::add($pm, null, 'incomplete');
+            if (0 != Cart::getTotalItemsInCart()) {
+                $order = Order::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
 
                 return Redirect::to($langpath . '/checkout/external');
@@ -247,7 +245,7 @@ class Checkout extends PageController
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
-                $order = StoreOrder::add($pm, $transactionReference);
+                $order = Order::add($pm, $transactionReference);
 
                 return Redirect::to($langpath . '/checkout/complete');
             }
@@ -261,7 +259,7 @@ class Checkout extends PageController
         $pm = false;
 
         if ($pmHandle) {
-            $pm = StorePaymentMethod::getByHandle($pmHandle);
+            $pm = PaymentMethod::getByHandle($pmHandle);
         }
 
         if (!$pm) {
@@ -302,7 +300,7 @@ class Checkout extends PageController
                     $emailexists = $this->validateAccountEmail($data['email']);
                 }
 
-                $orderRequiresLogin = StoreCart::requiresLogin();
+                $orderRequiresLogin = Cart::requiresLogin();
 
                 if ($orderRequiresLogin && $emailexists) {
                     $requiresLoginOrDifferentEmail = true;
@@ -318,7 +316,7 @@ class Checkout extends PageController
             if ($e->has()) {
                 echo $e->outputJSON();
             } else {
-                $customer = new StoreCustomer();
+                $customer = new Customer();
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
                     $address = Session::get('billing_address');
@@ -341,7 +339,7 @@ class Checkout extends PageController
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
                         $vat_number = $customer->getValue('vat_number');
-                        $taxHelper = $this->app->make(StoreTaxHelper::class);
+                        $taxHelper = $this->app->make(TaxHelper::class);
                         $e = $taxHelper->validateVatNumber($vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
@@ -351,7 +349,7 @@ class Checkout extends PageController
                     }
                 }
 
-                $address = nl2br(StoreCustomer::formatAddressArray($address));
+                $address = nl2br(Customer::formatAddressArray($address));
 
                 // Results array
                 $results = [
@@ -383,7 +381,7 @@ class Checkout extends PageController
     {
         //update the users shipping address
         $this->validateAddress($data);
-        $customer = new StoreCustomer();
+        $customer = new Customer();
 
         $guest = $customer->isGuest();
 
@@ -434,7 +432,7 @@ class Checkout extends PageController
     {
         $e = $this->app->make('helper/validation/error');
         $vals = $this->app->make('helper/validation/strings');
-        $customer = new StoreCustomer();
+        $customer = new Customer();
 
         if ($billing) {
             if ($customer->isGuest()) {
@@ -498,7 +496,7 @@ class Checkout extends PageController
     private function updateBilling($data)
     {
         //update the users billing address
-        $customer = new StoreCustomer();
+        $customer = new Customer();
 
         $guest = $customer->isGuest();
 

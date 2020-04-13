@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Support\Facade\Database;
-use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\User\User;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent as StoreOrderEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order as StoreOrder;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as StoreOrderStatus;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Database;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 
 /**
  * @ORM\Entity
@@ -46,7 +46,7 @@ class OrderStatusHistory
 
     public function getOrder()
     {
-        return StoreOrder::getByID($this->getOrderID());
+        return Order::getByID($this->getOrderID());
     }
 
     public function getOrderStatusHandle()
@@ -61,7 +61,7 @@ class OrderStatusHistory
 
     public function getOrderStatus()
     {
-        return StoreOrderStatus::getByHandle($this->getOrderStatusHandle());
+        return OrderStatus::getByHandle($this->getOrderStatusHandle());
     }
 
     public function getOrderStatusName()
@@ -127,7 +127,7 @@ class OrderStatusHistory
         return ($history instanceof self) ? $history : false;
     }
 
-    public static function getForOrder(StoreOrder $order)
+    public static function getForOrder(Order $order)
     {
         if (!$order->getOrderID()) {
             return false;
@@ -144,7 +144,7 @@ class OrderStatusHistory
         return $history;
     }
 
-    public static function updateOrderStatusHistory(StoreOrder $order, $statusHandle)
+    public static function updateOrderStatusHistory(Order $order, $statusHandle)
     {
         $history = self::getForOrder($order);
 
@@ -153,13 +153,13 @@ class OrderStatusHistory
             $order->updateStatus(self::recordStatusChange($order, $statusHandle));
 
             if (!empty($history)) {
-                $event = new StoreOrderEvent($order, $previousStatus);
-                Events::dispatch(StoreOrderEvent::ORDER_STATUS_UPDATE, $event);
+                $event = new OrderEvent($order, $previousStatus);
+                Events::dispatch(OrderEvent::ORDER_STATUS_UPDATE, $event);
             }
         }
     }
 
-    private static function recordStatusChange(StoreOrder $order, $statusHandle)
+    private static function recordStatusChange(Order $order, $statusHandle)
     {
         $user = new User();
         $orderStatusHistory = new self();

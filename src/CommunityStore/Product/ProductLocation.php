@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\Page\Page;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Page\Page;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -106,7 +106,7 @@ class ProductLocation
         return $em->find(get_class(), $cID);
     }
 
-    public static function getLocationsForProduct(StoreProduct $product)
+    public static function getLocationsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
@@ -120,7 +120,7 @@ class ProductLocation
         return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
 
-    public static function addLocationsForProduct(array $locations, StoreProduct $product)
+    public static function addLocationsForProduct(array $locations, Product $product)
     {
         $saveLocations = [];
         $existingLocationID = [];
@@ -155,7 +155,7 @@ class ProductLocation
         }
     }
 
-    public static function removeLocationsForProduct(StoreProduct $product)
+    public static function removeLocationsForProduct(Product $product)
     {
         $existingLocations = self::getLocationsForProduct($product);
         foreach ($existingLocations as $location) {

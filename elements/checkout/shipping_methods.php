@@ -1,11 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$eligibleMethods = StoreShippingMethod::getEligibleMethods();
+$eligibleMethods = ShippingMethod::getEligibleMethods();
 $currentShippingID = Session::get('community_store.smID');
 $count=0;
 $foundOffer = false;
@@ -30,7 +30,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
                             <div class="store-shipping-details">
                                 <?php $rate = $offer->getDiscountedRate(); ?>
-                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName', false, $method->getID()); ?> - <?= $rate > 0 ? StorePrice::format($rate) : t('No Charge');?></p>
+                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName', false, $method->getID()); ?> - <?= $rate > 0 ? Price::format($rate) : t('No Charge');?></p>
                                 <?php $details = $offer->getOfferDetails();
                                 if ($details) { ?>
                                 <p class="store-shipping-details-details"><?= $details; ?></p>

@@ -2,7 +2,6 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Application\Application;
 

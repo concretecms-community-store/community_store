@@ -3,13 +3,13 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartEvent as StoreCartEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation as StoreProductVariation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
 class Cart
 {
@@ -39,7 +39,7 @@ class Cart
             foreach ($cart as $cartitem) {
                 $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
 
-                $product = StoreProduct::getByID((int)$cartitem['product']['pID']);
+                $product = Product::getByID((int)$cartitem['product']['pID']);
 
                 $maxQuantity = 10000000;
 
@@ -60,7 +60,7 @@ class Cart
                     $include = true;
 
                     if ($cartitem['product']['variation']) {
-                        if (!StoreProductVariation::getByID($cartitem['product']['variation'])) {
+                        if (!ProductVariation::getByID($cartitem['product']['variation'])) {
                             $include = false;
                             $update = true;
                         } else {
@@ -166,11 +166,11 @@ class Cart
 
             self::$discounts = [];
 
-            $rules = StoreDiscountRule::findAutomaticDiscounts($checkeditems);
+            $rules = DiscountRule::findAutomaticDiscounts($checkeditems);
 
             $code = trim(Session::get('communitystore.code'));
             if ($code) {
-                $coderules = StoreDiscountRule::findDiscountRuleByCode($code, $checkeditems);
+                $coderules = DiscountRule::findDiscountRuleByCode($code, $checkeditems);
                 if (count($coderules)) {
                     $rules = array_merge($rules, $coderules);
                 } else {
@@ -237,13 +237,13 @@ class Cart
 
         $error = false;
         Session::set('community_store.smID', false);
-        $product = StoreProduct::getByID((int) $data['pID']);
+        $product = Product::getByID((int) $data['pID']);
 
-        $event = new StoreCartEvent('add');
+        $event = new CartEvent('add');
         $event->setProduct($product);
         $event->setData($data);
 
-        \Events::dispatch(StoreCartEvent::CART_PRE_ADD, $event);
+        \Events::dispatch(CartEvent::CART_PRE_ADD, $event);
 
         $customerPrice = false;
 
@@ -303,7 +303,7 @@ class Cart
             $removeexistingexclusive = false;
 
             foreach (self::getCart() as $k => $cart) {
-                $cartproduct = StoreProduct::getByID((int) $cart['product']['pID']);
+                $cartproduct = Product::getByID((int) $cart['product']['pID']);
 
                 if ($cartproduct && $cartproduct->isExclusive()) {
                     self::remove($k);
@@ -346,7 +346,7 @@ class Cart
 
                 // if there is a groupID, check to see if it's a required field, reject if no value
                 if ($groupID) {
-                    $option = StoreProductOption::getByID($groupID);
+                    $option = ProductOption::getByID($groupID);
 
                     if ($isOptionList && $option->getIncludeVariations()) {
                         $optionsInVariations[] = $value;
@@ -366,7 +366,7 @@ class Cart
 
             if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options
-                $variation = StoreProductVariation::getByOptionItemIDs($optionsInVariations);
+                $variation = ProductVariation::getByOptionItemIDs($optionsInVariations);
 
                 // association the variation with the product
                 if ($variation) {
@@ -450,8 +450,8 @@ class Cart
             Session::set('communitystore.cart', $cart);
         }
 
-        \Events::dispatch(StoreCartEvent::CART_ACTION, $event);
-        \Events::dispatch(StoreCartEvent::CART_POST_ADD, $event);
+        \Events::dispatch(CartEvent::CART_ACTION, $event);
+        \Events::dispatch(CartEvent::CART_POST_ADD, $event);
 
         return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
@@ -512,12 +512,12 @@ class Cart
 
         $cart = self::getCart();
 
-        $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
-        $event = new StoreCartEvent('update');
+        $product = Product::getByID((int) $cart[$instanceID]['product']['pID']);
+        $event = new CartEvent('update');
         $event->setProduct($product);
         $event->setData($data);
 
-        \Events::dispatch(StoreCartEvent::CART_PRE_UPDATE, $event);
+        \Events::dispatch(CartEvent::CART_PRE_UPDATE, $event);
         if ($product && !$product->allowDecimalQuantity()) {
             $qty = (int) $data['pQty'];
         }
@@ -549,8 +549,8 @@ class Cart
 
         self::$cart = null;
 
-        \Events::dispatch(StoreCartEvent::CART_ACTION, $event);
-        \Events::dispatch(StoreCartEvent::CART_POST_UPDATE, $event);
+        \Events::dispatch(CartEvent::CART_ACTION, $event);
+        \Events::dispatch(CartEvent::CART_POST_UPDATE, $event);
 
         return ['added' => $added];
     }
@@ -560,33 +560,33 @@ class Cart
         Session::set('community_store.smID', false);
 
         $cart = self::getCart();
-        $product = StoreProduct::getByID((int) $cart[$instanceID]['product']['pID']);
-        $event = new StoreCartEvent('remove');
+        $product = Product::getByID((int) $cart[$instanceID]['product']['pID']);
+        $event = new CartEvent('remove');
         $event->setProduct($product);
         $event->setData(['cartItem'=>$instanceID]);
 
-        \Events::dispatch(StoreCartEvent::CART_PRE_REMOVE, $event);
+        \Events::dispatch(CartEvent::CART_PRE_REMOVE, $event);
 
         unset($cart[$instanceID]);
         Session::set('communitystore.cart', $cart);
         self::$cart = null;
 
-        \Events::dispatch(StoreCartEvent::CART_ACTION, $event);
-        \Events::dispatch(StoreCartEvent::CART_POST_REMOVE, $event);
+        \Events::dispatch(CartEvent::CART_ACTION, $event);
+        \Events::dispatch(CartEvent::CART_POST_REMOVE, $event);
     }
 
     public static function clear()
     {
 
-        $event = new StoreCartEvent('clear');
-        \Events::dispatch(StoreCartEvent::CART_PRE_CLEAR, $event);
+        $event = new CartEvent('clear');
+        \Events::dispatch(CartEvent::CART_PRE_CLEAR, $event);
         Session::set('community_store.smID', false);
         $cart = self::getCart();
         unset($cart);
         Session::set('communitystore.cart', null);
         self::$cart = null;
-        \Events::dispatch(StoreCartEvent::CART_ACTION, $event);
-        \Events::dispatch(StoreCartEvent::CART_POST_CLEAR, $event);
+        \Events::dispatch(CartEvent::CART_ACTION, $event);
+        \Events::dispatch(CartEvent::CART_POST_CLEAR, $event);
     }
 
     public static function getTotalItemsInCart()
@@ -605,7 +605,7 @@ class Cart
     public static function isShippable()
     {
         $shippableItems = self::getShippableItems();
-        $shippingMethods = StoreShippingMethod::getAvailableMethods();
+        $shippingMethods = ShippingMethod::getAvailableMethods();
         if (count($shippingMethods) > 0) {
             if (count($shippableItems) > 0) {
                 return true;
@@ -626,7 +626,7 @@ class Cart
         if ($items) {
             foreach ($items as $item) {
                 //check if items are shippable
-                $product = StoreProduct::getByID($item['product']['pID']);
+                $product = Product::getByID($item['product']['pID']);
                 if ($product->isShippable()) {
                     $shippableItems[] = $item;
                 }
@@ -691,7 +691,7 @@ class Cart
     {
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $product = StoreProduct::getByID($item['product']['pID']);
+                $product = Product::getByID($item['product']['pID']);
                 if ($product) {
                     if ($product->hasUserGroups() && !$product->createsLogin()) {
                         return true;
@@ -708,7 +708,7 @@ class Cart
     {
         if (self::getCart()) {
             foreach (self::getCart() as $item) {
-                $product = StoreProduct::getByID($item['product']['pID']);
+                $product = Product::getByID($item['product']['pID']);
                 if ($product) {
                     if ($product->createsLogin()) {
                         return true;

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Concrete\Core\Support\Facade\Config;
 use Punic\Number;
+use Concrete\Core\Support\Facade\Config;
 
 class Price
 {

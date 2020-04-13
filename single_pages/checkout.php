@@ -1,7 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+
 use \Concrete\Core\Support\Facade\Url;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -382,7 +383,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="row panel-body">
                                 <div class="col-md-6">
                                     <div class="summary-shipping-method">
-                                        <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? StorePrice::format($shippingTotal) : t('No Charge');?>
+                                        <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? Price::format($shippingTotal) : t('No Charge');?>
                                     </div>
                                     <p class="summary-shipping-instructions">
                                         <?= h($shippingInstructions); ?>
@@ -559,7 +560,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 <ul class="store-checkout-totals-line-items list-group">
                     <li class="store-line-item store-sub-total list-group-item">
-                        <strong><?= t("Items Subtotal") ?>:</strong> <span class="store-sub-total-amount"><?= StorePrice::format($subtotal); ?></span>
+                        <strong><?= t("Items Subtotal") ?>:</strong> <span class="store-sub-total-amount"><?= Price::format($subtotal); ?></span>
                         <?php if ($calculation == 'extract') {
                             echo '<small class="text-muted">' . t("inc. taxes") . "</small>";
                         } ?>
@@ -568,7 +569,7 @@ $csm = $app->make('cs/helper/multilingual');
                  <?php if ($shippingEnabled) { ?>
 
                         <li class="store-line-item store-shipping list-group-item"><strong><?= t("Shipping") ?>:</strong> <span
-                                id="shipping-total" data-no-charge-label="<?=t('No Charge');?>" data-unknown-label="<?=t('to be determined');?>"><?= $shippingtotal !== false ? ($shippingtotal > 0 ? StorePrice::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
+                                id="shipping-total" data-no-charge-label="<?=t('No Charge');?>" data-unknown-label="<?=t('to be determined');?>"><?= $shippingtotal !== false ? ($shippingtotal > 0 ? Price::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?></span></li>
 
                  <?php } ?>
                  </ul>
@@ -581,7 +582,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
                                 ?>
                                 <li class="store-line-item store-tax-item list-group-item">
-                                <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= StorePrice::format($tax['taxamount']); ?></span>
+                                <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
                         }
@@ -591,7 +592,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 <ul class="store-checkout-totals-line-items list-group">
                     <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Total") ?>:</strong> <span
-                            class="store-total-amount" data-total-cents="<?= StorePrice::formatInNumberOfCents($total); ?>"><?= StorePrice::format($total) ?></span></li>
+                            class="store-total-amount" data-total-cents="<?= Price::formatInNumberOfCents($total); ?>"><?= Price::format($total) ?></span></li>
                 </ul>
             </div>
         </div>

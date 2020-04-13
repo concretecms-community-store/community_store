@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Concrete\Package\CommunityStore\Src\CommunityStore\Event\Event as StoreEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Event\Event;
 
-class ProductEvent extends StoreEvent
+class ProductEvent extends Event
 {
     const PRODUCT_ADD = 'on_community_store_product_add';
     const PRODUCT_UPDATE = 'on_community_store_product_update';

@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Concrete\Core\Support\Facade\Config;
 use stdClass;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
 

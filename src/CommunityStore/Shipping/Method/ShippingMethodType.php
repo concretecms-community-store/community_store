@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Package\Package;
 use Concrete\Core\View\View;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as ShippingMethod;
 
 /**
  * @ORM\Entity
@@ -152,7 +152,7 @@ class ShippingMethodType
 
     public function delete()
     {
-        $methods = StoreShippingMethod::getAvailableMethods($this->getShippingMethodTypeID());
+        $methods = ShippingMethod::getAvailableMethods($this->getShippingMethodTypeID());
         foreach ($methods as $method) {
             $method->delete();
         }

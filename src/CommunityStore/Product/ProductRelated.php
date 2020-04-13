@@ -3,7 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -96,14 +96,14 @@ class ProductRelated
         return $em->find(get_class(), $cID);
     }
 
-    public static function getRelatedProducts(StoreProduct $product)
+    public static function getRelatedProducts(Product $product)
     {
         $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function addRelatedProducts(array $products, StoreProduct $product)
+    public static function addRelatedProducts(array $products, Product $product)
     {
         //clear out existing locations
         self::removeRelatedProducts($product);
@@ -119,7 +119,7 @@ class ProductRelated
         }
     }
 
-    public static function removeRelatedProducts(StoreProduct $product)
+    public static function removeRelatedProducts(Product $product)
     {
         $existingRelations = self::getRelatedProducts($product);
         foreach ($existingRelations as $relation) {
@@ -129,7 +129,7 @@ class ProductRelated
 
     public static function add($product, $relatedProductID, $sort)
     {
-        $relatedProduct = StoreProduct::getByID($relatedProductID);
+        $relatedProduct = Product::getByID($relatedProductID);
         if ($relatedProduct) {
             $relation = new self();
             $relation->setProduct($product);

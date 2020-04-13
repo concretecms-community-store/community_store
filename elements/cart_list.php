@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption as StoreProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem as StoreProductOptionItem;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -78,7 +78,7 @@ if ($cart) {
 
                         if (substr($optionID, 0, 2) == 'po') {
                             $optionID = str_replace("po", "", $optionID);
-                            $optionvalue = StoreProductOptionItem::getByID($valID);
+                            $optionvalue = ProductOptionItem::getByID($valID);
 
                             if ($optionvalue) {
                                 $optionvalue = $optionvalue->getName();
@@ -97,7 +97,7 @@ if ($cart) {
                             $optionvalue = $valID;
                         }
 
-                        $optiongroup = StoreProductOption::getByID($optionID);
+                        $optiongroup = ProductOption::getByID($optionID);
 
                         ?>
                     <?php if ($optionvalue) { ?>
@@ -118,10 +118,10 @@ if ($cart) {
 
             <td class="store-cart-item-price text-right">
                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
-                <?= StorePrice::format($cartItem['product']['customerPrice']) ?>
+                <?= Price::format($cartItem['product']['customerPrice']) ?>
                 <?php
             } else {  ?>
-                <?= StorePrice::format($product->getActivePrice($qty)) ?>
+                <?= Price::format($product->getActivePrice($qty)) ?>
                 <?php
             } ?>
             </td>

@@ -4,12 +4,12 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Http\Request;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem as StoreOrderItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList as StoreOrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList as StoreProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as StoreProductReport;
 
 class Products extends DashboardPageController
 {
@@ -19,12 +19,12 @@ class Products extends DashboardPageController
         $dateTo = $this->request->query->get('dateTo');
 
         if (!$dateFrom) {
-            $dateFrom = StoreOrderList::getDateOfFirstOrder();
+            $dateFrom = OrderList::getDateOfFirstOrder();
         }
         if (!$dateTo) {
             $dateTo = date('Y-m-d');
         }
-        $pr = new StoreProductReport($dateFrom, $dateTo);
+        $pr = new ProductReport($dateFrom, $dateTo);
 
         $productSearch = $this->request->query->get('productSearch');
 
@@ -90,10 +90,10 @@ class Products extends DashboardPageController
             $orderItems = [];
 
             while ($row = $result->fetchRow()) {
-                $orderItems[] = StoreOrderItem::getByID($row['oiID']);
+                $orderItems[] = OrderItem::getByID($row['oiID']);
             }
 
-            $product = StoreProduct::getByID($productid);
+            $product = Product::getByID($productid);
 
             $this->set('orderItems', $orderItems);
             $this->set('product', $product);
@@ -174,7 +174,7 @@ class Products extends DashboardPageController
     }
 
     public function sheet() {
-        $productsList = new StoreProductList();
+        $productsList = new ProductList();
         $productsList->setItemsPerPage(20);
         $productsList->setActiveOnly(false);
         $productsList->setShowOutOfStock(true);

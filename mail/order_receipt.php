@@ -6,8 +6,8 @@ if ($locale) {
     \Concrete\Core\Localization\Localization::changeLocale($locale);
 }
 
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Core\Support\Facade\Config;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -81,7 +81,7 @@ ob_start();
                         <?= h($order->getAttribute("billing_company")); ?><br>
                     <?php
     } ?>
-                    <?php $address = StoreCustomer::formatAddress($order->getAttribute("billing_address")); ?>
+                    <?php $address = Customer::formatAddress($order->getAttribute("billing_address")); ?>
                     <?= nl2br($address); ?>
                     <br><br>
                     <strong><?= t('Phone'); ?></strong>: <?= h($order->getAttribute("billing_phone")); ?><br>
@@ -107,7 +107,7 @@ ob_start();
                         } ?>
                         <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                         <?php if ($shippingaddress) {
-                            $shippingaddress = StoreCustomer::formatAddress($shippingaddress);
+                            $shippingaddress = Customer::formatAddress($shippingaddress);
                             echo nl2br($shippingaddress);
                         } ?>
                     </p>
@@ -178,8 +178,8 @@ ob_start();
                 } ?>
                     </td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= $item->getQuantity(); ?> <?= h($item->getQuantityLabel()); ?></td>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= StorePrice::format($item->getPricePaid()); ?></td>
-                    <td style="vertical-align: top; padding: 5px 0 5px 0; text-align: right"><?= StorePrice::format($item->getSubTotal()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0; text-align: right"><?= Price::format($item->getPricePaid()); ?></td>
+                    <td style="vertical-align: top; padding: 5px 0 5px 0; text-align: right"><?= Price::format($item->getSubTotal()); ?></td>
                 </tr>
                 <?php
             }
@@ -189,7 +189,7 @@ ob_start();
         <tfoot>
         <tr>
             <td colspan="4" style="text-align: right"><strong><?= t("Items Subtotal")?>:</strong></td>
-            <td style="text-align: right"><?= StorePrice::format($order->getSubTotal())?></td>
+            <td style="text-align: right"><?= Price::format($order->getSubTotal())?></td>
         </tr>
         </tfoot>
     </table>
@@ -198,7 +198,7 @@ ob_start();
     <p>
         <?php if ($order->isShippable()) {
             ?>
-            <strong><?= t("Shipping"); ?>:</strong>  <?= StorePrice::format($order->getShippingTotal()); ?><br>
+            <strong><?= t("Shipping"); ?>:</strong>  <?= Price::format($order->getShippingTotal()); ?><br>
             <strong><?= t("Shipping Method"); ?>: </strong><?= $order->getShippingMethodName(); ?> <br>
 
             <?php
@@ -228,11 +228,11 @@ ob_start();
         <?php foreach ($order->getTaxes() as $tax) {
             ?>
             <strong><?= $tax['label']; ?>
-                :</strong> <?= StorePrice::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']); ?><br>
+                :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']); ?><br>
         <?php
         } ?>
 
-        <strong class="text-large"><?= t("Total"); ?>:</strong> <?= StorePrice::format($order->getTotal()); ?><br><br>
+        <strong class="text-large"><?= t("Total"); ?>:</strong> <?= Price::format($order->getTotal()); ?><br><br>
 
         <?php if ($order->getTotal() > 0) {
             ?>

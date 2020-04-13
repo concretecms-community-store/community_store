@@ -1,20 +1,20 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule as StoreDiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode as StoreDiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\View\View;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
+use Illuminate\Filesystem\Filesystem;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as StorePrice;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 
 class Cart extends PageController
 {
@@ -43,10 +43,10 @@ class Cart extends PageController
                 $codesuccess = false;
 
                 if ($this->request->request->get('code')) {
-                    $codesuccess = StoreDiscountCode::storeCartCode($this->request->request->get('code'));
+                    $codesuccess = DiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
                 } else {
-                    StoreDiscountCode::clearCartCode();
+                    DiscountCode::clearCartCode();
                 }
             }
 
@@ -97,7 +97,7 @@ class Cart extends PageController
         $this->set('cart', StoreCart::getCart(true));
         $this->set('discounts', StoreCart::getDiscounts());
 
-        $totals = StoreCalculator::getTotals();
+        $totals = Calculator::getTotals();
 
         if (StoreCart::isShippable()) {
             $this->set('shippingEnabled', true);
@@ -122,7 +122,7 @@ class Cart extends PageController
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
 
-        $discountsWithCodesExist = StoreDiscountRule::discountsWithCodesExist();
+        $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
         $this->set("discountsWithCodesExist", $discountsWithCodesExist);
 
         $this->set('token', $this->app->make('token'));
@@ -145,7 +145,7 @@ class Cart extends PageController
                 $error = 1;
             }
 
-            $product = StoreProduct::getByID($data['pID']);
+            $product = Product::getByID($data['pID']);
             $productdata['pAutoCheckout'] = $product->autoCheckout();
             $productdata['pName'] = $product->getName();
             $productdata['pID'] = $product->getID();
@@ -161,7 +161,7 @@ class Cart extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('community_store')) {
-            StoreDiscountCode::storeCartCode($this->request->request->get('code'));
+            DiscountCode::storeCartCode($this->request->request->get('code'));
         }
 
         exit();
@@ -233,7 +233,7 @@ class Cart extends PageController
 
         $cart = StoreCart::getCart();
         $discounts = StoreCart::getDiscounts();
-        $totals = StoreCalculator::getTotals();
+        $totals = Calculator::getTotals();
 
         $total = $totals['subTotal'];
 
@@ -251,7 +251,7 @@ class Cart extends PageController
 
     public function getCartSummary()
     {
-        $totals = StoreCalculator::getTotals();
+        $totals = Calculator::getTotals();
         $itemCount = StoreCart::getTotalItemsInCart();
         $total = $totals['total'];
         $subTotal = $totals['subTotal'];
@@ -264,7 +264,7 @@ class Cart extends PageController
         foreach ($taxes as $tax) {
             // translate tax name
             $tax['name'] = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
-            $tax['taxamount'] = StorePrice::format($tax['taxamount']);
+            $tax['taxamount'] = Price::format($tax['taxamount']);
             $formattedtaxes[] = $tax;
         }
 
@@ -274,7 +274,7 @@ class Cart extends PageController
             $shippingTotalRaw = $shippingTotal;
         }
 
-        $data = ['subTotal' => StorePrice::format($subTotal), 'total' => StorePrice::format($total), 'itemCount' => $itemCount, 'totalCents' => $total * 100, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => StorePrice::format($shippingTotal)];
+        $data = ['subTotal' => Price::format($subTotal), 'total' => Price::format($total), 'itemCount' => $itemCount, 'totalCents' => $total * 100, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => Price::format($shippingTotal)];
         echo json_encode($data);
 
         exit();

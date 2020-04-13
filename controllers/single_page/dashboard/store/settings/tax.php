@@ -4,23 +4,23 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax as StoreTax;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate as StoreTaxRate;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass as StoreTaxClass;
 
 class Tax extends DashboardPageController
 {
     public function view()
     {
         $this->set("taxRates", StoreTax::getTaxRates());
-        $this->set("taxClasses", StoreTaxClass::getTaxClasses());
+        $this->set("taxClasses", TaxClass::getTaxClasses());
     }
 
     public function add()
     {
         $this->set('pageTitle', t("Add Tax Rate"));
         $this->set("task", t("Add"));
-        $this->set("taxRate", new StoreTaxRate()); //shuts up errors when adding
+        $this->set("taxRate", new TaxRate()); //shuts up errors when adding
         $this->loadFormAssets();
     }
 
@@ -28,13 +28,13 @@ class Tax extends DashboardPageController
     {
         $this->set('pageTitle', t("Edit Tax Rate"));
         $this->set("task", t("Update"));
-        $this->set("taxRate", StoreTaxRate::getByID($trID));
+        $this->set("taxRate", TaxRate::getByID($trID));
         $this->loadFormAssets();
     }
 
     public function delete($trID)
     {
-        StoreTaxRate::getByID($trID)->delete();
+        TaxRate::getByID($trID)->delete();
         $this->flash('success', t('Tax Rate Deleted'));
 
         return Redirect::to('/dashboard/store/settings/tax');
@@ -55,7 +55,7 @@ class Tax extends DashboardPageController
         $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {
-            StoreTaxRate::add($data);
+            TaxRate::add($data);
 
             if ($this->request->request->get('taxRateID')) {
                 // update
@@ -99,7 +99,7 @@ class Tax extends DashboardPageController
     {
         $this->set('pageTitle', t("Add Tax Class"));
         $this->set('task', t("Add"));
-        $this->set('tc', new StoreTaxClass());
+        $this->set('tc', new TaxClass());
         $this->set('taxRates', StoreTax::getTaxRates());
         $this->requireAsset('selectize');
     }
@@ -108,7 +108,7 @@ class Tax extends DashboardPageController
     {
         $this->set('pageTitle', t("Edit Tax Class"));
         $this->set('task', t("Update"));
-        $this->set('tc', StoreTaxClass::getByID($tcID));
+        $this->set('tc', TaxClass::getByID($tcID));
         $this->set('taxRates', StoreTax::getTaxRates());
         $this->requireAsset('selectize');
     }
@@ -127,14 +127,14 @@ class Tax extends DashboardPageController
         if (!$errors->has()) {
             if ($this->request->request->get('taxClassID')) {
                 //update
-                $taxClass = StoreTaxClass::getByID($this->request->request->get('taxClassID'));
+                $taxClass = TaxClass::getByID($this->request->request->get('taxClassID'));
                 $taxClass->update($data);
                 $this->flash('success', t('Tax Class Updated'));
 
                 return Redirect::to('/dashboard/store/settings/tax');
             } else {
                 //add.
-                StoreTaxClass::add($data);
+                TaxClass::add($data);
                 $this->flash('success', t('Tax Class Added'));
 
                 return Redirect::to('/dashboard/store/settings/tax');
@@ -154,7 +154,7 @@ class Tax extends DashboardPageController
             $countries = [];
 
             foreach ($data['taxClassRates'] as $taxrateID) {
-                $taxrate = StoreTaxRate::getByID($taxrateID);
+                $taxrate = TaxRate::getByID($taxrateID);
 
                 if (in_array($taxrate->getTaxCountry(), $countries)) {
                     $e->add(t("You can only have one tax rate per country with your current tax settings"));
@@ -170,7 +170,7 @@ class Tax extends DashboardPageController
 
     public function delete_class($tcID)
     {
-        StoreTaxClass::getByID($tcID)->delete();
+        TaxClass::getByID($tcID)->delete();
         $this->flash('success', t('Tax Class Deleted'));
 
         return Redirect::to("/dashboard/store/settings/tax");

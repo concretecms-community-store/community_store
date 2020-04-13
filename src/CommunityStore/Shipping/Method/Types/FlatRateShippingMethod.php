@@ -2,14 +2,14 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator as StoreCalculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer as StoreCustomer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer as StoreShippingMethodOffer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer;
 
 /**
  * @ORM\Entity
@@ -250,7 +250,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinRange()
     {
-        $subtotal = StoreCalculator::getSubTotal();
+        $subtotal = Calculator::getSubTotal();
         $max = $this->getMaximumAmount();
         if (0 != $max) {
             if ($subtotal >= $this->getMinimumAmount() && $subtotal <= $this->getMaximumAmount()) {
@@ -267,7 +267,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinWeight()
     {
-        $totalWeight = StoreCart::getCartWeight();
+        $totalWeight = Cart::getCartWeight();
         $maxWeight = $this->getMaximumWeight();
         if (0 != $maxWeight) {
             if ($totalWeight >= $this->getMinimumWeight() && $totalWeight <= $this->getMaximumWeight()) {
@@ -284,7 +284,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinSelectedCountries()
     {
-        $customer = new StoreCustomer();
+        $customer = new Customer();
         $custCountry = $customer->getValue('shipping_address')->country;
         if ('all' != $this->getCountries()) {
             $selectedCountries = explode(',', $this->getCountriesSelected());
@@ -300,7 +300,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     private function getRate()
     {
-        $shippableItems = StoreCart::getShippableItems();
+        $shippableItems = Cart::getShippableItems();
 
         if (count($shippableItems) > 0) {
             if ('quantity' == $this->getRateType()) {
@@ -342,7 +342,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
         //go through items
         foreach ($shippableItems as $item) {
             //check if items are shippable
-            $product = StoreProduct::getByID($item['product']['pID']);
+            $product = Product::getByID($item['product']['pID']);
             if ($product->isShippable()) {
                 $totalQty = $totalQty + $item['product']['qty'];
             }
@@ -362,7 +362,7 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
     {
         $offers = [];
 
-        $offer = new StoreShippingMethodOffer();
+        $offer = new ShippingMethodOffer();
         $offer->setRate($this->getRate());
 
         $offers[] = $offer;

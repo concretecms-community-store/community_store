@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\File\File;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\File\File;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as StoreProduct;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 
 /**
  * @ORM\Entity
@@ -86,14 +86,14 @@ class ProductImage
         return $em->find(get_class(), $piID);
     }
 
-    public static function getImagesForProduct(StoreProduct $product)
+    public static function getImagesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
     }
 
-    public static function getImageObjectsForProduct(StoreProduct $product)
+    public static function getImageObjectsForProduct(Product $product)
     {
         $images = self::getImagesForProduct($product);
         $imageObjects = [];
@@ -104,7 +104,7 @@ class ProductImage
         return $imageObjects;
     }
 
-    public static function addImagesForProduct(array $images, StoreProduct $product)
+    public static function addImagesForProduct(array $images, Product $product)
     {
         self::removeImagesForProduct($product);
 
@@ -116,7 +116,7 @@ class ProductImage
         }
     }
 
-    public static function removeImagesForProduct(StoreProduct $product)
+    public static function removeImagesForProduct(Product $product)
     {
         $existingImages = self::getImagesForProduct($product);
         foreach ($existingImages as $img) {

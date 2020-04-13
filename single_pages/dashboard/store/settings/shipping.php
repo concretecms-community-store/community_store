@@ -1,7 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as StoreShippingMethod;
+use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $addViews = array('add','add_method','edit');
@@ -97,7 +98,7 @@ if(in_array($controller->getAction(),$addViews)){
 
     if(count($methodTypes) > 0){?>
 		<?php foreach($methodTypes as $methodType) {
-            $typemethods = StoreShippingMethod::getMethods($methodType->getShippingMethodTypeID());
+            $typemethods = ShippingMethod::getMethods($methodType->getShippingMethodTypeID());
             if (count($typemethods) > 0) {
                 $shippingmethodcount++;
                 ?>
