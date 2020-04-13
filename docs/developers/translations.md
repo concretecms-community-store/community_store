@@ -1,6 +1,6 @@
 # Translations
 
-Interface translations for Community Store are managed at https://translate.concrete5.org/translate/package/community_store
+Interface translations for Community Store are managed at [translate.concrete5.org](https://translate.concrete5.org/translate/package/community_store).
 This is the same translation system used for concrete5 add-ons in the official marketplace, meaning that you can visit `/index.php/dashboard/system/basics/multilingual/update` within your concrete5 installation to download and install/update the most up-to-date translation. 
 
 To provide translations, please register/login at the above link.
