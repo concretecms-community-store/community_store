@@ -1,5 +1,0 @@
-# Settings
-
-## Shipping
-
-## Tax

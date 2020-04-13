@@ -2,6 +2,8 @@
 
 Products are created and edited via the Dashboard, and are stored independently of pages or blocks.
 
+Key details about a product, such as its pricing, SKU, stock level and descriptions are edited on the 'Overview' tab when editing a product.
+Other options on a product are found through the other tabs - on adding a product for the first time is is recommended to review all options that are available for a product through these tabs.
 
 ## Options and Variations
 
@@ -27,7 +29,15 @@ This means that only the values that need to be adjusted only need be entered.
 Keep in mind that a variation of a product is created for every combination of option that is selected to be in variations, meaning that many options in variations can result is very larger numbers of combinations. 
 
 
-## Groups and Categories
+## Groups, Categories and Manufacturers
+
+There are three different ways that products can be categorized, with each way being used for different organizational purposes:
+
+- Using Product Groups - use to group products so they can be filtered within the dashboard, as well as on product list blocks
+- Categorised under pages - uses pages within a site's sitemap 
+- Using Manufacturers - a way to group products that can be show on product blocks, linking to a manufacturer page
+
+Review the [Categorization How-To](/how-tos/categorization) page for more detail on how these group concepts are used
 
 ## Attributes
 
@@ -35,5 +45,7 @@ Live page, user or file attributes in concrete5, product attributes can be creat
 Such attributes are intended to be used programmatically, such as in custom block templates, or by custom shipping methods.
 
 Attributes for a product can be __edited__ via the Attributes tab when adding or editing a product.
+
+The display of product attributes is only handled programmatically - see  [Product Attributes](/developers/attributes.html#product-attributes) for how to access product attribute data.
 
 

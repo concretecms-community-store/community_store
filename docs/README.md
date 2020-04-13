@@ -6,7 +6,7 @@ actionLink: /user-guide/
 tagline: An open, free and community developed eCommerce system for concrete5
 features:
 - title: Powerful eCommerce 
-  details: A wide range of product and checkout options, for digital and traditional eCommerce requirements
+  details: Product and checkout options suiting a wide range of digital and traditional eCommerce requirements
 - title: Highly Customizable
   details: Style, override and configure blocks, pages and other store elements with freedom
 - title: Open Source & Free 
@@ -14,6 +14,3 @@ features:
 
 footer: MIT Licensed
 ---
-
-
- 

@@ -51,3 +51,11 @@ Manufacturers are a grouping of products specifically intended to represent the 
 Manufacturers are managed through the **Store / Products / Manufacturers** dashboard page, and can be selected against each product.
 Each manufacturers added can be associated with a page within your site, and when displayed against a product will link through to that page.
  
+::: tip Terminology
+The term 'manufacturer' is used only to suggest who or where a product ordinates from.
+
+Another example of usage could be on website that sells artwork, treating the manufacturer as the artists of each piece.
+Using this way of categorizing products, when an individual product is viewed the artist for the product can be displayed, presenting a link to view their artist profile and other works.
+This setup would only require a modest update of the product block templates to change the word from Manufacturer to Artist.
+:::
+

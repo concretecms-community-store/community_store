@@ -41,6 +41,10 @@ The creation of a category page is similar to other custom page types in concret
 New categories can then be created as would other pages with concrete5 (i.e. through Composer), being linked to via common blocks as as Auto-Nav and Page List. 
 Products can then be placed within the created categories by adding the category page(s) via the 'Categorized under pages' section when editing a product.
  
+## Product List Filter blocks
+Product List Filter blocks allow a visitor to filter Product List blocks on a page via product price as well as __product attributes__.
+Note that product __options__ are not filterable. If you offer product options such as _size_ and wish to filter by the size, created a corresponding product attribute. 
+ 
 ## Customizations and Theming
 - All blocks can be overridden and customized using Custom Block Templates
 - The three single pages, `/cart`, `/checkout` and `/checkout/complete` can also be overridden

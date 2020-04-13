@@ -1,6 +1,6 @@
 module.exports = {
     title: 'Community Store for concrete5',
-    description: '',
+    description: 'An open, free and community developed eCommerce system for concrete5',
     themeConfig: {
         nav: [
             {text: 'User Guide', link: '/user-guide/'},
@@ -26,7 +26,8 @@ module.exports = {
                         children: [
                             'products',
                             'orders',
-                            'discounts'
+                            'discounts',
+                            'multilingual'
 
                         ]
                     } ,
@@ -51,6 +52,7 @@ module.exports = {
                         'donations',
                         'categorization',
                         'related-products',
+                        'restricting-countries',
                         'multilingual',
                     ]
                 }],
@@ -61,11 +63,12 @@ module.exports = {
                     collapsable: false,
                     children: [
                         '',
-                        'events',
                         'attributes',
+                        'events',
                         'shipping_methods',
                         'payment_methods',
-                        'cli-commands'
+                        'cli-commands',
+                        'translations'
                     ]
                 }]
             ,
