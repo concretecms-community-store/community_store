@@ -1,4 +1,5 @@
 module.exports = {
+    base: '/community_store/',
     title: 'Community Store for concrete5',
     description: 'An open, free and community developed eCommerce system for concrete5',
     themeConfig: {
