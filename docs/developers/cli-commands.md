@@ -9,7 +9,7 @@ This command is useful if you have been testing an install and which to clear te
     cstore:reset [<type>]
 
 Where the type options are:
-* orders
-* products
-* discounts
-* all - combining all three options above
+* `orders`
+* `products`
+* `discounts`
+* `all` - combining all three options above
