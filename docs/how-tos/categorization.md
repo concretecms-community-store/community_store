@@ -1,0 +1,53 @@
+# Product Categorization
+
+There are three key ways to categorize products within Community Store
+
+- Using Product Groups
+- Categorised under pages
+- Using Manufacturers
+
+## Product Groups
+
+Product Groups are a broad way to categorize product, either for reference within the dashboard, or, for display to customers.
+
+Product List blocks can be filtered to show products from one or more product groups, or to exclude products from product groups.
+
+An example of product group could be 'Great Gift Ideas', where you selectively pick products from your store for this group.
+You could then place a Product List block anywhere on your site filtering to this group.
+
+## Categorised under pages
+
+If your site presents different categories of products through corresponding pages within your sitemap, this method of categorization allows for grouping products __without__ have to create a Product Group for each category page.
+
+For example, your site might sell games and have the following site structure:
+
+- Home
+- Shop
+    - Games
+        - Card Games
+        - Board Games
+        - Table-top Games
+        - Puzzles
+    - Video Games
+- About, Contact, etc
+
+To manage such a site, you would likely have a page type, 'Product Category', configured so you can easily add a new product category page.
+On this Product Category page type, you would have a default Product List block, configured with **List Products** set to **Under current page**.
+ 
+Then when adding new products, to have them display under on their category pages all that is required is select one or more of the category pages from the sitemap using the **Categorized under page** selector on a product.
+
+Larger catalogs are likely to be easier to manage if there is a specific page type created to categorise products, but this is not a requirement - you can categorise products under any page within your sitemap. 
+
+::: tip Showing products from all nested page
+In the above example you may wish to show all games products on the top level 'Games' page. 
+To do this, you would add a Product List block and configure the **List Products** option to be **Under current page and child pages**.
+:::
+
+
+## Manufacturers
+
+Manufacturers are a grouping of products specifically intended to represent the brand or manufacturer.
+
+Manufacturers are managed through the **Store / Products / Manufacturers** dashboard page, and can be selected against each product.
+Each manufacturers added can be associated with a page within your site, and when displayed against a product will link through to that page.
+ 

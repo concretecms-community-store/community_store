@@ -49,7 +49,7 @@ module.exports = {
                         'digital',
                         'memberships',
                         'donations',
-                        'category-pages',
+                        'categorization',
                         'related-products',
                         'multilingual',
                     ]
@@ -61,7 +61,6 @@ module.exports = {
                     collapsable: false,
                     children: [
                         '',
-                        'customizations',
                         'events',
                         'attributes',
                         'shipping_methods',

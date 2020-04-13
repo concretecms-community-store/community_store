@@ -1,3 +1,0 @@
-# Category Pages
-
-## Filter Blocks
