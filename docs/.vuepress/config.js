@@ -2,6 +2,9 @@ module.exports = {
     base: '/community_store/',
     title: 'Community Store for concrete5',
     description: 'An open, free and community developed eCommerce system for concrete5',
+    head: [
+       ['link', { rel: "shortcut icon", href: "/favicon.ico"}]
+    ],
     themeConfig: {
         nav: [
             {text: 'User Guide', link: '/user-guide/'},
@@ -76,4 +79,3 @@ module.exports = {
         }
     }
 }
-
