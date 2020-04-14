@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* A concrete5 version of 8.4 or higher is recommended.
+* A concrete5 version of 8.4 or higher is required.
 
 Community Store is an _add on_ for the content management system concrete5, so it is not a stand-alone shopping cart.
 Is is recommended to use a release of Community Store, rather than the master branch.
