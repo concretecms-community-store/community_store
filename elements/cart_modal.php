@@ -92,10 +92,10 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php } ?>
                                 <?php if ($productPage) { ?>
                                     <a href="<?= URL::to($productPage) ?>">
-                                        <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                                        <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                                     </a>
                                 <?php } else { ?>
-                                    <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                                    <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                                 <?php } ?>
 
                                 <?php if($cartItem['productAttributes']){?>
@@ -128,8 +128,8 @@ $csm = $app->make('cs/helper/multilingual');
                                             ?>
                                             <?php if ($optiongroup) { ?>
                                             <div class="store-cart-list-item-attribute">
-                                                <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $product->getID(), $optionID)) : '') ?>:</span>
-                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $product->getID(), $valID)) : '') ?></span>
+                                                <span class="store-cart-list-item-attribute-label"><?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $cartItem['product']['pID'], $optionID)) : '') ?>:</span>
+                                                <span class="store-cart-list-item-attribute-value"><?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $cartItem['product']['pID'], $valID)) : '') ?></span>
                                             </div>
                                             <?php } ?>
                                         <?php }  ?>
@@ -146,7 +146,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </td>
 
                             <td class="store-cart-list-product-qty col-xs-3 text-right">
-                                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
+                                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID']); ?>
                                 <span class="store-qty-container
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>

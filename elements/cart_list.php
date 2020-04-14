@@ -64,11 +64,11 @@ if ($cart) {
             } ?>
                 <?php if ($productPage) { ?>
                 <a href="<?= URL::to($productPage) ?>">
-                    <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                    <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                 </a>
                 <?php
             } else { ?>
-                <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                 <?php
             } ?>
 
@@ -103,9 +103,9 @@ if ($cart) {
                     <?php if ($optionvalue) { ?>
                     <div class="store-cart-list-item-attribute">
                         <span class="store-cart-list-item-attribute-label">
-                            <?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $product->getID(), $optionID)) : '') ?>:</span>
+                            <?= ($optiongroup ? h($csm->t($optiongroup->getName(), 'optionName', $cartItem['product']['pID'], $optionID)) : '') ?>:</span>
                         <span class="store-cart-list-item-attribute-value">
-                            <?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $product->getID(), $valID)) : '') ?></span>
+                            <?= ($optionvalue ? h($csm->t($optionvalue, 'optionValue', $cartItem['product']['pID'], $valID)) : '') ?></span>
                     </div>
                     <?php
                 } ?>
@@ -133,7 +133,7 @@ if ($cart) {
                 } else { ?>
                     1
                 <?php } ?>
-                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
+                <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
                 <?php if ($quantityLabel) { ?>
                 <span class="store-cart-qty-label small">
                     <?= $quantityLabel; ?></span>

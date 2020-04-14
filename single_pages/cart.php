@@ -80,10 +80,10 @@ if ($cart) {
                         <?php } ?>
                         <?php if ($productPage) { ?>
                             <a href="<?= URL::to($productPage) ?>">
-                                <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                                <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                             </a>
                         <?php } else { ?>
-                            <?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                            <?= $csm->t($product->getName(), 'productName', $cartItem['product']['pID']); ?>
                         <?php } ?>
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-list-item-attributes">
@@ -138,7 +138,7 @@ if ($cart) {
                             <?php } ?>
                         </td>
                         <td class="store-cart-product-qty text-right">
-                            <?php $quantityLabel = $product->getQtyLabel(); ?>
+                            <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
                             <span class="store-qty-container pull-right
                             <?php if ($quantityLabel) { ?>input-group
