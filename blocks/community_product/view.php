@@ -469,7 +469,7 @@ if (is_object($product) && $product->isActive()) {
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
                                    title="<?= h($imgObj->getTitle()); ?>"
                                    class="store-product-thumb text-center center-block">
-                                    <img src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
+                                    <img class="img-responsive" src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
                                          alt="<?= h($imgTitle); ?>">
                                 </a>
                             </div>
