@@ -10,3 +10,6 @@ products.php.orig
 /node_modules/
 package-lock.json
 /docs/.vuepress/dist/
+docs/.idea/docs.iml
+docs/.idea/modules.xml
+docs/.idea/workspace.xml

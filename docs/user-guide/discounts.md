@@ -10,14 +10,14 @@ A discount rule can be configured to:
 - deduct the discount from the items sub-total or the shipping
 - apply automatically, or through the use of discount codes
 - apply within a certain date range
-- to selected groups of products
+- apply to selected groups of products
 - be available to selected user groups only
-- when the item count in a cart is within a minimum and maximum
+- apply when the item count in a cart is within a minimum and maximum
 
 Using the above restrictions, discounts can be configured to target very specific use-cases. Multiple discount rules can be created and made active at once.
 
 ### Code based Discounts
-To enter codes for a code based discount, first configured and create the discount rule. Once saved, a **Manage Codes** button is made available. Within the codes page, enter each code to be used to trigger the discount on a new line within the Code(s) field.
+To enter codes for a code based discount, first configure and create the discount rule. Once saved, a **Manage Codes** button is made available. Within the codes page, enter each code to be used to trigger the discount on a new line within the Code(s) field.
 
 ::: tip Codes are case-insensitive
 Note that entered codes are case-insentive, meaning that a code entered as `DISCOUNT123` is the same as `discount123`, and a customer can enter either variant to apply that discount.

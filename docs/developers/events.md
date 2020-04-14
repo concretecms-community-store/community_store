@@ -2,7 +2,7 @@
  
 The Community Store also includes 'Events' - these are hooks that [can be subscribed to with custom code](https://documentation.concrete5.org/developers/framework/application-events/hooking-application-events), allowing additional processing to take place.
 
-An example might be that you wish to communicate with a separate warehouse database/API to determine current stock levels or prices. By subscribing to the the product add, update and duplicate events, you could create code that takes the product SKU, looks it up in the external database and then updates the product accordingly. 
+An example might be that you wish to communicate with a separate warehouse database/API to determine current stock levels or prices. By subscribing to the `on_community_store_product_add` and `on_community_store_product_update` events, you could create code that takes the product SKU, looks it up in the external database and then updates the product accordingly. 
 
 Another usage example is for when you need to do some additional processing when an order is placed. The example might be that you may need to send an email to a supplier when a particular product is purchased. Events allow such functionality to be added through additional concrete5 add-ons.
 
@@ -17,7 +17,7 @@ Another usage example is for when you need to do some additional processing when
 - `on_community_store_product_add` - when a new product is added
 - `on_community_store_product_update`- when an existing product is updated
 - `on_community_store_product_delete` - when a product is deleted
-- `on_community_store_product_duplicat` - when a product is duplicated
+- `on_community_store_product_duplicate` - when a product is duplicated
 
 ## Cart events
 - `on_community_store_cart_action` - any time an action with a cart is performed
@@ -30,12 +30,12 @@ Another usage example is for when you need to do some additional processing when
 - `on_community_store_cart_pre_clear`
 - `on_community_store_cart_post_clear`
 
-When these events are fired, the event object passed includes the order or product it relates so. In the case of when a product is updated, or duplicated, the event object includes both the before and after products. 
+When these events are fired, the event object passed includes the order or product it relates to. In the case of when a product is updated, or duplicated, the event object includes both the before and after products. 
 
 The `on_community_store_order_status_update` event also includes the previous status of the order.
 
-The community_store_event_examples package includes sample code as to how to subscribe to and use the data from all the events above - https://github.com/concrete5-community-store/community_store_event_example
+The community_store_event_examples package includes sample code as to how to subscribe to and use the data from all the events above - [https://github.com/concrete5-community-store/community_store_event_example](https://github.com/concrete5-community-store/community_store_event_example)
 
 ### Slack Integration
-To hook into events and send notifications to Slack, try the package: https://github.com/a3020/slife_community_store
+To hook into events and send notifications to Slack, try the package: [https://github.com/a3020/slife_community_store](https://github.com/a3020/slife_community_store) 
 

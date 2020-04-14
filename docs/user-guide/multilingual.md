@@ -1,12 +1,12 @@
 # Multilingual
 
 When your concrete5 site is configured with [multiple languages](/how-tos/multilingual), product details, options and other pieces of text displayed in your store can be translated in full.
-Translations are managed through the **Store / Multilingual** dashboard page.
+Translations are managed through the **Store / Multilingual** Dashboard page.
 
-The translations process is designed that repeatly used 'common' pieces of text to describe products and product options only needs to be translated once, instead of on each product.
-Community Store will refer to the 'common' translations first when displaying a translated product, but the pieces of text can still be individual translated on a per-product basis if necessary.
+The translations process is designed such that repeatedly used 'common' pieces of text to describe products and product options only needs to be translated once, instead of on each product.
+Community Store will refer to the 'common' translations first when displaying a translated product, but the pieces of text can still be individually translated on a per-product basis if necessary.
 
-Therefore, it is suggested to visit the  **Store / Multilingual / Common** dashboard page first and complete the translations there, before working through individual product translations.
+Therefore, it is suggested to visit the  **Store / Multilingual / Common** Dashboard page first and complete the translations there, before working through individual product translations.
 
 ## Product Translations
 The following items can be translated per product in this section:
