@@ -139,7 +139,7 @@ class Products extends DashboardSitePageController
     public function edit($pID)
     {
         if ($this->request->getMethod() == 'POST') {
-            $this->save();
+            return $this->save();
         }
 
         $this->loadFormAssets();

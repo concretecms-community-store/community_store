@@ -53,15 +53,15 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
 
         if (!$upgrade) {
-            $cartPage = self::installSinglePage(  '/cart', $pkg);
-            $checkoutPage = self::installSinglePage(  '/checkout', $pkg);
-            $completePage = self::installSinglePage(   '/checkout/complete', $pkg);
+            $cartPage = self::installSinglePage('/cart', $pkg);
+            $checkoutPage = self::installSinglePage('/checkout', $pkg);
+            $completePage = self::installSinglePage('/checkout/complete', $pkg);
 
-            $completePage->move($checkoutPage);
             $defaultSlug = self::getDefaultSlug();
 
             $extraCheckoutPage = Page::getByPath($defaultSlug . '/checkout-1');
             if ($extraCheckoutPage) {
+                $completePage->move($checkoutPage);
                 $extraCheckoutPage->delete();
             }
 

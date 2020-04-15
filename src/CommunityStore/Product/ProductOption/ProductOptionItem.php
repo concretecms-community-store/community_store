@@ -115,7 +115,7 @@ class ProductOptionItem
 
     public function setPriceAdjustment($priceAdjust)
     {
-        $this->pPriceAdjust = $priceAdjust;
+        $this->pPriceAdjust = (float)$priceAdjust;
     }
 
     public function getWeightAdjustment()
@@ -125,7 +125,7 @@ class ProductOptionItem
 
     public function setWeightAdjustment($weightAdjust)
     {
-        $this->pWeightAdjust = $weightAdjust;
+        $this->pWeightAdjust = (float)$weightAdjust;
     }
 
     private function setSort($sort)

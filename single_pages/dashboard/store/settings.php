@@ -591,15 +591,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
         </div>
-
-
-
-
-
-
-
-
-    </div><!-- .row -->
+    </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

@@ -89,6 +89,7 @@ class Cart
                     }
 
                     if ($include) {
+                        $product->shallowClone = true;
                         $cartitem['product']['object'] = clone $product;
                         $cartitem['product']['object']->setPriceAdjustment($cartitem['priceAdjustment']);
                         $cartitem['product']['object']->setWeightAdjustment($cartitem['weightAdjustment']);
@@ -109,7 +110,6 @@ class Cart
                                 }
                             }
                         }
-
                     }
                 } else {
                     $update = true;

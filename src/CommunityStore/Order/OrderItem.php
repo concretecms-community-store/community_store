@@ -297,7 +297,7 @@ class OrderItem
 
         $product = $data['product']['object'];
 
-        $productName = $csm->t($product->getName(), 'productName', $data['product']['pID']);
+        $productName = $csm->t($product->getName(), 'productName', $product->getID());
         $qty = $data['product']['qty'];
 
         if (isset($data['product']['customerPrice'])) {
@@ -306,7 +306,7 @@ class OrderItem
             $productPrice = $product->getActivePrice($qty);
         }
 
-        $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $data['product']['pID']);
+        $qtyLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID());
 
         $sku = $product->getSKU();
         $variation = $product->getVariation();

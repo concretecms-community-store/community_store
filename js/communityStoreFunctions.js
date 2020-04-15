@@ -120,7 +120,12 @@ function updateActiveTab(historyPopEvent) {
 
         $('#'+paneTarget).addClass("active");
         $('a[data-pane-toggle]:eq('+paneTargetIndex+')').parent().addClass("active");
+
         window.location = '#';
+
+        if(history.pushState) {
+            history.pushState(null, null, hash);
+        }
     }
 
 }

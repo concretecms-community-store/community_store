@@ -1218,8 +1218,8 @@ $ps = $app->make('helper/form/page_selector');
                         optItemsContainer.append(optItemsTemplate({
                             poiName: '<?= h($optionItem->getName())?>',
                             poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
-                            poiPriceAdjust: '<?= h($optionItem->getPriceAdjustment())?>',
-                            poiWeightAdjust: '<?= h($optionItem->getWeightAdjustment())?>',
+                            poiPriceAdjust: '<?=  $optionItem->getPriceAdjustment() != 0 ? $optionItem->getPriceAdjustment() : ''; ?>',
+                            poiWeightAdjust: '<?= $optionItem->getWeightAdjustment() != 0  ? $optionItem->getWeightAdjustment() : ''?>',
                             poiID: '<?= $optionItem->getID()?>',
                             optGroup: <?= $i?>,
                             sort: <?= $optionItem->getSort()?>,
