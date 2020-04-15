@@ -111,7 +111,12 @@ class Installer
         $defaultSlug = self::getDefaultSlug();
         $productParentPage = Page::getByPath($defaultSlug . '/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
-            $productParentPage = Page::getByPath($defaultSlug ? $defaultSlug : '/')->add(
+        	if ($defaultSlug === '' || $defaultSlug === '/') {
+        		$parentPage = Page::getByID(1);
+			} else {
+        		$parentPage = Page::getByPath($defaultSlug);
+			}
+            $productParentPage = $parentPage->add(
                 PageType::getByHandle('page'),
                 [
                     'cName' => t('Products'),
