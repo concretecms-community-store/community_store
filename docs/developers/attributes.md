@@ -4,14 +4,14 @@ Product and Order attributes can be used in the same way that other attributes i
 
 ## Product Attributes
 
-Custom Product attributes are created through the **Store / Products / Attributes** dashboard page, and then stored against products through their attributes tab (or programatically assigned).
+Custom Product attributes are created through the **Store / Products / Attributes** Dashboard page, and then stored against products through their attributes tab (or programmatically assigned).
 
 A product attribute can be output in a template, etc, by simply using:
 ``` php
 echo $product->getAttribute('attribute_handle');
 ```
 
-where `$product` is a product object. Similarily, an attribute value can be __stored__ against a product with:
+where `$product` is a product object. Similarly, an attribute value can be _stored_ against a product with:
 
 ``` php
 echo $product->setAttribute('attribute_handle', 'A value to set');
@@ -20,7 +20,7 @@ echo $product->setAttribute('attribute_handle', 'A value to set');
 When outputting product attributes on Product and Product List blocks, the `$product` object is directly available (in the case of the Product List block it's within a loop).
 
 If a product attribute is needing to be used in other places, such as in a shipping method, it is a case of be able to fetch the product object.
-For example, to loop through the products and add together values from found an attribute with the handle `handling_fee`:
+For example, to loop through the products and add together values from an attribute with the handle `handling_fee`:
 
 ``` php
 $cartItems = \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart::getCart();
@@ -38,4 +38,4 @@ In the above case, the cart items are returned as an array, with the product obj
 
 ## Order Attributes
 
-Order attributes work the same as product attributes, except that both getting and setting of attributes is handled programmatically.
+Order attributes work the same way as product attributes, except that both the getting and setting of order attributes is handled programmatically.

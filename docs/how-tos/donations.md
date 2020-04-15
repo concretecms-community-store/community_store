@@ -15,5 +15,5 @@ Also set the **Offer quantity selection** option to **No, only allow one of this
 
 
 ::: tip Invoice Payments
-If you are configuring a product to be used for customers to pay existing invoices online, add a **Text Field** option to the product, set to be required, with a label such as 'Invoice Number'. This field can be used to associated the payment used with an invoice number, and also allows multiple invoice payments to be made within the same order.
+If you are configuring a product to be used for customers to pay existing invoices online, add a **Text Field** option to the product, set to be required, with a label such as 'Invoice Number'. This field can be used to associate the payment with an invoice number, and also allows multiple invoice payments to be made within the same order.
 :::

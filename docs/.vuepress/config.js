@@ -21,7 +21,7 @@ module.exports = {
                         '',
                         'essentials',
                         'installation',
-                        'configuration',
+                        'configuration'
                     ]
                 },
                     {
@@ -39,7 +39,7 @@ module.exports = {
                         title: 'Going Live',
                         collapsable: false,
                         children: [
-                            'going-live',
+                            'going-live'
                         ]
                     }
 
@@ -57,7 +57,7 @@ module.exports = {
                         'categorization',
                         'related-products',
                         'restricting-countries',
-                        'multilingual',
+                        'multilingual'
                     ]
                 }],
             '/developers/':
@@ -75,7 +75,7 @@ module.exports = {
                         'translations'
                     ]
                 }]
-            ,
+
         }
     }
 }

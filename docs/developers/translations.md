@@ -5,4 +5,4 @@ This is the same translation system used for concrete5 add-ons in the official m
 
 To provide translations, please register/login at the above link.
 
-In the past, translations have been directly stored alongside the project. If you are starting a new translation on translate.concrete5.org, you may find that existing translations at https://github.com/concrete5-community-store/community_store/tree/master/languages provide a good starting point.
+In the past, translations have been directly stored alongside the project. If you are starting a new translation on translate.concrete5.org, you may find that existing translations at [https://github.com/concrete5-community-store/community_store/tree/master/languages](https://github.com/concrete5-community-store/community_store/tree/master/languages) provide a good starting point.

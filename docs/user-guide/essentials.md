@@ -5,12 +5,12 @@ Like most add-ons for concrete5, Community Store follows a common pattern of des
 Because of this common design, if you are an existing concrete5 user or developer you may find that the following outline of how Community Store is structured may be all that is required to start working with it:
 
 ## Installation
-The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend concrete5** section of the dashboard.
+The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend concrete5** section of the Dashboard.
 
-Once installed, the dashboard page **Store / Settings** should be visited to configure default settings such the store's currency, notification emails, shipping units and checkout modes. 
+Once installed, the Dashboard page **Store / Settings** should be visited to configure default settings such the store's currency, notification emails, shipping units and checkout modes. 
 
 ## What is installed
-- A dashboard page, **Store**, with sub-pages to view orders, configure products and manage other settings
+- A Dashboard page, **Store**, with sub-pages to view orders, configure products and manage other settings
 - Four _Block_ types under the grouping Store:
     - **Product** - displays an individual product
     - **Product List** - displays a list of products, with or without add-to-cart controls
@@ -26,9 +26,9 @@ Once installed, the dashboard page **Store / Settings** should be visited to con
 - A **Product Breadcrumb** custom template for the **Auto-Nav** block is made available, to display a breadcrumb trail of pages for a product's _categorization_, instead of it's true location within a site
 
 ## Products and Product Pages
-- Products are added via the dashboard and exist independently of pages and/or blocks. When added, a corresponding Product page is created under `/products`
+- Products are added via the Dashboard and exist independently of pages and/or blocks. When added, a corresponding Product page is created under `/products`
 - The default Product page has a Product block on it, configured to look at the page to determine which product to display
-- Products exist independently of product pages and blocks - product pages are not required, or product blocks can be placed freely across a site
+- Products exist independently of product pages and blocks - product pages are not required, and product blocks can be placed freely across a site
 - Product pages can be moved in the sitemap if desired
 - Products can be categorized (and therefore filtered) through Product Groups, but also under pages of a site
 
@@ -42,8 +42,8 @@ New categories can then be created as would other pages with concrete5 (i.e. thr
 Products can then be placed within the created categories by adding the category page(s) via the 'Categorized under pages' section when editing a product.
  
 ## Product List Filter blocks
-Product List Filter blocks allow a visitor to filter Product List blocks on a page via product price as well as __product attributes__.
-Note that product __options__ are not filterable. If you offer product options such as _size_ and wish to filter by the size, created a corresponding product attribute. 
+Product List Filter blocks allow a visitor to filter Product List blocks on a page via product price as well as _product attributes_.
+Note that product _options_ are not filterable. If you offer product options such as _size_ and wish to filter by the size, created a corresponding product attribute. 
  
 ## Customizations and Theming
 - All blocks can be overridden and customized using Custom Block Templates
@@ -51,11 +51,11 @@ Note that product __options__ are not filterable. If you offer product options s
 - The default output of single pages and blocks is designed for Bootstrap 3, but can be styled with any CSS/Framework
 - When customizing HTML output, leave all classes in place that start with the prefix `store-`
 - Receipt, order notification and new user emails can be customized by overriding the templates found in `/mail`
-- Additional header and footer content can be added to customer receipt emails via the Notifications and Receipts section of the Store / Settings dashboard page.
+- Additional header and footer content can be added to customer receipt emails via the **Notifications and Receipts** section of the **Store / Settings** Dashboard page.
 - Other components of the store, such as the cart overlay or shipping methods displayed in the checkout can be customized by overriding the files 
 
 ## Multilingual
-When a concrete5 site has multiple languages set up, the cart, checkout and product pages are copied across language trees in the same way as other pages. Product names, descriptions and other text can then translated via the Store / Multilingual dashboard pages.
+When a concrete5 site has multiple languages set up, the cart, checkout and product pages are copied across language trees in the same way as other pages. Product names, descriptions and other text can then be translated via the **Store / Multilingual** Dashboard pages.
  
 
 

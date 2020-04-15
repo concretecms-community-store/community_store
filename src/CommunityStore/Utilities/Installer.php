@@ -53,40 +53,65 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
 
         if (!$upgrade) {
-            self::installSinglePage('/cart', $pkg);
-            self::installSinglePage('/checkout', $pkg);
-            self::installSinglePage('/checkout/complete', $pkg);
+            $cartPage = self::installSinglePage(  '/cart', $pkg);
+            $checkoutPage = self::installSinglePage(  '/checkout', $pkg);
+            $completePage = self::installSinglePage(   '/checkout/complete', $pkg);
 
-            $cartPage = Page::getByPath('/cart/');
+            $completePage->move($checkoutPage);
+            $defaultSlug = self::getDefaultSlug();
+
+            $extraCheckoutPage = Page::getByPath($defaultSlug . '/checkout-1');
+            if ($extraCheckoutPage) {
+                $extraCheckoutPage->delete();
+            }
+
             $cartPage->setAttribute('exclude_nav', 1);
             $cartPage->setAttribute('exclude_search_index', 1);
             $cartPage->setAttribute('exclude_page_list', 1);
 
-            $checkoutPage = Page::getByPath('/checkout/');
             $checkoutPage->setAttribute('exclude_nav', 1);
             $checkoutPage->setAttribute('exclude_search_index', 1);
             $checkoutPage->setAttribute('exclude_page_list', 1);
 
-            $completePage = Page::getByPath('/checkout/complete');
             $completePage->setAttribute('exclude_nav', 1);
             $completePage->setAttribute('exclude_search_index', 1);
             $completePage->setAttribute('exclude_page_list', 1);
         }
     }
 
+
+    public static function getDefaultSlug() {
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $site = $app->make('site')->getSite();
+        $defaultLocale = $site->getDefaultLocale();
+        $defaultHome = $defaultLocale->getSiteTree()->getSiteHomePageObject();
+        $defaultSlug = '';
+
+        if (is_object($defaultHome)) {
+            $defaultSlug = $defaultHome->getCollectionHandle();
+
+            if ($defaultSlug) {
+                $defaultSlug = '/' . $defaultSlug;
+            }
+        }
+
+        return $defaultSlug;
+    }
+
     public static function installSinglePage($path, $pkg)
     {
         $page = Page::getByPath($path);
         if (!is_object($page) || $page->isError()) {
-            SinglePage::add($path, $pkg);
+            return SinglePage::add($path, $pkg);
         }
     }
 
     public static function installProductParentPage($pkg)
     {
-        $productParentPage = Page::getByPath('/products');
+        $defaultSlug = self::getDefaultSlug();
+        $productParentPage = Page::getByPath($defaultSlug . '/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
-            $productParentPage = Page::getByID(1)->add(
+            $productParentPage = Page::getByPath($defaultSlug ? $defaultSlug : '/')->add(
                 PageType::getByHandle('page'),
                 [
                     'cName' => t('Products'),
@@ -121,25 +146,20 @@ class Installer
 
     public static function setDefaultConfigValues($pkg)
     {
-        self::setConfigValue('community_store.productPublishTarget', Page::getByPath('/products')->getCollectionID());
-        self::setConfigValue('community_store.symbol', '$');
-        self::setConfigValue('community_store.whole', '.');
-        self::setConfigValue('community_store.thousand', ',');
-        self::setConfigValue('community_store.sizeUnit', 'in');
-        self::setConfigValue('community_store.weightUnit', 'lb');
-        self::setConfigValue('community_store.taxName', t('Tax'));
-        self::setConfigValue('community_store.sizeUnit', 'in');
-        self::setConfigValue('community_store.weightUnit', 'lb');
-        self::setConfigValue('community_store.guestCheckout', 'always');
+        $defaultSlug = self::getDefaultSlug();
+
+        Config::save('community_store.productPublishTarget', Page::getByPath($defaultSlug . '/products')->getCollectionID());
+        Config::save('community_store.symbol', '$');
+        Config::save('community_store.whole', '.');
+        Config::save('community_store.thousand', ',');
+        Config::save('community_store.sizeUnit', 'in');
+        Config::save('community_store.weightUnit', 'lb');
+        Config::save('community_store.taxName', t('Tax'));
+        Config::save('community_store.sizeUnit', 'in');
+        Config::save('community_store.weightUnit', 'lb');
+        Config::save('community_store.guestCheckout', 'always');
     }
 
-    public static function setConfigValue($key, $value)
-    {
-        $config = Config::get($key);
-        if (empty($config)) {
-            Config::save($key, $value);
-        }
-    }
 
     public static function installPaymentMethods($pkg)
     {

@@ -2,7 +2,7 @@
 
 One or more products can be related to a product, from the **Related Products** tab when editing a product.
 
-An example might be that you are selling mobile phones, and you wish to relate a mobile phone __cover__ product with each mobile phone.
+An example might be that you are selling mobile phones, and you wish to relate a mobile phone _cover_ product with each mobile phone.
 
 Products added to the list of related products can be re-ordered by drag-and-drop.
 
@@ -12,7 +12,7 @@ Products added to the list of related products can be re-ordered by drag-and-dro
 By default, product pages are not configured to display related products. Related products are displayed via a **Product List** block, configured to do so.
 
 To display related products:
-- Add Product List block to a Product page
+- Add a Product List block to a Product page
 - Configure the block's **List Products** setting to **Related to a product displayed on this page**
 - Configure the **Sort Order** to **Related Products Order** if you wish the order to reflect what is selected on the **Related Products** tab of a product
 - Configure other options on the block as required
