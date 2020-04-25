@@ -35,8 +35,17 @@ $csm = $app->make('cs/helper/multilingual');
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
 
-            <?php if($actiondata['error']) { ?>
-                <p class="alert alert-warning"><?= t('An issue has occured adding the product to the cart. You may be missing required information.');?></p>
+            <?php if($actiondata['error']) {
+				?>
+                <p class="alert alert-warning">
+                    <?php
+                if ($actiondata['errorMsg']){
+                    echo $actiondata['errorMsg'];
+                } else {
+                    echo t('An issue has occured adding the product to the cart. You may be missing required information.');
+                }
+                ?>
+                </p>
             <?php } ?>
         <?php } ?>
 
