@@ -245,6 +245,9 @@ class Cart
 
         \Events::dispatch(CartEvent::CART_PRE_ADD, $event);
 
+        $error = $event->getError();
+        $errorMsg = $event->getErrorMsg();
+
         $customerPrice = false;
 
         if ($product->allowCustomerPrice()) {
@@ -453,7 +456,7 @@ class Cart
         \Events::dispatch(CartEvent::CART_ACTION, $event);
         \Events::dispatch(CartEvent::CART_POST_ADD, $event);
 
-        return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
+        return ['added' => $added, 'error' => $error, 'errorMsg' => $errorMsg, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
     public static function checkForExistingCartItem($cartItem)

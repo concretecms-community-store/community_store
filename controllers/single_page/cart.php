@@ -140,9 +140,11 @@ class Cart extends PageController
             $added = $result['added'];
 
             $error = 0;
+            $errorMsg = null;
 
             if ($result['error']) {
                 $error = 1;
+				$errorMsg = $result['errorMsg'];
             }
 
             $product = Product::getByID($data['pID']);
@@ -150,7 +152,7 @@ class Cart extends PageController
             $productdata['pName'] = $product->getName();
             $productdata['pID'] = $product->getID();
 
-            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error];
+            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error, 'errorMsg' => $errorMsg];
             echo json_encode($returndata);
         }
         exit();
