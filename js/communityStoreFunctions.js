@@ -169,5 +169,3 @@ if ($('a[data-pane-toggle]').length > 0) {
      updateActiveTab();
 
 }
-
-updateTaxStates();
