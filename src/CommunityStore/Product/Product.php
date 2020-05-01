@@ -851,12 +851,30 @@ class Product
 	/**
 	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
 	 */
-    public static function getByCollectionID($cID)
+    public static function getByCollectionID($cID, $allLocales = true)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+        $product =  $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+
+        // if product not found, look for it via multilingual related page
+        if ($allLocales && !$product) {
+            $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+            $site = $app->make('site')->getSite();
+            if ($site) {
+                $locale = $site->getDefaultLocale();
+
+                if ($locale) {
+                    $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
+                    $product = Product::getByCollectionID($originalcID, false);
+                }
+            }
+        }
+
+        return $product;
+
     }
+
 
     public function getAttributes()
     {

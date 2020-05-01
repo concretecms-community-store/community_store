@@ -151,19 +151,6 @@ class Controller extends BlockController
             if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
                 $product = Product::getByCollectionID($cID);
-
-                // if product not found, look for it via multilingual related page
-                if (!$product) {
-                    $site = $this->app->make('site')->getSite();
-                    if ($site) {
-                        $locale = $site->getDefaultLocale();
-
-                        if ($locale) {
-                            $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
-                            $product = Product::getByCollectionID($originalcID);
-                        }
-                    }
-                }
             } else {
                 $product = Product::getByID($this->relatedPID);
             }

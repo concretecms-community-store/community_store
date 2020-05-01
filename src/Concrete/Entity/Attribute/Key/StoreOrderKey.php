@@ -9,6 +9,7 @@ use Concrete\Core\Attribute\Set as AttributeSet;
 /**
  * @ORM\Entity
  * @ORM\Table(name="CommunityStoreOrderAttributeKeys")
+ * @ORM\DiscriminatorMap({ "storeorderkey" = "StoreOrderKey"})
  */
 class StoreOrderKey extends Key
 {
