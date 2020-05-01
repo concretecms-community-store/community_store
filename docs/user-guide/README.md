@@ -34,9 +34,15 @@ Another goal is to provide shop components that can take full advantage of concr
 On a technical level, Community Store aims to follow concrete5's 'best practices' and coding conventions. 
 
  
- 
 ## Documentation Scope
 
 The aim of this documentation is not to cover every feature of Community Store in depth. Instead, it aims to cover concepts that are not immediately obvious, or developer concepts such as overriding templates and developing new shipping and payment methods.
  
+## Support
 
+If you discover bugs or issues, or need support with customizations and using Community Store, you can:
+
+- Detail the issue on [Github's Issue Tracker](https://github.com/concrete5-community-store/community_store/issues). Whilst Github is mor intended more for bug tracking, polite questions on usage or how to approach customizations are welcome.
+- Post on the [concrete5's forum](https://www.concrete5.org/community/forums) your question or request for assistance. You may also consider posting in the Jobs section for commercial help.
+- Discuss with others on the [concrete5 #ecommerce channel](https://concrete5.slack.com/#ecommerce)  - you may need to [sign up first](https://slack.concrete5.org/)
+- Email the lead developer of the project, Ryan Hewitt of [Mesuva Web Development](https://www.mesuva.com), via [ryan@mesuva.com.au](ryan@mesuva.com.au) (or @mesuva on Slack)
