@@ -283,17 +283,25 @@ if ($productsPerRow == 6) {
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
+                                        $firstOptionItem = true;
                                         foreach ($optionItems as $optionItem) {
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
+                                                $selected = '';
+                                                
                                                 if (!empty($variation)) {
                                                     $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
-                                                }
-                                                $selected = '';
-                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                    $selected = 'selected="selected"';
+
+                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                        $selected = 'selected="selected"';
+                                                    }
+                                                } else {
+                                                    if ($firstOptionItem) {
+                                                        $selected = 'selected="selected"';
+                                                        $firstOptionItem = false;
+                                                    }
                                                 }
 
                                                 $optionLabel = $optionItem->getName();
