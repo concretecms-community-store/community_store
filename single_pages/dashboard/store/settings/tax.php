@@ -76,6 +76,8 @@ if (in_array($controller->getAction(), $addViews)) {
                                                 closeAfterSelect: true
                                             });
                                             $('.selectize').removeClass('form-control');
+
+                                            updateTaxStates();
                                         });
                                     </script>
                                 </div>
