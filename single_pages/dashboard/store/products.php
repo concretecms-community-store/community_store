@@ -141,7 +141,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $price = $product->getBasePrice(); ?>
-                                <?= $form->text("pPrice", $price, ['placeholder' => ($product->allowCustomerPrice() ? t('No Price Set') : '')]); ?>
+                                <?= $form->number("pPrice", $price, ['step'=>'0.01', 'placeholder' => ($product->allowCustomerPrice() ? t('No Price Set') : '')]); ?>
                             </div>
                         </div>
                     </div>
@@ -153,7 +153,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $salePrice = $product->getSalePrice(); ?>
-                                <?= $form->text("pSalePrice", $salePrice, ['placeholder' => t('No Sale Price Set')]); ?>
+                                <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
                             </div>
                         </div>
                         <div class="form-group priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
@@ -169,7 +169,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol');?>
                                 </div>
                                 <?php $wholesalePrice = $product->getWholesalePriceValue(); ?>
-                                <?= $form->text("pWholesalePrice", $wholesalePrice, array('placeholder'=>t('No Wholesale Price Set')));?>
+                                <?= $form->number("pWholesalePrice", $wholesalePrice, ['step'=>'0.01', 'placeholder'=>t('No Wholesale Price Set')]);?>
                             </div>
                         </div>
                     </div>
@@ -198,7 +198,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $minimumPrice = $product->getPriceMinimum(); ?>
-                                <?= $form->text("pPriceMinimum", $minimumPrice, ['placeholder' => t('No Minimum Price Set')]); ?>
+                                <?= $form->number("pPriceMinimum", $minimumPrice, ['step'=>'0.01', 'placeholder' => t('No Minimum Price Set')]); ?>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@ $ps = $app->make('helper/form/page_selector');
                                     <?= Config::get('community_store.symbol'); ?>
                                 </div>
                                 <?php $maximumPrice = $product->getPriceMaximum(); ?>
-                                <?= $form->text("pPriceMaximum", $maximumPrice, ['placeholder' => t('No Maximum Price Set')]); ?>
+                                <?= $form->number("pPriceMaximum", $maximumPrice, ['step'=>'0.01', 'placeholder' => t('No Maximum Price Set')]); ?>
                             </div>
                         </div>
                     </div>
@@ -269,7 +269,7 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="input-group-addon">
                                                 <?= Config::get('community_store.symbol'); ?>
                                             </div>
-                                            <input type="text" name="ptPrice[]" class="form-control ccm-input-text" value="<%=price%>">
+                                            <input type="number" name="ptPrice[]" class="form-control ccm-input-text" step="0.01" value="<%=price%>">
                                         </div>
                                     </div>
                                 </div>
@@ -364,7 +364,7 @@ $ps = $app->make('helper/form/page_selector');
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pQty", t("Stock Level")); ?>
-                            <?php $qty = $product->getQty(); ?>
+                            <?php $qty = $product->getStockLevel(); ?>
                             <div class="input-group">
                                 <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited() ? 'disabled' : '') => ($product->isUnlimited() ? 'disabled' : ''), 'step' => 0.001]); ?>
                                 <div class="input-group-addon">
@@ -602,7 +602,7 @@ $ps = $app->make('helper/form/page_selector');
                             <?= $form->label("pWeight", t("Weight")); ?>
                             <div class="input-group">
                                 <?php $weight = $product->getWeight(); ?>
-                                <?= $form->text('pWeight', $weight ? $weight : '0') ?>
+                                <?= $form->number('pWeight', $weight ? $weight : '0', ['step'=>'0.01']) ?>
                                 <div class="input-group-addon"><?= Config::get('community_store.weightUnit') ?></div>
                             </div>
                         </div>
@@ -622,7 +622,7 @@ $ps = $app->make('helper/form/page_selector');
                                 <?= $form->label("pLength", t("Length")); ?>
                                 <div class="input-group">
                                     <?php $length = $product->getLength(); ?>
-                                    <?= $form->text('pLength', $length ? $length : '0') ?>
+                                    <?= $form->number('pLength', $length ? $length : '0', ['step'=>'0.01','min'=>0]) ?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                 </div>
                             </div>
@@ -630,7 +630,7 @@ $ps = $app->make('helper/form/page_selector');
                                 <?= $form->label("pWidth", t("Width")); ?>
                                 <div class="input-group">
                                     <?php $width = $product->getWidth(); ?>
-                                    <?= $form->text('pWidth', $width ? $width : '0') ?>
+                                    <?= $form->number('pWidth', $width ? $width : '0', ['step'=>'0.01','min'=>0]) ?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                 </div>
                             </div>
@@ -638,7 +638,7 @@ $ps = $app->make('helper/form/page_selector');
                                 <?= $form->label("pHeight", t("Height")); ?>
                                 <div class="input-group">
                                     <?php $height = $product->getHeight(); ?>
-                                    <?= $form->text('pHeight', $height ? $height : '0') ?>
+                                    <?= $form->number('pHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
                                     <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                 </div>
                             </div>
@@ -646,7 +646,7 @@ $ps = $app->make('helper/form/page_selector');
 								<?= $form->label("pStackedHeight", t("Stacked Height")); ?>
 								<div class="input-group">
 									<?php $height = $product->getStackedHeight(); ?>
-									<?= $form->text('pStackedHeight', $height ? $height : '0') ?>
+									<?= $form->number('pStackedHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
 									<div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
 								</div>
 							</div>
@@ -1353,7 +1353,7 @@ $ps = $app->make('helper/form/page_selector');
                                                             <div class="input-group-addon">
                                                                 <?= Config::get('community_store.symbol'); ?>
                                                             </div>
-                                                            <?= $form->text("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['placeholder' => t('Base Price')]); ?>
+                                                            <?= $form->number("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['step'=>'0.01', 'placeholder' => t('Base Price')]); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1365,7 +1365,7 @@ $ps = $app->make('helper/form/page_selector');
                                                             <div class="input-group-addon">
                                                                 <?= Config::get('community_store.symbol'); ?>
                                                             </div>
-                                                            <?= $form->text("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['placeholder' => t('Base Sale Price')]); ?>
+                                                            <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Base Sale Price')]); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1379,7 +1379,7 @@ $ps = $app->make('helper/form/page_selector');
                                                         <div class="input-group-addon">
                                                             <?= Config::get('community_store.symbol'); ?>
                                                         </div>
-                                                        <?= $form->text("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['placeholder' => t('Wholesale Price')]); ?>
+                                                        <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Wholesale Price')]); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1393,7 +1393,7 @@ $ps = $app->make('helper/form/page_selector');
                                                     <div class="form-group">
                                                         <?= $form->label("", t("Weight")); ?>
                                                         <div class="input-group">
-                                                            <?= $form->text('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['placeholder' => t('Base Weight')]) ?>
+                                                            <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Weight')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.weightUnit') ?></div>
                                                         </div>
                                                     </div>
@@ -1402,7 +1402,7 @@ $ps = $app->make('helper/form/page_selector');
                                                     <div class="form-group">
                                                         <?= $form->label("", t("Length")); ?>
                                                         <div class="input-group">
-                                                            <?= $form->text('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['placeholder' => t('Base Length')]) ?>
+                                                            <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Length')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                                         </div>
                                                     </div>
@@ -1413,14 +1413,14 @@ $ps = $app->make('helper/form/page_selector');
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <?= $form->label("", t("Number of Items")); ?>
-                                                        <?= $form->text('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min' => 0, 'step' => 1, 'placeholder' => t('Base Number Of Items')]) ?>
+                                                        <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'placeholder' => t('Base Number Of Items')]) ?>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <?= $form->label("", t("Width")); ?>
                                                         <div class="input-group">
-                                                            <?= $form->text('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['placeholder' => t('Base Width')]) ?>
+                                                            <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step'=>'0.01','min'=>'0','placeholder' => t('Base Width')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                                         </div>
                                                     </div>
@@ -1435,7 +1435,7 @@ $ps = $app->make('helper/form/page_selector');
                                                     <div class="form-group">
                                                         <?= $form->label("", t("Height")); ?>
                                                         <div class="input-group">
-                                                            <?= $form->text('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['placeholder' => t('Base Height')]) ?>
+                                                            <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Height')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
                                                         </div>
                                                     </div>

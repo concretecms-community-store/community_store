@@ -12,7 +12,7 @@ class Tax extends DashboardPageController
 {
     public function view()
     {
-        $this->set("taxRates", StoreTax::getTaxRates());
+        $this->set("taxRates", StoreTax::getTaxRates(true));
         $this->set("taxClasses", TaxClass::getTaxClasses());
     }
 

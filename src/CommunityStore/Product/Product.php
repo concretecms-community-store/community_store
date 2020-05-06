@@ -534,15 +534,15 @@ class Product
 
     public function setPrice($price)
     {
-        $this->pPrice = ('' != $price ? $price : 0);
+        $this->pPrice = ('' != $price ? (float)$price : 0);
     }
     public function setWholesalePrice($price)
     {
-        $this->pWholesalePrice = ($price != '' ? $price : null);
+        $this->pWholesalePrice = ($price != '' ? (float)$price : null);
     }
     public function setSalePrice($price)
     {
-        $this->pSalePrice = ('' != $price ? $price : null);
+        $this->pSalePrice = ('' != $price ? (float)$price : null);
     }
 
     public function setCustomerPrice($bool)
@@ -1098,7 +1098,7 @@ class Product
     }
 
     public function getWholesalePriceValue() {
-        $this->pWholesalePrice;
+        return $this->pWholesalePrice;
     }
 
     public function getWholesalePrice($qty = 1)

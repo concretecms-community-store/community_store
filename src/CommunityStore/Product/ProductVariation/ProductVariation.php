@@ -309,7 +309,7 @@ class ProductVariation
     /**
      * @ORM\param mixed $pvQty
      */
-    public function setStockLevel($pvQty)
+    public function setVariationStockLevel($pvQty)
     {
         $this->pvQty = $pvQty ? $pvQty : 0;
     }
@@ -318,7 +318,7 @@ class ProductVariation
      * @deprecated
      */
     public function setVariationQty($pvQty) {
-        $this->setStockLevel($pvQty);
+        $this->setVariationStockLevel($pvQty);
     }
 
     /**
@@ -556,7 +556,7 @@ class ProductVariation
                     $variation->setVariationPrice($data['pvPrice'][$key]);
                     $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
-                    $variation->setVariationQty($data['pvQty'][$key]);
+                    $variation->setVariationStockLevel($data['pvQty'][$key]);
                     $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
                     $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
@@ -628,7 +628,7 @@ class ProductVariation
         $variation->setVariationPrice($data['pvPrice']);
         $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
-        $variation->setVariationQty($data['pvQty']);
+        $variation->setVariationStockLevel($data['pvQty']);
         $variation->setVariationQtyUnlim($data['pvQtyUnlim']);
         $variation->setVariationFID($data['pvfID']);
         $variation->setVariationWeight($data['pvWidth']);
