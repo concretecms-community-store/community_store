@@ -35,14 +35,20 @@ class Settings extends DashboardPageController
         $this->set("orderStatuses", OrderStatus::getAll());
 
         $groupList = [];
+        $allGroupList = [];
 
         $gl = new GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
-
         $this->set('groupList', $groupList);
 
+        $gl->includeAllGroups();
+        foreach ($gl->getResults() as $group) {
+            $allGroupList[$group->getGroupID()] = $group->getGroupName();
+        }
+
+        $this->set('allGroupList', $allGroupList);
         $targetCID = Config::get('community_store.productPublishTarget');
 
         if ($targetCID) {
@@ -70,7 +76,6 @@ class Settings extends DashboardPageController
 
         $this->set('customerGroup', $customerGroupID);
         $this->set('customerGroupName', $customerGroupName);
-
 
         $wholesaleCustomerGroupID = Config::get('community_store.wholesaleCustomerGroup');
 
@@ -235,12 +240,38 @@ class Settings extends DashboardPageController
                         $paymentData[$pmID]['paymentMethodSortOrder'] = $value;
                     }
 
+                    if (isset($args['paymentMethodUserGroups'])) {
+                        foreach ($args['paymentMethodUserGroups'] as $pmID => $value) {
+                            $paymentData[$pmID]['paymentMethodUserGroups'] = $value;
+                        }
+                    }
+
+                    if (isset($args['paymentMethodExcludedUserGroups'])) {
+                        foreach ($args['paymentMethodExcludedUserGroups'] as $pmID => $value) {
+                            $paymentData[$pmID]['paymentMethodExcludedUserGroups'] = $value;
+                        }
+                    }
+
                     foreach ($paymentData as $pmID => $data) {
                         $pm = PaymentMethod::getByID($pmID);
                         $pm->setEnabled($data['paymentMethodEnabled']);
                         $pm->setDisplayName($data['paymentMethodDisplayName']);
                         $pm->setButtonLabel($data['paymentMethodButtonLabel']);
                         $pm->setSortOrder($data['paymentMethodSortOrder']);
+
+                        if (isset($data['paymentMethodUserGroups'])) {
+                            $pm->setUserGroups($data['paymentMethodUserGroups']);
+                        } else {
+                            $pm->setUserGroups([]);
+                        }
+
+                        if (isset($data['paymentMethodExcludedUserGroups'])) {
+                            $pm->setExcludedUserGroups($data['paymentMethodExcludedUserGroups']);
+                        } else {
+                            $pm->setExcludedUserGroups([]);
+                        }
+
+
                         $controller = $pm->getMethodController();
                         $controller->save($args);
                         $pm->save();

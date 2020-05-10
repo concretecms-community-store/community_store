@@ -147,27 +147,67 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="panel panel-default">
 
                 <div class="panel-heading"><?= t($pm->getName()); ?></div>
+
                 <div class="panel-body">
-                    <div class="form-group paymentMethodEnabled">
-                        <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
-                        <label><?= t("Enabled"); ?></label>
-                        <?php
-                        echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group paymentMethodEnabled">
+                                <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
+                                <?= $form->label("paymentMethodEnabled[" . $pm->getID() . "]", t("Enabled"));?>
+                                <?php
+                                echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <?= $form->label("paymentMethodSortOrder[" . $pm->getID() . "]", t("Sort Order"));?>
+                                <?= $form->number('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
+                            </div>
+                        </div>
+
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups"));?>
+                                <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                    <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups');?>">
+                                        <?php
+                                        foreach ($allGroupList as $ugkey=>$uglabel) { ?>
+                                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $pm->getUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups"));?>
+                                <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                    <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('None');?>">
+                                        <?php
+                                        foreach ($allGroupList as $ugkey=>$uglabel) { ?>
+                                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey,  $pm->getExcludedUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label><?= t("Display Name (on checkout)"); ?></label>
+                                <?= $form->label("paymentMethodDisplayName[" . $pm->getID() . "]", t("Display Name (on checkout)"));?>
                                 <?= $form->text('paymentMethodDisplayName[' . $pm->getID() . ']', $pm->getDisplayName()); ?>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label><?= t("Button Label"); ?></label>
+                                <?= $form->label("paymentMethodButtonLabel[" . $pm->getID() . "]", t("Button Label"));?>
                                 <?= $form->text('paymentMethodButtonLabel[' . $pm->getID() . ']', $pm->getButtonLabel(), ['placeholder' => t('Optional')]); ?>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label><?= t("Sort Order"); ?></label>
-                            <?= $form->text('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
                         </div>
                         <?php
                         $pm->renderDashboardForm(); ?>

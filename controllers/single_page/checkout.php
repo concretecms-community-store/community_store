@@ -158,18 +158,7 @@ class Checkout extends PageController
             </script>
         ");
 
-        $enabledMethods = PaymentMethod::getEnabledMethods();
-
-        $availableMethods = [];
-
-        foreach ($enabledMethods as $em) {
-            $emmc = $em->getMethodController();
-
-            if ($totals['total'] >= $emmc->getPaymentMinimum() && $totals['total'] <= $emmc->getPaymentMaximum()) {
-                $availableMethods[] = $em;
-            }
-        }
-
+        $availableMethods = PaymentMethod::getAvailableMethods($totals['total']);
         $this->set("enabledPaymentMethods", $availableMethods);
 
         $apikey = Config::get('community_store.placesAPIKey');
