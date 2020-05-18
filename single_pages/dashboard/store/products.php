@@ -39,8 +39,14 @@ $ps = $app->make('helper/form/page_selector');
             </form>
 
             <form class="pull-right" method="get" id="duplicate" action="<?= Url::to('/dashboard/store/products/duplicate/', $pID) ?>">
-                <button class="btn btn-default"><?= t("Duplicate Product") ?></button>
+                &nbsp;&nbsp;<button class="btn btn-default"><?= t("Duplicate Product") ?></button>
             </form>
+
+            <?php if ($page && !$page->isInTrash()) { ?>
+                <div class="pull-right">
+                    <a class="btn btn-primary" target="_blank" href="<?= $page->getCollectionLink() ?>" target="_blank">View Product Page</a>
+                </div>
+            <?php } ?>
 
 
             <script type="text/javascript">
@@ -61,9 +67,10 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
+                    <li><a href="#product-descriptions" data-pane-toggle><?= t('Descriptions') ?></a></li>
+                    <li><a href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
                     <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
-                    <li><a href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
                     <li><a href="#product-options" data-pane-toggle><?= t('Options and Variations') ?></a></li>
                     <li><a href="#product-related" data-pane-toggle><?= t('Related Products') ?></a></li>
                     <li><a href="#product-attributes" data-pane-toggle><?= t('Attributes') ?></a></li>
@@ -482,6 +489,9 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                 <?php } ?>
 
+            </div><!-- #product-overview -->
+
+            <div class="col-sm-9 store-pane" id="product-descriptions">
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Short Description")); ?><br>
                     <?php
@@ -497,9 +507,65 @@ $ps = $app->make('helper/form/page_selector');
                     echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                     ?>
                 </div>
+            </div><!-- #product-descriptions -->
+
+            <div class="col-sm-9 store-pane" id="product-images">
+
+                <div class="form-group">
+                    <?= $form->label('pfID', t("Primary Product Image")); ?>
+                    <?php $pfID = $product->getImageID(); ?>
+                    <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID) : null); ?>
+                </div>
+
+                <?= $form->label('', t("Additional Images")); ?>
+
+                <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
+                    <?php foreach ($product->getimagesobjects() as $file) {
+                        if ($file) {
+                            $thumb = $file->getListingThumbnailImage();
+                            if ($thumb) {
+                                echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+
+                <div href="#" id="launch_additional" data-launch="file-manager" class="ccm-file-selector">
+                    <div class="ccm-file-selector-choose-new"><?= t('Choose Images'); ?></div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#launch_additional').on('click', function (e) {
+                            e.preventDefault();
+
+                            var options = {
+                                multipleSelection: true,
+                                filters: [{field: 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
+                            };
+
+                            ConcreteFileManager.launchDialog(function (data) {
+                                ConcreteFileManager.getFileDetails(data.fID, function (r) {
+                                    for (var i in r.files) {
+                                        var file = r.files[i];
+                                        $('#additional-image-list').append('<li class="list-group-item">' + file.resultsThumbnailImg + ' ' + file.title + '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
+                                    }
+
+                                });
+                            }, options);
+                        });
+
+                        $('#additional-image-list').sortable({axis: 'y'});
+
+                        $('#additional-image-list').on('click', 'a', function () {
+                            $(this).parent().remove();
+                        });
+                    });
+                </script>
+
+            </div><!-- #product-images -->
 
 
-            </div><!-- #product-overview -->
 
             <div class="col-sm-9 store-pane" id="product-categories">
                 <?= $form->label('', t("Categorized under pages")); ?>
@@ -672,63 +738,6 @@ $ps = $app->make('helper/form/page_selector');
                 </div>
 
             </div><!-- #product-shipping -->
-
-            <div class="col-sm-9 store-pane" id="product-images">
-
-                <div class="form-group">
-                    <?= $form->label('pfID', t("Primary Product Image")); ?>
-                    <?php $pfID = $product->getImageID(); ?>
-                    <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID) : null); ?>
-                </div>
-
-                <?= $form->label('', t("Additional Images")); ?>
-
-                <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
-                    <?php foreach ($product->getimagesobjects() as $file) {
-                        if ($file) {
-                            $thumb = $file->getListingThumbnailImage();
-                            if ($thumb) {
-                                echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
-                            }
-                        }
-                    }
-                    ?>
-                </ul>
-
-                <div href="#" id="launch_additional" data-launch="file-manager" class="ccm-file-selector">
-                    <div class="ccm-file-selector-choose-new"><?= t('Choose Images'); ?></div>
-                </div>
-                <script type="text/javascript">
-                    $(function () {
-                        $('#launch_additional').on('click', function (e) {
-                            e.preventDefault();
-
-                            var options = {
-                                multipleSelection: true,
-                                filters: [{field: 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
-                            };
-
-                            ConcreteFileManager.launchDialog(function (data) {
-                                ConcreteFileManager.getFileDetails(data.fID, function (r) {
-                                    for (var i in r.files) {
-                                        var file = r.files[i];
-                                        $('#additional-image-list').append('<li class="list-group-item">' + file.resultsThumbnailImg + ' ' + file.title + '<a><i class="pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
-                                    }
-
-                                });
-                            }, options);
-                        });
-
-                        $('#additional-image-list').sortable({axis: 'y'});
-
-                        $('#additional-image-list').on('click', 'a', function () {
-                            $(this).parent().remove();
-                        });
-                    });
-                </script>
-
-            </div><!-- #product-images -->
-
 
             <div class="col-sm-9 store-pane" id="product-options">
 
