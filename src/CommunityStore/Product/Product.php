@@ -96,6 +96,16 @@ class Product
     protected $pSalePrice;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pSaleStart;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pSaleEnd;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $pCustomerPrice;
@@ -534,15 +544,15 @@ class Product
 
     public function setPrice($price)
     {
-        $this->pPrice = ('' != $price ? (float)$price : 0);
+        $this->pPrice = ($price !== '' ? (float)$price : 0);
     }
     public function setWholesalePrice($price)
     {
-        $this->pWholesalePrice = ($price != '' ? (float)$price : null);
+        $this->pWholesalePrice = ($price !== '' ? (float)$price : null);
     }
     public function setSalePrice($price)
     {
-        $this->pSalePrice = ('' != $price ? (float)$price : null);
+        $this->pSalePrice = ($price !== '' ? (float)$price : null);
     }
 
     public function setCustomerPrice($bool)
@@ -903,16 +913,28 @@ class Product
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
 
-        if ($data['pWholesalePrice'] > 0) {
+        if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);
         } else {
-            $product->setWholesalePrice( null);
+            $product->setWholesalePrice( '');
         }
 
-        if ($data['pSalePrice'] > 0) {
+        if ($data['pSalePrice'] !== '') {
             $product->setSalePrice($data['pSalePrice']);
         } else {
             $product->setSalePrice('');
+        }
+
+        if ($data['pSaleStart_dt']) {
+            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m']));
+        } else {
+            $product->setSaleStart(null);
+        }
+
+        if ($data['pSaleEnd_dt']) {
+            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m']));
+        }else {
+            $product->setSaleEnd(null);
         }
 
         $product->setIsFeatured($data['pFeatured']);
@@ -1165,8 +1187,25 @@ class Product
         return Price::format($this->getWholesalePrice());
     }
 
+    public function getSalePriceValue() {
+        return $this->pSalePrice;
+    }
+
     public function getSalePrice()
     {
+
+        $saleStart = $this->getSaleStart();
+        $saleEnd = $this->getSaleEnd();
+        $now = new \DateTime();
+
+        if ($saleStart && $saleStart > $now) {
+            return false;
+        }
+
+        if ($saleEnd && $now > $saleEnd) {
+            return false;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
                 $varprice = $variation->getVariationSalePrice();
@@ -1195,6 +1234,26 @@ class Product
         if ('' != $saleprice) {
             return Price::format($saleprice);
         }
+    }
+
+    public function getSaleStart()
+    {
+        return $this->pSaleStart;
+    }
+
+    public function setSaleStart($saleStart)
+    {
+        $this->pSaleStart = $saleStart;
+    }
+
+    public function getSaleEnd()
+    {
+        return $this->pSaleEnd;
+    }
+
+    public function setSaleEnd($saleEnd)
+    {
+        $this->pSaleEnd = $saleEnd;
     }
 
     public function getActivePrice($qty = 1)

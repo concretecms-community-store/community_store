@@ -35,22 +35,21 @@ $ps = $app->make('helper/form/page_selector');
 
             <form class="pull-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/products/delete/', $pID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
-                <button class="btn btn-danger"><?= t("Delete Product") ?></button>
+                <button class="btn btn-danger"><?= t('Delete Product') ?></button>
             </form>
 
             <form class="pull-right" method="get" id="duplicate" action="<?= Url::to('/dashboard/store/products/duplicate/', $pID) ?>">
-                &nbsp;&nbsp;<button class="btn btn-default"><?= t("Duplicate Product") ?></button>
+                &nbsp;&nbsp;<button class="btn btn-default"><i class="fa fa-copy"></i> <?= t('Duplicate Product') ?></button>
             </form>
 
             <?php if ($page && !$page->isInTrash()) { ?>
                 <div class="pull-right">
-                    <a class="btn btn-primary" target="_blank" href="<?= $page->getCollectionLink() ?>" target="_blank">View Product Page</a>
+                    <a class="btn btn-primary" target="_blank" href="<?= $page->getCollectionLink() ?>" target="_blank"><?= t('View Product Page'); ?></a>
                 </div>
             <?php } ?>
 
-
             <script type="text/javascript">
-                $(function () {
+                $(document).ready(function () {
                     $('#delete').submit(function () {
                         return confirm('<?=  t("Are you sure you want to delete this product?"); ?>');
                     });
@@ -67,7 +66,7 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
-                    <li><a href="#product-descriptions" data-pane-toggle><?= t('Descriptions') ?></a></li>
+                    <li><a href="#product-descriptions" data-pane-toggle><?= t('Descriptions and Manufacturer') ?></a></li>
                     <li><a href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
                     <li><a href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
                     <li><a href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
@@ -94,6 +93,7 @@ $ps = $app->make('helper/form/page_selector');
                             <?= $form->text("pSKU", $product->getSKU()); ?>
                         </div>
                     </div>
+
                 </div>
                 <hr/>
             </div>
@@ -101,34 +101,86 @@ $ps = $app->make('helper/form/page_selector');
 
             <div class="col-sm-9 store-pane active" id="product-overview">
                 <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pManufacturer", t("Brand / Manufacturer")); ?>
-                            <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '',  ['class' => 'selectize']); ?>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pBarcode", t("Barcode")); ?>
-                            <?= $form->text("pBarcode", $product->getBarcode()); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-lg-3">
                         <div class="form-group">
                             <?= $form->label("pActive", t("Active")); ?>
                             <?= $form->select("pActive", ['1' => t('Active'), '0' => t('Inactive')], $product->isActive() ? '1' : '0'); ?>
                         </div>
                     </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pFeatured", t("Featured Product")); ?>
-                            <?= $form->select("pFeatured", ['0' => t('No'), '1' => t('Yes')], $product->isFeatured() ? '1' : '0'); ?>
+                    <div class="col-lg-5">
+                    <div class="form-group">
+                        <?= $form->label("pQty", t("Stock Level")); ?>
+                        <?php $qty = $product->getStockLevel(); ?>
+                        <div class="input-group">
+                            <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited() ? 'disabled' : '') => ($product->isUnlimited() ? 'disabled' : ''), 'step' => 0.001]); ?>
+                            <div class="input-group-addon">
+                                <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited()) ?>
+                                <?= $form->label('pQtyUnlim', t('Unlimited')) ?>
+                            </div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#pQtyUnlim').change(function () {
+                                        $('#pQty').prop('disabled', this.checked);
+                                        $('#backorders').toggle();
+                                    });
+
+                                    $('#pAllowDecimalQty').change(function () {
+                                        $('#quantitystepscontainer').toggleClass('hidden');
+                                    });
+
+                                    $('#pQuantityPrice').change(function () {
+                                        $('#tieredoptionscontainer').toggleClass('hidden');
+                                    });
+
+                                    $('#pNoQty').change(function () {
+                                        if ($(this).val() == '1') {
+                                            $('#quantityoptions').addClass('hidden');
+                                            $('#quantitystepscontainer').addClass('hidden');
+                                        } else {
+                                            $('#quantityoptions').removeClass('hidden');
+
+                                            if ($('#pAllowDecimalQty').val() == 1) {
+                                                $('#quantitystepscontainer').removeClass('hidden');
+                                            } else {
+                                                $('#quantitystepscontainer').addClass('hidden');
+                                            }
+                                        }
+
+                                    });
+
+                                    $('#pVariations').change(function () {
+                                        if ($(this).prop('checked')) {
+                                            $('#variations,#variationnotice').removeClass('hidden');
+                                        } else {
+                                            $('#variations,#variationnotice').addClass('hidden');
+                                        }
+                                    });
+
+                                    $('input[name^="pvQtyUnlim"]').change(function () {
+                                        $(this).closest('.input-group').find('.ccm-input-number').prop('readonly', this.checked);
+                                    });
+
+                                    <?php if ($controller->getAction() == 'add') { ?>
+                                    $('#pName').focus();
+                                    <?php } ?>
+
+                                });
+                            </script>
+                        </div>
+
+                    </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group" id="backorders" <?= ($product->isUnlimited() ? 'style="display: none"' : ''); ?>>
+                            <?= $form->label("pBackOrder", t("Allow Back Orders")); ?>
+                            <?= $form->select("pBackOrder", ['1' => t('Yes'), '0' => t('No')], $product->allowBackOrders() ? '1' : '0'); ?>
                         </div>
                     </div>
                 </div>
+
+                <hr />
+
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -153,22 +205,6 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
                     </div>
                     <div class="col-xs-6">
-                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
-                            <?= $form->label("pSalePrice", t("Sale Price"), ['class' => $priceclass]); ?>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <?= Config::get('community_store.symbol'); ?>
-                                </div>
-                                <?php $salePrice = $product->getSalePrice(); ?>
-                                <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
-                            </div>
-                        </div>
-                        <div class="form-group priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
-                            <?= $form->label('pPriceSuggestions', t('Price Suggestions')) ?>
-                            <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), ['placeholder' => t('e.g. 10,20,30')]) ?>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
                             <?= $form->label("pWholesalePrice", t("Wholesale Price"), array('class'=>$priceclass));?>
                             <div class="input-group">
@@ -181,46 +217,6 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
                     </div>
 
-                    <script>
-                        $(document).ready(function () {
-                            $('#pCustomerPrice').change(function () {
-                                if ($(this).prop('checked')) {
-                                    $('.priceentry').removeClass('hidden');
-                                    $('.nonpriceentry').addClass('hidden');
-                                } else {
-                                    $('.priceentry').addClass('hidden');
-                                    $('.nonpriceentry').removeClass('hidden');
-                                }
-                            });
-                        });
-                    </script>
-
-                </div>
-                <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pPriceMinimum", t("Minimum Price")); ?>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <?= Config::get('community_store.symbol'); ?>
-                                </div>
-                                <?php $minimumPrice = $product->getPriceMinimum(); ?>
-                                <?= $form->number("pPriceMinimum", $minimumPrice, ['step'=>'0.01', 'placeholder' => t('No Minimum Price Set')]); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pPriceMaximum", t("Maximum Price")); ?>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <?= Config::get('community_store.symbol'); ?>
-                                </div>
-                                <?php $maximumPrice = $product->getPriceMaximum(); ?>
-                                <?= $form->number("pPriceMaximum", $maximumPrice, ['step'=>'0.01', 'placeholder' => t('No Maximum Price Set')]); ?>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
@@ -229,17 +225,120 @@ $ps = $app->make('helper/form/page_selector');
                             <?= $form->label('pCustomerPrice', t('Allow customer to enter price')) ?>
                         </div>
                     </div>
-
                 </div>
+
+
 
                 <div class="row">
 
                     <div class="col-xs-6">
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <?= $form->label("pSalePrice", t("Sale Price"), ['class' => $priceclass]); ?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?= Config::get('community_store.symbol'); ?>
+                                </div>
+                                <?php $salePrice = $product->getSalePriceValue(); ?>
+                                <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
+                            </div>
+                            <span class="help-block <?=($salePrice ? 'hidden' : ''); ?>" id="saleNote"><?= t('Enter a value to set start and end dates for the sale'); ?></span>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $('#pSalePrice').keyup(function(){
+                                        var saleDates = $('.saleDates');
+                                        var saleNote = $('#saleNote');
+
+                                        if ($(this).val()) {
+                                            saleDates.removeClass('hidden');
+                                            saleNote.addClass('hidden');
+                                        } else {
+                                            saleDates.addClass('hidden');
+                                            saleNote.removeClass('hidden');
+                                        }
+                                    });
+
+                                    $('#pCustomerPrice').change(function () {
+                                        if ($(this).prop('checked')) {
+                                            $('.priceentry').removeClass('hidden');
+                                            $('.nonpriceentry').addClass('hidden');
+                                        } else {
+                                            $('.priceentry').addClass('hidden');
+                                            $('.nonpriceentry').removeClass('hidden');
+                                        }
+                                    });
+                                });
+                            </script>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row saleDates <?=($salePrice ? '' : 'hidden'); ?>">
+                    <div class="col-xs-12">
+
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <?= $form->label("pSaleStart", t("Sale Start")); ?>
+                            <?= $app->make('helper/form/date_time')->datetime('pSaleStart', $product->getSaleStart()); ?>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-12">
+
+                        <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <?= $form->label("pSaleEnd", t("Sale End")); ?>
+                            <?= $app->make('helper/form/date_time')->datetime('pSaleEnd', $product->getSaleEnd()); ?>
+                        </div>
+                        <style>
+                            #ui-datepicker-div {
+                                z-index: 100 !important;
+                            }
+                        </style>
+                    </div>
+                </div>
+                <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMinimum", t("Minimum Price")); ?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?= Config::get('community_store.symbol'); ?>
+                                </div>
+                                <?php $minimumPrice = $product->getPriceMinimum(); ?>
+                                <?= $form->number("pPriceMinimum", $minimumPrice, ['step'=>'0.01', 'placeholder' => t('No Minimum Price')]); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <?= $form->label("pPriceMaximum", t("Maximum Price")); ?>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?= Config::get('community_store.symbol'); ?>
+                                </div>
+                                <?php $maximumPrice = $product->getPriceMaximum(); ?>
+                                <?= $form->number("pPriceMaximum", $maximumPrice, ['step'=>'0.01', 'placeholder' => t('No Maximum Price')]); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                        <?= $form->label('pPriceSuggestions', t('Price Suggestions')) ?>
+                        <?= $form->text('pPriceSuggestions', $product->getPriceSuggestions(), ['placeholder' => t('e.g. 10,20,30')]) ?>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+
+                    <div class="col-xs-12">
                         <div class="form-group">
                             <?= $form->checkbox('pQuantityPrice', '1', $product->hasQuantityPrice()) ?>
                             <?= $form->label('pQuantityPrice', t('Quantity based pricing')) ?>
                         </div>
-
                     </div>
 
                     <div id="tieredoptionscontainer" class="col-xs-12  <?= $product->hasQuantityPrice() ? '' : 'hidden' ?>">
@@ -345,14 +444,11 @@ $ps = $app->make('helper/form/page_selector');
                             }
                         </script>
 
-
-                        <hr/>
                     </div>
-
 
                 </div>
 
-
+                <hr />
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
@@ -367,96 +463,15 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
                     </div>
                 </div>
+                <hr />
+
                 <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pQty", t("Stock Level")); ?>
-                            <?php $qty = $product->getStockLevel(); ?>
-                            <div class="input-group">
-                                <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited() ? 'disabled' : '') => ($product->isUnlimited() ? 'disabled' : ''), 'step' => 0.001]); ?>
-                                <div class="input-group-addon">
-                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited()) ?>
-                                    <?= $form->label('pQtyUnlim', t('Unlimited')) ?>
-                                </div>
-
-                                <script>
-                                    $(document).ready(function () {
-                                        $('#pQtyUnlim').change(function () {
-                                            $('#pQty').prop('disabled', this.checked);
-                                            $('#backorders').toggle();
-                                        });
-
-
-                                        $('#pAllowDecimalQty').change(function () {
-                                            $('#quantitystepscontainer').toggleClass('hidden');
-                                        });
-
-                                        $('#pQuantityPrice').change(function () {
-                                            $('#tieredoptionscontainer').toggleClass('hidden');
-                                        });
-
-                                        $('#pNoQty').change(function () {
-                                            if ($(this).val() == '1') {
-                                                $('#quantityoptions').addClass('hidden');
-                                                $('#quantitystepscontainer').addClass('hidden');
-                                            } else {
-                                                $('#quantityoptions').removeClass('hidden');
-
-                                                if ($('#pAllowDecimalQty').val() == 1) {
-                                                    $('#quantitystepscontainer').removeClass('hidden');
-                                                } else {
-                                                    $('#quantitystepscontainer').addClass('hidden');
-                                                }
-                                            }
-
-                                        });
-
-                                        $('#pVariations').change(function () {
-                                            if ($(this).prop('checked')) {
-                                                $('#variations,#variationnotice').removeClass('hidden');
-                                            } else {
-                                                $('#variations,#variationnotice').addClass('hidden');
-                                            }
-                                        });
-
-                                        $('input[name^="pvQtyUnlim"]').change(function () {
-                                            $(this).closest('.input-group').find('.ccm-input-number').prop('readonly', this.checked);
-                                        });
-
-                                    });
-                                </script>
-                            </div>
-
-                        </div>
-                        <div class="form-group" id="backorders" <?= ($product->isUnlimited() ? 'style="display: none"' : ''); ?>>
-                            <?= $form->checkbox('pBackOrder', '1', $product->allowBackOrders()) ?>
-                            <?= $form->label('pBackOrder', t('Allow Back Orders')) ?>
-                        </div>
-                    </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pNoQty", t("Offer quantity selection")); ?>
                             <?= $form->select("pNoQty", ['0' => t('Yes'), '1' => t('No, only allow one of this product in a cart')], !$product->allowQuantity()); ?>
                         </div>
                     </div>
-                </div>
-
-                <div class="row <?= !$product->allowQuantity() ? 'hidden' : ''; ?>" id="quantityoptions">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pAllowDecimalQty", t("Allow Decimal Quantities")); ?>
-                            <?= $form->select("pAllowDecimalQty", ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <?= $form->label("pMaxQty", t("Maximum Quantity In Cart")); ?>
-                            <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
                             <?= $form->label("pQtyLabel", t("Quantity Label")); ?>
@@ -464,14 +479,31 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
                     </div>
 
-                    <div class="col-xs-6 <?= ($product->getAllowDecimalQty() ? '' : 'hidden'); ?>" id="quantitystepscontainer">
+                </div>
+
+
+                <div class="row <?= !$product->allowQuantity() ? 'hidden' : ''; ?>" id="quantityoptions">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <?= $form->label("pAllowDecimalQty", t("Allow Decimal Quantities")); ?>
+                            <?= $form->select("pAllowDecimalQty", ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden'); ?>" id="quantitystepscontainer">
                         <div class="form-group">
                             <?= $form->label("pQtySteps", t("Quantity Steps")); ?>
                             <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
                         </div>
                     </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <?= $form->label("pMaxQty", t("Maximum Quantity In Cart")); ?>
+                            <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
+                        </div>
+                    </div>
                 </div>
 
+                <hr />
 
                 <?php if ($controller->getAction() == 'edit') { ?>
                     <div class="row">
@@ -487,11 +519,13 @@ $ps = $app->make('helper/form/page_selector');
                             </style>
                         </div>
                     </div>
+
                 <?php } ?>
 
             </div><!-- #product-overview -->
 
             <div class="col-sm-9 store-pane" id="product-descriptions">
+
                 <div class="form-group">
                     <?= $form->label("pDesc", t("Short Description")); ?><br>
                     <?php
@@ -507,6 +541,20 @@ $ps = $app->make('helper/form/page_selector');
                     echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                     ?>
                 </div>
+
+                <div class="form-group">
+                    <?= $form->label("pManufacturer", t("Brand / Manufacturer")); ?>
+                    <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '',  ['class' => 'selectize']); ?>
+                </div>
+
+
+
+                <div class="form-group">
+                    <?= $form->label("pBarcode", t("Barcode")); ?>
+                    <?= $form->text("pBarcode", $product->getBarcode()); ?>
+                </div>
+
+
             </div><!-- #product-descriptions -->
 
             <div class="col-sm-9 store-pane" id="product-images">
@@ -612,6 +660,12 @@ $ps = $app->make('helper/form/page_selector');
                             <?php }
                         } ?>
                     </select>
+                </div>
+
+                <br />
+                <div class="form-group">
+                    <?= $form->label("pFeatured", t("Featured Product")); ?>
+                    <?= $form->select("pFeatured", ['0' => t('No'), '1' => t('Yes')], $product->isFeatured() ? '1' : '0'); ?>
                 </div>
 
 
@@ -1249,7 +1303,7 @@ $ps = $app->make('helper/form/page_selector');
 
                 <br/>
                 <div class="form-group">
-                    <h3><?= t('Variations'); ?></h3>
+                    <h4><?= t('Variations'); ?></h4>
                     <label class="control-label"><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0') ?>
                         <?= t('Options have different prices, SKUs or stock levels'); ?></label>
 
@@ -1368,6 +1422,21 @@ $ps = $app->make('helper/form/page_selector');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+                                                        <?= $form->label("", t("Wholesale Price")); ?>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">
+                                                                <?= Config::get('community_store.symbol'); ?>
+                                                            </div>
+                                                            <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Wholesale Price')]); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
                                                         <?= $form->label("pvSalePrice[]", t("Sale Price")); ?>
 
                                                         <div class="input-group">
@@ -1375,20 +1444,6 @@ $ps = $app->make('helper/form/page_selector');
                                                                 <?= Config::get('community_store.symbol'); ?>
                                                             </div>
                                                             <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Base Sale Price')]); ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <?= $form->label("", t("Wholesale Price")); ?>
-                                                        <div class="input-group">
-                                                        <div class="input-group-addon">
-                                                            <?= Config::get('community_store.symbol'); ?>
-                                                        </div>
-                                                        <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Wholesale Price')]); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1869,9 +1924,8 @@ $ps = $app->make('helper/form/page_selector');
                                         <?php
                                         $page = $product->getProductPage();
                                         if ($page && !$page->isInTrash()) { ?>
-                                            <li><a target="_blank" href="<?= $page->getCollectionLink() ?>"> <?= t("View Product Page") ?></a></li>
+                                            <li><a target="_blank" href="<?= $page->getCollectionLink() ?>"><?= t('View Product Page') ?></a></li>
                                         <?php } ?>
-
 
                                         <li><a target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
                                     </ul>

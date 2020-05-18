@@ -18,7 +18,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.4';
-    protected $pkgVersion = '2.2.3';
+    protected $pkgVersion = '2.2.4';
 
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',

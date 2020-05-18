@@ -105,7 +105,7 @@ if (is_object($product) && $product->isActive()) {
                                 if (isset($salePrice) && "" != $salePrice) {
                                     $formattedSalePrice = $product->getFormattedSalePrice();
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-                                    echo t("On Sale") . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
+                                    echo t('On Sale') . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                     echo '&nbsp;' . t('was') . '&nbsp;';
                                     echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
@@ -570,7 +570,7 @@ if (is_object($product) && $product->isActive()) {
                     'available' => ($variation->isSellable()),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
-                    'saleTemplate'=> t("On Sale") .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
+                    'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
                 ];
 
                 if ($isWholesale) {
