@@ -83,13 +83,13 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="form-group">
-                            <?= $form->label("pName", t("Product Name")); ?>
+                            <?= $form->label("pName", t('Product Name')); ?>
                             <?= $form->text("pName", $product->getName(), ['required' => 'required']); ?>
                         </div>
                     </div>
                     <div class="col-xs-4">
                         <div class="form-group">
-                            <?= $form->label("pSKU", t("Code / SKU")); ?>
+                            <?= $form->label("pSKU", t('Code / SKU')); ?>
                             <?= $form->text("pSKU", $product->getSKU()); ?>
                         </div>
                     </div>
@@ -103,13 +103,13 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="form-group">
-                            <?= $form->label("pActive", t("Active")); ?>
+                            <?= $form->label("pActive", t('Active')); ?>
                             <?= $form->select("pActive", ['1' => t('Active'), '0' => t('Inactive')], $product->isActive() ? '1' : '0'); ?>
                         </div>
                     </div>
                     <div class="col-lg-5">
                     <div class="form-group">
-                        <?= $form->label("pQty", t("Stock Level")); ?>
+                        <?= $form->label("pQty", t('Stock Level')); ?>
                         <?php $qty = $product->getStockLevel(); ?>
                         <div class="input-group">
                             <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited() ? 'disabled' : '') => ($product->isUnlimited() ? 'disabled' : ''), 'step' => 0.001]); ?>
@@ -173,7 +173,7 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group" id="backorders" <?= ($product->isUnlimited() ? 'style="display: none"' : ''); ?>>
-                            <?= $form->label("pBackOrder", t("Allow Back Orders")); ?>
+                            <?= $form->label("pBackOrder", t('Allow Back Orders')); ?>
                             <?= $form->select("pBackOrder", ['1' => t('Yes'), '0' => t('No')], $product->allowBackOrders() ? '1' : '0'); ?>
                         </div>
                     </div>
@@ -206,7 +206,7 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
-                            <?= $form->label("pWholesalePrice", t("Wholesale Price"), array('class'=>$priceclass));?>
+                            <?= $form->label("pWholesalePrice", t('Wholesale Price'), array('class'=>$priceclass));?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?= Config::get('community_store.symbol');?>
@@ -233,7 +233,7 @@ $ps = $app->make('helper/form/page_selector');
 
                     <div class="col-xs-6">
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
-                            <?= $form->label("pSalePrice", t("Sale Price"), ['class' => $priceclass]); ?>
+                            <?= $form->label("pSalePrice", t('Sale Price'), ['class' => $priceclass]); ?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?= Config::get('community_store.symbol'); ?>
@@ -278,7 +278,7 @@ $ps = $app->make('helper/form/page_selector');
                     <div class="col-xs-12">
 
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
-                            <?= $form->label("pSaleStart", t("Sale Start")); ?>
+                            <?= $form->label("pSaleStart", t('Sale Start')); ?>
                             <?= $app->make('helper/form/date_time')->datetime('pSaleStart', $product->getSaleStart()); ?>
                         </div>
 
@@ -287,7 +287,7 @@ $ps = $app->make('helper/form/page_selector');
                     <div class="col-xs-12">
 
                         <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
-                            <?= $form->label("pSaleEnd", t("Sale End")); ?>
+                            <?= $form->label("pSaleEnd", t('Sale End')); ?>
                             <?= $app->make('helper/form/date_time')->datetime('pSaleEnd', $product->getSaleEnd()); ?>
                         </div>
                         <style>
@@ -300,7 +300,7 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
                     <div class="col-xs-4">
                         <div class="form-group">
-                            <?= $form->label("pPriceMinimum", t("Minimum Price")); ?>
+                            <?= $form->label("pPriceMinimum", t('Minimum Price')); ?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?= Config::get('community_store.symbol'); ?>
@@ -312,7 +312,7 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                     <div class="col-xs-4">
                         <div class="form-group">
-                            <?= $form->label("pPriceMaximum", t("Maximum Price")); ?>
+                            <?= $form->label("pPriceMaximum", t('Maximum Price')); ?>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <?= Config::get('community_store.symbol'); ?>
@@ -452,13 +452,13 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pTaxable", t("Taxable")); ?>
+                            <?= $form->label("pTaxable", t('Taxable')); ?>
                             <?= $form->select("pTaxable", ['1' => t('Yes'), '0' => t('No')], $product->isTaxable() ? '1' : '0'); ?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pTaxClass", t("Tax Class")); ?>
+                            <?= $form->label("pTaxClass", t('Tax Class')); ?>
                             <?= $form->select("pTaxClass", $taxClasses, $product->getTaxClassID()); ?>
                         </div>
                     </div>
@@ -468,13 +468,13 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pNoQty", t("Offer quantity selection")); ?>
+                            <?= $form->label("pNoQty", t('Offer quantity selection')); ?>
                             <?= $form->select("pNoQty", ['0' => t('Yes'), '1' => t('No, only allow one of this product in a cart')], !$product->allowQuantity()); ?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pQtyLabel", t("Quantity Label")); ?>
+                            <?= $form->label("pQtyLabel", t('Quantity Label')); ?>
                             <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => 'e.g. cm']); ?>
                         </div>
                     </div>
@@ -485,19 +485,19 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row <?= !$product->allowQuantity() ? 'hidden' : ''; ?>" id="quantityoptions">
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <?= $form->label("pAllowDecimalQty", t("Allow Decimal Quantities")); ?>
+                            <?= $form->label("pAllowDecimalQty", t('Allow Decimal Quantities')); ?>
                             <?= $form->select("pAllowDecimalQty", ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden'); ?>" id="quantitystepscontainer">
                         <div class="form-group">
-                            <?= $form->label("pQtySteps", t("Quantity Steps")); ?>
+                            <?= $form->label("pQtySteps", t('Quantity Steps')); ?>
                             <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <?= $form->label("pMaxQty", t("Maximum Quantity In Cart")); ?>
+                            <?= $form->label("pMaxQty", t('Maximum Quantity In Cart')); ?>
                             <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
                         </div>
                     </div>
@@ -509,7 +509,7 @@ $ps = $app->make('helper/form/page_selector');
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="form-group">
-                                <?= $form->label("pDateAdded", t("Date Added")); ?>
+                                <?= $form->label("pDateAdded", t('Date Added')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
                             </div>
                             <style>
@@ -527,7 +527,7 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-9 store-pane" id="product-descriptions">
 
                 <div class="form-group">
-                    <?= $form->label("pDesc", t("Short Description")); ?><br>
+                    <?= $form->label("pDesc", t('Short Description')); ?><br>
                     <?php
                     $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('pDesc', $product->getDesc());
@@ -535,7 +535,7 @@ $ps = $app->make('helper/form/page_selector');
                 </div>
 
                 <div class="form-group">
-                    <?= $form->label("pDesc", t("Product Details (Long Description)")); ?><br>
+                    <?= $form->label("pDesc", t('Product Details (Long Description')); ?><br>
                     <?php
                     $editor = $app->make('editor');
                     echo $editor->outputStandardEditor('pDetail', $product->getDetail());
@@ -543,14 +543,14 @@ $ps = $app->make('helper/form/page_selector');
                 </div>
 
                 <div class="form-group">
-                    <?= $form->label("pManufacturer", t("Brand / Manufacturer")); ?>
+                    <?= $form->label("pManufacturer", t('Brand / Manufacturer')); ?>
                     <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '',  ['class' => 'selectize']); ?>
                 </div>
 
 
 
                 <div class="form-group">
-                    <?= $form->label("pBarcode", t("Barcode")); ?>
+                    <?= $form->label("pBarcode", t('Barcode')); ?>
                     <?= $form->text("pBarcode", $product->getBarcode()); ?>
                 </div>
 
@@ -560,12 +560,12 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-9 store-pane" id="product-images">
 
                 <div class="form-group">
-                    <?= $form->label('pfID', t("Primary Product Image")); ?>
+                    <?= $form->label('pfID', t('Primary Product Image')); ?>
                     <?php $pfID = $product->getImageID(); ?>
                     <?= $al->image('ccm-image', 'pfID', t('Choose Image'), $pfID ? File::getByID($pfID) : null); ?>
                 </div>
 
-                <?= $form->label('', t("Additional Images")); ?>
+                <?= $form->label('', t('Additional Images')); ?>
 
                 <ul class="list-group multi-select-list multi-select-sortable" id="additional-image-list">
                     <?php foreach ($product->getimagesobjects() as $file) {
@@ -646,7 +646,7 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                 </div>
 
-                <?= $form->label('', t("In product groups")); ?>
+                <?= $form->label('', t('In product groups')); ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
                     <select multiple="multiple" name="pProductGroups[]" class="existing-select2 select2-select" style="width: 100%"
                             placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') : t('Select Product Groups')); ?>">
@@ -664,7 +664,7 @@ $ps = $app->make('helper/form/page_selector');
 
                 <br />
                 <div class="form-group">
-                    <?= $form->label("pFeatured", t("Featured Product")); ?>
+                    <?= $form->label("pFeatured", t('Featured Product')); ?>
                     <?= $form->select("pFeatured", ['0' => t('No'), '1' => t('Yes')], $product->isFeatured() ? '1' : '0'); ?>
                 </div>
 
@@ -713,13 +713,13 @@ $ps = $app->make('helper/form/page_selector');
             <div class="col-sm-9 store-pane" id="product-shipping">
 
                 <div class="form-group">
-                    <?= $form->label("pShippable", t("Product is Shippable")); ?>
+                    <?= $form->label("pShippable", t('Product is Shippable')); ?>
                     <?= $form->select("pShippable", ['1' => t('Yes'), '0' => t('No')], ($product->isShippable() ? '1' : '0')); ?>
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <?= $form->label("pWeight", t("Weight")); ?>
+                            <?= $form->label("pWeight", t('Weight')); ?>
                             <div class="input-group">
                                 <?php $weight = $product->getWeight(); ?>
                                 <?= $form->number('pWeight', $weight ? $weight : '0', ['step'=>'0.01']) ?>
@@ -728,18 +728,18 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
 
                         <div class="form-group">
-                            <?= $form->label("pNumberItems", t("Number Of Items")); ?>
+                            <?= $form->label("pNumberItems", t('Number Of Items')); ?>
                             <?= $form->number('pNumberItems', $product->getNumberItems(), ['min' => 0, 'step' => 1]) ?>
                         </div>
                         <div class="form-group">
-                            <?= $form->label("pSeperateShip", t("Product can be packaged with other items")); ?>
+                            <?= $form->label("pSeperateShip", t('Product can be packaged with other items')); ?>
                             <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as seperate package')], ($product->getSeperateShip() ? '1' : '0')); ?>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <div class="form-group">
-                                <?= $form->label("pLength", t("Length")); ?>
+                                <?= $form->label("pLength", t('Length')); ?>
                                 <div class="input-group">
                                     <?php $length = $product->getLength(); ?>
                                     <?= $form->number('pLength', $length ? $length : '0', ['step'=>'0.01','min'=>0]) ?>
@@ -747,7 +747,7 @@ $ps = $app->make('helper/form/page_selector');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <?= $form->label("pWidth", t("Width")); ?>
+                                <?= $form->label("pWidth", t('Width')); ?>
                                 <div class="input-group">
                                     <?php $width = $product->getWidth(); ?>
                                     <?= $form->number('pWidth', $width ? $width : '0', ['step'=>'0.01','min'=>0]) ?>
@@ -755,7 +755,7 @@ $ps = $app->make('helper/form/page_selector');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <?= $form->label("pHeight", t("Height")); ?>
+                                <?= $form->label("pHeight", t('Height')); ?>
                                 <div class="input-group">
                                     <?php $height = $product->getHeight(); ?>
                                     <?= $form->number('pHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
@@ -763,7 +763,7 @@ $ps = $app->make('helper/form/page_selector');
                                 </div>
                             </div>
 							<div class="form-group">
-								<?= $form->label("pStackedHeight", t("Stacked Height")); ?>
+								<?= $form->label("pStackedHeight", t('Stacked Height')); ?>
 								<div class="input-group">
 									<?php $height = $product->getStackedHeight(); ?>
 									<?= $form->number('pStackedHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
@@ -776,7 +776,7 @@ $ps = $app->make('helper/form/page_selector');
                 <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
                     <div class="col-xs-12">
                         <div class="form-group">
-                            <?= $form->label("pPackageData", t("Or, Package(s) Data")); ?>
+                            <?= $form->label("pPackageData", t('Or, Package(s) Data')); ?>
                             <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
                             <span class="help-block">
                                 <?= t('Values entered will override individual set weights and sizes'); ?>
@@ -946,7 +946,6 @@ $ps = $app->make('helper/form/page_selector');
                         $(".option-group[data-order='" + id + "']").remove();
 
                         indexOptionGroups();
-
                     }
 
                     $(function () {
@@ -1364,13 +1363,13 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("SKU")); ?>
+                                                        <?= $form->label("", t('Code / SKU')); ?>
                                                         <?= $form->text("pvSKU[" . $varid . "]", $variation ? $variation->getVariationSKU() : '', ['placeholder' => t('Base SKU')]); ?>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Barcode")); ?>
+                                                        <?= $form->label("", t('Barcode')); ?>
                                                         <?= $form->text("pvBarcode[" . $varid . "]", $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
                                                     </div>
                                                 </div>
@@ -1379,7 +1378,7 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Stock Level")); ?>
+                                                        <?= $form->label("", t('Stock Level')); ?>
                                                         <div class="input-group">
                                                             <?php
                                                             if ($variation) {
@@ -1396,7 +1395,7 @@ $ps = $app->make('helper/form/page_selector');
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <?= $form->label('pfID[]', t("Primary Image")); ?>
+                                                    <?= $form->label('pfID[]', t('Primary Image')); ?>
                                                     <?php
                                                     $pvfID = null;
                                                     if ($variation) {
@@ -1411,7 +1410,7 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Price")); ?>
+                                                        <?= $form->label("", t('Price')); ?>
                                                         <div class="input-group">
                                                             <div class="input-group-addon">
                                                                 <?= Config::get('community_store.symbol'); ?>
@@ -1422,7 +1421,7 @@ $ps = $app->make('helper/form/page_selector');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Wholesale Price")); ?>
+                                                        <?= $form->label("", t('Wholesale Price')); ?>
                                                         <div class="input-group">
                                                             <div class="input-group-addon">
                                                                 <?= Config::get('community_store.symbol'); ?>
@@ -1437,7 +1436,7 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("pvSalePrice[]", t("Sale Price")); ?>
+                                                        <?= $form->label("pvSalePrice[]", t('Sale Price')); ?>
 
                                                         <div class="input-group">
                                                             <div class="input-group-addon">
@@ -1455,7 +1454,7 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Weight")); ?>
+                                                        <?= $form->label("", t('Weight')); ?>
                                                         <div class="input-group">
                                                             <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Weight')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.weightUnit') ?></div>
@@ -1464,7 +1463,7 @@ $ps = $app->make('helper/form/page_selector');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Length")); ?>
+                                                        <?= $form->label("", t('Length')); ?>
                                                         <div class="input-group">
                                                             <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Length')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
@@ -1476,13 +1475,13 @@ $ps = $app->make('helper/form/page_selector');
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Number of Items")); ?>
+                                                        <?= $form->label("", t('Number of Items')); ?>
                                                         <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'placeholder' => t('Base Number Of Items')]) ?>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Width")); ?>
+                                                        <?= $form->label("", t('Width')); ?>
                                                         <div class="input-group">
                                                             <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step'=>'0.01','min'=>'0','placeholder' => t('Base Width')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
@@ -1497,7 +1496,7 @@ $ps = $app->make('helper/form/page_selector');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <?= $form->label("", t("Height")); ?>
+                                                        <?= $form->label("", t('Height')); ?>
                                                         <div class="input-group">
                                                             <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Height')]) ?>
                                                             <div class="input-group-addon"><?= Config::get('community_store.sizeUnit') ?></div>
