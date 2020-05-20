@@ -271,6 +271,21 @@ ob_start();
     </p>
 
     <?php
+
+    if ($order->getCustomerID()) {
+        if ($order->getMemberCreated()) { ?>
+            <p><?= t('A new member account has been created with this order. Your username and password have been emailed to you.'); ?></p>
+        <?php } else { ?>
+            <p><?= t('Your existing member account has been updated with this order. Please use your existing username and password to sign in.');?></p>
+        <?php }
+    }
+    ?>
+
+    <?php if ($link) { ?>
+        <p><?= t('You can now access'); ?> <a href="<?= $link; ?>"><?= $link; ?></a></p>
+    <?php } ?>
+
+    <?php
     if ($paymentInstructions && $paymentMethodID) {
         $paymentInstructions = $csm->t($paymentInstructions, 'paymentInstructions', false, $paymentMethodID);
     }

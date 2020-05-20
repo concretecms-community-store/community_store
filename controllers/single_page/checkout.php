@@ -236,7 +236,7 @@ class Checkout extends PageController
                 $transactionReference = $payment['transactionReference'];
                 $order = Order::add($pm, $transactionReference);
 
-                return Redirect::to($langpath . '/checkout/complete');
+                return Redirect::to($order->getOrderCompleteDestination());
             }
         }
     }

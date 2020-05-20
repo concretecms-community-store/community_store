@@ -214,6 +214,8 @@ class Settings extends DashboardPageController
                 Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
                 Config::save('community_store.logUserAgent', (bool) $args['logUserAgent']);
+                Config::save('community_store.cartMode', $args['cartMode']);
+                Config::save('community_store.orderCompleteCID', $args['orderCompleteCID']);
 
                 if ($args['currency']) {
                     $symbol = Currency::getSymbol($args['currency']);

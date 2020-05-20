@@ -161,3 +161,21 @@
         display: inline !important;
     }
 }
+
+.store-cart-modal-slide {
+    position: absolute !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: 0 !important;
+    max-height: none !important;
+    height: 100%;
+    margin-right: -800px !important;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+.store-cart-modal-slide.store-cart-modal-active {
+    margin-right: 0 !important;
+}

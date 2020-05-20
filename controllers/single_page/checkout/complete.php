@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
+use \Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
@@ -30,6 +32,26 @@ class Complete extends PageController
 
         if (is_object($order)) {
             $this->set("order", $order);
+
+            // if order has an associated user, and it's new, but not logged in, log them in now.
+            if ($order->getCustomerID() && $order->getMemberCreated()) {
+                $ui = $this->app->make(UserInfoRepository::class)->getByID($order->getCustomerID());
+
+                if ($ui) {
+                    $user = new User();
+                    if (!$user->isRegistered()) {
+                        User::loginByUserID($ui->getUserID());
+                    }
+                }
+            }
+
+            $redirectDestination = $order->getOrderCompleteDestination();
+            $c = Page::getCurrentPage();
+
+            if ($c->getCollectionPath() != $redirectDestination) {
+                return Redirect::to($redirectDestination);
+            }
+
         } else {
             return Redirect::to("/cart");
         }

@@ -505,13 +505,13 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
 
-            <h3><?= t('Digital Download Expiry'); ?></h3>
             <div class="form-group">
-                <?= $form->label('download_expiry_hours', t('Number of hours before digital download links expiry')); ?>
+                <?= $form->label('download_expiry_hours', t('Digital Download Expiry')); ?>
                 <div class="input-group">
                     <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
                     <div class="input-group-addon"><?= t('hours'); ?></div>
                 </div>
+                <span class="help-block"><?= t('Number of hours before digital download links expiry'); ?></span>
             </div>
         </div>
 
@@ -525,25 +525,45 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?> <?php echo t('Disabled (Catalog Mode)'); ?></label><br />
             </div>
 
-            <h3><?= t('Guest Checkout'); ?></h3>
+
             <div class="form-group">
+                <?= $form->label('guestCheckout', t('Cart Open Style')); ?>
+                <?php $cartMode = Config::get('community_store.cartMode');
+                ?>
+                <br />
+                <label><?= $form->radio('cartMode', ' ', ('' == $cartMode)); ?> <?php echo t('Modal'); ?></label><br />
+                <label><?= $form->radio('cartMode', 'slide', 'slide' == $cartMode); ?> <?php echo t('Slide'); ?></label><br />
+            </div>
+
+
+
+            <div class="form-group">
+                <?= $form->label('guestCheckout', t('Guest Checkout')); ?>
                 <?php $guestCheckout = Config::get('community_store.guestCheckout');
                 $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                 ?>
+                <br />
                 <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?> <?php echo t('Always (unless login required for products in cart)'); ?></label><br />
                 <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?> <?php echo t('Offer as checkout option'); ?></label><br />
                 <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?> <?php echo t('Disabled'); ?></label><br />
             </div>
 
-            <h3><?= t('Address Auto-Complete'); ?></h3>
+            <div class="form-group">
+                <?= $form->label('orderCompleteCID', t('Order Complete Destination')); ?>
+                <?php $orderCompleteCID = Config::get('community_store.orderCompleteCID'); ?>
+                <?= $pageSelector->selectPage('orderCompleteCID', $orderCompleteCID); ?>
+                <span class="help-block"><?= t('If left unselected, will redirect to default order completion page. May be overriden by product configuration.'); ?></span>
+           </div>
+
+
             <div class="form-group">
                 <?= $form->label('placesAPIKey', t('Address Auto-Complete API Key (Google Places)')); ?>
                 <?= $form->text('placesAPIKey', Config::get('community_store.placesAPIKey')); ?>
             </div>
 
-            <h3><?= t('Checkout Scroll Offset'); ?></h3>
+
             <div class="form-group">
-                <?= $form->label('checkoutScrollOffset', t('Amount to offset the automatic scroll in the checkout')); ?>
+                <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>
                 <div class="input-group">
                 <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
                     <div class="input-group-addon"><?= t('px');?></div>
@@ -551,11 +571,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
             </div>
 
-            <h3><?= t('Company Name'); ?></h3>
             <div class="form-group">
+                <?= $form->label('companyField', t('Company Name')); ?>
                 <?php $companyField = Config::get('community_store.companyField');
                 $companyField = ($companyField ? $companyField : 'off');
                 ?>
+                <br />
                 <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?> <?php echo t('Hidden'); ?></label><br />
                 <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?> <?php echo t('Optional'); ?></label><br />
                 <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?> <?php echo t('Required'); ?></label><br />

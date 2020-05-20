@@ -8,8 +8,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
+$cartModeClass = '';
+
+if ($cartMode) {
+    $cartModeClass = 'store-cart-modal-' . $cartMode;
+}
+
+
 ?>
-<div class="store-cart-modal clearfix" id="cart-modal">
+<div class="store-cart-modal <?= $cartModeClass; ?> clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">

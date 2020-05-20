@@ -2,7 +2,9 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
 use Concrete\Core\User\UserInfo;
@@ -49,6 +51,9 @@ class Order
 
     /** @ORM\Column(type="integer",nullable=true) */
     protected $cID;
+
+    /** @ORM\Column(type="boolean", nullable=true) */
+    protected $memberCreated;
 
     /** @ORM\Column(type="datetime") */
     protected $oDate;
@@ -149,6 +154,16 @@ class Order
     public function setCustomerID($cID)
     {
         $this->cID = $cID;
+    }
+
+    public function getMemberCreated()
+    {
+        return (bool)$this->memberCreated;
+    }
+
+    public function setMemberCreated($memberCreated)
+    {
+        $this->memberCreated = $memberCreated;
     }
 
     public function setDate($oDate)
@@ -782,7 +797,7 @@ class Order
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
                 $navhelper = $app->make('helper/navigation');
-                $target = Page::getByPath('/login');
+                $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
 
                 if ($target) {
                     $link = $navhelper->getLinkToCollection($target, true);
@@ -824,6 +839,8 @@ class Order
 
                 $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);
+                $this->setMemberCreated(true);
+
                 $usercreated = true;
 
                 if (Config::get('concrete.user.registration.email_registration')) {
@@ -1058,6 +1075,19 @@ class Order
             $orderChoicesAttList = [];
         }
 
+        $navhelper = $app->make('helper/navigation');
+        $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
+
+        if ($target) {
+            $link = $navhelper->getLinkToCollection($target, true);
+
+            if ($link) {
+                $mh->addParameter('link', $link);
+            }
+        } else {
+            $mh->addParameter('link', '');
+        }
+
         $mh->addParameter('paymentMethodID', $pmID);
         $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
         $mh->addParameter('paymentInstructions', $paymentInstructions);
@@ -1250,6 +1280,63 @@ class Order
         $att = $this->getAttribute($handle);
 
         return $this->returnAttributeValue($att, $valuename);
+    }
+
+    public function getOrderCompleteDestination($default = '', $locale = '') {
+        $c = Page::getCurrentPage();
+        $langpath = '';
+
+        if ($c && !$locale) {
+            $lang = Section::getBySectionOfSite($c);
+            if (null !== $lang) {
+                $langpath = $lang->getCollectionHandle();
+            }
+        } else {
+            if ($locale) {
+                $lang = Section::getByLocale($locale);
+            }
+        }
+
+        // default return
+        if ($default) {
+            $return = $default;
+        } else {
+            $return = ($langpath ? '/' . $langpath : '') . '/checkout/complete';
+        }
+
+        foreach($this->getOrderItems() as $orderItem) {
+            $product = $orderItem->getProductObject();
+            if ($product && $product->getOrderCompleteCID()) {
+                $orderCompleteCID = $product->getOrderCompleteCID();
+                break;
+            }
+        }
+
+        if (!$orderCompleteCID) {
+            $orderCompleteCID = Config::get('community_store.orderCompleteCID');
+        }
+
+        if ($orderCompleteCID) {
+            $page = Page::getByID($orderCompleteCID);
+
+            if ($lang) {
+                $relatedID = $lang->getTranslatedPageID($page);
+
+                if ($relatedID && $relatedID != $orderCompleteCID) {
+                    $translatedPage = Page::getByID($relatedID);
+
+                    if ($translatedPage && !$translatedPage->isError() && !$translatedPage->isInTrash()) {
+                        $page = $translatedPage;
+                    }
+                }
+            }
+
+            if ($page) {
+                $return = $page->getCollectionPath();
+            }
+        }
+
+        return $return;
     }
 
     private function returnAttributeValue($att, $valuename)

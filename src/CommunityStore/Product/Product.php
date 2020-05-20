@@ -256,6 +256,11 @@ class Product
     protected $pAutoCheckout;
 
     /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $pOrderCompleteCID;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $pExclusive;
@@ -778,6 +783,16 @@ class Product
         $this->pAutoCheckout = (!is_null($bool) ? $bool : false);
     }
 
+    public function getOrderCompleteCID()
+    {
+        return $this->pOrderCompleteCID;
+    }
+
+    public function setOrderCompleteCID($orderCompleteCID)
+    {
+        $this->pOrderCompleteCID = $orderCompleteCID;
+    }
+
     public function setIsExclusive($bool)
     {
         $this->pExclusive = (!is_null($bool) ? $bool : false);
@@ -969,6 +984,7 @@ class Product
         $product->setMaxQty($data['pMaxQty']);
         $product->setPageID($data['pageCID']);
         $product->setNotificationEmails($data['pNotificationEmails']);
+        $product->setOrderCompleteCID($data['pOrderCompleteCID']);
 
         if ($data['pManufacturer']) {
             $manufacturer = Manufacturer::getByID($data['pManufacturer']);

@@ -1704,6 +1704,12 @@ $ps = $app->make('helper/form/page_selector');
                     <?= $form->label('pAutoCheckout', t('Send customer directly to checkout when added to cart')) ?>
                 </div>
 
+
+                <div class="form-group">
+                    <?= $form->label('pOrderCompleteCID', t('Order Complete Destination')); ?>
+                    <?= $ps->selectPage('pOrderCompleteCID', $product->getOrderCompleteCID()); ?>
+                </div>
+
                 <div class="form-group">
                     <?= $form->checkbox('pExclusive', '1', $product->isExclusive()) ?>
                     <?= $form->label('pExclusive', t('Prevent this item from being in the cart with other items')) ?>

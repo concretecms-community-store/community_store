@@ -28,7 +28,7 @@ var communityStore = {
         if (animatecart) {
             setTimeout(function() {
                 $('.store-cart-modal').addClass('store-cart-modal-active');
-            }, 10);
+            }, 30);
         } else {
             $('.store-cart-modal').addClass('store-cart-modal-active');
         }
