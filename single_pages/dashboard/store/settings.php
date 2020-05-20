@@ -168,37 +168,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups"));?>
-                                <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                    <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups');?>">
-                                        <?php
-                                        foreach ($allGroupList as $ugkey=>$uglabel) { ?>
-                                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $pm->getUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups"));?>
-                                <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                    <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('None');?>">
-                                        <?php
-                                        foreach ($allGroupList as $ugkey=>$uglabel) { ?>
-                                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey,  $pm->getExcludedUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
+                    <div class="paymentConfigDetails" id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <?= $form->label("paymentMethodDisplayName[" . $pm->getID() . "]", t("Display Name (on checkout)"));?>
@@ -211,6 +181,37 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         </div>
                         <?php
                         $pm->renderDashboardForm(); ?>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups"));?>
+                                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                        <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups');?>">
+                                            <?php
+                                            foreach ($allGroupList as $ugkey=>$uglabel) { ?>
+                                                <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $pm->getUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups"));?>
+                                    <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                        <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupexcludeselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('None');?>">
+                                            <?php
+                                            foreach ($allGroupList as $ugkey=>$uglabel) { ?>
+                                                <option value="<?= $ugkey;?>" <?= (in_array($ugkey,  $pm->getExcludedUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -230,9 +231,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     $('.paymentMethodEnabled SELECT').on('change', function() {
                         var $this = $(this);
                         if ($this.val() == 1) {
-                            $this.parent().next().slideDown();
+                            $this.closest('.panel-body').find('.paymentConfigDetails').slideDown();
                         } else {
-                            $this.parent().next().slideUp();
+                            $this.closest('.panel-body').find('.paymentConfigDetails').slideUp();
                         }
                     });
                 });
