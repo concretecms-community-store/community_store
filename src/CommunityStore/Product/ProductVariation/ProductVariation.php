@@ -470,7 +470,7 @@ class ProductVariation
 
     public function isSellable()
     {
-        if ($this->isUnlimited() || $this->getVariationQty() > 0) {
+        if ($this->isUnlimited() || $this->getStockLevel() > 0) {
             return true;
         } else {
             return false;

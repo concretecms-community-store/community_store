@@ -23,8 +23,12 @@ class Complete extends PageController
 
     public function view()
     {
+        // unset the shipping type, as next order might be unshippable
+        Session::set('community_store.smID', '');
+
         $customer = new Customer();
         $lastorderid = $customer->getLastOrderID();
+        $refreshCheck = false;
 
         if ($lastorderid) {
             $order = Order::getByID($customer->getLastOrderID());
@@ -45,12 +49,20 @@ class Complete extends PageController
                 }
             }
 
-            $redirectDestination = $order->getOrderCompleteDestination();
-            $c = Page::getCurrentPage();
+            if ($order->getPaid()) {
+                $redirectDestination = $order->getOrderCompleteDestination();
+                $c = Page::getCurrentPage();
 
-            if ($c->getCollectionPath() != $redirectDestination) {
-                return Redirect::to($redirectDestination);
+                if ($c->getCollectionPath() != $redirectDestination) {
+                    return Redirect::to($redirectDestination);
+                }
+            } else {
+                if ($order->getExternalPaymentRequested()) {
+                    // if it's not paid, but external payment was requested e.g. payment, trigger a check/refresh
+                    $refreshCheck = true;
+                }
             }
+
 
         } else {
             return Redirect::to("/cart");
@@ -59,14 +71,13 @@ class Complete extends PageController
         Cart::clear();
         DiscountCode::clearCartCode();
 
+        $this->set('refreshCheck', true);
+
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
-
-        // unset the shipping type, as next order might be unshippable
-        Session::set('community_store.smID', '');
 
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
         $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);

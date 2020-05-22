@@ -218,6 +218,9 @@ class Checkout extends PageController
                 $order = Order::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
 
+                // unset the shipping type, as next order might be unshippable
+                Session::set('community_store.smID', '');
+
                 return Redirect::to($langpath . '/checkout/external');
             } else {
                 return Redirect::to($langpath . '/cart');
@@ -234,8 +237,10 @@ class Checkout extends PageController
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
-                $order = Order::add($pm, $transactionReference);
+                // unset the shipping type, as next order might be unshippable
+                Session::set('community_store.smID', '');
 
+                $order = Order::add($pm, $transactionReference);
                 return Redirect::to($order->getOrderCompleteDestination());
             }
         }

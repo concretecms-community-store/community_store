@@ -146,6 +146,26 @@ class Product
     protected $pQtyUnlim;
 
     /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    protected $pDateAvailableStart;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    protected $pDateAvailableEnd;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $pOutOfStockMessage;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $pAddToCartText;
+
+    /**
      * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pBackOrder;
@@ -619,6 +639,46 @@ class Product
         $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
     }
 
+    public function getDateAvailableStart()
+    {
+        return $this->pDateAvailableStart;
+    }
+
+    public function setDateAvailableStart($pDateAvailableStart)
+    {
+        $this->pDateAvailableStart = $pDateAvailableStart;
+    }
+
+    public function getDateAvailableEnd()
+    {
+        return $this->pDateAvailableEnd;
+    }
+
+    public function setDateAvailableEnd($dateAvailableEnd)
+    {
+        $this->pDateAvailableEnd = $dateAvailableEnd;
+    }
+
+    public function getOutOfStockMessage()
+    {
+        return $this->pOutOfStockMessage;
+    }
+
+    public function setOutOfStockMessage($outOfStockMessage)
+    {
+        $this->pOutOfStockMessage = $outOfStockMessage;
+    }
+
+    public function getAddToCartText()
+    {
+        return $this->pAddToCartText;
+    }
+
+    public function setAddToCartText($pAddToCartText)
+    {
+        $this->pAddToCartText = $pAddToCartText;
+    }
+
     public function setAllowBackOrder($bool)
     {
         $this->pBackOrder = (!is_null($bool) ? $bool : false);
@@ -985,6 +1045,21 @@ class Product
         $product->setPageID($data['pageCID']);
         $product->setNotificationEmails($data['pNotificationEmails']);
         $product->setOrderCompleteCID($data['pOrderCompleteCID']);
+
+        if ($data['pDateAvailableStart_dt']) {
+            $product->setDateAvailableStart(new \DateTime($data['pDateAvailableStart_dt'] . ' ' . $data['pDateAvailableStart_h'] . ':' . $data['pDateAvailableStart_m']));
+        }else {
+            $product->setDateAvailableStart(null);
+        }
+
+        if ($data['pDateAvailableEnd_dt']) {
+            $product->setDateAvailableEnd(new \DateTime($data['pDateAvailableEnd_dt'] . ' ' . $data['pDateAvailableEnd_h'] . ':' . $data['pDateAvailableEnd_m']));
+        }else {
+            $product->setDateAvailableEnd(null);
+        }
+
+        $product->setOutOfStockMessage($data['pOutOfStockMessage']);
+        $product->setAddToCartText($data['pAddToCartText']);
 
         if ($data['pManufacturer']) {
             $manufacturer = Manufacturer::getByID($data['pManufacturer']);
@@ -1580,8 +1655,23 @@ class Product
         return (bool) $this->pVariations;
     }
 
-    public function isUnlimited()
+    public function isUnlimited($skipDateCheck = false)
     {
+        if (!$skipDateCheck) {
+            $now = new \DateTime();
+            $startAvailable = $this->getDateAvailableStart();
+            $endAvailable = $this->getDateAvailableEnd();
+
+            if ($startAvailable && $startAvailable >= $now) {
+                return false;
+            }
+
+            if ($endAvailable && $now > $endAvailable) {
+                return false;
+            }
+        }
+
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isUnlimited();
         } else {
@@ -1626,6 +1716,19 @@ class Product
     }
 
     public function getStockLevel() {
+
+        $now = new \DateTime();
+        $startAvailable = $this->getDateAvailableStart();
+        $endAvailable = $this->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return 0;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
+            return 0;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationQty();
         } else {
@@ -1646,7 +1749,7 @@ class Product
         if ($this->allowBackOrders() || $this->isUnlimited()) {
             $available = false;
         } else {
-            $available = $this->getQty();
+            $available = $this->getStockLevel();
         }
 
         $maxcart = $this->getMaxQty();
@@ -1665,6 +1768,18 @@ class Product
     public function isSellable()
     {
         if (!$this->isActive()) {
+            return false;
+        }
+
+        $now = new \DateTime();
+        $startAvailable = $this->getDateAvailableStart();
+        $endAvailable = $this->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return false;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
             return false;
         }
 

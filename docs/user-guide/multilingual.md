@@ -1,6 +1,6 @@
 # Multilingual
-
-When your concrete5 site is configured with [multiple languages](/how-tos/multilingual), product details, options and other pieces of text displayed in your store can be translated in full.
+ 
+When your concrete5 site is configured with [multiple languages](/how-tos/multilingual.html), product details, options and other pieces of text displayed in your store can be translated in full.
 Translations are managed through the **Store / Multilingual** Dashboard page.
 
 The translations process is designed such that repeatedly used 'common' pieces of text to describe products and product options only needs to be translated once, instead of on each product.
@@ -14,6 +14,8 @@ The following items can be translated per product in this section:
 - Short Description
 - Details
 - Quantity Label
+- Add To Cart Button Label
+- Out of Stock Message
 - Option Names
 - Option Details
 - Product Attribute Names and Values
@@ -35,4 +37,6 @@ The following items can be translated in this section, and act as default transl
 - Option Names
 - Option Details
 - Product Quantity Labels
+- Product Add To Cart Button Labels
+- Product Out of Stock Messages
 - Product Attribute Names and Values

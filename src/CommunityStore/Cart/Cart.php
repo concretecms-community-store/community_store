@@ -74,7 +74,7 @@ class Cart
                     // if the cart has greater stock than available
                     if (!$product->isUnlimited() && !$product->allowBackOrders()) {
                         $stockLimited = true;
-                        $availableProductQuantity = $product->getQty();
+                        $availableProductQuantity = $product->getStockLevel();
                         if ($cartitem['product']['qty'] > $availableProductQuantity) {
                             if ($availableProductQuantity > 0) {
                                 $cartitem['product']['qty'] = $availableProductQuantity; // set to how many are left

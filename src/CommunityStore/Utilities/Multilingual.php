@@ -47,6 +47,8 @@ class Multilingual
      *  productDescription
      *  productDetails
      *  productQuantityLabel
+     *  productAddToCartText
+     *  productOutOfStockMessage
      *  productAttributeName
      *  productAttributeLabel
      *  productAttributeValue
@@ -68,6 +70,14 @@ class Multilingual
         $siteConfig = $this->app->make('site')->getActiveSiteForEditing()->getConfigRepository();
         $defaultSourceLocale = $siteConfig->get('multilingual.default_source_locale');
 
+        $commonContexts = [
+            'productAttributeValue',
+            'optionName',
+            'optionDetails',
+            'optionSelectorName',
+            'optionValue'
+        ];
+
         if ($locale != $defaultSourceLocale || $forcedLocale) {
             $qb = $this->entityManager->createQueryBuilder();
 
@@ -82,13 +92,13 @@ class Multilingual
                 } else {
                     $query->andWhere('t.entityID = :id')->setParameter('id', $id);
                 }
-            } elseif ('productAttributeValue' == $context || 'optionName' == $context || 'optionDetails' == $context || 'optionSelectorName' == $context || 'optionValue' == $context  ) {
+            } elseif (in_array($context, $commonContexts)) {
                 $query->andWhere('t.originalText = :text and t.entityID is null')->setParameter('text', $text);
             }
 
             if ($productID) {
                 if ($useCommon) {
-                    if ('productQuantityLabel' == $context) {
+                    if ($context == 'productQuantityLabel' || $context == 'productAddToCartText' || $context == 'productOutOfStockMessage') {
                         $query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
                     } else {
                         $query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);

@@ -11,6 +11,7 @@ $listViews = ['view', 'updated', 'removed', 'success'];
 $addViews = ['add', 'edit', 'save'];
 $attributeViews = ['attributes', 'attributeadded', 'attributeremoved'];
 $ps = $app->make('helper/form/page_selector');
+$dh = $app->make('helper/date');
 
 ?>
 
@@ -112,9 +113,9 @@ $ps = $app->make('helper/form/page_selector');
                         <?= $form->label("pQty", t('Stock Level')); ?>
                         <?php $qty = $product->getStockLevel(); ?>
                         <div class="input-group">
-                            <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited() ? 'disabled' : '') => ($product->isUnlimited() ? 'disabled' : ''), 'step' => 0.001]); ?>
+                            <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'step' => 0.001]); ?>
                             <div class="input-group-addon">
-                                <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited()) ?>
+                                <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true)) ?>
                                 <?= $form->label('pQtyUnlim', t('Unlimited')) ?>
                             </div>
 
@@ -172,12 +173,31 @@ $ps = $app->make('helper/form/page_selector');
                     </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="form-group" id="backorders" <?= ($product->isUnlimited() ? 'style="display: none"' : ''); ?>>
+                        <div class="form-group" id="backorders" <?= ($product->isUnlimited(true) ? 'style="display: none"' : ''); ?>>
                             <?= $form->label("pBackOrder", t('Allow Back Orders')); ?>
                             <?= $form->select("pBackOrder", ['1' => t('Yes'), '0' => t('No')], $product->allowBackOrders() ? '1' : '0'); ?>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $form->label("pDateAvailableStart", t('Stock Available From')); ?>
+                            <?= $app->make('helper/form/date_time')->datetime('pDateAvailableStart', $product->getDateAvailableStart()); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $form->label("pDateAvailableEnd", t('Stock Available Until')); ?>
+                            <?= $app->make('helper/form/date_time')->datetime('pDateAvailableEnd', $product->getDateAvailableEnd()); ?>
+                        </div>
+                    </div>
+                </div>
+
 
                 <hr />
 
@@ -502,6 +522,23 @@ $ps = $app->make('helper/form/page_selector');
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <?php $outOfStockMessage = $product->getOutOfStockMessage(); ?>
+                            <?= $form->label("pOutOfStockMessage", t('Out Of Stock Message')); ?>
+                            <?= $form->text("pOutOfStockMessage", $product->getOutOfStockMessage(), ['placeholder'=>t('Out of Stock')]); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <?= $form->label("pAddToCartText", t('Add To Cart Button Text')); ?>
+                            <?= $form->text("pAddToCartText", $product->getAddToCartText(), ['placeholder'=>t('Add to Cart')]); ?>
+                        </div>
+                    </div>
+                </div>
+
 
                 <hr />
 
@@ -1382,14 +1419,14 @@ $ps = $app->make('helper/form/page_selector');
                                                         <div class="input-group">
                                                             <?php
                                                             if ($variation) {
-                                                                echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited() ? 'readonly' : '') => ($variation->isUnlimited() ? 'readonly' : ''), 'step' => 0.001]);
+                                                                echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001]);
                                                             } else {
                                                                 echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'step' => 0.001]);
                                                             }
                                                             ?>
 
                                                             <div class="input-group-addon">
-                                                                <label class="control-label"><?= $form->checkbox('pvQtyUnlim[' . $varid . ']', '1', $variation ? $variation->isUnlimited() : true) ?> <?= t('Unlimited'); ?></label>
+                                                                <label class="control-label"><?= $form->checkbox('pvQtyUnlim[' . $varid . ']', '1', $variation ? $variation->isUnlimited(true) : true) ?> <?= t('Unlimited'); ?></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1883,13 +1920,25 @@ $ps = $app->make('helper/form/page_selector');
                                 echo "<span class='label label-default'>" . t('Inactive') . "</span>";
                             }
                             ?>
+
                         </td>
                         <td><?php
                             if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span>';
                             } else {
-                                echo($product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty());
-                            } ?></td>
+                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty());
+                            } ?>
+
+                            <?php
+                            $startDate = $product->getDateAvailableStart();
+                            $endDate = $product->getDateAvailableEnd();
+
+                            if ($startDate || $endDate) {
+                                echo '<br /><span class="label label-warning">' . t('Stock time limited') . '</span>';
+                            }
+                            ?>
+
+                        </td>
                         <td>
                             <?php
                             if ($product->hasVariations()) {
