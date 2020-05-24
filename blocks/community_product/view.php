@@ -335,8 +335,8 @@ if (is_object($product) && $product->isActive()) {
 
                                                 if (!empty($variation)) {
                                                     $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
-                                                    $disabled = $variation->isSellable() && $isSellable ? '' : 'disabled="disabled" ';
-                                                    $outOfStock = $variation->isSellable() && $isSellable ? '' : ' (' . t('out of stock') . ')';
+                                                    $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                                    $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
 
                                                     if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                                         $selected = 'selected="selected"';
@@ -580,7 +580,7 @@ if (is_object($product) && $product->isActive()) {
                 $varationData[$key] = [
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
-                    'available' => ($variation->isSellable() && $isSellable),
+                    'available' => $variation->isSellable(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                     'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'

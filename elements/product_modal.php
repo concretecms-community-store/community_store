@@ -200,7 +200,7 @@ $token = $app->make('token');
 
 <?php
 if ($product->hasVariations()) {
-                $variations = ProductVariation::getVariationsForProduct($product);
+                $variations = $product->getVariations();
 
                 $variationLookup = [];
 

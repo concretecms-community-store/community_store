@@ -50,6 +50,7 @@ class Product
      */
     protected $pID;
 
+
     /**
      * @ORM\Column(type="integer",nullable=true)
      */
@@ -307,6 +308,7 @@ class Product
      */
     protected $locations;
 
+
     public function getLocations()
     {
         return $this->locations;
@@ -379,9 +381,22 @@ class Product
      */
     protected $priceTiers;
 
+
     public function getPriceTiers()
     {
         return $this->priceTiers;
+    }
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation", mappedBy="product",cascade={"persist"}))
+     * @ORM\OrderBy({"pvSort" = "ASC"})
+     */
+    protected $variations;
+
+    public function getVariations()
+    {
+        return $this->variations;
     }
 
     protected $discountRules;
@@ -444,6 +459,7 @@ class Product
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
         $this->priceTiers = new ArrayCollection();
+        $this->variations = new ArrayCollection();
     }
 
     public function setPriceAdjustment($adjustment){
@@ -1813,11 +1829,6 @@ class Product
         return ProductGroup::getGroupIDsForProduct($this);
     }
 
-    public function getVariations()
-    {
-        return ProductVariation::getVariationsForProduct($this);
-    }
-
     public function getDateAdded()
     {
         return $this->pDateAdded;
@@ -2238,7 +2249,7 @@ class Product
         $variationLookup = [];
 
         if ($this->hasVariations()) {
-            $variations = ProductVariation::getVariationsForProduct($this);
+            $variations = $this->getVariations();
 
             $variationLookup = [];
 

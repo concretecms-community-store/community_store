@@ -290,9 +290,9 @@ if ($productsPerRow == 6) {
                                                 $selected = '';
 
                                                 if (!empty($variation)) {
-                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable() && $isSellable) ? $variation : $firstAvailableVariation;
-                                                    $disabled = $variation->isSellable() && $isSellable ? '' : 'disabled="disabled" ';
-                                                    $outOfStock = $variation->isSellable() && $isSellable ? '' : ' (' . t('out of stock') . ')';
+                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
+                                                    $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
+                                                    $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
 
                                                     if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
                                                         $selected = 'selected="selected"';
@@ -434,7 +434,7 @@ if ($productsPerRow == 6) {
                                     $varationData[$key] = [
                                         'price' => $product->getPrice(),
                                         'salePrice' => $product->getSalePrice(),
-                                        'available' => ($variation->isSellable() && $isSellable),
+                                        'available' => $variation->isSellable(),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',
                                         'saleTemplate'=>'<span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'

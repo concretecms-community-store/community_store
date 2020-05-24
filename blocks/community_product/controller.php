@@ -48,7 +48,7 @@ class Controller extends BlockController
 
         if ($product) {
             if ($product->hasVariations()) {
-                $variations = ProductVariation::getVariationsForProduct($product);
+                $variations = $product->getVariations();
 
                 $variationLookup = [];
 

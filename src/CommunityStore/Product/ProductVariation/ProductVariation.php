@@ -24,9 +24,10 @@ class ProductVariation
     protected $pvID;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product", inversedBy="variations", cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
-    protected $pID;
+    protected $product;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -179,6 +180,15 @@ class ProductVariation
     {
         return $this->pID;
     }
+
+    public function getProduct() {
+        return $this->product;
+    }
+
+    public function setProduct($product) {
+        $this->product = $product;
+    }
+
 
     /**
      * @ORM\return mixed
@@ -470,6 +480,23 @@ class ProductVariation
 
     public function isSellable()
     {
+        if (!$this->product->isActive()) {
+            return false;
+        }
+
+        $now = new \DateTime();
+        $startAvailable = $this->product->getDateAvailableStart();
+        $endAvailable = $this->product->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return false;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
+            return false;
+        }
+
+
         if ($this->isUnlimited() || $this->getStockLevel() > 0) {
             return true;
         } else {
@@ -519,7 +546,7 @@ class ProductVariation
 
                 if (!$variation) {
                     $variation = self::add(
-                        $product->getID(),
+                        $product,
                         [
                         'pvSKU' => '',
                         'pvBarcode' => '',
@@ -566,6 +593,7 @@ class ProductVariation
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->setVariationPackageData($data['pvPackageData'][$key]);
                     $variation->setVariationSort($sort);
+                    $variation->setProduct($product);
                     $variation->save(true);
 
                     $options = $variation->getOptions();
@@ -619,10 +647,10 @@ class ProductVariation
         return $em->getRepository(get_class())->findOneBy(['pvSKU' => $pvSKU]);
     }
 
-    public static function add($productID, $data, $persistonly = false)
+    public static function add($product, $data, $persistonly = false)
     {
         $variation = new self();
-        $variation->setProductID($productID);
+        $variation->setProduct($product);
         $variation->setVariationSKU($data['pvSKU']);
         $variation->setVariationBarcode($data['pvBarcode']);
         $variation->setVariationPrice($data['pvPrice']);
@@ -670,13 +698,6 @@ class ProductVariation
         }
     }
 
-    public static function getVariationsForProduct(Product $product)
-    {
-        $em = dbORM::entityManager();
-
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['pvSort' => 'asc']);
-    }
-
     public function delete()
     {
         $em = dbORM::entityManager();
@@ -691,7 +712,7 @@ class ProductVariation
         }
 
         //clear out existing product option groups
-        $existingVariations = self::getVariationsForProduct($product);
+        $existingVariations = $product->getVariations();
         foreach ($existingVariations as $variation) {
             if (!in_array($variation->getID(), $excluding)) {
                 $variation->delete();
