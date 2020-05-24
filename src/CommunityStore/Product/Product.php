@@ -990,7 +990,7 @@ class Product
             $product->setPageDescription($data['pDesc']);
 
             if ($data['pDateAdded_dt']) {
-                $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m']));
+                $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m'] . (isset($data['pDateAdded_a']) ? $data['pDateAdded_a'] : '')));
             }
         } else {
             //else, we don't know it and we're adding a new product
@@ -1017,13 +1017,13 @@ class Product
         }
 
         if ($data['pSaleStart_dt']) {
-            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m']));
+            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m']  . (isset($data['pSaleStart_a']) ? $data['pSaleStart_a'] : '')));
         } else {
             $product->setSaleStart(null);
         }
 
         if ($data['pSaleEnd_dt']) {
-            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m']));
+            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m']  . (isset($data['pSaleEnd_a']) ? $data['pSaleEnd_a'] : '') ));
         }else {
             $product->setSaleEnd(null);
         }
@@ -1063,13 +1063,13 @@ class Product
         $product->setOrderCompleteCID($data['pOrderCompleteCID']);
 
         if ($data['pDateAvailableStart_dt']) {
-            $product->setDateAvailableStart(new \DateTime($data['pDateAvailableStart_dt'] . ' ' . $data['pDateAvailableStart_h'] . ':' . $data['pDateAvailableStart_m']));
+            $product->setDateAvailableStart(new \DateTime($data['pDateAvailableStart_dt'] . ' ' . $data['pDateAvailableStart_h'] . ':' . $data['pDateAvailableStart_m'] . (isset($data['pDateAvailableStart_a']) ? $data['pDateAvailableStart_a'] : '')));
         }else {
             $product->setDateAvailableStart(null);
         }
 
         if ($data['pDateAvailableEnd_dt']) {
-            $product->setDateAvailableEnd(new \DateTime($data['pDateAvailableEnd_dt'] . ' ' . $data['pDateAvailableEnd_h'] . ':' . $data['pDateAvailableEnd_m']));
+            $product->setDateAvailableEnd(new \DateTime($data['pDateAvailableEnd_dt'] . ' ' . $data['pDateAvailableEnd_h'] . ':' . $data['pDateAvailableEnd_m'] . (isset($data['pDateAvailableEnd_a']) ? $data['pDateAvailableEnd_a'] : '')));
         }else {
             $product->setDateAvailableEnd(null);
         }
