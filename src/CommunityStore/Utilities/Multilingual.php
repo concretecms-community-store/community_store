@@ -67,8 +67,8 @@ class Multilingual
     {
         $locale = $this->localization->getLocale();
 
-        $siteConfig = $this->app->make('site')->getActiveSiteForEditing()->getConfigRepository();
-        $defaultSourceLocale = $siteConfig->get('multilingual.default_source_locale');
+        $site = $this->app->make('site')->getSite();
+        $defaultSourceLocale = $site->getDefaultLocale()->getLocale();
 
         $commonContexts = [
             'productAttributeValue',
