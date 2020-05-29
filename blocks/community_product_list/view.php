@@ -29,6 +29,10 @@ if ($productsPerRow == 6) {
     $columnClass = 'col-md-2';
 }
 
+if (!$productsPerRow) {
+    $productsPerRow = 1;
+}
+
 ?>
 
 <div class="store-product-list-block">
