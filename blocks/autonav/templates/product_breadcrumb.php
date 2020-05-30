@@ -1,8 +1,9 @@
-<?php use Concrete\Core\Multilingual\Page\Section\Section;
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-
-defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
 $product = \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product::getByCollectionID($c->getCollectionID());
