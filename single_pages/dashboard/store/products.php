@@ -132,6 +132,7 @@ $dh = $app->make('helper/date');
 
                                     $('#pQuantityPrice').change(function () {
                                         $('#tieredoptionscontainer').toggleClass('hidden');
+                                        $('#tieredoptionsnote').toggleClass('hidden');
                                     });
 
                                     $('#pNoQty').change(function () {
@@ -358,6 +359,7 @@ $dh = $app->make('helper/date');
                         <div class="form-group">
                             <?= $form->checkbox('pQuantityPrice', '1', $product->hasQuantityPrice()) ?>
                             <?= $form->label('pQuantityPrice', t('Quantity based pricing')) ?>
+                            <span id="tieredoptionsnote" class="help-block <?= $product->hasQuantityPrice() ? '' : 'hidden' ?>"><?= t('Note: quantity based pricing is not overridden by a sale price'); ?></span>
                         </div>
                     </div>
 

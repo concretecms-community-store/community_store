@@ -1369,7 +1369,7 @@ class Product
             return $this->getWholesalePrice();
         } else {
             $salePrice = $this->getSalePrice();
-            if ($salePrice != "") {
+            if ($salePrice != "" && !$this->hasQuantityPrice()) {
                 return $salePrice;
             }
             return $this->getPrice($qty);
