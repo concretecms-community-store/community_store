@@ -677,7 +677,7 @@ class ProductVariation
         $db = $app->make('database')->connection();
 
         if (is_array($optionids) && !empty($optionids)) {
-            $options = implode(',', $optionids);
+            $options = implode(',', array_map('intval', $optionids));
 
             $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ($options)
                                  group by pvID having count(*) = ? ", [count($optionids)]);
