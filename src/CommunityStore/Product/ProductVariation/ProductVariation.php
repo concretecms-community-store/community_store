@@ -617,7 +617,8 @@ class ProductVariation
         $db = $app->make('database')->connection();
 
         if (!empty($variationIDs)) {
-            $options = implode(',', $variationIDs);
+            $options = implode(',', array_map('intval', $variationIDs));
+
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ($options)", [$product->getID()]);
         } else {
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", [$product->getID()]);
