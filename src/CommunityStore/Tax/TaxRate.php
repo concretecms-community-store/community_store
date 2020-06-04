@@ -257,6 +257,10 @@ class TaxRate
                     $product->setVariation($cartItem['product']['variation']);
                 }
 
+                if($cartItem['priceAdjustment']){
+                    $product->setPriceAdjustment($cartItem['priceAdjustment']);
+                }
+
                 if (is_object($product)) {
                     if ($product->isTaxable()) {
                         //if this tax rate is in the tax class associated with this product
