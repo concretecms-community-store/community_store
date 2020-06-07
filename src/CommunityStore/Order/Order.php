@@ -127,6 +127,9 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $oRefundReason;
 
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $oNotes;
+
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
@@ -417,6 +420,16 @@ class Order
         $this->userAgent = $userAgent;
     }
 
+    public function setNotes($notes)
+    {
+        $this->oNotes = $notes;
+    }
+
+    public function getNotes()
+    {
+        return $this->oNotes;
+    }
+
     public function getTaxes()
     {
         $taxes = [];
@@ -529,6 +542,7 @@ class Order
         $csm = $app->make('cs/helper/multilingual');
 
         $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
+        $notes = session::get('notes');
 
         $customer = new Customer();
         $now = new \DateTime();
@@ -577,6 +591,7 @@ class Order
         $order->setShipmentID($sShipmentID);
         $order->setRateID($sRateID);
         $order->setShippingInstructions($sInstructions);
+        $order->setNotes($notes);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxTotal);
         $order->setTaxIncluded($taxIncludedTotal);

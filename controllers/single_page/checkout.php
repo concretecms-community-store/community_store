@@ -143,6 +143,7 @@ class Checkout extends PageController
 
         $this->set('total', $totals['total']);
         $this->set('shippingEnabled', Cart::isShippable());
+        $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled') == 'true');
         $this->set('shippingInstructions', Cart::getShippingInstructions());
 
         $this->requireAsset('javascript', 'jquery');
@@ -313,6 +314,8 @@ class Checkout extends PageController
                 $customer = new Customer();
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
+                    $notes = $data['notes'];
+                    if($notes) Session::set('notes', $notes);
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
                     $company = Session::get('billing_company');
