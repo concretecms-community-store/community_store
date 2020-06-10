@@ -627,7 +627,6 @@ $dh = $app->make('helper/date');
                             e.preventDefault();
 
                             var options = {
-                                multipleSelection: true,
                                 filters: [{field: 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
                             };
 
