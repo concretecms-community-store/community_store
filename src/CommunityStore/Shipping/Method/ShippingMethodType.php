@@ -109,6 +109,10 @@ class ShippingMethodType
         return $this->methodTypeController;
     }
 
+	/**
+	 * @param $smtID
+	 * @return ShippingMethodType
+	 */
     public static function getByID($smtID)
     {
         $em = dbORM::entityManager();
@@ -118,6 +122,10 @@ class ShippingMethodType
         return $obj;
     }
 
+	/**
+	 * @param $smtHandle
+	 * @return ShippingMethodType|null
+	 */
     public static function getByHandle($smtHandle)
     {
         $em = dbORM::entityManager();
