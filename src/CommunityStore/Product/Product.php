@@ -913,7 +913,7 @@ class Product
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
-                $variation->setStockLevel($qty);
+                $variation->setVariationStockLevel($qty);
                 $variation->save();
             }
         } else {
