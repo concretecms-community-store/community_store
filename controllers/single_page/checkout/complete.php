@@ -71,7 +71,7 @@ class Complete extends PageController
         Cart::clear();
         DiscountCode::clearCartCode();
 
-        $this->set('refreshCheck', true);
+        $this->set('refreshCheck', $refreshCheck);
 
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
