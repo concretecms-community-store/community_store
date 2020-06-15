@@ -237,10 +237,11 @@ class Checkout extends PageController
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
-                // unset the shipping type, as next order might be unshippable
-                Session::set('community_store.smID', '');
 
                 $order = Order::add($pm, $transactionReference);
+
+                // unset the shipping type, as next order might be unshippable
+                Session::set('community_store.smID', '');
                 return Redirect::to($order->getOrderCompleteDestination());
             }
         }
