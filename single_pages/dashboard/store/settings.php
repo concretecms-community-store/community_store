@@ -527,7 +527,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <h3><?= t('Order notes'); ?></h3>
             <div class="form-group">
-                <label><?= $form->checkbox('orderNotesEnabled', true, Config::get('community_store.orderNotesEnabled')); ?>
+                <label><?= $form->checkbox('orderNotesEnabled', '1', Config::get('community_store.orderNotesEnabled')); ?>
                     <?= t('Enable order notes field'); ?>
                 </label>
             </div>
