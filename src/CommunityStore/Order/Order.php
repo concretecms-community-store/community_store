@@ -127,7 +127,7 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $oRefundReason;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     protected $oNotes;
 
     /** @ORM\Column(type="datetime", nullable=true) */

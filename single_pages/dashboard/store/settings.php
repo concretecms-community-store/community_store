@@ -527,10 +527,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <h3><?= t('Order notes'); ?></h3>
             <div class="form-group">
-                <?php $orderNotesEnabled = Config::get('community_store.orderNotesEnabled');
-                ?>
-                <label><?= $form->radio('orderNotesEnabled', 'true', ('true' == $orderNotesEnabled)); ?> <?php echo t('Enabled'); ?></label><br />
-                <label><?= $form->radio('orderNotesEnabled', ' ', '' == $orderNotesEnabled); ?> <?php echo t('Disabled'); ?></label><br />
+                <label><?= $form->checkbox('orderNotesEnabled', true, Config::get('community_store.orderNotesEnabled')); ?>
+                    <?= t('Enable order notes field'); ?>
+                </label>
             </div>
 
             <div class="form-group">

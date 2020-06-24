@@ -143,7 +143,7 @@ class Checkout extends PageController
 
         $this->set('total', $totals['total']);
         $this->set('shippingEnabled', Cart::isShippable());
-        $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled') == 'true');
+        $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
         $this->set('shippingInstructions', Cart::getShippingInstructions());
 
         $this->requireAsset('javascript', 'jquery');
