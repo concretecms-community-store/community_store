@@ -163,6 +163,17 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                         </div>
 
+                        <?php if($orderNotesEnabled) { ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="store-checkout-notes"><?= t("Order notes") ?></label>
+                                    <?= $form->textarea('store-checkout-notes', '', array('placeholder'=>t('Order notes'))); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+
                         <div class="row">
                             <?php if ($shippingEnabled) { ?>
                             <div class="store-copy-billing-container col-md-12 text-right">

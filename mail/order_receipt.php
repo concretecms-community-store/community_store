@@ -210,6 +210,11 @@ ob_start();
             } ?>
         <?php
         } ?>
+        <?php
+            $notes = $order->getNotes();
+            if ($notes) { ?>
+            <strong><?= t("Order notes"); ?>: </strong><?= $notes; ?> <br />
+        <?php } ?>
 
         <?php $applieddiscounts = $order->getAppliedDiscounts();
         if (!empty($applieddiscounts)) {

@@ -147,6 +147,11 @@ ob_start();
                 <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
             <?php } ?>
         <?php } ?>
+        <?php
+        $notes = $order->getNotes();
+        if ($notes) { ?>
+            <strong><?= t("Order notes") ?>: </strong><?= $notes ?> <br />
+        <?php } ?>
 
         <?php $applieddiscounts = $order->getAppliedDiscounts();
         if (!empty($applieddiscounts)) { ?>

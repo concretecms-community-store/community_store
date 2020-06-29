@@ -313,7 +313,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             if ($shippingInstructions) { ?>
                 <p><strong><?= t("Delivery Instructions") ?>: </strong><?= h($shippingInstructions) ?></p>
             <?php } ?>
-
+            <?php
+            $notes = $order->getNotes();
+            if ($notes) { ?>
+                <p><strong><?= t("Order notes") ?>: </strong><?= h($notes) ?></p>
+            <?php } ?>
         <?php } ?>
 
         <?php $locale = $order->getLocale();
