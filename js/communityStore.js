@@ -612,6 +612,7 @@ $(document).ready(function() {
         var bCity = $("#store-checkout-billing-city").val();
         var bState = $("#store-checkout-billing-state").val();
         var bPostal = $("#store-checkout-billing-zip").val();
+        var notes = $("#store-checkout-notes").val();
         $("#store-checkout-form-group-billing .store-checkout-form-group-body .store-checkout-errors").remove();
 
         var ccm_token = $(this).find('[name=ccm_token]').val();
@@ -640,7 +641,8 @@ $(document).ready(function() {
                 count: bCountry,
                 city: bCity,
                 state: bState,
-                postal: bPostal
+                postal: bPostal,
+                notes: notes
             },
             success: function(result) {
                 //var test = null;
