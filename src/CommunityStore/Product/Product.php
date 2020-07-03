@@ -593,7 +593,7 @@ class Product
     }
     public function setSalePrice($price)
     {
-        $this->pSalePrice = ($price !== '' ? (float)$price : null);
+        $this->pSalePrice = (empty($price) && !is_numeric($price) ?  null : (float)$price );
     }
 
     public function setCustomerPrice($bool)
@@ -1802,7 +1802,7 @@ class Product
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isSellable();
         } else {
-            if ($this->getQty() > 0 || $this->isUnlimited()) {
+            if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
                 return true;
             } else {
                 if ($this->allowBackOrders()) {
