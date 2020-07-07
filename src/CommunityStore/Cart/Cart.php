@@ -400,8 +400,8 @@ class Cart
                 if ($product->allowQuantity()) {
                     $newquantity = $cart[$exists['cartItemKey']]['product']['qty'] + $cartItem['product']['qty'];
 
-                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < max($newquantity, $existingproductcount)) {
-                        $newquantity = $product->getQty();
+                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getStockLevel() < max($newquantity, $existingproductcount)) {
+                        $newquantity = $product->getStockLevel();
                     }
 
                     if ($product->getMaxQty() > 0) {
@@ -425,8 +425,8 @@ class Cart
             } else {
                 $newquantity = $cartItem['product']['qty'];
 
-                if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
-                    $newquantity = $product->getQty();
+                if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getStockLevel() < $newquantity) {
+                    $newquantity = $product->getStockLevel();
                 }
 
                 if ($product->getMaxQty() > 0) {

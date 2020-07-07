@@ -395,7 +395,7 @@ if (is_object($product) && $product->isActive()) {
                                     <?php } ?>
 
                                     <input class="store-product-option-entry form-control" <?= $requiredAttr; ?>
-                                           name="pt<?= $option->getID(); ?>"/>
+                                           name="pt<?= $option->getID(); ?>" type="text" />
                                 </div>
                                 <?php
                             } elseif ($optionType == 'textarea') {

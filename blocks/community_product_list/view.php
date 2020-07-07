@@ -353,7 +353,7 @@ if (!$productsPerRow) {
                                         <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
                                     <?php } ?>
 
-                                    <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID(); ?>"/>
+                                    <input class="store-product-option-entry form-control" <?= $requiredAttr; ?> name="pt<?= $option->getID(); ?>" type="text" />
                                 </div>
                                 <?php
                             } elseif ($optionType == 'textarea') {
