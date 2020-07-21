@@ -323,6 +323,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         <?= $form->text('emailAlertName', Config::get('community_store.emailalertsname'), ['placeholder' => t('From Name')]); ?>
                     </div>
                 </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label><?= $form->checkbox('setReplyTo', true, Config::get('community_store.setReplyTo')); ?>
+                            <?= t('Set Reply-To header on notification emails to the address of the buyer'); ?>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <h3><?= t('Receipt Emails'); ?></h3>
