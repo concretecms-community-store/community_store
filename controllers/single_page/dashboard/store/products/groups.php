@@ -37,8 +37,8 @@ class Groups extends DashboardPageController
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
 
-                    foreach ($productids as $productid) {
-                        ProductGroup::add($productid, $newproductgroup->getID());
+                    foreach ($productids as $index => $productid) {
+                        ProductGroup::add($productid, $newproductgroup->getID(), $index);
                     }
                 }
 
@@ -76,8 +76,8 @@ class Groups extends DashboardPageController
                 if (is_array($productids)) {
                     $productids = array_unique($productids);
 
-                    foreach ($productids as $productid) {
-                        ProductGroup::add($productid, $group->getID());
+                    foreach ($productids as $index => $productid) {
+                        ProductGroup::add($productid, $group->getID(), $index);
                     }
                 }
 

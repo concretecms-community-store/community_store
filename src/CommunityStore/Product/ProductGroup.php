@@ -40,6 +40,11 @@ class ProductGroup
      */
     protected $group;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $sortOrder;
+
     public function getGroup()
     {
         return $this->group;
@@ -58,6 +63,16 @@ class ProductGroup
     private function setGroupID($gID)
     {
         $this->gID = $gID;
+    }
+
+    public function setSortOrder($sortOrder)
+    {
+        $this->sortOrder = $sortOrder;
+    }
+
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
     }
 
     public function getProductID()
@@ -166,7 +181,7 @@ class ProductGroup
         }
     }
 
-    public static function add($product, $gID)
+    public static function add($product, $gID, $sortOrder = 0)
     {
         if (!is_object($product)) {
             $product = Product::getByID($product);
@@ -178,6 +193,7 @@ class ProductGroup
                 $productGroup = new self();
                 $productGroup->setProduct($product);
                 $productGroup->setGroup($group);
+                $productGroup->setSortOrder($sortOrder);
                 $productGroup->save();
             }
 
