@@ -944,7 +944,7 @@ $dh = $app->make('helper/date');
                                 <div class="col-xs-12">
                                     <div class="form-group">
                                         <label class="control-label"><?= t('Static HTML');?></label>
-                                        <textarea rows="3" placeholder="<?= t(''); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
+                                        <textarea rows="3" placeholder="<?= t(''); ?>" class="form-control" name="poDetails[]"><%= poDetails.replace('~~~',"\n")%></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -1047,7 +1047,7 @@ $dh = $app->make('helper/date');
                             poDisplayType: '<?= $displayType ?>',
                             poLabel: '<?= $label; ?>',
                             poHandle: '<?= h($handle); ?>',
-                            poDetails: '<?= h($details); ?>',
+                            poDetails: '<?= str_replace(["\r\n", "\r", "\n"], "~~~", h($details)); ?>',
                             poRequired: '<?= $required ? 1 : 0; ?>',
                             poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                             sort: '<?= $optionsort ?>'
