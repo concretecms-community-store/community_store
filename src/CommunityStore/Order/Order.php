@@ -1040,7 +1040,9 @@ class Order
             $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
             $mh->addParameter("order", $this);
             $mh->load("new_order_notification", "community_store");
-            $mh->replyto($this->getAttribute('email'));
+            if(Config::get('community_store.setReplyTo')) {
+                $mh->replyto($this->getAttribute('email'));
+            }
 
             try {
                 $mh->sendMail();

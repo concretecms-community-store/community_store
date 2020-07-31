@@ -171,6 +171,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
+                Config::save('community_store.setReplyTo', (bool)$args['setReplyTo']);
                 Config::save('community_store.customerGroup', $args['customerGroup']);
                 Config::save('community_store.wholesaleCustomerGroup', $args['wholesaleCustomerGroup']);
                 Config::save('community_store.digitalDownloadFileSet', $args['digitalDownloadFileSet']);

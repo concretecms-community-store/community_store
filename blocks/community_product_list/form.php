@@ -46,6 +46,7 @@
                     'popular' => t('Best Sellers'),
                     'related' => t("Related Products Order"),
                     'category' => t("Category Sort Order"),
+                    'group' => t("Group Sort Order"),
                     'random' => t('Random order, changing each display'),
                     'random_daily' => t('Random order, changing each day'),
                     ], $sortOrder); ?>

@@ -316,6 +316,9 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "category":
                 $query->addOrderBy('categorySortOrder');
                 break;
+            case "group":
+                $query->addOrderBy('sortOrder');
+                break;
             case "random":
                 $query->orderBy('RAND(' . $this->randomSeed . ')', null); break;
                 break;

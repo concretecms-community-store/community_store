@@ -80,12 +80,12 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
         <label><?= t('Products within group');?></label>
                 <?php $products = $group->getProducts(); ?>
-                <ul class="list-group multi-select-list <?= count($products) == 0 ? 'hidden' : ''; ?>" id="group-products">
+                <ul class="group-product-list list-group multi-select-list <?= count($products) == 0 ? 'hidden' : ''; ?>" id="group-products">
                     <?php
 
                     if ($products && count($products) > 0) {
                         foreach ($products as $product) {
-                            echo '<li class="list-group-item">' . $product->getProduct()->getName() . '<input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>';
+                            echo '<li class="list-group-item"><i class="fa fa-arrows-v"></i>' . $product->getProduct()->getName() . '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>';
                         }
                     }
                     ?>
@@ -143,9 +143,25 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                         });
 
 
+                        $(".group-product-list").sortable({
+                            cursor: 'move',
+                            opacity: 0.5,
+                            axis: 'y'
+                        });
+
                     });
 
                 </script>
+                <style type="text/css">
+                    .group-product-list:hover {
+                        cursor: move
+                    }
+                    .fa-arrows-v {
+                         padding-right: 7px;
+                         cursor: move !important;
+                    }
+
+                </style>
 
 
         <div class="ccm-dashboard-form-actions-wrapper">
