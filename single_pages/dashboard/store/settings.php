@@ -324,10 +324,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     </div>
                 </div>
 
-                <div class="col-xs-6">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label><?= $form->checkbox('setReplyTo', true, Config::get('community_store.setReplyTo')); ?>
-                            <?= t('Set Reply-To header on notification emails to the address of the buyer'); ?>
+                            <?= t('Set Reply-To on notification emails to the email address of the customer'); ?>
                         </label>
                     </div>
                 </div>
