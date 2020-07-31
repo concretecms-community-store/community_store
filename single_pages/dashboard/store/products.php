@@ -865,6 +865,7 @@ $dh = $app->make('helper/date');
                             <div class="row">
                                 <% if (poType == 'static') { %>
                                 <input type="hidden" class="form-control" name="poName[]" value="<%=poType%>">
+				<input type="hidden" class="form-control" name="poHandle[]" value="<%=poHandle%>">
                                 <% } %>
 
                                 <% if (poType != 'static') { %>
