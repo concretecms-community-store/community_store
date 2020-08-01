@@ -50,7 +50,7 @@ class Calculator
     {
         $cart = Cart::getCart();
         if (empty($cart)) {
-            return false;
+            return 0;
         }
 
         $existingShippingMethodID = Session::get('community_store.smID');

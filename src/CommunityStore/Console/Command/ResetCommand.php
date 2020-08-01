@@ -65,6 +65,7 @@ EOT
 
         if ('all' == $operationType || 'orders' == $operationType) {
             $orderList = new OrderList();
+            $orderList->setIncludeExternalPaymentRequested(true);
             $orders = $orderList->getResults();
             $orderCount = count($orders);
 
