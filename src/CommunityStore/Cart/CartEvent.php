@@ -16,6 +16,11 @@ class CartEvent extends StoreEvent {
     const CART_POST_CLEAR = 'on_community_store_cart_post_clear';
     const CART_ACTION = 'on_community_store_cart_action';
 
+    /** @var boolean */
+    private $error = false;
+
+    /** @var string */
+    private $errorMsg = null;
 
     /** @var Product */
     private $product;
@@ -58,4 +63,30 @@ class CartEvent extends StoreEvent {
         $this->data = $data;
         return $this;
     }
+
+	/**
+	 * @param string
+	 * @return void
+	 */
+	public function setErrorMsg($e)
+	{
+		$this->errorMsg = $e;
+		$this->error = true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getError()
+	{
+		return $this->error;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getErrorMsg()
+	{
+		return $this->errorMsg;
+	}
 }

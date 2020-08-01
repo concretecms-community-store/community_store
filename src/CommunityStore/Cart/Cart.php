@@ -74,7 +74,7 @@ class Cart
                     // if the cart has greater stock than available
                     if (!$product->isUnlimited() && !$product->allowBackOrders()) {
                         $stockLimited = true;
-                        $availableProductQuantity = $product->getQty();
+                        $availableProductQuantity = $product->getStockLevel();
                         if ($cartitem['product']['qty'] > $availableProductQuantity) {
                             if ($availableProductQuantity > 0) {
                                 $cartitem['product']['qty'] = $availableProductQuantity; // set to how many are left
@@ -245,6 +245,9 @@ class Cart
 
         \Events::dispatch(CartEvent::CART_PRE_ADD, $event);
 
+        $error = $event->getError();
+        $errorMsg = $event->getErrorMsg();
+
         $customerPrice = false;
 
         if ($product->allowCustomerPrice()) {
@@ -397,8 +400,8 @@ class Cart
                 if ($product->allowQuantity()) {
                     $newquantity = $cart[$exists['cartItemKey']]['product']['qty'] + $cartItem['product']['qty'];
 
-                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < max($newquantity, $existingproductcount)) {
-                        $newquantity = $product->getQty();
+                    if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getStockLevel() < max($newquantity, $existingproductcount)) {
+                        $newquantity = $product->getStockLevel();
                     }
 
                     if ($product->getMaxQty() > 0) {
@@ -422,8 +425,8 @@ class Cart
             } else {
                 $newquantity = $cartItem['product']['qty'];
 
-                if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getQty() < $newquantity) {
-                    $newquantity = $product->getQty();
+                if (!$product->isUnlimited() && !$product->allowBackOrders() && $product->getStockLevel() < $newquantity) {
+                    $newquantity = $product->getStockLevel();
                 }
 
                 if ($product->getMaxQty() > 0) {
@@ -453,7 +456,7 @@ class Cart
         \Events::dispatch(CartEvent::CART_ACTION, $event);
         \Events::dispatch(CartEvent::CART_POST_ADD, $event);
 
-        return ['added' => $added, 'error' => $error, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
+        return ['added' => $added, 'error' => $error, 'errorMsg' => $errorMsg, 'exclusive' => $product->isExclusive(), 'removeexistingexclusive' => $removeexistingexclusive];
     }
 
     public static function checkForExistingCartItem($cartItem)

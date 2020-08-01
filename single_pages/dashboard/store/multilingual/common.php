@@ -180,10 +180,8 @@ $localecount = count($locales);
 
     </fieldset>
 
-
     <fieldset>
         <legend><?= t('Product Quantity Labels'); ?></legend>
-
 
         <?php if (!empty($quantityLabels)) { ?>
             <table class="table table-bordered">
@@ -237,7 +235,6 @@ $localecount = count($locales);
         <?php } ?>
 
     </fieldset>
-
 
     <fieldset>
         <legend><?= t('Product Attribute Names and Values'); ?></legend>
@@ -328,6 +325,117 @@ $localecount = count($locales);
             </table>
         <?php } else { ?>
             <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
+        <?php } ?>
+
+    </fieldset>
+
+    <fieldset>
+        <legend><?= t('Product Add To Cart Button Text'); ?></legend>
+
+        <?php if (!empty($cartButtons)) { ?>
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th></th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php
+
+                foreach ($cartButtons as $cartButtonLabel) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t(' Add To Cart Button Text'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($cartButtonLabel); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($cartButtonLabel); ?></td>
+                            <?php } ?>
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][productAddToCartText][<?= h($cartButtonLabel); ?>]"
+                                       value="<?= $csm->t($cartButtonLabel, 'productAddToCartText', false, false, $lp->getLocale(), false); ?>"/>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php }
+                ?>
+
+            </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t("No products have Add To Cart Button Text entered"); ?></p>
+        <?php } ?>
+
+    </fieldset>
+
+    <fieldset>
+        <legend><?= t('Product Out of Stock Message'); ?></legend>
+
+        <?php if (!empty($outOfStock)) { ?>
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= t('Context'); ?></th>
+                    <th><?= t('Text'); ?> - <?= $defaultLocale->getLanguageText($defaultLocale->getLocale()); ?>
+                        (<?= $defaultLocale->getLocale() ?>)
+                    </th>
+                    <th></th>
+                    <th><?= t('Locale') ?></th>
+                    <th style="width: 50%"><?= t('Translations'); ?></th>
+                </tr>
+
+                <?php
+
+                foreach ($outOfStock as $outOfStockMessage) {
+
+                    $firstrow = true;
+                    foreach ($locales as $lp) { ?>
+                        <tr>
+                            <?php if ($firstrow) {
+                                $firstrow = false;
+                                ?>
+
+                                <td rowspan="<?= $localecount; ?>"><span
+                                            class="label label-primary"><?= t('Out of Stock Message'); ?></span>
+                                </td>
+                                <td rowspan="<?= $localecount; ?>"><?= h($outOfStockMessage); ?></td>
+                            <?php } else { ?>
+                                <td class="hidden"><?= h($outOfStockMessage); ?></td>
+                            <?php } ?>
+                            <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                            <td>
+                                <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="translation[options][<?= $lp->getLocale(); ?>][text][productOutOfStockMessage][<?= h($outOfStockMessage); ?>]"
+                                       value="<?= $csm->t($outOfStockMessage, 'productOutOfStockMessage', false, false, $lp->getLocale(), false); ?>"/>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+                <?php }
+                ?>
+
+            </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t("No products have an Out of Stock Message entered"); ?></p>
         <?php } ?>
 
     </fieldset>

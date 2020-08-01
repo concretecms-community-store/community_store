@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
+use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Filesystem\Filesystem;
@@ -37,6 +38,16 @@ class ShippingMethod
      * @ORM\Column(type="text",nullable=true)
      */
     protected $smDetails;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $smUserGroups;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $smExcludedUserGroups;
 
     /**
      * @ORM\Column(type="integer")
@@ -94,6 +105,35 @@ class ShippingMethod
         $this->smSortOrder = $smSortOrder;
     }
 
+
+    public function getUserGroups()
+    {
+        return $this->smUserGroups ? explode(',', $this->smUserGroups) : [];
+    }
+
+    public function setUserGroups($userGroups)
+    {
+        if (is_array($userGroups)) {
+            $this->smUserGroups = implode(',', $userGroups);
+        } else {
+            $this->smUserGroups = '';
+        }
+    }
+
+    public function getExcludedUserGroups()
+    {
+        return $this->smExcludedUserGroups ? explode(',', $this->smExcludedUserGroups) : [];
+    }
+
+    public function setExcludedUserGroups($userGroups)
+    {
+        if (is_array($userGroups)) {
+            $this->smExcludedUserGroups = implode(',', $userGroups);
+        } else {
+            $this->smExcludedUserGroups = '';
+        }
+    }
+
     public function getID()
     {
         return $this->smID;
@@ -145,6 +185,7 @@ class ShippingMethod
     {
         return $this->smDetails;
     }
+
 
     public function isEnabled()
     {
@@ -207,7 +248,7 @@ class ShippingMethod
      *
      * @ORM\return ShippingMethod
      */
-    public static function add($smtm, $smt, $smName, $smEnabled, $smDetails, $smSortOrder)
+    public static function add($smtm, $smt, $smName, $smEnabled, $smDetails, $smSortOrder, $userGroups, $excludedUserGroups)
     {
         $sm = new self();
         $sm->setShippingMethodTypeMethodID($smtm);
@@ -216,6 +257,8 @@ class ShippingMethod
         $sm->setEnabled($smEnabled);
         $sm->setDetails($smDetails);
         $sm->setSortOrder($smSortOrder);
+        $sm->setUserGroups($userGroups);
+        $sm->setExcludedUserGroups($excludedUserGroups);
         $sm->save();
         $smtm->setShippingMethodID($sm->getID());
         $smtm->save();
@@ -223,12 +266,14 @@ class ShippingMethod
         return $sm;
     }
 
-    public function update($smName, $smEnabled, $smDetails, $smSortOrder)
+    public function update($smName, $smEnabled, $smDetails, $smSortOrder, $userGroups, $excludedUserGroups)
     {
         $this->setName($smName);
         $this->setEnabled($smEnabled);
         $this->setSortOrder($smSortOrder);
         $this->setDetails($smDetails);
+        $this->setUserGroups($userGroups);
+        $this->setExcludedUserGroups($excludedUserGroups);
         $this->save();
 
         return $this;
@@ -253,12 +298,27 @@ class ShippingMethod
     {
         $allMethods = self::getAvailableMethods();
         $eligibleMethods = [];
+
+        $u = new User();
+        $userGroups = $u->getUserGroups();
+
         foreach ($allMethods as $method) {
+            $includedGroups = $method->getUserGroups();
+            $excludedGroups = $method->getExcludedUserGroups();
+
+            if (count($includedGroups) > 0 && count(array_intersect($includedGroups, $userGroups)) == 0) {
+                continue;
+            }
+
+            if (count($excludedGroups) > 0 && count(array_intersect($excludedGroups, $userGroups)) > 0) {
+                continue;
+            }
+
             if ($method->getShippingMethodTypeMethod()->isEligible()) {
                 $eligibleMethods[] = $method;
             }
         }
-
+        
         return $eligibleMethods;
     }
 

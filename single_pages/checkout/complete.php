@@ -293,7 +293,7 @@ $dh = $app->make('helper/date');
             } elseif ($paid) {
                 $status = t('Paid') . ' - ' . $dh->formatDateTime($paid);
             } elseif ($order->getTotal() > 0) {
-                $status = t('Unpaid');
+                $status = t('Pending');
             }
         }
         ?>
@@ -325,3 +325,12 @@ $dh = $app->make('helper/date');
 
 
 </div>
+
+
+<?php if ($refreshCheck) { ?>
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+    }, 2000);
+</script>
+<?php } ?>

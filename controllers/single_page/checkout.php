@@ -143,6 +143,7 @@ class Checkout extends PageController
 
         $this->set('total', $totals['total']);
         $this->set('shippingEnabled', Cart::isShippable());
+        $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
         $this->set('shippingInstructions', Cart::getShippingInstructions());
 
         $this->requireAsset('javascript', 'jquery');
@@ -158,18 +159,7 @@ class Checkout extends PageController
             </script>
         ");
 
-        $enabledMethods = PaymentMethod::getEnabledMethods();
-
-        $availableMethods = [];
-
-        foreach ($enabledMethods as $em) {
-            $emmc = $em->getMethodController();
-
-            if ($totals['total'] >= $emmc->getPaymentMinimum() && $totals['total'] <= $emmc->getPaymentMaximum()) {
-                $availableMethods[] = $em;
-            }
-        }
-
+        $availableMethods = PaymentMethod::getAvailableMethods($totals['total']);
         $this->set("enabledPaymentMethods", $availableMethods);
 
         $apikey = Config::get('community_store.placesAPIKey');
@@ -229,6 +219,9 @@ class Checkout extends PageController
                 $order = Order::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
 
+                // unset the shipping type, as next order might be unshippable
+                Session::set('community_store.smID', '');
+
                 return Redirect::to($langpath . '/checkout/external');
             } else {
                 return Redirect::to($langpath . '/cart');
@@ -245,9 +238,12 @@ class Checkout extends PageController
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];
+
                 $order = Order::add($pm, $transactionReference);
 
-                return Redirect::to($langpath . '/checkout/complete');
+                // unset the shipping type, as next order might be unshippable
+                Session::set('community_store.smID', '');
+                return Redirect::to($order->getOrderCompleteDestination());
             }
         }
     }
@@ -319,6 +315,8 @@ class Checkout extends PageController
                 $customer = new Customer();
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
+                    $notes = $data['notes'];
+                    if($notes) Session::set('notes', $notes);
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
                     $company = Session::get('billing_company');

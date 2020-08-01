@@ -35,14 +35,20 @@ class Settings extends DashboardPageController
         $this->set("orderStatuses", OrderStatus::getAll());
 
         $groupList = [];
+        $allGroupList = [];
 
         $gl = new GroupList();
         foreach ($gl->getResults() as $group) {
             $groupList[$group->getGroupID()] = $group->getGroupName();
         }
-
         $this->set('groupList', $groupList);
 
+        $gl->includeAllGroups();
+        foreach ($gl->getResults() as $group) {
+            $allGroupList[$group->getGroupID()] = $group->getGroupName();
+        }
+
+        $this->set('allGroupList', $allGroupList);
         $targetCID = Config::get('community_store.productPublishTarget');
 
         if ($targetCID) {
@@ -70,7 +76,6 @@ class Settings extends DashboardPageController
 
         $this->set('customerGroup', $customerGroupID);
         $this->set('customerGroupName', $customerGroupName);
-
 
         $wholesaleCustomerGroupID = Config::get('community_store.wholesaleCustomerGroup');
 
@@ -157,20 +162,8 @@ class Settings extends DashboardPageController
                 Config::save('community_store.currency', $args['currency']);
                 Config::save('community_store.whole', $args['whole']);
                 Config::save('community_store.thousand', $args['thousand']);
-                Config::save('community_store.taxenabled', $args['taxEnabled']);
-                Config::save('community_store.taxcountry', $args['taxCountry']);
-                Config::save('community_store.taxstate', $args['taxState']);
-                Config::save('community_store.taxcity', trim($args['taxCity']));
-                Config::save('community_store.taxAddress', trim($args['taxAddress']));
-                Config::save('community_store.taxMatch', trim($args['taxMatch']));
-                Config::save('community_store.taxBased', trim($args['taxBased']));
-                Config::save('community_store.taxrate', trim($args['taxRate']));
-                Config::save('community_store.taxName', trim($args['taxName']));
                 Config::save('community_store.calculation', trim($args['calculation']));
-                Config::save('community_store.vat_number', trim($args['vat_number']));
-                Config::save('community_store.shippingenabled', $args['shippingEnabled']);
-                Config::save('community_store.shippingbase', $args['shippingBasePrice']);
-                Config::save('community_store.shippingitem', $args['shippingItemPrice']);
+                Config::save('community_store.vat_number', (bool)trim($args['vat_number']));
                 Config::save('community_store.weightUnit', $args['weightUnit']);
                 Config::save('community_store.sizeUnit', $args['sizeUnit']);
                 Config::save('community_store.deliveryInstructions', $args['deliveryInstructions']);
@@ -178,6 +171,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.notificationemails', $args['notificationEmails']);
                 Config::save('community_store.emailalerts', $args['emailAlert']);
                 Config::save('community_store.emailalertsname', $args['emailAlertName']);
+                Config::save('community_store.setReplyTo', (bool)$args['setReplyTo']);
                 Config::save('community_store.customerGroup', $args['customerGroup']);
                 Config::save('community_store.wholesaleCustomerGroup', $args['wholesaleCustomerGroup']);
                 Config::save('community_store.digitalDownloadFileSet', $args['digitalDownloadFileSet']);
@@ -197,6 +191,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
                 Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
+                Config::save('community_store.orderNotesEnabled', (bool)trim($args['orderNotesEnabled']));
                 Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
                 Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
@@ -209,6 +204,8 @@ class Settings extends DashboardPageController
                 Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);
                 Config::save('community_store.logUserAgent', (bool) $args['logUserAgent']);
+                Config::save('community_store.cartMode', $args['cartMode']);
+                Config::save('community_store.orderCompleteCID', $args['orderCompleteCID']);
 
                 if ($args['currency']) {
                     $symbol = Currency::getSymbol($args['currency']);
@@ -235,12 +232,38 @@ class Settings extends DashboardPageController
                         $paymentData[$pmID]['paymentMethodSortOrder'] = $value;
                     }
 
+                    if (isset($args['paymentMethodUserGroups'])) {
+                        foreach ($args['paymentMethodUserGroups'] as $pmID => $value) {
+                            $paymentData[$pmID]['paymentMethodUserGroups'] = $value;
+                        }
+                    }
+
+                    if (isset($args['paymentMethodExcludedUserGroups'])) {
+                        foreach ($args['paymentMethodExcludedUserGroups'] as $pmID => $value) {
+                            $paymentData[$pmID]['paymentMethodExcludedUserGroups'] = $value;
+                        }
+                    }
+
                     foreach ($paymentData as $pmID => $data) {
                         $pm = PaymentMethod::getByID($pmID);
                         $pm->setEnabled($data['paymentMethodEnabled']);
                         $pm->setDisplayName($data['paymentMethodDisplayName']);
                         $pm->setButtonLabel($data['paymentMethodButtonLabel']);
                         $pm->setSortOrder($data['paymentMethodSortOrder']);
+
+                        if (isset($data['paymentMethodUserGroups'])) {
+                            $pm->setUserGroups($data['paymentMethodUserGroups']);
+                        } else {
+                            $pm->setUserGroups([]);
+                        }
+
+                        if (isset($data['paymentMethodExcludedUserGroups'])) {
+                            $pm->setExcludedUserGroups($data['paymentMethodExcludedUserGroups']);
+                        } else {
+                            $pm->setExcludedUserGroups([]);
+                        }
+
+
                         $controller = $pm->getMethodController();
                         $controller->save($args);
                         $pm->save();

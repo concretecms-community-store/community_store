@@ -105,7 +105,7 @@ if (is_object($product) && $product->isActive()) {
                                 if (isset($salePrice) && "" != $salePrice) {
                                     $formattedSalePrice = $product->getFormattedSalePrice();
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
-                                    echo t("On Sale") . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
+                                    echo t('On Sale') . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                     echo '&nbsp;' . t('was') . '&nbsp;';
                                     echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
@@ -251,7 +251,7 @@ if (is_object($product) && $product->isActive()) {
                     } ?>
 
                     <div  class="store-product-options">
-                        <?php if ($product->allowQuantity() && $showQuantity) {
+                        <?php if ($isSellable && $product->allowQuantity() && $showQuantity) {
                             ?>
                             <div class="store-product-quantity form-group">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
@@ -327,17 +327,25 @@ if (is_object($product) && $product->isActive()) {
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
+                                        $firstOptionItem = true;
                                         foreach ($optionItems as $optionItem) {
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
+                                                $selected = '';
+
                                                 if (!empty($variation)) {
                                                     $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
-                                                }
-                                                $selected = '';
-                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                    $selected = 'selected="selected"';
+
+                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                        $selected = 'selected="selected"';
+                                                    }
+                                                } else {
+                                                    if ($firstOptionItem) {
+                                                        $selected = 'selected="selected"';
+                                                        $firstOptionItem = false;
+                                                    }
                                                 }
 
                                                 $optionLabel = $optionItem->getName();
@@ -387,7 +395,7 @@ if (is_object($product) && $product->isActive()) {
                                     <?php } ?>
 
                                     <input class="store-product-option-entry form-control" <?= $requiredAttr; ?>
-                                           name="pt<?= $option->getID(); ?>"/>
+                                           name="pt<?= $option->getID(); ?>" type="text" />
                                 </div>
                                 <?php
                             } elseif ($optionType == 'textarea') {
@@ -441,10 +449,23 @@ if (is_object($product) && $product->isActive()) {
                         <p class="store-product-button">
                             <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
                             <span><button data-add-type="none" data-product-id="<?= $product->getID(); ?>"
-                                          class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> "><?= ($btnText ? h($btnText) : t("Add to Cart")); ?></button>
+                                          class="store-btn-add-to-cart btn btn-primary <?= ($isSellable ? '' : 'hidden'); ?> ">
+                                    <?php
+                                    if ($btnText) {
+                                        $buttonText = $btnText;
+                                    } else {
+                                        $buttonText = $csm->t($product->getAddToCartText(), 'productAddToCartText', $product->getID());
+                                    }
+                                    ?>
+
+                                    <?= ($buttonText ? h($buttonText) : t("Add to Cart")); ?>
+                                </button>
                             </span>
                         </p>
-                        <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>"><?= t("Out of Stock"); ?></p>
+                        <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>">
+                            <?php $outOfStock = $csm->t($product->getOutOfStockMessage(), 'productOutOfStockMessage', $product->getID()); ?>
+                            <?= $outOfStock ? h($outOfStock) : t("Out of Stock"); ?>
+                        </p>
                         <?php
                     } ?>
 
@@ -559,10 +580,10 @@ if (is_object($product) && $product->isActive()) {
                 $varationData[$key] = [
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
-                    'available' => ($variation->isSellable()),
+                    'available' => $variation->isSellable(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
-                    'saleTemplate'=> t("On Sale") .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
+                    'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
                 ];
 
                 if ($isWholesale) {

@@ -8,8 +8,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\Pr
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
+$cartModeClass = '';
+
+if ($cartMode) {
+    $cartModeClass = 'store-cart-modal-' . $cartMode;
+}
+
+
 ?>
-<div class="store-cart-modal clearfix" id="cart-modal">
+<div class="store-cart-modal <?= $cartModeClass; ?> clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">x</a>
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
@@ -35,8 +42,17 @@ $csm = $app->make('cs/helper/multilingual');
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
 
-            <?php if($actiondata['error']) { ?>
-                <p class="alert alert-warning"><?= t('An issue has occured adding the product to the cart. You may be missing required information.');?></p>
+            <?php if($actiondata['error']) {
+				?>
+                <p class="alert alert-warning">
+                    <?php
+                if ($actiondata['errorMsg']){
+                    echo $actiondata['errorMsg'];
+                } else {
+                    echo t('An issue has occured adding the product to the cart. You may be missing required information.');
+                }
+                ?>
+                </p>
             <?php } ?>
         <?php } ?>
 
@@ -162,7 +178,11 @@ $csm = $app->make('cs/helper/multilingual');
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
                                 <?php }  else { ?>
-                                1
+                                    <?php if ($quantityLabel) { ?>
+                                        <div  class="store-product-qty form-control text-right pull-right form-control-static">1</div>
+                                        <?php } else { ?>
+                                            1
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php if ($quantityLabel) { ?>
                                         <div class="store-cart-qty-label input-group-addon"><?= $quantityLabel; ?></div>

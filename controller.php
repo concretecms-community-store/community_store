@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore;
 
 use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
@@ -13,12 +14,13 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Page\Page;
+use Whoops\Exception\ErrorException;
 
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.4';
-    protected $pkgVersion = '2.2.2';
+    protected $pkgVersion = '2.2.8';
 
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
@@ -56,6 +58,12 @@ class Controller extends Package
 
     public function install()
     {
+        $template = PageTemplate::getByHandle('full');
+
+        if (!$template) {
+            throw new ErrorException(t("This package requires that a page template exists with the handle of 'full'. This can be adjusted or removed after the installation if required."));
+        }
+
         $this->registerCategories();
         parent::install();
 

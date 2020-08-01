@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
 
@@ -19,6 +20,17 @@ class Shipping extends DashboardPageController
         $smt = ShippingMethodType::getByID($smtID);
         $this->set('smt', $smt);
         $this->set("task", t("Add"));
+
+        $allGroupList = [];
+
+        $gl = new GroupList();
+        $gl->includeAllGroups();
+        foreach ($gl->getResults() as $group) {
+            $allGroupList[$group->getGroupID()] = $group->getGroupName();
+        }
+
+        $this->set('allGroupList', $allGroupList);
+        $this->requireAsset('selectize');
     }
 
     public function edit($smID)
@@ -29,6 +41,17 @@ class Shipping extends DashboardPageController
         $this->set('sm', $sm);
         $this->set('smt', $smt);
         $this->set("task", t("Update"));
+
+        $allGroupList = [];
+
+        $gl = new GroupList();
+        $gl->includeAllGroups();
+        foreach ($gl->getResults() as $group) {
+            $allGroupList[$group->getGroupID()] = $group->getGroupName();
+        }
+
+        $this->set('allGroupList', $allGroupList);
+        $this->requireAsset('selectize');
     }
 
     public function delete($smID)
@@ -53,7 +76,13 @@ class Shipping extends DashboardPageController
                 if ($shippingMethod) {
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                     $shippingMethodTypeMethod->update($this->request->request->all());
-                    $shippingMethod->update($this->request->request->get('methodName'), $this->request->request->get('methodEnabled'), $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
+                    $shippingMethod->update($this->request->request->get('methodName'),
+                                            $this->request->request->get('methodEnabled'),
+                                            $this->request->request->get('methodDetails'),
+                                            $this->request->request->get('methodSortOrder'),
+                                            $this->request->request->get('methodUserGroups'),
+                                            $this->request->request->get('methodExcludedUserGroups')
+                    );
                     $this->flash('success', t('Shipping Method Updated'));
 
                     return Redirect::to('/dashboard/store/settings/shipping');
@@ -65,7 +94,14 @@ class Shipping extends DashboardPageController
                 $shippingMethodType = ShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->request->request->all());
                 //make a shipping method that correlates with it.
-                ShippingMethod::add($shippingMethodTypeMethod, $shippingMethodType, $this->request->request->get('methodName'), true, $this->request->request->get('methodDetails'), $this->request->request->get('methodSortOrder'));
+                ShippingMethod::add($shippingMethodTypeMethod,
+                            $shippingMethodType,
+                            $this->request->request->get('methodName'), true,
+                            $this->request->request->get('methodDetails'),
+                            $this->request->request->get('methodSortOrder'),
+                            $this->request->request->get('methodUserGroups'),
+                            $this->request->request->get('methodExcludedUserGroups')
+                );
                 $this->flash('success', t('Shipping Method Created'));
 
                 return Redirect::to('/dashboard/store/settings/shipping');

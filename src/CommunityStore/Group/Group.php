@@ -44,6 +44,7 @@ class Group
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
+     * @ORM\OrderBy({"sortOrder" = "ASC"})
      */
     protected $products;
 

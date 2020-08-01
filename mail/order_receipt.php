@@ -210,6 +210,11 @@ ob_start();
             } ?>
         <?php
         } ?>
+        <?php
+            $notes = $order->getNotes();
+            if ($notes) { ?>
+            <strong><?= t("Order notes"); ?>: </strong><?= $notes; ?> <br />
+        <?php } ?>
 
         <?php $applieddiscounts = $order->getAppliedDiscounts();
         if (!empty($applieddiscounts)) {
@@ -269,6 +274,21 @@ ob_start();
         <?php
         } ?>
     </p>
+
+    <?php
+
+    if ($order->getCustomerID()) {
+        if ($order->getMemberCreated()) { ?>
+            <p><?= t('A new member account has been created with this order. Your username and password have been emailed to you.'); ?></p>
+        <?php } else { ?>
+            <p><?= t('Your existing member account has been updated with this order. Please use your existing username and password to sign in.');?></p>
+        <?php }
+    }
+    ?>
+
+    <?php if ($link) { ?>
+        <p><?= t('You can now access'); ?> <a href="<?= $link; ?>"><?= $link; ?></a></p>
+    <?php } ?>
 
     <?php
     if ($paymentInstructions && $paymentMethodID) {

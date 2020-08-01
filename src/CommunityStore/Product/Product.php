@@ -50,6 +50,7 @@ class Product
      */
     protected $pID;
 
+
     /**
      * @ORM\Column(type="integer",nullable=true)
      */
@@ -96,6 +97,16 @@ class Product
     protected $pSalePrice;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pSaleStart;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pSaleEnd;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $pCustomerPrice;
@@ -134,6 +145,26 @@ class Product
      * @ORM\Column(type="boolean",nullable=true)
      */
     protected $pQtyUnlim;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    protected $pDateAvailableStart;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    protected $pDateAvailableEnd;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $pOutOfStockMessage;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $pAddToCartText;
 
     /**
      * @ORM\Column(type="boolean",nullable=true)
@@ -246,6 +277,11 @@ class Product
     protected $pAutoCheckout;
 
     /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $pOrderCompleteCID;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $pExclusive;
@@ -271,6 +307,7 @@ class Product
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
     protected $locations;
+
 
     public function getLocations()
     {
@@ -344,9 +381,22 @@ class Product
      */
     protected $priceTiers;
 
+
     public function getPriceTiers()
     {
         return $this->priceTiers;
+    }
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation", mappedBy="product",cascade={"persist"}))
+     * @ORM\OrderBy({"pvSort" = "ASC"})
+     */
+    protected $variations;
+
+    public function getVariations()
+    {
+        return $this->variations;
     }
 
     protected $discountRules;
@@ -409,6 +459,7 @@ class Product
         $this->options = new ArrayCollection();
         $this->related = new ArrayCollection();
         $this->priceTiers = new ArrayCollection();
+        $this->variations = new ArrayCollection();
     }
 
     public function setPriceAdjustment($adjustment){
@@ -534,15 +585,15 @@ class Product
 
     public function setPrice($price)
     {
-        $this->pPrice = ('' != $price ? $price : 0);
+        $this->pPrice = ($price !== '' ? (float)$price : 0);
     }
     public function setWholesalePrice($price)
     {
-        $this->pWholesalePrice = ($price != '' ? $price : null);
+        $this->pWholesalePrice = ($price !== '' ? (float)$price : null);
     }
     public function setSalePrice($price)
     {
-        $this->pSalePrice = ('' != $price ? $price : null);
+        $this->pSalePrice = (empty($price) && !is_numeric($price) ?  null : (float)$price );
     }
 
     public function setCustomerPrice($bool)
@@ -602,6 +653,46 @@ class Product
     public function setIsUnlimited($bool)
     {
         $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
+    }
+
+    public function getDateAvailableStart()
+    {
+        return $this->pDateAvailableStart;
+    }
+
+    public function setDateAvailableStart($pDateAvailableStart)
+    {
+        $this->pDateAvailableStart = $pDateAvailableStart;
+    }
+
+    public function getDateAvailableEnd()
+    {
+        return $this->pDateAvailableEnd;
+    }
+
+    public function setDateAvailableEnd($dateAvailableEnd)
+    {
+        $this->pDateAvailableEnd = $dateAvailableEnd;
+    }
+
+    public function getOutOfStockMessage()
+    {
+        return $this->pOutOfStockMessage;
+    }
+
+    public function setOutOfStockMessage($outOfStockMessage)
+    {
+        $this->pOutOfStockMessage = $outOfStockMessage;
+    }
+
+    public function getAddToCartText()
+    {
+        return $this->pAddToCartText;
+    }
+
+    public function setAddToCartText($pAddToCartText)
+    {
+        $this->pAddToCartText = $pAddToCartText;
     }
 
     public function setAllowBackOrder($bool)
@@ -768,6 +859,16 @@ class Product
         $this->pAutoCheckout = (!is_null($bool) ? $bool : false);
     }
 
+    public function getOrderCompleteCID()
+    {
+        return $this->pOrderCompleteCID;
+    }
+
+    public function setOrderCompleteCID($orderCompleteCID)
+    {
+        $this->pOrderCompleteCID = $orderCompleteCID;
+    }
+
     public function setIsExclusive($bool)
     {
         $this->pExclusive = (!is_null($bool) ? $bool : false);
@@ -812,7 +913,7 @@ class Product
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
-                $variation->setStockLevel($qty);
+                $variation->setVariationStockLevel($qty);
                 $variation->save();
             }
         } else {
@@ -851,12 +952,30 @@ class Product
 	/**
 	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
 	 */
-    public static function getByCollectionID($cID)
+    public static function getByCollectionID($cID, $allLocales = true)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+        $product =  $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+
+        // if product not found, look for it via multilingual related page
+        if ($allLocales && !$product) {
+            $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+            $site = $app->make('site')->getSite();
+            if ($site) {
+                $locale = $site->getDefaultLocale();
+
+                if ($locale) {
+                    $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
+                    $product = Product::getByCollectionID($originalcID, false);
+                }
+            }
+        }
+
+        return $product;
+
     }
+
 
     public function getAttributes()
     {
@@ -871,7 +990,7 @@ class Product
             $product->setPageDescription($data['pDesc']);
 
             if ($data['pDateAdded_dt']) {
-                $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m']));
+                $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m'] . (isset($data['pDateAdded_a']) ? $data['pDateAdded_a'] : '')));
             }
         } else {
             //else, we don't know it and we're adding a new product
@@ -885,16 +1004,28 @@ class Product
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
 
-        if ($data['pWholesalePrice'] > 0) {
+        if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);
         } else {
-            $product->setWholesalePrice( null);
+            $product->setWholesalePrice( '');
         }
 
-        if ($data['pSalePrice'] > 0) {
+        if ($data['pSalePrice'] !== '') {
             $product->setSalePrice($data['pSalePrice']);
         } else {
             $product->setSalePrice('');
+        }
+
+        if ($data['pSaleStart_dt']) {
+            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m']  . (isset($data['pSaleStart_a']) ? $data['pSaleStart_a'] : '')));
+        } else {
+            $product->setSaleStart(null);
+        }
+
+        if ($data['pSaleEnd_dt']) {
+            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m']  . (isset($data['pSaleEnd_a']) ? $data['pSaleEnd_a'] : '') ));
+        }else {
+            $product->setSaleEnd(null);
         }
 
         $product->setIsFeatured($data['pFeatured']);
@@ -929,6 +1060,22 @@ class Product
         $product->setMaxQty($data['pMaxQty']);
         $product->setPageID($data['pageCID']);
         $product->setNotificationEmails($data['pNotificationEmails']);
+        $product->setOrderCompleteCID($data['pOrderCompleteCID']);
+
+        if ($data['pDateAvailableStart_dt']) {
+            $product->setDateAvailableStart(new \DateTime($data['pDateAvailableStart_dt'] . ' ' . $data['pDateAvailableStart_h'] . ':' . $data['pDateAvailableStart_m'] . (isset($data['pDateAvailableStart_a']) ? $data['pDateAvailableStart_a'] : '')));
+        }else {
+            $product->setDateAvailableStart(null);
+        }
+
+        if ($data['pDateAvailableEnd_dt']) {
+            $product->setDateAvailableEnd(new \DateTime($data['pDateAvailableEnd_dt'] . ' ' . $data['pDateAvailableEnd_h'] . ':' . $data['pDateAvailableEnd_m'] . (isset($data['pDateAvailableEnd_a']) ? $data['pDateAvailableEnd_a'] : '')));
+        }else {
+            $product->setDateAvailableEnd(null);
+        }
+
+        $product->setOutOfStockMessage($data['pOutOfStockMessage']);
+        $product->setAddToCartText($data['pAddToCartText']);
 
         if ($data['pManufacturer']) {
             $manufacturer = Manufacturer::getByID($data['pManufacturer']);
@@ -1080,7 +1227,7 @@ class Product
     }
 
     public function getWholesalePriceValue() {
-        $this->pWholesalePrice;
+        return $this->pWholesalePrice;
     }
 
     public function getWholesalePrice($qty = 1)
@@ -1147,8 +1294,25 @@ class Product
         return Price::format($this->getWholesalePrice());
     }
 
+    public function getSalePriceValue() {
+        return $this->pSalePrice;
+    }
+
     public function getSalePrice()
     {
+
+        $saleStart = $this->getSaleStart();
+        $saleEnd = $this->getSaleEnd();
+        $now = new \DateTime();
+
+        if ($saleStart && $saleStart > $now) {
+            return false;
+        }
+
+        if ($saleEnd && $now > $saleEnd) {
+            return false;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             if ($variation) {
                 $varprice = $variation->getVariationSalePrice();
@@ -1179,13 +1343,33 @@ class Product
         }
     }
 
+    public function getSaleStart()
+    {
+        return $this->pSaleStart;
+    }
+
+    public function setSaleStart($saleStart)
+    {
+        $this->pSaleStart = $saleStart;
+    }
+
+    public function getSaleEnd()
+    {
+        return $this->pSaleEnd;
+    }
+
+    public function setSaleEnd($saleEnd)
+    {
+        $this->pSaleEnd = $saleEnd;
+    }
+
     public function getActivePrice($qty = 1)
     {
         if(Wholesale::isUserWholesale()){
             return $this->getWholesalePrice();
         } else {
             $salePrice = $this->getSalePrice();
-            if ($salePrice != "") {
+            if ($salePrice != "" && !$this->hasQuantityPrice()) {
                 return $salePrice;
             }
             return $this->getPrice($qty);
@@ -1487,8 +1671,23 @@ class Product
         return (bool) $this->pVariations;
     }
 
-    public function isUnlimited()
+    public function isUnlimited($skipDateCheck = false)
     {
+        if (!$skipDateCheck) {
+            $now = new \DateTime();
+            $startAvailable = $this->getDateAvailableStart();
+            $endAvailable = $this->getDateAvailableEnd();
+
+            if ($startAvailable && $startAvailable >= $now) {
+                return false;
+            }
+
+            if ($endAvailable && $now > $endAvailable) {
+                return false;
+            }
+        }
+
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isUnlimited();
         } else {
@@ -1533,6 +1732,19 @@ class Product
     }
 
     public function getStockLevel() {
+
+        $now = new \DateTime();
+        $startAvailable = $this->getDateAvailableStart();
+        $endAvailable = $this->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return 0;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
+            return 0;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationQty();
         } else {
@@ -1553,7 +1765,7 @@ class Product
         if ($this->allowBackOrders() || $this->isUnlimited()) {
             $available = false;
         } else {
-            $available = $this->getQty();
+            $available = $this->getStockLevel();
         }
 
         $maxcart = $this->getMaxQty();
@@ -1575,10 +1787,22 @@ class Product
             return false;
         }
 
+        $now = new \DateTime();
+        $startAvailable = $this->getDateAvailableStart();
+        $endAvailable = $this->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return false;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
+            return false;
+        }
+
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isSellable();
         } else {
-            if ($this->getQty() > 0 || $this->isUnlimited()) {
+            if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
                 return true;
             } else {
                 if ($this->allowBackOrders()) {
@@ -1603,11 +1827,6 @@ class Product
     public function getGroupIDs()
     {
         return ProductGroup::getGroupIDsForProduct($this);
-    }
-
-    public function getVariations()
-    {
-        return ProductVariation::getVariationsForProduct($this);
     }
 
     public function getDateAdded()
@@ -2030,7 +2249,7 @@ class Product
         $variationLookup = [];
 
         if ($this->hasVariations()) {
-            $variations = ProductVariation::getVariationsForProduct($this);
+            $variations = $this->getVariations();
 
             $variationLookup = [];
 

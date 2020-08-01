@@ -12,7 +12,7 @@ class Tax extends DashboardPageController
 {
     public function view()
     {
-        $this->set("taxRates", StoreTax::getTaxRates());
+        $this->set("taxRates", StoreTax::getTaxRates(true));
         $this->set("taxClasses", TaxClass::getTaxClasses());
     }
 
@@ -100,7 +100,7 @@ class Tax extends DashboardPageController
         $this->set('pageTitle', t("Add Tax Class"));
         $this->set('task', t("Add"));
         $this->set('tc', new TaxClass());
-        $this->set('taxRates', StoreTax::getTaxRates());
+        $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');
     }
 
@@ -109,7 +109,7 @@ class Tax extends DashboardPageController
         $this->set('pageTitle', t("Edit Tax Class"));
         $this->set('task', t("Update"));
         $this->set('tc', TaxClass::getByID($tcID));
-        $this->set('taxRates', StoreTax::getTaxRates());
+        $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');
     }
 
@@ -153,14 +153,16 @@ class Tax extends DashboardPageController
         if ("extract" == Config::get('community_store.calculation')) {
             $countries = [];
 
-            foreach ($data['taxClassRates'] as $taxrateID) {
-                $taxrate = TaxRate::getByID($taxrateID);
+            if (isset($data['taxClassRates'] )) {
+                foreach ($data['taxClassRates'] as $taxrateID) {
+                    $taxrate = TaxRate::getByID($taxrateID);
 
-                if (in_array($taxrate->getTaxCountry(), $countries)) {
-                    $e->add(t("You can only have one tax rate per country with your current tax settings"));
-                    break;
-                } else {
-                    $countries[] = $taxrate->getTaxCountry();
+                    if (in_array($taxrate->getTaxCountry(), $countries)) {
+                        $e->add(t("You can only have one tax rate per country with your current tax settings"));
+                        break;
+                    } else {
+                        $countries[] = $taxrate->getTaxCountry();
+                    }
                 }
             }
         }

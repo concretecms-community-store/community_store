@@ -8,11 +8,14 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
 
 class Tax
 {
-    public static function getTaxRates()
+    public static function getTaxRates($showall = false)
     {
-        if(Wholesale::isUserWholesale()){
-            return $taxRates = [];
+        if (!$showall) {
+            if (Wholesale::isUserWholesale()) {
+                return $taxRates = [];
+            }
         }
+
         $em = dbORM::entityManager();
         $taxRates = $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
 

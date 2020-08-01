@@ -24,9 +24,10 @@ class ProductVariation
     protected $pvID;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product", inversedBy="variations", cascade={"persist"})
+     * @ORM\JoinColumn(name="pID", referencedColumnName="pID", onDelete="CASCADE")
      */
-    protected $pID;
+    protected $product;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -180,6 +181,15 @@ class ProductVariation
         return $this->pID;
     }
 
+    public function getProduct() {
+        return $this->product;
+    }
+
+    public function setProduct($product) {
+        $this->product = $product;
+    }
+
+
     /**
      * @ORM\return mixed
      */
@@ -309,7 +319,7 @@ class ProductVariation
     /**
      * @ORM\param mixed $pvQty
      */
-    public function setStockLevel($pvQty)
+    public function setVariationStockLevel($pvQty)
     {
         $this->pvQty = $pvQty ? $pvQty : 0;
     }
@@ -318,7 +328,7 @@ class ProductVariation
      * @deprecated
      */
     public function setVariationQty($pvQty) {
-        $this->setStockLevel($pvQty);
+        $this->setVariationStockLevel($pvQty);
     }
 
     /**
@@ -470,7 +480,24 @@ class ProductVariation
 
     public function isSellable()
     {
-        if ($this->isUnlimited() || $this->getVariationQty() > 0) {
+        if (!$this->product->isActive()) {
+            return false;
+        }
+
+        $now = new \DateTime();
+        $startAvailable = $this->product->getDateAvailableStart();
+        $endAvailable = $this->product->getDateAvailableEnd();
+
+        if ($startAvailable && $startAvailable >= $now) {
+            return false;
+        }
+
+        if ($endAvailable && $now > $endAvailable) {
+            return false;
+        }
+
+
+        if ($this->isUnlimited() || $this->getStockLevel() > 0) {
             return true;
         } else {
             return false;
@@ -519,7 +546,7 @@ class ProductVariation
 
                 if (!$variation) {
                     $variation = self::add(
-                        $product->getID(),
+                        $product,
                         [
                         'pvSKU' => '',
                         'pvBarcode' => '',
@@ -556,7 +583,7 @@ class ProductVariation
                     $variation->setVariationPrice($data['pvPrice'][$key]);
                     $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
-                    $variation->setVariationQty($data['pvQty'][$key]);
+                    $variation->setVariationStockLevel($data['pvQty'][$key]);
                     $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
                     $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
@@ -566,6 +593,7 @@ class ProductVariation
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->setVariationPackageData($data['pvPackageData'][$key]);
                     $variation->setVariationSort($sort);
+                    $variation->setProduct($product);
                     $variation->save(true);
 
                     $options = $variation->getOptions();
@@ -589,7 +617,8 @@ class ProductVariation
         $db = $app->make('database')->connection();
 
         if (!empty($variationIDs)) {
-            $options = implode(',', $variationIDs);
+            $options = implode(',', array_map('intval', $variationIDs));
+
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ($options)", [$product->getID()]);
         } else {
             $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", [$product->getID()]);
@@ -619,16 +648,16 @@ class ProductVariation
         return $em->getRepository(get_class())->findOneBy(['pvSKU' => $pvSKU]);
     }
 
-    public static function add($productID, $data, $persistonly = false)
+    public static function add($product, $data, $persistonly = false)
     {
         $variation = new self();
-        $variation->setProductID($productID);
+        $variation->setProduct($product);
         $variation->setVariationSKU($data['pvSKU']);
         $variation->setVariationBarcode($data['pvBarcode']);
         $variation->setVariationPrice($data['pvPrice']);
         $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
-        $variation->setVariationQty($data['pvQty']);
+        $variation->setVariationStockLevel($data['pvQty']);
         $variation->setVariationQtyUnlim($data['pvQtyUnlim']);
         $variation->setVariationFID($data['pvfID']);
         $variation->setVariationWeight($data['pvWidth']);
@@ -649,7 +678,7 @@ class ProductVariation
         $db = $app->make('database')->connection();
 
         if (is_array($optionids) && !empty($optionids)) {
-            $options = implode(',', $optionids);
+            $options = implode(',', array_map('intval', $optionids));
 
             $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ($options)
                                  group by pvID having count(*) = ? ", [count($optionids)]);
@@ -670,13 +699,6 @@ class ProductVariation
         }
     }
 
-    public static function getVariationsForProduct(Product $product)
-    {
-        $em = dbORM::entityManager();
-
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['pvSort' => 'asc']);
-    }
-
     public function delete()
     {
         $em = dbORM::entityManager();
@@ -691,7 +713,7 @@ class ProductVariation
         }
 
         //clear out existing product option groups
-        $existingVariations = self::getVariationsForProduct($product);
+        $existingVariations = $product->getVariations();
         foreach ($existingVariations as $variation) {
             if (!in_array($variation->getID(), $excluding)) {
                 $variation->delete();

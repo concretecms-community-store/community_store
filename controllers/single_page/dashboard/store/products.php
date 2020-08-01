@@ -86,7 +86,10 @@ class Products extends DashboardSitePageController
     public function add()
     {
         if ($this->request->getMethod() == 'POST') {
-           return $this->save();
+           $return = $this->save();
+           if ($return) {
+               return $return;
+           }
         }
 
         $this->loadFormAssets();
@@ -139,7 +142,10 @@ class Products extends DashboardSitePageController
     public function edit($pID)
     {
         if ($this->request->getMethod() == 'POST') {
-            return $this->save();
+            $return = $this->save();
+            if ($return) {
+                return $return;
+            }
         }
 
         $this->loadFormAssets();
@@ -456,21 +462,7 @@ class Products extends DashboardSitePageController
         if (!is_numeric($args['pQty']) && !$args['pQtyUnlim']) {
             $e->add(t('The Quantity must be set, and numeric'));
         }
-        if (!is_numeric($args['pWidth'])) {
-            $e->add(t('The Product Width must be a number'));
-        }
-        if (!is_numeric($args['pHeight'])) {
-            $e->add(t('The Product Height must be a number'));
-        }
-		if (!is_numeric($args['pStackedHeight'])) {
-			$e->add(t('The Product Stacked Height must be a number'));
-		}
-        if (!is_numeric($args['pLength'])) {
-            $e->add(t('The Product Length must be a number'));
-        }
-        if (!is_numeric($args['pWeight'])) {
-            $e->add(t('The Product Weight must be a number'));
-        }
+
         if (strlen($args['pEan']) > 13) {
             $e->add(t('The EAN can not be greater than 13 Characters'));
         }

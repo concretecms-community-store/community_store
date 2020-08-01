@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* A concrete5 version of 8.4 or higher is required.
+* A concrete5 version of 8.5.1 or higher is required.
 
 Community Store is an _add on_ for the content management system concrete5, so it is not a stand-alone shopping cart.
 Is is recommended to use a release of Community Store, rather than the master branch.
@@ -14,7 +14,7 @@ The latest release of Community Store should be downloaded from the [releases se
 The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend concrete5** section of the Dashboard.
 
 Once installed, the Dashboard page **Store / Settings** should be visited to configure default settings such the store's currency, notification emails, shipping units and checkout modes. 
-Refer to the [Initial Setup](/user-guide/config.html) documentation as to a recommended set of options to review.
+Refer to the [Initial Setup](/user-guide/configuration.html) documentation as to a recommended set of options to review.
 
 ## Updating
 

@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
+use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Controller\Controller;
@@ -31,6 +32,12 @@ class Method extends Controller
 
     /** @ORM\Column(type="text", nullable=true) */
     protected $pmButtonLabel;
+
+    /** @ORM\Column(type="string",nullable=true) */
+    protected $pmUserGroups;
+
+    /** @ORM\Column(type="string",nullable=true) */
+    protected $pmExcludedUserGroups;
 
     /** @ORM\Column(type="boolean") */
     protected $pmEnabled;
@@ -122,6 +129,34 @@ class Method extends Controller
     public function isEnabled()
     {
         return $this->pmEnabled;
+    }
+
+    public function getUserGroups()
+    {
+        return $this->pmUserGroups ? explode(',', $this->pmUserGroups) : [];
+    }
+
+    public function setUserGroups($userGroups)
+    {
+        if (is_array($userGroups)) {
+            $this->pmUserGroups = implode(',', $userGroups);
+        } else {
+            $this->pmUserGroups = '';
+        }
+    }
+
+    public function getExcludedUserGroups()
+    {
+        return $this->pmExcludedUserGroups ? explode(',', $this->pmExcludedUserGroups) : [];
+    }
+
+    public function setExcludedUserGroups($userGroups)
+    {
+        if (is_array($userGroups)) {
+            $this->pmExcludedUserGroups = implode(',', $userGroups);
+        } else {
+            $this->pmExcludedUserGroups = '';
+        }
     }
 
     public static function getByID($pmID)
@@ -218,6 +253,37 @@ class Method extends Controller
     {
         return self::getMethods(true);
     }
+
+    public static function getAvailableMethods($total) {
+        $enabledMethods = self::getMethods(true);
+
+        $availableMethods = [];
+
+        $u = new User();
+        $userGroups = $u->getUserGroups();
+
+        foreach ($enabledMethods as $em) {
+            $includedGroups = $em->getUserGroups();
+            $excludedGroups = $em->getExcludedUserGroups();
+
+            if (count($includedGroups) > 0 && count(array_intersect($includedGroups, $userGroups)) == 0) {
+                continue;
+            }
+
+            if (count($excludedGroups) > 0 && count(array_intersect($excludedGroups, $userGroups)) > 0) {
+                continue;
+            }
+
+            $emmc = $em->getMethodController();
+
+            if ($total >= $emmc->getPaymentMinimum() && $total <= $emmc->getPaymentMaximum()) {
+                $availableMethods[] = $em;
+            }
+        }
+
+        return $availableMethods;
+    }
+
 
     public function renderCheckoutForm()
     {

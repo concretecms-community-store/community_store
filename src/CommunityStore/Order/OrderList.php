@@ -9,6 +9,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 
 class OrderList extends AttributedItemList implements PaginationProviderInterface
 {

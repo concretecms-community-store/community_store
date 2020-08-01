@@ -140,6 +140,28 @@ class Common extends DashboardSitePageController
         }
 
         $this->set('quantityLabels',$quantityLabels);
+
+
+
+        $cartButtons = [];
+        $cartButtonsData =  $db->fetchAll('SELECT distinct pAddToCartText FROM CommunityStoreProducts where pAddToCartText <> ""');
+
+        foreach($cartButtonsData as $label) {
+            $cartButtons[] = $label['pAddToCartText'];
+        }
+
+        $this->set('cartButtons',$cartButtons);
+
+
+        $outOfStock = [];
+        $outOfStockData =  $db->fetchAll('SELECT distinct pOutOfStockMessage FROM CommunityStoreProducts where pOutOfStockMessage <> ""');
+
+        foreach($outOfStockData as $label) {
+            $outOfStock[] = $label['pOutOfStockMessage'];
+        }
+
+        $this->set('outOfStock',$outOfStock);
+
     }
 
     private function getLocales() {

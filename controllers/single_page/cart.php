@@ -140,9 +140,11 @@ class Cart extends PageController
             $added = $result['added'];
 
             $error = 0;
+            $errorMsg = null;
 
             if ($result['error']) {
                 $error = 1;
+				$errorMsg = $result['errorMsg'];
             }
 
             $product = Product::getByID($data['pID']);
@@ -150,7 +152,7 @@ class Cart extends PageController
             $productdata['pName'] = $product->getName();
             $productdata['pID'] = $product->getID();
 
-            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error];
+            $returndata = ['quantity' => $data['quantity'], 'added' => $added, 'product' => $productdata, 'action' => 'add', 'error' => $error, 'errorMsg' => $errorMsg];
             echo json_encode($returndata);
         }
         exit();
@@ -240,10 +242,12 @@ class Cart extends PageController
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $token = $app->make('token');
 
+        $cartMode = Config::get('community_store.cartMode');
+
         if (Filesystem::exists(DIR_BASE . '/application/elements/cart_modal.php')) {
-            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
+            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
         } else {
-            View::element('cart_modal', ['cart' => $cart, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
+            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
         }
 
         exit();

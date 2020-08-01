@@ -156,7 +156,11 @@ if ($cart) {
                                  <input type="hidden" name="instance[]" value="<?= $k ?>"/>
 
                             <?php } else { ?>
-                                1
+                                <?php if ($quantityLabel) { ?>
+                                    <div  class="store-product-qty form-control text-right pull-right form-control-static">1</div>
+                                <?php } else { ?>
+                                    1
+                                <?php } ?>
                             <?php } ?>
 
                             <?php if ($quantityLabel) { ?>

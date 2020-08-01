@@ -7,6 +7,7 @@ $action = $controller->getAction();
 $csm = $app->make('cs/helper/multilingual');
 $editor = $app->make('editor');
 
+
 if ($action == 'view') { ?>
 
     <?php if (count($locales) > 0) { ?>
@@ -280,16 +281,78 @@ $localecount = count($locales);
                     <td>
                         <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
                     </td>
-
                     <td>
                         <input type="text" class="form-control"
                                name="translation[<?= $lp->getLocale(); ?>][text][productQuantityLabel]"
                                value="<?= $csm->t(null, 'productQuantityLabel', $product->getID(), false, $lp->getLocale(), false); ?>"
                                placeholder="<?= $csm->t(null, 'productQuantityLabel', false, false, $lp->getLocale()); ?>"/>
                     </td>
+                </tr>
+            <?php } ?>
+
+            <?php
+
+            $firstrow = true;
+            foreach ($locales as $lp) { ?>
+                <tr>
+                    <?php if ($firstrow) {
+                        $firstrow = false;
+                        ?>
+                        <td rowspan="<?= $localecount; ?>"><span
+                                    class="label label-primary"><?= t('Add To Cart Button Text') ?></span>
+                        </td>
+                        <td rowspan="<?= $localecount; ?>"><?= h($product->getAddToCartText()) ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= h($product->getAddToCartText()) ?></td>
+                    <?php } ?>
+                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                    <td>
+                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                    </td>
+
+                    <td>
+                        <input type="text" class="form-control"
+                               name="translation[<?= $lp->getLocale(); ?>][text][productAddToCartText]"
+                               value="<?= $csm->t(null, 'productAddToCartText', $product->getID(), false, $lp->getLocale(), false); ?>"
+                               placeholder="<?= $csm->t(null, 'productAddToCartText', false, false, $lp->getLocale()); ?>"/>
+                    </td>
 
                 </tr>
             <?php } ?>
+
+
+            <?php
+
+            $firstrow = true;
+            foreach ($locales as $lp) { ?>
+                <tr>
+                    <?php if ($firstrow) {
+                        $firstrow = false;
+                        ?>
+                        <td rowspan="<?= $localecount; ?>"><span
+                                    class="label label-primary"><?= t('Out of Stock Message') ?></span>
+                        </td>
+                        <td rowspan="<?= $localecount; ?>"><?= h($product->getOutOfStockMessage()) ?></td>
+                    <?php } else { ?>
+                        <td class="hidden"><?= h($product->getOutOfStockMessage()) ?></td>
+                    <?php } ?>
+                    <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
+                    <td>
+                        <span class="label label-default"><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</span>
+                    </td>
+
+                    <td>
+                        <input type="text" class="form-control"
+                               name="translation[<?= $lp->getLocale(); ?>][text][productOutOfStockMessage]"
+                               value="<?= $csm->t(null, 'productOutOfStockMessage', $product->getID(), false, $lp->getLocale(), false); ?>"
+                               placeholder="<?= $csm->t(null, 'productOutOfStockMessage', false, false, $lp->getLocale()); ?>"/>
+                    </td>
+
+                </tr>
+            <?php } ?>
+
+
+
         </table>
     </fieldset>
 
@@ -459,6 +522,7 @@ $localecount = count($locales);
     <fieldset>
         <legend><?= t('Attribute Names and Values'); ?></legend>
 
+        <?php if (count($attrList) > 0) { ?>
         <table class="table table-bordered table-condensed">
             <tr>
                 <th><?= t('Context'); ?></th>
@@ -541,6 +605,9 @@ $localecount = count($locales);
 
 
         </table>
+        <?php } else { ?>
+            <p class="alert alert-info"><?= t('No product attributes defined'); ?></p>
+        <?php } ?>
     </fieldset>
 
 

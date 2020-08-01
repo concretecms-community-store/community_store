@@ -2,7 +2,9 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
 use Concrete\Core\User\UserInfo;
@@ -49,6 +51,9 @@ class Order
 
     /** @ORM\Column(type="integer",nullable=true) */
     protected $cID;
+
+    /** @ORM\Column(type="boolean", nullable=true) */
+    protected $memberCreated;
 
     /** @ORM\Column(type="datetime") */
     protected $oDate;
@@ -122,6 +127,9 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $oRefundReason;
 
+    /** @ORM\Column(type="text", nullable=true) */
+    protected $oNotes;
+
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
@@ -149,6 +157,16 @@ class Order
     public function setCustomerID($cID)
     {
         $this->cID = $cID;
+    }
+
+    public function getMemberCreated()
+    {
+        return (bool)$this->memberCreated;
+    }
+
+    public function setMemberCreated($memberCreated)
+    {
+        $this->memberCreated = $memberCreated;
     }
 
     public function setDate($oDate)
@@ -402,6 +420,16 @@ class Order
         $this->userAgent = $userAgent;
     }
 
+    public function setNotes($notes)
+    {
+        $this->oNotes = $notes;
+    }
+
+    public function getNotes()
+    {
+        return $this->oNotes;
+    }
+
     public function getTaxes()
     {
         $taxes = [];
@@ -514,6 +542,7 @@ class Order
         $csm = $app->make('cs/helper/multilingual');
 
         $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
+        $notes = session::get('notes');
 
         $customer = new Customer();
         $now = new \DateTime();
@@ -562,6 +591,7 @@ class Order
         $order->setShipmentID($sShipmentID);
         $order->setRateID($sRateID);
         $order->setShippingInstructions($sInstructions);
+        $order->setNotes($notes);
         $order->setShippingTotal($shippingTotal);
         $order->setTaxTotal($taxTotal);
         $order->setTaxIncluded($taxIncludedTotal);
@@ -782,7 +812,7 @@ class Order
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
                 $navhelper = $app->make('helper/navigation');
-                $target = Page::getByPath('/login');
+                $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
 
                 if ($target) {
                     $link = $navhelper->getLinkToCollection($target, true);
@@ -824,6 +854,8 @@ class Order
 
                 $userRegistrationService = $app->make('Concrete\Core\User\RegistrationServiceInterface');
                 $newuser = $userRegistrationService->create(['uName' => $newusername, 'uEmail' => trim($email), 'uPassword' => $password]);
+                $this->setMemberCreated(true);
+
                 $usercreated = true;
 
                 if (Config::get('concrete.user.registration.email_registration')) {
@@ -1008,7 +1040,9 @@ class Order
             $mh->addParameter('orderChoicesAttList', $orderChoicesAttList);
             $mh->addParameter("order", $this);
             $mh->load("new_order_notification", "community_store");
-            $mh->replyto($this->getAttribute('email'));
+            if(Config::get('community_store.setReplyTo')) {
+                $mh->replyto($this->getAttribute('email'));
+            }
 
             try {
                 $mh->sendMail();
@@ -1056,6 +1090,19 @@ class Order
 
         if (!is_array($orderChoicesAttList)) {
             $orderChoicesAttList = [];
+        }
+
+        $navhelper = $app->make('helper/navigation');
+        $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
+
+        if ($target) {
+            $link = $navhelper->getLinkToCollection($target, true);
+
+            if ($link) {
+                $mh->addParameter('link', $link);
+            }
+        } else {
+            $mh->addParameter('link', '');
         }
 
         $mh->addParameter('paymentMethodID', $pmID);
@@ -1250,6 +1297,63 @@ class Order
         $att = $this->getAttribute($handle);
 
         return $this->returnAttributeValue($att, $valuename);
+    }
+
+    public function getOrderCompleteDestination($default = '', $locale = '') {
+        $c = Page::getCurrentPage();
+        $langpath = '';
+
+        if ($c && !$locale) {
+            $lang = Section::getBySectionOfSite($c);
+            if (null !== $lang) {
+                $langpath = $lang->getCollectionHandle();
+            }
+        } else {
+            if ($locale) {
+                $lang = Section::getByLocale($locale);
+            }
+        }
+
+        // default return
+        if ($default) {
+            $return = $default;
+        } else {
+            $return = ($langpath ? '/' . $langpath : '') . '/checkout/complete';
+        }
+
+        foreach($this->getOrderItems() as $orderItem) {
+            $product = $orderItem->getProductObject();
+            if ($product && $product->getOrderCompleteCID()) {
+                $orderCompleteCID = $product->getOrderCompleteCID();
+                break;
+            }
+        }
+
+        if (!$orderCompleteCID) {
+            $orderCompleteCID = Config::get('community_store.orderCompleteCID');
+        }
+
+        if ($orderCompleteCID) {
+            $page = Page::getByID($orderCompleteCID);
+
+            if ($lang) {
+                $relatedID = $lang->getTranslatedPageID($page);
+
+                if ($relatedID && $relatedID != $orderCompleteCID) {
+                    $translatedPage = Page::getByID($relatedID);
+
+                    if ($translatedPage && !$translatedPage->isError() && !$translatedPage->isInTrash()) {
+                        $page = $translatedPage;
+                    }
+                }
+            }
+
+            if ($page) {
+                $return = $page->getCollectionPath();
+            }
+        }
+
+        return $return;
     }
 
     private function returnAttributeValue($att, $valuename)
