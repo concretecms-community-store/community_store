@@ -117,18 +117,18 @@ if (!$productsPerRow) {
                             <?php if ($showQuickViewLink) {
                                 ?>
                                 <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
-                                    <img src="<?= $thumb->src; ?>" class="img-responsive">
+                                    <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
                                 </a>
                                 <?php
                             } elseif ($showPageLink && $productPage) {
                                 ?>
                                 <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
-                                    <img src="<?= $thumb->src; ?>" class="img-responsive">
+                                    <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
                                 </a>
                                 <?php
                             } else {
                                 ?>
-                                <img src="<?= $thumb->src; ?>" class="img-responsive">
+                                <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
                                 <?php
                             } ?>
                         </p>
