@@ -158,6 +158,11 @@
             </div>
 
             <div class="form-group">
+                <?= $form->label('displayMode', t('Display Mode')); ?>
+                <?= $form->select('displayMode', ['grid' => 'Grid', 'list' => 'List'], $displayMode); ?>
+            </div>
+
+            <div class="form-group">
                 <?= $form->label('productsPerRow', t('Products per Row')); ?>
                 <?= $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
             </div>
@@ -270,12 +275,19 @@ if ($relatedProduct) {
         $('#groups-select').select2();
 
         var initfilter = $('#filter');
+        var displayMode = $('#displayMode');
 
         if (initfilter.val() == 'related' || initfilter.val() == 'related_product') {
             $('#sortOrder option[value="related"]').prop('disabled', false);
         } else {
             $('#sortOrder option[value="related"]').prop('disabled', true);
         }
+
+        if(displayMode.val() == 'list') $('#productsPerRow').prop('disabled', 'disabled');
+        displayMode.change(function() {
+            if(displayMode.val() == 'list') $('#productsPerRow').prop('disabled', 'disabled');
+            else $('#productsPerRow').prop('disabled', false);
+        });
 
         if (initfilter.val() == 'current' || initfilter.val() == 'page') {
             $('#sortOrder option[value="category"]').prop('disabled', false);
