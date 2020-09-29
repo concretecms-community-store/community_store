@@ -899,7 +899,7 @@ $dh = $app->make('helper/date');
                                 <% } else { %>
                                 <input type="hidden" value="0" name="poIncludeVariations[]"/>
                                 <% } %>
-                                <% if (poType != 'select' && poType != 'checkbox' && poType != 'static') { %>
+                                <% if (poType != 'checkbox' && poType != 'static') { %>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label class="control-label"><?= t('Required'); ?></label>
