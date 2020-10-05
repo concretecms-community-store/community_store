@@ -113,6 +113,14 @@ class OrderItemOption
     }
 
     /**
+     * @ORM\return mixed
+     */
+    public function getOrderItemOptionHandle()
+    {
+        return $this->oioHandle;
+    }
+
+    /**
      * @return mixed
      */
     public function getOrderItemOptionPriceAdjust()
