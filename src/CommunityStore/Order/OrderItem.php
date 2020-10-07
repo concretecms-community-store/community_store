@@ -364,6 +364,7 @@ class OrderItem
 
             $orderItemOption = new OrderItemOption();
             $orderItemOption->setOrderItemOptionKey($optionGroupName);
+            $orderItemOption->setOrderItemOptionHandle($optiongroup->getHandle());
             $orderItemOption->setOrderItemOptionValue($optionvalue);
             $orderItemOption->setOrderItem($orderItem);
             $orderItemOption->save();

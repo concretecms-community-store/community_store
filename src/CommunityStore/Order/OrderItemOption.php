@@ -28,6 +28,11 @@ class OrderItemOption
     protected $oioKey;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $oioHandle;
+
+    /**
      * @ORM\Column(type="text")
      */
     protected $oioValue;
@@ -84,6 +89,14 @@ class OrderItemOption
     }
 
     /**
+     * @ORM\param mixed $oioHandle
+     */
+    public function setOrderItemOptionHandle($oioHandle)
+    {
+        $this->oioHandle = $oioHandle;
+    }
+
+    /**
      * @ORM\return mixed
      */
     public function getOrderItemOptionValue()
@@ -97,6 +110,14 @@ class OrderItemOption
     public function setOrderItemOptionValue($oioValue)
     {
         $this->oioValue = $oioValue;
+    }
+
+    /**
+     * @ORM\return mixed
+     */
+    public function getOrderItemOptionHandle()
+    {
+        return $this->oioHandle;
     }
 
     /**

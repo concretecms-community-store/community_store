@@ -125,6 +125,10 @@ class Shipping extends DashboardPageController
             $e->add(t("Method Name must be set"));
         }
 
+        if (!is_numeric($data['methodSortOrder'])) {
+            $e->add(t("Sort order must be a number."));
+        }
+
         //pass the validator to the shipping method to check for it's own errors
         $shippingMethodType = ShippingMethodType::getByID($data['shippingMethodTypeID']);
         $e = $shippingMethodType->getMethodTypeController()->validate($data, $e);
