@@ -1092,17 +1092,29 @@ class Order
             $orderChoicesAttList = [];
         }
 
-        $navhelper = $app->make('helper/navigation');
-        $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
+        $orderItems = $this->getOrderItems();
+        $createlogin = false;
 
-        if ($target) {
-            $link = $navhelper->getLinkToCollection($target, true);
-
-            if ($link) {
-                $mh->addParameter('link', $link);
+        foreach ($orderItems as $orderItem) {
+            $product = $orderItem->getProductObject();
+            if ($product && $product->createsLogin()) {
+                $createlogin = true;
             }
-        } else {
-            $mh->addParameter('link', '');
+        }
+
+        $mh->addParameter('link', '');
+
+        if ($createlogin) {
+            $navhelper = $app->make('helper/navigation');
+            $target = Page::getByPath($this->getOrderCompleteDestination('/login', $this->getLocale()));
+
+            if ($target) {
+                $link = $navhelper->getLinkToCollection($target, true);
+
+                if ($link) {
+                    $mh->addParameter('link', $link);
+                }
+            }
         }
 
         $mh->addParameter('paymentMethodID', $pmID);
