@@ -580,6 +580,7 @@ var communityStore = {
         str[0] = parts.join(thousands_sep?thousands_sep:',');
         return str.join(dec_point?dec_point:'.');
     },
+
     optionOrder: function(pdb) {
         var order = [];
         pdb.find('.store-product-options select').each(function(index,elem) {
@@ -587,6 +588,7 @@ var communityStore = {
         });
         return order;
     },
+
     cartesianProduct: function(arr) {
         return arr.reduce(function(a,b){
             return a.map(function(x){
@@ -596,6 +598,7 @@ var communityStore = {
             }).reduce(function(a,b){ return a.concat(b) },[])
         }, [[]])
     },
+
     filterSelections: function(pdb,changedElement) {
        var self = this;
        var order = self.optionOrder(pdb);
@@ -605,7 +608,7 @@ var communityStore = {
        order.forEach(function(name,orderIndex) {
                var select = pdb.find('select[name="'+name+'"]');
                selects[orderIndex] = select;
-               if(name == changedElement.attr('name')) {
+               if(name == changedElement.attr('name') && order.length>1) {
                    allValues[orderIndex] = [select.val()];
                    changedIndex = orderIndex;
                } else {
