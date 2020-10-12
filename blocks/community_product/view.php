@@ -318,7 +318,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ('radio' != $displayType) {
                                     ?>
-                                    <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
+                                    <select <?= $required ? ' required="required" ' : ''; ?> 'class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
                                             name="po<?= $option->getID(); ?>">
                                         <?php
                                         } ?>
@@ -329,6 +329,7 @@ if (is_object($product) && $product->isActive()) {
                                         $outOfStock = false;
                                         $firstOptionItem = true;
                                         foreach ($optionItems as $optionItem) {
+                                            $noValue = false;
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
@@ -342,8 +343,14 @@ if (is_object($product) && $product->isActive()) {
                                                         $selected = 'selected="selected"';
                                                     }
                                                 } else {
+                                                    $disabled = false;
                                                     if ($firstOptionItem) {
                                                         $selected = 'selected="selected"';
+                                                        if(!$optionItem->getName()) {
+                                                            $disabled = 'disabled="disabled" ';
+                                                            $noValue = true;
+                                                            if($displayType == 'radio') $selected = '';
+                                                        }
                                                         $firstOptionItem = false;
                                                     }
                                                 }
@@ -371,7 +378,7 @@ if (is_object($product) && $product->isActive()) {
                                                     </div>
                                                 <?php } else { ?>
                                                     <option
-                                                        <?= $disabled . ' ' . $selected; ?> value="<?= $optionItem->getID(); ?>"
+                                                        <?= $disabled . ' ' . $selected; ?> value="<?= $noValue && $required ? '' : $optionItem->getID(); ?>"
                                                                                     data-adjustment="<?= $optionItem->getPriceAdjustment($product->getDiscountRules()); ?>"
 
                                                     ><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>

@@ -280,7 +280,7 @@ if (!$productsPerRow) {
                                     <?php } ?>
 
                                     <?php if ($displayType != 'radio') { ?>
-                                    <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
+                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
                                         <?php } ?>
                                         <?php
                                         $firstAvailableVariation = false;
@@ -289,6 +289,7 @@ if (!$productsPerRow) {
                                         $outOfStock = false;
                                         $firstOptionItem = true;
                                         foreach ($optionItems as $optionItem) {
+                                            $noValue = false;
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
@@ -302,8 +303,14 @@ if (!$productsPerRow) {
                                                         $selected = 'selected="selected"';
                                                     }
                                                 } else {
+                                                    $disabled = false;
                                                     if ($firstOptionItem) {
                                                         $selected = 'selected="selected"';
+                                                        if(!$optionItem->getName()) {
+                                                            $disabled = 'disabled="disabled" ';
+                                                            $noValue = true;
+                                                            if($displayType == 'radio') $selected = '';
+                                                        }
                                                         $firstOptionItem = false;
                                                     }
                                                 }
@@ -331,7 +338,7 @@ if (!$productsPerRow) {
                                                     </div>
                                                 <?php } else { ?>
                                                     <option <?= $disabled . ' ' . $selected; ?>
-                                                            value="<?= $optionItem->getID(); ?>"
+                                                            value="<?= $noValue && $required ? '' : $optionItem->getID(); ?>"
                                                             data-adjustment="<?= (float)$optionItem->getPriceAdjustment($product->getDiscountRules()); ?>"
                                                     ><?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
                                                 <?php } ?>
