@@ -473,11 +473,12 @@ if (!$productsPerRow) {
             </div><!-- .product-list-item -->
 
         <?php
-        if ($i % $productsPerRow ==  0) {
+        if ($i % $productsPerRow ==  0 && $i < count($products)) {
             echo "</div>";
+            if($displayMode == 'list') echo '<hr class="store-product-divider">';
             echo '<div class="store-product-list row store-product-list-per-row-' . $productsPerRow . '">';
         }
-        if($displayMode == 'list') echo '<hr style="margin-top: 0px; margin-bottom: 40px;">';
+
         ++$i;
     }// foreach
     echo "</div><!-- .product-list -->";

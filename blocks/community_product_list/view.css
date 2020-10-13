@@ -5,3 +5,8 @@
 .store-product-list-sort {
     margin-top: 15px;
 }
+
+.store-product-list-block hr.store-product-divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
