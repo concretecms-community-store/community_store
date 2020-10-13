@@ -579,68 +579,7 @@ var communityStore = {
         }
         str[0] = parts.join(thousands_sep?thousands_sep:',');
         return str.join(dec_point?dec_point:'.');
-    },
-
-    optionOrder: function(pdb) {
-        var order = [];
-        pdb.find('.store-product-options select').each(function(index,elem) {
-            order.push($(elem).attr('name'));
-        });
-        return order;
-    },
-
-    cartesianProduct: function(arr) {
-        return arr.reduce(function(a,b){
-            return a.map(function(x){
-                return b.map(function(y){
-                    return x.concat([y]);
-                })
-            }).reduce(function(a,b){ return a.concat(b) },[])
-        }, [[]])
-    },
-
-    filterSelections: function(pdb,changedElement) {
-       var self = this;
-       var order = self.optionOrder(pdb);
-       var allValues = [];
-       var changedIndex;
-       var selects = [];
-       order.forEach(function(name,orderIndex) {
-               var select = pdb.find('select[name="'+name+'"]');
-               selects[orderIndex] = select;
-               if(name == changedElement.attr('name') && order.length>1) {
-                   allValues[orderIndex] = [select.val()];
-                   changedIndex = orderIndex;
-               } else {
-                   allValues[orderIndex] = [];
-                   select.find('option').each(function(index,option) {
-                       allValues[orderIndex].push($(option).val());
-                   });
-               }
-       });
-       var allVariations = self.cartesianProduct(allValues);
-       let pID = pdb.data('product-id');
-       allVariations.forEach(function(variation) {
-           var tmp = variation.join('_');
-           var tmp1 = variation.slice(0).reverse().join('_');
-           if(!variationData[pID][tmp] && !variationData[pID][tmp1]) {
-               // remove option from selects
-               variation.forEach(function(optionValue,index) {
-                   if(index != changedIndex) {
-                       var select = selects[index];
-                       select.find('option[value="' + optionValue + '"]').hide();
-                       if(select.val() == optionValue) select.val("");
-                   }
-               });
-           } else {
-               variation.forEach(function(optionValue,index) {
-                   var select = selects[index];
-                   select.find('option[value="' + optionValue + '"]').show();
-               });
-           }
-       });
     }
-
 
 };
 

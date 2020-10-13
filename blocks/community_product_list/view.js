@@ -1,12 +1,4 @@
 $(function () {
-    $('.store-product-options select').change(function() {
-        let changedElement = $(this);
-        let pdb = $(this).closest('.store-product-list-item').find('form');
-        if(typeof variationData != 'undefined' && variationData[pID]) {
-            communityStore.filterSelections(pdb,changedElement);
-        }
-    });
-
     $('.store-product-list-block .store-product-options select, .store-product-list-block .store-product-options input').change(function () {
 
         let pdb = $(this).closest('.store-product-list-item').find('form');

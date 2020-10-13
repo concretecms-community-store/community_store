@@ -533,11 +533,13 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?> <?php echo t('Disabled (Catalog Mode)'); ?></label><br />
             </div>
 
-            <h3><?= t('Order notes'); ?></h3>
             <div class="form-group">
-                <label><?= $form->checkbox('orderNotesEnabled', '1', Config::get('community_store.orderNotesEnabled')); ?>
-                    <?= t('Enable order notes field'); ?>
-                </label>
+                <?= $form->label('orderNotesEnabled', t('Order notes')); ?>
+                  <br />
+                  <label><?= $form->checkbox('orderNotesEnabled', '1', Config::get('community_store.orderNotesEnabled')); ?>
+                      <?= t('Enable order notes field'); ?>
+                  </label>
+
             </div>
 
             <div class="form-group">

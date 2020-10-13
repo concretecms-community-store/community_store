@@ -1,22 +1,4 @@
 $(function () {
-
-    $($('.store-product-options select')[0]).change(function() {
-         let changedElement = $(this);
-         let pdb = $(this).closest('.store-product-block');
-         let pID = pdb.data('product-id');
-         if(typeof variationData != 'undefined' && variationData[pID]) {
-             communityStore.filterSelections(pdb,changedElement);
-         }
-    });
-
-    let firstElem = $($('.store-product-options select')[0]);
-    let pdb = firstElem.closest('.store-product-block');
-    let pID = pdb.data('product-id');
-    if(typeof variationData != 'undefined' && variationData[pID]) {
-        communityStore.filterSelections(pdb,firstElem);
-    }
-
-
     $('.store-product-block .store-product-options select, .store-product-block .store-product-options input').change(function () {
 
         let pdb = $(this).closest('.store-product-block');
