@@ -168,7 +168,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="store-checkout-notes"><?= t("Order notes") ?></label>
-                                    <?= $form->textarea('store-checkout-notes', '', array('placeholder'=>t('Order notes'))); ?>
+                                    <?= $form->textarea('store-checkout-notes', nl2br(h($notes)), array('placeholder'=>t('Order notes'))); ?>
                                 </div>
                             </div>
                         </div>
@@ -243,6 +243,13 @@ $csm = $app->make('cs/helper/multilingual');
                                 <label><?= t('Phone'); ?></label>
                                 <p class="store-summary-phone"><?= $customer->getValue('billing_phone'); ?></p>
                             </div>
+
+                           <?php if($orderNotesEnabled) { ?>
+                            <div class="col-sm-12" id="store-check-notes-container">
+                              <label><?= t('Order notes'); ?></label>
+                                <p class="store-summary-notes"></p>
+                            </div>
+                            <?php } ?>
 
                             <?php if ($orderChoicesEnabled) { ?>
 

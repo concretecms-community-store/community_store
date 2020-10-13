@@ -118,6 +118,8 @@ class Checkout extends PageController
         $this->set("defaultBillingCountry", $defaultBillingCountry);
         $this->set("defaultShippingCountry", $defaultShippingCountry);
 
+        $this->set('notes', Session::get('notes'));
+
         $statelist = ['' => ''];
         $statelist = array_merge($statelist, $this->app->make('helper/lists/states_provinces')->getStates());
         $this->set("states", $statelist);
@@ -243,6 +245,7 @@ class Checkout extends PageController
 
                 // unset the shipping type, as next order might be unshippable
                 Session::set('community_store.smID', '');
+                Session::set('notes', '');
                 return Redirect::to($order->getOrderCompleteDestination());
             }
         }
@@ -316,7 +319,7 @@ class Checkout extends PageController
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
                     $notes = $data['notes'];
-                    if($notes) Session::set('notes', $notes);
+                    Session::set('notes', $notes);
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
                     $company = Session::get('billing_company');
@@ -341,7 +344,6 @@ class Checkout extends PageController
                         $e = $taxHelper->validateVatNumber($vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
-
                             return;
                         }
                     }
@@ -359,6 +361,8 @@ class Checkout extends PageController
                     'address' => $address,
                     'error' => false,
                 ];
+
+                $results['notes'] = nl2br(h($notes));
 
                 // If updating shipping method we need vat number
                 if ('shipping' == $data['adrType']) {

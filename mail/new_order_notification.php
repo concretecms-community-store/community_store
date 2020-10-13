@@ -144,13 +144,8 @@ ob_start();
             <?php
             $shippingInstructions = $order->getShippingInstructions();
             if ($shippingInstructions) { ?>
-                <strong><?= t("Delivery Instructions") ?>: </strong><?= $shippingInstructions ?> <br />
+                <strong><?= t("Delivery Instructions") ?>: </strong><?= nl2br(h($shippingInstructions)) ?> <br />
             <?php } ?>
-        <?php } ?>
-        <?php
-        $notes = $order->getNotes();
-        if ($notes) { ?>
-            <strong><?= t("Order notes") ?>: </strong><?= $notes ?> <br />
         <?php } ?>
 
         <?php $applieddiscounts = $order->getAppliedDiscounts();
@@ -195,6 +190,12 @@ ob_start();
             <strong><?=  t('Free Order') ?></strong>
         <?php } ?>
     </p>
+
+    <?php
+    $notes = $order->getNotes();
+    if ($notes) { ?>
+      <strong><?= t("Order notes") ?>: </strong><?= nl2br(h($notes)) ?> <br />
+    <?php } ?>
 
     <p><a href="<?= Url::to('/dashboard/store/orders/order/'. $order->getOrderID());?>"><?=t('View this order within the Dashboard');?></a></p>
 

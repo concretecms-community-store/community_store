@@ -321,6 +321,12 @@ $dh = $app->make('helper/date');
 
         <?php
         } ?>
+
+        <?php
+        $notes = $order->getNotes();
+        if ($notes) { ?>
+          <p><strong><?= t("Order notes") ?>: </strong><?= nl2br(h($notes)) ?></p>
+        <?php } ?>
     </fieldset>
 
 

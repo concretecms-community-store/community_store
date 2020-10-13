@@ -662,7 +662,14 @@ $(document).ready(function() {
                     obj.find('.store-checkout-form-group-summary .store-summary-phone').html(response.phone);
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
-                    obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
+                    obj.find('.store-checkout-form-group-summary .store-summary-notes').html(response.notes);
+
+                    if (response.notes) {
+                        obj.find('#store-check-notes-container').show();
+                    } else {
+                        obj.find('#store-check-notes-container').hide();
+                    }
+
                     communityStore.nextPane(obj);
                     communityStore.refreshCartTotals();
 

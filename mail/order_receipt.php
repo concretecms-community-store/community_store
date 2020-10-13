@@ -205,16 +205,11 @@ ob_start();
             $shippingInstructions = $order->getShippingInstructions();
             if ($shippingInstructions) {
                 ?>
-                <strong><?= t("Delivery Instructions"); ?>: </strong><?= $shippingInstructions; ?> <br />
+                <strong><?= t("Delivery Instructions"); ?>: </strong><?= nl2br(h($shippingInstructions)); ?> <br />
             <?php
             } ?>
         <?php
         } ?>
-        <?php
-            $notes = $order->getNotes();
-            if ($notes) { ?>
-            <strong><?= t("Order notes"); ?>: </strong><?= $notes; ?> <br />
-        <?php } ?>
 
         <?php $applieddiscounts = $order->getAppliedDiscounts();
         if (!empty($applieddiscounts)) {
@@ -274,6 +269,12 @@ ob_start();
         <?php
         } ?>
     </p>
+
+    <?php
+    $notes = $order->getNotes();
+    if ($notes) { ?>
+      <strong><?= t("Order notes"); ?>: </strong><?= nl2br(h($notes)); ?> <br />
+    <?php } ?>
 
     <?php
 
