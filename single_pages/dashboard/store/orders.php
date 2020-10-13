@@ -175,6 +175,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                 echo "</ul>";
                             }
                             ?>
+
                         </td>
                         <td class="text-right"><?= Price::format($item->getPricePaid()) ?></td>
                         <td class="text-right"><?= $item->getQuantity() ?> <?= h($item->getQuantityLabel()); ?></td>
@@ -343,6 +344,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                     <th><?= t("Status") ?></th>
                     <th><?= t("Date") ?></th>
                     <th><?= t("User") ?></th>
+                    <th><?= t("Comment") ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -355,6 +357,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             <td><?= t($status->getOrderStatusName()) ?></td>
                             <td><?= $status->getDate() ?></td>
                             <td><?= $status->getUserName() ?></td>
+                            <td><?= $status->getOrderStatusComment() ?></td>
                         </tr>
                         <?php
                     }
@@ -370,9 +373,15 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
                     <form action="<?= Url::to("/dashboard/store/orders/updatestatus", $order->getOrderID()) ?>" method="post">
                         <?= $token->output('community_store'); ?>
-                        <div class="form-group">
-                            <?= $form->select("orderStatus", $orderStatuses, $order->getStatus()); ?>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?= $form->select("orderStatus", $orderStatuses, $order->getStatus()); ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?= $form->text("comment", ['placeholder' => 'Comment']); ?>
+                            </div>
                         </div>
+
                         <input type="submit" class="btn btn-default" value="<?= t("Update") ?>">
                     </form>
 

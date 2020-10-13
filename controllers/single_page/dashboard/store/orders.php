@@ -113,7 +113,8 @@ class Orders extends DashboardPageController
     {
         $data = $this->request->request->all();
         if ($this->token->validate('community_store')) {
-            Order::getByID($oID)->updateStatus($data['orderStatus']);
+            $comment = isset($data['comment']) ? $data['comment'] : null;
+            Order::getByID($oID)->updateStatus($data['orderStatus'], $comment);
             $this->flash('success', t('Fulfilment Status Updated'));
 
             return Redirect::to('/dashboard/store/orders/order', $oID);

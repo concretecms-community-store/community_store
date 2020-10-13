@@ -28,6 +28,9 @@ class OrderStatusHistory
      */
     protected $order;
 
+    /** @ORM\Column(type="text", nullable=true) */
+    protected $oshComment;
+
     /** @ORM\Column(type="text") */
     protected $oshStatus;
 
@@ -57,6 +60,16 @@ class OrderStatusHistory
     public function setOrderStatusHandle($oshStatus)
     {
         $this->oshStatus = $oshStatus;
+    }
+
+    public function getOrderStatusComment()
+    {
+        return $this->oshComment;
+    }
+
+    public function setOrderStatusComment($oshComment)
+    {
+        $this->oshComment = $oshComment;
     }
 
     public function getOrderStatus()
@@ -144,13 +157,13 @@ class OrderStatusHistory
         return $history;
     }
 
-    public static function updateOrderStatusHistory(Order $order, $statusHandle)
+    public static function updateOrderStatusHistory(Order $order, $statusHandle, $comment = null)
     {
         $history = self::getForOrder($order);
 
         if (empty($history) || $history[0]->getOrderStatusHandle() != $statusHandle) {
             $previousStatus = $order->getStatusHandle();
-            $order->updateStatus(self::recordStatusChange($order, $statusHandle));
+            $order->updateStatus(self::recordStatusChange($order, $statusHandle, $comment));
 
             if (!empty($history)) {
                 $event = new OrderEvent($order, $previousStatus);
@@ -159,7 +172,7 @@ class OrderStatusHistory
         }
     }
 
-    private static function recordStatusChange(Order $order, $statusHandle)
+    private static function recordStatusChange(Order $order, $statusHandle, $comment = null)
     {
         $user = new User();
         $orderStatusHistory = new self();
@@ -167,6 +180,7 @@ class OrderStatusHistory
         $orderStatusHistory->setUserID($user->getUserID());
         $orderStatusHistory->setDate(new \DateTime());
         $orderStatusHistory->setOrder($order);
+        $orderStatusHistory->setOrderStatusComment($comment);
         $orderStatusHistory->save();
 
         return $orderStatusHistory->getOrderStatusHandle();

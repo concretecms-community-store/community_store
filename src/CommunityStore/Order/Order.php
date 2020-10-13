@@ -1199,12 +1199,12 @@ class Order
         return "" != $this->getShippingMethodName();
     }
 
-    public function updateStatus($status = null)
+    public function updateStatus($status = null, $comment = null)
     {
         if ($status) {
-            OrderStatusHistory::updateOrderStatusHistory($this, $status);
+            OrderStatusHistory::updateOrderStatusHistory($this, $status, $comment);
         } else {
-            OrderStatusHistory::updateOrderStatusHistory($this, OrderStatus::getStartingStatus()->getHandle());
+            OrderStatusHistory::updateOrderStatusHistory($this, OrderStatus::getStartingStatus()->getHandle(), $comment);
         }
     }
 
