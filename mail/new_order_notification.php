@@ -18,6 +18,11 @@ ob_start();
     <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
     <html>
     <head>
+      <style>
+          body {
+              font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+          }
+      </style>
     </head>
     <body>
     <h2><?= t('An order has been placed') ?></h2>
