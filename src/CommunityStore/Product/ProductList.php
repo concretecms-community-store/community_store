@@ -341,6 +341,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         if ($this->sortBy == 'category') {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
+        } elseif ($this->sortBy == 'group') {
+            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
         } else {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
         }
