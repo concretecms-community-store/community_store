@@ -281,7 +281,17 @@ class Method extends Controller
             }
         }
 
-        return $availableMethods;
+		$event = new PaymentEvent('add');
+		$event->setMethods($availableMethods);
+
+		\Events::dispatch(PaymentEvent::PAYMENT_ON_AVAILABLE_METHODS_GET, $event);
+
+		$changed = $event->getChanged();
+		if ($changed){
+			$availableMethods = $event->getMethods();
+		}
+
+		return $availableMethods;
     }
 
 
