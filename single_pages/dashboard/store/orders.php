@@ -377,7 +377,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                         <?= $token->output('community_store'); ?>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <?= $form->select("orderStatus", $orderStatuses, $order->getStatus()); ?>
+                                <?= $form->select("orderStatus", $orderStatuses, $order->getStatusHandle()); ?>
                             </div>
                             <div class="form-group col-md-6">
                                 <?= $form->text("comment", ['placeholder' => 'Comment']); ?>
