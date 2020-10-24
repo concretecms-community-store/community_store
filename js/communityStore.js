@@ -69,15 +69,7 @@ var communityStore = {
         });
     },
 
-    addToCart: function(pID, type) {
-        var form;
-        if (type == 'modal') {
-            form = $('#store-form-add-to-cart-modal-' + pID);
-        } else if (type == 'list') {
-            form = $('#store-form-add-to-cart-list-' + pID);
-        } else {
-            form = $('#store-form-add-to-cart-' + pID);
-        }
+    addToCart: function(form) {
 
         var valid = true;
 
@@ -888,7 +880,7 @@ $(document).ready(function() {
             }
 
             if (add) {
-                communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
+                communityStore.addToCart($(this).closest('form')[0]);
                 e.preventDefault();
             }
         }
@@ -897,7 +889,7 @@ $(document).ready(function() {
 
     $(document).on('submit', '.store-product-block', function(e) {
         if ($(this).find('.store-btn-add-to-cart').length > 0) {
-            communityStore.addToCart($(this).data('product-id'), $(this).data('add-type'));
+            communityStore.addToCart($(this));
         }
         e.preventDefault();
     });
@@ -905,7 +897,7 @@ $(document).ready(function() {
     $(document).on('click', '.store-price-suggestion', function(e) {
         var productform = $(this).closest('form');
         productform.find('.store-product-customer-price-entry-field').val($(this).data('suggestion-value'));
-        communityStore.addToCart(productform.data('product-id'), $(this).data('add-type'));
+        communityStore.addToCart(productform);
         e.preventDefault();
     });
 

@@ -18,7 +18,7 @@ if (is_object($product) && $product->isActive()) {
     $product->setPriceAdjustment($variationData['priceAdjustment']);
     $isSellable = $product->isSellable(); ?>
 
-    <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID(); ?>"
+    <form class="store-product store-product-block"
           data-product-id="<?= $product->getID(); ?>" itemscope itemtype="http://schema.org/Product">
         <?= $token->output('community_store'); ?>
         <div class="row">

@@ -102,7 +102,7 @@ if (!$productsPerRow) {
         } ?>
 
             <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-                <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
+                <form data-product-id="<?= $product->getID(); ?>">
                     <?= $token->output('community_store'); ?>
                     <?php if ($showName && $displayMode != 'list') {
                         ?>
