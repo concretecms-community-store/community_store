@@ -1437,11 +1437,31 @@ $dh = $app->make('helper/date');
                                                     <?= $form->label('pfID[]', t('Primary Image')); ?>
                                                     <?php
                                                     $pvfID = null;
+                                                    $thumb = '';
+                                                    $title = '';
                                                     if ($variation) {
                                                         $pvfID = $variation->getVariationImageID();
+
+                                                        if ($pvfID) {
+                                                            $file = File::getByID($pvfID);
+
+                                                            if ($file) {
+                                                                $thumb = $file->getThumbnailURL('file_manager_listing');
+                                                                $title = $file->getTitle();
+                                                            }
+                                                        }
                                                     }
                                                     ?>
-                                                    <?= $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
+
+                                                  <div>
+                                                    <img title="<?= h($title); ?>" id="pvfIDImage-<?= $varid; ?>" src="<?= $thumb; ?>" style="height: 40px" class="<?= (!$thumb ? 'hidden' : ''); ?>" />
+                                                    <button class="btn btn-primary btn-selectfile" data-pvfid="<?= $varid; ?>" ><?= t('Choose Image'); ?></button>
+                                                    <button class="btn btn-danger btn-clearfile <?= (!$thumb ? 'hidden' : ''); ?>"
+                                                            data-pvfid="<?= $varid; ?>" ><i class="fa fa-times"></i></button>
+                                                    <input type="hidden" id="pvfID-<?= $varid; ?>" name="pvfID[<?= $varid; ?>]" value="<?= $pvfID; ?>" />
+                                                  </div>
+
+                                                    <?php // $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
                                                 </div>
                                             </div>
 
@@ -2038,3 +2058,43 @@ $dh = $app->make('helper/date');
         content: '';
     }
 </style>
+
+<script>
+
+    $(document).ready(function() {
+       $('.btn-selectfile').click(function(e){
+           e.preventDefault();
+           var pvfid  = $(this).data('pvfid');
+           var button = $(this);
+
+           ConcreteFileManager.launchDialog(function (data) {
+               ConcreteFileManager.getFileDetails(data.fID, function (r) {
+                       let template = document.createElement('template');
+                       template.innerHTML = r.files[0].resultsThumbnailImg;
+
+                       $('#pvfID-' + pvfid).val(data['fID']);
+                       $('#pvfIDImage-' + pvfid).prop('src',template.content.firstChild.src ).removeClass('hidden').prop('title', r.files[0].title);
+                       button.next().removeClass('hidden');
+               });
+           }, {
+             filters:
+                 [{"field":"type","type":1}]
+             }
+
+           );
+       }) ;
+
+       $('.btn-clearfile').click(function(e){
+            e.preventDefault();
+            var pvfid  = $(this).data('pvfid');
+
+            $('#pvfID-' + pvfid).val('');
+            $('#pvfIDImage-' + pvfid).prop('src','').addClass('hidden');
+            $(this).addClass('hidden');
+        });
+    });
+
+
+
+
+</script>
