@@ -551,6 +551,10 @@ var communityStore = {
 
                 var newfield = field.clone();
 
+                if (!newfield.prop('name')) {
+                    newfield.prop('name', "akID[" + akID + "][value]")
+                }
+
                 if (isselect) {
                     newfield.val(field.val());
                 }
