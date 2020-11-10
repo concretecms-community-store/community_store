@@ -790,6 +790,14 @@ class Product
         $this->pShippable = (!is_null($bool) ? $bool : false);
     }
 
+    public function setSeparateShip($bool)
+    {
+        $this->pSeperateShip = (!is_null($bool) ? $bool : false);
+    }
+
+    /**
+     * @deprecated
+     */
     public function setSeperateShip($bool)
     {
         $this->pSeperateShip = (!is_null($bool) ? $bool : false);
@@ -809,14 +817,30 @@ class Product
         $this->pPackageData = trim($pPackageData);
     }
 
+    public function getSeparateShip()
+    {
+        return $this->pSeperateShip;
+    }
+
+    /**
+     * @deprecated
+     */
     public function getSeperateShip()
     {
         return $this->pSeperateShip;
     }
 
+    public function isSeparateShip()
+    {
+        return (bool) $this->getSeparateShip();
+    }
+
+    /**
+     * @deprecated
+     */
     public function isSeperateShip()
     {
-        return (bool) $this->getSeperateShip();
+        return (bool) $this->getSeparateShip();
     }
 
     public function setWidth($width)
@@ -1046,7 +1070,7 @@ class Product
         $product->setWeight($data['pWeight']);
         $product->setPackageData($data['pPackageData']);
         $product->setNumberItems($data['pNumberItems']);
-        $product->setSeperateShip($data['pSeperateShip']);
+        $product->setSeparateShip($data['pSeperateShip']);
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
         $product->setCustomerPrice($data['pCustomerPrice']);
