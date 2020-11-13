@@ -5,6 +5,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Database;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
@@ -61,8 +62,7 @@ class Controller extends BlockController
 
     private function getAvailableAttributes()
     {
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-        $attrList = $productCategory->getList();
+        $attrList = ProductKey::getList();
         $availableAtts = [];
 
         foreach ($attrList as $ak) {
@@ -108,8 +108,6 @@ class Controller extends BlockController
     {
         $request = $this->app->make(Request::class);
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-        $attrList = $productCategory->getList();
         $attrLookup = [];
         $selectedarray = [];
         $groupfilters = [];
@@ -146,7 +144,7 @@ class Controller extends BlockController
 
         foreach ($selectedAttributeList as $attr) {
             if ('attr' == $attr['type']) {
-                $attributeKey = $productCategory->getByID($attr['akID']);
+                $attributeKey = ProductKey::getByID($attr['akID']);
 
                 if ($attributeKey) {
                     $attrList[] = $attributeKey;

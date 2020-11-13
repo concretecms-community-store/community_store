@@ -64,7 +64,6 @@ class Controller extends BlockController
                 $this->set('variationLookup', $variationLookup);
             }
 
-            $codediscounts = false;
             $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
             if (!empty($automaticdiscounts)) {

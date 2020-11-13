@@ -11,6 +11,7 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
@@ -393,8 +394,7 @@ class Products extends DashboardSitePageController
                 //save the product
                 $product = Product::saveProduct($data);
                 //save product attributes
-                $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-                $aks = $productCategory->getList();
+                $aks = ProductKey::getList();
 
                 foreach ($aks as $uak) {
                     $controller = $uak->getController();
