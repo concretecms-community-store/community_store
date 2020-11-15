@@ -212,7 +212,7 @@ if (in_array($controller->getAction(), $addViews)) {
                         <td><?= ($tr->isEnabled() ? t('Yes') : t('No')); ?></td>
                         <?php
                         $countries = $tr->getTaxCountry();
-                $locationInfo = array_filter([t('City') => $tr->getTaxCity(), t('Region') => $tr->getTaxState(), t2('Country', 'Countries', count($countries)) => implode(", ", $countries)]);
+                $locationInfo = array_filter([t('City') => $tr->getTaxCity(), t('Region') => $tr->getTaxState(), (count($countries) > 1 ? t('Countries') : t('Country')) => implode(", ", $countries)]);
                 foreach ($locationInfo as $key => $value) {
                     $locationInfo[$key] = $key . ': ' . $value;
                 } ?>
