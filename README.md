@@ -43,3 +43,7 @@ To provide translations, please register/login at the above link.
 ### User Account Order History
 Show a user's order history as a single page /account/orders:
 https://github.com/JeRoNZ/community_store_order_history
+
+### Omni Gallery for Community Store
+Show product and product list images in galleries, sliders and carousels.
+https://www.concrete5.org/marketplace/addons/omni-gallery-for-community-store
