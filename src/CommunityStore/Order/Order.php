@@ -88,6 +88,9 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingURL;
 
+    /** @ORM\Column(type="text",nullable=true) */
+    protected $sTrackingEstimatedDate;
+
     /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) */
     protected $oShippingTotal;
 
@@ -252,6 +255,16 @@ class Order
     public function setTrackingURL($sTrackingURL)
     {
         $this->sTrackingURL = $sTrackingURL;
+    }
+
+    public function getTrackingEstimatedDate()
+    {
+        return $this->sTrackingEstimatedDate;
+    }
+
+    public function setTrackingEstimatedDate($sTrackingEstimatedDate)
+    {
+        $this->sTrackingEstimatedDate = $sTrackingEstimatedDate;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -1299,8 +1312,24 @@ class Order
 
         foreach ($aks as $uak) {
             $controller = $uak->getController();
-            $value = $controller->createAttributeValueFromRequest();
-            $order->setAttribute($uak, $value);
+
+           $type = $uak->getAttributeTypeHandle();
+
+           if ($type == 'date_time') {
+               $app = Application::getFacadeApplication();
+               $dh = $app->make('helper/date');
+               $format = $dh->getPHPDatePattern();
+
+               $value = \DateTime::createFromFormat(
+                   $format,
+                   $controller->post()['value'],
+                   $dh->getTimezone('user')
+               );
+           } else {
+               $value = $controller->createAttributeValueFromRequest();
+           }
+
+           $order->setAttribute($uak, $value);
         }
     }
 
