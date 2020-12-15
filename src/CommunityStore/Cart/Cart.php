@@ -213,6 +213,18 @@ class Cart
             }
 
             self::$cart = $checkeditems;
+            $event = new CartEvent('get');
+            $event->setData([
+                'cart' => self::$cart,
+                'discounts' => self::$discounts
+            ]);
+            \Events::dispatch(CartEvent::CART_GET, $event);
+            if($event->updatedCart()) {
+                self::$cart = $event->updatedCart();
+            }
+            if($event->updatedDiscounts()) {
+                self::$discounts = $event->updatedDiscounts();
+            }
         }
 
         return self::$cart;
