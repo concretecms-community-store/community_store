@@ -47,3 +47,7 @@ https://github.com/JeRoNZ/community_store_order_history
 ### Omni Gallery for Community Store
 Show product and product list images in galleries, sliders and carousels.
 https://www.concrete5.org/marketplace/addons/omni-gallery-for-community-store
+
+### Community Store Import
+Import products via a CSV file.
+https://github.com/dbuonomo/community-store-import
