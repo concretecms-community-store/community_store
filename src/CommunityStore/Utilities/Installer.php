@@ -300,7 +300,7 @@ class Installer
         $categoryEntity = $service->getByHandle('user');
         $category = $categoryEntity->getController();
 
-        $attr = $category->getByHandle($handle);
+        $attr = $category->getAttributeKeyByHandle($handle);
 
         if (!is_object($attr)) {
             $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
@@ -381,7 +381,7 @@ class Installer
         $app = Application::getFacadeApplication();
         $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
 
-        $attr = $orderCategory->getByHandle($handle);
+        $attr = $orderCategory->getAttributeKeyByHandle($handle);
 
         if (!is_object($attr)) {
             $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
