@@ -106,6 +106,8 @@ class Orders extends DashboardPageController
             return Redirect::to('/dashboard/store/orders');
         }
 
+        $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
+        
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
     }
 

@@ -146,6 +146,11 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             <tr>
                 <th><strong><?= t("Product Name") ?></strong></th>
                 <th><?= t("Product Options") ?></th>
+
+                <?php if ($showFiles) { ?>
+                <th><?= t("File Uploads") ?></th>
+                <?php } ?>
+
                 <th class="text-right"><?= t("Price") ?></th>
                 <th class="text-right"><?= t("Quantity") ?></th>
                 <th class="text-right"><?= t("Subtotal") ?></th>
@@ -177,6 +182,24 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             ?>
 
                         </td>
+
+                        <?php if ($showFiles) { ?>
+                          <td>
+                              <?php
+                              $orderItemFiles = \Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile::getAllByOrderItem($item);
+
+                              foreach ($orderItemFiles as $orderItemFile) {
+                                  $file = $orderItemFile->getFile();
+
+                                  if ($file) {
+                                      echo '<a href="' . $file->getForceDownloadUrl() . '">' . $file->getTitle() . '</a><br />';
+                                  }
+                              }
+                              ?>
+
+                          </td>
+                        <?php } ?>
+
                         <td class="text-right"><?= Price::format($item->getPricePaid()) ?></td>
                         <td class="text-right"><?= $item->getQuantity() ?> <?= h($item->getQuantityLabel()); ?></td>
                         <td class="text-right"><?= Price::format($item->getSubTotal()) ?></td>
@@ -188,7 +211,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="4" class="text-right"><strong><?= t("Items Subtotal") ?>:</strong></td>
+                <td colspan="<?= $showFiles ? 5 : 4; ?>" class="text-right"><strong><?= t("Items Subtotal") ?>:</strong></td>
                 <td class="text-right"><?= Price::format($order->getSubTotal()) ?></td>
             </tr>
             </tfoot>
