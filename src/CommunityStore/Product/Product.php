@@ -1322,9 +1322,8 @@ class Product
         return $this->pSalePrice;
     }
 
-    public function getSalePrice()
+    public function getSalePrice($ignoreDiscounts = false)
     {
-
         $saleStart = $this->getSaleStart();
         $saleEnd = $this->getSaleEnd();
         $now = new \DateTime();
@@ -1353,8 +1352,28 @@ class Product
         $priceAdjustment = $this->getPriceAdjustment();
 
         if ($price && $priceAdjustment != 0) {
-            return $price + $priceAdjustment;
+            $price = $price + $priceAdjustment;
         }
+
+        if ($price) {
+            $discounts = $this->getDiscountRules();
+
+            if (!$ignoreDiscounts) {
+                if (!empty($discounts)) {
+                    foreach ($discounts as $discount) {
+                        if ($discount->getDiscountSalePrices()) {
+                            $discount->setApplicableTotal($price);
+                            $discountedprice = $discount->returnDiscountedPrice();
+    
+                            if (false !== $discountedprice) {
+                                $price = $discountedprice;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return $price;
     }
 

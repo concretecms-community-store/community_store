@@ -323,11 +323,13 @@ $currencySymbol = Config::get('community_store.symbol');
 
         <div class="form-group">
             <?= $form->label('drDeductFrom', t('Apply To'))?>
-            <?php
-            // commenting out following until product and product group matching is implemented
-            //echo $form->select('drDeductFrom', array('total' => t('Total, including shipping'), 'subtotal'=>'Items Sub-total', 'shipping' => t('Shipping'), 'product'=> t('Specific Product'), 'group'=> t('Products in Product Group')), $discountRule->drDeductFrom, array('class' => ''))?>
             <?= $form->select('drDeductFrom', array('subtotal'=>t('Items In Cart'), 'shipping' => t('Shipping')), $discountRule->getDeductFrom(), array('class' => ''))?>
         </div>
+
+      <div class="form-group">
+          <?= $form->label('drDiscountSalePrices', t('Discount Sale Prices'))?>
+          <?= $form->select('drDiscountSalePrices', array('0'=>t('No, sale prices will not be discounted'), '1' => t('Yes, sale prices will have discounts applied')), $discountRule->getDiscountSalePrices(), array('class' => ''))?>
+      </div>
 
         <div class="form-group">
             <?= $form->label('drTrigger', t('Apply'))?>
