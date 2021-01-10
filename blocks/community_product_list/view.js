@@ -78,6 +78,13 @@ $(function () {
                 }
             }
 
+            if (!isNaN(variation['maxCart'])) {
+                pdb.find('.store-product-qty').prop('max', variation['maxCart']);
+            } else {
+                pdb.find('.store-product-qty').removeProp('max');
+            }
+
+
         } else {
 
             if (priceHolder.data('original-price')) {

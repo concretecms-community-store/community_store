@@ -308,6 +308,27 @@ class ProductVariation
         return $this->pvQty;
     }
 
+    public function getMaxCartQty()
+    {
+        if ($this->isUnlimited()) {
+            $available = false;
+        } else {
+            $available = $this->getStockLevel();
+        }
+
+        $maxcart = $this->product->getMaxQty();
+
+        if ($maxcart > 0) {
+            if ($available > 0) {
+                return min($maxcart, $available);
+            } else {
+                return $maxcart;
+            }
+        } else {
+            return $available;
+        }
+    }
+
     /**
      * @deprecated
      */

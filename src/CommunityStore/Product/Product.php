@@ -1364,7 +1364,7 @@ class Product
                         if ($discount->getDiscountSalePrices()) {
                             $discount->setApplicableTotal($price);
                             $discountedprice = $discount->returnDiscountedPrice();
-    
+
                             if (false !== $discountedprice) {
                                 $price = $discountedprice;
                             }
@@ -1789,7 +1789,7 @@ class Product
         }
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->getVariationQty();
+            return $variation->getStockLevel();
         } else {
             return $this->pQty;
         }

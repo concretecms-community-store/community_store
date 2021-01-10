@@ -588,6 +588,7 @@ if (is_object($product) && $product->isActive()) {
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
                     'available' => $variation->isSellable(),
+                    'maxCart' => $variation->getMaxCartQty(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                     'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
