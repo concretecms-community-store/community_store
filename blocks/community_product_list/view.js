@@ -78,12 +78,16 @@ $(function () {
                 }
             }
 
-            if (!isNaN(variation['maxCart'])) {
-                pdb.find('.store-product-qty').prop('max', variation['maxCart']);
+            if (variation['maxCart'] !== false) {
+                var quantityField = pdb.find('.store-product-qty');
+                quantityField.prop('max', variation['maxCart']);
+
+                if (parseFloat(quantityField.val()) > parseFloat(variation['maxCart'])) {
+                    quantityField.val(parseFloat(variation['maxCart']));
+                }
             } else {
                 pdb.find('.store-product-qty').removeProp('max');
             }
-
 
         } else {
 
