@@ -3,7 +3,9 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
+use Concrete\Core\View\View;
 use Concrete\Core\Routing\Redirect;
+use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Page\Controller\PageController;
@@ -11,14 +13,14 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
-use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 
 class Checkout extends PageController
 {
@@ -46,6 +48,14 @@ class Checkout extends PageController
 
             $this->set('codeerror', $codeerror);
             $this->set('codesuccess', $codesuccess);
+
+            // if there was a code and it's valid we refresh
+            // if the code submitted was empty we also apply since any other existing code is removed
+            if (($codesuccess && !$codeerror) || (!$codesuccess && !$codeerror)) {
+                // A coupon was added or removed so let's refresh other carts on other open pages
+                $this->addFooterItem('<script type="text/javascript">$(function() { communityStore.broadcastCartRefresh({action: \'code\'}); });</script>');
+            }
+
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
@@ -151,7 +161,10 @@ class Checkout extends PageController
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
+
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
+
         $this->requireAsset('css', 'community-store');
         $this->addFooterItem("
             <script type=\"text/javascript\">
@@ -545,5 +558,18 @@ class Checkout extends PageController
         }
 
         Session::set('community_store.smID', false);
+    }
+
+    public function getCartList()
+    {
+        $cart = Cart::getCart();
+
+        if (Filesystem::exists(DIR_BASE . '/application/elements/cart_list.php')) {
+            View::element('cart_list', ['cart' => $cart]);
+        } else {
+            View::element('cart_list', ['cart' => $cart], 'community_store');
+        }
+
+        exit();
     }
 }

@@ -5,5 +5,8 @@
   "scripts": {
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
+  },
+  "dependencies": {
+    "sysend": "^1.3.4"
   }
 }

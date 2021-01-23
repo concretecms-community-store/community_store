@@ -34,6 +34,21 @@ var communityStore = {
         }
     },
 
+    updateCartList: function() {
+        var cartList = $(".store-checkout-cart-contents").find('#cart');
+
+        if (cartList.length) {
+            $.ajax({
+                url: CHECKOUTURL + '/getCartList' + TRAILINGSLASH,
+                cache: false,
+                dataType: 'text',
+                success: function (data) {
+                    cartList.replaceWith(data);
+                }
+            });
+        }
+    },
+
     waiting: function() {
         communityStore.openModal("<div class='store-spinner-container'><div class='store-spinner'></div></div>");
     },
@@ -197,11 +212,13 @@ var communityStore = {
             dataType: 'text',
             data: { clear: 1, ccm_token: ccm_token },
             success: function(data) {
+                communityStore.broadcastCartRefresh({
+                    action: 'clear',
+                });
                 if (modal) {
                     var res = jQuery.parseJSON(data);
                     communityStore.displayCart(res);
                 }
-
                 $(".store-utility-links .store-items-counter").text(0);
                 $(".store-utility-links .store-total-cart-amount").text("");
                 $(".store-utility-links").addClass('store-cart-empty');
@@ -209,12 +226,13 @@ var communityStore = {
         });
     },
 
-    refreshCartTotals: function(callback) {
+    refreshCartTotals: function (callback, nobroadcast) {
+        nobroadcast = nobroadcast || false;
         $.ajax({
             url: CARTURL + '/getCartSummary' + TRAILINGSLASH,
             cache: false,
             dataType: 'text',
-            success: function(response) {
+            success: function (response) {
                 var values = $.parseJSON(response);
                 var itemCount = values.itemCount;
                 var subTotal = values.subTotal;
@@ -223,7 +241,11 @@ var communityStore = {
                 var taxes = values.taxes;
                 var shippingTotal = values.shippingTotal;
                 var shippingTotalRaw = values.shippingTotalRaw;
-
+                if (!nobroadcast) {
+                    communityStore.broadcastCartRefresh({
+                        action: itemCount > 0 ? 'refresh' : 'clear'
+                    });
+                }
                 if (itemCount == 0) {
                     $(".store-utility-links .store-items-counter").text(0);
                     $(".store-utility-links .store-total-cart-amount").text("");
@@ -259,6 +281,12 @@ var communityStore = {
                 }
             }
         });
+    },
+
+    broadcastCartRefresh: function (message) {
+        if (window.sysend) {
+            sysend.broadcast('refresh_cart', message);
+        }
     },
 
     // checkout
@@ -579,7 +607,37 @@ var communityStore = {
 
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
+    if (window.sysend) {
+        sysend.on('refresh_cart', function (data) {
+            var isCart = window.location.href.indexOf(CARTURL);
+            var isCheckout = window.location.href.indexOf(CHECKOUTURL);
+            if (isCart !== -1 || (data.action == 'clear' && isCheckout !== -1)) {
+                // we are on the /cart page
+                // or we're on the /checkout page and we just cleared the cart
+                // so let's just reload
+                // Here we cannot use window.location.reload();
+                // otherwise it sends all post values again when on the /cart page
+                // and it might alter the cart in unpredictable ways
+                // Also if we're on /checkout and the cart is empty the controller would redirect to /cart
+                // so let's do it right away to avoid a redirect
+                window.location = isCart !== -1 ? window.location : CARTURL;
+            } else if (data.action == 'code' && isCheckout !== -1) {
+                // we're on the /checkout page and we just added or removed a coupon
+                // so let's just reload
+                window.location = window.location;
+            } else {
+                // Let's just update the utility links
+                if (isCheckout !== -1) {
+                    // we are on the /checkout page so we can update the cart table
+                    communityStore.updateCartList();
+                }
+                communityStore.refreshCartTotals(false, true);
+                communityStore.exitModal();
+            }
+        });
+    }
+
     if ($('.store-checkout-form-shell form').length > 0) {
         communityStore.updateBillingStates(true);
         if ($('#store-checkout-form-group-shipping').length > 0) {

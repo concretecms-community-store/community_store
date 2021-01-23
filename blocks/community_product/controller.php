@@ -106,6 +106,7 @@ class Controller extends BlockController
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);

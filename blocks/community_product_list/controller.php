@@ -254,6 +254,7 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
     }
