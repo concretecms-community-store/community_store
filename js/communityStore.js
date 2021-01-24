@@ -41,7 +41,7 @@ var communityStore = {
             $.ajax({
                 url: CHECKOUTURL + '/getCartList' + TRAILINGSLASH,
                 cache: false,
-                dataType: 'text'
+                dataType: 'text',
                 success: function (data) {
                     cartList.replaceWith(data);
                 }
