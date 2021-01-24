@@ -41,7 +41,7 @@ var communityStore = {
             $.ajax({
                 url: CHECKOUTURL + '/getCartList' + TRAILINGSLASH,
                 cache: false,
-                dataType: 'text',
+                dataType: 'text'
                 success: function (data) {
                     cartList.replaceWith(data);
                 }
@@ -243,7 +243,7 @@ var communityStore = {
                 var shippingTotalRaw = values.shippingTotalRaw;
                 if (!nobroadcast) {
                     communityStore.broadcastCartRefresh({
-                        action: itemCount > 0 ? 'refresh' : 'clear'
+                        action: itemCount > 0 ? 'refresh' : 'clear',
                     });
                 }
                 if (itemCount == 0) {

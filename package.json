@@ -7,6 +7,8 @@
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
+    "chartist": "^0.11.4",
+    "chartist-plugin-tooltips": "0.0.17",
     "sysend": "^1.3.4"
   }
 }
