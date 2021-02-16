@@ -152,14 +152,14 @@ class Controller extends Package
         $al->register('css', 'community-store', 'css/community-store.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store', 'js/communityStore.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('javascript', 'sysend', 'node_modules/sysend/sysend.js', ['version' => $this->npmPackages['sysend'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'sysend', 'js/sysend/sysend.js', ['version' => $this->npmPackages['sysend'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store-autocomplete', 'js/autoComplete.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-        $al->register('javascript', 'chartist', 'node_modules/chartist/dist/chartist.min.js', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('css', 'chartist', 'node_modules/chartist/dist/chartist.min.css', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-        $al->register('javascript', 'chartist-tooltip', 'node_modules/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('css', 'chartist-tooltip', 'node_modules/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'chartist', 'js/chartist/chartist.min.js', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist', 'css/chartist/chartist.min.css', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'chartist-tooltip', 'js/chartist/chartist-plugin-tooltip.min.js', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist-tooltip', 'css/chartist/chartist-plugin-tooltip.css', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->registerGroup('chartist',
             [
                 ['javascript', 'chartist'],
