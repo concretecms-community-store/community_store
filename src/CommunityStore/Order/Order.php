@@ -821,7 +821,7 @@ class Order
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
 
-                $mh = $app->make('helper/mail');
+                $mh = $app->make('mail');
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
                 $navhelper = $app->make('helper/navigation');
