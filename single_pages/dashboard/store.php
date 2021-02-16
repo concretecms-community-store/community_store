@@ -130,7 +130,7 @@ if ($taxCalc == 'extract') {
                         plugins: [
                             Chartist.plugins.tooltip(
                                 {
-                                    currency: '$'
+                                    currency: '<?= $symbol;?>'
                                 }
                             )
                         ],

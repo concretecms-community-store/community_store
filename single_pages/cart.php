@@ -204,7 +204,8 @@ if ($cart) {
 <?php } ?>
 
 
-<?php if ($cart && !empty($cart)) { ?>
+<?php
+if ($cart && !empty($cart)) { ?>
     <?php if ($discountsWithCodesExist && $cart) { ?>
         <h3><?= t('Enter Discount Code'); ?></h3>
         <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
