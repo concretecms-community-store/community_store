@@ -1683,7 +1683,7 @@ $dh = $app->make('helper/date');
                         <div class="form-group">
                             <?= $ak->render('label'); ?>
                             <div class="input">
-                                <?= $ak->render('composer', $caValue, true) ?>
+                                <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
                             </div>
                         </div>
                     <?php  }
@@ -1705,7 +1705,7 @@ $dh = $app->make('helper/date');
                         <div class="form-group">
                             <?= $ak->render('label'); ?>
                             <div class="input">
-                                <?= $ak->render('composer', $caValue, true) ?>
+                                <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
                             </div>
                         </div>
                  <?php   }
