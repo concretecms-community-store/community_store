@@ -1795,9 +1795,14 @@ $dh = $app->make('helper/date');
                         </div>
                         <label for="pageCID"><?= t('Associate with an existing page'); ?></label>
                         <?= $ps->selectPage('pageCID', ''); ?>
+                        <br/>
+                        <label class="control-label"><?= t('Or, create a new product page'); ?></label><br /><br />
+                    <?php } else { ?>
+                        <div class="form-group">
+                            <?= $form->checkbox('createPage', '1',  true) ?>
+                            <?= $form->label('createPage', t('Create Product Page In Sitemap')) ?>
+                        </div>
                     <?php } ?>
-                    <br/>
-                    <label class="control-label"><?= t('Or, create a new product page'); ?></label>
 
                     <?php if ($productPublishTarget) { ?>
                         <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
