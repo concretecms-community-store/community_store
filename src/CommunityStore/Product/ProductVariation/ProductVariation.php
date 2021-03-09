@@ -157,7 +157,11 @@ class ProductVariation
         $optionids = [];
 
         foreach ($options as $opt) {
-            $optionids[] = $opt->getOptionItem()->getID();
+            $optItem = $opt->getOptionItem();
+
+            if ($optItem) {
+                $optionids[] = $optItem->getID();
+            }
         }
 
         sort($optionids);
