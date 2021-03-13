@@ -199,6 +199,8 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
+
+
         $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
         foreach ($products as $key => $product) {

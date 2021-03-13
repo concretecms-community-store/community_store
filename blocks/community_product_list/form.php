@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="container-fluid">
 <div class="row">
 
     <div class="col-xs-6">
@@ -52,7 +53,7 @@
                     ], $sortOrder); ?>
             </div>
 
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showSortOption', 1, $showSortOption); ?>
                     <?= t('Display Sort Option'); ?>
@@ -113,25 +114,25 @@
                 <?php
             } ?>
 
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showFeatured', 1, $showFeatured); ?>
                     <?= t('Include Featured Only'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showSale', 1, $showSale); ?>
                     <?= t('Include On Sale Only'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showOutOfStock', 1, $showOutOfStock); ?>
                     <?= t('Include Out of Stock Products'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('enableExternalFiltering', 1, $enableExternalFiltering); ?>
                     <?= t('Enable Other Blocks to Filter This Product List'); ?>
@@ -150,7 +151,7 @@
                 <?= $form->number('maxProducts', $maxProducts, ['min' => '0', 'step' => '1', 'placeholder' => t('leave blank or 0 to list all matching products')]); ?>
             </div>
 
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showPagination', 1, $showPagination); ?>
                     <?= t('Display pagination interface if more products are available than are displayed.'); ?>
@@ -170,19 +171,19 @@
                 <?= $form->label('noProductsMessage', t("Display text when no products")); ?>
                 <?= $form->text('noProductsMessage', $noProductsMessage); ?>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showName', 1, $showName); ?>
                     <?= t('Display Name'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showPrice', 1, $showPrice); ?>
                     <?= t('Display Price'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                 <?= $form->checkbox('showAddToCart', 1, $showAddToCart); ?>
                 <?= t('Display Add To Cart Button'); ?>
@@ -192,19 +193,19 @@
                 <?= $form->label('btnText', t("Add To Cart Button Text")); ?>
                 <?= $form->text('btnText', $btnText, ['placeholder' => t("Defaults to: Add To Cart")]); ?>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
                     <?= t('Display Quantity Selector'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showDescription', 1, $showDescription); ?>
                     <?= t('Display Product Description'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?php if (0 != $showQuickViewLink) {
                 $showQuickViewLink = 1;
@@ -213,7 +214,7 @@
                     <?= t('Display Quickview Link (Modal Window)'); ?>
                 </label>
             </div>
-            <div class="form-group checkbox">
+            <div class="form-group form-check">
                 <label>
                     <?= $form->checkbox('showPageLink', 1, $showPageLink); ?>
                     <?= t('Display Link To Product Page'); ?>
@@ -226,6 +227,7 @@
         </fieldset>
     </div>
 </div>
+
 
 <?php
 if ($relatedProduct) {
