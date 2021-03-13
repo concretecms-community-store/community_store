@@ -19,7 +19,7 @@ use Whoops\Exception\ErrorException;
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
-    protected $appVersionRequired = '8.4';
+    protected $appVersionRequired = '8.5';
     protected $pkgVersion = '2.3.4';
 
     protected $npmPackages = [
