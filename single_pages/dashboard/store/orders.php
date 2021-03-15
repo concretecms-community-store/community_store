@@ -598,7 +598,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
     <form role="form" class="form-inline">
         <div class="row">
-            <div class="ccm-search-fields-submit col-xs-12 col-md-4">
+            <div class="ccm-search-fields-submit col-md-12 col-md-4">
                 <div class="form-group">
                     <div class="ccm-search-main-lookup-field">
                         <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders'), 'style'=>""]) ?>
@@ -606,7 +606,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                 </div>
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
             </div>
-            <div class="col-xs-12 col-md-8">
+            <div class="col-md-12 col-md-8">
                 <ul id="group-filters" class="nav nav-pills">
                 <?php
                 $keywordsparam = '';
@@ -628,9 +628,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             <?= $paymentMethod  != 'all' ? t('Payment Method: %s', $paymentMethodName) : t('Payment Method'); ?> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li <?= (!$paymentMethod ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
+                            <li class="nav-item <?= (!$paymentMethod ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
                             <?php foreach($enabledPaymentMethods as $pm){ ?>
-                                <li <?= ($paymentMethod == $pm->getName() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
+                                <li class="nav-item <?= ($paymentMethod == $pm->getName() ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
                             <?php } ?>
                         </ul>
                     </li>

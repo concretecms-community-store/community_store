@@ -16,7 +16,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <form action="<?= Url::to('/dashboard/store/settings/shipping', 'add_method') ?>" method="post">
         <?= $token->output('community_store'); ?>
         <div class="row">
-            <div class="col-xs-12 col-md-12">
+            <div class="col-md-12 col-md-12">
                 <?php //echo var_dump($smt);
                 ?>
                 <h3><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h3>
@@ -25,19 +25,19 @@ if (in_array($controller->getAction(), $addViews)) {
                     <?= $form->hidden('shippingMethodID', $sm->getID()); ?>
                 <?php } ?>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
+                    <div class="col-md-12 col-sm-6">
                         <div class="form-group">
                             <?= $form->label('methodName', t("Method Name")); ?>
                             <?= $form->text('methodName', is_object($sm) ? $sm->getName() : ''); ?>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-3">
+                    <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodEnabled', t("Enabled")); ?>
                             <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], is_object($sm) ? $sm->isEnabled() : ''); ?>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-3">
+                    <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodSortOrder', t("Sort Order")); ?>
                             <?= $form->text('methodSortOrder', is_object($sm) ? $sm->getSortOrder() : ''); ?>
@@ -84,7 +84,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 </script>
 
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
                         <div class="form-group">
                             <?= $form->label('methodDetails', t("Details")); ?>
                             <?php

@@ -297,7 +297,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?= $form->label('drPercentage', t('Percentage Discount'))?>
                         <div class="input-group">
                             <?= $form->text('drPercentage', $discountRule->getPercentage(), $fieldrequired)?>
-                            <div class="input-group-addon">%</div>
+                            <div class="input-group-addon input-group-text">%</div>
                         </div>
                     </div>
 
@@ -312,7 +312,7 @@ $currencySymbol = Config::get('community_store.symbol');
                     <div class="form-group col-md-8" id="valueinput" <?= $visibility; ?>>
                         <?= $form->label('drValue', t('Value'))?>
                         <div class="input-group">
-                            <div class="input-group-addon"><?= $currencySymbol; ?></div>
+                            <div class="input-group-addon input-group-text"><?= $currencySymbol; ?></div>
                             <?= $form->text('drValue', $discountRule->getValue(), $fieldrequired)?>
                         </div>
                     </div>

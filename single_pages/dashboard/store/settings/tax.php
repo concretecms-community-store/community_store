@@ -14,22 +14,22 @@ if (in_array($controller->getAction(), $addViews)) {
 <form id="settings-tax" action="<?=Url::to('/dashboard/store/settings/tax', 'add_rate'); ?>" method="post" data-states-utility="<?=Url::to('/helpers/stateprovince/getstates'); ?>">
     <?= $token->output('community_store'); ?>
     <div class="row">
-        <div class="col-xs-12 col-md-12">
+        <div class="col-md-12 col-md-12">
             <input type="hidden" name="taxRateID" value="<?= $taxRate->getTaxRateID(); ?>">
             <div class="row">
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-md-12 col-sm-4">
                             <div class="form-group">
                                 <?= $form->label('taxEnabled', t('Enable Tax Rate')); ?>
                                 <?= $form->select('taxEnabled', [false => t('No'), true => t('Yes')], $taxRate->isEnabled()); ?>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-md-12 col-sm-4">
                             <div class="form-group">
                                 <?= $form->label('taxLabel', t('Tax Label')); ?>
                                 <?= $form->text('taxLabel', $taxRate->getTaxLabel()); ?>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-md-12 col-sm-4">
                             <div class="form-group">
                                 <?= $form->label('taxRate', t('Tax Rate %')); ?>
                                 <div class="input-group">
@@ -238,7 +238,7 @@ if (in_array($controller->getAction(), $addViews)) {
 <form id="settings-tax" action="<?=Url::to('/dashboard/store/settings/tax', 'save_class'); ?>" method="post" data-states-utility="<?=Url::to('/helpers/stateprovince/getstates'); ?>">
     <?= $token->output('community_store'); ?>
     <div class="row">
-        <div class="col-xs-12 col-md-12">
+        <div class="col-md-12 col-md-12">
             <input type="hidden" name="taxClassID" value="<?= $tc->getID(); ?>">
             <div class="form-group">
                 <?= $form->label('taxClassName', t("Tax Class Name")); ?>

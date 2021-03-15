@@ -18,19 +18,19 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     <div class="row">
         <div class="col-sm-3">
 
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
-                <li><a href="#settings-tax" data-pane-toggle><?= t('Tax'); ?></a></li>
-                <li><a href="#settings-shipping" data-pane-toggle><?= t('Shipping'); ?></a></li>
-                <li><a href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
-                <li><a href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses'); ?></a></li>
-                <li><a href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts'); ?></a></li>
-                <li><a href="#settings-customers" data-pane-toggle><?= t('Customers'); ?></a></li>
-                <li><a href="#settings-products" data-pane-toggle><?= t('Products'); ?></a></li>
-                <li><a href="#settings-product-images" data-pane-toggle><?= t('Product Images'); ?></a></li>
-                <li><a href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
-                <li><a href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
-                <li><a href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
+            <ul class="nav nav-pills nav-stacked flex-column">
+                <li class="nav-item active"><a class="nav-link" href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-tax" data-pane-toggle><?= t('Tax'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-shipping" data-pane-toggle><?= t('Shipping'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-customers" data-pane-toggle><?= t('Customers'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-products" data-pane-toggle><?= t('Products'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-product-images" data-pane-toggle><?= t('Product Images'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
             </ul>
 
         </div>
@@ -102,14 +102,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <h3><?= t("Shipping Units"); ?></h3>
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('weightUnit', t('Units for Weight')); ?>
                         <?php  ?>
                         <?= $form->select('weightUnit', ['oz' => t('oz'), 'lb' => t('lb'), 'kg' => t('kg'), 'g' => t('g')], Config::get('community_store.weightUnit')); ?>
                     </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('sizeUnit', t('Units for Size')); ?>
                         <?php  ?>
@@ -119,7 +119,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <label><?= $form->checkbox('deliveryInstructions', '1', Config::get('community_store.deliveryInstructions') ? '1' : '0'); ?>
                         <?= t('Include Delivery Instructions field in checkout'); ?></label>
                 </div>
@@ -127,7 +127,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <h3><?= t("Multiple Packages Support"); ?></h3>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <label><?= $form->checkbox('multiplePackages', '1', Config::get('community_store.multiplePackages') ? '1' : '0'); ?>
                         <?= t('Enable Package(s) Data fields'); ?></label>
                     <span class="help-block"> <?= t('Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods'); ?></span>
@@ -310,21 +310,21 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h4><?= t('Emails Sent From'); ?></h4>
 
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('emailAlert', t('From Email')); ?>
                         <?= $form->email('emailAlert', Config::get('community_store.emailalerts'), ['placeholder' => t('From Email Address')]); ?>
                     </div>
                 </div>
 
-                <div class="col-xs-6">
+                <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('emailAlertName', t('From Name')); ?>
                         <?= $form->text('emailAlertName', Config::get('community_store.emailalertsname'), ['placeholder' => t('From Name')]); ?>
                     </div>
                 </div>
 
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label><?= $form->checkbox('setReplyTo', true, Config::get('community_store.setReplyTo')); ?>
                             <?= t('Set Reply-To on notification emails to the email address of the customer'); ?>
@@ -354,7 +354,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         <div class="col-sm-9 store-pane" id="settings-customers">
             <h3><?= t("Customers"); ?></h3>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <div class="form-group">
                         <?= $form->label('customerGroup', t('Customers User Group')); ?>
                         <?= $form->select('customerGroup', $groupList, $customerGroup, [  'placeholder' => t('Select a Group')]); ?>
@@ -601,14 +601,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Billing Details'); ?></h3>
 
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <label><?= $form->checkbox('noBillingSave', '1', Config::get('community_store.noBillingSave') ? '1' : '0'); ?>
                         <?= t('Do not save billing details to user on order'); ?></label>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <div class="ccm-search-field-content">
                         <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
                         <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
@@ -619,14 +619,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <h3><?= t('Shipping Details'); ?></h3>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <label><?= $form->checkbox('noShippingSave', '1', Config::get('community_store.noShippingSave') ? '1' : '0'); ?>
                         <?= t('Do not save shipping details to user on order'); ?></label>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12">
                     <div class="ccm-search-field-content">
                         <?= $form->label('noShippingSaveGroups', t('For users in groups')); ?>
                         <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>

@@ -36,7 +36,7 @@ if ($taxCalc == 'extract') {
 
 
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-sm-6">
         <div class="panel-sale panel panel-default">
             <?php $ts = $sr->getTodaysSales(); ?>
             <div class="panel-heading">
@@ -44,18 +44,18 @@ if ($taxCalc == 'extract') {
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 stat">
+                    <div class="col-sm-6 stat">
                         <strong><?= t('Total') ?></strong> <?= Price::format($ts['total']) ?>
                     </div>
-                    <div class="col-xs-12 col-sm-6 stat">
+                    <div class="col-sm-6 stat">
                         <strong><?= t('Products') ?></strong> <?= Price::format($ts['productTotal']) ?>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 stat">
+                    <div class="col-sm-6 stat">
                         <strong><?= t('Tax') ?> <?= $extraTaxLable ?></strong> <?= Price::format($ts[$taxValue]) ?>
                     </div>
-                    <div class="col-xs-12 col-sm-6 stat">
+                    <div class="col-sm-6 stat">
                         <strong><?= t('Shipping') ?></strong> <?= Price::format($ts['shippingTotal']) ?>
                     </div>
                 </div>
@@ -142,7 +142,7 @@ if ($taxCalc == 'extract') {
             });
         </script>
     </div>
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-sm-6">
 
         <h4><?= t("Orders") ?></h4>
 
@@ -193,13 +193,13 @@ if ($taxCalc == 'extract') {
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <hr>
 
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <h4><?= t("Recent Orders") ?></h4>
 
         <?php

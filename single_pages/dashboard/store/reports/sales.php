@@ -19,7 +19,7 @@ if ($taxCalc == 'extract') {
 ?>
 
 <div class="row">
-	<div class="col-xs-12 col-md-4">
+	<div class="col-md-12 col-md-4">
 		<div class="panel-sale panel panel-default">
 			<?php $ts = SalesReport::getTodaysSales(); ?>
 			<div class="panel-heading">
@@ -27,25 +27,25 @@ if ($taxCalc == 'extract') {
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Total')?> </strong> <?=Price::format($ts['total'])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Products')?></strong> <?=Price::format($ts['productTotal'])?>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($ts[$taxValue])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Shipping')?></strong> <?=Price::format($ts['shippingTotal'])?>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12 col-md-4">
+	<div class="col-md-12 col-md-4">
 		<div class="panel-sale panel panel-default">
 			<?php $td = SalesReport::getThirtyDays(); ?>
 			<div class="panel-heading">
@@ -53,25 +53,25 @@ if ($taxCalc == 'extract') {
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Total')?></strong> <?=Price::format($td['total'])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Products')?></strong> <?=Price::format($td['productTotal'])?>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($td[$taxValue])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Shipping')?></strong> <?=Price::format($td['shippingTotal'])?>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12 col-md-4">
+	<div class="col-md-12 col-md-4">
 		<div class="panel-sale panel panel-default">
 			<?php $ytd = SalesReport::getYearToDate(); ?>
 			<div class="panel-heading">
@@ -79,18 +79,18 @@ if ($taxCalc == 'extract') {
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Total')?></strong> <?=Price::format($ytd['total'])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Products')?></strong> <?=Price::format($ytd['productTotal'])?>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($ytd[$taxValue])?>
 					</div>
-					<div class="col-xs-12 col-sm-6 stat">
+					<div class="col-md-12 col-sm-6 stat">
 						<strong><?= t('Shipping')?></strong> <?=Price::format($ytd['shippingTotal'])?>
 					</div>
 				</div>
@@ -114,7 +114,7 @@ $(function(){
                 new DateTime(date('Y-M'))
             );
         ?>
-	    
+
 	    labels: [ <?php for($i=0;$i<6;$i++){
                 if($i!=5){
                     echo "'".$months[$i]->format("M")."',";
@@ -125,7 +125,7 @@ $(function(){
 		// Our series array that contains series objects or in this case series data arrays
 	    series: [
 	    	[
-				<?php 
+				<?php
                     for($i=0;$i<6;$i++){
                         $report = SalesReport::getByMonth($months[$i]->format('Y-M'));
                         if($i==5){
@@ -134,10 +134,10 @@ $(function(){
                             echo "{meta: '".t('Total')."', value: ".$report['total']."},";
                         }
                     }
-                ?>				
+                ?>
 			],
 			[
-				<?php 
+				<?php
                     for($i=0;$i<6;$i++){
                         $report = SalesReport::getByMonth($months[$i]->format('Y-M'));
                         if($i==5){
@@ -146,10 +146,10 @@ $(function(){
                             echo "{meta: '".t('Products')."', value: ".$report['productTotal']."},";
                         }
                     }
-                ?>				
+                ?>
 			],
 			[
-				<?php 
+				<?php
                     for($i=0;$i<6;$i++){
                         $report = SalesReport::getByMonth($months[$i]->format('Y-M'));
                         if($i==5){
@@ -158,7 +158,7 @@ $(function(){
                             echo "{meta: '".t('Shipping')."', value: ".$report['shippingTotal']."},";
                         }
                     }
-                ?>				
+                ?>
 			]
 	  	]
 	},
@@ -175,17 +175,17 @@ $(function(){
   		lineSmooth: Chartist.Interpolation.none()
 	}
 	);
-	
+
 
 });
 </script>
 
 <div class="well">
 	<div class="row">
-		<div class="col-xs-12 col-sm-4">
+		<div class="col-md-12 col-sm-4">
 			<h3><?= t("View Orders by Date")?></h3>
 		</div>
-		<div class="col-xs-12 col-sm-8 text-right">
+		<div class="col-md-12 col-sm-8 text-right">
 			<form action="<?=Url::to('/dashboard/store/reports/sales')?>" method="post" class="form form-inline order-report-form">
 				<div class="form-group">
 					<?= $app->make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
