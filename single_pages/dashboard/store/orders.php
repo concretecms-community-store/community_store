@@ -407,7 +407,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             </div>
                         </div>
 
-                        <input type="submit" class="btn btn-default" value="<?= t("Update") ?>">
+                        <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Update") ?>">
                     </form>
 
                 </div>
@@ -424,7 +424,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             <label for="email"><?= t('Email'); ?></label>
                             <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?= Config::get('community_store.notificationemails'); ?>"/>
                         </div>
-                        <input type="submit" class="btn btn-default" value="<?= t("Resend Notification") ?>">
+                        <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Resend Notification") ?>">
                     </form>
                 </div>
             </div>
@@ -522,7 +522,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                         <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
                                         <input type="text" class="form-control ccm-input-text" id="transactionReference" name="transactionReference"/>
                                     </div>
-                                    <input type="submit" class="btn btn-default" value="<?= t("Mark Paid") ?>">
+                                    <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Mark Paid") ?>">
                                 </form>
                             <?php } elseif (!$refunded) { ?>
                                 <form action="<?= Url::to("/dashboard/store/orders/markrefunded", $order->getOrderID()) ?>" method="post">
@@ -531,7 +531,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                         <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
                                         <input type="text" class="form-control ccm-input-text" id="oRefundReason" name="oRefundReason"/>
                                     </div>
-                                    <input type="submit" class="btn btn-default" value="<?= t("Mark Refunded") ?>">
+                                    <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Mark Refunded") ?>">
                                 </form>
                             <?php } ?>
 

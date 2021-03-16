@@ -11,7 +11,7 @@ $task = $controller->getAction();
 
 
     <div class="ccm-dashboard-header-buttons">
-        <form class="pull-right" method="get" id="duplicate" action="<?= Url::to(' /dashboard/store/reports/products/sheet', $pID) ?>">
+        <form class="pull-right float-right" method="get" id="duplicate" action="<?= Url::to(' /dashboard/store/reports/products/sheet', $pID) ?>">
             <button class="btn btn-primary"><?= t("View Product Price/Shipping Sheet") ?></button>
         </form>
     </div>
@@ -61,7 +61,7 @@ $task = $controller->getAction();
 
         <div class="row">
             <div class="col-md-12">
-                <button type="submit" class="btn btn-default"><?= t('Filter Results') ?></button>
+                <button type="submit" class="btn btn-default btn-secondary"><?= t('Filter Results') ?></button>
             </div>
         </div>
     </form>

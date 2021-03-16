@@ -33,7 +33,7 @@ $currencySymbol = Config::get('community_store.symbol');
                 </div>
 
             </div>
-            <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
+            <button type="submit" class="btn btn-default btn-secondary"><?= t('Search') ?></button>
         </div>
     </form>
 
@@ -348,7 +348,7 @@ $currencySymbol = Config::get('community_store.symbol');
         </div>
 
         <?php if ($discountRule->getID() && $discountRule->getTrigger() == 'code') { ?>
-            <p><a class="btn btn-default btn-sm" href="<?= Url::to('/dashboard/store/discounts/codes/', $discountRule->getID()); ?>"><?= t('Manage Codes'); ?></a></p><br>
+            <p><a class="btn btn-default btn-secondary btn-sm" href="<?= Url::to('/dashboard/store/discounts/codes/', $discountRule->getID()); ?>"><?= t('Manage Codes'); ?></a></p><br>
        <?php } ?>
 
 <!--       <field name="drCurrency" type="C" size="20"></field>-->
@@ -450,8 +450,8 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : ''))?>" class="btn btn-default"><?= t('Cancel / View All Discount Rules')?></a>
-            <button class="pull-right btn btn-primary" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
+            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : ''))?>" class="btn btn-default btn-secondary"><?= t('Cancel / View All Discount Rules')?></a>
+            <button class="pull-right btn btn-primary float-right" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
 
@@ -536,7 +536,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
 <?php if (in_array($controller->getAction(), $codeViews)){ ?>
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= Url::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default"><?= t("Edit Discount Rule")?></a>
+    <a href="<?= Url::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default btn-secondary"><?= t("Edit Discount Rule")?></a>
 </div>
 
 <?php if (isset($failedcodes) && count($failedcodes) > 0 ) { ?>
@@ -574,7 +574,7 @@ $currencySymbol = Config::get('community_store.symbol');
                         <?php if ($code->isUsed()) { ?>
                             <tr>
                                 <td><del><?= $code->getCode(); ?></del></td>
-                                <td><a class="btn btn-default btn-xs" href="<?= Url::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
+                                <td><a class="btn btn-default btn-secondary btn-xs" href="<?= Url::to('/dashboard/store/orders/order/', $code->getOID()); ?>"><?= t('View Order'); ?></a></td>
                                 <td></td>
                             </tr>
                         <?php } else { ?>
@@ -631,7 +631,7 @@ $currencySymbol = Config::get('community_store.symbol');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default"><?= t('Return to Discount Rules')?></a>
+            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary"><?= t('Return to Discount Rules')?></a>
         </div>
     </div>
 

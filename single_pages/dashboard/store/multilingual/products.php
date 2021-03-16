@@ -614,8 +614,8 @@ $localecount = count($locales);
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>"
-               class="btn btn-default pull-left"><?= t("Cancel") ?></a>
-            <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
+               class="btn btn-default btn-secondary pull-left"><?= t("Cancel") ?></a>
+            <button class="pull-right btn btn-success float-right" type="submit"><?= t('Save Product Translation') ?></button>
         </div>
     </div>
     <?php } ?>

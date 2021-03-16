@@ -18,7 +18,7 @@ if ($controller->getAction() == 'add' ||
     <?php if ($mID > 0) { ?>
         <div class="ccm-dashboard-header-buttons">
 
-            <form class="pull-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/manufacturers/delete/', $mID) ?>">
+            <form class="pull-right float-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/manufacturers/delete/', $mID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
                 <button class="btn btn-danger"><?= t("Delete Manufacturer") ?></button>
             </form>
@@ -62,11 +62,11 @@ if ($controller->getAction() == 'add' ||
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo URL::to('/dashboard/store/manufacturers') ?>"
-                   class="btn btn-default pull-left"><?= t('Cancel') ?></a>
+                   class="btn btn-default btn-secondary pull-left float-left"><?= t('Cancel') ?></a>
                 <?php if (isset($mID)) { ?>
-                    <?php echo $form->submit('save', t('Update'), ['class' => 'btn btn-primary pull-right']) ?>
+                    <?php echo $form->submit('save', t('Update'), ['class' => 'btn btn-primary pull-right float-right']) ?>
                 <?php } else { ?>
-                    <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary pull-right']) ?>
+                    <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary pull-right float-right']) ?>
                 <?php } ?>
             </div>
         </div>

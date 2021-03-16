@@ -129,8 +129,8 @@ if (in_array($controller->getAction(), $addViews)) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default pull-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
+            <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default  btn-secondary pull-left float-left"><?= t("Cancel / View Taxes"); ?></a>
+            <button class="pull-right btn btn-primary float-right" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
         </div>
     </div>
 
@@ -142,7 +142,7 @@ if (in_array($controller->getAction(), $addViews)) {
 <div class="ccm-dashboard-header-buttons">
     <a href="<?= Url::to('/dashboard/store/settings/tax', 'add'); ?>" class="btn btn-primary"><?= t("Add Tax Rate"); ?></a>
     <a href="<?= Url::to('/dashboard/store/settings/tax', 'add_class'); ?>" class="btn btn-primary"><?= t("Add Tax Class"); ?></a>
-    <a href="<?= Url::to('/dashboard/store/settings'); ?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings"); ?></a>
+    <a href="<?= Url::to('/dashboard/store/settings'); ?>" class="btn btn-default btn-secondary"><i class="fa fa-gear"></i> <?= t("General Settings"); ?></a>
 </div>
 
 <div class="dashboard-tax-rates">
@@ -176,7 +176,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 } ?>
                         </td>
                         <td class="text-right">
-                            <a href="<?=Url::to('/dashboard/store/settings/tax/edit_class', $tc->getID()); ?>" class="btn btn-default"><?= t("Edit"); ?></a>
+                            <a href="<?=Url::to('/dashboard/store/settings/tax/edit_class', $tc->getID()); ?>" class="btn btn-default btn-secondary"><?= t("Edit"); ?></a>
                             <?php if (!$tc->isLocked()) {
                     ?>
                             <a href="<?=Url::to('/dashboard/store/settings/tax/delete_class', $tc->getID()); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
@@ -218,7 +218,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 } ?>
                         <td><?= implode(", ", $locationInfo); ?></td>
                         <td class="text-right">
-        					<a href="<?=Url::to('/dashboard/store/settings/tax/edit', $tr->getTaxRateID()); ?>" class="btn btn-default"><?= t("Edit"); ?></a>
+        					<a href="<?=Url::to('/dashboard/store/settings/tax/edit', $tr->getTaxRateID()); ?>" class="btn btn-default btn-secondary"><?= t("Edit"); ?></a>
         					<a href="<?=Url::to('/dashboard/store/settings/tax/delete', $tr->getTaxRateID()); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
         				</td>
         			</tr>
@@ -290,8 +290,8 @@ if (in_array($controller->getAction(), $addViews)) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default pull-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
+            <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel / View Taxes"); ?></a>
+            <button class="pull-right float-right btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
         </div>
     </div>
 

@@ -215,7 +215,7 @@ $(function(){
 				<td><?=Price::format($ordersTotals['shippingTotal'])?></td>
 				<td><?=Price::format($ordersTotals[$taxValue])?></td>
 				<td><?=Price::format($ordersTotals['total'])?></td>
-				<td><a href="<?=Url::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default"><?= t('Export to CSV')?></a></td>
+				<td><a href="<?=Url::to('/dashboard/store/reports/sales/export?fromDate='.$dateFrom.'&toDate='.$dateTo)?>" class="btn btn-default btn-secondary"><?= t('Export to CSV')?></a></td>
 			</tr>
 		</tbody>
 	</table>

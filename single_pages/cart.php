@@ -140,7 +140,7 @@ if ($cart) {
                         <td class="store-cart-product-qty text-right">
                             <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
-                            <span class="store-qty-container pull-right
+                            <span class="store-qty-container pull-right float-right
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>
                                 ">
@@ -157,7 +157,7 @@ if ($cart) {
 
                             <?php } else { ?>
                                 <?php if ($quantityLabel) { ?>
-                                    <div  class="store-product-qty form-control text-right pull-right form-control-static">1</div>
+                                    <div  class="store-product-qty form-control text-right pull-right float-right form-control-static">1</div>
                                 <?php } else { ?>
                                     1
                                 <?php } ?>
@@ -172,7 +172,7 @@ if ($cart) {
                         <td class="text-right">
                             <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
-                                        class="fa fa-remove"></i><?php //echo t("Remove")
+                                        class="fa fa-remove fa-times"></i><?php //echo t("Remove")
                                 ?></a>
                         </td>
                     </tr>
@@ -214,7 +214,7 @@ if ($cart && !empty($cart)) { ?>
                 <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
             </div>
             <input type="hidden" name="action" value="code"/>
-            <button type="submit" class="store-cart-page-discount-apply btn btn-default"><?= t('Apply'); ?></button>
+            <button type="submit" class="store-cart-page-discount-apply btn btn-default btn-secondary"><?= t('Apply'); ?></button>
         </form>
     <?php } ?>
 
@@ -271,7 +271,7 @@ if ($cart && !empty($cart)) { ?>
         <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>
 
-    <div class="store-cart-page-cart-links pull-right">
+    <div class="store-cart-page-cart-links pull-right float-right">
         <a class="store-btn-cart-page-checkout btn btn-success"
            href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>

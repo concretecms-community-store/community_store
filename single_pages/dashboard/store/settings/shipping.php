@@ -108,7 +108,7 @@ if (in_array($controller->getAction(), $addViews)) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-primary" type="submit"><?= t('%s Shipping Method', $task) ?></button>
+                <button class="pull-right btn btn-primary float-right" type="submit"><?= t('%s Shipping Method', $task) ?></button>
             </div>
         </div>
 
@@ -130,7 +130,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 </ul>
             </div>
         <?php } ?>
-        <a href="<?= Url::to('/dashboard/store/settings#settings-shipping') ?>" class="btn btn-default"><i class="fa fa-gear"></i> <?= t("General Settings") ?></a>
+        <a href="<?= Url::to('/dashboard/store/settings#settings-shipping') ?>" class="btn btn-default btn-secondary"><i class="fa fa-gear"></i> <?= t("General Settings") ?></a>
     </div>
 
     <div class="dashboard-shipping-methods">
@@ -196,9 +196,9 @@ if (in_array($controller->getAction(), $addViews)) {
                                     <td><?= $method->getSortOrder() ?></td>
                                     <td class="text-right">
                                         <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
-                                           class="btn btn-default"><?= t("Edit") ?></a>
+                                           class="btn btn-default btn-secondary"><?= t("Edit") ?></a>
                                         <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
-                                            <a href="" class="btn btn-default"><?= t("Disable") ?></a>
+                                            <a href="" class="btn btn-default btn-secondary"><?= t("Disable") ?></a>
                                         <?php } else { ?>
                                             <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
                                                class="btn btn-danger"><?= t("Delete") ?></a>

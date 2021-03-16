@@ -190,7 +190,7 @@ if ($cartMode) {
                                 </span>
                             </td>
                             <td class="store-cart-list-remove-button col-xs-2 text-right">
-                                <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove"></i><?php ///echo t("Remove")?></a>
+                                <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove fa-times"></i><?php ///echo t("Remove")?></a>
                             </td>
 
                         </tr>
@@ -248,12 +248,12 @@ if ($cartMode) {
 
 
         <div class="store-cart-page-cart-links">
-            <p class="pull-left">
-                <a class="store-btn-cart-modal-continue btn btn-default" href="#"><?= t("Continue Shopping")?></a>
+            <p class="pull-left float-left">
+                <a class="store-btn-cart-modal-continue btn btn-default btn-secondary" href="#"><?= t("Continue Shopping")?></a>
                 <?php if ($cart  && !empty($cart)) { ?>
                 <a class="store-btn-cart-modal-clear btn btn-warning" href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right"><a class="store-btn-cart-modal-checkout btn  btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right float-right"><a class="store-btn-cart-modal-checkout btn btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

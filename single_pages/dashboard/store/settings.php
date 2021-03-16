@@ -673,7 +673,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit"><?= t('Save'); ?></button>
+            <button class="pull-right btn btn-primary float-right" type="submit"><?= t('Save'); ?></button>
         </div>
     </div>
 

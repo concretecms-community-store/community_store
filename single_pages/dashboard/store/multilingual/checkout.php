@@ -482,7 +482,7 @@ $editor = $app->make('editor');
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
 
-                    <button class="pull-right btn btn-success" type="submit"><?= t('Save Translations') ?></button>
+                    <button class="pull-right btn btn-success float-right" type="submit"><?= t('Save Translations') ?></button>
                 </div>
             </div>
 
