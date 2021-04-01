@@ -102,6 +102,9 @@ if (!$productsPerRow) {
         } ?>
 
             <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
+
+
+
                 <form data-product-id="<?= $product->getID(); ?>">
                     <?= $token->output('community_store'); ?>
                     <?php if ($showName && $displayMode != 'list') {
@@ -109,36 +112,58 @@ if (!$productsPerRow) {
                         <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
                         <?php
                     } ?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                    <div class="row">
+                    <?php } ?>
+
                     <?php
                     $imgObj = $product->getImageObj();
                     if (is_object($imgObj)) {
                         $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
-                        <p class="<?= $displayMode != 'list' ? 'store-product-list-thumbnail' : 'col-md-3 col-xs-6'; ?>">
-                            <?php if ($showQuickViewLink) {
-                                ?>
-                                <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
+
+                        <?php if ( $displayMode == 'list') { ?>
+                            <div class="col-md-3 col-xs-6">
+                        <?php } ?>
+
+                            <p class="store-product-list-thumbnail">
+                                <?php if ($showQuickViewLink) {
+                                    ?>
+                                    <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
+                                        <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
+                                    </a>
+                                    <?php
+                                } elseif ($showPageLink && $productPage) {
+                                    ?>
+                                    <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
+                                        <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
+                                    </a>
+                                    <?php
+                                } else {
+                                    ?>
                                     <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                </a>
-                                <?php
-                            } elseif ($showPageLink && $productPage) {
-                                ?>
-                                <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
-                                    <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                </a>
-                                <?php
-                            } else {
-                                ?>
-                                <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                <?php
-                            } ?>
-                        </p>
+                                    <?php
+                                } ?>
+                            </p>
+
+                        <?php if ( $displayMode == 'list') { ?>
+                            </div>
+                        <?php } ?>
+
                         <?php
                     }// if is_obj?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                        <div class="col-md-9 col-xs-6">
+                    <?php } ?>
+
                     <?php if ($showName && $displayMode == 'list') {
                         ?>
+
                         <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
                         <?php
                     } ?>
+
                     <?php if ($showPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
@@ -208,17 +233,18 @@ if (!$productsPerRow) {
                         <?php
                     } ?>
 
-
                     <?php if ($showDescription) {
                         ?>
                         <div class="store-product-list-description"><?= $csm->t($product->getDesc(), 'productDescription', $product->getID()); ?></div>
                         <?php
                     } ?>
+
                     <?php if ($showPageLink && $productPage) {
                         ?>
                         <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
                         <?php
                     } ?>
+
                     <?php if ($showAddToCart) {
                         ?>
                     <div class="store-product-options">
@@ -469,6 +495,11 @@ if (!$productsPerRow) {
                         </script>
                         <?php
                     } ?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                        </div>
+                    </div>
+                    <?php } ?>
 
                 </form><!-- .product-list-item-inner -->
             </div><!-- .product-list-item -->

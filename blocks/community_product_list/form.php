@@ -12,10 +12,10 @@
                 <?= $form->label('filter', t('List Products')); ?>
                 <?= $form->select('filter', [
                     'all' => '** ' . t("All") . ' **',
-                    'current' => t('Under current page'),
-                    'current_children' => t('Under current page and child pages'),
-                    'page' => t('Under a specified page'),
-                    'page_children' => t('Under a specified page and child pages'),
+                    'current' => t('Categorized under current page'),
+                    'current_children' => t('Categorized under current page and child pages'),
+                    'page' => t('Categorized under a specified page'),
+                    'page_children' => t('Categorized under a specified page and child pages'),
                     'related' => t('Related to product displayed on this page'),
                     'related_product' => t('Related to a specified product'),
                 ], $filter); ?>

@@ -18,7 +18,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
-    protected $btInterfaceWidth = "800";
+    protected $btInterfaceWidth = "840";
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
