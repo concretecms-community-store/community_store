@@ -1836,7 +1836,7 @@ $dh = $app->make('helper/date');
         </div>
 
         <script>
-            $(window).load(function () {
+            $(window).on('load', function(){
                 setTimeout(
                     function () {
                         $('.ccm-dashboard-form-actions .btn-primary').removeAttr('disabled');

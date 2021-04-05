@@ -169,7 +169,7 @@ class Controller extends Package
             ]
         );
 
-        $select2 =$al->getAssetGroup('select2');
+        $select2 =  $al->getAssetGroup('select2');
 
         if (!$select2) {
             $al->register('css', 'select2', 'vendor/select2/select2/dist/css/select2.min.css', ['version' => 4.0, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
@@ -183,7 +183,7 @@ class Controller extends Package
             );
         }
 
-        $selectize =$al->getAssetGroup('selectize');
+        $selectize = $al->getAssetGroup('selectize');
 
         if (!$selectize) {
 
@@ -194,6 +194,21 @@ class Controller extends Package
                 [
                     ['javascript', 'selectize'],
                     ['css', 'selectize']
+                ]
+            );
+        }
+
+        $lightbox = $al->getAssetGroup('core/lightbox');
+
+        if (!$lightbox) {
+
+            $al->register('css', 'lightbox', 'css/magnific-popup/magnific-popup.css', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'lightbox', 'js/magnific-popup/jquery.magnific-popup.js', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('core/lightbox',
+                [
+                    ['javascript', 'lightbox'],
+                    ['css', 'lightbox']
                 ]
             );
         }
