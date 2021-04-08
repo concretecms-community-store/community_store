@@ -229,6 +229,11 @@ class Checkout extends PageController
             return Redirect::to($langpath . '/checkout');
         }
 
+        // if no more items in cart, refresh the checkout page
+        if (Cart::getTotalItemsInCart() == 0) {
+            return Redirect::to($langpath . '/checkout');
+        }
+
         if ($pm->getMethodController()->isExternal()) {
             if (0 != Cart::getTotalItemsInCart()) {
                 $order = Order::add($pm, null, 'incomplete');
