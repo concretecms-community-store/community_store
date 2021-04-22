@@ -316,7 +316,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "category":
                 $query->addOrderBy('categorySortOrder');
                 break;
-            case "group" && !empty($validgids):
+            case "group" && !empty($validgids) && !$this->groupNoMatchAny:
                 $query->addOrderBy('sortOrder');
                 break;
             case "random":
@@ -341,7 +341,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         if ($this->sortBy == 'category') {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
-        } elseif ($this->sortBy == 'group' && !empty($validgids)) {
+        } elseif ($this->sortBy == 'group' && !empty($validgids) && !$this->groupNoMatchAny) {
                 $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
         } else {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
