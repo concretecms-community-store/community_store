@@ -304,8 +304,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     $pIDs[] = $product['pID'];
                 }
 
-                foreach ($pIDs as $pID) {
-                    $query->addOrderBy("p.pID = ?", 'DESC')->setParameter($paramcount++, $pID);
+                if (!empty($pIDs)) {
+                    $query->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')');
                 }
                 break;
             case "related":
