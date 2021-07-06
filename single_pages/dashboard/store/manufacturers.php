@@ -130,7 +130,7 @@ if ($controller->getAction() == 'add' ||
 
     <?php } else { ?>
 
-        <br/><p class="alert alert-info"><?= t('No Manufacturers Found'); ?></p>
+         <p class="alert alert-info"><?= t('No Manufacturers Found'); ?></p>
 
 
     <?php } ?>

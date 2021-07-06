@@ -1866,22 +1866,19 @@ $dh = $app->make('helper/date');
 
         <form role="form" class="form-inline">
             <div class="row">
-                <div class="ccm-search-fields-submit col-md-12 col-md-6">
-                    <div class="form-group">
-                        <div class="ccm-search-main-lookup-field">
-                            <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
-                        </div>
+                <div class="ccm-search-fields-submit col-sm-12 col-md-6">
 
-                    </div>
+                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
+
                     <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
-                <div class="col-md-12 col-md-6">
+                <div class="col-sm-12 col-md-6">
                     <?php if ($grouplist) {
                         $currentFilter = '';
                         ?>
                         <ul id="group-filters" class="nav nav-pills">
 
-                            <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?>">
+                            <li role="presentation" class="dropdown <?= ($gID ? 'active' : ''); ?> nav-item">
                                 <?php
                                 if ($gID) {
                                     foreach ($grouplist as $group) {
@@ -1891,14 +1888,14 @@ $dh = $app->make('helper/date');
                                     }
                                 } ?>
 
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     <?= $currentFilter ? t('Product Group: %s', $currentFilter) : t('Product Group'); ?> <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu">
                                     <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
                                     <?php foreach ($grouplist as $group) { ?>
-                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-item" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
                                     <?php } ?>
                                 </ul>
                             </li>

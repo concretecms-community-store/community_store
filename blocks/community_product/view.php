@@ -133,7 +133,7 @@ if (is_object($product) && $product->isActive()) {
                                 <p class="store-product-price-suggestions"><?php
                                     foreach ($pricesuggestions as $suggestion) {
                                         ?>
-                                        <a href="#" class="store-price-suggestion btn btn-default btn-sm"
+                                        <a href="#" class="store-price-suggestion btn btn-default btn-secondary btn-sm"
                                            data-add-type="none"
                                            data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
                                         <?php
@@ -150,7 +150,7 @@ if (is_object($product) && $product->isActive()) {
                             } ?>
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
-                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group col-md-6 col-sm-6 col-sm-6">
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>
                                     <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01"

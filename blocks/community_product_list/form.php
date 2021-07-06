@@ -3,9 +3,9 @@
 <div class="container-fluid">
 <div class="row">
 
-    <div class="col-xs-6">
+    <div class="col-sm-6">
 
-        <fieldset>
+
             <legend><?= t('Products'); ?></legend>
 
             <div class="form-group">
@@ -60,9 +60,7 @@
                 </label>
             </div>
 
-        </fieldset>
 
-        <fieldset>
             <legend><?= t('Filtering'); ?></legend>
 
             <?php
@@ -138,12 +136,12 @@
                     <?= t('Enable Other Blocks to Filter This Product List'); ?>
                 </label>
             </div>
-        </fieldset>
+
 
 
     </div>
-    <div class="col-xs-6">
-        <fieldset>
+    <div class="col-sm-6">
+
             <legend><?= t('Pagination and Display Options'); ?></legend>
 
             <div class="form-group">
@@ -224,7 +222,7 @@
                 <?= $form->label('pageLinkText', t("Link To Product Page Text")); ?>
                 <?= $form->text('pageLinkText', $pageLinkText, ['placeholder' => t("Defaults to: More Details")]); ?>
             </div>
-        </fieldset>
+
     </div>
 </div>
 

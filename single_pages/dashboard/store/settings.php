@@ -59,12 +59,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="form-group col-md-4">
                     <?= $form->label('thousand', t('Thousands Separator')); ?>
                     <?= $form->text('thousand', Config::get('community_store.thousand')); ?>
-                    <span class="help-block"><?= t('e.g. , or a space'); ?></span>
+                    <p class="help-block"><?= t('e.g. , or a space'); ?></p>
                 </div>
                 <div class="form-group col-md-4">
                     <?= $form->label('whole', t('Whole Number Separator')); ?>
                     <?= $form->text('whole', Config::get('community_store.whole')); ?>
-                    <span class="help-block"><?= t('e.g. period or a comma'); ?></span>
+                    <p class="help-block"><?= t('e.g. period or a comma'); ?></p>
                 </div>
             </div>
 
@@ -130,7 +130,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-md-12">
                     <label><?= $form->checkbox('multiplePackages', '1', Config::get('community_store.multiplePackages') ? '1' : '0'); ?>
                         <?= t('Enable Package(s) Data fields'); ?></label>
-                    <span class="help-block"> <?= t('Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods'); ?></span>
+                    <p class="help-block"> <?= t('Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods'); ?></p>
                 </div>
             </div>
 
@@ -304,7 +304,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('notificationEmails', t('Send order notification to email')); ?>
                 <?= $form->text('notificationEmails', Config::get('community_store.notificationemails'), ['placeholder' => t('Email Address')]); ?>
-                <span class="help-block"><?= t('separate multiple emails with commas'); ?></span>
+                <p class="help-block"><?= t('separate multiple emails with commas'); ?></p>
             </div>
 
             <h4><?= t('Emails Sent From'); ?></h4>
@@ -519,7 +519,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
                     <div class="input-group-addon"><?= t('hours'); ?></div>
                 </div>
-                <span class="help-block"><?= t('Number of hours before digital download links expiry'); ?></span>
+                <p class="help-block"><?= t('Number of hours before digital download links expiry'); ?></p>
             </div>
         </div>
 
