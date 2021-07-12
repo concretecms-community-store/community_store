@@ -4,7 +4,7 @@
 
 An open, free and community developed eCommerce system for concrete5
 
-Please refer to the project wiki for extended details - https://github.com/concrete5-community-store/community_store/wiki
+Please refer to the project documentation for extended details - https://concrete5-community-store.github.io/community_store/
 
 The goal of this project is to provide a stable, feature rich, highly extensible and customizable 'shopping cart toolkit' for version 8+ of concrete5.
 The add-on will work directly with a Bootstrap based theme, primarily Elemental, but is intended to be easily modified and overriden for a custom theme.
