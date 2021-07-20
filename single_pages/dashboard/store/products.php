@@ -546,7 +546,7 @@ $dh = $app->make('helper/date');
 
                 <?php if ($controller->getAction() == 'edit') { ?>
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-lg-9">
                             <div class="form-group">
                                 <?= $form->label("pDateAdded", t('Date Added')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
@@ -556,6 +556,14 @@ $dh = $app->make('helper/date');
                                     z-index: 100 !important;
                                 }
                             </style>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <?= $form->label("pDateUpdated", t('Last Updated')); ?>
+                                <div class="form-control-static">
+                                <?= $dh->formatDateTime($product->getDateUpdated()); ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

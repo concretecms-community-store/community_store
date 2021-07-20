@@ -222,6 +222,11 @@ class Product
     protected $pDateAdded;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pDateUpdated;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $pShippable;
@@ -785,6 +790,11 @@ class Product
         $this->pDateAdded = $date;
     }
 
+    public function setDateUpdated($date)
+    {
+        $this->pDateUpdated = $date;
+    }
+
     public function setIsShippable($bool)
     {
         $this->pShippable = (!is_null($bool) ? $bool : false);
@@ -1021,6 +1031,7 @@ class Product
             $product = new self();
             $product->setDateAdded(new \DateTime());
         }
+
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
         $product->setBarCode($data['pBarcode']);
@@ -1877,8 +1888,19 @@ class Product
         return $this->pDateAdded;
     }
 
+    public function getDateUpdated()
+    {
+        if ($this->pDateUpdated) {
+            return $this->pDateUpdated;
+        } else {
+            return $this->getDateAdded();
+        }
+    }
+
     public function save()
     {
+        $this->setDateUpdated(new \DateTime());
+
         $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();

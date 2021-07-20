@@ -365,11 +365,16 @@ class ProductVariation
     }
 
     /**
-     * @ORM\param mixed $pvQtyUnlim
+     * @deprecated
      */
     public function setVariationQtyUnlim($pvQtyUnlim)
     {
         $this->pvQtyUnlim = $pvQtyUnlim;
+    }
+
+    public function setVariationIsUnlimited($bool)
+    {
+        $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
     }
 
     /**
@@ -720,6 +725,10 @@ class ProductVariation
         $em->persist($this);
 
         if (!$persistonly) {
+            $product = $this->getProduct();
+            $product->setDateUpdated(new \DateTime());
+            $product->save();
+
             $em->flush();
         }
     }
