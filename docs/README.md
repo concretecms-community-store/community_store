@@ -10,7 +10,7 @@ features:
 - title: Highly Customizable
   details: Style, override and configure blocks, pages and other store elements with freedom
 - title: Open Source & Free 
-  details: MIT licenced and community supported, developed for concrete5 fans, by concrete5 fans
+  details: MIT licenced and community supported, developed for Concrete CMS fans, by Concrete CMS fans
 
 footer: MIT Licensed
 ---
