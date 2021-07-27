@@ -1,6 +1,6 @@
 # CLI Commands
 
-See the [concrete5 documentation covering how to run CLI commands](http://documentation.concrete5.org/developers/appendix/cli-commands)
+See the [Concrete CMS documentation covering how to run CLI commands](http://documentation.concretecms.org/developers/appendix/cli-commands)
 
 ## Reset Store Data
 A CLI command is available to clear all orders, products, discounts or all three at once.

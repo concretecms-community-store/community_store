@@ -2,7 +2,7 @@
 
 After installing you should review some commonly changed settings before populating your store with products.
 
-As an Administrator visit, **Store / Settings** within concrete5's Dashboard.
+As an Administrator visit, **Store / Settings** within Concrete CMS's Dashboard.
 
 A suggested checklist of items to review is as follows:
 
@@ -29,7 +29,7 @@ Further Tax Classes allow different taxes to be applied in groups to specific pr
 By default Community Store installs only one Payment Method, **Invoice**.
 This method is intended for situations where immediate payments are not required or for testing purposes.
 
-Additional payment methods can be [downloaded from github](https://github.com/concrete5-community-store) as concrete5 add-ons.
+Additional payment methods can be [downloaded from github](https://github.com/concrete5-community-store) as Concrete CMS add-ons.
 
 Once installed, each payment method is enabled and configured from the Payments section of **Store / Settings** within the dashboard.
 Typically each Payment Method needs keys or other credentials entered.
@@ -50,6 +50,6 @@ A common situation is that free shipping is offered on orders over a certain pri
 For example, if you offer free shipping on orders $200 and above, Add a 'Free Shipping' shipping method and configure its 'Minimum Purchase Amount for this rate to apply' value to 200.
 Then, on your paid shipping method(s), set the 'Maximum Purchase Amount for this rate to apply' to 199.99
 
-Like Payment Methods, additional shipping methods can be  [downloaded from github](https://github.com/concrete5-community-store) as concrete5 add-ons.
+Like Payment Methods, additional shipping methods can be  [downloaded from github](https://github.com/concrete5-community-store) as Concrete CMS add-ons.
 
 For complex shipping calculation requirements, further custom shipping methods can be developed as add-ons. [An example shipping method is available on github](https://github.com/concrete5-community-store/community_store_shipping_example) to act as template for new methods.

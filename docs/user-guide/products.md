@@ -41,7 +41,7 @@ Review the [Categorization How-To](/how-tos/categorization) page for more detail
 
 ## Attributes
 
-Live page, user or file attributes in concrete5, product attributes can be created for products.
+Live page, user or file attributes in Concrete CMS, product attributes can be created for products.
 Such attributes are intended to be used programmatically, such as in custom block templates, or by custom shipping methods.
 
 Attributes for a product can be _edited_ via the Attributes tab when adding or editing a product.

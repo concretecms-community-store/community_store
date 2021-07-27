@@ -1,10 +1,10 @@
 # Events
  
-The Community Store also includes 'Events' - these are hooks that [can be subscribed to with custom code](https://documentation.concrete5.org/developers/framework/application-events/hooking-application-events), allowing additional processing to take place.
+The Community Store also includes 'Events' - these are hooks that [can be subscribed to with custom code](https://documentation.concretecms.org/developers/framework/application-events/hooking-application-events), allowing additional processing to take place.
 
 An example might be that you wish to communicate with a separate warehouse database/API to determine current stock levels or prices. By subscribing to the `on_community_store_product_add` and `on_community_store_product_update` events, you could create code that takes the product SKU, looks it up in the external database and then updates the product accordingly. 
 
-Another usage example is for when you need to do some additional processing when an order is placed. The example might be that you may need to send an email to a supplier when a particular product is purchased. Events allow such functionality to be added through additional concrete5 add-ons.
+Another usage example is for when you need to do some additional processing when an order is placed. The example might be that you may need to send an email to a supplier when a particular product is purchased. Events allow such functionality to be added through additional Concrete CMS add-ons.
 
 [An example package showing how to respond to Community Store events is available on github](https://github.com/concrete5-community-store/community_store_event_example).
 
