@@ -3,7 +3,7 @@ home: true
 heroImage: logo.png
 actionText: Get Started →
 actionLink: /user-guide/
-tagline: An open, free and community developed eCommerce system for concrete5
+tagline: An open, free and community developed eCommerce system for Concrete CMS
 features:
 - title: Powerful eCommerce 
   details: Product and checkout options suiting a wide range of digital and traditional eCommerce requirements
