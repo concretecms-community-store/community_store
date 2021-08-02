@@ -1,9 +1,9 @@
 name: docs
 
 on:
-  # trigger deployment on every push to main branch
+  # trigger deployment on every push to master branch
   push:
-    branches: [main]
+    branches: [master]
   # trigger deployment manually
   workflow_dispatch:
 
