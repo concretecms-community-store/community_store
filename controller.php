@@ -72,8 +72,11 @@ class Controller extends Package
         $this->registerCategories();
         parent::install();
 
-        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        $this->installStore($pkg);
+
+        if ($this->app->isRunThroughCommandLineInterface()) {
+            $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+            $this->installStore($pkg);
+        }
     }
 
     public function upgrade()
