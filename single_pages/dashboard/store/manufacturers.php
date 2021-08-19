@@ -18,7 +18,7 @@ if ($controller->getAction() == 'add' ||
     <?php if ($mID > 0) { ?>
         <div class="ccm-dashboard-header-buttons">
 
-            <form class="pull-right float-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/manufacturers/delete/', $mID) ?>">
+            <form class="pull-right float-end" method="post" id="delete" action="<?= Url::to('/dashboard/store/manufacturers/delete/', $mID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
                 <button class="btn btn-danger"><?= t("Delete Manufacturer") ?></button>
             </form>
@@ -54,6 +54,7 @@ if ($controller->getAction() == 'add' ||
             <?= $form->label("description", t("Description")); ?>
             <?php
             $editor = $app->make('editor');
+            $editor->getPluginManager()->deselect(array('autogrow'));
             echo $editor->outputStandardEditor('description', $manufacturer->getDescription());
             ?>
         </div>
@@ -64,9 +65,9 @@ if ($controller->getAction() == 'add' ||
                 <a href="<?php echo URL::to('/dashboard/store/manufacturers') ?>"
                    class="btn btn-default btn-secondary pull-left float-left"><?= t('Cancel') ?></a>
                 <?php if (isset($mID)) { ?>
-                    <?php echo $form->submit('save', t('Update'), ['class' => 'btn btn-primary pull-right float-right']) ?>
+                    <?php echo $form->submit('save', t('Update'), ['class' => 'btn btn-primary pull-right float-end']) ?>
                 <?php } else { ?>
-                    <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary pull-right float-right']) ?>
+                    <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary pull-right float-end']) ?>
                 <?php } ?>
             </div>
         </div>

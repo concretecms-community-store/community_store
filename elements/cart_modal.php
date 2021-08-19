@@ -153,7 +153,7 @@ if ($cartMode) {
                                 <?php } ?>
                             </td>
 
-                            <td class="store-cart-list-item-price col-sm-2 text-right">
+                            <td class="store-cart-list-item-price col-sm-2 text-right text-end">
                                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                     <?=Price::format($cartItem['product']['customerPrice'])?>
                                 <?php } else {  ?>
@@ -161,7 +161,7 @@ if ($cartMode) {
                                 <?php } ?>
                             </td>
 
-                            <td class="store-cart-list-product-qty col-sm-3 text-right">
+                            <td class="store-cart-list-product-qty col-sm-3 text-right text-end">
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
                                 <span class="store-qty-container
                             <?php if ($quantityLabel) { ?>input-group
@@ -171,15 +171,15 @@ if ($cartMode) {
                                     $max = $product->getMaxCartQty();
                                     ?>
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } else { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
                                     <?php } ?>
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
                                 <?php }  else { ?>
                                     <?php if ($quantityLabel) { ?>
-                                        <div  class="store-product-qty form-control text-right pull-right form-control-static">1</div>
+                                        <div  class="store-product-qty form-control text-right pull-right text-end float-end form-control-static">1</div>
                                         <?php } else { ?>
                                             1
                                         <?php } ?>
@@ -189,7 +189,7 @@ if ($cartMode) {
                                 <?php } ?>
                                 </span>
                             </td>
-                            <td class="store-cart-list-remove-button col-sm-2 text-right">
+                            <td class="store-cart-list-remove-button col-sm-2 text-right text-end">
                                 <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove fa-times"></i><?php ///echo t("Remove")?></a>
                             </td>
 
@@ -208,7 +208,7 @@ if ($cartMode) {
                     <td></td>
                     <td colspan="2">
                         <?php if ($allowUpdate) { ?>
-                            <p class="text-right"><button type="submit" class="store-btn-cart-modal-update btn btn-primary" data-modal="true" href="#"><?= t("Update")?></button></p>
+                            <p class="text-right text-end "><button type="submit" class="store-btn-cart-modal-update btn btn-primary" data-modal="true" href="#"><?= t("Update")?></button></p>
                         <?php } ?>
                     </td>
                 </tr>
@@ -238,7 +238,7 @@ if ($cartMode) {
 
         <?php }?>
 
-        <p class="store-cart-page-cart-total text-right">
+        <p class="store-cart-page-cart-total text-right text-end">
             <strong class="store-cart-grand-total-label"><?= t("Total")?>:</strong>
             <span class="store-cart-grand-total-value"><?=Price::format($total)?></span>
         </p>
@@ -248,12 +248,12 @@ if ($cartMode) {
 
 
         <div class="store-cart-page-cart-links">
-            <p class="pull-left float-left">
+            <p class="pull-left float-start">
                 <a class="store-btn-cart-modal-continue btn btn-default btn-secondary" href="#"><?= t("Continue Shopping")?></a>
                 <?php if ($cart  && !empty($cart)) { ?>
                 <a class="store-btn-cart-modal-clear btn btn-warning" href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right float-right"><a class="store-btn-cart-modal-checkout btn btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right float-end"><a class="store-btn-cart-modal-checkout btn btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

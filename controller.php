@@ -20,7 +20,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.3.4';
+    protected $pkgVersion = '2.4';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -44,13 +44,13 @@ class Controller extends Package
 
     public function installStore($pkg)
     {
-        Installer::installSinglePages($pkg);
+        Installer::installBlocks($pkg);
         Installer::installProductParentPage($pkg);
+        Installer::installSinglePages($pkg);
         Installer::installStoreProductPageType($pkg);
         Installer::setDefaultConfigValues($pkg);
         Installer::installPaymentMethods($pkg);
         Installer::installShippingMethods($pkg);
-        Installer::installBlocks($pkg);
         Installer::setPageTypeDefaults($pkg);
         Installer::installCustomerGroups($pkg);
         Installer::installUserAttributes($pkg);

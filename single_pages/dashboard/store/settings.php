@@ -338,12 +338,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
                 <?php $editor = $app->make('editor');
+                $editor->getPluginManager()->deselect(array('autogrow'));
                 echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
             </div>
 
             <div class="form-group">
                 <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
                 <?php $editor = $app->make('editor');
+                $editor->getPluginManager()->deselect(array('autogrow'));
                 echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
             </div>
 
@@ -673,7 +675,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary float-right" type="submit"><?= t('Save'); ?></button>
+            <button class="pull-right btn btn-primary float-end" type="submit"><?= t('Save'); ?></button>
         </div>
     </div>
 

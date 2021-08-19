@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\File\Search\Menu\MenuFactory;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
@@ -31,6 +33,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 
 class Products extends DashboardSitePageController
 {
+    protected $headerSearch;
+
     public function view($gID = null)
     {
         $productsList = new ProductList();
@@ -82,6 +86,9 @@ class Products extends DashboardSitePageController
         $site = $this->getSite();
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
         $this->set('multilingualEnabled', (count($pages) > 1));
+
+        $headerSearch = $this->getHeaderSearch($grouplist, $gID);
+        $this->set('headerSearch', $headerSearch);
     }
 
     public function add()
@@ -480,5 +487,13 @@ class Products extends DashboardSitePageController
         }
 
         return $e;
+    }
+
+    protected function getHeaderSearch($groupList, $gID)
+    {
+        if (!isset($this->headerSearch)) {
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('products/search', 'community_store', ['groupList'=>$groupList, 'gID'=>$gID]);
+        }
+        return $this->headerSearch;
     }
 }

@@ -28,7 +28,7 @@ use \Concrete\Core\Support\Facade\Url;
 
     <ul class="list-group" id="product-list">
     <?php foreach($products as $product) { ?>
-        <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right float-right"></i>
+        <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right float-end"></i>
             <?= $product->getImageThumb();?>
 
             <?= $product->getName(); ?>
@@ -49,7 +49,7 @@ use \Concrete\Core\Support\Facade\Url;
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
         <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel")?></a>
-        <button class="pull-right btn btn-success float-right"  type="submit" ><?= t('Save Category Product Order')?></button>
+        <button class="pull-right btn btn-success float-end"  type="submit" ><?= t('Save Category Product Order')?></button>
     </div>
 </div>
     </form>

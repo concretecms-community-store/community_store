@@ -17,7 +17,7 @@
 		<field name="maxProducts" type="integer"></field>
 		<field name="showOutOfStock" type="boolean"></field>
 		<field name="productsPerRow" type="integer" size="2"></field>
-                <field name="displayMode" type="string" size="30"></field>
+		<field name="displayMode" type="string" size="30"></field>
 		<field name="showPagination" type="boolean"></field>
 		<field name="enableExternalFiltering" type="boolean"><default value="1"/></field>
 		<field name="showFeatured" type="boolean"></field>

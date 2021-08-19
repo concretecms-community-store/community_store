@@ -226,6 +226,7 @@ $localecount = count($locales);
                     <td>
 
                         <?php
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
                         ?>
 
@@ -255,6 +256,7 @@ $localecount = count($locales);
 
                     <td>
                         <?php
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
                         ?>
                     </td>
@@ -615,7 +617,7 @@ $localecount = count($locales);
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>"
                class="btn btn-default btn-secondary pull-left"><?= t("Cancel") ?></a>
-            <button class="pull-right btn btn-success float-right" type="submit"><?= t('Save Product Translation') ?></button>
+            <button class="pull-right btn btn-success float-end" type="submit"><?= t('Save Product Translation') ?></button>
         </div>
     </div>
     <?php } ?>

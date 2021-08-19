@@ -34,17 +34,17 @@ $dh = $app->make('helper/date');
     <?php if ($pID > 0) { ?>
         <div class="ccm-dashboard-header-buttons">
 
-            <form class="pull-right float-right" method="post" id="delete" action="<?= Url::to('/dashboard/store/products/delete/', $pID) ?>">
+            <form class="pull-right float-end" method="post" id="delete" action="<?= Url::to('/dashboard/store/products/delete/', $pID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
                 <button class="btn btn-danger"><?= t('Delete Product') ?></button>
             </form>
 
-            <form class="pull-right float-right" method="get" id="duplicate" action="<?= Url::to('/dashboard/store/products/duplicate/', $pID) ?>">
-                &nbsp;&nbsp;<button class="btn btn-default"><i class="fa fa-copy"></i> <?= t('Duplicate Product') ?></button>
+            <form class="pull-right float-end" method="get" id="duplicate" action="<?= Url::to('/dashboard/store/products/duplicate/', $pID) ?>">
+                &nbsp;&nbsp;<button class="btn btn-default btn-secondary"><i class="fa fa-copy"></i> <?= t('Duplicate Product') ?></button>
             </form>
 
             <?php if ($page && !$page->isInTrash()) { ?>
-                <div class="pull-right float-right">
+                <div class="pull-right float-end">
                     <a class="btn btn-primary" target="_blank" href="<?= $page->getCollectionLink() ?>" target="_blank"><?= t('View Product Page'); ?></a>
                 </div>
             <?php } ?>
@@ -569,7 +569,10 @@ $dh = $app->make('helper/date');
                         <?= $form->label("pDesc", t('Short Description')); ?><br>
                         <?php
                         $editor = $app->make('editor');
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('pDesc', $product->getDesc());
+
+
                         ?>
                     </div>
 
@@ -577,6 +580,7 @@ $dh = $app->make('helper/date');
                         <?= $form->label("pDesc", t('Product Details (Long Description')); ?><br>
                         <?php
                         $editor = $app->make('editor');
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                         ?>
                     </div>
@@ -611,7 +615,7 @@ $dh = $app->make('helper/date');
                             if ($file) {
                                 $thumb = $file->getListingThumbnailImage();
                                 if ($thumb) {
-                                    echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="float-right pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
+                                    echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="float-end pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
                                 }
                             }
                         }
@@ -634,7 +638,7 @@ $dh = $app->make('helper/date');
                                     ConcreteFileManager.getFileDetails(data.fID, function (r) {
                                         for (var i in r.files) {
                                             var file = r.files[i];
-                                            $('#additional-image-list').append('<li class="list-group-item">' + file.resultsThumbnailImg + ' ' + file.title + '<a><i class="float-right pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
+                                            $('#additional-image-list').append('<li class="list-group-item">' + file.resultsThumbnailImg + ' ' + file.title + '<a><i class="float-end pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
                                         }
 
                                     });
@@ -663,7 +667,7 @@ $dh = $app->make('helper/date');
                                     if ($location) {
                                         $locationpage = Page::getByID($location->getCollectionID());
                                         if ($locationpage) {
-                                            echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="float-right pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                            echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="float-end pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
                                         }
                                     }
                                 }
@@ -722,7 +726,7 @@ $dh = $app->make('helper/date');
 
 
                                         if ($('#pagelocations input[value=' + data.cID + ']').length == 0) {
-                                            $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="float-right pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
+                                            $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="float-end pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
                                         }
 
                                         $('.page_picker > div').hide();
@@ -1601,7 +1605,7 @@ $dh = $app->make('helper/date');
                         $relatedProducts = $product->getRelatedProducts();
                         if (!empty($relatedProducts)) {
                             foreach ($relatedProducts as $relatedProduct) {
-                                echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '<input type="hidden" name="pRelatedProducts[]" value="' . $relatedProduct->getRelatedProduct()->getID() . '" /><a><i class="float-right pull-right fa fa-minus-circle"></i></a></li>';
+                                echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '<input type="hidden" name="pRelatedProducts[]" value="' . $relatedProduct->getRelatedProduct()->getID() . '" /><a><i class="float-end pull-right fa fa-minus-circle"></i></a></li>';
                             }
                         }
                         ?>
@@ -1646,7 +1650,7 @@ $dh = $app->make('helper/date');
 
                             $('#product-select').on("change", function (e) {
                                 var data = $(this).select2('data');
-                                $('#related-products').append('<li class="list-group-item">' + data.text + '<a><i class="float-right pull-right fa fa-minus-circle"></i> <input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /></a> </li>');
+                                $('#related-products').append('<li class="list-group-item">' + data.text + '<a><i class="float-end pull-right fa fa-minus-circle"></i> <input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /></a> </li>');
                                 $(this).select2("val", []);
                             });
 
@@ -1831,7 +1835,7 @@ $dh = $app->make('helper/date');
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel / View All Products") ?></a>
-                <button class="float-right pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
+                <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
 
@@ -1864,14 +1868,17 @@ $dh = $app->make('helper/date');
 
     <div class="cccm-dashboard-content-inner">
 
+        <?php
+        $version = $app->make('config')->get('concrete.version');
+        if (version_compare($version, '9.0', '<')) { ?>
+
         <form role="form" class="form-inline">
             <div class="row">
                 <div class="ccm-search-fields-submit col-sm-12 col-md-6">
-
                     <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
-
                     <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
+
                 <div class="col-sm-12 col-md-6">
                     <?php if ($grouplist) {
                         $currentFilter = '';
@@ -1904,6 +1911,7 @@ $dh = $app->make('helper/date');
                 </div>
             </div>
         </form>
+        <?php } ?>
 
         <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">

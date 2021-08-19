@@ -89,13 +89,9 @@ if (in_array($controller->getAction(), $addViews)) {
                             <?= $form->label('methodDetails', t("Details")); ?>
                             <?php
                             $editor = $app->make('editor');
+                            $editor->getPluginManager()->deselect(array('autogrow'));
                             echo $editor->outputStandardEditor('methodDetails', is_object($sm) ? $sm->getDetails() : '');
                             ?>
-                            <style>
-                                .redactor-editor {
-                                    min-height: 80px !important;
-                                }
-                            </style>
                         </div>
                     </div>
 
@@ -108,7 +104,7 @@ if (in_array($controller->getAction(), $addViews)) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-primary float-right" type="submit"><?= t('%s Shipping Method', $task) ?></button>
+                <button class="pull-right btn btn-primary float-end" type="submit"><?= t('%s Shipping Method', $task) ?></button>
             </div>
         </div>
 

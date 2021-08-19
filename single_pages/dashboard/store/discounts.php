@@ -451,7 +451,7 @@ $currencySymbol = Config::get('community_store.symbol');
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : ''))?>" class="btn btn-default btn-secondary"><?= t('Cancel / View All Discount Rules')?></a>
-            <button class="pull-right btn btn-primary float-right" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
+            <button class="pull-right btn btn-primary float-end" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
 

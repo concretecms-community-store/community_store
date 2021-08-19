@@ -1,6 +1,8 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Support\Facade\Config;
@@ -29,58 +31,66 @@ use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as Page
 
 class Installer
 {
-    public static function installSinglePages($pkg, $upgrade = false)
+    public static function installProductParentPage($pkg)
     {
-        //install our dashboard single pages
-        self::installSinglePage('/dashboard/store', $pkg);
-        self::installSinglePage('/dashboard/store/orders/', $pkg);
-        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
-        self::installSinglePage('/dashboard/store/products/', $pkg);
-        self::installSinglePage('/dashboard/store/discounts/', $pkg);
-        self::installSinglePage('/dashboard/store/products/groups', $pkg);
-        self::installSinglePage('/dashboard/store/products/categories', $pkg);
-        self::installSinglePage('/dashboard/store/products/attributes', $pkg);
-        self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
-        self::installSinglePage('/dashboard/store/settings/', $pkg);
-        self::installSinglePage('/dashboard/store/settings/shipping', $pkg);
-        self::installSinglePage('/dashboard/store/settings/tax', $pkg);
-        self::installSinglePage('/dashboard/store/reports', $pkg);
-        self::installSinglePage('/dashboard/store/reports/sales', $pkg);
-        self::installSinglePage('/dashboard/store/reports/products', $pkg);
-        self::installSinglePage('/dashboard/store/multilingual', $pkg);
-        self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
-        self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
-        self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
-
-        if (!$upgrade) {
-            $cartPage = self::installSinglePage('/cart', $pkg);
-            $checkoutPage = self::installSinglePage('/checkout', $pkg);
-            $completePage = self::installSinglePage('/checkout/complete', $pkg);
-
-            $defaultSlug = self::getDefaultSlug();
-
-            $extraCheckoutPage = Page::getByPath($defaultSlug . '/checkout-1');
-            if ($extraCheckoutPage) {
-                $completePage->move($checkoutPage);
-                $extraCheckoutPage->delete();
+        $defaultSlug = self::getDefaultSlug();
+        $productParentPage = Page::getByPath($defaultSlug . '/products');
+        if (!is_object($productParentPage) || $productParentPage->isError()) {
+            if ($defaultSlug === '' || $defaultSlug === '/' || !$defaultSlug) {
+                $parentPage = Page::getByID(1);
+            } else {
+                $parentPage = Page::getByPath($defaultSlug);
             }
 
-            $cartPage->setAttribute('exclude_nav', 1);
-            $cartPage->setAttribute('exclude_search_index', 1);
-            $cartPage->setAttribute('exclude_page_list', 1);
+            $productParentPage = $parentPage->add(
+                PageType::getByHandle('page'),
+                [
+                    'cName' => t('Products'),
+                    'cHandle' => 'products',
+                    'pkgID' => $pkg->getPackageID(),
+                ]
+            );
 
-            $checkoutPage->setAttribute('exclude_nav', 1);
-            $checkoutPage->setAttribute('exclude_search_index', 1);
-            $checkoutPage->setAttribute('exclude_page_list', 1);
 
-            $completePage->setAttribute('exclude_nav', 1);
-            $completePage->setAttribute('exclude_search_index', 1);
-            $completePage->setAttribute('exclude_page_list', 1);
+            $main = new Area('Main');
+
+            $bt = BlockType::getByHandle('content');
+            $productParentPage->addBlock($bt, $main, ['content'=>'<h1>' .t('Products') , '</h1>']);
+
+            $bt = BlockType::getByHandle('community_product_list');
+            $data = [
+                'sortOrder' =>  'alpha',
+                'filter' =>  'all',
+                'filterCID' =>  0,
+                'relatedPID' =>  0,
+                'groupMatchAny' =>  0,
+                'maxProducts' =>  10,
+                'showOutOfStock' =>  0,
+                'productsPerRow' =>  1,
+                'displayMode' =>  'grid',
+                'showPagination' => 1,
+                'enableExternalFiltering' =>  1,
+                'showFeatured' =>  0,
+                'showSale' =>  0,
+                'showDescription' =>  1,
+                'showName' =>  1,
+                'showPrice' =>  1,
+                'showQuickViewLink' =>  0,
+                'showPageLink' =>  1,
+                'showSortOption' =>  0,
+                'pageLinkText' =>  '',
+                'showAddToCart' =>  1,
+                'btnText' =>  '',
+                'showQuantity' =>  0,
+                'noProductsMessage' =>  ''
+            ];
+
+            $productParentPage->addBlock($bt, $main, $data);
         }
     }
 
-
-    public static function getDefaultSlug() {
+    public static function getDefaultSlug()
+    {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $site = $app->make('site')->getSite();
         $defaultLocale = $site->getDefaultLocale();
@@ -96,36 +106,6 @@ class Installer
         }
 
         return $defaultSlug;
-    }
-
-    public static function installSinglePage($path, $pkg)
-    {
-        $page = Page::getByPath($path);
-        if (!is_object($page) || $page->isError()) {
-            return SinglePage::add($path, $pkg);
-        }
-    }
-
-    public static function installProductParentPage($pkg)
-    {
-        $defaultSlug = self::getDefaultSlug();
-        $productParentPage = Page::getByPath($defaultSlug . '/products');
-        if (!is_object($productParentPage) || $productParentPage->isError()) {
-        	if ($defaultSlug === '' || $defaultSlug === '/') {
-        		$parentPage = Page::getByID(1);
-			} else {
-        		$parentPage = Page::getByPath($defaultSlug);
-			}
-            $productParentPage = $parentPage->add(
-                PageType::getByHandle('page'),
-                [
-                    'cName' => t('Products'),
-                    'cHandle' => 'products',
-                    'pkgID' => $pkg->getPackageID(),
-                ]
-            );
-        }
-        $productParentPage->setAttribute('exclude_nav', 1);
     }
 
     public static function installStoreProductPageType($pkg)
@@ -165,7 +145,6 @@ class Installer
         Config::save('community_store.guestCheckout', 'always');
     }
 
-
     public static function installPaymentMethods($pkg)
     {
         self::installPaymentMethod('invoice', 'Invoice', $pkg, null, true);
@@ -193,26 +172,6 @@ class Installer
         }
     }
 
-    public static function installBlocks($pkg)
-    {
-        $bts = BlockTypeSet::getByHandle('community_store');
-        if (!is_object($bts)) {
-            BlockTypeSet::add("community_store", "Store", $pkg);
-        }
-        self::installBlock('community_product_list', $pkg);
-        self::installBlock('community_utility_links', $pkg);
-        self::installBlock('community_product', $pkg);
-        self::installBlock('community_product_filter', $pkg);
-    }
-
-    public static function installBlock($handle, $pkg)
-    {
-        $blockType = BlockType::getByHandle($handle);
-        if (!is_object($blockType)) {
-            BlockType::installBlockType($handle, $pkg);
-        }
-    }
-
     public static function setPageTypeDefaults($pkg)
     {
         $pageType = PageType::getByHandle('store_product');
@@ -237,81 +196,74 @@ class Installer
         }
     }
 
-    public static function installCustomerGroups($pkg)
+    public static function installOrderStatuses($pkg)
     {
-        $groupID = Config::get('community_store.customerGroup');
-
-        if (empty($groupID)) {
-            $group = Group::getByName('Store Customer');
-        } else {
-            $group = Group::getByID($groupID);
-        }
-
-        if (!$group || $group->getGroupID() < 1) {
-            $group = Group::add('Store Customer', t('Registered Customer in your store'));
-        }
-
-        Config::save('community_store.customerGroup', $group->getGroupID());
-
-        $group = Group::getByName('Wholesale Customer');
-
-        if (!$group || $group->getGroupID() < 1) {
-            $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
-        }
-        Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
-
-    }
-
-    public static function installUserAttributes($pkg)
-    {
-        //user attributes for customers
-        $uakc = AttributeKeyCategory::getByHandle('user');
-        $uakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
-
-        //define attr group, and the different attribute types we'll use
-        $custSet = AttributeSet::getByHandle('customer_info');
-        if (!is_object($custSet)) {
-            $custSet = $uakc->addSet('customer_info', t('Store Customer Info'), $pkg);
-        }
-
-        $text = AttributeType::getByHandle('text');
-        $address = AttributeType::getByHandle('address');
-
-        self::installUserAttribute('email', $text, $pkg, $custSet);
-        self::installUserAttribute('billing_first_name', $text, $pkg, $custSet);
-        self::installUserAttribute('billing_last_name', $text, $pkg, $custSet);
-        self::installUserAttribute('billing_address', $address, $pkg, $custSet);
-        self::installUserAttribute('billing_phone', $text, $pkg, $custSet);
-        self::installUserAttribute('billing_company', $text, $pkg, $custSet);
-        self::installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
-        self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
-        self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
-        self::installUserAttribute('shipping_company', $text, $pkg, $custSet);
-        self::installUserAttribute('vat_number', $text, $pkg, $custSet, [
-            'akHandle' => 'vat_number',
-            'akName' => t('VAT Number'),
-        ]);
-    }
-
-    public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
-    {
+        $table = OrderStatus::getTableName();
         $app = Application::getFacadeApplication();
-        $service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
-        $categoryEntity = $service->getByHandle('user');
-        $category = $categoryEntity->getController();
+        $db = $app->make('database')->connection();
+        $statuses = [
+            ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
+            ['osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+        ];
 
-        $attr = $category->getAttributeKeyByHandle($handle);
+        $db->query("DELETE FROM " . $table);
 
-        if (!is_object($attr)) {
-            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
-
-            $key = new UserKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName(t($name));
-            $key = $category->add($type, $key, null, $pkg);
-
-            $key->setAttributeSet($set);
+        foreach ($statuses as $status) {
+            OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
         }
+    }
+
+    public static function installDefaultTaxClass($pkg)
+    {
+        $defaultTaxClass = TaxClass::getByHandle("default");
+        if (!is_object($defaultTaxClass)) {
+            $data = [
+                'taxClassName' => t('Default'),
+                'taxClassLocked' => true,
+            ];
+            $defaultTaxClass = TaxClass::add($data);
+        }
+    }
+
+    public static function upgrade($pkg)
+    {
+        // trigger a reinstall to add the select attribute type to the product category
+        self::installProductAttributes($pkg);
+        // trigger a reinstall in case new fields have been added
+        self::installOrderAttributes($pkg);
+        self::installUserAttributes($pkg);
+        self::installBlocks($pkg);
+
+        // pass an upgrade value of true, to avoid recreating cart/checkout pages again
+        self::installSinglePages($pkg, true);
+
+        // in case the customer group and digital download fileset are not saved in config yet
+        self::installCustomerGroups($pkg);
+        self::createDDFileset($pkg);
+
+        Localization::clearCache();
+    }
+
+    public static function installProductAttributes($pkg)
+    {
+        //create custom attribute category for products
+        $productCategory = Category::getByHandle('store_product');
+
+        if (!is_object($productCategory)) {
+            $productCategory = Category::add('store_product', 1, $pkg);
+        }
+
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
+        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
     }
 
     public static function installOrderAttributes($pkg)
@@ -394,22 +346,159 @@ class Installer
         }
     }
 
-    public static function installProductAttributes($pkg)
+    public static function installUserAttributes($pkg)
     {
-        //create custom attribute category for products
-        $productCategory = Category::getByHandle('store_product');
+        //user attributes for customers
+        $uakc = AttributeKeyCategory::getByHandle('user');
+        $uakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
 
-        if (!is_object($productCategory)) {
-            $productCategory = Category::add('store_product', 1, $pkg);
+        //define attr group, and the different attribute types we'll use
+        $custSet = AttributeSet::getByHandle('customer_info');
+        if (!is_object($custSet)) {
+            $custSet = $uakc->addSet('customer_info', t('Store Customer Info'), $pkg);
         }
 
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
-        $productCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
+        $text = AttributeType::getByHandle('text');
+        $address = AttributeType::getByHandle('address');
+
+        self::installUserAttribute('email', $text, $pkg, $custSet);
+        self::installUserAttribute('billing_first_name', $text, $pkg, $custSet);
+        self::installUserAttribute('billing_last_name', $text, $pkg, $custSet);
+        self::installUserAttribute('billing_address', $address, $pkg, $custSet);
+        self::installUserAttribute('billing_phone', $text, $pkg, $custSet);
+        self::installUserAttribute('billing_company', $text, $pkg, $custSet);
+        self::installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
+        self::installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
+        self::installUserAttribute('shipping_address', $address, $pkg, $custSet);
+        self::installUserAttribute('shipping_company', $text, $pkg, $custSet);
+        self::installUserAttribute('vat_number', $text, $pkg, $custSet, [
+            'akHandle' => 'vat_number',
+            'akName' => t('VAT Number'),
+        ]);
+    }
+
+    public static function installUserAttribute($handle, $type, $pkg, $set, $data = null)
+    {
+        $app = Application::getFacadeApplication();
+        $service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
+        $categoryEntity = $service->getByHandle('user');
+        $category = $categoryEntity->getController();
+
+        $attr = $category->getAttributeKeyByHandle($handle);
+
+        if (!is_object($attr)) {
+            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
+
+            $key = new UserKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName(t($name));
+            $key = $category->add($type, $key, null, $pkg);
+
+            $key->setAttributeSet($set);
+        }
+    }
+
+    public static function installBlocks($pkg)
+    {
+        $bts = BlockTypeSet::getByHandle('community_store');
+        if (!is_object($bts)) {
+            BlockTypeSet::add("community_store", "Store", $pkg);
+        }
+        self::installBlock('community_product_list', $pkg);
+        self::installBlock('community_utility_links', $pkg);
+        self::installBlock('community_product', $pkg);
+        self::installBlock('community_product_filter', $pkg);
+    }
+
+    public static function installBlock($handle, $pkg)
+    {
+        $blockType = BlockType::getByHandle($handle);
+        if (!is_object($blockType)) {
+            BlockType::installBlockType($handle, $pkg);
+        }
+    }
+
+    public static function installSinglePages($pkg, $upgrade = false)
+    {
+        //install our dashboard single pages
+        self::installSinglePage('/dashboard/store', $pkg);
+        self::installSinglePage('/dashboard/store/orders/', $pkg);
+        self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
+        self::installSinglePage('/dashboard/store/products/', $pkg);
+        self::installSinglePage('/dashboard/store/discounts/', $pkg);
+        self::installSinglePage('/dashboard/store/products/groups', $pkg);
+        self::installSinglePage('/dashboard/store/products/categories', $pkg);
+        self::installSinglePage('/dashboard/store/products/attributes', $pkg);
+        self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
+        self::installSinglePage('/dashboard/store/settings/', $pkg);
+        self::installSinglePage('/dashboard/store/settings/shipping', $pkg);
+        self::installSinglePage('/dashboard/store/settings/tax', $pkg);
+        self::installSinglePage('/dashboard/store/reports', $pkg);
+        self::installSinglePage('/dashboard/store/reports/sales', $pkg);
+        self::installSinglePage('/dashboard/store/reports/products', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
+        self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
+
+        if (!$upgrade) {
+            $cartPage = self::installSinglePage('/cart', $pkg);
+            $checkoutPage = self::installSinglePage('/checkout', $pkg);
+            $completePage = self::installSinglePage('/checkout/complete', $pkg);
+
+            $defaultSlug = self::getDefaultSlug();
+
+            $extraCheckoutPage = Page::getByPath($defaultSlug . '/checkout-1');
+            if ($extraCheckoutPage) {
+                $completePage->move($checkoutPage);
+                $extraCheckoutPage->delete();
+            }
+
+            $cartPage->setAttribute('exclude_nav', 1);
+            $cartPage->setAttribute('exclude_search_index', 1);
+            $cartPage->setAttribute('exclude_page_list', 1);
+
+            $checkoutPage->setAttribute('exclude_nav', 1);
+            $checkoutPage->setAttribute('exclude_search_index', 1);
+            $checkoutPage->setAttribute('exclude_page_list', 1);
+
+            $completePage->setAttribute('exclude_nav', 1);
+            $completePage->setAttribute('exclude_search_index', 1);
+            $completePage->setAttribute('exclude_page_list', 1);
+        }
+    }
+
+    public static function installSinglePage($path, $pkg)
+    {
+        $page = Page::getByPath($path);
+        if (!is_object($page) || $page->isError()) {
+            return SinglePage::add($path, $pkg);
+        }
+    }
+
+    public static function installCustomerGroups($pkg)
+    {
+        $groupID = Config::get('community_store.customerGroup');
+
+        if (empty($groupID)) {
+            $group = Group::getByName('Store Customer');
+        } else {
+            $group = Group::getByID($groupID);
+        }
+
+        if (!$group || $group->getGroupID() < 1) {
+            $group = Group::add('Store Customer', t('Registered Customer in your store'));
+        }
+
+        Config::save('community_store.customerGroup', $group->getGroupID());
+
+        $group = Group::getByName('Wholesale Customer');
+
+        if (!$group || $group->getGroupID() < 1) {
+            $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
+        }
+        Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
+
     }
 
     public static function createDDFileset($pkg)
@@ -430,58 +519,6 @@ class Installer
         Config::save('community_store.digitalDownloadFileSet', $fs->getFileSetID());
     }
 
-    public static function installOrderStatuses($pkg)
-    {
-        $table = OrderStatus::getTableName();
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $statuses = [
-            ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
-            ['osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
-        ];
-
-        $db->query("DELETE FROM " . $table);
-
-        foreach ($statuses as $status) {
-            OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
-        }
-    }
-
-    public static function installDefaultTaxClass($pkg)
-    {
-        $defaultTaxClass = TaxClass::getByHandle("default");
-        if (!is_object($defaultTaxClass)) {
-            $data = [
-                'taxClassName' => t('Default'),
-                'taxClassLocked' => true,
-            ];
-            $defaultTaxClass = TaxClass::add($data);
-        }
-    }
-
-    public static function upgrade($pkg)
-    {
-        // trigger a reinstall to add the select attribute type to the product category
-        self::installProductAttributes($pkg);
-        // trigger a reinstall in case new fields have been added
-        self::installOrderAttributes($pkg);
-        self::installUserAttributes($pkg);
-        self::installBlocks($pkg);
-
-        // pass an upgrade value of true, to avoid recreating cart/checkout pages again
-        self::installSinglePages($pkg, true);
-
-        // in case the customer group and digital download fileset are not saved in config yet
-        self::installCustomerGroups($pkg);
-        self::createDDFileset($pkg);
-
-        Localization::clearCache();
-    }
-
     public static function refreshEntities()
     {
         $em = dbORM::entityManager();
@@ -498,8 +535,8 @@ class Installer
         if (
             $community_store
             && (
-            ($installedVersion && version_compare($installedVersion, '2.0', '<'))
-            || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
+                ($installedVersion && version_compare($installedVersion, '2.0', '<'))
+                || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
             )
         ) {
             $db->query("SET foreign_key_checks = 0");

@@ -140,7 +140,7 @@ if ($cart) {
                         <td class="store-cart-product-qty text-right">
                             <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
-                            <span class="store-qty-container pull-right float-right
+                            <span class="store-qty-container pull-right float-end
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>
                                 ">
@@ -157,7 +157,7 @@ if ($cart) {
 
                             <?php } else { ?>
                                 <?php if ($quantityLabel) { ?>
-                                    <div  class="store-product-qty form-control text-right pull-right float-right form-control-static">1</div>
+                                    <div  class="store-product-qty form-control text-right pull-right float-end form-control-static">1</div>
                                 <?php } else { ?>
                                     1
                                 <?php } ?>
@@ -271,7 +271,7 @@ if ($cart && !empty($cart)) { ?>
         <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>
 
-    <div class="store-cart-page-cart-links pull-right float-right">
+    <div class="store-cart-page-cart-links pull-right float-end">
         <a class="store-btn-cart-page-checkout btn btn-success"
            href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>

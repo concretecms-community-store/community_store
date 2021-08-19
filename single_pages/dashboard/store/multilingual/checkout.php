@@ -433,6 +433,7 @@ $editor = $app->make('editor');
 
                             <td>
                                 <?php
+                                $editor->getPluginManager()->deselect(array('autogrow'));
                                 echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() . '][longText][receiptEmailHeader]', $csm->t(null, 'receiptEmailHeader', false, false, $lp->getLocale()));
                                 ?>
                             </td>
@@ -465,6 +466,7 @@ $editor = $app->make('editor');
 
                             <td>
                                 <?php
+                                $editor->getPluginManager()->deselect(array('autogrow'));
                                 echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() . '][longText][receiptEmailFooter]', $csm->t(null, 'receiptEmailFooter', false, false, $lp->getLocale()));
                                 ?>
                             </td>
@@ -482,7 +484,7 @@ $editor = $app->make('editor');
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
 
-                    <button class="pull-right btn btn-success float-right" type="submit"><?= t('Save Translations') ?></button>
+                    <button class="pull-right btn btn-success float-end" type="submit"><?= t('Save Translations') ?></button>
                 </div>
             </div>
 

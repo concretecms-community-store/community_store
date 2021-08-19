@@ -130,7 +130,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default  btn-secondary pull-left float-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-primary float-right" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
+            <button class="pull-right btn btn-primary float-end" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
         </div>
     </div>
 
@@ -291,7 +291,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right float-right btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
+            <button class="pull-right float-end btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
         </div>
     </div>
 

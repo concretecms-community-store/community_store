@@ -181,7 +181,7 @@ if ($taxCalc == 'extract') {
         </form>
 
 
-        <p class="pull-right float-right"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Product') ?></a></p>
         <p><a href="<?= Url::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> <?= t('View All Products') ?></a></p>
 
@@ -189,7 +189,7 @@ if ($taxCalc == 'extract') {
 
 
         <h4><?= t("Discounts") ?></h4>
-        <p class="pull-right float-right"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Discount Rule') ?></a></p>
         <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> <?= t('View Discount Rules') ?></a>
         </p>

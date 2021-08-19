@@ -391,7 +391,7 @@ class Checkout extends PageController
                 echo json_encode($results);
             }
         } else {
-            echo "An error occured";
+            echo "An error occurred";
         }
 
         exit();

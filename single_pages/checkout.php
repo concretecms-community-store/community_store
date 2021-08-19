@@ -214,7 +214,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?php } ?>
 
                         <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-right" value="<?= t("Next") ?>">
+                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
@@ -349,7 +349,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -389,7 +389,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
@@ -427,7 +427,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <div class="store-checkout-form-group-buttons">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-right" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -491,7 +491,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
                                  <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
+                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-end" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>

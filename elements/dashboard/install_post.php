@@ -16,13 +16,13 @@ $pkg->installStore($pkg);
 </p>
 
 <p>
-    <a class="btn btn-primary" target="_blank" href="https://concrete5-community-store.github.io/community_store/">
-        <?= t('View Community Store Documentation'); ?>
+    <a class="text-primary" target="_blank" href="https://concrete5-community-store.github.io/community_store/">
+        <?= t('View Community Store Documentation'); ?> <i class="fa fa-external-link-alt"></i>
     </a>
 </p>
 
 <p>
-    <a class="btn btn-primary" target="_blank" href="https://github.com/concrete5-community-store">
-        <?= t('View Community Store Github for additional add-ons such as payment gateways and shipping methods'); ?>
+    <a class="text-primary" target="_blank" href="https://github.com/concrete5-community-store">
+        <?= t('View Community Store Github for additional add-ons such as payment gateways and shipping methods'); ?> <i class="fa fa-external-link-alt"></i>
     </a>
 </p>

@@ -199,8 +199,6 @@ class Controller extends BlockController
         $pagination = $paginator->renderDefaultView();
         $products = $paginator->getCurrentPageResults();
 
-
-
         $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
         foreach ($products as $key => $product) {
@@ -263,22 +261,22 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $args['showOutOfStock'] = isset($args['showOutOfStock']) ? 1 : 0;
-        $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
-        $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
-        $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
-        $args['showSortOption'] = isset($args['showSortOption']) ? 1 : 0;
-        $args['showName'] = isset($args['showName']) ? 1 : 0;
-        $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
-        $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
-        $args['showAddToCart'] = isset($args['showAddToCart']) ? 1 : 0;
-        $args['showLink'] = isset($args['showLink']) ? 1 : 0;
-        $args['showButton'] = isset($args['showButton']) ? 1 : 0;
-        $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
-        $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['showOutOfStock'] = isset($args['showOutOfStock']) ? (int)$args['showOutOfStock'] : 0;
+        $args['showDescription'] = isset($args['showDescription']) ? (int)$args['showDescription'] : 0;
+        $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? (int)$args['showQuickViewLink'] : 0;
+        $args['showPageLink'] = isset($args['showPageLink']) ? (int)$args['showPageLink'] : 0;
+        $args['showSortOption'] = isset($args['showSortOption']) ? (int)$args['showSortOption'] : 0;
+        $args['showName'] = isset($args['showName']) ? (int)$args['showName'] : 0;
+        $args['showPrice'] = isset($args['showPrice']) ? (int)$args['showPrice'] : 0;
+        $args['showQuantity'] = isset($args['showQuantity']) ? (int)$args['showQuantity'] : 0;
+        $args['showAddToCart'] = isset($args['showAddToCart']) ? (int)$args['showAddToCart'] : 0;
+        $args['showLink'] = isset($args['showLink']) ? (int)$args['showLink'] : 0;
+        $args['showButton'] = isset($args['showButton']) ? (int)$args['showButton'] : 0;
+        $args['truncateEnabled'] = isset($args['truncateEnabled']) ? (int)$args['truncateEnabled'] : 0;
+        $args['showPagination'] = isset($args['showPagination']) ? (int)$args['showPagination'] : 0;
         $args['enableExternalFiltering'] = isset($args['enableExternalFiltering']) ? 1 : 0;
-        $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
-        $args['showSale'] = isset($args['showSale']) ? 1 : 0;
+        $args['showFeatured'] = isset($args['showFeatured']) ? (int)$args['showFeatured'] : 0;
+        $args['showSale'] = isset($args['showSale']) ? (int)$args['showSale'] : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
         $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
 
