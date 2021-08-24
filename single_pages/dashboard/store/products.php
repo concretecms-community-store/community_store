@@ -1080,7 +1080,7 @@ $dh = $app->make('helper/date');
                                 poID: '',
                                 poType: 'select',
                                 poDisplayType: 'select',
-                                poLabel: '<?= $labels['select']; ?>',
+                                poLabel: '<?= addslashes($labels['select']); ?>',
                                 poHandle: '',
                                 poDetails: '',
                                 poRequired: '',
