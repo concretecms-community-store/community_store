@@ -48,7 +48,7 @@ use \Concrete\Core\Support\Facade\Url;
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel")?></a>
+        <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel")?></a>
         <button class="pull-right btn btn-success float-end"  type="submit" ><?= t('Save Category Product Order')?></button>
     </div>
 </div>

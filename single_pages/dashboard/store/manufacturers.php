@@ -63,7 +63,7 @@ if ($controller->getAction() == 'add' ||
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo URL::to('/dashboard/store/manufacturers') ?>"
-                   class="btn btn-default btn-secondary pull-left float-left"><?= t('Cancel') ?></a>
+                   class="btn btn-default btn-secondary pull-left float-start"><?= t('Cancel') ?></a>
                 <?php if (isset($mID)) { ?>
                     <?php echo $form->submit('save', t('Update'), ['class' => 'btn btn-primary pull-right float-end']) ?>
                 <?php } else { ?>

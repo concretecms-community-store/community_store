@@ -1203,7 +1203,7 @@ $dh = $app->make('helper/date');
                         <div class="option-item clearfix form-horizontal" data-order="<%=sort%>" data-option-group="<%=optGroup%>">
                             <div class="form-group">
                                 <div class="col-sm-2 text-right">
-                                    <label class="control-label grabme"><i class="fa fa-arrows drag-handle pull-left float-left"></i><?= t('Option') ?></label>
+                                    <label class="control-label grabme"><i class="fa fa-arrows drag-handle pull-left float-start"></i><?= t('Option') ?></label>
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="input-group">
@@ -1834,7 +1834,7 @@ $dh = $app->make('helper/date');
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-left"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
                 <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
