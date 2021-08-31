@@ -390,6 +390,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                 ?>
                 </tbody>
             </table>
+            <br />
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title"><?= t("Update Fulfilment Status") ?></h4>
@@ -407,12 +408,12 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             </div>
                         </div>
 
-                        <input type="submit" class="btn btn-default" value="<?= t("Update") ?>">
+                        <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Update") ?>">
                     </form>
 
                 </div>
             </div>
-
+            <br />
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title"><?= t("Resend Notification Email") ?></h4>
@@ -424,7 +425,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             <label for="email"><?= t('Email'); ?></label>
                             <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?= Config::get('community_store.notificationemails'); ?>"/>
                         </div>
-                        <input type="submit" class="btn btn-default" value="<?= t("Resend Notification") ?>">
+                        <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Resend Notification") ?>">
                     </form>
                 </div>
             </div>
@@ -522,7 +523,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                         <label for="transactionReference"><?= t('Transaction Reference'); ?></label>
                                         <input type="text" class="form-control ccm-input-text" id="transactionReference" name="transactionReference"/>
                                     </div>
-                                    <input type="submit" class="btn btn-default" value="<?= t("Mark Paid") ?>">
+                                    <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Mark Paid") ?>">
                                 </form>
                             <?php } elseif (!$refunded) { ?>
                                 <form action="<?= Url::to("/dashboard/store/orders/markrefunded", $order->getOrderID()) ?>" method="post">
@@ -531,7 +532,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                         <label for="oRefundReason"><?= t('Refund Reason'); ?></label>
                                         <input type="text" class="form-control ccm-input-text" id="oRefundReason" name="oRefundReason"/>
                                     </div>
-                                    <input type="submit" class="btn btn-default" value="<?= t("Mark Refunded") ?>">
+                                    <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Mark Refunded") ?>">
                                 </form>
                             <?php } ?>
 
@@ -541,6 +542,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
             <?php } ?>
 
+            <br />
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title"><?= t("Resend Invoice Email") ?></h4>
@@ -598,21 +600,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
     <form role="form" class="form-inline">
         <div class="row">
-            <div class="ccm-search-fields-submit col-xs-12 col-md-4">
-                <div class="form-group">
-                    <div class="ccm-search-main-lookup-field">
-                        <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders'), 'style'=>""]) ?>
-                    </div>
-                </div>
+            <div class="ccm-search-fields-submit col-sm-12 col-md-5">
+                <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders'), 'style'=>""]) ?>
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
             </div>
-            <div class="col-xs-12 col-md-8">
+
+            <div class="col-sm-12 col-md-7">
                 <ul id="group-filters" class="nav nav-pills">
                 <?php
                 $keywordsparam = '';
                 if ( $keywords) {
                     $keywordsparam = '?keywords=' . urlencode($keywords);
-
                 }
 
                 if($enabledPaymentMethods){
@@ -623,31 +621,31 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                         }
                     } ?>
 
-                    <li role="presentation" class="dropdown <?= ($paymentMethod != 'all' ? 'active' : ''); ?>">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li role="presentation" class="dropdown <?= ($paymentMethod != 'all' ? 'active' : ''); ?> ">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <?= $paymentMethod  != 'all' ? t('Payment Method: %s', $paymentMethodName) : t('Payment Method'); ?> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li <?= (!$paymentMethod ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
+                            <li class="nav-item <?= (!$paymentMethod ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
                             <?php foreach($enabledPaymentMethods as $pm){ ?>
-                                <li <?= ($paymentMethod == $pm->getName() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
+                                <li class="nav-item <?= ($paymentMethod == $pm->getName() ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
                             <?php } ?>
                         </ul>
                     </li>
                 <?php } ?>
                 <li role="presentation" class="dropdown <?= ($paymentStatus != 'all' ? 'active' : ''); ?>">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <?= $paymentStatus != 'all' ? t('Payment Status: %s', title_case($paymentStatus)) : t('Payment Status'); ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li <?= ($paymentStatus == 'all' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )?>"><?= t('All Payment Statuses')?></a></li>
-                            <li <?= ($paymentStatus == 'paid' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/paid'.$keywordsparam)?>"><?= t('Paid');?></a></li>
-                            <li <?= ($paymentStatus == 'unpaid' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/unpaid'.$keywordsparam)?>"><?= t('Unpaid');?></a></li>
-                            <li <?= ($paymentStatus == 'refunded' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/refunded'.$keywordsparam)?>"><?= t('Refunded');?></a></li>
+                        <li <?= ($paymentStatus == 'all' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )?>"><?= t('All Payment Statuses')?></a></li>
+                            <li <?= ($paymentStatus == 'paid' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/paid'.$keywordsparam)?>"><?= t('Paid');?></a></li>
+                            <li <?= ($paymentStatus == 'unpaid' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/unpaid'.$keywordsparam)?>"><?= t('Unpaid');?></a></li>
+                            <li <?= ($paymentStatus == 'refunded' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/refunded'.$keywordsparam)?>"><?= t('Refunded');?></a></li>
                             <?php if (Config::get('community_store.showUnpaidExternalPaymentOrders')) { ?>
-                            <li <?= ($paymentStatus == 'incomplete' ? 'class="active"' : '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/incomplete'.$keywordsparam)?>"><?= t('Incomplete');?></a></li>
+                            <li <?= ($paymentStatus == 'incomplete' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/incomplete'.$keywordsparam)?>"><?= t('Incomplete');?></a></li>
                             <?php } ?>
-                            <li <?= ($paymentStatus == 'cancelled' ? 'class="active"': '');?>><a href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/cancelled'.$keywordsparam)?>"><?= t('Cancelled');?></a></li>
+                            <li <?= ($paymentStatus == 'cancelled' ? 'class="active"': '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/cancelled'.$keywordsparam)?>"><?= t('Cancelled');?></a></li>
                     </ul>
                 </li>
 
@@ -661,14 +659,14 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             }
                         } ?>
 
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <?= $status != 'all' ? t('Fulfilment: %s', $statusString) : t('Fulfilment'); ?> <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li <?= (!$status ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
+                            <li <?= (!$status ? 'class="active"' : ''); ?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
                             <?php foreach($statuses as $statusoption){ ?>
-                                <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
+                                <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
                             <?php } ?>
                         </ul>
                     </li>
@@ -677,6 +675,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             </div>
         </div>
     </form>
+    <br />
 
     <?php if (!empty($orderList)) { ?>
         <div class="ccm-dashboard-content-full">

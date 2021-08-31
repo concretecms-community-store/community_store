@@ -20,7 +20,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.3.6';
+    protected $pkgVersion = '2.4';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -44,13 +44,13 @@ class Controller extends Package
 
     public function installStore($pkg)
     {
-        Installer::installSinglePages($pkg);
+        Installer::installBlocks($pkg);
         Installer::installProductParentPage($pkg);
+        Installer::installSinglePages($pkg);
         Installer::installStoreProductPageType($pkg);
         Installer::setDefaultConfigValues($pkg);
         Installer::installPaymentMethods($pkg);
         Installer::installShippingMethods($pkg);
-        Installer::installBlocks($pkg);
         Installer::setPageTypeDefaults($pkg);
         Installer::installCustomerGroups($pkg);
         Installer::installUserAttributes($pkg);
@@ -72,8 +72,11 @@ class Controller extends Package
         $this->registerCategories();
         parent::install();
 
-        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        $this->installStore($pkg);
+
+        if ($this->app->isRunThroughCommandLineInterface()) {
+            $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+            $this->installStore($pkg);
+        }
     }
 
     public function upgrade()
@@ -168,6 +171,50 @@ class Controller extends Package
                 ['css', 'chartist-tooltip'],
             ]
         );
+
+        $select2 =  $al->getAssetGroup('select2');
+
+        if (!$select2) {
+            $al->register('css', 'select2', 'vendor/select2/select2/dist/css/select2.min.css', ['version' => 4.0, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'select2', 'vendor/select2/select2/dist/js/select2.full.min.js', ['version' => 4.0, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('select2',
+                [
+                    ['javascript', 'select2'],
+                    ['css', 'select2']
+                ]
+            );
+        }
+
+        $selectize = $al->getAssetGroup('selectize');
+
+        if (!$selectize) {
+
+            $al->register('css', 'selectize', 'css/selectize/selectize.css', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'selectize', 'js/selectize/selectize.min.js', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('selectize',
+                [
+                    ['javascript', 'selectize'],
+                    ['css', 'selectize']
+                ]
+            );
+        }
+
+        $lightbox = $al->getAssetGroup('core/lightbox');
+
+        if (!$lightbox) {
+
+            $al->register('css', 'lightbox', 'css/magnific-popup/magnific-popup.css', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'lightbox', 'js/magnific-popup/jquery.magnific-popup.js', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('core/lightbox',
+                [
+                    ['javascript', 'lightbox'],
+                    ['css', 'lightbox']
+                ]
+            );
+        }
 
         if ($this->app->isRunThroughCommandLineInterface()) {
             try {

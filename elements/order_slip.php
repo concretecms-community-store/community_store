@@ -49,10 +49,10 @@ $dh = $app->make('helper/date');
         <h1><?= t("Order #") . $order->getOrderID() ?></h1>
 
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-sm-8">
                 <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate()) ?></p>
             </div>
-            <div class="col-xs-4">
+            <div class="col-sm-4">
                 <?php
                 $refunded = $order->getRefunded();
                 $paid = $order->getPaid();
@@ -79,7 +79,7 @@ $dh = $app->make('helper/date');
         <fieldset>
             <legend><?= t("Customer Details") ?></legend>
             <div class="row">
-                <div class="col-xs-4">
+                <div class="col-sm-4">
                     <h4><?= t("Name")?></h4>
                     <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
 
@@ -106,7 +106,7 @@ $dh = $app->make('helper/date');
 
                 </div>
 
-                <div class="col-xs-4">
+                <div class="col-sm-4">
                     <h4><?= t("Billing Address") ?></h4>
 
                     <p>
@@ -118,7 +118,7 @@ $dh = $app->make('helper/date');
                         }?>
                     </p>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-sm-4">
                     <?php
                     $billingaddress = $order->getAttributeValueObject('shipping_address');
                     if ($billingaddress) { ?>
@@ -132,7 +132,7 @@ $dh = $app->make('helper/date');
                 </div>
 
                 <?php if (!empty($orderChoicesAttList)) { ?>
-                    <div class="col-xs-12">
+                    <div class="col-sm-12">
                         <?php foreach ($orderChoicesAttList as $ak) {
                             $attValue = $order->getAttributeValueObject($ak->getAttributeKeyHandle());
 
@@ -160,9 +160,9 @@ $dh = $app->make('helper/date');
                 <tr>
                     <th><strong><?= t("Product Name") ?></strong></th>
                     <th><?= t("Product Options") ?></th>
-                    <th class="text-right"><?= t("Price") ?></th>
-                    <th class="text-right"><?= t("Quantity") ?></th>
-                    <th class="text-right"><?= t("Subtotal") ?></th>
+                    <th class="text-right text-end"><?= t("Price") ?></th>
+                    <th class="text-right text-end"><?= t("Quantity") ?></th>
+                    <th class="text-right text-end"><?= t("Subtotal") ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -192,9 +192,9 @@ $dh = $app->make('helper/date');
                                 }
                                 ?>
                             </td>
-                            <td class="text-right"><?=Price::format($item->getPricePaid()) ?></td>
-                            <td class="text-right"><?= $item->getQuantity() ?></td>
-                            <td class="text-right"><?=Price::format($item->getSubTotal()) ?></td>
+                            <td class="text-right text-end"><?=Price::format($item->getPricePaid()) ?></td>
+                            <td class="text-right text-end"><?= $item->getQuantity() ?></td>
+                            <td class="text-right text-end"><?=Price::format($item->getSubTotal()) ?></td>
                         </tr>
                         <?php
                     }
@@ -203,7 +203,7 @@ $dh = $app->make('helper/date');
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right"><strong><?= t("Items Subtotal")?>:</strong></td>
+                    <td colspan="4" class="text-right text-end"><strong><?= t("Items Subtotal")?>:</strong></td>
                     <td class="text-right" ><?= Price::format($order->getSubTotal())?></td>
                 </tr>
                 </tfoot>
@@ -218,7 +218,7 @@ $dh = $app->make('helper/date');
                     <tr>
 
                         <th><?= t("Discount")?></th>
-                        <th class="text-right"><?= t("Amount")?></th>
+                        <th class="text-right text-end"><?= t("Amount")?></th>
                     </tr>
 
                     </thead>
@@ -226,7 +226,7 @@ $dh = $app->make('helper/date');
                     <?php foreach($applieddiscounts as $discount) { ?>
                         <tr>
                             <td><?= h($discount['odDisplay']); ?></td>
-                            <td class="text-right"><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : $discount['odPercentage'] . '%' ); ?></td>
+                            <td class="text-right text-end"><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : $discount['odPercentage'] . '%' ); ?></td>
                         </tr>
                     <?php } ?>
 

@@ -24,57 +24,62 @@ if ($taxCalc == 'extract') {
 <?php } ?>
 
 <?php if (isset($missingNotificationEmails)) { ?>
-    <p class="alert alert-warning small"><i class="fa fa-warning"></i> <?= t('No notification emails are set - order notifications will be not be sent. This setting can be can entered via the'); ?>
+    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t('No notification emails are set - order notifications will be not be sent. This setting can be can entered via the'); ?>
         <a href="<?= Url::to('/dashboard/store/settings#settings-notifications'); ?>"><?= t('settings page.'); ?></a></p>
 <?php } ?>
 
 <?php if (isset($missingFromEmail)) { ?>
-    <p class="alert alert-warning small"><i class="fa fa-warning"></i> <?= t("No 'From Email' has been configured. It is advised to specify this email address to ensure notifications and receipts are received correctly. This setting can be changed via the"); ?>
+    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t("No 'From Email' has been configured. It is advised to specify this email address to ensure notifications and receipts are received correctly. This setting can be changed via the"); ?>
         <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
 <?php } ?>
 
 
 
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
-        <div class="panel-sale panel panel-default">
-            <?php $ts = $sr->getTodaysSales(); ?>
-            <div class="panel-heading">
-                <h2 class="panel-title"><?= t("Today's Sales") ?></h2>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 stat">
-                        <strong><?= t('Total') ?></strong> <?= Price::format($ts['total']) ?>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 stat">
-                        <strong><?= t('Products') ?></strong> <?= Price::format($ts['productTotal']) ?>
-                    </div>
+    <div class="col-sm-6">
+        <div class="panel-sale panel panel-default card">
+            <div class="card-body">
+                <?php $ts = $sr->getTodaysSales(); ?>
+                <div class="panel-heading">
+                    <h4 class="panel-title card-title"><?= t("Today's Sales") ?></h4>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 stat">
-                        <strong><?= t('Tax') ?> <?= $extraTaxLable ?></strong> <?= Price::format($ts[$taxValue]) ?>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6 stat">
+                            <strong><?= t('Total') ?></strong> <?= Price::format($ts['total']) ?>
+                        </div>
+                        <div class="col-sm-6 stat">
+                            <strong><?= t('Products') ?></strong> <?= Price::format($ts['productTotal']) ?>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 stat">
-                        <strong><?= t('Shipping') ?></strong> <?= Price::format($ts['shippingTotal']) ?>
+                    <div class="row">
+                        <div class="col-sm-6 stat">
+                            <strong><?= t('Tax') ?> <?= $extraTaxLable ?></strong> <?= Price::format($ts[$taxValue]) ?>
+                        </div>
+                        <div class="col-sm-6 stat">
+                            <strong><?= t('Shipping') ?></strong> <?= Price::format($ts['shippingTotal']) ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <br />
 
-        <div class="panel-sale panel panel-default">
-            <?php $ts = $sr->getTodaysSales(); ?>
-            <div class="panel-heading">
-                <h2 class="panel-title"><?= t("Sales this Week") ?></h2>
-            </div>
-            <div class="panel-body">
+        <div class="panel-sale panel panel-default card">
+            <div class="card-body">
+                <?php $ts = $sr->getTodaysSales(); ?>
+                <div class="panel-heading">
+                    <h4 class="panel-title card-title"><?= t("Sales this Week") ?></h4>
+                </div>
+                <div class="panel-body">
 
 
-                <div id="sales-chart"></div>
-            </div>
-            <div class="panel-footer">
-                <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> <?= t('View Sales Report') ?></a>
+                    <div id="sales-chart"></div>
+                </div>
+                <div class="panel-footer">
+                    <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> <?= t('View Sales Report') ?></a>
+                </div>
             </div>
         </div>
 
@@ -142,7 +147,7 @@ if ($taxCalc == 'extract') {
             });
         </script>
     </div>
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-sm-6">
 
         <h4><?= t("Orders") ?></h4>
 
@@ -152,7 +157,7 @@ if ($taxCalc == 'extract') {
                 <div class="input-group">
                     <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders')]) ?>
                     <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            <button type="submit" class="btn btn-default btn-secondary"><i class="fa fa-search"></i></button>
                         </span>
                 </div>
             </div>
@@ -169,14 +174,14 @@ if ($taxCalc == 'extract') {
                 <div class="input-group">
                     <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Products')]) ?>
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-default btn-secondary"><i class="fa fa-search"></i></button>
                     </span>
                 </div>
             </div>
         </form>
 
 
-        <p class="pull-right"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/products/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Product') ?></a></p>
         <p><a href="<?= Url::to('/dashboard/store/products') ?>"><i class="fa fa-gift"></i> <?= t('View All Products') ?></a></p>
 
@@ -184,7 +189,7 @@ if ($taxCalc == 'extract') {
 
 
         <h4><?= t("Discounts") ?></h4>
-        <p class="pull-right"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
+        <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Discount Rule') ?></a></p>
         <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> <?= t('View Discount Rules') ?></a>
         </p>
@@ -193,13 +198,13 @@ if ($taxCalc == 'extract') {
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <hr>
 
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <h4><?= t("Recent Orders") ?></h4>
 
         <?php

@@ -40,16 +40,16 @@ $csm = $app->make('cs/helper/multilingual');
                         <div class="row">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default btn-secondary" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-default btn-secondary"
                                        href="<?= Url::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-default btn-secondary"
                                        href="<?= Url::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
@@ -214,7 +214,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?php } ?>
 
                         <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
@@ -348,8 +348,8 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -388,8 +388,8 @@ $csm = $app->make('cs/helper/multilingual');
                             <?php } ?>
 
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
@@ -426,8 +426,8 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                             </div>
                             <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
@@ -490,8 +490,8 @@ $csm = $app->make('cs/helper/multilingual');
                                 $pm->renderCheckoutForm();
                                 ?>
                                 <div class="store-checkout-form-group-buttons">
-                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
+                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-end" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>
@@ -556,7 +556,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?= $token->output('community_store'); ?>
                                 <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
                                 <input type="hidden" name="action" value="code" />
-                                <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
+                                <button type="submit" class="btn btn-default btn-secondary btn-cart-discount-apply"><?= t('Apply');?></button>
                             </form>
 
                              <script type="text/javascript">

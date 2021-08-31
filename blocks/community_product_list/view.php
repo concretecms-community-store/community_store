@@ -123,7 +123,7 @@ if (!$productsPerRow) {
                         $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
 
                         <?php if ( $displayMode == 'list') { ?>
-                            <div class="col-md-3 col-xs-6">
+                            <div class="col-md-3 col-sm-6">
                         <?php } ?>
 
                             <p class="store-product-list-thumbnail">
@@ -154,7 +154,7 @@ if (!$productsPerRow) {
                     }// if is_obj?>
 
                     <?php if ( $displayMode == 'list') { ?>
-                        <div class="col-md-9 col-xs-6">
+                        <div class="col-md-9 col-sm-6">
                     <?php } ?>
 
                     <?php if ($showName && $displayMode == 'list') {
@@ -195,7 +195,7 @@ if (!$productsPerRow) {
                                 <p class="store-product-price-suggestions"><?php
                                     foreach ($pricesuggestions as $suggestion) {
                                         ?>
-                                        <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
+                                        <a href="#" class="store-price-suggestion btn btn-default btn-secondary btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
                                         <?php
                                     } ?>
                                 </p>
@@ -208,7 +208,7 @@ if (!$productsPerRow) {
                             } ?>
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
-                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group col-md-6 col-sm-6 col-sm-6">
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01" class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice"/>
                             </div>
@@ -241,7 +241,7 @@ if (!$productsPerRow) {
 
                     <?php if ($showPageLink && $productPage) {
                         ?>
-                        <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
+                        <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default btn-secondary"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
                         <?php
                     } ?>
 

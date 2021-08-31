@@ -15,6 +15,13 @@ This add-on is intended to be run in a PHP 7 environment.
 ## Setup
 The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend concrete5' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concrete5-community-store/community_store/releases
 
+## Development
+To install dependencies run:
+- npm install --dev
+- composer install
+
+Once installed the node_modules folder is not needed for deployment.
+
 ## Documentation
 Further documentation and how-tos can be found at https://concrete5-community-store.github.io/community_store/
 The documentation is automatically generated using https://vuepress.vuejs.org/, from the files within the [docs folder of the master branch](https://github.com/concrete5-community-store/community_store/tree/master/docs).

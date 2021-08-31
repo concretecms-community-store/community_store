@@ -1,46 +1,47 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('showCartItems', 1, isset($showCartItems) ? $showCartItems : 1); ?>
         <?= t('Show Number Of Items In Cart'); ?>
     </label>
 </div>
 
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('showCartTotal', 1, isset($showCartTotal) ? $showCartTotal : 1); ?>
         <?= t('Show Cart Total'); ?>
     </label>
 </div>
 
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('showCheckout', 1, isset($showCheckout) ? $showCheckout : 1); ?>
         <?= t('Show Checkout Link'); ?>
     </label>
 </div>
 
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('popUpCart', 1, isset($popUpCart) ? $popUpCart : 1); ?>
         <?= t('Display Cart In Popup'); ?>
     </label>
 </div>
 
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('showGreeting', 1, isset($showSignIn) ? $showSignIn : 1); ?>
         <?= t('Show Greeting'); ?>
     </label>
 </div>
 
-<div class="checkbox">
+<div class="checkbox form-check">
     <label>
         <?= $form->checkbox('showSignIn', 1, isset($showSignIn) ? $showSignIn : 1); ?>
         <?= t('Show Sign-In Link'); ?>
     </label>
 </div>
 
+<br />
 
 <div class="form-group">
     <?= $form->label('cartLabel', t('Cart Link Label')); ?>

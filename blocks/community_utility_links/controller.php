@@ -13,7 +13,7 @@ class Controller extends BlockController
     protected $btTable = 'btCommunityUtilityLinks';
     protected $btInterfaceWidth = "450";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "400";
+    protected $btInterfaceHeight = "460";
     protected $btDefaultSet = 'community_store';
 
     public function getBlockTypeDescription()
