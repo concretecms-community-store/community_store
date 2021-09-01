@@ -102,16 +102,16 @@ class ShippingMethodOffer
 
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
-                if ('shipping' == $discount->getDeductFrom()) {
-                    if ('value' == $discount->getDeductType() || 'value_all' == $discount->getDeductType()) {
+                if ($discount->getDeductFrom() == 'shipping') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() ==  'value_all') {
                         $deduct += $discount->getValue();
                     }
 
-                    if ('percentage' == $discount->getDeductType()) {
+                    if ($discount->getDeductType() == 'percentage') {
                         $percentage -= ($discount->getPercentage() / 100);
                     }
 
-                    if ('fixed' == $discount->getDeductType()) {
+                    if ($discount->getDeductType() == 'fixed') {
                         return $discount->getValue();
                     }
                 }

@@ -597,7 +597,9 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
         <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 
-
+    <?php
+    $version = $app->make('config')->get('concrete.version');
+    if (version_compare($version, '9.0', '<')) { ?>
     <form role="form" class="form-inline">
         <div class="row">
             <div class="ccm-search-fields-submit col-sm-12 col-md-5">
@@ -675,7 +677,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             </div>
         </div>
     </form>
-    <br />
+    <?php } ?>
 
     <?php if (!empty($orderList)) { ?>
         <div class="ccm-dashboard-content-full">

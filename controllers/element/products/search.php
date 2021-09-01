@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\Element\Products;
 
-use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\File\Search\SearchProvider;
-use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Controller\ElementController;
 
 class Search extends ElementController
 {
@@ -57,6 +55,9 @@ class Search extends ElementController
         $this->set('gID', $this->gID);
         $this->set('groupList', $this->groupList);
         $this->set('token', $this->app->make('token'));
+
+        $this->set('keywords', $this->app->request->request('keywords'));
+
         if (isset($this->headerSearchAction)) {
             $this->set('headerSearchAction', $this->headerSearchAction);
         } else {

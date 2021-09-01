@@ -6,6 +6,7 @@
     <div class="col-sm-6">
 
 
+s
             <legend><?= t('Products'); ?></legend>
 
             <div class="form-group">
@@ -41,6 +42,8 @@
                 <?= $form->select('sortOrder', [
                     'alpha' => t("Alphabetical"),
                     'alpha_desc' => t("Alphabetical, reversed"),
+                    'sku' => t("SKU"),
+                    'sku_desc' => t("SKU, reversed"),
                     'date' => t('Date Added'),
                     'price_asc' => t('Price Ascending'),
                     'price_desc' => t('Price Descending'),

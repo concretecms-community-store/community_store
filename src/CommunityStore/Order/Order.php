@@ -625,7 +625,7 @@ class Order
         foreach ($discounts as $discount) {
             $orderDiscount = new OrderDiscount();
             $orderDiscount->setOrder($order);
-            if ('code' == $discount->getTrigger()) {
+            if ($discount->getTrigger() == 'code') {
                 $orderDiscount->setCode(Session::get('communitystore.code'));
 
                 if ($discount->isSingleUse()) {

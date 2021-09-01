@@ -136,8 +136,8 @@ class DiscountRule
 
     public function returnDiscountedPrice()
     {
-        if ('subtotal' == $this->getDeductFrom()) {
-            if ('percentage' == $this->getDeductType()) {
+        if ($this->getDeductFrom() == 'subtotal') {
+            if ($this->getDeductType() == 'percentage') {
                 $applicableTotal = $this->getApplicableTotal();
 
                 if (false != $applicableTotal) {
@@ -145,7 +145,7 @@ class DiscountRule
                 }
             }
 
-            if ('value_all' == $this->getDeductType()) {
+            if ($this->getDeductType() == 'value_all') {
                 $applicableTotal = $this->getApplicableTotal();
 
                 if (false != $applicableTotal) {
@@ -153,7 +153,7 @@ class DiscountRule
                 }
             }
 
-            if ('fixed' == $this->getDeductType()) {
+            if ($this->getDeductType() == 'fixed') {
                 return $this->getValue();
             }
         }
@@ -525,11 +525,11 @@ class DiscountRule
         if ($display) {
             return $display;
         } else {
-            if ('percentage' == $this->drDeductType) {
+            if ($this->drDeductType == 'percentage') {
                 return $this->drPercentage . ' ' . t('off');
             }
 
-            if ('value' == $this->drDeductType) {
+            if ($this->drDeductType == 'value') {
                 return Price::format($this->drValue) . ' ' . t('off');
             }
         }

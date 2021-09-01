@@ -281,6 +281,15 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "alpha_desc":
                 $query->orderBy('pName', 'desc');
                 break;
+            case "sku":
+                $query->orderBy('pSKU', $this->getSortByDirection());
+                break;
+            case "sku_asc":
+                $query->orderBy('pSKU', 'asc');
+                break;
+            case "sku_desc":
+                $query->orderBy('pSKU', 'desc');
+                break;
             case "price":
                 $query->orderBy('pPrice', $this->getSortByDirection());
                 break;

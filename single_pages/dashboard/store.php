@@ -78,7 +78,7 @@ if ($taxCalc == 'extract') {
                     <div id="sales-chart"></div>
                 </div>
                 <div class="panel-footer">
-                    <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart"></i> <?= t('View Sales Report') ?></a>
+                    <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart fa-chart-line"></i> <?= t('View Sales Report') ?></a>
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@ if ($taxCalc == 'extract') {
         <h4><?= t("Discounts") ?></h4>
         <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Discount Rule') ?></a></p>
-        <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors"></i> <?= t('View Discount Rules') ?></a>
+        <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors fa-ticket-alt"></i> <?= t('View Discount Rules') ?></a>
         </p>
 
 
