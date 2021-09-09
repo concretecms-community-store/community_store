@@ -314,7 +314,6 @@ if (!$productsPerRow) {
                                     <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
                                         <?php } ?>
                                         <?php
-                                        $firstAvailableVariation = false;
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
@@ -325,14 +324,13 @@ if (!$productsPerRow) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
 
+                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                    $selected = 'selected="selected"';
+                                                }
+
                                                 if (!empty($variation)) {
-                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
-
-                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                        $selected = 'selected="selected"';
-                                                    }
                                                 } else {
                                                     $disabled = false;
                                                     if ($firstOptionItem) {

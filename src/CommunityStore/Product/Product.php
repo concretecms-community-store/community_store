@@ -1853,8 +1853,14 @@ class Product
             return false;
         }
 
-        if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->isSellable();
+        if ($this->hasVariations()) {
+            $variation = $this->getVariation();
+            if ($variation) {
+                return $variation->isSellable();
+            } else {
+                return false;
+            }
+
         } else {
             if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
                 return true;

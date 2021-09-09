@@ -323,7 +323,7 @@ if (is_object($product) && $product->isActive()) {
                                         <?php
                                         } ?>
                                         <?php
-                                        $firstAvailableVariation = false;
+
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
@@ -334,14 +334,14 @@ if (is_object($product) && $product->isActive()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
 
+                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                    $selected = 'selected="selected"';
+                                                }
+
                                                 if (!empty($variation)) {
-                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
 
-                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                        $selected = 'selected="selected"';
-                                                    }
                                                 } else {
                                                     $disabled = false;
                                                     if ($firstOptionItem) {
