@@ -40,8 +40,8 @@
                 <?= $form->select('sortOrder', [
                     'alpha' => t("Alphabetical"),
                     'alpha_desc' => t("Alphabetical, reversed"),
-                    'sku' => t("SKU"),
-                    'sku_desc' => t("SKU, reversed"),
+                    'sku' => t("SKU Alphabetical"),
+                    'sku_desc' => t("SKU Alphabetical, reversed"),
                     'date' => t('Date Added'),
                     'price_asc' => t('Price Ascending'),
                     'price_desc' => t('Price Descending'),

@@ -119,7 +119,7 @@ class Controller extends BlockController
             $this->set('usersort', '');
         }
 
-        if ($this->sortOrder == 'alpha') {
+        if ($this->sortOrder == 'alpha' || $this->sortOrder == 'sku') {
             $products->setSortByDirection('asc');
         }
 
