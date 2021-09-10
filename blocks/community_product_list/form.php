@@ -5,8 +5,6 @@
 
     <div class="col-sm-6">
 
-
-s
             <legend><?= t('Products'); ?></legend>
 
             <div class="form-group">
