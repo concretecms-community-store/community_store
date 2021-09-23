@@ -303,6 +303,19 @@ class Controller extends BlockController
         parent::save($args);
     }
 
+    public function duplicate($newBID) {
+        $db = $this->app->make('database')->connection();
+        $ni = parent::duplicate($newBID);
+        $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) select (?, gID) from btCommunityStoreProductListGroups where VALUES bID = ?", [$ni->bID, $this->bID]);
+    }
+
+    public function delete()
+    {
+        $db = $this->app->make('database')->connection();
+        $db->executeQuery('DELETE FROM btCommunityStoreProductListGroups WHERE bID = ?', [$this->bID]);
+        parent::delete();
+    }
+
     public function validate($args)
     {
         $e = $this->app->make("helper/validation/error");

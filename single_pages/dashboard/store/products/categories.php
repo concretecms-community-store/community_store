@@ -32,6 +32,7 @@ use \Concrete\Core\Support\Facade\Url;
             <?= $product->getImageThumb();?>
 
             <?= $product->getName(); ?>
+            <?= $product->getSKU() ? '(' . $product->getSKU() . ')' : '' ; ?>
             <?= ($product->isActive() ? '' : ' <span class="label label-default">' . t('Inactive'). '</span>'); ?>
 
             <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />
