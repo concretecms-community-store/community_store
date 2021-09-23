@@ -306,7 +306,7 @@ class Controller extends BlockController
     public function duplicate($newBID) {
         $db = $this->app->make('database')->connection();
         $ni = parent::duplicate($newBID);
-        $db->query("INSERT INTO btCommunityStoreProductListGroups (bID,gID) select (?, gID) from btCommunityStoreProductListGroups where VALUES bID = ?", [$ni->bID, $this->bID]);
+        $db->query("INSERT INTO btCommunityStoreProductListGroups (bID, gID) select ?, gID from btCommunityStoreProductListGroups where  bID = ?", [$ni->bID, $this->bID]);
     }
 
     public function delete()
