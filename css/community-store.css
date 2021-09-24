@@ -179,3 +179,7 @@
 .store-cart-modal-slide.store-cart-modal-active {
     margin-right: 0 !important;
 }
+
+.store-cart-list-thumb img {
+    max-width: 100%;
+}

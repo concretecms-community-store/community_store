@@ -93,7 +93,7 @@ if ($cartMode) {
                         <tr class="store-cart-page-cart-list-item <?= $classes?>" data-instance-id="<?= $k?>" data-product-id="<?= $product->getID()?>">
                             <?php $thumb = $product->getImageThumb(); ?>
                             <?php if ($thumb) { ?>
-                            <td class="cart-list-thumb col-sm-2 col-md-1">
+                            <td class="store-cart-list-thumb col-sm-2 col-md-1">
                                 <?php if ($productPage) { ?>
                                     <a href="<?= URL::to($productPage) ?>">
                                         <?= $thumb ?>
