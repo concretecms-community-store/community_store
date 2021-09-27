@@ -204,7 +204,7 @@ $dh = $app->make('helper/date');
                     <hr />
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <?php
                                 $priceclass = 'nonpriceentry';
@@ -226,7 +226,7 @@ $dh = $app->make('helper/date');
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
                                 <?= $form->label("pWholesalePrice", t('Wholesale Price'), array('class'=>$priceclass));?>
                                 <div class="input-group">
@@ -235,6 +235,18 @@ $dh = $app->make('helper/date');
                                     </div>
                                     <?php $wholesalePrice = $product->getWholesalePriceValue(); ?>
                                     <?= $form->number("pWholesalePrice", $wholesalePrice, ['step'=>'0.01', 'placeholder'=>t('No Wholesale Price Set')]);?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?= $form->label("pCostPrice", t('Cost Price'), array('class'=>$priceclass));?>
+                                <div class="input-group">
+                                    <div class="input-group-addon input-group-text">
+                                        <?= Config::get('community_store.symbol');?>
+                                    </div>
+                                    <?php $costPrice = $product->getCostPrice(); ?>
+                                    <?= $form->number("pCostPrice", $costPrice, ['step'=>'0.01', 'placeholder'=>t('No Cost Price Set')]);?>
                                 </div>
                             </div>
                         </div>
@@ -1476,7 +1488,7 @@ $dh = $app->make('helper/date');
 
 
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Price')); ?>
                                                             <div class="input-group">
@@ -1487,7 +1499,7 @@ $dh = $app->make('helper/date');
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Wholesale Price')); ?>
                                                             <div class="input-group">
@@ -1495,6 +1507,17 @@ $dh = $app->make('helper/date');
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
                                                                 <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Wholesale Price')]); ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <?= $form->label("", t('Cost Price')); ?>
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon input-group-text">
+                                                                    <?= Config::get('community_store.symbol'); ?>
+                                                                </div>
+                                                                <?= $form->number("pvCostPrice[" . $varid . "]", $variation ? $variation->getVariationCostPrice() : '', ['step'=>'0.01', 'placeholder' => t('Cost Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>

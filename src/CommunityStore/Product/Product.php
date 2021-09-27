@@ -91,6 +91,13 @@ class Product
      */
     protected $pWholesalePrice;
 
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pCostPrice;
+
+
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
@@ -592,10 +599,17 @@ class Product
     {
         $this->pPrice = ($price !== '' ? (float)$price : 0);
     }
+
     public function setWholesalePrice($price)
     {
         $this->pWholesalePrice = ($price !== '' ? (float)$price : null);
     }
+
+    public function setCostPrice($price)
+    {
+        $this->pCostPrice = ($price !== '' ? (float)$price : null);
+    }
+
     public function setSalePrice($price)
     {
         $this->pSalePrice = (empty($price) && !is_numeric($price) ?  null : (float)$price );
@@ -1038,6 +1052,7 @@ class Product
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
+        $product->setCostPrice($data['pCostPrice']);
 
         if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);
@@ -1263,6 +1278,10 @@ class Product
 
     public function getWholesalePriceValue() {
         return $this->pWholesalePrice;
+    }
+
+    public function getCostPrice() {
+        return $this->pCostPrice;
     }
 
     public function getWholesalePrice($qty = 1)
