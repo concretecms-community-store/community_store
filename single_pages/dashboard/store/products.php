@@ -116,8 +116,10 @@ $dh = $app->make('helper/date');
                             <div class="input-group">
                                 <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'step' => 0.001]); ?>
                                 <div class="input-group-addon input-group-text">
-                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true)) ?>
-                                    <?= $form->label('pQtyUnlim', t('Unlimited')) ?>
+                                    <div class="form-check-inline">
+                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true),  ['class'=>'form-check-input']) ?>
+                                    <?= $form->label('pQtyUnlim', t('Unlimited'), ['class'=>'form-label form-check-label']) ?>
+                                    </div>
                                 </div>
 
                                 <script>
@@ -857,10 +859,10 @@ $dh = $app->make('helper/date');
                     <?= $form->label('', t("Options")); ?>
                     <div id="product-options-container"></div>
 
-                    <div class="clearfix">
+                    <div class="clearfix mt-3">
                         <h4><?= t('Add'); ?></h4>
                         <span class="btn btn-sm btn-primary" id="btn-add-option-group"><?= t('Option List') ?></span>
-                        <span class="btn btn-sm btn-primary" id="btn-add-text"><?= t('Text Field') ?></span>
+                        <span class="btn btn-sm btn-primary" id="btn-add-text"><?= t('Text Input') ?></span>
                         <span class="btn btn-sm btn-primary" id="btn-add-textarea"><?= t('Text Area') ?></span>
                         <span class="btn btn-sm btn-primary" id="btn-add-checkbox"><?= t('Checkbox') ?></span>
                         <span class="btn btn-sm btn-primary" id="btn-add-hidden"><?= t('Hidden Value') ?></span>
@@ -869,19 +871,19 @@ $dh = $app->make('helper/date');
 
                     <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
                     <script type="text/template" id="option-group-template">
-                        <div class="panel panel-default option-group clearfix" data-order="<%=sort%>">
-                            <div class="panel-heading">
+                        <div class="card panel panel-default option-group clearfix" data-order="<%=sort%>">
+                            <div class="panel-heading card-title">
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3 class="panel-title"><i class="fa fa-arrows drag-handle"></i> <%=poLabel%></h3>
+                                        <h3 class="panel-title"><i class="fa fa-arrows-alt drag-handle mr-2"></i> <%=poLabel%></h3>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-sm btn-delete-item btn-danger"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group') ?>" class="fa fa-times"></i> Remove</a>
+                                        <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-sm btn-delete-item btn-danger float-end"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group') ?>" class="fa fa-times"></i> Remove</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body card-body">
 
                                 <div class="row">
                                     <% if (poType == 'static') { %>
@@ -975,7 +977,7 @@ $dh = $app->make('helper/date');
                                 <% if (poType == 'select') { %>
                                 <hr/>
                                 <div data-group="<%=sort%>" class="option-group-item-container"></div>
-                                <a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default"><?= t('Add Option') ?></a>
+                                <p><a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default btn-secondary"><?= t('Add Option') ?></a></p>
                                 <% } %>
                             </div>
                             <input type="hidden" name="poID[]" value="<%=poID%>">
@@ -1221,17 +1223,20 @@ $dh = $app->make('helper/date');
                     <!-- TEMPLATE FOR EACH OPTION ITEM ---->
                     <script type="text/template" id="option-item-template">
                         <div class="option-item clearfix form-horizontal" data-order="<%=sort%>" data-option-group="<%=optGroup%>">
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <div class="col-sm-2 text-right">
-                                    <label class="control-label grabme"><i class="fa fa-arrows drag-handle pull-left float-start"></i><?= t('Option') ?></label>
+                                    <label class="control-label grabme"><i class="fa fa-arrows-alt drag-handle pull-left float-start"></i> <?= t('Option') ?></label>
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="input-group">
                                         <input type="text" name="poiName[]" class="form-control input-sm" value="<%=poiName%>">
                                         <div class="input-group-addon input-group-text input-sm">
-                                            <label class="">
+                                            <div class="form-check-inline">
                                                 <input type="hidden" name="poiHidden[]" value="<%=poiHiddenValue%>"/>
-                                                <input type="checkbox" class="optionHiddenToggle" name="poiHiddenToggle[]" value="1" <%=poiHidden%> /> <?= t('Hide'); ?></label>
+                                                <label class="form-label form-check-label"><input type="checkbox" class="optionHiddenToggle form-check-input" name="poiHiddenToggle[]" value="1" <%=poiHidden%> />
+                                                    <?= t('Hide'); ?>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                     <br class="smallbreak">

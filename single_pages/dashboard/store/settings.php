@@ -31,6 +31,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <li class="nav-item"><a class="nav-link" href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings-user-interface" data-pane-toggle><?= t('User Interface'); ?></a></li>
             </ul>
 
         </div>
@@ -669,6 +670,13 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <span class="small text-muted"><br /><?= t('Log the user agent against the order (this will effect your GDPR compliance).') ?></span>
                 </label>
             </div>
+
+        </div>
+
+        <!-- #settings-user-interface -->
+        <div class="col-sm-9 store-pane" id="settings-user-interface">
+            <h3><?= t('User Interface'); ?></h3>
+
 
         </div>
     </div>
