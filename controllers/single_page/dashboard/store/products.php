@@ -364,6 +364,20 @@ class Products extends DashboardSitePageController
             $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
         }
         $this->set('taxClasses', $taxClasses);
+
+        $this->set('hideStockAvailabilityDates', Config::get('community_store.hideStockAvailabilityDates'));
+        $this->set('hideWholesalePrice', Config::get('community_store.hideWholesalePrice'));
+        $this->set('hideCostPrice', Config::get('community_store.hideCostPrice'));
+        $this->set('hideVariationPrices', Config::get('community_store.hideVariationPrices'));
+        $this->set('hideVariationShippingFields', Config::get('community_store.hideVariationShippingFields'));
+        $this->set('hideSalePrice', Config::get('community_store.hideSalePrice'));
+        $this->set('hideCustomerPriceEntry', Config::get('community_store.hideCustomerPriceEntry'));
+        $this->set('hideQuantityBasedPricing', Config::get('community_store.hideQuantityBasedPricing'));
+        $this->set('productDefaultActive', Config::get('community_store.productDefaultActive'));
+        $this->set('productDefaultShippingNo', Config::get('community_store.productDefaultShippingNo'));
+        $this->set('variationDefaultUnlimited', Config::get('community_store.variationDefaultUnlimited'));
+
+
     }
 
     public function save()

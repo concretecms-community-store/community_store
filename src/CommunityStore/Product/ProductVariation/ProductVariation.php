@@ -492,6 +492,8 @@ class ProductVariation
 
         $variationIDs = [];
 
+        $variationDefaultUnlimited = \Concrete\Core\Support\Facade\Config::get('community_store.variationDefaultUnlimited');
+
         if (!empty($comboOptions)) {
             $sort = 0;
 
@@ -514,7 +516,7 @@ class ProductVariation
                         'pvWholesalePrice'=>'',
                         'pvSalePrice' => '',
                         'pvQty' => 0,
-                        'pvQtyUnlim' => null,
+                        'pvQtyUnlim' => ($variationDefaultUnlimited ? 1 : null) ,
                         'pvfID' => null,
                         'pvWeight' => '',
                         'pvNumberItems' => '',
@@ -545,7 +547,7 @@ class ProductVariation
                     $variation->setVariationCostPrice($data['pvCostPrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationStockLevel($data['pvQty'][$key]);
-                    $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
+                    $variation->setVariationIsUnlimited($data['pvQtyUnlim'][$key]);
                     $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
                     $variation->setVariationNumberItems($data['pvNumberItems'][$key]);

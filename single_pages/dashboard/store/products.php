@@ -20,7 +20,15 @@ $dh = $app->make('helper/date');
         $product = new Product();
         $product->setIsUnlimited(true);
         $product->setIsTaxable(true);
-        $product->setIsShippable(true);
+
+        if (!$productDefaultShippingNo) {
+            $product->setIsShippable(true);
+        }
+
+        if ($productDefaultActive) {
+            $product->setIsActive(true);
+        }
+        
     } else {
         $images = $product->getImages();
         $options = $product->getOptions();
@@ -130,25 +138,25 @@ $dh = $app->make('helper/date');
                                         });
 
                                         $('#pAllowDecimalQty').change(function () {
-                                            $('#quantitystepscontainer').toggleClass('hidden');
+                                            $('#quantitystepscontainer').toggleClass('hidden d-none');
                                         });
 
                                         $('#pQuantityPrice').change(function () {
-                                            $('#tieredoptionscontainer').toggleClass('hidden');
-                                            $('#tieredoptionsnote').toggleClass('hidden');
+                                            $('#tieredoptionscontainer').toggleClass('hidden d-none');
+                                            $('#tieredoptionsnote').toggleClass('hidden d-none');
                                         });
 
                                         $('#pNoQty').change(function () {
                                             if ($(this).val() == '1') {
-                                                $('#quantityoptions').addClass('hidden');
-                                                $('#quantitystepscontainer').addClass('hidden');
+                                                $('#quantityoptions').addClass('hidden d-none');
+                                                $('#quantitystepscontainer').addClass('hidden d-none');
                                             } else {
-                                                $('#quantityoptions').removeClass('hidden');
+                                                $('#quantityoptions').removeClass('hidden d-none');
 
                                                 if ($('#pAllowDecimalQty').val() == 1) {
-                                                    $('#quantitystepscontainer').removeClass('hidden');
+                                                    $('#quantitystepscontainer').removeClass('hidden d-none');
                                                 } else {
-                                                    $('#quantitystepscontainer').addClass('hidden');
+                                                    $('#quantitystepscontainer').addClass('hidden d-none');
                                                 }
                                             }
 
@@ -156,9 +164,9 @@ $dh = $app->make('helper/date');
 
                                         $('#pVariations').change(function () {
                                             if ($(this).prop('checked')) {
-                                                $('#variations,#variationnotice').removeClass('hidden');
+                                                $('#variations,#variationnotice').removeClass('hidden d-none');
                                             } else {
-                                                $('#variations,#variationnotice').addClass('hidden');
+                                                $('#variations,#variationnotice').addClass('hidden d-none');
                                             }
                                         });
 
@@ -184,26 +192,26 @@ $dh = $app->make('helper/date');
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <?= $form->label("pDateAvailableStart", t('Stock Available From')); ?>
-                                <?= $app->make('helper/form/date_time')->datetime('pDateAvailableStart', $product->getDateAvailableStart()); ?>
+                    <div class="<?= ($hideStockAvailabilityDates ? 'hidden d-none' : ''); ?>">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <?= $form->label("pDateAvailableStart", t('Stock Available From')); ?>
+                                    <?= $app->make('helper/form/date_time')->datetime('pDateAvailableStart', $product->getDateAvailableStart()); ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <?= $form->label("pDateAvailableEnd", t('Stock Available Until')); ?>
-                                <?= $app->make('helper/form/date_time')->datetime('pDateAvailableEnd', $product->getDateAvailableEnd()); ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <?= $form->label("pDateAvailableEnd", t('Stock Available Until')); ?>
+                                    <?= $app->make('helper/form/date_time')->datetime('pDateAvailableEnd', $product->getDateAvailableEnd()); ?>
+                                </div>
                             </div>
                         </div>
+                        <hr />
                     </div>
-
-
-                    <hr />
 
                     <div class="row">
                         <div class="col-md-4">
@@ -212,9 +220,9 @@ $dh = $app->make('helper/date');
                                 $priceclass = 'nonpriceentry';
                                 $defaultpriceclass = 'priceentry';
                                 if ($product->allowCustomerPrice()) {
-                                    $priceclass .= ' hidden';
+                                    $priceclass .= ' hidden d-none';
                                 } else {
-                                    $defaultpriceclass .= ' hidden';
+                                    $defaultpriceclass .= ' hidden d-none';
                                 }
                                 ?>
                                 <?= $form->label("pPrice", t("Price"), ['class' => $priceclass]); ?>
@@ -228,8 +236,8 @@ $dh = $app->make('helper/date');
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?>">
+                        <div class="col-md-4 <?= ($hideWholesalePrice ? 'hidden d-none' : ''); ?>">
+                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?> ">
                                 <?= $form->label("pWholesalePrice", t('Wholesale Price'), array('class'=>$priceclass));?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
@@ -240,7 +248,7 @@ $dh = $app->make('helper/date');
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 <?= ($hideCostPrice ? 'hidden d-none' : ''); ?>">
                             <div class="form-group">
                                 <?= $form->label("pCostPrice", t('Cost Price'), array('class'=>$priceclass));?>
                                 <div class="input-group">
@@ -254,7 +262,7 @@ $dh = $app->make('helper/date');
                         </div>
 
                     </div>
-                    <div class="row">
+                    <div class="row <?= ($hideCustomerPriceEntry ? 'hidden d-none' : ''); ?>">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <?= $form->checkbox('pCustomerPrice', '1', $product->allowCustomerPrice()) ?>
@@ -265,10 +273,10 @@ $dh = $app->make('helper/date');
 
 
 
-                    <div class="row">
+                    <div class="row <?= ($hideSalePrice ? 'hidden d-none' : ''); ?>">
 
                         <div class="col-md-6">
-                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
                                 <?= $form->label("pSalePrice", t('Sale Price'), ['class' => $priceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
@@ -277,7 +285,7 @@ $dh = $app->make('helper/date');
                                     <?php $salePrice = $product->getSalePriceValue(); ?>
                                     <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
                                 </div>
-                                <span class="help-block <?=($salePrice ? 'hidden' : ''); ?>" id="saleNote"><?= t('Enter a value to set start and end dates for the sale'); ?></span>
+                                <span class="help-block <?=($salePrice ? 'hidden d-none' : ''); ?>" id="saleNote"><?= t('Enter a value to set start and end dates for the sale'); ?></span>
 
                                 <script>
                                     $(document).ready(function () {
@@ -286,21 +294,21 @@ $dh = $app->make('helper/date');
                                             var saleNote = $('#saleNote');
 
                                             if ($(this).val()) {
-                                                saleDates.removeClass('hidden');
-                                                saleNote.addClass('hidden');
+                                                saleDates.removeClass('hidden d-none');
+                                                saleNote.addClass('hidden d-none')
                                             } else {
-                                                saleDates.addClass('hidden');
-                                                saleNote.removeClass('hidden');
+                                                saleDates.addClass('hidden d-none');
+                                                saleNote.removeClass('hidden d-none');
                                             }
                                         });
 
                                         $('#pCustomerPrice').change(function () {
                                             if ($(this).prop('checked')) {
-                                                $('.priceentry').removeClass('hidden');
-                                                $('.nonpriceentry').addClass('hidden');
+                                                $('.priceentry').removeClass('hidden d-none');
+                                                $('.nonpriceentry').addClass('hidden d-none');
                                             } else {
-                                                $('.priceentry').addClass('hidden');
-                                                $('.nonpriceentry').removeClass('hidden');
+                                                $('.priceentry').addClass('hidden d-none');
+                                                $('.nonpriceentry').removeClass('hidden d-none');
                                             }
                                         });
                                     });
@@ -310,10 +318,10 @@ $dh = $app->make('helper/date');
                         </div>
 
                     </div>
-                    <div class="row saleDates <?=($salePrice ? '' : 'hidden'); ?>">
+                    <div class="row saleDates <?=($salePrice ? '' : 'hidden d-none'); ?>">
                         <div class="col-md-12">
 
-                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
                                 <?= $form->label("pSaleStart", t('Sale Start')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleStart', $product->getSaleStart()); ?>
                             </div>
@@ -322,7 +330,7 @@ $dh = $app->make('helper/date');
 
                         <div class="col-md-12">
 
-                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
                                 <?= $form->label("pSaleEnd", t('Sale End')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleEnd', $product->getSaleEnd()); ?>
                             </div>
@@ -341,7 +349,7 @@ $dh = $app->make('helper/date');
                             </div>
                         </div>
                     </div>
-                    <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden'); ?>">
+                    <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden d-none'); ?>">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= $form->label("pPriceMinimum", t('Minimum Price')); ?>
@@ -375,18 +383,17 @@ $dh = $app->make('helper/date');
                         </div>
                     </div>
 
-
-                    <div class="row nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?>">
+                    <div class="row nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?> <?= ($hideQuantityBasedPricing ? 'hidden d-none' : ''); ?>">
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <?= $form->checkbox('pQuantityPrice', '1', $product->hasQuantityPrice()) ?>
                                 <?= $form->label('pQuantityPrice', t('Quantity based pricing')) ?>
-                                <span id="tieredoptionsnote" class="help-block <?= $product->hasQuantityPrice() ? '' : 'hidden' ?>"><?= t('Note: quantity based pricing is not overridden by a sale price'); ?></span>
+                                <span id="tieredoptionsnote" class="help-block <?= $product->hasQuantityPrice() ? '' : 'hidden d-none' ?>"><?= t('Note: quantity based pricing is not overridden by a sale price'); ?></span>
                             </div>
                         </div>
 
-                        <div id="tieredoptionscontainer" class="col-md-12  <?= $product->hasQuantityPrice() ? '' : 'hidden' ?>">
+                        <div id="tieredoptionscontainer" class="col-md-12  <?= $product->hasQuantityPrice() ? '' : 'hidden d-none' ?>">
 
                             <div id="tierscontainer">
                                 <div class="row">
@@ -526,14 +533,14 @@ $dh = $app->make('helper/date');
                     </div>
 
 
-                    <div class="row <?= !$product->allowQuantity() ? 'hidden' : ''; ?>" id="quantityoptions">
+                    <div class="row <?= !$product->allowQuantity() ? 'hidden d-none' : ''; ?>" id="quantityoptions">
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <?= $form->label("pAllowDecimalQty", t('Allow Decimal Quantities')); ?>
                                 <?= $form->select("pAllowDecimalQty", ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
                             </div>
                         </div>
-                        <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden'); ?>" id="quantitystepscontainer">
+                        <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden d-none'); ?>" id="quantitystepscontainer">
                             <div class="form-group">
                                 <?= $form->label("pQtySteps", t('Quantity Steps')); ?>
                                 <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
@@ -834,7 +841,7 @@ $dh = $app->make('helper/date');
                             </div>
                         </div>
                     </div>
-                    <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
+                    <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden d-none'; ?>">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <?= $form->label("pPackageData", t('Or, Package(s) Data')); ?>
@@ -1001,8 +1008,8 @@ $dh = $app->make('helper/date');
                             var variationeffect = $(".option-group[data-order='" + id + "'] select[name=poIncludeVariations\\[\\]] option:selected");
 
                             if (variationeffect && variationeffect.val() == 1) {
-                                $('#variationshider').addClass('hidden');
-                                $('#changenotice').removeClass('hidden');
+                                $('#variationshider').addClass('hidden d-none');
+                                $('#changenotice').removeClass('hidden d-none');
                             }
 
                             $(".option-group[data-order='" + id + "']").remove();
@@ -1014,9 +1021,9 @@ $dh = $app->make('helper/date');
 
 
                             $(document).on('change', 'select[name=poIncludeVariations\\[\\]]', function () {
-                                $('#variationshider').addClass('hidden');
-                                $('#changenotice').removeClass('hidden');
-                                $('#changewarning').removeClass('hidden');
+                                $('#variationshider').addClass('hidden d-none');
+                                $('#changenotice').removeClass('hidden d-none');
+                                $('#changewarning').removeClass('hidden d-none');
                             });
 
 
@@ -1274,8 +1281,8 @@ $dh = $app->make('helper/date');
                         function deleteOptionItem(group, id) {
                             $(".option-group[data-order='" + group + "']").find(".option-item[data-order='" + id + "']").remove();
 
-                            $('#variationshider').addClass('hidden');
-                            $('#changenotice').removeClass('hidden');
+                            $('#variationshider').addClass('hidden d-none');
+                            $('#changenotice').removeClass('hidden d-none');
                         }
 
                         function indexOptionItems() {
@@ -1310,8 +1317,8 @@ $dh = $app->make('helper/date');
 
                             //Init Index
                             indexOptionItems();
-                            $('#variationshider').addClass('hidden');
-                            $('#changenotice').removeClass('hidden');
+                            $('#variationshider').addClass('hidden d-none');
+                            $('#changenotice').removeClass('hidden d-none');
                         }
 
                         // add handler for hide checkbox, to adjust hidden value when changed
@@ -1372,19 +1379,19 @@ $dh = $app->make('helper/date');
                             <?= t('Options have different prices, SKUs or stock levels'); ?></label>
 
                         <?php if (!$pID) { ?>
-                            <p class="alert alert-info hidden" id="variationnotice"><?= t('After creating options add the product to configure product variations.') ?></p>
+                            <p class="alert alert-info hidden d-none" id="variationnotice"><?= t('After creating options add the product to configure product variations.') ?></p>
                         <?php } ?>
 
 
                     </div>
 
                     <?php if (!empty($comboOptions)) { ?>
-                        <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden'); ?>">
+                        <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden d-none'); ?>">
 
-                            <p class="alert alert-danger hidden" id="changewarning"><?= t('Warning: Product options have changed that will create different variations - any existing variation data will be lost') ?></p>
+                            <p class="alert alert-danger hidden d-none" id="changewarning"><?= t('Warning: Product options have changed that will create different variations - any existing variation data will be lost') ?></p>
 
                             <?php if ($pID) { ?>
-                                <p class="alert alert-info hidden" id="changenotice"><?= t('Product options have changed, update the product to configure updated variations') ?></p>
+                                <p class="alert alert-info hidden d-none" id="changenotice"><?= t('Product options have changed, update the product to configure updated variations') ?></p>
                             <?php } ?>
 
                             <div id="variationshider">
@@ -1480,9 +1487,9 @@ $dh = $app->make('helper/date');
                                                         ?>
 
                                                       <div>
-                                                        <img title="<?= h($title); ?>" id="pvfIDImage-<?= $varid; ?>" src="<?= $thumb; ?>" style="height: 40px" class="<?= (!$thumb ? 'hidden' : ''); ?>" />
+                                                        <img title="<?= h($title); ?>" id="pvfIDImage-<?= $varid; ?>" src="<?= $thumb; ?>" style="height: 40px" class="<?= (!$thumb ? 'hidden d-none' : ''); ?>" />
                                                         <button class="btn btn-primary btn-selectfile" data-pvfid="<?= $varid; ?>" ><?= t('Choose Image'); ?></button>
-                                                        <button class="btn btn-danger btn-clearfile <?= (!$thumb ? 'hidden' : ''); ?>"
+                                                        <button class="btn btn-danger btn-clearfile <?= (!$thumb ? 'hidden d-none' : ''); ?>"
                                                                 data-pvfid="<?= $varid; ?>" ><i class="fa fa-times"></i></button>
                                                         <input type="hidden" id="pvfID-<?= $varid; ?>" name="pvfID[<?= $varid; ?>]" value="<?= $pvfID; ?>" />
                                                       </div>
@@ -1492,7 +1499,7 @@ $dh = $app->make('helper/date');
                                                 </div>
 
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Price')); ?>
@@ -1529,7 +1536,7 @@ $dh = $app->make('helper/date');
 
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("pvSalePrice[]", t('Sale Price')); ?>
@@ -1547,7 +1554,7 @@ $dh = $app->make('helper/date');
                                                     </div>
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Weight')); ?>
@@ -1568,7 +1575,7 @@ $dh = $app->make('helper/date');
                                                     </div>
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Number of Items')); ?>
@@ -1586,7 +1593,7 @@ $dh = $app->make('helper/date');
                                                     </div>
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
 
                                                     </div>
@@ -1602,9 +1609,9 @@ $dh = $app->make('helper/date');
 
                                                 </div>
 
-                                                <div class="row">
+                                                <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
 
-                                                    <div class="col-md-12 <?= Config::get('community_store.multiplePackages') ? '' : 'hidden'; ?>">
+                                                    <div class="col-md-12 <?= Config::get('community_store.multiplePackages') ? '' : 'hidden d-none'; ?>">
                                                         <div class="form-group">
 
                                                             <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data")); ?>
@@ -1885,7 +1892,7 @@ $dh = $app->make('helper/date');
 
             $(function () {
                 $('.variationdisplaybutton').click(function (el) {
-                    $(this).closest('.panel').find('.extrafields').toggleClass('hidden');
+                    $(this).closest('.panel').find('.extrafields').toggleClass('hidden d-none');
                     el.preventDefault();
                 });
             });
@@ -2116,8 +2123,8 @@ $dh = $app->make('helper/date');
                        template.innerHTML = r.files[0].resultsThumbnailImg;
 
                        $('#pvfID-' + pvfid).val(data['fID']);
-                       $('#pvfIDImage-' + pvfid).prop('src',template.content.firstChild.src ).removeClass('hidden').prop('title', r.files[0].title);
-                       button.next().removeClass('hidden');
+                       $('#pvfIDImage-' + pvfid).prop('src',template.content.firstChild.src ).removeClass('hidden d-none').prop('title', r.files[0].title);
+                       button.next().removeClass('hidden d-none');
                });
            }, {
              filters:
@@ -2132,8 +2139,8 @@ $dh = $app->make('helper/date');
             var pvfid  = $(this).data('pvfid');
 
             $('#pvfID-' + pvfid).val('');
-            $('#pvfIDImage-' + pvfid).prop('src','').addClass('hidden');
-            $(this).addClass('hidden');
+            $('#pvfIDImage-' + pvfid).prop('src','').addClass('hidden d-none');
+            $(this).addClass('hidden d-none');
         });
     });
 

@@ -40,16 +40,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Currency Settings'); ?></h3>
 
             <div class="row">
-                    <div class="form-group col-md-4">
-                        <?= $form->label('currency', t('Currency')); ?>
+                <div class="form-group col-md-4">
+                    <?= $form->label('currency', t('Currency')); ?>
 
-                        <?php
-                        $currencies = [''=> '-- '. t('Unspecified') . ' --'];
-                        $currencyList = array_merge($currencies, $currencyList);
-                        ?>
+                    <?php
+                    $currencies = ['' => '-- ' . t('Unspecified') . ' --'];
+                    $currencyList = array_merge($currencies, $currencyList);
+                    ?>
 
-                        <?= $form->select('currency', $currencyList, Config::get('community_store.currency')); ?>
-                    </div>
+                    <?= $form->select('currency', $currencyList, Config::get('community_store.currency')); ?>
+                </div>
             </div>
 
             <div id="extra-currency" class="row <?= (Config::get('community_store.currency') ? 'hidden' : ''); ?>">
@@ -70,8 +70,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
             <script>
-                $(function() {
-                    $('#currency').change(function(){
+                $(function () {
+                    $('#currency').change(function () {
                         if ($(this).val()) {
                             $('#extra-currency').addClass('hidden');
                         } else {
@@ -106,14 +106,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('weightUnit', t('Units for Weight')); ?>
-                        <?php  ?>
+                        <?php ?>
                         <?= $form->select('weightUnit', ['oz' => t('oz'), 'lb' => t('lb'), 'kg' => t('kg'), 'g' => t('g')], Config::get('community_store.weightUnit')); ?>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('sizeUnit', t('Units for Size')); ?>
-                        <?php  ?>
+                        <?php ?>
                         <?= $form->select('sizeUnit', ['in' => t('in'), 'cm' => t('cm'), 'mm' => t('mm')], Config::get('community_store.sizeUnit')); ?>
                     </div>
                 </div>
@@ -145,91 +145,91 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 foreach ($installedPaymentMethods as $pm) {
                     ?>
 
-            <div class="panel panel-default">
+                    <div class="panel panel-default">
 
-                <div class="panel-heading"><?= t($pm->getName()); ?></div>
+                        <div class="panel-heading"><?= t($pm->getName()); ?></div>
 
-                <div class="panel-body">
+                        <div class="panel-body">
 
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="form-group paymentMethodEnabled">
-                                <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
-                                <?= $form->label("paymentMethodEnabled[" . $pm->getID() . "]", t("Enabled"));?>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="form-group paymentMethodEnabled">
+                                        <input type="hidden" name="paymentMethodHandle[<?= $pm->getID(); ?>]" value="<?= $pm->getHandle(); ?>">
+                                        <?= $form->label("paymentMethodEnabled[" . $pm->getID() . "]", t("Enabled")); ?>
+                                        <?php
+                                        echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <?= $form->label("paymentMethodSortOrder[" . $pm->getID() . "]", t("Sort Order")); ?>
+                                        <?= $form->number('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="paymentConfigDetails" id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <?= $form->label("paymentMethodDisplayName[" . $pm->getID() . "]", t("Display Name (on checkout)")); ?>
+                                        <?= $form->text('paymentMethodDisplayName[' . $pm->getID() . ']', $pm->getDisplayName()); ?>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <?= $form->label("paymentMethodButtonLabel[" . $pm->getID() . "]", t("Button Label")); ?>
+                                        <?= $form->text('paymentMethodButtonLabel[' . $pm->getID() . ']', $pm->getButtonLabel(), ['placeholder' => t('Optional')]); ?>
+                                    </div>
+                                </div>
                                 <?php
-                                echo $form->select("paymentMethodEnabled[" . $pm->getID() . "]", [0 => t("No"), 1 => t("Yes")], $pm->isEnabled()); ?>
+                                $pm->renderDashboardForm(); ?>
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups")); ?>
+                                            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                                <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups'); ?>">
+                                                    <?php
+                                                    foreach ($allGroupList as $ugkey => $uglabel) { ?>
+                                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, $pm->getUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups")); ?>
+                                            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                                <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupexcludeselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('None'); ?>">
+                                                    <?php
+                                                    foreach ($allGroupList as $ugkey => $uglabel) { ?>
+                                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, $pm->getExcludedUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <?= $form->label("paymentMethodSortOrder[" . $pm->getID() . "]", t("Sort Order"));?>
-                                <?= $form->number('paymentMethodSortOrder[' . $pm->getID() . ']', $pm->getSortOrder()); ?>
-                            </div>
+
                         </div>
 
                     </div>
 
-                    <div class="paymentConfigDetails" id="paymentMethodForm-<?= $pm->getID(); ?>" style="display:<?= $pm->isEnabled() ? 'block' : 'none'; ?>">
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <?= $form->label("paymentMethodDisplayName[" . $pm->getID() . "]", t("Display Name (on checkout)"));?>
-                                <?= $form->text('paymentMethodDisplayName[' . $pm->getID() . ']', $pm->getDisplayName()); ?>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <?= $form->label("paymentMethodButtonLabel[" . $pm->getID() . "]", t("Button Label"));?>
-                                <?= $form->text('paymentMethodButtonLabel[' . $pm->getID() . ']', $pm->getButtonLabel(), ['placeholder' => t('Optional')]); ?>
-                            </div>
-                        </div>
-                        <?php
-                        $pm->renderDashboardForm(); ?>
+                    <?php
 
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups"));?>
-                                    <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                        <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups');?>">
-                                            <?php
-                                            foreach ($allGroupList as $ugkey=>$uglabel) { ?>
-                                                <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $pm->getUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups"));?>
-                                    <div class="ccm-search-field-content ccm-search-field-content-select2">
-                                        <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupexcludeselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('None');?>">
-                                            <?php
-                                            foreach ($allGroupList as $ugkey=>$uglabel) { ?>
-                                                <option value="<?= $ugkey;?>" <?= (in_array($ugkey,  $pm->getExcludedUserGroups()) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <?php
-
-        }
-    } else {
-        echo t("No Payment Methods are Installed");
-    }
-    ?>
+                }
+            } else {
+                echo t("No Payment Methods are Installed");
+            }
+            ?>
 
             <script>
-                $(function() {
-                    $('.paymentMethodEnabled SELECT').on('change', function() {
+                $(function () {
+                    $('.paymentMethodEnabled SELECT').on('change', function () {
                         var $this = $(this);
                         if ($this.val() == 1) {
                             $this.closest('.panel-body').find('.paymentConfigDetails').slideDown();
@@ -246,10 +246,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <?php
             if (count($orderStatuses) > 0) {
                 ?>
-            <div class="panel panel-default">
+                <div class="panel panel-default">
 
-                <table class="table" id="orderStatusTable">
-                    <thead>
+                    <table class="table" id="orderStatusTable">
+                        <thead>
                         <tr>
                             <th rowspan="1">&nbsp;</th>
                             <th rowspan="1"><?= t('Display Name'); ?></th>
@@ -260,41 +260,41 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                             <th><?= t('Site'); ?></th>
                             <th><?= t('Customer'); ?></th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <?php foreach ($orderStatuses as $orderStatus) {
                             ?>
-                        <tr>
-                            <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
-                            <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
-                            <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked' : ''; ?>></td>
-                            <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked' : ''; ?> class="form-control"></td>
-                            <td style="display:none;"><input type="checkbox" name="osInformCustomer[]" value="1" <?= $orderStatus->getInformCustomer() ? 'checked' : ''; ?> class="form-control"></td>
-                        </tr>
-                        <?php
+                            <tr>
+                                <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
+                                <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
+                                <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked' : ''; ?>></td>
+                                <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked' : ''; ?> class="form-control"></td>
+                                <td style="display:none;"><input type="checkbox" name="osInformCustomer[]" value="1" <?= $orderStatus->getInformCustomer() ? 'checked' : ''; ?> class="form-control"></td>
+                            </tr>
+                            <?php
 
-                    } ?>
-                    </tbody>
-                </table>
-                <script>
-                    $(function() {
-                        $('#orderStatusTable TBODY').sortable({
-                            cursor: 'move',
-                            opacity: 0.5,
-                            handle: '.sorthandle'
+                        } ?>
+                        </tbody>
+                    </table>
+                    <script>
+                        $(function () {
+                            $('#orderStatusTable TBODY').sortable({
+                                cursor: 'move',
+                                opacity: 0.5,
+                                handle: '.sorthandle'
+                            });
+
                         });
+                    </script>
 
-                    });
-                </script>
+                </div>
 
-            </div>
+                <?php
 
-            <?php
-
-        } else {
-            echo t("No Fulfilment Statuses are available");
-        }
-        ?>
+            } else {
+                echo t("No Fulfilment Statuses are available");
+            }
+            ?>
 
 
         </div><!-- #settings-order-statuses -->
@@ -339,14 +339,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
                 <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(array('autogrow'));
+                $editor->getPluginManager()->deselect(['autogrow']);
                 echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
             </div>
 
             <div class="form-group">
                 <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
                 <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(array('autogrow'));
+                $editor->getPluginManager()->deselect(['autogrow']);
                 echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
             </div>
 
@@ -360,7 +360,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-md-12">
                     <div class="form-group">
                         <?= $form->label('customerGroup', t('Customers User Group')); ?>
-                        <?= $form->select('customerGroup', $groupList, $customerGroup, [  'placeholder' => t('Select a Group')]); ?>
+                        <?= $form->select('customerGroup', $groupList, $customerGroup, ['placeholder' => t('Select a Group')]); ?>
                     </div>
 
                     <div class="form-group">
@@ -509,7 +509,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t("Digital Downloads"); ?></h3>
             <div class="form-group">
                 <?= $form->label('digitalDownloadFileSet', t('Digital Downloads File Set')); ?>
-                <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet,  ['class' => 'selectize']); ?>
+                <?= $form->select('digitalDownloadFileSet', $fileSets, $digitalDownloadFileSet, ['class' => 'selectize']); ?>
                 <div class="alert alert-warning">
                     <?= t("If you change file set remember to switch your existing digital downloads over to the new file set"); ?>
                 </div>
@@ -532,16 +532,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?php $shoppingDisabled = Config::get('community_store.shoppingDisabled');
                 ?>
-                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?> <?php echo t('Enabled'); ?></label><br />
-                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?> <?php echo t('Disabled (Catalog Mode)'); ?></label><br />
+                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label><br/>
+                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label><br/>
             </div>
 
             <div class="form-group">
                 <?= $form->label('orderNotesEnabled', t('Order notes')); ?>
-                  <br />
-                  <label><?= $form->checkbox('orderNotesEnabled', '1', Config::get('community_store.orderNotesEnabled')); ?>
-                      <?= t('Enable order notes field'); ?>
-                  </label>
+                <br/>
+                <label><?= $form->checkbox('orderNotesEnabled', '1', Config::get('community_store.orderNotesEnabled')); ?>
+                    <?= t('Enable order notes field'); ?>
+                </label>
 
             </div>
 
@@ -549,11 +549,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('guestCheckout', t('Cart Open Style')); ?>
                 <?php $cartMode = Config::get('community_store.cartMode');
                 ?>
-                <br />
-                <label><?= $form->radio('cartMode', ' ', ('' == $cartMode)); ?> <?php echo t('Modal'); ?></label><br />
-                <label><?= $form->radio('cartMode', 'slide', 'slide' == $cartMode); ?> <?php echo t('Slide'); ?></label><br />
+                <br/>
+                <label><?= $form->radio('cartMode', ' ', ('' == $cartMode)); ?><?php echo t('Modal'); ?></label><br/>
+                <label><?= $form->radio('cartMode', 'slide', 'slide' == $cartMode); ?><?php echo t('Slide'); ?></label><br/>
             </div>
-
 
 
             <div class="form-group">
@@ -561,10 +560,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $guestCheckout = Config::get('community_store.guestCheckout');
                 $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                 ?>
-                <br />
-                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?> <?php echo t('Always (unless login required for products in cart)'); ?></label><br />
-                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?> <?php echo t('Offer as checkout option'); ?></label><br />
-                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?> <?php echo t('Disabled'); ?></label><br />
+                <br/>
+                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label><br/>
+                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label><br/>
+                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label><br/>
             </div>
 
             <div class="form-group">
@@ -572,7 +571,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $orderCompleteCID = Config::get('community_store.orderCompleteCID'); ?>
                 <?= $pageSelector->selectPage('orderCompleteCID', $orderCompleteCID); ?>
                 <span class="help-block"><?= t('If left unselected, will redirect to default order completion page. May be overriden by product configuration.'); ?></span>
-           </div>
+            </div>
 
 
             <div class="form-group">
@@ -584,8 +583,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>
                 <div class="input-group">
-                <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
-                    <div class="input-group-addon"><?= t('px');?></div>
+                    <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
+                    <div class="input-group-addon"><?= t('px'); ?></div>
                 </div>
                 <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
             </div>
@@ -595,10 +594,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $companyField = Config::get('community_store.companyField');
                 $companyField = ($companyField ? $companyField : 'off');
                 ?>
-                <br />
-                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?> <?php echo t('Hidden'); ?></label><br />
-                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?> <?php echo t('Optional'); ?></label><br />
-                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?> <?php echo t('Required'); ?></label><br />
+                <br/>
+                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label><br/>
+                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label><br/>
+                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label><br/>
             </div>
 
             <h3><?= t('Billing Details'); ?></h3>
@@ -639,7 +638,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 
             <script>
-                $(document).ready(function() {
+                $(document).ready(function () {
                     $('.selectize').selectize({
                         plugins: ['remove_button'],
                         selectOnTab: true
@@ -660,14 +659,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="form-group">
                 <?= $form->label('numberOfOrders', t('Number of orders displayed per page on orders dashboard page')); ?>
-               <?= $form->select('numberOfOrders', array(20 => 20, 50 => 50, 100 => 100, 500 => 500), Config::get('community_store.numberOfOrders'), array('style' => 'width: 125px;'))?>
+                <?= $form->select('numberOfOrders', [20 => 20, 50 => 50, 100 => 100, 500 => 500], Config::get('community_store.numberOfOrders'), ['style' => 'width: 125px;']) ?>
             </div>
 
-             <div class="checkbox">
+            <div class="checkbox">
                 <label>
-                    <?= $form->checkbox('logUserAgent', '1', (bool) Config::get('community_store.logUserAgent')) ?>
+                    <?= $form->checkbox('logUserAgent', '1', (bool)Config::get('community_store.logUserAgent')) ?>
                     <?= t('Log User Agent') ?>
-                    <span class="small text-muted"><br /><?= t('Log the user agent against the order (this will effect your GDPR compliance).') ?></span>
+                    <span class="small text-muted"><br/><?= t('Log the user agent against the order (this will effect your GDPR compliance).') ?></span>
                 </label>
             </div>
 
@@ -677,6 +676,77 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         <div class="col-sm-9 store-pane" id="settings-user-interface">
             <h3><?= t('User Interface'); ?></h3>
 
+            <label class="form-label"><?= t('Product Options'); ?></label>
+            <div class="form-group">
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideStockAvailabilityDates', true, Config::get('community_store.hideStockAvailabilityDates')); ?>
+                        <?= t('Hide stock availability dates'); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideSalePrice', true, Config::get('community_store.hideSalePrice')); ?>
+                        <?= t('Hide sale price'); ?>
+                    </label>
+                </div>
+
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideWholesalePrice', true, Config::get('community_store.hideWholesalePrice')); ?>
+                        <?= t('Hide wholesale price'); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideCostPrice', true, Config::get('community_store.hideCostPrice')); ?>
+                        <?= t('Hide cost price'); ?>
+                    </label>
+                </div>
+
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideCustomerPriceEntry', true, Config::get('community_store.hideCustomerPriceEntry')); ?>
+                        <?= t('Hide customer price entry option'); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideQuantityBasedPricing', true, Config::get('community_store.hideQuantityBasedPricing')); ?>
+                        <?= t('Hide quantity based pricing option'); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('productDefaultActive', true, Config::get('community_store.productDefaultActive')); ?>
+                        <?= t('Set product to active status by default'); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('productDefaultShippingNo', true, Config::get('community_store.productDefaultShippingNo')); ?>
+                        <?= t('Set product shippable status to no by default'); ?>
+                    </label>
+                </div>
+            </div>
+
+            <label class="form-label"><?= t('Variation Options'); ?></label>
+            <div class="checkbox form-check">
+                <label><?= $form->checkbox('hideVariationPrices', true, Config::get('community_store.hideVariationPrices')); ?>
+                    <?= t('Hide variation prices'); ?>
+                </label>
+            </div>
+
+            <div class="checkbox form-check">
+                <label><?= $form->checkbox('hideVariationShippingFields', true, Config::get('community_store.hideVariationShippingFields')); ?>
+                    <?= t('Hide variation shipping fields'); ?>
+                </label>
+            </div>
+
+            <div class="checkbox form-check">
+                <label><?= $form->checkbox('variationDefaultUnlimited', true, Config::get('community_store.variationDefaultUnlimited')); ?>
+                    <?= t('Set new variations to unlimited by default'); ?>
+                </label>
+            </div>
 
         </div>
     </div>
