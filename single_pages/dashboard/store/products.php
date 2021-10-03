@@ -28,7 +28,7 @@ $dh = $app->make('helper/date');
         if ($productDefaultActive) {
             $product->setIsActive(true);
         }
-        
+
     } else {
         $images = $product->getImages();
         $options = $product->getOptions();
@@ -606,7 +606,7 @@ $dh = $app->make('helper/date');
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label("pDesc", t('Product Details (Long Description')); ?><br>
+                        <?= $form->label("pDesc", t('Product Details (Long Description)')); ?><br>
                         <?php
                         $editor = $app->make('editor');
                         $editor->getPluginManager()->deselect(array('autogrow'));
