@@ -975,7 +975,7 @@ $dh = $app->make('helper/date');
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Static HTML');?></label>
-                                            <textarea rows="3" placeholder="<?= t(''); ?>" class="form-control" name="poDetails[]"><%= poDetails.replace('~~~',"\n")%></textarea>
+                                            <textarea rows="3" class="form-control" name="poDetails[]"><%= poDetails.replace('~~~',"\n")%></textarea>
                                         </div>
                                     </div>
                                 </div>
