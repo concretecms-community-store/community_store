@@ -153,6 +153,8 @@ class Controller extends BlockController
         $args['showGroups'] = isset($args['showGroups']) ? (int)$args['showGroups'] : 0;
         $args['showDimensions'] = isset($args['showDimensions']) ? (int)$args['showDimensions'] : 0;
         $args['showQuantity'] = isset($args['showQuantity']) ? (int)$args['showQuantity'] : 0;
+        $args['pID'] = (is_numeric($args['pID']) ? $args['pID'] : null);
+
         if ('search' == $args['productLocation']) {
             if (!is_numeric($args['pID']) || $args['pID'] < 1) {
                 $args['productLocation'] = "page";

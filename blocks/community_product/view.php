@@ -253,7 +253,7 @@ if (is_object($product) && $product->isActive()) {
                     <div  class="store-product-options">
                         <?php if ($isSellable && $product->allowQuantity() && $showQuantity) {
                             ?>
-                            <div class="store-product-quantity form-group">
+                            <div class="store-product-quantity form-group mb-3">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
 
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
@@ -280,7 +280,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ($quantityLabel) {
                                     ?>
-                                    <div class="input-group-addon"><?= $quantityLabel; ?></div>
+                                    <div class="input-group-addon input-group-text"><?= $quantityLabel; ?></div>
                                 </div>
                             <?php
                             } ?>
@@ -309,7 +309,7 @@ if (is_object($product) && $product->isActive()) {
 
                             <?php if (!$optionType || $optionType == 'select') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= h($option->getHandle()); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -394,7 +394,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'text') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -407,7 +407,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'textarea') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -420,7 +420,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'checkbox') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>"
                                                class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>"

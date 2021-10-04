@@ -12,7 +12,7 @@ $token = $app->make('token');
     <?= $token->output('community_store'); ?>
     <div class="store-product-modal-info-shell">
 
-        <a href="#" class="store-modal-exit">x</a>
+        <a href="#" class="store-modal-exit">&times;</a>
         <h4 class="store-product-modal-title"><?= h($csm->t($product->getName(), 'productName', $product->getID())); ?></h4>
 
         <p class="store-product-modal-thumb">

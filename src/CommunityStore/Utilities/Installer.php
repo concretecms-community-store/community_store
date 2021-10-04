@@ -422,6 +422,7 @@ class Installer
     {
         //install our dashboard single pages
         self::installSinglePage('/dashboard/store', $pkg);
+        self::installSinglePage('/dashboard/store/overview/', $pkg);
         self::installSinglePage('/dashboard/store/orders/', $pkg);
         self::installSinglePage('/dashboard/store/orders/attributes', $pkg);
         self::installSinglePage('/dashboard/store/products/', $pkg);
@@ -440,6 +441,25 @@ class Installer
         self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/common', $pkg);
+
+        $reorderPages = [
+            '/dashboard/store/overview/',
+            '/dashboard/store/orders/',
+            '/dashboard/store/products/',
+            '/dashboard/store/discounts/',
+            '/dashboard/store/manufacturers/',
+            '/dashboard/store/manufacturers/',
+            '/dashboard/store/settings/',
+            '/dashboard/store/multilingual/'
+        ];
+
+        $count = 1;
+        foreach($reorderPages as $path) {
+            $pageToReorder = Page::getByPath($path);
+            $pageToReorder->updateDisplayOrder($count);
+            $count++;
+        }
+
 
         if (!$upgrade) {
             $cartPage = self::installSinglePage('/cart', $pkg);

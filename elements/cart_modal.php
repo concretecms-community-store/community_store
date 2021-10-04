@@ -17,7 +17,7 @@ if ($cartMode) {
 
 ?>
 <div class="store-cart-modal <?= $cartModeClass; ?> clearfix" id="cart-modal">
-    <a href="#" class="store-modal-exit">x</a>
+    <a href="#" class="store-modal-exit">&times;</a>
     <h3><?= t("Shopping Cart")?></h3>
     <div class="store-cart-page-cart">
         <?php
@@ -185,7 +185,7 @@ if ($cartMode) {
                                         <?php } ?>
                                     <?php } ?>
                                 <?php if ($quantityLabel) { ?>
-                                        <div class="store-cart-qty-label input-group-addon"><?= $quantityLabel; ?></div>
+                                        <div class="store-cart-qty-label input-group-addon input-group-text"><?= $quantityLabel; ?></div>
                                 <?php } ?>
                                 </span>
                             </td>
@@ -251,9 +251,9 @@ if ($cartMode) {
             <p class="pull-left float-start">
                 <a class="store-btn-cart-modal-continue btn btn-default btn-secondary" href="#"><?= t("Continue Shopping")?></a>
                 <?php if ($cart  && !empty($cart)) { ?>
-                <a class="store-btn-cart-modal-clear btn btn-warning" href="#"><?= t('Clear Cart')?></a>
+                <a class="store-btn-cart-modal-clear btn btn-warning text-white " href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right float-end"><a class="store-btn-cart-modal-checkout btn btn-success " href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right float-end"><a class="store-btn-cart-modal-checkout btn btn-success text-white" href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 
