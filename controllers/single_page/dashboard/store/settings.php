@@ -207,6 +207,19 @@ class Settings extends DashboardPageController
                 Config::save('community_store.cartMode', $args['cartMode']);
                 Config::save('community_store.orderCompleteCID', $args['orderCompleteCID']);
 
+                Config::save('community_store.hideStockAvailabilityDates', $args['hideStockAvailabilityDates']);
+                Config::save('community_store.hideWholesalePrice', $args['hideWholesalePrice']);
+                Config::save('community_store.hideCostPrice', $args['hideCostPrice']);
+                Config::save('community_store.hideVariationPrices', $args['hideVariationPrices']);
+                Config::save('community_store.hideVariationShippingFields', $args['hideVariationShippingFields']);
+                Config::save('community_store.hideSalePrice', $args['hideSalePrice']);
+                Config::save('community_store.hideCustomerPriceEntry', $args['hideCustomerPriceEntry']);
+                Config::save('community_store.hideQuantityBasedPricing', $args['hideQuantityBasedPricing']);
+
+                Config::save('community_store.productDefaultActive', $args['productDefaultActive']);
+                Config::save('community_store.productDefaultShippingNo', $args['productDefaultShippingNo']);
+                Config::save('community_store.variationDefaultUnlimited', $args['variationDefaultUnlimited']);
+
                 if ($args['currency']) {
                     $symbol = Currency::getSymbol($args['currency']);
                     Config::save('community_store.symbol', $symbol);

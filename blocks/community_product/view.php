@@ -18,7 +18,7 @@ if (is_object($product) && $product->isActive()) {
     $product->setPriceAdjustment($variationData['priceAdjustment']);
     $isSellable = $product->isSellable(); ?>
 
-    <form class="store-product store-product-block" id="store-form-add-to-cart-<?= $product->getID(); ?>"
+    <form class="store-product store-product-block"
           data-product-id="<?= $product->getID(); ?>" itemscope itemtype="http://schema.org/Product">
         <?= $token->output('community_store'); ?>
         <div class="row">
@@ -133,7 +133,7 @@ if (is_object($product) && $product->isActive()) {
                                 <p class="store-product-price-suggestions"><?php
                                     foreach ($pricesuggestions as $suggestion) {
                                         ?>
-                                        <a href="#" class="store-price-suggestion btn btn-default btn-sm"
+                                        <a href="#" class="store-price-suggestion btn btn-default btn-secondary btn-sm"
                                            data-add-type="none"
                                            data-suggestion-value="<?= $suggestion; ?>"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
                                         <?php
@@ -150,7 +150,7 @@ if (is_object($product) && $product->isActive()) {
                             } ?>
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
-                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group col-md-6 col-sm-6 col-sm-6">
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>
                                     <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01"
@@ -253,7 +253,7 @@ if (is_object($product) && $product->isActive()) {
                     <div  class="store-product-options">
                         <?php if ($isSellable && $product->allowQuantity() && $showQuantity) {
                             ?>
-                            <div class="store-product-quantity form-group">
+                            <div class="store-product-quantity form-group mb-3">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
 
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
@@ -280,7 +280,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ($quantityLabel) {
                                     ?>
-                                    <div class="input-group-addon"><?= $quantityLabel; ?></div>
+                                    <div class="input-group-addon input-group-text"><?= $quantityLabel; ?></div>
                                 </div>
                             <?php
                             } ?>
@@ -309,7 +309,7 @@ if (is_object($product) && $product->isActive()) {
 
                             <?php if (!$optionType || $optionType == 'select') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= h($option->getHandle()); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -323,7 +323,7 @@ if (is_object($product) && $product->isActive()) {
                                         <?php
                                         } ?>
                                         <?php
-                                        $firstAvailableVariation = false;
+
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
@@ -334,14 +334,14 @@ if (is_object($product) && $product->isActive()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
 
+                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                    $selected = 'selected="selected"';
+                                                }
+
                                                 if (!empty($variation)) {
-                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
 
-                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                        $selected = 'selected="selected"';
-                                                    }
                                                 } else {
                                                     $disabled = false;
                                                     if ($firstOptionItem) {
@@ -394,7 +394,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'text') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -407,7 +407,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'textarea') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -420,7 +420,7 @@ if (is_object($product) && $product->isActive()) {
                                 <?php
                             } elseif ($optionType == 'checkbox') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>"
                                                class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>"
@@ -588,6 +588,7 @@ if (is_object($product) && $product->isActive()) {
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
                     'available' => $variation->isSellable(),
+                    'maxCart' => $variation->getMaxCartQty(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
                     'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'

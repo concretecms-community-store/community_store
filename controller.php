@@ -19,9 +19,14 @@ use Whoops\Exception\ErrorException;
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
-    protected $appVersionRequired = '8.4';
-    protected $pkgVersion = '2.3.1';
+    protected $appVersionRequired = '8.5';
+    protected $pkgVersion = '2.4.2';
 
+    protected $npmPackages = [
+        'sysend' => '1.3.4',
+        'chartist' => '0.11.4',
+        'chartist-plugin-tooltips' => '0.0.17',
+    ];
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
@@ -39,13 +44,13 @@ class Controller extends Package
 
     public function installStore($pkg)
     {
-        Installer::installSinglePages($pkg);
+        Installer::installBlocks($pkg);
         Installer::installProductParentPage($pkg);
+        Installer::installSinglePages($pkg);
         Installer::installStoreProductPageType($pkg);
         Installer::setDefaultConfigValues($pkg);
         Installer::installPaymentMethods($pkg);
         Installer::installShippingMethods($pkg);
-        Installer::installBlocks($pkg);
         Installer::setPageTypeDefaults($pkg);
         Installer::installCustomerGroups($pkg);
         Installer::installUserAttributes($pkg);
@@ -67,8 +72,11 @@ class Controller extends Package
         $this->registerCategories();
         parent::install();
 
-        $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-        $this->installStore($pkg);
+
+        if ($this->app->isRunThroughCommandLineInterface()) {
+            $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
+            $this->installStore($pkg);
+        }
     }
 
     public function upgrade()
@@ -147,13 +155,14 @@ class Controller extends Package
         $al->register('css', 'community-store', 'css/community-store.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store', 'js/communityStore.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'sysend', 'js/sysend/sysend.js', ['version' => $this->npmPackages['sysend'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store-autocomplete', 'js/autoComplete.js?v=' . $version, ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-        $al->register('javascript', 'chartist', 'js/chartist.min.js', ['version' => '0.9.7', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('css', 'chartist', 'css/chartist.min.css', ['version' => '0.9.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-        $al->register('javascript', 'chartist-tooltip', 'js/chartist-plugin-tooltip.min.js', ['version' => '0.0.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('css', 'chartist-tooltip', 'css/chartist-plugin-tooltip.css', ['version' => '0.0.12', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'chartist', 'js/chartist/chartist.min.js', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist', 'css/chartist/chartist.min.css', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'chartist-tooltip', 'js/chartist/chartist-plugin-tooltip.min.js', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'chartist-tooltip', 'css/chartist/chartist-plugin-tooltip.css', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->registerGroup('chartist',
             [
                 ['javascript', 'chartist'],
@@ -162,6 +171,50 @@ class Controller extends Package
                 ['css', 'chartist-tooltip'],
             ]
         );
+
+        $select2 =  $al->getAssetGroup('select2');
+
+        if (!$select2) {
+            $al->register('css', 'select2', 'vendor/select2/select2/dist/css/select2.min.css', ['version' => 4.0, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'select2', 'vendor/select2/select2/dist/js/select2.full.min.js', ['version' => 4.0, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('select2',
+                [
+                    ['javascript', 'select2'],
+                    ['css', 'select2']
+                ]
+            );
+        }
+
+        $selectize = $al->getAssetGroup('selectize');
+
+        if (!$selectize) {
+
+            $al->register('css', 'selectize', 'css/selectize/selectize.css', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'selectize', 'js/selectize/selectize.min.js', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('selectize',
+                [
+                    ['javascript', 'selectize'],
+                    ['css', 'selectize']
+                ]
+            );
+        }
+
+        $lightbox = $al->getAssetGroup('core/lightbox');
+
+        if (!$lightbox) {
+
+            $al->register('css', 'lightbox', 'css/magnific-popup/magnific-popup.css', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'lightbox', 'js/magnific-popup/jquery.magnific-popup.js', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+
+            $al->registerGroup('core/lightbox',
+                [
+                    ['javascript', 'lightbox'],
+                    ['css', 'lightbox']
+                ]
+            );
+        }
 
         if ($this->app->isRunThroughCommandLineInterface()) {
             try {

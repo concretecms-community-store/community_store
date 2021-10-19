@@ -52,7 +52,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
             $db = $app->make('database')->connection();
             $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrderStatusHistories t1
                                             WHERE oshStatus = ? and
-                                                t1.oshDate = (SELECT MAX(t2.oshDate)
+                                                t1.oshID = (SELECT MAX(t2.oshID)
                                                              FROM CommunityStoreOrderStatusHistories t2
                                                              WHERE t2.oID = t1.oID)", [$this->status]);
             $orderIDs = [];

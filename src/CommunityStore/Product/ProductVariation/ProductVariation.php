@@ -40,6 +40,11 @@ class ProductVariation
     protected $pvWholesalePrice;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pvCostPrice;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $pvSKU;
@@ -109,18 +114,11 @@ class ProductVariation
      */
     protected $options;
 
-
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationFID()
     {
         return $this->pvfID;
     }
 
-    /**
-     * @ORM\param mixed $pvfID
-     */
     public function setVariationFID($pvfID)
     {
         $this->pvfID = $pvfID;
@@ -157,7 +155,11 @@ class ProductVariation
         $optionids = [];
 
         foreach ($options as $opt) {
-            $optionids[] = $opt->getOptionItem()->getID();
+            $optItem = $opt->getOptionItem();
+
+            if ($optItem) {
+                $optionids[] = $optItem->getID();
+            }
         }
 
         sort($optionids);
@@ -165,17 +167,11 @@ class ProductVariation
         return $optionids;
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getID()
     {
         return $this->pvID;
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getProductID()
     {
         return $this->pID;
@@ -189,61 +185,44 @@ class ProductVariation
         $this->product = $product;
     }
 
-
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationSKU()
     {
         return $this->pvSKU;
     }
 
-    /**
-     * @ORM\param mixed $pvSKU
-     */
     public function setVariationSKU($pvSKU)
     {
         $this->pvSKU = $pvSKU;
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationBarcode()
     {
         return $this->pvBarcode;
     }
 
-    /**
-     * @ORM\param mixed $pvBarcode
-     */
     public function setVariationBarcode($pvBarcode)
     {
         $this->pvBarcode = $pvBarcode;
     }
 
-    /**
-     * @ORM\param mixed $pID
-     */
     public function setProductID($pID)
     {
         $this->pID = $pID;
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationPrice()
     {
         return $this->pvPrice;
     }
 
-    /**
-     * @return mixed
-     */
     public function getVariationWholesalePrice()
     {
         return $this->pvWholesalePrice;
+    }
+
+    public function getVariationCostPrice()
+    {
+        return $this->pvCostPrice;
     }
 
     public function getFormattedVariationPrice()
@@ -251,9 +230,6 @@ class ProductVariation
         return Price::format($this->pvPrice);
     }
 
-    /**
-     * @ORM\param mixed $pvPrice
-     */
     public function setVariationPrice($pvPrice)
     {
         if ('' != $pvPrice) {
@@ -263,9 +239,6 @@ class ProductVariation
         }
     }
 
-    /**
-     * @param mixed $pvWholesalePrice
-     */
     public function setVariationWholesalePrice($pvWholesalePrice)
     {
         if ($pvWholesalePrice != '') {
@@ -275,9 +248,15 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
+    public function setVariationCostPrice($pvCostPrice)
+    {
+        if ($pvCostPrice != '') {
+            $this->pvCostPrice = (float)$pvCostPrice;
+        } else {
+            $this->pvCostPrice = null;
+        }
+    }
+
     public function getVariationSalePrice()
     {
         return $this->pvSalePrice;
@@ -288,9 +267,6 @@ class ProductVariation
         return Price::format($this->pvSalePrice);
     }
 
-    /**
-     * @ORM\param mixed $pvSalePrice
-     */
     public function setVariationSalePrice($pvSalePrice)
     {
         if ('' != $pvSalePrice) {
@@ -300,12 +276,30 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getStockLevel()
     {
         return $this->pvQty;
+    }
+
+    public function getMaxCartQty()
+    {
+        if ($this->isUnlimited()) {
+            $available = false;
+        } else {
+            $available = $this->getStockLevel();
+        }
+
+        $maxcart = $this->product->getMaxQty();
+
+        if ($maxcart > 0) {
+            if ($available > 0) {
+                return min($maxcart, $available);
+            } else {
+                return $maxcart;
+            }
+        } else {
+            return $available;
+        }
     }
 
     /**
@@ -316,9 +310,6 @@ class ProductVariation
         return $this->getStockLevel();
     }
 
-    /**
-     * @ORM\param mixed $pvQty
-     */
     public function setVariationStockLevel($pvQty)
     {
         $this->pvQty = $pvQty ? $pvQty : 0;
@@ -340,24 +331,23 @@ class ProductVariation
     }
 
     /**
-     * @ORM\param mixed $pvQtyUnlim
+     * @deprecated
      */
     public function setVariationQtyUnlim($pvQtyUnlim)
     {
         $this->pvQtyUnlim = $pvQtyUnlim;
     }
 
-    /**
-     * @ORM\return mixed
-     */
+    public function setVariationIsUnlimited($bool)
+    {
+        $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
+    }
+
     public function getVariationWidth()
     {
         return $this->pvWidth;
     }
 
-    /**
-     * @ORM\param mixed $pWidth
-     */
     public function setVariationWidth($pvWidth)
     {
         if ('' != $pvWidth) {
@@ -367,17 +357,11 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationHeight()
     {
         return $this->pvHeight;
     }
 
-    /**
-     * @ORM\param mixed $pvHeight
-     */
     public function setVariationHeight($pvHeight)
     {
         if ('' != $pvHeight) {
@@ -387,17 +371,11 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationLength()
     {
         return $this->pvLength;
     }
 
-    /**
-     * @ORM\param mixed $pvLength
-     */
     public function setVariationLength($pvLength)
     {
         if ('' != $pvLength) {
@@ -407,17 +385,11 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationWeight()
     {
         return $this->pvWeight;
     }
 
-    /**
-     * @ORM\param mixed $pvWeight
-     */
     public function setVariationWeight($pvWeight)
     {
         if ('' != $pvWeight) {
@@ -427,9 +399,6 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationNumberItems()
     {
         return $this->pvNumberItems;
@@ -445,9 +414,6 @@ class ProductVariation
         $this->pvPackageData = trim($data);
     }
 
-    /**
-     * @ORM\param mixed $pvNumberItems
-     */
     public function setVariationNumberItems($pvNumberItems)
     {
         if ('' != $pvNumberItems) {
@@ -457,17 +423,11 @@ class ProductVariation
         }
     }
 
-    /**
-     * @ORM\return mixed
-     */
     public function getVariationSort()
     {
         return $this->pvSort;
     }
 
-    /**
-     * @ORM\param mixed $pvSort
-     */
     public function setVariationSort($pvSort)
     {
         $this->pvSort = $pvSort;
@@ -532,6 +492,8 @@ class ProductVariation
 
         $variationIDs = [];
 
+        $variationDefaultUnlimited = \Concrete\Core\Support\Facade\Config::get('community_store.variationDefaultUnlimited');
+
         if (!empty($comboOptions)) {
             $sort = 0;
 
@@ -554,7 +516,7 @@ class ProductVariation
                         'pvWholesalePrice'=>'',
                         'pvSalePrice' => '',
                         'pvQty' => 0,
-                        'pvQtyUnlim' => null,
+                        'pvQtyUnlim' => ($variationDefaultUnlimited ? 1 : null) ,
                         'pvfID' => null,
                         'pvWeight' => '',
                         'pvNumberItems' => '',
@@ -582,9 +544,10 @@ class ProductVariation
                     $variation->setVariationBarcode($data['pvBarcode'][$key]);
                     $variation->setVariationPrice($data['pvPrice'][$key]);
                     $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
+                    $variation->setVariationCostPrice($data['pvCostPrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationStockLevel($data['pvQty'][$key]);
-                    $variation->setVariationQtyUnlim($data['pvQtyUnlim'][$key]);
+                    $variation->setVariationIsUnlimited($data['pvQtyUnlim'][$key]);
                     $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
                     $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
@@ -695,6 +658,10 @@ class ProductVariation
         $em->persist($this);
 
         if (!$persistonly) {
+            $product = $this->getProduct();
+            $product->setDateUpdated(new \DateTime());
+            $product->save();
+
             $em->flush();
         }
     }

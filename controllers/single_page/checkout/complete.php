@@ -62,10 +62,14 @@ class Complete extends PageController
                     $refreshCheck = true;
                 }
             }
-
-
         } else {
-            return Redirect::to("/cart");
+            $user = new User();
+
+            if (!$user->isSuperUser()) {
+                return Redirect::to("/cart");
+            } else {
+                $this->set('order', new Order());
+            }
         }
 
         Cart::clear();

@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
@@ -81,9 +82,7 @@ class Products extends DashboardSitePageController
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('pageTitle', t('Translate Product'));
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-
-        $attrList = $productCategory->getList();
+        $attrList = ProductKey::getList();
         $this->set('attrList', $attrList);
 
         $attInputTypes = ['text'];

@@ -91,6 +91,13 @@ class Product
      */
     protected $pWholesalePrice;
 
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $pCostPrice;
+
+
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
@@ -220,6 +227,11 @@ class Product
      * @ORM\Column(type="datetime")
      */
     protected $pDateAdded;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pDateUpdated;
 
     /**
      * @ORM\Column(type="boolean")
@@ -587,10 +599,17 @@ class Product
     {
         $this->pPrice = ($price !== '' ? (float)$price : 0);
     }
+
     public function setWholesalePrice($price)
     {
         $this->pWholesalePrice = ($price !== '' ? (float)$price : null);
     }
+
+    public function setCostPrice($price)
+    {
+        $this->pCostPrice = ($price !== '' ? (float)$price : null);
+    }
+
     public function setSalePrice($price)
     {
         $this->pSalePrice = (empty($price) && !is_numeric($price) ?  null : (float)$price );
@@ -785,11 +804,24 @@ class Product
         $this->pDateAdded = $date;
     }
 
+    public function setDateUpdated($date)
+    {
+        $this->pDateUpdated = $date;
+    }
+
     public function setIsShippable($bool)
     {
         $this->pShippable = (!is_null($bool) ? $bool : false);
     }
 
+    public function setSeparateShip($bool)
+    {
+        $this->pSeperateShip = (!is_null($bool) ? $bool : false);
+    }
+
+    /**
+     * @deprecated
+     */
     public function setSeperateShip($bool)
     {
         $this->pSeperateShip = (!is_null($bool) ? $bool : false);
@@ -809,14 +841,30 @@ class Product
         $this->pPackageData = trim($pPackageData);
     }
 
+    public function getSeparateShip()
+    {
+        return $this->pSeperateShip;
+    }
+
+    /**
+     * @deprecated
+     */
     public function getSeperateShip()
     {
         return $this->pSeperateShip;
     }
 
+    public function isSeparateShip()
+    {
+        return (bool) $this->getSeparateShip();
+    }
+
+    /**
+     * @deprecated
+     */
     public function isSeperateShip()
     {
-        return (bool) $this->getSeperateShip();
+        return (bool) $this->getSeparateShip();
     }
 
     public function setWidth($width)
@@ -997,12 +1045,14 @@ class Product
             $product = new self();
             $product->setDateAdded(new \DateTime());
         }
+
         $product->setName($data['pName']);
         $product->setSKU($data['pSKU']);
         $product->setBarCode($data['pBarcode']);
         $product->setDescription($data['pDesc']);
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
+        $product->setCostPrice($data['pCostPrice']);
 
         if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);
@@ -1046,7 +1096,7 @@ class Product
         $product->setWeight($data['pWeight']);
         $product->setPackageData($data['pPackageData']);
         $product->setNumberItems($data['pNumberItems']);
-        $product->setSeperateShip($data['pSeperateShip']);
+        $product->setSeparateShip($data['pSeperateShip']);
         $product->setAutoCheckout($data['pAutoCheckout']);
         $product->setIsExclusive($data['pExclusive']);
         $product->setCustomerPrice($data['pCustomerPrice']);
@@ -1094,7 +1144,7 @@ class Product
         }
 
         $product->save();
-        if (!$data['pID']) {
+        if (!$data['pID'] && $data['createPage']) {
             $product->generatePage($data['selectPageTemplate']);
         } else {
             $product->updatePage();
@@ -1230,6 +1280,10 @@ class Product
         return $this->pWholesalePrice;
     }
 
+    public function getCostPrice() {
+        return $this->pCostPrice;
+    }
+
     public function getWholesalePrice($qty = 1)
     {
         $price = $this->pPrice;
@@ -1298,9 +1352,8 @@ class Product
         return $this->pSalePrice;
     }
 
-    public function getSalePrice()
+    public function getSalePrice($ignoreDiscounts = false)
     {
-
         $saleStart = $this->getSaleStart();
         $saleEnd = $this->getSaleEnd();
         $now = new \DateTime();
@@ -1329,8 +1382,28 @@ class Product
         $priceAdjustment = $this->getPriceAdjustment();
 
         if ($price && $priceAdjustment != 0) {
-            return $price + $priceAdjustment;
+            $price = $price + $priceAdjustment;
         }
+
+        if ($price) {
+            $discounts = $this->getDiscountRules();
+
+            if (!$ignoreDiscounts) {
+                if (!empty($discounts)) {
+                    foreach ($discounts as $discount) {
+                        if ($discount->getDiscountSalePrices()) {
+                            $discount->setApplicableTotal($price);
+                            $discountedprice = $discount->returnDiscountedPrice();
+
+                            if (false !== $discountedprice) {
+                                $price = $discountedprice;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return $price;
     }
 
@@ -1746,7 +1819,7 @@ class Product
         }
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->getVariationQty();
+            return $variation->getStockLevel();
         } else {
             return $this->pQty;
         }
@@ -1799,8 +1872,14 @@ class Product
             return false;
         }
 
-        if ($this->hasVariations() && $variation = $this->getVariation()) {
-            return $variation->isSellable();
+        if ($this->hasVariations()) {
+            $variation = $this->getVariation();
+            if ($variation) {
+                return $variation->isSellable();
+            } else {
+                return false;
+            }
+
         } else {
             if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
                 return true;
@@ -1834,8 +1913,19 @@ class Product
         return $this->pDateAdded;
     }
 
+    public function getDateUpdated()
+    {
+        if ($this->pDateUpdated) {
+            return $this->pDateUpdated;
+        } else {
+            return $this->getDateAdded();
+        }
+    }
+
     public function save()
     {
+        $this->setDateUpdated(new \DateTime());
+
         $em = dbORM::entityManager();
         $em->persist($this);
         $em->flush();

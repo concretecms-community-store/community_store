@@ -18,7 +18,7 @@ if ($cart) {
             <th colspan="2">
                 <?= t('Product'); ?>
             </th>
-            <th class="text-right">
+            <th class="text-right text-end"=">
                 <?= t('Price'); ?>
             </th>
             <th class="text-center">
@@ -116,7 +116,7 @@ if ($cart) {
             } ?>
             </td>
 
-            <td class="store-cart-item-price text-right">
+            <td class="store-cart-item-price text-right text-end">
                 <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                 <?= Price::format($cartItem['product']['customerPrice']) ?>
                 <?php

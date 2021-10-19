@@ -4,7 +4,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <div class="row">
 
-    <div class="col-xs-12">
+    <div class="col-sm-12">
 
         <fieldset>
             <legend><?= t('Filter Data Source'); ?></legend>

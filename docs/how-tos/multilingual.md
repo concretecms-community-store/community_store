@@ -2,7 +2,7 @@
 
 Community Store is aware of multilingual site setups, and allows for all aspects of a store to be offered in multiple languages.
 
-The full setup steps for a multilingual site in concrete5 is outside the scope of the documentation, but the steps to add a new language to a site generally are as follows:
+The full setup steps for a multilingual site in Concrete CMS is outside the scope of the documentation, but the steps to add a new language to a site generally are as follows:
 
 - Visit **System & Settings / Multilingual / Multilingual Setup** within the Dashboard
 - Select **Add Locale**, and configure a new language/tree

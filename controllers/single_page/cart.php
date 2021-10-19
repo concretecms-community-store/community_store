@@ -31,6 +31,7 @@ class Cart extends PageController
             return Redirect::to("/");
         }
 
+        $cart = null;
         $codeerror = false;
         $codesuccess = false;
 
@@ -84,6 +85,19 @@ class Cart extends PageController
                     $returndata = ['success' => true, 'action' => 'remove'];
                 }
             }
+
+            $cart = StoreCart::getCart(true);
+
+            // if the cart was updated in any way we try to update the cart on other open pages
+            if ($action === 'changed'
+            || ($this->request->request->has('action')
+                && in_array($this->request->request->get('action'), ['update', 'clear', 'remove', 'code']))
+            ) {
+                // if the cart still has items let's make the action whatever it was supposed to be
+                // Otherwise we can consider the last item was removed or the cart was cleared
+                $action = count($cart) ? $this->request->request->get('action') : 'clear';
+                $this->addFooterItem(sprintf('<script type="text/javascript">$(function() { communityStore.broadcastCartRefresh({action: \'%s\'}); });</script>', $action));
+            }
         }
 
         if ($action) {
@@ -94,7 +108,9 @@ class Cart extends PageController
         $this->set('codeerror', $codeerror);
         $this->set('codesuccess', $codesuccess);
 
-        $this->set('cart', StoreCart::getCart(true));
+        $cart = is_null($cart) ? StoreCart::getCart(true) : $cart;
+
+        $this->set('cart', $cart);
         $this->set('discounts', StoreCart::getDiscounts());
 
         $totals = Calculator::getTotals();
@@ -119,6 +135,7 @@ class Cart extends PageController
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
 

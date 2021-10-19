@@ -88,6 +88,9 @@ class Order
     /** @ORM\Column(type="text",nullable=true) */
     protected $sTrackingURL;
 
+    /** @ORM\Column(type="text",nullable=true) */
+    protected $sTrackingEstimatedDate;
+
     /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) */
     protected $oShippingTotal;
 
@@ -252,6 +255,16 @@ class Order
     public function setTrackingURL($sTrackingURL)
     {
         $this->sTrackingURL = $sTrackingURL;
+    }
+
+    public function getTrackingEstimatedDate()
+    {
+        return $this->sTrackingEstimatedDate;
+    }
+
+    public function setTrackingEstimatedDate($sTrackingEstimatedDate)
+    {
+        $this->sTrackingEstimatedDate = $sTrackingEstimatedDate;
     }
 
     public function setShippingTotal($shippingTotal)
@@ -612,7 +625,7 @@ class Order
         foreach ($discounts as $discount) {
             $orderDiscount = new OrderDiscount();
             $orderDiscount->setOrder($order);
-            if ('code' == $discount->getTrigger()) {
+            if ($discount->getTrigger() == 'code') {
                 $orderDiscount->setCode(Session::get('communitystore.code'));
 
                 if ($discount->isSingleUse()) {
@@ -808,7 +821,7 @@ class Order
             if (!$user) {
                 $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
 
-                $mh = $app->make('helper/mail');
+                $mh = $app->make('mail');
                 $mh->addParameter('siteName', Config::get('concrete.site'));
 
                 $navhelper = $app->make('helper/navigation');
@@ -1299,8 +1312,24 @@ class Order
 
         foreach ($aks as $uak) {
             $controller = $uak->getController();
-            $value = $controller->createAttributeValueFromRequest();
-            $order->setAttribute($uak, $value);
+
+           $type = $uak->getAttributeTypeHandle();
+
+           if ($type == 'date_time') {
+               $app = Application::getFacadeApplication();
+               $dh = $app->make('helper/date');
+               $format = $dh->getPHPDatePattern();
+
+               $value = \DateTime::createFromFormat(
+                   $format,
+                   $controller->post()['value'],
+                   $dh->getTimezone('user')
+               );
+           } else {
+               $value = $controller->createAttributeValueFromRequest();
+           }
+
+           $order->setAttribute($uak, $value);
         }
     }
 

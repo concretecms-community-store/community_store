@@ -79,6 +79,17 @@ $(function () {
                 }
             }
 
+            if (variation['maxCart'] !== false) {
+                var quantityField = pdb.find('.store-product-qty');
+                quantityField.prop('max', variation['maxCart']);
+
+                if (parseFloat(quantityField.val()) > parseFloat(variation['maxCart'])) {
+                    quantityField.val(parseFloat(variation['maxCart']));
+                }
+            } else {
+                pdb.find('.store-product-qty').removeProp('max');
+            }
+
         } else {
             if (priceHolder.data('original-price')) {
                 let saletotal = parseFloat(priceHolder.data('price')) + priceAdjust;

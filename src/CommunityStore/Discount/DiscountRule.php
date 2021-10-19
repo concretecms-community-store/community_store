@@ -107,6 +107,11 @@ class DiscountRule
     protected $drMaximumQuantity;
 
     /**
+    * @ORM\Column(type="boolean")
+    */
+    protected $drDiscountSalePrices;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $drDateAdded;
@@ -131,8 +136,8 @@ class DiscountRule
 
     public function returnDiscountedPrice()
     {
-        if ('subtotal' == $this->getDeductFrom()) {
-            if ('percentage' == $this->getDeductType()) {
+        if ($this->getDeductFrom() == 'subtotal') {
+            if ($this->getDeductType() == 'percentage') {
                 $applicableTotal = $this->getApplicableTotal();
 
                 if (false != $applicableTotal) {
@@ -140,7 +145,7 @@ class DiscountRule
                 }
             }
 
-            if ('value_all' == $this->getDeductType()) {
+            if ($this->getDeductType() == 'value_all') {
                 $applicableTotal = $this->getApplicableTotal();
 
                 if (false != $applicableTotal) {
@@ -148,7 +153,7 @@ class DiscountRule
                 }
             }
 
-            if ('fixed' == $this->getDeductType()) {
+            if ($this->getDeductType() == 'fixed') {
                 return $this->getValue();
             }
         }
@@ -471,6 +476,16 @@ class DiscountRule
         $this->drMaximumQuantity = $drMaximumQuantity;
     }
 
+    public function getDiscountSalePrices()
+    {
+        return (bool)$this->drDiscountSalePrices;
+    }
+
+    public function setDiscountSalePrices($drDiscountSalePrices)
+    {
+        $this->drDiscountSalePrices = $drDiscountSalePrices;
+    }
+
     /**
      * @ORM\return mixed
      */
@@ -510,11 +525,11 @@ class DiscountRule
         if ($display) {
             return $display;
         } else {
-            if ('percentage' == $this->drDeductType) {
+            if ($this->drDeductType == 'percentage') {
                 return $this->drPercentage . ' ' . t('off');
             }
 
-            if ('value' == $this->drDeductType) {
+            if ($this->drDeductType == 'value') {
                 return Price::format($this->drValue) . ' ' . t('off');
             }
         }
@@ -714,6 +729,7 @@ class DiscountRule
         $discountRule->setUserGroups(isset($data['drUserGroups']) ? $data['drUserGroups'] : '');
         $discountRule->setQuantity($data['drQuantity'] ? $data['drQuantity'] : null);
         $discountRule->setMaximumQuantity($data['drMaximumQuantity'] ? $data['drMaximumQuantity'] : null);
+        $discountRule->setDiscountSalePrices($data['drDiscountSalePrices'] ? true : false);
 
         if (1 == $data['validFrom']) {
             $from = new \DateTime($data['drValidFrom_dt'] . ' ' . $data['drValidFrom_h'] . ':' . $data['drValidFrom_m'] . (isset($data['drValidFrom_a']) ? $data['drValidFrom_a'] : ''));

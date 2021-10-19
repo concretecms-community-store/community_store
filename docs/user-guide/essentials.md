@@ -1,11 +1,11 @@
 # Essentials
 
-Like most add-ons for concrete5, Community Store follows a common pattern of design, making its functionality intuitive, leaving the purpose of documentation to cover non-obvious configurations or development tasks.
+Like most add-ons for Concrete CMS, Community Store follows a common pattern of design, making its functionality intuitive, leaving the purpose of documentation to cover non-obvious configurations or development tasks.
 
-Because of this common design, if you are an existing concrete5 user or developer you may find that the following outline of how Community Store is structured may be all that is required to start working with it:
+Because of this common design, if you are an existing Concrete CMS user or developer you may find that the following outline of how Community Store is structured may be all that is required to start working with it:
 
 ## Installation
-The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend concrete5** section of the Dashboard.
+The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend Concrete CMS** section of the Dashboard.
 
 Once installed, the Dashboard page **Store / Settings** should be visited to configure default settings such the store's currency, notification emails, shipping units and checkout modes. 
 
@@ -34,11 +34,11 @@ Once installed, the Dashboard page **Store / Settings** should be visited to con
 
 ## Product Category Pages
 By default, a page type to manage and display categories is not installed.
-The creation of a category page is similar to other custom page types in concrete5:
+The creation of a category page is similar to other custom page types in Concrete CMS:
 - Create a new page type, such as 'Product Category', with a template of your choosing
 - On the new page type, add a default Product List block, with the setting **List Products**, set to _Under current page_
 
-New categories can then be created as would other pages with concrete5 (i.e. through Composer), being linked to via common blocks as as Auto-Nav and Page List. 
+New categories can then be created as would other pages with Concrete CMS (i.e. through Composer), being linked to via common blocks as as Auto-Nav and Page List. 
 Products can then be placed within the created categories by adding the category page(s) via the 'Categorized under pages' section when editing a product.
  
 ## Product List Filter blocks
@@ -55,7 +55,7 @@ Note that product _options_ are not filterable. If you offer product options suc
 - Other components of the store, such as the cart overlay or shipping methods displayed in the checkout can be customized by overriding the files 
 
 ## Multilingual
-When a concrete5 site has multiple languages set up, the cart, checkout and product pages are copied across language trees in the same way as other pages. Product names, descriptions and other text can then be translated via the **Store / Multilingual** Dashboard pages.
+When a Concrete CMS site has multiple languages set up, the cart, checkout and product pages are copied across language trees in the same way as other pages. Product names, descriptions and other text can then be translated via the **Store / Multilingual** Dashboard pages.
  
 
 

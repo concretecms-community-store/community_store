@@ -1,7 +1,7 @@
 module.exports = {
     base: '/community_store/',
-    title: 'Community Store for concrete5',
-    description: 'An open, free and community developed eCommerce system for concrete5',
+    title: 'Community Store for Concrete CMS',
+    description: 'An open, free and community developed eCommerce system for Concrete CMS',
     head: [
        ['link', { rel: "shortcut icon", href: "/favicon.ico"}]
     ],

@@ -19,6 +19,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $randomSeed = '';
     protected $sortByDirection = "desc";
     protected $featuredOnly = false;
+    protected $showOutOfStock = false;
     protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = [];
@@ -280,6 +281,15 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "alpha_desc":
                 $query->orderBy('pName', 'desc');
                 break;
+            case "sku":
+                $query->orderBy('pSKU', $this->getSortByDirection());
+                break;
+            case "sku_asc":
+                $query->orderBy('pSKU', 'asc');
+                break;
+            case "sku_desc":
+                $query->orderBy('pSKU', 'desc');
+                break;
             case "price":
                 $query->orderBy('pPrice', $this->getSortByDirection());
                 break;
@@ -304,8 +314,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     $pIDs[] = $product['pID'];
                 }
 
-                foreach ($pIDs as $pID) {
-                    $query->addOrderBy("p.pID = ?", 'DESC')->setParameter($paramcount++, $pID);
+                if (!empty($pIDs)) {
+                    $query->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')');
                 }
                 break;
             case "related":
@@ -316,7 +326,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "category":
                 $query->addOrderBy('categorySortOrder');
                 break;
-            case "group":
+            case "group" && !empty($validgids) && !$this->groupNoMatchAny:
                 $query->addOrderBy('sortOrder');
                 break;
             case "random":
@@ -341,8 +351,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         if ($this->sortBy == 'category') {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
-        } elseif ($this->sortBy == 'group') {
-            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
+        } elseif ($this->sortBy == 'group' && !empty($validgids) && !$this->groupNoMatchAny) {
+                $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
         } else {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
         }

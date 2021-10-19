@@ -154,13 +154,32 @@ class ProductGroup
 
     public static function addGroupsForProduct(array $data, Product $product)
     {
-        self::removeGroupsForProduct($product);
+        $existingGroupIDs = [];
+
+        $existingGroups = $product->getGroups();
+
+        if (is_array($data['pProductGroups'])){
+            foreach ($existingGroups as $existingGroup) {
+                if (!in_array($existingGroup->getGroupID(), $data['pProductGroups'])) {
+                    // no longer in list, so remove
+                    $existingGroup->delete();
+                } else {
+                    $existingGroupIDs[] = $existingGroup->getGroupID();
+                }
+            }
+        } else {
+            self::removeGroupsForProduct($product);
+        }
+
         //add new ones.
         if (!empty($data['pProductGroups'])) {
             foreach ($data['pProductGroups'] as $gID) {
-                self::add($product, $gID);
+                if ($gID > 0 && !in_array($gID, $existingGroupIDs)) {
+                    self::add($product, $gID);
+                }
             }
         }
+
     }
 
     public static function removeGroupsForProduct(Product $product)

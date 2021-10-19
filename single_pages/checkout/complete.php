@@ -7,10 +7,14 @@ $dh = $app->make('helper/date');
 ?>
 
 <div class="store-order-complete-page">
-    <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-    <h1><?= t("Order #%s has been placed", $order->getOrderID()); ?></h1>
 
+    <h1><?= t("Order #%s has been placed", $order->getOrderID()); ?></h1>
     <p><?= t("Thank you for your order. A receipt will be emailed to you shortly."); ?></p>
+
+    <?php
+    $a = new Area('Checkout Complete Header');
+    $a->display();
+    ?>
 
     <br>
 
@@ -328,6 +332,12 @@ $dh = $app->make('helper/date');
           <p><strong><?= t("Order notes") ?>: </strong><?= nl2br(h($notes)) ?></p>
         <?php } ?>
     </fieldset>
+
+
+    <?php
+    $a = new Area('Checkout Complete Footer');
+    $a->display();
+    ?>
 
 
 </div>

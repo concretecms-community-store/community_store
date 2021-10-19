@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 
 class Common extends DashboardSitePageController
@@ -71,9 +72,7 @@ class Common extends DashboardSitePageController
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
 
-        $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-
-        $attrList = $productCategory->getList();
+        $attrList = ProductKey::getList();
         $this->set('attrList', $attrList);
 
         $attInputTypes = ['text'];

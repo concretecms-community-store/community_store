@@ -37,19 +37,19 @@ $csm = $app->make('cs/helper/multilingual');
                     <h2><?= $introTitle ?></h2>
 
                     <div class="store-checkout-form-group-body">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <p><?= t("In order to proceed, you'll need to either register, or sign in with your existing account.") ?></p>
-                                <a class="btn btn-default" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
+                                <a class="btn btn-default btn-secondary" href="<?= Url::to('/login') ?>"><?= t("Sign In") ?></a>
                                 <?php if (Config::get('concrete.user.registration.enabled')) { ?>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-default btn-secondary"
                                        href="<?= Url::to('/register') ?>"><?= t("Register") ?></a>
                                 <?php } ?>
                             </div>
                             <?php if ($guestCheckout == 'option' && !$requiresLogin) { ?>
                                 <div class="col-md-6">
                                     <p><?= t("Or optionally, you may choose to checkout as a guest.") ?></p>
-                                    <a class="btn btn-default"
+                                    <a class="btn btn-default btn-secondary"
                                        href="<?= Url::to($langpath . '/checkout/1') ?>"><?= t("Checkout as Guest") ?></a>
                                 </div>
                             <?php } ?>
@@ -64,7 +64,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <?php if ($customer->isGuest()) { ?>
                             <h2><?= t("Customer Information") ?></h2>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="store-email"><?= t("Email") ?></label>
@@ -79,13 +79,13 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="store-checkout-billing-first-name"><?= t('First Name') ?></label>
                                     <?= $form->text('store-checkout-billing-first-name', $customer->getValue('billing_first_name'), array('required' => 'required', 'placeholder'=>t('First Name'))); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="store-checkout-billing-last-name"><?= t("Last Name") ?></label>
                                     <?= $form->text('store-checkout-billing-last-name', $customer->getValue('billing_last_name'), array('required'=>'required', 'placeholder'=>t('Last Name'))); ?>
                                 </div>
@@ -99,7 +99,7 @@ $csm = $app->make('cs/helper/multilingual');
                             }
                         ?>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-company"><?= t("Company") ?></label>
                                     <?= $form->text('store-checkout-billing-company', $customer->getValue('billing_company'), $companyOptions); ?>
@@ -111,19 +111,19 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="col-md-12">
                                 <label for="store-checkout-billing-address-1"><?= t("Street Address") ?></label>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-7 mb-3">
                                 <div class="form-group">
                                     <?= $form->text('store-checkout-billing-address-1', $customer->getAddressValue('billing_address', 'address1'), array('required'=>'required','placeholder'=>t('Street Address'))); ?>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 mb-3">
                                 <div class="form-group">
                                     <?= $form->text('store-checkout-billing-address-2', $customer->getAddressValue('billing_address', 'address2'), array('placeholder'=>t('Apartment, unit, etc (optional)'))); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-city"><?= t("City") ?></label>
                                     <?= $form->text('store-checkout-billing-city', $customer->getAddressValue('billing_address', 'city'), array('required'=>'required','placeholder'=>t('City'))); ?>
@@ -131,14 +131,14 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
                                     <?php $country = $customer->getAddressValue('billing_address', 'country') ?>
                                     <?= $form->select('store-checkout-billing-country', $billingCountries, $country && array_key_exists($country, $billingCountries) ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
                                <div class="form-group">
                                     <label for="store-checkout-billing-state"><?= t("State / Province") ?></label>
                                     <?php $billingState = $customer->getAddressValue('billing_address', 'state_province'); ?>
@@ -146,7 +146,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                                 <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-zip"><?= t("Postal Code") ?></label>
                                     <?= $form->text('store-checkout-billing-zip', $customer->getAddressValue('billing_address', 'postal_code'), array('required'=>'required', 'placeholder'=>t('Postal Code'))); ?>
@@ -155,7 +155,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-billing-phone"><?= t("Phone Number") ?></label>
                                     <?= $form->telephone('store-checkout-billing-phone', $customer->getValue('billing_phone'), array('required'=>'required','placeholder'=>t('Phone Number'))); ?>
@@ -165,7 +165,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <?php if($orderNotesEnabled) { ?>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-notes"><?= t("Order notes") ?></label>
                                     <?= $form->textarea('store-checkout-notes', nl2br(h($notes)), array('placeholder'=>t('Order notes'))); ?>
@@ -176,7 +176,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <div class="row">
                             <?php if ($shippingEnabled) { ?>
-                            <div class="store-copy-billing-container col-md-12 text-right">
+                            <div class="store-copy-billing-container col-md-12 mb-3 text-right">
                                 <div class="form-group">
                                 <label>
                                     <input type="checkbox" id="store-copy-billing" />
@@ -193,7 +193,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
                                         <div class="row" data-akid="<?= $ak->getAttributeKeyID()?>">
-                                            <div class="col-md-12">
+                                            <div class="col-md-12  mb-3">
                                                 <div class="form-group" id="store-att-<?= $ak->getAttributeKeyHandle(); ?>">
                                                     <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
@@ -213,17 +213,17 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                         <?php } ?>
 
-                        <div class="store-checkout-form-group-buttons">
-                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                        <div class="store-checkout-form-group-buttons mb-3 clearfix">
+                            <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                         </div>
 
                     </div>
 
-                    <div class="store-checkout-form-group-summary panel panel-default ">
-                        <div class="panel-heading">
+                    <div class="store-checkout-form-group-summary panel card panel-default mb-3">
+                        <div class="panel-heading card-header">
                             <?= t('Billing Details'); ?>
                         </div>
-                        <div class="row panel-body">
+                        <div class="row panel-body card-body">
                             <div class="col-sm-6">
                                 <label><?= t('Email'); ?></label>
                                 <p class="store-summary-email"><?= $customer->getEmail(); ?></p>
@@ -265,8 +265,6 @@ $csm = $app->make('cs/helper/multilingual');
                             <?php } ?>
 
                         </div>
-
-
                     </div>
 
 
@@ -278,13 +276,13 @@ $csm = $app->make('cs/helper/multilingual');
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-first-name"><?= t("First Name") ?></label>
                                         <?= $form->text('store-checkout-shipping-first-name', $customer->getValue("shipping_first_name"), array('required'=>'required', 'placeholder'=>t('First Name'))); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-last-name"><?= t("Last Name") ?></label>
                                         <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), array('required'=>'required', 'placeholder'=>t('Last Name'))); ?>
@@ -292,7 +290,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                             </div>
                             <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="store-checkout-shipping-company"><?= t("Company") ?></label>
@@ -301,7 +299,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-12">
                                     <label for="store-checkout-shipping-address-1"><?= t("Address") ?></label>
                                 </div>
@@ -316,7 +314,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-city"><?= t("City") ?></label>
@@ -324,7 +322,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
@@ -347,17 +345,17 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             </div>
-                            <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                            <div class="store-checkout-form-group-buttons mb-3">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
-                        <div class="store-checkout-form-group-summary panel panel-default">
-                            <div class="panel-heading">
+                        <div class="store-checkout-form-group-summary panel card panel-default mb-3">
+                            <div class="panel-heading card-header">
                                     <?= t('Shipping Address'); ?>
                             </div>
-                            <div class="row panel-body">
+                            <div class="row panel-body card-body">
                                 <div class="col-sm-6">
                                     <label><?= t('Name'); ?></label>
                                     <p class="store-summary-name"><?= $customer->getValue("billing_first_name") . ' ' . $customer->getValue("billing_last_name"); ?></p>
@@ -387,18 +385,18 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <?php } ?>
 
-                            <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right" value="<?= t("Next") ?>">
+                            <div class="store-checkout-form-group-buttons mb-3">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
 
                         </div>
 
-                        <div class="store-checkout-form-group-summary panel panel-default">
-                            <div class="panel-heading">
+                        <div class="store-checkout-form-group-summary panel card panel-default mb-3">
+                            <div class="panel-heading card-header">
                                 <?= t('Shipping'); ?>
                             </div>
-                            <div class="row panel-body">
+                            <div class="row panel-body card-body">
                                 <div class="col-md-6">
                                     <div class="summary-shipping-method">
                                         <?= $activeShippingLabel; ?> - <?= $shippingTotal > 0 ? Price::format($shippingTotal) : t('No Charge');?>
@@ -417,7 +415,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("VAT Number") ?></h2>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-vat-number"><?= t("VAT Number (if applicable)") ?></label>
@@ -425,13 +423,13 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             </div>
-                            <div class="store-checkout-form-group-buttons">
-                                <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default pull-right" value="<?= t("Next") ?>">
+                            <div class="store-checkout-form-group-buttons mb-3">
+                                <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
-                        <div class="store-checkout-form-group-summary panel panel-default ">
+                        <div class="store-checkout-form-group-summary panel panel-default mb-3">
                         <div class="panel-heading">
                             <?=t('VAT Number'); ?>
                         </div>
@@ -489,9 +487,9 @@ $csm = $app->make('cs/helper/multilingual');
 
                                 $pm->renderCheckoutForm();
                                 ?>
-                                <div class="store-checkout-form-group-buttons">
-                                 <a href="#" class="store-btn-previous-pane btn btn-default"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
+                                <div class="store-checkout-form-group-buttons mb-3">
+                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-end" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
                                 </div>
                                 </div>
@@ -556,7 +554,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?= $token->output('community_store'); ?>
                                 <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
                                 <input type="hidden" name="action" value="code" />
-                                <button type="submit" class="btn btn-default btn-cart-discount-apply"><?= t('Apply');?></button>
+                                <button type="submit" class="btn btn-default btn-secondary btn-cart-discount-apply"><?= t('Apply');?></button>
                             </form>
 
                              <script type="text/javascript">

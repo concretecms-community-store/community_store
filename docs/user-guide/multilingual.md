@@ -1,6 +1,6 @@
 # Multilingual
  
-When your concrete5 site is configured with [multiple languages](/how-tos/multilingual.html), product details, options and other pieces of text displayed in your store can be translated in full.
+When your Concrete CMS site is configured with [multiple languages](/how-tos/multilingual.html), product details, options and other pieces of text displayed in your store can be translated in full.
 Translations are managed through the **Store / Multilingual** Dashboard page.
 
 The translations process is designed such that repeatedly used 'common' pieces of text to describe products and product options only needs to be translated once, instead of on each product.
