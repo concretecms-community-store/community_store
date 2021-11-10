@@ -405,7 +405,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if (true === $exists['exists']) {
+            if ($exists['exists'] === true) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty
@@ -475,12 +475,19 @@ class Cart
     {
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.
+
             if ($cart['product']['pID'] == $cartItem['product']['pID']) {
                 // check if the number of attributes is the same
                 if (count($cart['productAttributes']) == count($cartItem['productAttributes'])) {
                     if (empty($cartItem['productAttributes'])) {
                         // if we have no attributes, it's a direct match
-                        return ['exists' => true, 'cartItemKey' => $k];
+
+                        if ($cartItem['product']['customerPrice']) {
+                            if ($cartItem['product']['customerPrice'] == $cart['product']['customerPrice']) {
+                                return ['exists' => true, 'cartItemKey' => $k];
+                            }
+                        }
+
                     } else {
                         // otherwise loop through attributes
                         $attsmatch = true;
@@ -492,6 +499,15 @@ class Cart
                                 //different attributes means different "product".
                                 $attsmatch = false;
                                 break;
+                            }
+                        }
+
+                        if ($attsmatch) {
+                            // test for a customer entered price, treat a different item if different amount
+                            if ($cartItem['product']['customerPrice']) {
+                                if ($cartItem['product']['customerPrice'] != $cart['product']['customerPrice']) {
+                                    $attsmatch = false;
+                                }
                             }
                         }
 
