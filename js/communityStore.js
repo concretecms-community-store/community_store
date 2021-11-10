@@ -85,10 +85,7 @@ var communityStore = {
     },
 
     addToCart: function(form) {
-
         var valid = true;
-
-
         var priceinput = $(form).find('.store-product-customer-price-entry-field');
 
         if (priceinput.length > 0) {
@@ -100,7 +97,6 @@ var communityStore = {
                 priceinput.focus();
                 valid = false;
             }
-
         }
 
         $(form).find('input,textarea,select').filter('[required]').each(function(i, requiredField) {

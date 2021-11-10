@@ -78,17 +78,18 @@ $(function () {
                 }
             }
 
+            var quantityField = pdb.find('.store-product-qty');
             if (variation['maxCart'] !== false) {
-                var quantityField = pdb.find('.store-product-qty');
                 quantityField.prop('max', variation['maxCart']);
-
                 if (parseFloat(quantityField.val()) > parseFloat(variation['maxCart'])) {
                     quantityField.val(parseFloat(variation['maxCart']));
                 }
             } else {
-                pdb.find('.store-product-qty').removeProp('max');
+                quantityField.removeProp('max');
+                if (parseFloat(quantityField.val()) === 0 ){
+                    quantityField.val(1);
+                }
             }
-
         } else {
 
             if (priceHolder.data('original-price')) {
