@@ -120,17 +120,21 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 form-group">
+                    <div class="checkbox form-check">
                     <label><?= $form->checkbox('deliveryInstructions', '1', Config::get('community_store.deliveryInstructions') ? '1' : '0'); ?>
                         <?= t('Include Delivery Instructions field in checkout'); ?></label>
+                    </div>
                 </div>
             </div>
 
             <h3><?= t("Multiple Packages Support"); ?></h3>
             <div class="row">
                 <div class="col-md-12">
+                    <div class="checkbox form-check">
                     <label><?= $form->checkbox('multiplePackages', '1', Config::get('community_store.multiplePackages') ? '1' : '0'); ?>
                         <?= t('Enable Package(s) Data fields'); ?></label>
+                    </div>
                     <p class="help-block"> <?= t('Allows multiple packages to be defined per product configuration, to be used by advanced shipping methods'); ?></p>
                 </div>
             </div>
@@ -532,8 +536,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="form-group">
                 <?php $shoppingDisabled = Config::get('community_store.shoppingDisabled');
                 ?>
-                <label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label><br/>
-                <label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label><br/>
+                <div class="checkbox form-check">
+                    <div class="radio"><label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -549,21 +555,25 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('guestCheckout', t('Cart Open Style')); ?>
                 <?php $cartMode = Config::get('community_store.cartMode');
                 ?>
-                <br/>
-                <label><?= $form->radio('cartMode', ' ', ('' == $cartMode)); ?><?php echo t('Modal'); ?></label><br/>
-                <label><?= $form->radio('cartMode', 'slide', 'slide' == $cartMode); ?><?php echo t('Slide'); ?></label><br/>
+
+                <div class="checkbox form-check">
+                    <div class="radio"><label><?= $form->radio('cartMode', ' ', ('' == $cartMode)); ?><?php echo t('Modal'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('cartMode', 'slide', 'slide' == $cartMode); ?><?php echo t('Slide'); ?></label></div>
+                </div>
             </div>
 
 
-            <div class="form-group">
+            <div class="form-group ">
                 <?= $form->label('guestCheckout', t('Guest Checkout')); ?>
                 <?php $guestCheckout = Config::get('community_store.guestCheckout');
                 $guestCheckout = ($guestCheckout ? $guestCheckout : 'off');
                 ?>
-                <br/>
-                <label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label><br/>
-                <label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label><br/>
-                <label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label><br/>
+
+                <div class="checkbox form-check">
+                    <div class="radio"><label><?= $form->radio('guestCheckout', 'always', 'always' == $guestCheckout); ?><?php echo t('Always (unless login required for products in cart)'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('guestCheckout', 'option', 'option' == $guestCheckout); ?><?php echo t('Offer as checkout option'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('guestCheckout', 'off', 'off' == $guestCheckout || '' == $guestCheckout); ?><?php echo t('Disabled'); ?></label></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -594,23 +604,27 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?php $companyField = Config::get('community_store.companyField');
                 $companyField = ($companyField ? $companyField : 'off');
                 ?>
-                <br/>
-                <label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label><br/>
-                <label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label><br/>
-                <label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label><br/>
+
+                <div class="checkbox form-check">
+                    <div class="radio"><label><?= $form->radio('companyField', 'off', 'off' == $companyField || '' == $companyField); ?><?php echo t('Hidden'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('companyField', 'optional', 'optional' == $companyField); ?><?php echo t('Optional'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('companyField', 'required', 'required' == $companyField); ?><?php echo t('Required'); ?></label></div>
+                </div>
             </div>
 
             <h3><?= t('Billing Details'); ?></h3>
 
             <div class="row">
                 <div class="col-md-12">
+                    <div class="checkbox form-check">
                     <label><?= $form->checkbox('noBillingSave', '1', Config::get('community_store.noBillingSave') ? '1' : '0'); ?>
                         <?= t('Do not save billing details to user on order'); ?></label>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 form-group">
                     <div class="ccm-search-field-content">
                         <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
                         <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
@@ -622,13 +636,15 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <h3><?= t('Shipping Details'); ?></h3>
             <div class="row">
                 <div class="col-md-12">
+                    <div class="checkbox form-check">
                     <label><?= $form->checkbox('noShippingSave', '1', Config::get('community_store.noShippingSave') ? '1' : '0'); ?>
                         <?= t('Do not save shipping details to user on order'); ?></label>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 form-group">
                     <div class="ccm-search-field-content">
                         <?= $form->label('noShippingSaveGroups', t('For users in groups')); ?>
                         <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
