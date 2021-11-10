@@ -340,7 +340,7 @@ class ProductVariation
 
     public function setVariationIsUnlimited($bool)
     {
-        $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
+        $this->pvQtyUnlim = (!is_null($bool) ? $bool : false);
     }
 
     public function getVariationWidth()
@@ -621,7 +621,7 @@ class ProductVariation
         $variation->setVariationWholesalePrice($data['pvWholesalePrice']);
         $variation->setVariationSalePrice($data['pvSalePrice']);
         $variation->setVariationStockLevel($data['pvQty']);
-        $variation->setVariationQtyUnlim($data['pvQtyUnlim']);
+        $variation->setVariationIsUnlimited($data['pvQtyUnlim']);
         $variation->setVariationFID($data['pvfID']);
         $variation->setVariationWeight($data['pvWidth']);
         $variation->setVariationNumberItems($data['pvNumberItems']);
