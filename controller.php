@@ -134,12 +134,19 @@ class Controller extends Package
     public function registerHelpers()
     {
         $singletons = [
-            'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
             'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual',
+        ];
+
+        $binds = [
+            'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
         ];
 
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
+        }
+
+        foreach ($binds as $key => $value) {
+            $this->app->bind($key, $value);
         }
     }
 

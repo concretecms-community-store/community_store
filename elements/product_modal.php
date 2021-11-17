@@ -4,7 +4,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-$communityStoreImageHelper = $app->make('cs/helper/image', ['product_modal']);
+$communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'product_modal']);
 $csm = $app->make('cs/helper/multilingual');
 $token = $app->make('token');
 ?>

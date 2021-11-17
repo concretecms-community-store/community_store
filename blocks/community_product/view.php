@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$communityStoreImageHelper = $app->make('cs/helper/image', ['single_product']);
+$communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'single_product']);
 $csm = $app->make('cs/helper/multilingual');
 
 if (is_object($product) && $product->isActive()) {
