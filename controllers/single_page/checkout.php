@@ -236,13 +236,20 @@ class Checkout extends PageController
 
         if ($pm->getMethodController()->isExternal()) {
             if (0 != Cart::getTotalItemsInCart()) {
-                $order = Order::add($pm, null, 'incomplete');
+				if (! $this->request->isMethod('POST')) {
+					return Redirect::to($langpath . '/cart');
+				}
+
+				$nonce = md5(uniqid('cs', true));
+				Session::set('checkoutNonce', $nonce);
+
+				$order = Order::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
 
                 // unset the shipping type, as next order might be unshippable
                 Session::set('community_store.smID', '');
 
-                return Redirect::to($langpath . '/checkout/external');
+				return Redirect::to($langpath . '/checkout/external',$nonce);
             } else {
                 return Redirect::to($langpath . '/cart');
             }
@@ -269,7 +276,7 @@ class Checkout extends PageController
         }
     }
 
-    public function external()
+	public function external($nonce = false)
     {
         $this->requireAsset('javascript', 'jquery');
         $pmHandle = Session::get('paymentMethod');
@@ -279,16 +286,25 @@ class Checkout extends PageController
             $pm = PaymentMethod::getByHandle($pmHandle);
         }
 
-        if (!$pm) {
-            $c = Page::getCurrentPage();
-            $al = Section::getBySectionOfSite($c);
-            $langpath = '';
-            if (null !== $al) {
-                $langpath = $al->getCollectionHandle();
-            }
+		$c = Page::getCurrentPage();
+		$al = Section::getBySectionOfSite($c);
+		$langpath = '';
+		if (null !== $al) {
+			$langpath = $al->getCollectionHandle();
+		}
 
+        if (!$pm) {
             return Redirect::to($langpath . '/checkout');
         }
+
+		$checkoutNonce = Session::get('checkoutNonce');
+		if (!$checkoutNonce) {
+			return Redirect::to($langpath . '/checkout');
+		}
+		Session::remove('checkoutNonce');
+		if ($checkoutNonce !== $nonce) {
+			return Redirect::to($langpath . '/checkout');
+		}
 
         $this->set('pm', $pm);
         $this->set('action', $pm->getMethodController()->getAction());
