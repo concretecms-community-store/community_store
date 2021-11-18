@@ -9,7 +9,6 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
 class Controller extends BlockController
@@ -166,27 +165,14 @@ class Controller extends BlockController
 
     public function add()
     {
-       $this->createProductList();
-    }
-
-    private function createProductList() {
-        $allProducts = [''=> '-- ' . t('Select Product') . ' --'];
-
-        $productList = new ProductList();
-        $productList->setSortBy('pName');
-        $result = $productList->getResults();
-
-        foreach($result as $p) {
-            $allProducts[$p->getID()] = $p->getName();
-        }
-
-        $this->set('productList', $allProducts);
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
     }
 
     public function edit()
     {
-        $this->createProductList();
-
+        $this->requireAsset('css', 'select2');
+        $this->requireAsset('javascript', 'select2');
 
         if ($this->pID) {
             $this->set('product', Product::getByID($this->pID));

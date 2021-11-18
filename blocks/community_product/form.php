@@ -1,19 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$version = $app->make('config')->get('concrete.version');
-$legacy = version_compare($version, '9.0', '<');
-?>
-
 <div class="form-group">
     <?= $form->label('productLocation', t('Product')); ?>
     <?= $form->select('productLocation', ['search' => t('A selected product'), 'page' => t('Product associated with this page')], $productLocation, ['onChange' => 'updateProductLocation();']); ?>
 </div>
 
 <div class="form-group" id="product-search">
-    <?= $form->label('productSearch', 'Selected Product'); ?>
-    <?= $form->select('pID', $productList, $pID); ?>
+    <?= $form->label('productSearch', 'Search for a product'); ?>
+    <input name="pID" id="product-select"  class="select2-select" style="width: 100%" placeholder="<?= t('Select Product'); ?>" />
 </div>
 
 <legend><?= t("Display Options"); ?></legend>
@@ -123,4 +117,36 @@ $legacy = version_compare($version, '9.0', '<');
     }
     updateProductLocation();
 
+    $(document).ready(function () {
+
+        $("#product-select").select2({
+            ajax: {
+                url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
+                dataType: 'json',
+                quietMillis: 250,
+                data: function (term, page) {
+                    return {
+                        q: term // search term
+                    };
+                },
+                results: function (data) {
+                    var results = [];
+                    $.each(data, function(index, item){
+                        results.push({
+                            id: item.pID,
+                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 2,
+            initSelection: function(element, callback) {
+                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? addslashes($product->getName()) : ''); ?>' });
+            }
+        }).select2('val', []);
+    });
 </script>
