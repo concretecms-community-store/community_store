@@ -21,7 +21,6 @@
             </label>
         </div>
 
-
         <div class="form-check">
             <label>
                 <?= $form->checkbox('showProductDescription', 1, !isset($showProductDescription) ? true : $showProductDescription); ?>
@@ -145,7 +144,7 @@
             },
             minimumInputLength: 2,
             initSelection: function(element, callback) {
-                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? addslashes($product->getName()) : ''); ?>' });
+                callback({id: <?= ($pID ? $pID : 0); ?>, text: <?= ($product ? json_encode($product->getName()) : "''"); ?> });
             }
         }).select2('val', []);
     });
