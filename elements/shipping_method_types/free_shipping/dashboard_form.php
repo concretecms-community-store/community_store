@@ -19,7 +19,7 @@ extract($vars); ?>
             </select>
         </div>
     </div>
-</div> 
+</div>
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
@@ -34,14 +34,14 @@ extract($vars); ?>
             <p class="help-block"><?= t("Leave at 0 for no maximum")?></p>
         </div>
     </div>
-</div> 
+</div>
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
             <?= $form->label('minimumWeight',t("Minimum Weight Amount for this rate to apply")); ?>
             <div class="input-group">
                 <?= $form->text('minimumWeight',$smtm->getMinimumWeight()?$smtm->getMinimumWeight():'0'); ?>
-                <div class="input-group-addon"><?=Config::get('community_store.weightUnit')?></div>
+                <div class="input-group-addon input-group-text"><?=Config::get('community_store.weightUnit')?></div>
             </div>
         </div>
     </div>
@@ -50,9 +50,9 @@ extract($vars); ?>
             <?= $form->label('maximumWeight',t("Maximum Weight Amount for this rate to apply")); ?>
             <div class="input-group">
                 <?= $form->text('maximumWeight',$smtm->getMaximumWeight()?$smtm->getMaximumWeight():'0'); ?>
-                <div class="input-group-addon"><?=Config::get('community_store.weightUnit')?></div>
+                <div class="input-group-addon input-group-text"><?=Config::get('community_store.weightUnit')?></div>
             </div>
             <p class="help-block"><?= t("Leave at 0 for no maximum")?></p>
         </div>
     </div>
-</div> 
+</div>
