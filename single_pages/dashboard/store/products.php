@@ -74,17 +74,17 @@ $dh = $app->make('helper/date');
         <div class="row">
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked flex-column">
-                    <li class="nav-item active"><a class="nav-link" href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-descriptions" data-pane-toggle><?= t('Descriptions and Manufacturer') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-options" data-pane-toggle><?= t('Options and Variations') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-related" data-pane-toggle><?= t('Related Products') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-attributes" data-pane-toggle><?= t('Attributes') ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups") ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-checkout" data-pane-toggle><?= t("Checkout Options") ?></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#product-page" data-pane-toggle><?= t('Detail Page') ?></a></li>
+                    <li class="nav-item active"><a class="nav-link text-primary" href="#product-overview" data-pane-toggle><?= t('Overview') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-descriptions" data-pane-toggle><?= t('Descriptions and Manufacturer') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-options" data-pane-toggle><?= t('Options and Variations') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-related" data-pane-toggle><?= t('Related Products') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-attributes" data-pane-toggle><?= t('Attributes') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups") ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-checkout" data-pane-toggle><?= t("Checkout Options") ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-page" data-pane-toggle><?= t('Detail Page') ?></a></li>
                 </ul>
             </div>
             <div class="col-sm-9">
@@ -2144,7 +2144,10 @@ $dh = $app->make('helper/date');
         });
     });
 
-
-
-
 </script>
+
+<style>
+    #ccm-dashboard-content-regular .nav-pills.nav-stacked .active a {
+        font-weight: bold
+    }
+</style>

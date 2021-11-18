@@ -690,7 +690,7 @@ class DiscountRule
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $r = $db->query("select count(*) as total, COUNT(CASE WHEN oID is NULL THEN 1 END) AS available from CommunityStoreDiscountCodes where drID = ?", [$this->drID]);
-        $r = $r->fetchRow();
+        $r = $r->fetch();
         $this->totalCodes = $r['total'];
         $this->availableCodes = $r['available'];
 

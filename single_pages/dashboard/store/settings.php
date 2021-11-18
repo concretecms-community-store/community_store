@@ -19,19 +19,19 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         <div class="col-sm-3">
 
             <ul class="nav nav-pills nav-stacked flex-column">
-                <li class="nav-item active"><a class="nav-link" href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-tax" data-pane-toggle><?= t('Tax'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-shipping" data-pane-toggle><?= t('Shipping'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-customers" data-pane-toggle><?= t('Customers'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-products" data-pane-toggle><?= t('Products'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-product-images" data-pane-toggle><?= t('Product Images'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings-user-interface" data-pane-toggle><?= t('User Interface'); ?></a></li>
+                <li class="nav-item active"><a class="nav-link text-primary"" href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-tax" data-pane-toggle><?= t('Tax'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-shipping" data-pane-toggle><?= t('Shipping'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-order-statuses" data-pane-toggle><?= t('Fulfilment Statuses'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-notifications" data-pane-toggle><?= t('Notifications and Receipts'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-customers" data-pane-toggle><?= t('Customers'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-products" data-pane-toggle><?= t('Products'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-product-images" data-pane-toggle><?= t('Product Images'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-digital-downloads" data-pane-toggle><?= t('Digital Downloads'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-user-interface" data-pane-toggle><?= t('User Interface'); ?></a></li>
             </ul>
 
         </div>
@@ -774,3 +774,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     </div>
 
 </form>
+
+<style>
+    #ccm-dashboard-content-regular .nav-pills.nav-stacked .active a {
+        font-weight: bold
+    }
+</style>

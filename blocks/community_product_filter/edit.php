@@ -174,7 +174,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             </div>
         </fieldset>
-
+        <br />
         <fieldset>
             <legend><?= t('Display Options'); ?></legend>
 
