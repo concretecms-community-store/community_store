@@ -13,6 +13,12 @@ $attributeViews = ['attributes', 'attributeadded', 'attributeremoved'];
 $ps = $app->make('helper/form/page_selector');
 $dh = $app->make('helper/date');
 
+$version = $app->make('config')->get('concrete.version');
+$badgeClass = ' badge ';
+if (version_compare($version, '9.0', '<')) {
+    $badgeClass = '';
+}
+
 ?>
 
 <?php if (in_array($controller->getAction(), $addViews)) { //if adding or editing a product
@@ -1987,9 +1993,9 @@ $dh = $app->make('helper/date');
                         <td>
                             <?php
                             if ($product->isActive()) {
-                                echo "<span class='label label-success'>" . t('Active') . "</span>";
+                                echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Active') . "</span>";
                             } else {
-                                echo "<span class='label label-default'>" . t('Inactive') . "</span>";
+                                echo "<span class='label label-default ". $badgeClass ." bg-success'>" . t('Inactive') . "</span>";
                             }
                             ?>
 
@@ -2022,16 +2028,16 @@ $dh = $app->make('helper/date');
                         <td>
                             <?php
                             if ($product->isFeatured()) {
-                                echo "<span class='label label-success'>" . t('Featured') . "</span>";
+                                echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Featured') . "</span>";
                             } else {
-                                echo "<span class='label label-default'>" . t('Not Featured') . "</span>";
+                                echo "<span class='label label-default ". $badgeClass ." bg-success'>" . t('Not Featured') . "</span>";
                             }
                             ?>
                         </td>
                         <td>
                             <?php $productgroups = $product->getGroups();
                             foreach ($productgroups as $pg) { ?>
-                                <span class="label label-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
+                                <span class="label label-primary <?= $badgeClass; ?> badge-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
                             <?php } ?>
 
                             <?php if (empty($productgroups)) { ?>
@@ -2042,20 +2048,23 @@ $dh = $app->make('helper/date');
                             <div class="btn-group" style="width:100px">
                                 <a class="btn btn-sm btn-primary" title="<?= t('Manage'); ?>"
                                    href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><i class="fa fa-pencil-alt fa-pencil"></i></a>
-                                <?php if ($multilingualEnabled) { ?>
-                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <?php
-                                        $page = $product->getProductPage();
-                                        if ($page && !$page->isInTrash()) { ?>
-                                            <li><a target="_blank" href="<?= $page->getCollectionLink() ?>"><?= t('View Product Page') ?></a></li>
-                                        <?php } ?>
 
-                                        <li><a target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
-                                    </ul>
-                                <?php } ?>
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" >
+                                            <?php
+                                            $page = $product->getProductPage();
+                                            if ($page && !$page->isInTrash()) { ?>
+                                                <li><a class="nav-link"  target="_blank" href="<?= $page->getCollectionLink() ?>"><?= t('View Product Page') ?></a></li>
+                                            <?php } else { ?>
+                                                <li><a class="nav-link"  style="pointer-events: none; cursor: none" disabled href=""><?= t('No product page'); ?></a></li>
+                                            <?php } ?>
+                                            <?php if ($multilingualEnabled) { ?>
+                                            <li><a target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
+                                            <?php } ?>
+                                        </ul>
+
                             </div>
                         </td>
                     </tr>

@@ -5,6 +5,9 @@ use \Concrete\Core\Support\Facade\Url;
 ?>
 
 <?php
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$version = $app->make('config')->get('concrete.version');
+$legacy = version_compare($version, '9.0', '<');
 
 $groupViews = ['view','groupadded'];
 $groupEdits = ['add','edit'];
@@ -103,6 +106,8 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                                 url: "<?= Url::to('/productfinder')?>",
                                 dataType: 'json',
                                 quietMillis: 250,
+
+                                <?php if ($legacy) { ?>
                                 data: function (term, page) {
                                     return {
                                         q: term // search term
@@ -120,6 +125,30 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                                         results: results
                                     };
                                 },
+                                <?php } else { ?>
+                                data: function (params) {
+                                    return {
+                                        q: params.term // search term
+                                    };
+                                },
+                                processResults: function (data) {
+                                    var results = [];
+
+                                    $.each(data, function(index, item){
+                                        results.push({
+                                            id: item.pID,
+                                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
+                                        });
+                                    });
+
+                                    console.log(results);
+
+                                    return {
+                                        results: results
+                                    };
+                                },
+                                <?php } ?>
+
                                 cache: true
                             },
                             minimumInputLength: 2,
@@ -129,8 +158,15 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                         }).select2('val', []);
 
                         $('#product-select').on("change", function(e) {
+                            <?php if ($legacy) { ?>
                             var data = $(this).select2('data');
                             $('#group-products').removeClass('hidden').append('<li class="list-group-item">'+ data.text  +'<a><i class="pull-right fa fa-minus-circle float-end"></i> <input type="hidden" name="products[]" value="' + data.id + '" /></a> </li>');
+                           <?php } else { ?>
+                            var id = $(this).val();
+                            var text = $(this).text();
+                            $('#group-products').removeClass('hidden').append('<li class="list-group-item">'+ text  +'<a><i class="pull-right fa fa-minus-circle float-end"></i> <input type="hidden" name="products[]" value="' + id + '" /></a> </li>');
+                            <?php } ?>
+
                             $(this).select2("val", []);
                         });
 

@@ -115,8 +115,8 @@ if (in_array($controller->getAction(), $addViews)) {
         <?php
         if (count($methodTypes) > 0) {
             ?>
-            <div class="btn-group">
-                <a href="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><?= t('Add Shipping Method') ?> <span class="caret"></span></a>
+            <div class="btn-group dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button"  data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= t('Add Shipping Method') ?> <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
                     <?php foreach ($methodTypes as $smt) { ?>
                         <?php if ($smt && !$smt->isHiddenFromAddMenu()) { ?>
