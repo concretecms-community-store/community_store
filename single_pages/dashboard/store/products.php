@@ -1072,13 +1072,13 @@ $dh = $app->make('helper/date');
 
                             ?>
                             optionsContainer.append(optionsTemplate({
-                                poName: '<?= h($option->getName()) ?>',
-                                poID: '<?= $option->getID()?>',
+                                poName: <?= json_encode($option->getName()) ?>,
+                                poID: <?= json_encode($option->getID()) ?>,
                                 poType: '<?= $type ?>',
                                 poDisplayType: '<?= $displayType ?>',
-                                poLabel: '<?= $label; ?>',
-                                poHandle: '<?= h($handle); ?>',
-                                poDetails: '<?= str_replace(["\r\n", "\r", "\n"], "~~~", h($details)); ?>',
+                                poLabel: <?= json_encode($label); ?>,
+                                poHandle: <?= json_encode($handle); ?>,
+                                poDetails: <?= json_encode(str_replace(["\r\n", "\r", "\n"], "~~~", h($details))); ?>,
                                 poRequired: '<?= $required ? 1 : 0; ?>',
                                 poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                                 sort: '<?= $optionsort ?>'
