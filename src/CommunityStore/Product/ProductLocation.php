@@ -173,7 +173,7 @@ class ProductLocation
         $query = $db->query('select count(*) as productCount, max(cID) as cID from CommunityStoreProductLocations group by cID');
 
         $pages = [];
-        while ($row = $query->fetchRow()) {
+        while ($row = $query->fetch()) {
             $page = Page::getByID($row['cID']);
 
             if ($page) {

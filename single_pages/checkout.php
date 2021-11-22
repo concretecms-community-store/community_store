@@ -68,7 +68,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="store-email"><?= t("Email") ?></label>
-                                        <?= $form->email('store-email', $customer->getEmail(), array('required'=>'required','placeholder'=>t('Email'))); ?>
+                                        <?= $form->email('store-email', $customer->getEmail(), ['required'=>'required','placeholder'=>t('Email')]); ?>
                                     </div>
                                 </div>
                             </div>
@@ -135,14 +135,14 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="form-group">
                                     <label for="store-checkout-billing-country"><?= t("Country") ?></label>
                                     <?php $country = $customer->getAddressValue('billing_address', 'country') ?>
-                                    <?= $form->select('store-checkout-billing-country', $billingCountries, $country && array_key_exists($country, $billingCountries) ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), array("onchange" => "communityStore.updateBillingStates()")); ?>
+                                    <?= $form->select('store-checkout-billing-country', $billingCountries, $country && array_key_exists($country, $billingCountries) ? $country : ($defaultBillingCountry ? $defaultBillingCountry : 'US'), ["onchange" => "communityStore.updateBillingStates()", 'class'=>'form-control form-select'] ); ?>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                <div class="form-group">
                                     <label for="store-checkout-billing-state"><?= t("State / Province") ?></label>
                                     <?php $billingState = $customer->getAddressValue('billing_address', 'state_province'); ?>
-                                    <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : ""); ?>
+                                    <?= $form->select('store-checkout-billing-state', $states, $billingState ? $billingState : "", ['class'=>'form-control form-select']); ?>
                                 </div>
                                 <input type="hidden" id="store-checkout-saved-billing-state" value="<?= $billingState ?>">
                             </div>
@@ -168,7 +168,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="store-checkout-notes"><?= t("Order notes") ?></label>
-                                    <?= $form->textarea('store-checkout-notes', nl2br(h($notes)), array('placeholder'=>t('Order notes'))); ?>
+                                    <?= $form->textarea('store-checkout-notes', nl2br(h($notes)), ['placeholder'=>t('Order notes')]); ?>
                                 </div>
                             </div>
                         </div>
@@ -176,7 +176,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <div class="row">
                             <?php if ($shippingEnabled) { ?>
-                            <div class="store-copy-billing-container col-md-12 mb-3 text-right">
+                            <div class="store-copy-billing-container col-md-12 mb-3 text-right text-end">
                                 <div class="form-group">
                                 <label>
                                     <input type="checkbox" id="store-copy-billing" />
@@ -279,13 +279,13 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-first-name"><?= t("First Name") ?></label>
-                                        <?= $form->text('store-checkout-shipping-first-name', $customer->getValue("shipping_first_name"), array('required'=>'required', 'placeholder'=>t('First Name'))); ?>
+                                        <?= $form->text('store-checkout-shipping-first-name', $customer->getValue("shipping_first_name"), ['required'=>'required', 'placeholder'=>t('First Name')]); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-last-name"><?= t("Last Name") ?></label>
-                                        <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), array('required'=>'required', 'placeholder'=>t('Last Name'))); ?>
+                                        <?= $form->text('store-checkout-shipping-last-name', $customer->getValue("shipping_last_name"), ['required'=>'required', 'placeholder'=>t('Last Name')]); ?>
                                     </div>
                                 </div>
                             </div>
@@ -305,12 +305,12 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                                 <div class="col-md-7">
                                     <div class="form-group">
-                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), array('required'=>'required','placeholder'=>t('Street Address'))); ?>
+                                        <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), ['required'=>'required','placeholder'=>t('Street Address')]); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-5">
                                     <div class="form-group">
-                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2'), array('placeholder'=>t('Apartment, unit, etc (optional)'))); ?>
+                                        <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2'), ['placeholder'=>t('Apartment, unit, etc (optional)')]); ?>
                                     </div>
                                 </div>
                             </div>
@@ -318,7 +318,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-city"><?= t("City") ?></label>
-                                        <?= $form->text('store-checkout-shipping-city', $customer->getAddressValue('shipping_address', 'city'), array('required'=>'required', 'placeholder'=>t('City'))); ?>
+                                        <?= $form->text('store-checkout-shipping-city', $customer->getAddressValue('shipping_address', 'city'), ['required'=>'required', 'placeholder'=>t('City')]); ?>
                                     </div>
                                 </div>
                             </div>
@@ -327,25 +327,25 @@ $csm = $app->make('cs/helper/multilingual');
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
                                         <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
-                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), array("onchange" => "communityStore.updateShippingStates()")); ?>
+                                        <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), ["onchange" => "communityStore.updateShippingStates()", 'class'=>'form-control form-select']); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-state"><?= t("State / Province") ?></label>
                                         <?php $shippingState = $customer->getAddressValue('shipping_address', 'state_province'); ?>
-                                        <?= $form->select('store-checkout-shipping-state', $states, $shippingState ? $shippingState : ""); ?>
+                                        <?= $form->select('store-checkout-shipping-state', $states, $shippingState ? $shippingState : "", ['class'=>'form-control form-select']); ?>
                                     </div>
                                     <input type="hidden" id="store-checkout-saved-shipping-state" value="<?= $shippingState ?>">
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-zip"><?= t("Postal Code") ?></label>
-                                            <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), array('required'=>'required', 'placeholder'=>t('Postal Code'))); ?>
+                                            <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), ['required'=>'required', 'placeholder'=>t('Postal Code')]); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="store-checkout-form-group-buttons mb-3">
+                            <div class="store-checkout-form-group-buttons mb-3 mt-3">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
@@ -375,7 +375,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
 
-                            <div id="store-checkout-shipping-method-options" data-error-message="<?= h(t('Please select a shipping method'));?>">
+                            <div id="store-checkout-shipping-method-options" class="mb-1 mt-3" data-error-message="<?= h(t('Please select a shipping method'));?>">
                             </div>
 
                             <?php if (Config::get('community_store.deliveryInstructions')) { ?>
@@ -385,7 +385,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <?php } ?>
 
-                            <div class="store-checkout-form-group-buttons mb-3">
+                            <div class="store-checkout-form-group-buttons mb-3 mt-3">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
@@ -419,11 +419,11 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-vat-number"><?= t("VAT Number (if applicable)") ?></label>
-                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), array('placeholder'=>t('VAT Number'))); ?>
+                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), ['placeholder'=>t('VAT Number')]); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="store-checkout-form-group-buttons mb-3">
+                            <div class="store-checkout-form-group-buttons mb-3 mt-3">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
@@ -487,7 +487,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                                 $pm->renderCheckoutForm();
                                 ?>
-                                <div class="store-checkout-form-group-buttons mb-3">
+                                <div class="store-checkout-form-group-buttons mb-3 mt-3">
                                  <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
                                 <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-end" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
 
@@ -524,7 +524,7 @@ $csm = $app->make('cs/helper/multilingual');
                 }
                 ?>
 
-                <ul class="store-checkout-totals-line-items list-group">
+                <ul class="store-checkout-totals-line-items list-group mb-3">
 
                     <?php if (!empty($discounts)) { ?>
                         <li class="store-line-item store-discounts list-group-item">
@@ -550,9 +550,9 @@ $csm = $app->make('cs/helper/multilingual');
 
                             <a href="<?= Url::to($langpath . '/cart'); ?>" id="store-enter-discount-trigger"><?= t('Enter discount code'); ?></a>
 
-                            <form method="post" action="" class="form-inline store-checkout-code-form">
+                            <form method="post" action="" class="form-inline store-checkout-code-form d-flex" style="display: none !important;">
                                 <?= $token->output('community_store'); ?>
-                                <input type="text" class="form-control" name="code" placeholder="<?= t('Enter code'); ?>" />
+                                <input type="text" class="form-control me-3" name="code" placeholder="<?= t('Enter code'); ?>" />
                                 <input type="hidden" name="action" value="code" />
                                 <button type="submit" class="btn btn-default btn-secondary btn-cart-discount-apply"><?= t('Apply');?></button>
                             </form>
@@ -574,7 +574,7 @@ $csm = $app->make('cs/helper/multilingual');
 
 
 
-                <ul class="store-checkout-totals-line-items list-group">
+                <ul class="store-checkout-totals-line-items list-group mb-3">
                     <li class="store-line-item store-sub-total list-group-item">
                         <strong><?= t("Items Subtotal") ?>:</strong> <span class="store-sub-total-amount"><?= Price::format($subtotal); ?></span>
                         <?php if ($calculation == 'extract') {
@@ -590,10 +590,11 @@ $csm = $app->make('cs/helper/multilingual');
                  <?php } ?>
                  </ul>
 
-                <ul class="store-checkout-totals-line-items list-group" id="store-taxes">
+
                     <?php
-                    if ($taxtotal > 0) {
-                        foreach ($taxes as $tax) {
+                    if ($taxtotal > 0) { ?>
+                <ul class="store-checkout-totals-line-items list-group mb-3" id="store-taxes">
+                        <?php foreach ($taxes as $tax) {
                             if ($tax['taxamount'] > 0) {
                                 $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
                                 ?>
@@ -601,10 +602,10 @@ $csm = $app->make('cs/helper/multilingual');
                                 <strong><?= ($taxlabel ? $taxlabel : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                                 </li>
                             <?php }
-                        }
-                    }
-                    ?>
+                        } ?>
                 </ul>
+                    <?php } ?>
+
 
                 <ul class="store-checkout-totals-line-items list-group">
                     <li class="store-line-item store-grand-total list-group-item"><strong><?= t("Total") ?>:</strong> <span

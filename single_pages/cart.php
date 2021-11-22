@@ -208,9 +208,9 @@ if ($cart) {
 if ($cart && !empty($cart)) { ?>
     <?php if ($discountsWithCodesExist && $cart) { ?>
         <h3><?= t('Enter Discount Code'); ?></h3>
-        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
+        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline d-flex">
             <?= $token->output('community_store'); ?>
-            <div class="form-group">
+            <div class="form-group me-3">
                 <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
             </div>
             <input type="hidden" name="action" value="code"/>
@@ -228,7 +228,7 @@ if ($cart && !empty($cart)) { ?>
 
     <?php if (!empty($discounts)) { ?>
 
-        <p class="store-cart-page-discounts text-right">
+        <p class="store-cart-page-discounts text-right text-end">
             <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
             <?php
             $discountstrings = array();
@@ -242,13 +242,13 @@ if ($cart && !empty($cart)) { ?>
     <?php } ?>
 
 
-    <p class="store-cart-page-cart-total text-right">
+    <p class="store-cart-page-cart-total text-right text-end">
         <strong class="cart-grand-total-label"><?= t("Items Sub Total") ?>:</strong>
         <span class="cart-grand-total-value"><?= Price::format($subTotal) ?></span>
     </p>
 
     <?php if ($shippingEnabled) { ?>
-        <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong>
+        <p class="store-cart-page-shipping text-right text-end"><strong><?= t("Shipping") ?>:</strong>
         <span id="store-shipping-total">
          <?= $shippingtotal !== false ? ($shippingtotal > 0 ? Price::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
         </span></p>
@@ -258,7 +258,7 @@ if ($cart && !empty($cart)) { ?>
     if ($taxtotal > 0) {
         foreach ($taxes as $tax) {
             if ($tax['taxamount'] > 0) { ?>
-                <p class="store-cart-page-tax text-right">
+                <p class="store-cart-page-tax text-right text-end">
                     <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                 </p>
             <?php }
@@ -266,7 +266,7 @@ if ($cart && !empty($cart)) { ?>
     }
     ?>
 
-    <p class="store-cart-page-cart-total text-right">
+    <p class="store-cart-page-cart-total text-right text-end">
         <strong class="store-cart-grand-total-label"><?= t("Total") ?>:</strong>
         <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>

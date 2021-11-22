@@ -658,7 +658,7 @@ if (version_compare($version, '9.0', '<')) {
                     </ul>
 
                     <div href="#" id="launch_additional" data-launch="file-manager" class="ccm-file-selector">
-                        <div class="ccm-file-selector-choose-new"><?= t('Choose Images'); ?></div>
+                        <div class="ccm-file-selector-choose-new btn btn-secondary"><?= t('Choose Images'); ?></div>
                     </div>
                     <script type="text/javascript">
                         $(function () {

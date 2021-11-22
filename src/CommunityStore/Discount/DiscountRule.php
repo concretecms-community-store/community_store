@@ -599,7 +599,7 @@ class DiscountRule
             $cartItems = \Concrete\Core\Support\Facade\Session::get('communitystore.cart');
         }
 
-        while ($row = $result->fetchRow()) {
+        while ($row = $result->fetch()) {
             $discountRule = self::getByID($row['drID']);
 
             if (!$discountRule) {
