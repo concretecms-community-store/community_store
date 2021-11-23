@@ -497,7 +497,7 @@ if (is_object($product) && $product->isActive()) {
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
                                    title="<?= h($imgObj->getTitle()); ?>"
                                    class="store-product-thumb text-center center-block">
-                                    <img class="img-responsive" src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
+                                    <img class="img-responsive img-fluid" src="<?= $thumb->src; ?>" title="<?= h($imgObj->getTitle()); ?>"
                                          alt="<?= h($imgTitle); ?>">
                                 </a>
                             </div>
@@ -528,10 +528,11 @@ if (is_object($product) && $product->isActive()) {
                                     <div class="store-product-additional-image col-md-6 col-sm-6"><a
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
-                                                class="store-product-thumb text-center center-block"><img
+                                                class="store-product-thumb text-center center-block">
+                                            <img class="img-responsive img-fluid"
                                                     src="<?= $thumb->src; ?>"
                                                     title="<?= h($secondaryImage->getTitle()) ?>"
-                                                    alt="<?= h($imgTitle); ?>"/></a></div>
+                                                    alt="<?= h($imgTitle); ?>" /></a></div>
                                     <?php
                                 }
 

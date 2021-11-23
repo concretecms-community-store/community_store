@@ -346,14 +346,7 @@ if (version_compare($version, '9.0', '<')) {
                                 }
                             </style>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <?= $form->label("pDateUpdated", t('Last Updated')); ?>
-                                <div class="form-control-static">
-                                <?= $dh->formatDateTime($product->getDateUpdated()); ?>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden d-none'); ?>">
                         <div class="col-md-4">
@@ -592,7 +585,18 @@ if (version_compare($version, '9.0', '<')) {
                                     }
                                 </style>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <?= $form->label("pDateUpdated", t('Last Updated')); ?>
+                                    <div class="form-control-static">
+                                        <?= $dh->formatDateTime($product->getDateUpdated()); ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+
 
                     <?php } ?>
 
