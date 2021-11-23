@@ -269,7 +269,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         <?php foreach ($orderStatuses as $orderStatus) {
                             ?>
                             <tr>
-                                <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v"></i></td>
+                                <td class="sorthandle"><input type="hidden" name="osID[]" value="<?= $orderStatus->getID(); ?>"><i class="fa fa-arrows-v fa-arrows-alt-v"></i></td>
                                 <td><input type="text" name="osName[]" value="<?= t($orderStatus->getName()); ?>" placeholder="<?= $orderStatus->getReadableHandle(); ?>" class="form-control ccm-input-text"></td>
                                 <td><input type="radio" name="osIsStartingStatus" value="<?= $orderStatus->getID(); ?>" <?= $orderStatus->isStartingStatus() ? 'checked' : ''; ?>></td>
                                 <td style="display:none;"><input type="checkbox" name="osInformSite[]" value="1" <?= $orderStatus->getInformSite() ? 'checked' : ''; ?> class="form-control"></td>

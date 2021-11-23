@@ -318,7 +318,7 @@ if (is_object($product) && $product->isActive()) {
 
                                     <?php if ('radio' != $displayType) {
                                     ?>
-                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
+                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control form-select"
                                             name="po<?= $option->getID(); ?>">
                                         <?php
                                         } ?>

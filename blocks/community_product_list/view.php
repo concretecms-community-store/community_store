@@ -108,9 +108,7 @@ if (!$productsPerRow) {
             $productPage = false;
         } ?>
 
-            <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-
-
+            <div class="store-product-list-item mb-3 <?= $columnClass; ?> <?= $activeclass; ?>">
 
                 <form data-product-id="<?= $product->getID(); ?>">
                     <?= $token->output('community_store'); ?>
@@ -310,7 +308,7 @@ if (!$productsPerRow) {
 
                             <?php if (!$optionType || $optionType == 'select') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -318,7 +316,7 @@ if (!$productsPerRow) {
                                     <?php } ?>
 
                                     <?php if ($displayType != 'radio') { ?>
-                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
+                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control form-select" name="po<?= $option->getID(); ?>">
                                         <?php } ?>
                                         <?php
                                         $variation = false;
@@ -389,7 +387,7 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'text' ) {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -401,7 +399,7 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'textarea') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -413,7 +411,7 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'checkbox') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/>
                                         <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>

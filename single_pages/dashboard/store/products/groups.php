@@ -84,7 +84,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
                     if ($products && count($products) > 0) {
                         foreach ($products as $product) {
-                            echo '<li class="list-group-item"><i class="fa fa-arrows-v"></i>' . $product->getProduct()->getName() . ( $product->getProduct()->getSKU() ? ' (' . $product->getProduct()->getSKU() . ')' : '').  '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle float-end"></i></a></li>';
+                            echo '<li class="list-group-item"><i class="fa fa-arrows-v fa-arrows-alt-v"></i>' . $product->getProduct()->getName() . ( $product->getProduct()->getSKU() ? ' (' . $product->getProduct()->getSKU() . ')' : '').  '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle float-end"></i></a></li>';
                         }
                     }
                     ?>
@@ -155,7 +155,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                     .group-product-list:hover {
                         cursor: move
                     }
-                    .fa-arrows-v {
+                    .fa-arrows-v, .fa-arrows-alt-v {
                          padding-right: 7px;
                          cursor: move !important;
                     }
