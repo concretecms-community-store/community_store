@@ -1338,9 +1338,9 @@ class Product
         return Price::format($this->getPrice(1));
     }
 
-    public function getFormattedPrice()
+    public function getFormattedPrice($qty = 1, $ignoreDiscounts = false)
     {
-        return Price::format($this->getActivePrice());
+        return Price::format($this->getActivePrice($qty, $ignoreDiscounts));
     }
 
     public function getFormattedWholesalePrice()
@@ -1436,7 +1436,7 @@ class Product
         $this->pSaleEnd = $saleEnd;
     }
 
-    public function getActivePrice($qty = 1)
+    public function getActivePrice($qty = 1, $ignoreDiscounts = false)
     {
         if(Wholesale::isUserWholesale()){
             return $this->getWholesalePrice();
@@ -1445,13 +1445,13 @@ class Product
             if ($salePrice != "" && !$this->hasQuantityPrice()) {
                 return $salePrice;
             }
-            return $this->getPrice($qty);
+            return $this->getPrice($qty, $ignoreDiscounts);
         }
     }
 
-    public function getFormattedActivePrice($qty = 1)
+    public function getFormattedActivePrice($qty = 1, $ignoreDiscounts = false)
     {
-        return Price::format($this->getActivePrice($qty));
+        return Price::format($this->getActivePrice($qty, $ignoreDiscounts));
     }
 
     public function getTaxClassID()

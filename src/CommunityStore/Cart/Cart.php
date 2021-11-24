@@ -186,23 +186,25 @@ class Cart
             if (count($rules) > 0) {
                 foreach ($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
-                    $include = true;
+                    $include = false;
                     $matchingprods = [];
 
-                    if (!empty($discountProductGroups)) {
-                        $include = false;
+                    if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
+                        if (!empty($discountProductGroups)) {
+                            foreach ($checkeditems as $cartitem) {
+                                $groupids = $cartitem['product']['object']->getGroupIDs();
 
-                        foreach ($checkeditems as $cartitem) {
-                            $groupids = $cartitem['product']['object']->getGroupIDs();
+                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                    $include = true;
+                                    $cartitem['product']['object']->addDiscountRule($rule);
+                                }
+                            }
+                        } else {
+                            $include = true;
 
-                            if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                $include = true;
+                            foreach ($checkeditems as $key => $cartitem) {
                                 $cartitem['product']['object']->addDiscountRule($rule);
                             }
-                        }
-                    } else {
-                        foreach ($checkeditems as $key => $cartitem) {
-                            $cartitem['product']['object']->addDiscountRule($rule);
                         }
                     }
 
