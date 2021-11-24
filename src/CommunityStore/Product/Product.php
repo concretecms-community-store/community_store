@@ -1333,9 +1333,9 @@ class Product
         return $this->pPrice;
     }
 
-    public function getFormattedOriginalPrice()
+    public function getFormattedOriginalPrice($ignoreDiscounts = true)
     {
-        return Price::format($this->getPrice(1));
+        return Price::format($this->getPrice(1, $ignoreDiscounts));
     }
 
     public function getFormattedPrice($qty = 1, $ignoreDiscounts = false)
