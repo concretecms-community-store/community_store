@@ -187,26 +187,27 @@ class Cart
                 foreach ($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
                     $include = false;
-                    $matchingprods = [];
+                    
+                    if (!empty($discountProductGroups)) {
+                        foreach ($checkeditems as $cartitem) {
+                            $groupids = $cartitem['product']['object']->getGroupIDs();
 
-                    if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
-                        if (!empty($discountProductGroups)) {
-                            foreach ($checkeditems as $cartitem) {
-                                $groupids = $cartitem['product']['object']->getGroupIDs();
-
-                                if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                            if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
+                                if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
                                     $include = true;
                                     $cartitem['product']['object']->addDiscountRule($rule);
                                 }
                             }
-                        } else {
-                            $include = true;
-
-                            foreach ($checkeditems as $key => $cartitem) {
+                        }
+                    } else {
+                        foreach ($checkeditems as $key => $cartitem) {
+                            if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
+                                $include = true;
                                 $cartitem['product']['object']->addDiscountRule($rule);
                             }
                         }
                     }
+
 
                     if ($include) {
                         self::$discounts[] = $rule;
