@@ -2065,7 +2065,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 <li><a class="nav-link"  style="pointer-events: none; cursor: none" disabled href=""><?= t('No product page'); ?></a></li>
                                             <?php } ?>
                                             <?php if ($multilingualEnabled) { ?>
-                                            <li><a target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
+                                            <li><a class="nav-link"  target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
                                             <?php } ?>
                                         </ul>
 

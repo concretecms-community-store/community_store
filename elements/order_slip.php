@@ -11,7 +11,14 @@ $dh = $app->make('helper/date');
 <html>
 <head>
     <title><?= t("Order #") . $order->getOrderID() ?></title>
+
+    <?php
+    if (version_compare($app->make('config')->get('concrete.version'), '9.0', '<')) { ?>
     <link href="<?= str_replace('/index.php/', '/' , Url::to('/concrete/css/app.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <?php } else { ?>
+    <link href="<?= str_replace('/index.php/', '/' , Url::to('/concrete/css/cms.css')); ?>" rel="stylesheet" type="text/css" media="all">
+    <?php } ?>
+
     <style>
         #store-print-slip td, #store-print-slip th, #store-print-slip p {
             font-size: 0.8em;
@@ -49,10 +56,10 @@ $dh = $app->make('helper/date');
         <h1><?= t("Order #") . $order->getOrderID() ?></h1>
 
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-xs-8 col-sm-8">
                 <p><strong><?= t('Order placed'); ?>:</strong> <?= $dh->formatDateTime($order->getOrderDate()) ?></p>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4 col-sm-4">
                 <?php
                 $refunded = $order->getRefunded();
                 $paid = $order->getPaid();
@@ -79,7 +86,7 @@ $dh = $app->make('helper/date');
         <fieldset>
             <legend><?= t("Customer Details") ?></legend>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                     <h4><?= t("Name")?></h4>
                     <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
 
@@ -106,7 +113,7 @@ $dh = $app->make('helper/date');
 
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                     <h4><?= t("Billing Address") ?></h4>
 
                     <p>
@@ -118,7 +125,7 @@ $dh = $app->make('helper/date');
                         }?>
                     </p>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                     <?php
                     $billingaddress = $order->getAttributeValueObject('shipping_address');
                     if ($billingaddress) { ?>
