@@ -58,28 +58,28 @@ class Order
     /** @ORM\Column(type="datetime") */
     protected $oDate;
 
-    /** @ORM\Column(type="integer",nullable=true) */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $pmID;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=120, nullable=true) */
     protected $pmName;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=120, nullable=true) */
     protected $smName;
 
     /** @ORM\Column(type="text",nullable=true) */
     protected $sInstructions;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $sShipmentID;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $sRateID;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $sCarrier;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $sTrackingID;
 
     /** @ORM\Column(type="text",nullable=true) */
@@ -94,19 +94,19 @@ class Order
     /** @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) */
     protected $oShippingTotal;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $oTax;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $oTaxIncluded;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=100, nullable=true) */
     protected $oTaxName;
 
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $oTotal;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=200, nullable=true) */
     protected $transactionReference;
 
     /** @ORM\Column(type="datetime", nullable=true) */
@@ -136,10 +136,10 @@ class Order
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=10, nullable=true) */
     protected $locale;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="string", length=255, nullable=true) */
     protected $userAgent;
 
     /**

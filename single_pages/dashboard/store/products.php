@@ -106,7 +106,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-4 col">
                             <div class="form-group">
                                 <?= $form->label("pSKU", t('Code / SKU')); ?>
-                                <?= $form->text("pSKU", $product->getSKU()); ?>
+                                <?= $form->text("pSKU", $product->getSKU(), ['maxlength' => 100]); ?>
                             </div>
                         </div>
 
@@ -525,7 +525,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <?= $form->label("pQtyLabel", t('Quantity Label')); ?>
-                                <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => 'e.g. cm']); ?>
+                                <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => 'e.g. cm', 'maxlength'=>100]); ?>
                             </div>
                         </div>
 
@@ -558,13 +558,13 @@ if (version_compare($version, '9.0', '<')) {
                             <div class="form-group">
                                 <?php $outOfStockMessage = $product->getOutOfStockMessage(); ?>
                                 <?= $form->label("pOutOfStockMessage", t('Out Of Stock Message')); ?>
-                                <?= $form->text("pOutOfStockMessage", $product->getOutOfStockMessage(), ['placeholder'=>t('Out of Stock')]); ?>
+                                <?= $form->text("pOutOfStockMessage", $product->getOutOfStockMessage(), ['placeholder'=>t('Out of Stock'), 'maxlength'=>200]); ?>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <?= $form->label("pAddToCartText", t('Add To Cart Button Text')); ?>
-                                <?= $form->text("pAddToCartText", $product->getAddToCartText(), ['placeholder'=>t('Add to Cart')]); ?>
+                                <?= $form->text("pAddToCartText", $product->getAddToCartText(), ['placeholder'=>t('Add to Cart'), 'maxlength'=>120]); ?>
                             </div>
                         </div>
                     </div>

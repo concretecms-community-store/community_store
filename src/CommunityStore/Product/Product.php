@@ -62,12 +62,12 @@ class Product
     protected $pName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $pSKU;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $pBarcode;
 
@@ -164,12 +164,12 @@ class Product
     protected $pDateAvailableEnd;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", length=120, nullable=true)
      */
     protected $pOutOfStockMessage;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     protected $pAddToCartText;
 
@@ -194,12 +194,12 @@ class Product
     protected $pQtySteps;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $pQtyLabel;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     protected $pMaxQty;
 
