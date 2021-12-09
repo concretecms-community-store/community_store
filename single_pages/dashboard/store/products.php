@@ -85,7 +85,7 @@ if (version_compare($version, '9.0', '<')) {
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-images" data-pane-toggle><?= t('Images') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-categories" data-pane-toggle><?= t('Categories and Groups') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-shipping" data-pane-toggle><?= t('Shipping') ?></a></li>
-                    <li class="nav-item"><a class="nav-link text-primary" href="#product-options" data-pane-toggle><?= t('Options and Variations') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-options" data-pane-toggle><?= t('Options and Variants') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-related" data-pane-toggle><?= t('Related Products') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-attributes" data-pane-toggle><?= t('Attributes') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups") ?></a></li>
@@ -928,7 +928,7 @@ if (version_compare($version, '9.0', '<')) {
                                     <% if (poType == 'select') { %>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label  class="control-label"><?= t('In Variations'); ?></label>
+                                            <label  class="control-label"><?= t('In Variants'); ?></label>
                                             <select class="form-control" name="poIncludeVariations[]">
                                                 <option value="1"
                                                 <% if (poIncludeVariations == 1) { %>selected="selected"<% } %>><?= t('Yes'); ?></option>
@@ -1384,7 +1384,7 @@ if (version_compare($version, '9.0', '<')) {
 
                     <br/>
                     <div class="form-group">
-                        <h4><?= t('Variations'); ?></h4>
+                        <h4><?= t('Variants'); ?></h4>
                         <label class="control-label"><?= $form->checkbox('pVariations', '1', $product->hasVariations() ? '1' : '0') ?>
                             <?= t('Options have different prices, SKUs or stock levels'); ?></label>
 
