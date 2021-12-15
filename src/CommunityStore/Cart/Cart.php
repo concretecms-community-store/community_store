@@ -183,11 +183,12 @@ class Cart
                 $cartitem['product']['object']->clearDiscountRules();
             }
 
+
             if (count($rules) > 0) {
                 foreach ($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
                     $include = false;
-                    
+
                     if (!empty($discountProductGroups)) {
                         foreach ($checkeditems as $cartitem) {
                             $groupids = $cartitem['product']['object']->getGroupIDs();
@@ -208,6 +209,9 @@ class Cart
                         }
                     }
 
+                    if ($rule->getDeductFrom() == 'shipping') {
+                        $include = true;
+                    }
 
                     if ($include) {
                         self::$discounts[] = $rule;
