@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
+if ($order && $orderItems) {
     $currency = Config::get('community_store.currency');
 
     if (!$currency) {
@@ -32,28 +33,31 @@
 
         if ($product = $item->getProductObject()) {
             if ($product->getManufacturer()) {
-                $itemArray['item_brand'] = $product->getManufacturer()->getName();
+                $itemArray['brand'] = $product->getManufacturer()->getName();
             }
 
             if ($pages = $product->getLocationPages()) {
                 if ($pages[0]) {
-                    $itemArray['item_category'] = \Concrete\Core\Page\Page::getByID($pages[0]->getCollectionID())->getCollectionName();
+                    $itemArray['category'] = \Concrete\Core\Page\Page::getByID($pages[0]->getCollectionID())->getCollectionName();
                 }
             }
 
             $variant = '';
             $options = $item->getProductOptions();
             if ($options) {
-
+                $variants = [];
                 foreach ($options as $option) {
                     if ($option['oioValue']) {
-                        $variant .= $option['oioKey'] . ' - ' . $option['oioValue'];
+                        $variants[] = $option['oioKey'] . ': ' . $option['oioValue'];
                     }
                 }
+
+                $variant .= implode(', ', $variants);
+
             }
 
             if ($variant) {
-                $itemArray['item_variant'] = $variant;
+                $itemArray['variant'] = $variant;
             }
 
         }
@@ -64,5 +68,7 @@
     ?>
 
 <script>
-gtag('event', 'purchase', <?= json_encode($orderDetails); ?> );
+        gtag('event', 'purchase', <?= json_encode($orderDetails); ?>);
 </script>
+
+<?php } ?>
