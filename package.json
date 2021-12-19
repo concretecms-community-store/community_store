@@ -41,7 +41,7 @@
       "to": "css/selectize/selectize.css"
     },
     {
-      "from": "node_modules/selectize/dist/js/selectize.min.js",
+      "from": "node_modules/selectize/dist/js/standalone/selectize.min.js",
       "to": "js/selectize/selectize.min.js"
     },
     {
