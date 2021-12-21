@@ -167,26 +167,31 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
+        $paramcount = 1;
+
         foreach ($searchparams as $handle => $searchvalue) {
             $type = $searchvalue['type'];
             $value = $searchvalue['values'];
 
-            if ('price' == $handle) {
+            $paramname = 'F' . $paramcount++;
+
+            if ($handle == 'price') {
                 $this->filterByPrice($value[0]);
             } else {
                 $ak = $productCategory->getByHandle($handle);
 
                 if (is_object($ak)) {
                     $value = array_filter($value);
-                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
-                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = ' . $value[0]);
+                    if ($ak->getAttributeType()->getAttributeTypeHandle() == 'boolean') {
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = :'. $paramname)->setParameter($paramname, $value[0]);
                     } else {
-                        if ('and' == $type) {
+                        if ($type == 'and') {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . $searchterm . '($|\n)"');
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "\(^|\n)" . preg_quote($searchterm) . "($|\n)");
                             }
                         } else {
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . implode('($|\n)|(^|\n)', $value ) . '($|\n)"');
+                            $value = array_map('preg_quote', $value);
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode('($|\n)|(^|\n)', $value ) . "($|\n)");
                         }
                     }
                 }
