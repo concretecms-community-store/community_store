@@ -414,7 +414,7 @@ if (!$productsPerRow) {
                                 <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/>
-                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                                        <input type="checkbox" value="<?= t('yes'); ?>" <?= $requiredAttr; ?> class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
                                         <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>

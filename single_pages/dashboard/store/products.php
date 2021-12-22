@@ -939,7 +939,7 @@ if (version_compare($version, '9.0', '<')) {
                                     <% } else { %>
                                     <input type="hidden" value="0" name="poIncludeVariations[]"/>
                                     <% } %>
-                                    <% if (poType != 'checkbox' && poType != 'static') { %>
+                                    <% if ( poType != 'static') { %>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Required'); ?></label>

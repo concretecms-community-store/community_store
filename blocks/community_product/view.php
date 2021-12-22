@@ -425,7 +425,7 @@ if (is_object($product) && $product->isActive()) {
                                         <input type="hidden" value="<?= t('no'); ?>"
                                                class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>"
                                                name="pc<?= $option->getID(); ?>"/>
-                                        <input type="checkbox" value="<?= t('yes'); ?>"
+                                        <input type="checkbox" value="<?= t('yes'); ?>" <?= $requiredAttr; ?>
                                                class="store-product-option-checkbox <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> <?= $option->getHandle(); ?>"
                                                name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
