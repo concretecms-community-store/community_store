@@ -177,6 +177,12 @@
             </div>
             <div class="form-group form-check">
                 <label>
+                    <?= $form->checkbox('showSKU', 1, $showSKU); ?>
+                    <?= t('Display SKU'); ?>
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label>
                     <?= $form->checkbox('showPrice', 1, $showPrice); ?>
                     <?= t('Display Price'); ?>
                 </label>

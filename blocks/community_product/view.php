@@ -34,7 +34,11 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductName) {
                         ?>
                         <h1 class="store-product-name"
-                            itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h1>
+                            itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                         <?php if ($showProductSKU && $product->getSKU()) { ?>
+                             <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                         <?php } ?>
+                        </h1>
                         <meta itemprop="sku" content="<?= $product->getSKU(); ?>"/>
                     <?php } ?>
 

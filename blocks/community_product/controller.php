@@ -72,6 +72,7 @@ class Controller extends BlockController
 
             $this->set('product', $product);
             $this->set('showProductName', $this->showProductName);
+            $this->set('showProductSKU', $this->showProductSKU);
             $this->set('showProductPrice', $this->showProductPrice);
             $this->set('showProductDescription', $this->showProductDescription);
             $this->set('showManufacturer', $this->showManufacturer);
@@ -141,6 +142,7 @@ class Controller extends BlockController
     public function save($args)
     {
         $args['showProductName'] = isset($args['showProductName']) ? (int)$args['showProductName'] : 0;
+        $args['showProductSKU'] = isset($args['showProductSKU']) ? (int)$args['showProductSKU'] : 0;
         $args['showProductDescription'] = isset($args['showProductDescription']) ? (int)$args['showProductDescription'] : 0;
         $args['showManufacturer'] = isset($args['showManufacturer']) ? (int)$args['showManufacturer'] : 0;
         $args['showManufacturerDescription'] = isset($args['showManufacturerDescription']) ? (int)$args['showManufacturerDescription'] : 0;

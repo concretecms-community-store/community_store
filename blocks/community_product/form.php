@@ -23,6 +23,13 @@
 
         <div class="form-check">
             <label>
+                <?= $form->checkbox('showProductSKU', 1, !isset($showProductSKU) ? false : $showProductSKU); ?>
+                <?= t('Display SKU'); ?>
+            </label>
+        </div>
+
+        <div class="form-check">
+            <label>
                 <?= $form->checkbox('showProductDescription', 1, !isset($showProductDescription) ? true : $showProductDescription); ?>
                 <?= t('Display Short Description'); ?>
             </label>

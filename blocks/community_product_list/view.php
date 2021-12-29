@@ -114,7 +114,11 @@ if (!$productsPerRow) {
                     <?= $token->output('community_store'); ?>
                     <?php if ($showName && $displayMode != 'list') {
                         ?>
-                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
+                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                            <?php if ($showSKU && $product->getSKU()) { ?>
+                                <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                            <?php } ?>
+                        </h2>
                         <?php
                     } ?>
 
@@ -164,8 +168,11 @@ if (!$productsPerRow) {
 
                     <?php if ($showName && $displayMode == 'list') {
                         ?>
-
-                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
+                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                            <?php if ($showSKU && $product->getSKU()) { ?>
+                                <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                            <?php } ?>
+                        </h2>
                         <?php
                     } ?>
 

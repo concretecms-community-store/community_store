@@ -24,6 +24,7 @@
 		<field name="showSale" type="boolean"></field>
 		<field name="showDescription" type="boolean"></field>
 		<field name="showName" type="boolean"><default value="1"/></field>
+		<field name="showSKU" type="boolean"><default value="1"/></field>
 		<field name="showPrice" type="boolean"><default value="1"/></field>
 		<field name="showQuickViewLink" type="boolean"></field>
 		<field name="showPageLink" type="boolean"><default value="1"/></field>
