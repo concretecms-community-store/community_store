@@ -41,3 +41,7 @@
 .ct-chart-line .ct-series.ct-series-b .ct-point { stroke: #414d59; }
 .ct-chart-line .ct-series.ct-series-c .ct-line { stroke: #414d59; stroke-width: 2px; stroke-linecap: round; stroke-dasharray: 30px; }
 .ct-chart-line .ct-series.ct-series-c .ct-point { stroke: #303b48; }
+
+.hidden {
+    display: none;
+}
