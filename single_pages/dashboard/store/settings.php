@@ -149,11 +149,11 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 foreach ($installedPaymentMethods as $pm) {
                     ?>
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-default card mb-3">
 
-                        <div class="panel-heading"><?= t($pm->getName()); ?></div>
+                        <div class="panel-heading card-heading ps-3 pt-3 heading fs-4"><?= t($pm->getName()); ?></div>
 
-                        <div class="panel-body">
+                        <div class="panel-body card-body pb-0">
 
                             <div class="row">
                                 <div class="col-md-9">
@@ -250,7 +250,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <?php
             if (count($orderStatuses) > 0) {
                 ?>
-                <div class="panel panel-default">
+                <div class="panel panel-default card">
 
                     <table class="table" id="orderStatusTable">
                         <thead>

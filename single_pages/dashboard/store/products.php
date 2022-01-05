@@ -888,8 +888,8 @@ if (version_compare($version, '9.0', '<')) {
 
                     <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
                     <script type="text/template" id="option-group-template">
-                        <div class="card panel panel-default option-group clearfix" data-order="<%=sort%>">
-                            <div class="panel-heading card-title">
+                        <div class="card panel panel-default option-group clearfix mb-3" data-order="<%=sort%>">
+                            <div class="panel-heading card-title ps-3 pt-3 pe-3">
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -1412,8 +1412,8 @@ if (version_compare($version, '9.0', '<')) {
 
                                     foreach ($comboOptions as $combinedOptions) {
                                         ?>
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
+                                        <div class="panel panel-default card-body">
+                                            <div class="panel-heading card-heading">
                                                 <?= t('Options') . ':'; ?>
                                                 <?php
                                                 $comboIDs = [];
@@ -1428,7 +1428,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 ?>
                                             </div>
 
-                                            <div class="panel-body">
+                                            <div class="panel-body card-body">
                                                 <input type="hidden" name="option_combo[]" value="<?= implode('_', $comboIDs); ?>"/>
 
                                                 <?php
