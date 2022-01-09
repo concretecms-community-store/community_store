@@ -1999,7 +1999,7 @@ if (version_compare($version, '9.0', '<')) {
                             if ($product->isActive()) {
                                 echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Active') . "</span>";
                             } else {
-                                echo "<span class='label label-default ". $badgeClass ." bg-success'>" . t('Inactive') . "</span>";
+                                echo "<span class='label label-default ". $badgeClass ." bg-secondary'>" . t('Inactive') . "</span>";
                             }
                             ?>
 
@@ -2034,7 +2034,7 @@ if (version_compare($version, '9.0', '<')) {
                             if ($product->isFeatured()) {
                                 echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Featured') . "</span>";
                             } else {
-                                echo "<span class='label label-default ". $badgeClass ." bg-success'>" . t('Not Featured') . "</span>";
+                                echo "<span class='label label-default ". $badgeClass ." bg-secondary'>" . t('Not Featured') . "</span>";
                             }
                             ?>
                         </td>
