@@ -11,6 +11,7 @@ class OrderEvent extends StoreEvent
     const ORDER_PAYMENT_COMPLETE = 'on_community_store_payment_complete';
     const ORDER_BEFORE_PAYMENT_COMPLETE = 'on_community_store_before_payment_complete';
     const ORDER_BEFORE_USER_ADD = 'on_community_store_before_user_add';
+    const ORDER_CANCELLED = 'on_community_store_order_cancelled';
 
     protected $event;
 

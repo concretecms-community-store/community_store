@@ -14,6 +14,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
 
 class Orders extends DashboardPageController
 {
@@ -217,6 +218,8 @@ class Orders extends DashboardPageController
             $order->setCancelled(new \DateTime());
             $order->setCancelledByUID($user->getUserID());
             $order->save();
+            $event = new OrderEvent($order);
+            $event = \Events::dispatch(OrderEvent::ORDER_CANCELLED, $event);
 
             $this->flash('success', t('Order Cancelled'));
 
