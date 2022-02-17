@@ -493,6 +493,8 @@ class Cart
                             if ($cartItem['product']['customerPrice'] == $cart['product']['customerPrice']) {
                                 return ['exists' => true, 'cartItemKey' => $k];
                             }
+                        } else {
+							return ['exists' => true, 'cartItemKey' => $k];
                         }
 
                     } else {
