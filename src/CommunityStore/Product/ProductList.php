@@ -19,6 +19,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $randomSeed = '';
     protected $sortByDirection = "desc";
     protected $featuredOnly = false;
+    protected $showOutOfStock = false;
     protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = [];
@@ -166,26 +167,31 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
+        $paramcount = 1;
+
         foreach ($searchparams as $handle => $searchvalue) {
             $type = $searchvalue['type'];
             $value = $searchvalue['values'];
 
-            if ('price' == $handle) {
+            $paramname = 'F' . $paramcount++;
+
+            if ($handle == 'price') {
                 $this->filterByPrice($value[0]);
             } else {
                 $ak = $productCategory->getByHandle($handle);
 
                 if (is_object($ak)) {
                     $value = array_filter($value);
-                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
-                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = ' . $value[0]);
+                    if ($ak->getAttributeType()->getAttributeTypeHandle() == 'boolean') {
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = :'. $paramname)->setParameter($paramname, $value[0]);
                     } else {
-                        if ('and' == $type) {
+                        if ($type == 'and') {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . $searchterm . '($|\n)"');
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "\(^|\n)" . preg_quote($searchterm) . "($|\n)");
                             }
                         } else {
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP "(^|\n)' . implode('($|\n)|(^|\n)', $value ) . '($|\n)"');
+                            $value = array_map('preg_quote', $value);
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode('($|\n)|(^|\n)', $value ) . "($|\n)");
                         }
                     }
                 }
@@ -280,6 +286,15 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "alpha_desc":
                 $query->orderBy('pName', 'desc');
                 break;
+            case "sku":
+                $query->orderBy('pSKU', $this->getSortByDirection());
+                break;
+            case "sku_asc":
+                $query->orderBy('pSKU', 'asc');
+                break;
+            case "sku_desc":
+                $query->orderBy('pSKU', 'desc');
+                break;
             case "price":
                 $query->orderBy('pPrice', $this->getSortByDirection());
                 break;
@@ -304,8 +319,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     $pIDs[] = $product['pID'];
                 }
 
-                foreach ($pIDs as $pID) {
-                    $query->addOrderBy("p.pID = ?", 'DESC')->setParameter($paramcount++, $pID);
+                if (!empty($pIDs)) {
+                    $query->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')');
                 }
                 break;
             case "related":
@@ -316,7 +331,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             case "category":
                 $query->addOrderBy('categorySortOrder');
                 break;
-            case "group":
+            case "group" && !empty($validgids) && !$this->groupNoMatchAny:
                 $query->addOrderBy('sortOrder');
                 break;
             case "random":
@@ -341,8 +356,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         if ($this->sortBy == 'category') {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, categorySortOrder');
-        } elseif ($this->sortBy == 'group') {
-            $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
+        } elseif ($this->sortBy == 'group' && !empty($validgids) && !$this->groupNoMatchAny) {
+                $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded, sortOrder');
         } else {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
         }
@@ -364,10 +379,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $values = $query->execute()->fetchAll();
-            $count = count($values);
-
-            $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count . ' c ');
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -393,10 +405,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
-        $values = $query->execute()->fetchAll();
-        $count = count($values);
-
-        return $query->resetQueryParts(['groupBy', 'orderBy', 'having', 'join', 'where', 'from'])->from('DUAL')->select($count)->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     public function getResultIDs()

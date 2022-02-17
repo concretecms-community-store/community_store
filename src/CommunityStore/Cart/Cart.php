@@ -183,27 +183,34 @@ class Cart
                 $cartitem['product']['object']->clearDiscountRules();
             }
 
+
             if (count($rules) > 0) {
                 foreach ($rules as $rule) {
                     $discountProductGroups = $rule->getProductGroups();
-                    $include = true;
-                    $matchingprods = [];
+                    $include = false;
 
                     if (!empty($discountProductGroups)) {
-                        $include = false;
-
                         foreach ($checkeditems as $cartitem) {
                             $groupids = $cartitem['product']['object']->getGroupIDs();
 
                             if (count(array_intersect($discountProductGroups, $groupids)) > 0) {
-                                $include = true;
-                                $cartitem['product']['object']->addDiscountRule($rule);
+                                if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
+                                    $include = true;
+                                    $cartitem['product']['object']->addDiscountRule($rule);
+                                }
                             }
                         }
                     } else {
                         foreach ($checkeditems as $key => $cartitem) {
-                            $cartitem['product']['object']->addDiscountRule($rule);
+                            if ($rule->getDiscountSalePrices() || !$cartitem['product']['object']->getSalePrice()) {
+                                $include = true;
+                                $cartitem['product']['object']->addDiscountRule($rule);
+                            }
                         }
+                    }
+
+                    if ($rule->getDeductFrom() == 'shipping') {
+                        $include = true;
                     }
 
                     if ($include) {
@@ -213,6 +220,18 @@ class Cart
             }
 
             self::$cart = $checkeditems;
+            $event = new CartEvent('get');
+            $event->setData([
+                'cart' => self::$cart,
+                'discounts' => self::$discounts
+            ]);
+            \Events::dispatch(CartEvent::CART_GET, $event);
+            if($event->updatedCart()) {
+                self::$cart = $event->updatedCart();
+            }
+            if($event->updatedDiscounts()) {
+                self::$discounts = $event->updatedDiscounts();
+            }
         }
 
         return self::$cart;
@@ -393,7 +412,7 @@ class Cart
 
             $exists = self::checkForExistingCartItem($cartItem);
 
-            if (true === $exists['exists']) {
+            if ($exists['exists'] === true) {
                 $existingproductcount = $cart[$exists['cartItemKey']]['product']['qty'];
 
                 //we have a match, update the qty
@@ -463,12 +482,19 @@ class Cart
     {
         foreach (self::getCart() as $k => $cart) {
             //  check if product is the same id first.
+
             if ($cart['product']['pID'] == $cartItem['product']['pID']) {
                 // check if the number of attributes is the same
                 if (count($cart['productAttributes']) == count($cartItem['productAttributes'])) {
                     if (empty($cartItem['productAttributes'])) {
                         // if we have no attributes, it's a direct match
-                        return ['exists' => true, 'cartItemKey' => $k];
+
+                        if ($cartItem['product']['customerPrice']) {
+                            if ($cartItem['product']['customerPrice'] == $cart['product']['customerPrice']) {
+                                return ['exists' => true, 'cartItemKey' => $k];
+                            }
+                        }
+
                     } else {
                         // otherwise loop through attributes
                         $attsmatch = true;
@@ -480,6 +506,15 @@ class Cart
                                 //different attributes means different "product".
                                 $attsmatch = false;
                                 break;
+                            }
+                        }
+
+                        if ($attsmatch) {
+                            // test for a customer entered price, treat a different item if different amount
+                            if ($cartItem['product']['customerPrice']) {
+                                if ($cartItem['product']['customerPrice'] != $cart['product']['customerPrice']) {
+                                    $attsmatch = false;
+                                }
                             }
                         }
 

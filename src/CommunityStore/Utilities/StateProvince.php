@@ -31,6 +31,9 @@ class StateProvince extends Controller
         $ret = '';
         $list = $this->app->make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
         if ($list) {
+            $class = trim(str_replace('form-select', '', $class));
+            $class .= ' form-select';
+
             if ("tax" == $type) {
                 $ret .= "<select name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
@@ -57,6 +60,12 @@ class StateProvince extends Controller
                 $ret = str_replace('{selected}', 'selected', $ret);
             }
         } else {
+            $class = trim(str_replace('form-select', '', $class));
+
+            if (!$class) {
+                $class = 'form-control';
+            }
+
             if ("tax" == $type) {
                 $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {

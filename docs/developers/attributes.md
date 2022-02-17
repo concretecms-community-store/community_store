@@ -1,6 +1,6 @@
 # Product and Order Attributes
 
-Product and Order attributes can be used in the same way that other attributes in concrete5 can be used, such as page attributes.
+Product and Order attributes can be used in the same way that other attributes in Concrete CMS can be used, such as page attributes.
 
 ## Product Attributes
 

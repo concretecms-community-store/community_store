@@ -15,6 +15,7 @@ class CartEvent extends StoreEvent {
     const CART_PRE_CLEAR = 'on_community_store_cart_pre_clear';
     const CART_POST_CLEAR = 'on_community_store_cart_post_clear';
     const CART_ACTION = 'on_community_store_cart_action';
+    const CART_GET = 'on_community_store_cart_get';
 
     /** @var boolean */
     private $error = false;
@@ -27,6 +28,10 @@ class CartEvent extends StoreEvent {
 
     /** @var array | null */
     private $data;
+
+    private $updatedCart = null;
+
+    private $updatedDiscounts = null;
 
     /**
      * @return Product | null
@@ -89,4 +94,20 @@ class CartEvent extends StoreEvent {
 	{
 		return $this->errorMsg;
 	}
+
+        public function setUpdatedDiscounts($updatedDiscounts) {
+            $this->updatedDiscounts = $updatedDiscounts;
+        }
+
+        public function setUpdatedCart($updatedCart) {
+            $this->updatedCart = $updatedCart;
+        }
+
+        public function updatedCart() {
+            return $this->updatedCart;
+        }
+
+        public function updatedDiscounts() {
+            return $this->updatedDiscounts;
+        }
 }

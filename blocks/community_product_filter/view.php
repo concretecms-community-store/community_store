@@ -14,7 +14,7 @@ $csm = $app->make('cs/helper/multilingual');
             foreach ($filterData as $akhandle => $data) {
                 $ak = $attributes[$akhandle];
                 ?>
-                <div class="form-group">
+                <div class="form-group mb-3">
 
                     <h3 class="store-product-filter-block-option-title">
                     <?php if ($data['type'] == 'attr') { ?>
@@ -133,12 +133,12 @@ $csm = $app->make('cs/helper/multilingual');
 
         <?php if ($updateType == 'button') { ?>
             <p><button type="submit"
-                    class="store-btn-filter btn btn-default btn-block"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
+                    class="store-btn-filter btn btn-block btn-primary"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
         <?php } ?>
 
         <?php if ($displayClear && (!empty($selectedAttributes) || $priceFiltering)) { ?>
             <p><button type="submit"
-                    class="store-btn-filter-clear btn btn-default btn-block"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
+                    class="store-btn-filter-clear btn btn-default btn-block btn-secondary"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
         <?php } ?>
     </form>
 </div>

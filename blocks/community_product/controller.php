@@ -64,7 +64,6 @@ class Controller extends BlockController
                 $this->set('variationLookup', $variationLookup);
             }
 
-            $codediscounts = false;
             $automaticdiscounts = DiscountRule::findAutomaticDiscounts();
 
             if (!empty($automaticdiscounts)) {
@@ -73,6 +72,7 @@ class Controller extends BlockController
 
             $this->set('product', $product);
             $this->set('showProductName', $this->showProductName);
+            $this->set('showProductSKU', $this->showProductSKU);
             $this->set('showProductPrice', $this->showProductPrice);
             $this->set('showProductDescription', $this->showProductDescription);
             $this->set('showManufacturer', $this->showManufacturer);
@@ -107,6 +107,7 @@ class Controller extends BlockController
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
@@ -140,19 +141,22 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $args['showProductName'] = isset($args['showProductName']) ? 1 : 0;
-        $args['showProductDescription'] = isset($args['showProductDescription']) ? 1 : 0;
-        $args['showManufacturer'] = isset($args['showManufacturer']) ? 1 : 0;
-        $args['showManufacturerDescription'] = isset($args['showManufacturerDescription']) ? 1 : 0;
-        $args['showProductDetails'] = isset($args['showProductDetails']) ? 1 : 0;
-        $args['showProductPrice'] = isset($args['showProductPrice']) ? 1 : 0;
-        $args['showWeight'] = isset($args['showWeight']) ? 1 : 0;
-        $args['showImage'] = isset($args['showImage']) ? 1 : 0;
-        $args['showCartButton'] = isset($args['showCartButton']) ? 1 : 0;
-        $args['showIsFeatured'] = isset($args['showIsFeatured']) ? 1 : 0;
-        $args['showGroups'] = isset($args['showGroups']) ? 1 : 0;
-        $args['showDimensions'] = isset($args['showDimensions']) ? 1 : 0;
-        $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
+        $args['showProductName'] = isset($args['showProductName']) ? (int)$args['showProductName'] : 0;
+        $args['showProductSKU'] = isset($args['showProductSKU']) ? (int)$args['showProductSKU'] : 0;
+        $args['showProductDescription'] = isset($args['showProductDescription']) ? (int)$args['showProductDescription'] : 0;
+        $args['showManufacturer'] = isset($args['showManufacturer']) ? (int)$args['showManufacturer'] : 0;
+        $args['showManufacturerDescription'] = isset($args['showManufacturerDescription']) ? (int)$args['showManufacturerDescription'] : 0;
+        $args['showProductDetails'] = isset($args['showProductDetails']) ? (int)$args['showProductDetails'] : 0;
+        $args['showProductPrice'] = isset($args['showProductPrice']) ? (int)$args['showProductPrice'] : 0;
+        $args['showWeight'] = isset($args['showWeight']) ? (int)$args['showWeight'] : 0;
+        $args['showImage'] = isset($args['showImage']) ? (int)$args['showImage'] : 0;
+        $args['showCartButton'] = isset($args['showCartButton']) ? (int)$args['showCartButton'] : 0;
+        $args['showIsFeatured'] = isset($args['showIsFeatured']) ? (int)$args['showIsFeatured'] : 0;
+        $args['showGroups'] = isset($args['showGroups']) ? (int)$args['showGroups'] : 0;
+        $args['showDimensions'] = isset($args['showDimensions']) ? (int)$args['showDimensions'] : 0;
+        $args['showQuantity'] = isset($args['showQuantity']) ? (int)$args['showQuantity'] : 0;
+        $args['pID'] = (is_numeric($args['pID']) ? $args['pID'] : null);
+
         if ('search' == $args['productLocation']) {
             if (!is_numeric($args['pID']) || $args['pID'] < 1) {
                 $args['productLocation'] = "page";

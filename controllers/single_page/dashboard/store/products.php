@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\File\Search\Menu\MenuFactory;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
@@ -11,6 +13,7 @@ use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
@@ -30,6 +33,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 
 class Products extends DashboardSitePageController
 {
+    protected $headerSearch;
+
     public function view($gID = null)
     {
         $productsList = new ProductList();
@@ -81,6 +86,9 @@ class Products extends DashboardSitePageController
         $site = $this->getSite();
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
         $this->set('multilingualEnabled', (count($pages) > 1));
+
+        $headerSearch = $this->getHeaderSearch($grouplist, $gID);
+        $this->set('headerSearch', $headerSearch);
     }
 
     public function add()
@@ -356,6 +364,20 @@ class Products extends DashboardSitePageController
             $taxClasses[$taxClass->getID()] = $taxClass->getTaxClassName();
         }
         $this->set('taxClasses', $taxClasses);
+
+        $this->set('hideStockAvailabilityDates', Config::get('community_store.hideStockAvailabilityDates'));
+        $this->set('hideWholesalePrice', Config::get('community_store.hideWholesalePrice'));
+        $this->set('hideCostPrice', Config::get('community_store.hideCostPrice'));
+        $this->set('hideVariationPrices', Config::get('community_store.hideVariationPrices'));
+        $this->set('hideVariationShippingFields', Config::get('community_store.hideVariationShippingFields'));
+        $this->set('hideSalePrice', Config::get('community_store.hideSalePrice'));
+        $this->set('hideCustomerPriceEntry', Config::get('community_store.hideCustomerPriceEntry'));
+        $this->set('hideQuantityBasedPricing', Config::get('community_store.hideQuantityBasedPricing'));
+        $this->set('productDefaultActive', Config::get('community_store.productDefaultActive'));
+        $this->set('productDefaultShippingNo', Config::get('community_store.productDefaultShippingNo'));
+        $this->set('variationDefaultUnlimited', Config::get('community_store.variationDefaultUnlimited'));
+
+
     }
 
     public function save()
@@ -393,8 +415,7 @@ class Products extends DashboardSitePageController
                 //save the product
                 $product = Product::saveProduct($data);
                 //save product attributes
-                $productCategory = $this->app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
-                $aks = $productCategory->getList();
+                $aks = ProductKey::getList();
 
                 foreach ($aks as $uak) {
                     $controller = $uak->getController();
@@ -480,5 +501,13 @@ class Products extends DashboardSitePageController
         }
 
         return $e;
+    }
+
+    protected function getHeaderSearch($groupList, $gID)
+    {
+        if (!isset($this->headerSearch)) {
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('products/search', 'community_store', ['groupList'=>$groupList, 'gID'=>$gID]);
+        }
+        return $this->headerSearch;
     }
 }

@@ -360,14 +360,13 @@ class OrderItem
             $optiongroup = ProductOption::getByID($groupID);
             if ($optiongroup) {
                 $optionGroupName = $csm->t($optiongroup->getName(), 'optionName', null, $groupID);
+                $orderItemOption = new OrderItemOption();
+                $orderItemOption->setOrderItemOptionKey($optionGroupName);
+                $orderItemOption->setOrderItemOptionHandle($optiongroup->getHandle());
+                $orderItemOption->setOrderItemOptionValue($optionvalue);
+                $orderItemOption->setOrderItem($orderItem);
+                $orderItemOption->save();
             }
-
-            $orderItemOption = new OrderItemOption();
-            $orderItemOption->setOrderItemOptionKey($optionGroupName);
-            $orderItemOption->setOrderItemOptionHandle($optiongroup->getHandle());
-            $orderItemOption->setOrderItemOptionValue($optionvalue);
-            $orderItemOption->setOrderItem($orderItem);
-            $orderItemOption->save();
         }
 
         return $orderItem;

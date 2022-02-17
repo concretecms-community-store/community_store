@@ -169,7 +169,10 @@ class OrderStatusHistory
                 $event = new OrderEvent($order, $previousStatus);
                 Events::dispatch(OrderEvent::ORDER_STATUS_UPDATE, $event);
             }
+        } else if(!empty($history) && $history[0]->getOrderStatusHandle() == $statusHandle && $comment) {
+            self::recordStatusChange($order, $statusHandle, $comment);
         }
+
     }
 
     private static function recordStatusChange(Order $order, $statusHandle, $comment = null)

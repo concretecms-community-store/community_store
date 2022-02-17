@@ -140,7 +140,7 @@ if ($cart) {
                         <td class="store-cart-product-qty text-right">
                             <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
-                            <span class="store-qty-container pull-right
+                            <span class="store-qty-container pull-right float-end
                             <?php if ($quantityLabel) { ?>input-group
                                 <?php } ?>
                                 ">
@@ -157,7 +157,7 @@ if ($cart) {
 
                             <?php } else { ?>
                                 <?php if ($quantityLabel) { ?>
-                                    <div  class="store-product-qty form-control text-right pull-right form-control-static">1</div>
+                                    <div  class="store-product-qty form-control text-right pull-right float-end form-control-static">1</div>
                                 <?php } else { ?>
                                     1
                                 <?php } ?>
@@ -172,7 +172,7 @@ if ($cart) {
                         <td class="text-right">
                             <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
-                                        class="fa fa-remove"></i><?php //echo t("Remove")
+                                        class="fa fa-remove fa-times"></i><?php //echo t("Remove")
                                 ?></a>
                         </td>
                     </tr>
@@ -204,16 +204,17 @@ if ($cart) {
 <?php } ?>
 
 
-<?php if ($cart && !empty($cart)) { ?>
+<?php
+if ($cart && !empty($cart)) { ?>
     <?php if ($discountsWithCodesExist && $cart) { ?>
         <h3><?= t('Enter Discount Code'); ?></h3>
-        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline">
+        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline d-flex">
             <?= $token->output('community_store'); ?>
-            <div class="form-group">
+            <div class="form-group me-3">
                 <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
             </div>
             <input type="hidden" name="action" value="code"/>
-            <button type="submit" class="store-cart-page-discount-apply btn btn-default"><?= t('Apply'); ?></button>
+            <button type="submit" class="store-cart-page-discount-apply btn btn-default btn-secondary"><?= t('Apply'); ?></button>
         </form>
     <?php } ?>
 
@@ -227,7 +228,7 @@ if ($cart) {
 
     <?php if (!empty($discounts)) { ?>
 
-        <p class="store-cart-page-discounts text-right">
+        <p class="store-cart-page-discounts text-right text-end">
             <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
             <?php
             $discountstrings = array();
@@ -241,13 +242,13 @@ if ($cart) {
     <?php } ?>
 
 
-    <p class="store-cart-page-cart-total text-right">
+    <p class="store-cart-page-cart-total text-right text-end">
         <strong class="cart-grand-total-label"><?= t("Items Sub Total") ?>:</strong>
         <span class="cart-grand-total-value"><?= Price::format($subTotal) ?></span>
     </p>
 
     <?php if ($shippingEnabled) { ?>
-        <p class="store-cart-page-shipping text-right"><strong><?= t("Shipping") ?>:</strong>
+        <p class="store-cart-page-shipping text-right text-end"><strong><?= t("Shipping") ?>:</strong>
         <span id="store-shipping-total">
          <?= $shippingtotal !== false ? ($shippingtotal > 0 ? Price::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
         </span></p>
@@ -257,7 +258,7 @@ if ($cart) {
     if ($taxtotal > 0) {
         foreach ($taxes as $tax) {
             if ($tax['taxamount'] > 0) { ?>
-                <p class="store-cart-page-tax text-right">
+                <p class="store-cart-page-tax text-right text-end">
                     <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                 </p>
             <?php }
@@ -265,12 +266,12 @@ if ($cart) {
     }
     ?>
 
-    <p class="store-cart-page-cart-total text-right">
+    <p class="store-cart-page-cart-total text-right text-end">
         <strong class="store-cart-grand-total-label"><?= t("Total") ?>:</strong>
         <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>
 
-    <div class="store-cart-page-cart-links pull-right">
+    <div class="store-cart-page-cart-links pull-right float-end">
         <a class="store-btn-cart-page-checkout btn btn-success"
            href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
     </div>

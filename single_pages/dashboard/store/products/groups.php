@@ -5,7 +5,6 @@ use \Concrete\Core\Support\Facade\Url;
 ?>
 
 <?php
-
 $groupViews = ['view','groupadded'];
 $groupEdits = ['add','edit'];
 
@@ -85,7 +84,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
                     if ($products && count($products) > 0) {
                         foreach ($products as $product) {
-                            echo '<li class="list-group-item"><i class="fa fa-arrows-v"></i>' . $product->getProduct()->getName() . '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle"></i></a></li>';
+                            echo '<li class="list-group-item"><i class="fa fa-arrows-v fa-arrows-alt-v"></i>' . $product->getProduct()->getName() . ( $product->getProduct()->getSKU() ? ' (' . $product->getProduct()->getSKU() . ')' : '').  '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle float-end"></i></a></li>';
                         }
                     }
                     ?>
@@ -130,7 +129,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
                         $('#product-select').on("change", function(e) {
                             var data = $(this).select2('data');
-                            $('#group-products').removeClass('hidden').append('<li class="list-group-item">'+ data.text  +'<a><i class="pull-right fa fa-minus-circle"></i> <input type="hidden" name="products[]" value="' + data.id + '" /></a> </li>');
+                            $('#group-products').removeClass('hidden').append('<li class="list-group-item">'+ data.text  +'<a><i class="pull-right fa fa-minus-circle float-end"></i> <input type="hidden" name="products[]" value="' + data.id + '" /></a> </li>');
                             $(this).select2("val", []);
                         });
 
@@ -152,11 +151,11 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                     });
 
                 </script>
-                <style type="text/css">
+                <style>
                     .group-product-list:hover {
                         cursor: move
                     }
-                    .fa-arrows-v {
+                    .fa-arrows-v, .fa-arrows-alt-v {
                          padding-right: 7px;
                          cursor: move !important;
                     }
@@ -166,8 +165,8 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/groups')?>" class="btn btn-default"><?= t('Cancel')?></a>
-                <button class="pull-right btn btn-primary" type="submit"><?= ($group->getGroupID() > 0 ? t('Update') : t('Add'))?></button>
+                <a href="<?= Url::to('/dashboard/store/products/groups')?>" class="btn btn-default btn-secondary"><?= t('Cancel')?></a>
+                <button class="pull-right btn btn-primary float-end" type="submit"><?= ($group->getGroupID() > 0 ? t('Update') : t('Add'))?></button>
             </div>
         </div>
 

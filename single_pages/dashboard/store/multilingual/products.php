@@ -19,7 +19,7 @@ if ($action == 'view') { ?>
         <div class="cccm-dashboard-content-inner">
             <form role="form" class="form-inline">
                 <div class="row">
-                    <div class="ccm-search-fields-submit col-xs-12 col-md-6">
+                    <div class="ccm-search-fields-submit col-md-12 col-md-6">
                         <div class="form-group">
                             <div class="ccm-search-main-lookup-field">
                                 <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style' => "min-width: 220px"]) ?>
@@ -28,7 +28,7 @@ if ($action == 'view') { ?>
                         </div>
                         <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                     </div>
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-md-12 col-md-6">
                         <?php if ($grouplist) {
                             $currentFilter = '';
                             ?>
@@ -49,9 +49,9 @@ if ($action == 'view') { ?>
                                     </a>
 
                                     <ul class="dropdown-menu">
-                                        <li <?= (!$gID ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/multilingual/products/') ?>"><?= t('All Groups') ?></a></li>
+                                        <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/multilingual/products/') ?>"><?= t('All Groups') ?></a></li>
                                         <?php foreach ($grouplist as $group) { ?>
-                                            <li <?= ($gID == $group->getGroupID() ? 'class="active"' : ''); ?>><a href="<?= Url::to('/dashboard/store/multilingual/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                            <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/multilingual/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
@@ -226,6 +226,7 @@ $localecount = count($locales);
                     <td>
 
                         <?php
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
                         ?>
 
@@ -255,6 +256,7 @@ $localecount = count($locales);
 
                     <td>
                         <?php
+                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
                         ?>
                     </td>
@@ -614,8 +616,8 @@ $localecount = count($locales);
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>"
-               class="btn btn-default pull-left"><?= t("Cancel") ?></a>
-            <button class="pull-right btn btn-success" type="submit"><?= t('Save Product Translation') ?></button>
+               class="btn btn-default btn-secondary pull-left"><?= t("Cancel") ?></a>
+            <button class="pull-right btn btn-success float-end" type="submit"><?= t('Save Product Translation') ?></button>
         </div>
     </div>
     <?php } ?>

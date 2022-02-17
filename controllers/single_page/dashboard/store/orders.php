@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Concrete\Core\Http\Request;
@@ -13,6 +14,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
 
 class Orders extends DashboardPageController
 {
@@ -67,25 +69,41 @@ class Orders extends DashboardPageController
 
         $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
-        $enabledMethods = PaymentMethod::getEnabledMethods();
+        $paymentMethods = PaymentMethod::getEnabledMethods();
 
         $pagination = $paginator->renderDefaultView();
         $this->set('orderList', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
-        $this->set('orderStatuses', OrderStatus::getList());
+        $statuses =  OrderStatus::getList();
+        $this->set('orderStatuses', $statuses);
         $this->set('status', $status);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        $this->set('statuses', OrderStatus::getAll());
+        $fulfilmentStatuses =  OrderStatus::getAll();
+        $this->set('statuses', $fulfilmentStatuses);
         $this->set('paymentMethod', $paymentMethod);
-        $this->set("enabledPaymentMethods", $enabledMethods);
+        $this->set("enabledPaymentMethods", $paymentMethods);
         $this->set('paymentStatus', $paymentStatus);
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {
             $this->set('shoppingDisabled', true);
         }
         $this->set('pageTitle', t('Orders'));
+
+        $paymentStatuses = [];
+
+        $paymentStatuses['paid'] = t('Paid');
+        $paymentStatuses['unpaid'] = t('Unpaid');
+        $paymentStatuses['refunded'] = t('Refunded');
+        if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
+            $paymentStatuses['incomplete'] = t('Incomplete');
+        }
+
+        $paymentStatuses['cancelled'] = t('Cancelled');
+
+        $headerSearch = $this->getHeaderSearch($paymentMethods, $paymentMethod, $paymentStatuses, $paymentStatus, $fulfilmentStatuses, $status);
+        $this->set('headerSearch', $headerSearch);
     }
 
     public function order($oID)
@@ -105,6 +123,8 @@ class Orders extends DashboardPageController
         } else {
             return Redirect::to('/dashboard/store/orders');
         }
+
+        $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
 
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
     }
@@ -198,6 +218,8 @@ class Orders extends DashboardPageController
             $order->setCancelled(new \DateTime());
             $order->setCancelledByUID($user->getUserID());
             $order->save();
+            $event = new OrderEvent($order);
+            $event = \Events::dispatch(OrderEvent::ORDER_CANCELLED, $event);
 
             $this->flash('success', t('Order Cancelled'));
 
@@ -272,5 +294,13 @@ class Orders extends DashboardPageController
         }
 
         exit();
+    }
+
+    protected function getHeaderSearch($paymentMethods, $paymentMethod, $paymentStatuses, $paymentStatus, $fulfilmentStatuses, $status)
+    {
+        if (!isset($this->headerSearch)) {
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('orders/search', 'community_store', ['paymentMethods'=>$paymentMethods, 'paymentMethod'=>$paymentMethod, 'paymentStatuses'=>$paymentStatuses, 'paymentStatus'=>$paymentStatus, 'fulfilmentStatuses'=>$fulfilmentStatuses, 'status'=>$status]);
+        }
+        return $this->headerSearch;
     }
 }

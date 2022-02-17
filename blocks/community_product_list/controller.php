@@ -18,7 +18,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
-    protected $btInterfaceWidth = "800";
+    protected $btInterfaceWidth = "840";
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
@@ -42,6 +42,12 @@ class Controller extends BlockController
         $this->set('groupfilters', []);
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
 
+    }
+
+    public function getGroupList()
+    {
+        $grouplist = GroupList::getGroupList();
+        $this->set("grouplist", $grouplist);
     }
 
     public function edit()
@@ -74,10 +80,17 @@ class Controller extends BlockController
         return $list;
     }
 
-    public function getGroupList()
+    public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
     {
-        $grouplist = GroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        for ($i = 1; $i < 4; ++$i) {
+            $attitle = 'atthandle' . $i;
+            $atvalue = 'attvalue' . $i;
+            if ($$attitle) {
+                $this->attFilters[$$attitle] = $$atvalue;
+            }
+        }
+
+        $this->view();
     }
 
     public function view()
@@ -106,11 +119,11 @@ class Controller extends BlockController
             $this->set('usersort', '');
         }
 
-        if ('alpha' == $this->sortOrder) {
+        if ($this->sortOrder == 'alpha' || $this->sortOrder == 'sku') {
             $products->setSortByDirection('asc');
         }
 
-        if ('current' == $this->filter || 'current_children' == $this->filter) {
+        if ($this->filter == 'current' || $this->filter == 'current_children') {
             $page = Page::getCurrentPage();
             $pageID = $page->getCollectionID();
 
@@ -129,16 +142,16 @@ class Controller extends BlockController
 
             $products->setCID($pageID);
 
-            if ('current_children' == $this->filter) {
+            if ($this->filter == 'current_children') {
                 $products->setCIDs($page->getCollectionChildrenArray());
             }
         }
 
-        if ('page' == $this->filter || 'page_children' == $this->filter) {
+        if ($this->filter == 'page' || $this->filter == 'page_children') {
             if ($this->filterCID) {
                 $products->setCID($this->filterCID);
 
-                if ('page_children' == $this->filter) {
+                if ($this->filter == 'page_children') {
                     $targetpage = Page::getByID($this->filterCID);
                     if ($targetpage) {
                         $products->setCIDs($targetpage->getCollectionChildrenArray());
@@ -147,7 +160,7 @@ class Controller extends BlockController
             }
         }
 
-        if ('related' == $this->filter || 'related_product' == $this->filter) {
+        if ($this->filter == 'related' || $this->filter == 'related_product') {
             if ('related' == $this->filter) {
                 $cID = Page::getCurrentPage()->getCollectionID();
                 $product = Product::getByCollectionID($cID);
@@ -162,11 +175,11 @@ class Controller extends BlockController
             }
         }
 
-        if ('random' == $this->filter) {
+        if ($this->filter == 'random') {
             $products->setSortBy('random');
         }
 
-        if ('random_daily' == $this->filter) {
+        if ($this->filter == 'random_daily') {
             $products->setSortBy('random');
             $products->setRandomSeed(date('z'));
         }
@@ -215,7 +228,7 @@ class Controller extends BlockController
         $this->set('ih', $this->app->make('helper/image'));
         $this->set('th', $this->app->make('helper/text'));
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('showAddToCart', false);
         }
 
@@ -225,7 +238,7 @@ class Controller extends BlockController
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
 
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
@@ -236,46 +249,35 @@ class Controller extends BlockController
         $this->set('isWholesale', \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale());
     }
 
-    public function action_filterby($atthandle1 = '', $attvalue1 = '', $atthandle2 = '', $attvalue2 = '', $atthandle3 = '', $attvalue3 = '')
-    {
-        for ($i = 1; $i < 4; ++$i) {
-            $attitle = 'atthandle' . $i;
-            $atvalue = 'attvalue' . $i;
-            if ($$attitle) {
-                $this->attFilters[$$attitle] = $$atvalue;
-            }
-        }
-
-        $this->view();
-    }
-
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
+        $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
     }
 
     public function save($args)
     {
-        $args['showOutOfStock'] = isset($args['showOutOfStock']) ? 1 : 0;
-        $args['showDescription'] = isset($args['showDescription']) ? 1 : 0;
-        $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? 1 : 0;
-        $args['showPageLink'] = isset($args['showPageLink']) ? 1 : 0;
-        $args['showSortOption'] = isset($args['showSortOption']) ? 1 : 0;
-        $args['showName'] = isset($args['showName']) ? 1 : 0;
-        $args['showPrice'] = isset($args['showPrice']) ? 1 : 0;
-        $args['showQuantity'] = isset($args['showQuantity']) ? 1 : 0;
-        $args['showAddToCart'] = isset($args['showAddToCart']) ? 1 : 0;
-        $args['showLink'] = isset($args['showLink']) ? 1 : 0;
-        $args['showButton'] = isset($args['showButton']) ? 1 : 0;
-        $args['truncateEnabled'] = isset($args['truncateEnabled']) ? 1 : 0;
-        $args['showPagination'] = isset($args['showPagination']) ? 1 : 0;
+        $args['showOutOfStock'] = isset($args['showOutOfStock']) ? (int)$args['showOutOfStock'] : 0;
+        $args['showDescription'] = isset($args['showDescription']) ? (int)$args['showDescription'] : 0;
+        $args['showQuickViewLink'] = isset($args['showQuickViewLink']) ? (int)$args['showQuickViewLink'] : 0;
+        $args['showPageLink'] = isset($args['showPageLink']) ? (int)$args['showPageLink'] : 0;
+        $args['showSortOption'] = isset($args['showSortOption']) ? (int)$args['showSortOption'] : 0;
+        $args['showName'] = isset($args['showName']) ? (int)$args['showName'] : 0;
+        $args['showSKU'] = isset($args['showSKU']) ? (int)$args['showSKU'] : 0;
+        $args['showPrice'] = isset($args['showPrice']) ? (int)$args['showPrice'] : 0;
+        $args['showQuantity'] = isset($args['showQuantity']) ? (int)$args['showQuantity'] : 0;
+        $args['showAddToCart'] = isset($args['showAddToCart']) ? (int)$args['showAddToCart'] : 0;
+        $args['showLink'] = isset($args['showLink']) ? (int)$args['showLink'] : 0;
+        $args['showButton'] = isset($args['showButton']) ? (int)$args['showButton'] : 0;
+        $args['truncateEnabled'] = isset($args['truncateEnabled']) ? (int)$args['truncateEnabled'] : 0;
+        $args['showPagination'] = isset($args['showPagination']) ? (int)$args['showPagination'] : 0;
         $args['enableExternalFiltering'] = isset($args['enableExternalFiltering']) ? 1 : 0;
-        $args['showFeatured'] = isset($args['showFeatured']) ? 1 : 0;
-        $args['showSale'] = isset($args['showSale']) ? 1 : 0;
+        $args['showFeatured'] = isset($args['showFeatured']) ? (int)$args['showFeatured'] : 0;
+        $args['showSale'] = isset($args['showSale']) ? (int)$args['showSale'] : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
         $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
 
@@ -302,12 +304,25 @@ class Controller extends BlockController
         parent::save($args);
     }
 
+    public function duplicate($newBID) {
+        $db = $this->app->make('database')->connection();
+        $ni = parent::duplicate($newBID);
+        $db->query("INSERT INTO btCommunityStoreProductListGroups (bID, gID) select ?, gID from btCommunityStoreProductListGroups where  bID = ?", [$ni->bID, $this->bID]);
+    }
+
+    public function delete()
+    {
+        $db = $this->app->make('database')->connection();
+        $db->executeQuery('DELETE FROM btCommunityStoreProductListGroups WHERE bID = ?', [$this->bID]);
+        parent::delete();
+    }
+
     public function validate($args)
     {
         $e = $this->app->make("helper/validation/error");
         $nh = $this->app->make("helper/number");
 
-        if (('page' == $args['filter'] || 'page_children' == $args['filter']) && $args['filterCID'] <= 0) {
+        if (($args['filter']  == 'page' || $args['filter'] == 'page_children') && $args['filterCID'] <= 0) {
             $e->add(t('A page must be selected'));
         }
 

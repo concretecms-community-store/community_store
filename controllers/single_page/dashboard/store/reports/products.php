@@ -89,7 +89,7 @@ class Products extends DashboardPageController
 
             $orderItems = [];
 
-            while ($row = $result->fetchRow()) {
+            while ($row = $result->fetch()) {
                 $orderItems[] = OrderItem::getByID($row['oiID']);
             }
 

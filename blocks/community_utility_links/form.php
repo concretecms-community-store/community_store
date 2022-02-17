@@ -41,6 +41,7 @@
     </label>
 </div>
 
+<br />
 
 <div class="form-group">
     <?= $form->label('cartLabel', t('Cart Link Label')); ?>

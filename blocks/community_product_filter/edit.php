@@ -4,7 +4,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <div class="row">
 
-    <div class="col-xs-12">
+    <div class="col-sm-12">
 
         <fieldset>
             <legend><?= t('Filter Data Source'); ?></legend>
@@ -15,7 +15,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
 
-            <div id="manualsettings" class="<?= ($filterSource == 'manual' ? '' : 'hidden'); ?>">
+            <div id="manualsettings" class="<?= ($filterSource == 'manual' ? '' : 'hidden d-none'); ?>">
                 <div class="form-group">
                     <?= $form->label('filter', t('List Products')); ?>
                     <?= $form->select('filter', [
@@ -139,15 +139,15 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <label><?= t('Available Attributes'); ?></label>
 
                     <ul class="list-group" id="availableatts">
-                        <li class="list-group-item <?= (in_array('price', $otherfilters) ? 'hidden' : ''); ?>" data-id="price"><a class="block" data-id="0" data-type="price" href="#"> <?= t('Price');?>
-                                <i class="pull-right fa fa-angle-right"></i> </a></li>
+                        <li class="list-group-item <?= (in_array('price', $otherfilters) ? 'hidden d-none' : ''); ?>" data-id="price"><a class="block" data-id="0" data-type="price" href="#"> <?= t('Price');?>
+                                <i class="pull-right float-end fa fa-angle-right"></i> </a></li>
                         <?php
                         $attlookup = array();
                         foreach($attributes as $att) {
                             $attlookup[$att->getAttributeKeyID()] = $att->getAttributeKeyName();
                             ?>
-                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-type="attr" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName());?>
-                                <i class="pull-right fa fa-angle-right"></i> </a></li>
+                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden d-none' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-type="attr" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName());?>
+                                <i class="pull-right float-end fa fa-angle-right"></i> </a></li>
 
                         <?php } ?>
 
@@ -161,9 +161,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         <?php
                         if (!empty($selectedAttributes)) {
                             foreach ($selectedAttributes as $selectedatt) {
-                                echo '<li data-id="' . ($selectedatt['akID'] > 0 ? $selectedatt['akID'] : $selectedatt['type']) . '" data-type="' . $selectedatt['type'] . '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' . ($selectedatt['type'] == 'attr' ? $attlookup[$selectedatt['akID']] : $typelookup[$selectedatt['type']]);
-                                echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
-                                echo '<select class="form-control input-sm pull-right '. ($selectedatt['type'] == 'attr' ? '' : 'hidden') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
+                                echo '<li data-id="' . ($selectedatt['akID'] > 0 ? $selectedatt['akID'] : $selectedatt['type']) . '" data-type="' . $selectedatt['type'] . '" class="clearfix list-group-item"><a href="#" class="attremove pull-right float-end">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v fa-arrows-alt-v"></i>&nbsp;&nbsp;' . ($selectedatt['type'] == 'attr' ? $attlookup[$selectedatt['akID']] : $typelookup[$selectedatt['type']]);
+                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 '. ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
+                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 '. ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
                                 echo '<input type="hidden" name="types[]" value="' . $selectedatt['type'] . '" /><input type="hidden" name="attributes[]" value="' . $selectedatt['akID'] . '" />';
                                 echo '<br /><input class="form-control input-sm" placeholder="'.t('Custom Label') .'" type="text" name="labels[]" value="' . $selectedatt['label'] . '" />';
                                 echo '</li>';
@@ -174,7 +174,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             </div>
         </fieldset>
-
+        <br />
         <fieldset>
             <legend><?= t('Display Options'); ?></legend>
 
@@ -191,7 +191,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->select('updateType', ['auto' => t("Automatically when filters are selected"), 'button' => t('When filter button is pressed')], $updateType); ?>
             </div>
 
-            <div id="filterButtonTextField" class="form-group <?= $updateType == 'button' ? '' :'hidden'; ?>">
+            <div id="filterButtonTextField" class="form-group <?= $updateType == 'button' ? '' :'hidden d-none'; ?>">
                 <?= $form->label('filterButtonText', t("Filter Button Text")); ?>
                 <?= $form->text('filterButtonText', $filterButtonText, ['placeholder' => t('Filter')]); ?>
             </div>
@@ -203,7 +203,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 </label>
             </div>
 
-            <div id="clearButtonTextField" class="form-group <?= $displayClear ? '' :'hidden'; ?>">
+            <div id="clearButtonTextField" class="form-group <?= $displayClear ? '' :'hidden d-none'; ?>">
                 <?= $form->label('clearButtonText', t("Clear Button Text")); ?>
                 <?= $form->text('clearButtonText', $clearButtonText, ['placeholder' => t('Clear')]); ?>
             </div>
@@ -233,17 +233,17 @@ if ($relatedProduct) {
 
         $('#displayClear').change(function () {
             if ($(this).prop('checked')) {
-                $('#clearButtonTextField').removeClass('hidden');
+                $('#clearButtonTextField').removeClass('hidden d-none');
             } else {
-                $('#clearButtonTextField').addClass('hidden');
+                $('#clearButtonTextField').addClass('hidden d-none');
             }
         });
 
         $('#updateType').change(function () {
             if ($(this).val() === 'button') {
-                $('#filterButtonTextField').removeClass('hidden');
+                $('#filterButtonTextField').removeClass('hidden d-none');
             } else {
-                $('#filterButtonTextField').addClass('hidden');
+                $('#filterButtonTextField').addClass('hidden d-none');
             }
         });
 
@@ -328,9 +328,9 @@ if ($relatedProduct) {
 
         $('#filterSource').change(function () {
             if ($(this).val() == 'auto') {
-                $('#manualsettings').addClass('hidden');
+                $('#manualsettings').addClass('hidden d-none');
             } else {
-                $('#manualsettings').removeClass('hidden');
+                $('#manualsettings').removeClass('hidden d-none');
             }
         });
 
@@ -341,10 +341,10 @@ if ($relatedProduct) {
         $('#availableatts a').click(function (e) {
             e.preventDefault();
 
-            var newitem = '<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v"></i>&nbsp;&nbsp;' + $(this).text();
+            var newitem = '<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right float-end">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v fa-arrows-alt-v"></i>&nbsp;&nbsp;' + $(this).text();
                 if($(this).data('type')==='attr') {
-                    newitem += '<select class="form-control input-sm pull-right" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>';
-                    newitem += '<select class="form-control input-sm pull-right" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select>';
+                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>';
+                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select>';
                 }
 
             newitem += '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /><input type="hidden" name="types[]" value="' + $(this).data('type') + '" />';
@@ -352,7 +352,7 @@ if ($relatedProduct) {
             newitem += '</li>';
 
             $("#activeatts").append(newitem);
-            $(this).parent().addClass('hidden');
+            $(this).parent().addClass('hidden d-none');
         });
 
     });
@@ -361,7 +361,7 @@ if ($relatedProduct) {
         e.preventDefault();
         var element = $(this).closest('li');
         var id = element.data('id');
-        $("#availableatts").find("[data-id='" + id + "']").removeClass('hidden');
+        $("#availableatts").find("[data-id='" + id + "']").removeClass('hidden d-none');
         element.remove();
     });
 

@@ -5,7 +5,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // with the crop property set to true since default is false
 $legacyThumbProps = new \stdClass();
 $legacyThumbProps->crop = true;
-$communityStoreImageHelper = $app->make('cs/helper/image', ['product_list', null, $legacyThumbProps]);
+$communityStoreImageHelper = $app->make(
+    'cs/helper/image',
+    [
+        'resizingScheme' => 'product_list',
+        'thumbTypeHandle' => null,
+        'legacyThumbProps' => $legacyThumbProps
+    ]
+);
 $csm = $app->make('cs/helper/multilingual');
 
 $c = \Concrete\Core\Page\Page::getCurrentPage();
@@ -14,19 +21,19 @@ $c = \Concrete\Core\Page\Page::getCurrentPage();
 $columnClass = 'col-md-12';
 
 if ($productsPerRow == 2) {
-    $columnClass = 'col-md-6';
+    $columnClass = 'col-md-6 col-sm-6 col-xs-12';
 }
 
 if ($productsPerRow == 3) {
-    $columnClass = 'col-md-4';
+    $columnClass = 'col-md-4 col-sm-4 col-xs-12';
 }
 
 if ($productsPerRow == 4) {
-    $columnClass = 'col-md-3';
+    $columnClass = 'col-md-3 col-sm-6 col-xs-12';
 }
 
 if ($productsPerRow == 6) {
-    $columnClass = 'col-md-2';
+    $columnClass = 'col-md-2 col-sm-6 col-xs-12';
 }
 
 if (!$productsPerRow) {
@@ -101,44 +108,74 @@ if (!$productsPerRow) {
             $productPage = false;
         } ?>
 
-            <div class="store-product-list-item <?= $columnClass; ?> <?= $activeclass; ?>">
-                <form id="store-form-add-to-cart-list-<?= $product->getID(); ?>" data-product-id="<?= $product->getID(); ?>">
+            <div class="store-product-list-item mb-3 <?= $columnClass; ?> <?= $activeclass; ?>">
+
+                <form data-product-id="<?= $product->getID(); ?>">
                     <?= $token->output('community_store'); ?>
                     <?php if ($showName && $displayMode != 'list') {
                         ?>
-                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
+                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                            <?php if ($showSKU && $product->getSKU()) { ?>
+                                <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                            <?php } ?>
+                        </h2>
                         <?php
                     } ?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                    <div class="row">
+                    <?php } ?>
+
                     <?php
                     $imgObj = $product->getImageObj();
                     if (is_object($imgObj)) {
                         $thumb = $communityStoreImageHelper->getThumbnail($imgObj); ?>
-                        <p class="<?= $displayMode != 'list' ? 'store-product-list-thumbnail' : 'col-md-3 col-xs-6'; ?>">
-                            <?php if ($showQuickViewLink) {
-                                ?>
-                                <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
-                                    <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                </a>
-                                <?php
-                            } elseif ($showPageLink && $productPage) {
-                                ?>
-                                <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
-                                    <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                </a>
-                                <?php
-                            } else {
-                                ?>
-                                <img src="<?= $thumb->src; ?>" class="img-responsive" alt="<?= $product->getName() ?>">
-                                <?php
-                            } ?>
-                        </p>
+
+                        <?php if ( $displayMode == 'list') { ?>
+                            <div class="col-md-3 col-sm-6">
+                        <?php } ?>
+
+                            <p class="store-product-list-thumbnail">
+                                <?php if ($showQuickViewLink) {
+                                    ?>
+                                    <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
+                                        <img src="<?= $thumb->src; ?>" class="img-responsive img-fluid" alt="<?= $product->getName() ?>">
+                                    </a>
+                                    <?php
+                                } elseif ($showPageLink && $productPage) {
+                                    ?>
+                                    <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
+                                        <img src="<?= $thumb->src; ?>" class="img-responsive img-fluid" alt="<?= $product->getName() ?>">
+                                    </a>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <img src="<?= $thumb->src; ?>" class="img-responsive img-fluid" alt="<?= $product->getName() ?>">
+                                    <?php
+                                } ?>
+                            </p>
+
+                        <?php if ( $displayMode == 'list') { ?>
+                            </div>
+                        <?php } ?>
+
                         <?php
                     }// if is_obj?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                        <div class="col-md-9 col-sm-6">
+                    <?php } ?>
+
                     <?php if ($showName && $displayMode == 'list') {
                         ?>
-                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?></h2>
+                        <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
+                            <?php if ($showSKU && $product->getSKU()) { ?>
+                                <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                            <?php } ?>
+                        </h2>
                         <?php
                     } ?>
+
                     <?php if ($showPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
@@ -170,7 +207,7 @@ if (!$productsPerRow) {
                                 <p class="store-product-price-suggestions"><?php
                                     foreach ($pricesuggestions as $suggestion) {
                                         ?>
-                                        <a href="#" class="store-price-suggestion btn btn-default btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
+                                        <a href="#" class="store-price-suggestion btn btn-default btn-secondary btn-sm" data-suggestion-value="<?= $suggestion; ?>" data-add-type="list"><?= Config::get('community_store.symbol') . $suggestion; ?></a>
                                         <?php
                                     } ?>
                                 </p>
@@ -183,7 +220,7 @@ if (!$productsPerRow) {
                             } ?>
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
-                            <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group col-md-6 col-sm-6 col-sm-6">
                                 <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>  <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01" class="store-product-customer-price-entry-field form-control" value="<?= $product->getPrice(); ?>" name="customerPrice"/>
                             </div>
@@ -208,17 +245,18 @@ if (!$productsPerRow) {
                         <?php
                     } ?>
 
-
                     <?php if ($showDescription) {
                         ?>
                         <div class="store-product-list-description"><?= $csm->t($product->getDesc(), 'productDescription', $product->getID()); ?></div>
                         <?php
                     } ?>
+
                     <?php if ($showPageLink && $productPage) {
                         ?>
-                        <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
+                        <p class="store-btn-more-details-container"><a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>" class="store-btn-more-details btn btn-default btn-secondary"><?= ($pageLinkText ? $pageLinkText : t("More Details")); ?></a></p>
                         <?php
                     } ?>
+
                     <?php if ($showAddToCart) {
                         ?>
                     <div class="store-product-options">
@@ -277,7 +315,7 @@ if (!$productsPerRow) {
 
                             <?php if (!$optionType || $optionType == 'select') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -285,10 +323,9 @@ if (!$productsPerRow) {
                                     <?php } ?>
 
                                     <?php if ($displayType != 'radio') { ?>
-                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control" name="po<?= $option->getID(); ?>">
+                                    <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control form-select" name="po<?= $option->getID(); ?>">
                                         <?php } ?>
                                         <?php
-                                        $firstAvailableVariation = false;
                                         $variation = false;
                                         $disabled = false;
                                         $outOfStock = false;
@@ -299,14 +336,13 @@ if (!$productsPerRow) {
                                                 $variation = $variationLookup[$optionItem->getID()];
                                                 $selected = '';
 
+                                                if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
+                                                    $selected = 'selected="selected"';
+                                                }
+
                                                 if (!empty($variation)) {
-                                                    $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
-
-                                                    if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {
-                                                        $selected = 'selected="selected"';
-                                                    }
                                                 } else {
                                                     $disabled = false;
                                                     if ($firstOptionItem) {
@@ -358,7 +394,7 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'text' ) {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -370,7 +406,7 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'textarea') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
@@ -382,10 +418,10 @@ if (!$productsPerRow) {
                                 <?php
                             } elseif ($optionType == 'checkbox') {
                                 ?>
-                                <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
+                                <div class="store-product-option-group form-group mb-3 <?= $option->getHandle(); ?>">
                                     <label class="store-product-option-group-label">
                                         <input type="hidden" value="<?= t('no'); ?>" class="store-product-option-checkbox-hidden <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/>
-                                        <input type="checkbox" value="<?= t('yes'); ?>" class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
+                                        <input type="checkbox" value="<?= t('yes'); ?>" <?= $requiredAttr; ?> class="store-product-option-checkbox <?= $option->getHandle(); ?>" name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
 
                                     <?php if ($details) { ?>
                                         <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
@@ -451,6 +487,7 @@ if (!$productsPerRow) {
                                         'price' => $product->getPrice(),
                                         'salePrice' => $product->getSalePrice(),
                                         'available' => $variation->isSellable(),
+                                        'maxCart' => $variation->getMaxCartQty(),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',
                                         'saleTemplate'=>'<span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
@@ -468,6 +505,11 @@ if (!$productsPerRow) {
                         </script>
                         <?php
                     } ?>
+
+                    <?php if ( $displayMode == 'list') { ?>
+                        </div>
+                    </div>
+                    <?php } ?>
 
                 </form><!-- .product-list-item-inner -->
             </div><!-- .product-list-item -->

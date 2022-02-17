@@ -1,5 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<legend><?= t("Product"); ?></legend>
 
 <div class="form-group">
     <?= $form->label('productLocation', t('Product')); ?>
@@ -14,81 +13,87 @@
 <legend><?= t("Display Options"); ?></legend>
 
 <div class="row">
-    <div class="col-xs-6">
-        <div class="checkbox">
+    <div class="col-sm-6">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showProductName', 1, !isset($showProductName) ? true : $showProductName); ?>
                 <?= t('Display Product Name'); ?>
             </label>
         </div>
 
+        <div class="form-check">
+            <label>
+                <?= $form->checkbox('showProductSKU', 1, !isset($showProductSKU) ? false : $showProductSKU); ?>
+                <?= t('Display SKU'); ?>
+            </label>
+        </div>
 
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showProductDescription', 1, !isset($showProductDescription) ? true : $showProductDescription); ?>
                 <?= t('Display Short Description'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showProductDetails', 1, !isset($showProductDetails) ? true : $showProductDetails); ?>
                 <?= t('Display Product Details'); ?>
             </label>
         </div>
 
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showManufacturer', 1, !isset($showManufacturer) ? false : $showManufacturer); ?>
                 <?= t('Display Manufacturer Name'); ?>
             </label>
         </div>
 
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showManufacturerDescription', 1, !isset($showManufacturerDescription) ? false : $showManufacturerDescription); ?>
                 <?= t('Display Manufacturer Description'); ?>
             </label>
         </div>
 
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showProductPrice', 1, !isset($showProductPrice) ? true : $showProductPrice); ?>
                 <?= t('Display Price'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showWeight', 1, $showWeight); ?>
                 <?= t('Display Weight'); ?>
             </label>
         </div>
     </div>
-    <div class="col-xs-6">
-        <div class="checkbox">
+    <div class="col-sm-6">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showImage', 1, !isset($showImage) ? true : $showImage); ?>
                 <?= t('Display Product Image'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showCartButton', 1, !isset($showCartButton) ? true : $showCartButton); ?>
                 <?= t('Display Add To Cart Button'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured); ?>
                 <?= t('Display If Featured'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showDimensions', 1, $showDimensions); ?>
                 <?= t('Display Dimensions'); ?>
             </label>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
             <label>
                 <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
                 <?= t('Display Quantity Selector'); ?>
@@ -99,7 +104,7 @@
 </div>
 <br />
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
         <div class="form-group">
             <?= $form->label('btnText', t("Add to Cart Button Text")); ?>
             <?= $form->text('btnText', $btnText, ['placeholder' => t('Add To Cart')]); ?>
@@ -146,7 +151,7 @@
             },
             minimumInputLength: 2,
             initSelection: function(element, callback) {
-                callback({id: <?= ($pID ? $pID : 0); ?>, text: '<?= ($product ? addslashes($product->getName()) : ''); ?>' });
+                callback({id: <?= ($pID ? $pID : 0); ?>, text: <?= ($product ? json_encode($product->getName()) : "''"); ?> });
             }
         }).select2('val', []);
     });

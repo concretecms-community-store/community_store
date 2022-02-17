@@ -5,19 +5,19 @@ Products are created and edited via the Dashboard, and are stored independently 
 Key details about a product, such as its pricing, SKU, stock level and descriptions are edited on the 'Overview' tab when editing a product.
 Other options on a product are found through the other tabs - on adding a product for the first time it is recommended to review all options that are available for a product through these tabs.
 
-## Options and Variations
+## Options and Variants
 
-Configurable options for a product, for example a product's size, can be added via the **Options and Variations** tab when adding or editing a product.
+Configurable options for a product, for example a product's size, can be added via the **Options and Variants** tab when adding or editing a product.
 Such options are selected by a customer when adding to the cart, and are then carried through to be shown within an order against that product.
 
 An Option List provides a drop down or set of radio buttons for a product. Such options can be configured to directly adjust the price or weight of a product, using the **Price Adjustment** and **Weight Adjustment** fields of the product option respectively.
 Other options types such as **Text Field** or **Text Area** allow text to be entered.
 
-When a product option or set of options changes the product Code / SKU, has a specific price, stock levels, a specific image, or shipping requirements, **Variations** can be used for greater control.
+When a product option or set of options changes the product Code / SKU, has a specific price, stock levels, a specific image, or shipping requirements, **Variants** can be used for greater control.
 
 To create variations for a product:
-- Select one or more options to be part of variations by setting their 'In Variations' setting to yes
-- Check the 'Options have different prices, SKUs or stock levels' towards the bottom of the Options and Variations tab
+- Select one or more options to be part of variations by setting their 'In Variants' setting to yes
+- Check the 'Options have different prices, SKUs or stock levels' towards the bottom of the Options and Variants tab
 - Update the Product and scroll down past your product options - the combinations of options, the variations will be displayed and be configured
 
 By default new variations are set to be unavailable.
@@ -41,7 +41,7 @@ Review the [Categorization How-To](/how-tos/categorization) page for more detail
 
 ## Attributes
 
-Live page, user or file attributes in concrete5, product attributes can be created for products.
+Live page, user or file attributes in Concrete CMS, product attributes can be created for products.
 Such attributes are intended to be used programmatically, such as in custom block templates, or by custom shipping methods.
 
 Attributes for a product can be _edited_ via the Attributes tab when adding or editing a product.

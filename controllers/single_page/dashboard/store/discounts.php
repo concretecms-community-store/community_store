@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
@@ -37,6 +38,9 @@ class Discounts extends DashboardPageController
         $this->set('paginator', $paginator);
 
         $this->set('pageTitle', t('Discount Rules'));
+
+        $headerSearch = $this->getHeaderSearch();
+        $this->set('headerSearch', $headerSearch);
     }
 
     public function add()
@@ -226,5 +230,13 @@ class Discounts extends DashboardPageController
             }
             //if no errors
         } // if post
+    }
+
+    protected function getHeaderSearch()
+    {
+        if (!isset($this->headerSearch)) {
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('discounts/search', 'community_store');
+        }
+        return $this->headerSearch;
     }
 }

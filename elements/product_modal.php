@@ -4,7 +4,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-$communityStoreImageHelper = $app->make('cs/helper/image', ['product_modal']);
+$communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'product_modal']);
 $csm = $app->make('cs/helper/multilingual');
 $token = $app->make('token');
 ?>
@@ -12,7 +12,7 @@ $token = $app->make('token');
     <?= $token->output('community_store'); ?>
     <div class="store-product-modal-info-shell">
 
-        <a href="#" class="store-modal-exit">x</a>
+        <a href="#" class="store-modal-exit">&times;</a>
         <h4 class="store-product-modal-title"><?= h($csm->t($product->getName(), 'productName', $product->getID())); ?></h4>
 
         <p class="store-product-modal-thumb">
