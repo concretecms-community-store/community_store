@@ -196,6 +196,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
                 Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
                 Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
+                Config::save('community_store.receiptBCC', trim($args['receiptBCC']));
                 Config::save('community_store.noBillingSave', trim($args['noBillingSave']));
                 Config::save('community_store.noShippingSave', trim($args['noShippingSave']));
                 Config::save('community_store.noBillingSaveGroups', is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');

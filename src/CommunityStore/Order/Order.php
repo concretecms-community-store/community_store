@@ -1088,6 +1088,17 @@ class Order
         }
         $mh->to($email);
 
+        $bbcEmails = trim(Config::get('community_store.receiptBCC'));
+
+        if ($bbcEmails) {
+            $bbcEmails = explode(",", $bbcEmails);
+            $bbcEmails = array_map('trim', $bbcEmails);
+
+            foreach($bbcEmails as $bbcEmail) {
+                $mh->bcc($bbcEmail);
+            }
+        }
+
         $pmID = $this->getPaymentMethodID();
 
         if ($pmID) {

@@ -354,6 +354,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
             </div>
 
+            <div class="form-group">
+                <?= $form->label('receiptBCC', t('Send BCC of receipt to email')); ?>
+                <?= $form->text('receiptBCC', Config::get('community_store.receiptBCC'), ['placeholder' => t('Email Address')]); ?>
+                <p class="help-block"><?= t('separate multiple emails with commas'); ?></p>
+            </div>
+
 
         </div>
 

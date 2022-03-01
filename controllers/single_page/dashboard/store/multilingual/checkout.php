@@ -26,6 +26,7 @@ class Checkout extends DashboardSitePageController
 
         $this->set('receiptHeader', trim(Config::get('community_store.receiptHeader')));
         $this->set('receiptFooter', trim(Config::get('community_store.receiptFooter')));
+        $this->set('receiptBCC', trim(Config::get('community_store.receiptBCC')));
 
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
