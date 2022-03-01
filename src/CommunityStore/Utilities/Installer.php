@@ -98,9 +98,9 @@ class Installer
         $defaultSlug = '';
 
         if (is_object($defaultHome)) {
-            $defaultSlug = $defaultHome->getCollectionHandle();
+            $defaultSlug = (string)$defaultHome->getCollectionHandle();
 
-            if ($defaultSlug) {
+            if (!empty($defaultSlug)) {
                 $defaultSlug = '/' . $defaultSlug;
             }
         }
