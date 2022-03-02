@@ -189,6 +189,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.defaultProductListCrop', $args['defaultProductListCrop']);
                 Config::save('community_store.defaultProductListCrop', $args['defaultProductModalCrop']);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
+                Config::save('community_store.useCaptcha', $args['useCaptcha']);
                 Config::save('community_store.companyField', $args['companyField']);
                 Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
                 Config::save('community_store.orderNotesEnabled', (bool)trim($args['orderNotesEnabled']));

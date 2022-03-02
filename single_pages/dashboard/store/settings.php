@@ -583,6 +583,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
             <div class="form-group">
+                <?= $form->label('useCaptcha', t('Use CAPTCHA')); ?>
+                <br/>
+                <label><?= $form->checkbox('useCaptcha', '1', Config::get('community_store.useCaptcha')); ?>
+                    <?= t('Challenge Customers with CAPTCHA before checkout'); ?>
+                </label>
+
+            </div>
+
+
+            <div class="form-group">
                 <?= $form->label('orderCompleteCID', t('Order Complete Destination')); ?>
                 <?php $orderCompleteCID = Config::get('community_store.orderCompleteCID'); ?>
                 <?= $pageSelector->selectPage('orderCompleteCID', $orderCompleteCID); ?>

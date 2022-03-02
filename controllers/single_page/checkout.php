@@ -81,92 +81,113 @@ class Checkout extends PageController
         }
         $this->set('form', $this->app->make("helper/form"));
 
-        $allcountries = $this->app->make('helper/lists/countries')->getCountries();
+        $useCaptcha = Config::get('community_store.useCaptcha');
 
-        $ak = UserAttributeKey::getByHandle('billing_address');
-
-        $keysettings = $ak->getController()->getAttributeKeySettings();
-        $defaultBillingCountry = $keysettings->getDefaultCountry();
-        $hasCustomerBillingCountries = $keysettings->hasCustomCountries();
-        $availableBillingCountries = $keysettings->getCustomCountries();
-
-        if ($hasCustomerBillingCountries) {
-            $billingCountries = [];
-            foreach ($availableBillingCountries as $countrycode) {
-                $billingCountries[$countrycode] = $allcountries[$countrycode];
+        if ($useCaptcha) {
+            $captcha = $this->app->make("captcha");
+            $token = $this->app->make('token');
+            $session = $this->app->make('session');
+            if (!$session->get('securityCheck')) {
+                if ($token->validate('community_store')) {
+                    if ($captcha->check()) {
+                        $session->set('securityCheck', true);
+                    } else {
+                        $this->set('error', t('Incorrect captcha code'));
+                    }
+                }
             }
-        } else {
-            $billingCountries = $allcountries;
         }
 
-        $ak = UserAttributeKey::getByHandle('shipping_address');
+        if ($useCaptcha && !$session->get('securityCheck')) {
+            $this->render('/checkout/security');
+        } else {
 
-        $keysettings = $ak->getController()->getAttributeKeySettings();
-        $defaultShippingCountry = $keysettings->getDefaultCountry();
-        $hasCustomerShippingCountries = $keysettings->hasCustomCountries();
-        $availableShippingCountries = $keysettings->getCustomCountries();
+            $allcountries = $this->app->make('helper/lists/countries')->getCountries();
 
-        if ($hasCustomerShippingCountries) {
-            $shippingCountries = [];
-            foreach ($availableShippingCountries as $countrycode) {
-                $shippingCountries[$countrycode] = $allcountries[$countrycode];
+            $ak = UserAttributeKey::getByHandle('billing_address');
+
+            $keysettings = $ak->getController()->getAttributeKeySettings();
+            $defaultBillingCountry = $keysettings->getDefaultCountry();
+            $hasCustomerBillingCountries = $keysettings->hasCustomCountries();
+            $availableBillingCountries = $keysettings->getCustomCountries();
+
+            if ($hasCustomerBillingCountries) {
+                $billingCountries = [];
+                foreach ($availableBillingCountries as $countrycode) {
+                    $billingCountries[$countrycode] = $allcountries[$countrycode];
+                }
+            } else {
+                $billingCountries = $allcountries;
             }
-        } else {
-            $shippingCountries = $allcountries;
-        }
 
-        $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
+            $ak = UserAttributeKey::getByHandle('shipping_address');
 
-        $this->set("discountsWithCodesExist", $discountsWithCodesExist);
-        $this->set('cart', $cart);
-        $this->set('discounts', Cart::getDiscounts());
-        $this->set('hasCode', DiscountCode::hasCartCode());
+            $keysettings = $ak->getController()->getAttributeKeySettings();
+            $defaultShippingCountry = $keysettings->getDefaultCountry();
+            $hasCustomerShippingCountries = $keysettings->hasCustomCountries();
+            $availableShippingCountries = $keysettings->getCustomCountries();
 
-        $this->set("billingCountries", $billingCountries);
-        $this->set("shippingCountries", $shippingCountries);
+            if ($hasCustomerShippingCountries) {
+                $shippingCountries = [];
+                foreach ($availableShippingCountries as $countrycode) {
+                    $shippingCountries[$countrycode] = $allcountries[$countrycode];
+                }
+            } else {
+                $shippingCountries = $allcountries;
+            }
 
-        $this->set("defaultBillingCountry", $defaultBillingCountry);
-        $this->set("defaultShippingCountry", $defaultShippingCountry);
+            $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
 
-        $this->set('notes', Session::get('notes'));
+            $this->set("discountsWithCodesExist", $discountsWithCodesExist);
+            $this->set('cart', $cart);
+            $this->set('discounts', Cart::getDiscounts());
+            $this->set('hasCode', DiscountCode::hasCartCode());
 
-        $statelist = ['' => ''];
-        $statelist = array_merge($statelist, $this->app->make('helper/lists/states_provinces')->getStates());
-        $this->set("states", $statelist);
+            $this->set("billingCountries", $billingCountries);
+            $this->set("shippingCountries", $shippingCountries);
 
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
-        $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
-        if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-            $this->set("orderChoicesAttList", $orderChoicesAttList);
-        }
+            $this->set("defaultBillingCountry", $defaultBillingCountry);
+            $this->set("defaultShippingCountry", $defaultShippingCountry);
 
-        $totals = Calculator::getTotals();
+            $this->set('notes', Session::get('notes'));
 
-        $this->set('subtotal', $totals['subTotal']);
-        $this->set('taxes', $totals['taxes']);
+            $statelist = ['' => ''];
+            $statelist = array_merge($statelist, $this->app->make('helper/lists/states_provinces')->getStates());
+            $this->set("states", $statelist);
 
-        $this->set('taxtotal', $totals['taxTotal']);
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+            $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
+            if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+                $this->set("orderChoicesAttList", $orderChoicesAttList);
+            }
 
-        if (Session::get('community_store.smID')) {
-            $this->set('shippingtotal', $totals['shippingTotal']);
-        } else {
-            $this->set('shippingtotal', false);
-        }
+            $totals = Calculator::getTotals();
 
-        $this->set('total', $totals['total']);
-        $this->set('shippingEnabled', Cart::isShippable());
-        $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
-        $this->set('shippingInstructions', Cart::getShippingInstructions());
+            $this->set('subtotal', $totals['subTotal']);
+            $this->set('taxes', $totals['taxes']);
 
-        $this->requireAsset('javascript', 'jquery');
-        $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
-        $this->addFooterItem($js);
+            $this->set('taxtotal', $totals['taxTotal']);
 
-        $this->requireAsset('javascript', 'sysend');
-        $this->requireAsset('javascript', 'community-store');
+            if (Session::get('community_store.smID')) {
+                $this->set('shippingtotal', $totals['shippingTotal']);
+            } else {
+                $this->set('shippingtotal', false);
+            }
 
-        $this->requireAsset('css', 'community-store');
-        $this->addFooterItem("
+            $this->set('total', $totals['total']);
+            $this->set('shippingEnabled', Cart::isShippable());
+            $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
+            $this->set('shippingInstructions', Cart::getShippingInstructions());
+
+            $this->requireAsset('javascript', 'jquery');
+            $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
+            $this->addFooterItem($js);
+
+            $this->requireAsset('javascript', 'sysend');
+            $this->requireAsset('javascript', 'community-store');
+
+            $this->requireAsset('css', 'community-store');
+            $this->addFooterItem("
             <script type=\"text/javascript\">
                 $(function() {
                     communityStore.loadViaHash();
@@ -174,18 +195,20 @@ class Checkout extends PageController
             </script>
         ");
 
-        $availableMethods = PaymentMethod::getAvailableMethods($totals['total']);
-        $this->set("enabledPaymentMethods", $availableMethods);
+            $availableMethods = PaymentMethod::getAvailableMethods($totals['total']);
+            $this->set("enabledPaymentMethods", $availableMethods);
 
-        $apikey = Config::get('community_store.placesAPIKey');
+            $apikey = Config::get('community_store.placesAPIKey');
 
-        if ($apikey) {
-            $this->addFooterItem(
-                '<script src="https://maps.googleapis.com/maps/api/js?' . ($apikey ? '&key=' . $apikey : '') . '&libraries=places&callback=initAutocomplete" defer></script>'
-            );
+            if ($apikey) {
+                $this->addFooterItem(
+                    '<script src="https://maps.googleapis.com/maps/api/js?' . ($apikey ? '&key=' . $apikey : '') . '&libraries=places&callback=initAutocomplete" defer></script>'
+                );
 
-            $this->requireAsset('javascript', 'community-store-autocomplete');
-            $this->set('addressLookup', true);
+                $this->requireAsset('javascript', 'community-store-autocomplete');
+                $this->set('addressLookup', true);
+            }
+
         }
 
         $this->set('token', $this->app->make('token'));
@@ -215,6 +238,12 @@ class Checkout extends PageController
 
         if (!$token->validate('community_store')) {
             return Redirect::to($langpath . '/checkout');
+        }
+
+        if (Config::get('community_store.useCaptcha')) {
+            if (!Session::get('securityCheck')) {
+                return Redirect::to($langpath . '/checkout');
+            }
         }
 
         $data = $this->request->request->all();
@@ -254,6 +283,8 @@ class Checkout extends PageController
                 return Redirect::to($langpath . '/cart');
             }
         } else {
+            Session::set('securityCheck', false);
+
             $payment = $pm->submitPayment();
             if (1 == $payment['error']) {
                 $errors = $payment['errorMessage'];
