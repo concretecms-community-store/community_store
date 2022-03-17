@@ -45,7 +45,7 @@ class OrderItem
     protected $oiProductName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiSKU;
 
@@ -65,7 +65,7 @@ class OrderItem
     protected $oiTaxIncluded;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $oiTaxName;
 
