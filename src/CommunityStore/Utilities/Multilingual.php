@@ -49,6 +49,7 @@ class Multilingual
      *  productQuantityLabel
      *  productAddToCartText
      *  productOutOfStockMessage
+     *  productNotAvailableMessage
      *  productAttributeName
      *  productAttributeLabel
      *  productAttributeValue
@@ -98,11 +99,17 @@ class Multilingual
 
             if ($productID) {
                 if ($useCommon) {
-                    if ($context == 'productQuantityLabel' || $context == 'productAddToCartText' || $context == 'productOutOfStockMessage') {
-                        $query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
-                    } else {
-                        $query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
-                    }
+					switch ($context) {
+						case 'productQuantityLabel':
+						case 'productAddToCartText':
+						case 'productOutOfStockMessage':
+						case 'productNotAvailableMessage':
+							$query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
+							break;
+						default:
+							$query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
+							break;
+					}
                 } else {
                     $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
                 }

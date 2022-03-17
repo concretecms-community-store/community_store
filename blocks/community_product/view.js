@@ -61,9 +61,16 @@ $(function () {
 
             if (variation['available']) {
                 pdb.find('.store-out-of-stock-label').addClass('hidden');
+                pdb.find('.store-not-available-label').addClass('hidden');
                 pdb.find('.store-btn-add-to-cart').removeClass('hidden');
             } else {
-                pdb.find('.store-out-of-stock-label').removeClass('hidden');
+                if (variation['disabled']) {
+                    pdb.find('.store-out-of-stock-label').addClass('hidden');
+                    pdb.find('.store-not-available-label').removeClass('hidden');
+                } else {
+                    pdb.find('.store-out-of-stock-label').removeClass('hidden');
+                    pdb.find('.store-not-available-label').addClass('hidden');
+                }
                 pdb.find('.store-btn-add-to-cart').addClass('hidden');
             }
 

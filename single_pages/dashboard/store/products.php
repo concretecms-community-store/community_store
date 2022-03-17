@@ -5,6 +5,8 @@ use \Concrete\Core\Page\Page;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+/** @var $variationLookup ProductVariation [] */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $listViews = ['view', 'updated', 'removed', 'success'];
@@ -1410,7 +1412,7 @@ if (version_compare($version, '9.0', '<')) {
                                 if ($product->hasVariations()) {
                                     $count = 0;
 
-                                    foreach ($comboOptions as $combinedOptions) {
+                                    foreach ($comboOptions as $comboKey => $combinedOptions) {
                                         ?>
                                         <div class="panel panel-default card-body">
                                             <div class="panel-heading card-heading">
@@ -1425,22 +1427,23 @@ if (version_compare($version, '9.0', '<')) {
                                                     echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
                                                 }
 
-                                                ?>
+												if (isset($variationLookup[implode('_', $comboIDs)])) {
+													$variation = $variationLookup[implode('_', $comboIDs)];
+													$varid = $variation->getID();
+												} else {
+													$variation = null;
+													$varid = '';
+												} ?>
+
+                                                <div class="form-group pull-right">
+													<?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
+													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : false, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
+                                                </div>
+
                                             </div>
 
-                                            <div class="panel-body card-body">
+                                            <div data-combokey="<?= $comboKey ?>" class="panel-body card-body"<?= ($variation && $variation->getVariationDisabled()) ? ' style="display:none"' :'' ?>">
                                                 <input type="hidden" name="option_combo[]" value="<?= implode('_', $comboIDs); ?>"/>
-
-                                                <?php
-
-                                                if (isset($variationLookup[implode('_', $comboIDs)])) {
-                                                    $variation = $variationLookup[implode('_', $comboIDs)];
-                                                    $varid = $variation->getID();
-                                                } else {
-                                                    $variation = null;
-                                                    $varid = '';
-                                                } ?>
-
 
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -1713,6 +1716,21 @@ if (version_compare($version, '9.0', '<')) {
 
                             $('#related-products').sortable({axis: 'y'});
 
+                            $('.optionDisabled').change(function () {
+                                var comboKey = $(this).data('combokey');
+                                var panelBody = null;
+                                $('.panel-body.card-body').each(function () {
+                                    if ($(this).data('combokey') === comboKey) {
+                                        panelBody = $(this);
+                                    }
+                                });
+
+                                if ($(this).is(':checked')) {
+                                    panelBody.slideUp();
+                                } else {
+                                    panelBody.slideDown();
+                                }
+                            });
                         });
 
                     </script>
