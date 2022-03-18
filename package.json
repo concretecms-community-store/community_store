@@ -13,7 +13,7 @@
     "chartist-plugin-tooltips": "0.0.17",
     "magnific-popup": "^1.1.0",
     "selectize": "^0.12.6",
-    "sysend": "^1.3.4"
+    "sysend": "^1.10.0"
   },
   "copyFiles": [
     {
