@@ -94,6 +94,17 @@ class Sales extends DashboardPageController
             // getOrderDate returns DateTime need to format it as string
             $date = $o->getOrderDate();
             // set up our export array
+
+            $last = $o->getAttribute('billing_last_name');
+            $first = $o->getAttribute('billing_first_name');
+
+            $fullName = implode(', ', array_filter([$last, $first]));
+            if (strlen($fullName) > 0) {
+                $customerName = $fullName;
+            } else {
+                $customerName = '-';
+            }
+
             $export[] = [
                 'Order #' => $o->getOrderID(),
                 'Date' => $date->format('Y-m-d H:i:s'),
@@ -101,6 +112,10 @@ class Sales extends DashboardPageController
                 'Shipping' => $o->getShippingTotal(),
                 'Tax' => $orderTax,
                 'Total' => $o->getTotal(),
+                'Payment Method' => $o->getPaymentMethodName(),
+                'Transaction Reference' => $o->getTransactionReference(),
+                'Customer Name' => $customerName,
+                'Customer Email' => $o->getAttribute('email'),
             ];
         }
 
