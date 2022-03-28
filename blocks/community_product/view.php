@@ -332,7 +332,8 @@ if (is_object($product) && $product->isActive()) {
                                         $disabled = false;
                                         $outOfStock = false;
                                         $firstOptionItem = true;
-                                        foreach ($optionItems as $optionItem) {
+                                        /** @var \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem[] $optionItems */
+										foreach ($optionItems as $optionItem) {
                                             $noValue = false;
                                             if (!$optionItem->isHidden()) {
                                                 $variation = $variationLookup[$optionItem->getID()];
@@ -477,6 +478,10 @@ if (is_object($product) && $product->isActive()) {
                             <?php $outOfStock = $csm->t($product->getOutOfStockMessage(), 'productOutOfStockMessage', $product->getID()); ?>
                             <?= $outOfStock ? h($outOfStock) : t("Out of Stock"); ?>
                         </p>
+                        <p class="store-not-available-label alert alert-warning hidden">
+							<?php $notAvailable = $csm->t('Not Available', 'productNotAvailableMessage', $product->getID()); ?>
+							<?= $notAvailable ? h($notAvailable) : t('Not Available') ?>
+                        </p>
                         <?php
                     } ?>
 
@@ -593,6 +598,7 @@ if (is_object($product) && $product->isActive()) {
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
                     'available' => $variation->isSellable(),
+					'disabled' => $variation->getVariationDisabled(),
                     'maxCart' => $variation->getMaxCartQty(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',

@@ -109,10 +109,25 @@ class ProductVariation
      */
     protected $pvSort;
 
+	/**
+	 * @ORM\Column(type="boolean",nullable=true)
+	 */
+	protected $pvDisabled;
+
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
      */
     protected $options;
+
+	public function getVariationDisabled()
+	{
+		return $this->pvDisabled ? 1 : 0;
+	}
+
+	public function setVariationDisabled($pvDisabled)
+	{
+		$this->pvDisabled = $pvDisabled ? 1 : 0;
+	}
 
     public function getVariationFID()
     {
@@ -143,6 +158,9 @@ class ProductVariation
         $this->options = new ArrayCollection();
     }
 
+	/**
+	 * @return ArrayCollection | ProductVariationOptionItem[]
+	 */
     public function getOptions()
     {
         return $this->options;
@@ -456,6 +474,9 @@ class ProductVariation
             return false;
         }
 
+        if ($this->getVariationDisabled()) {
+        	return false;
+		}
 
         if ($this->isUnlimited() || $this->getStockLevel() > 0) {
             return true;
@@ -524,6 +545,7 @@ class ProductVariation
                         'pvHeight' => '',
                         'pvLength' => '',
                         'pvSort' => $sort,
+                        'pvDisabled' => 0,
                          true, ]
                     );
 
@@ -556,6 +578,11 @@ class ProductVariation
                     $variation->setVariationLength($data['pvLength'][$key]);
                     $variation->setVariationPackageData($data['pvPackageData'][$key]);
                     $variation->setVariationSort($sort);
+                    if (isset($data['pvDisabled'][$key])) {
+						$variation->setVariationDisabled(1);
+					} else {
+                    	$variation->setVariationDisabled(0);
+					}
                     $variation->setProduct($product);
                     $variation->save(true);
 
@@ -597,6 +624,9 @@ class ProductVariation
         }
     }
 
+    /**
+	 * @return ProductVariation | null
+	 */
     public static function getByID($pvID)
     {
         $em = dbORM::entityManager();

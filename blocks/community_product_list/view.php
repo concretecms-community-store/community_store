@@ -466,6 +466,10 @@ if (!$productsPerRow) {
                             <?= $outOfStock ? h($outOfStock) : t("Out of Stock"); ?>
                         </p>
 
+                        <p class="store-not-available-label alert alert-warning hidden">
+							<?php $notAvailable = $csm->t('Not Available', 'productNotAvailableMessage', $product->getID()); ?>
+							<?= $notAvailable ? h($notAvailable) : t('Not Available') ?>
+                        </p>
                         <?php
                     } ?>
 
@@ -487,6 +491,7 @@ if (!$productsPerRow) {
                                         'price' => $product->getPrice(),
                                         'salePrice' => $product->getSalePrice(),
                                         'available' => $variation->isSellable(),
+                                        'disabled' => $variation->getVariationDisabled(),
                                         'maxCart' => $variation->getMaxCartQty(),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',
