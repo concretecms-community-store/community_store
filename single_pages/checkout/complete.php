@@ -32,7 +32,7 @@ $dh = $app->make('helper/date');
             }
         }
     }
-    if (count($downloads) > 0) {
+    if (count($downloads) > 0 && $order->getPaid()) {
         ?>
         <fieldset>
             <legend><?= t("Your Downloads"); ?></legend>

@@ -58,7 +58,7 @@ ob_start();
             }
         }
     }
-    if (count($downloads) > 0) {
+    if (count($downloads) > 0 && $order->getPaid()) {
         ?>
 
         <h3><?= t("Your Downloads"); ?></h3>

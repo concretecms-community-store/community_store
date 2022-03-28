@@ -36,6 +36,10 @@ class Download extends Controller
             $threshhold->sub(new \DateInterval('PT' . $expiryhours . 'H'));
             $orderDate = $order->getOrderDate();
 
+            if (!$orderDate) {
+                $orderDate = $order->getOrderDate();
+            }
+
             // check that order exists, and md5 hash of order timestamp matches
             if ($order && md5($orderDate->format('Y-m-d H:i:s')) == $hash && $orderDate > $threshhold) {
                 // loop to find whether order contained a product with linked file
