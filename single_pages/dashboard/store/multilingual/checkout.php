@@ -50,7 +50,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($paymentMethod->getDisplayName()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($paymentMethod->getDisplayName()); ?></td>
+                                    <td class="hidden d-none"><?= h($paymentMethod->getDisplayName()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -79,7 +79,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($paymentMethod->getButtonLabel()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($paymentMethod->getButtonLabel()); ?></td>
+                                    <td class="hidden d-none"><?= h($paymentMethod->getButtonLabel()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -109,7 +109,7 @@ $editor = $app->make('editor');
                                         </td>
                                         <td rowspan="<?= $localecount; ?>"><?= $paymentMethod->getMethodController()->getPaymentInstructions(); ?></td>
                                     <?php } else { ?>
-                                        <td class="hidden"><?= $paymentMethod->getMethodController()->getPaymentInstructions(); ?></td>
+                                        <td class="hidden d-none"><?= $paymentMethod->getMethodController()->getPaymentInstructions(); ?></td>
                                     <?php } ?>
                                     <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                     <td>
@@ -166,7 +166,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($shippingMethod->getName()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($shippingMethod->getName()); ?></td>
+                                    <td class="hidden d-none"><?= h($shippingMethod->getName()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -195,7 +195,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= $shippingMethod->getDetails(); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= $shippingMethod->getDetails(); ?></td>
+                                    <td class="hidden d-none"><?= $shippingMethod->getDetails(); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -253,7 +253,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($taxRate->getTaxLabel()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($taxRate->getTaxLabel()); ?></td>
+                                    <td class="hidden d-none"><?= h($taxRate->getTaxLabel()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -311,7 +311,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($discountRule->getDisplay()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($discountRule->getDisplay()); ?></td>
+                                    <td class="hidden d-none"><?= h($discountRule->getDisplay()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -368,7 +368,7 @@ $editor = $app->make('editor');
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($attr->getAttributeKeyName()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($attr->getAttributeKeyName()); ?></td>
+                                    <td class="hidden d-none"><?= h($attr->getAttributeKeyName()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -424,7 +424,7 @@ $editor = $app->make('editor');
 
                                 </td>
                             <?php } else { ?>
-                                <td class="hidden"><?= $receiptHeader; ?></td>
+                                <td class="hidden d-none"><?= $receiptHeader; ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -457,7 +457,7 @@ $editor = $app->make('editor');
                                     <?= $receiptFooter; ?>
                                 </td>
                             <?php } else { ?>
-                                <td class="hidden"><?= $receiptFooter; ?></td>
+                                <td class="hidden d-none"><?= $receiptFooter; ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>

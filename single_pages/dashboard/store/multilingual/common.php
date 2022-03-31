@@ -42,7 +42,7 @@ $localecount = count($locales);
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($option->getName()); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($option->getName()); ?></td>
+                                    <td class="hidden d-none"><?= h($option->getName()); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -85,7 +85,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($option->getDetails()); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($option->getDetails()); ?></td>
+                                <td class="hidden d-none"><?= h($option->getDetails()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -120,7 +120,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($option->getName()); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($option->getName()); ?></td>
+                                <td class="hidden d-none"><?= h($option->getName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -155,7 +155,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($option->getSelectorName()); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($option->getSelectorName()); ?></td>
+                                <td class="hidden d-none"><?= h($option->getSelectorName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -211,7 +211,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($quantityLabel); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($quantityLabel); ?></td>
+                                <td class="hidden d-none"><?= h($quantityLabel); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -267,7 +267,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($attr->getAttributeKeyName()); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($attr->getAttributeKeyName()); ?></td>
+                                <td class="hidden d-none"><?= h($attr->getAttributeKeyName()); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -305,7 +305,7 @@ $localecount = count($locales);
                                     </td>
                                     <td rowspan="<?= $localecount; ?>"><?= h($attrOption); ?></td>
                                 <?php } else { ?>
-                                    <td class="hidden"><?= h($attrOption); ?></td>
+                                    <td class="hidden d-none"><?= h($attrOption); ?></td>
                                 <?php } ?>
                                 <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                                 <td>
@@ -360,7 +360,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($cartButtonLabel); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($cartButtonLabel); ?></td>
+                                <td class="hidden d-none"><?= h($cartButtonLabel); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
@@ -415,7 +415,7 @@ $localecount = count($locales);
                                 </td>
                                 <td rowspan="<?= $localecount; ?>"><?= h($outOfStockMessage); ?></td>
                             <?php } else { ?>
-                                <td class="hidden"><?= h($outOfStockMessage); ?></td>
+                                <td class="hidden d-none"><?= h($outOfStockMessage); ?></td>
                             <?php } ?>
                             <td class="text-center"><i class="copytext fa fa-arrow-right"></i></td>
                             <td>
