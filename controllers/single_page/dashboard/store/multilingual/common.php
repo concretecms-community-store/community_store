@@ -6,6 +6,8 @@ use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 
 class Common extends DashboardSitePageController
 {
@@ -14,26 +16,28 @@ class Common extends DashboardSitePageController
         $this->set('pageTitle', t('Common Translations'));
 
         $qb = $this->entityManager->createQueryBuilder();
-        $query = $qb->select('o')
+        $query = $qb->select('o.poID')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
-            ->groupBy('o.poName')->orderBy('o.poName')->getQuery()->getResult();
+            ->groupBy('o.poName','o.poID' )->orderBy('o.poName')->getQuery()->getResult();
 
         $optionNames = [];
 
-        foreach($query as $optionName) {
+        foreach($query as $op) {
+            $optionName = ProductOption::getByID($op['poID']);
             $optionNames[$optionName->getName()] = $optionName;
         }
 
         $this->set('optionNames', array_values($optionNames));
 
         $qb = $this->entityManager->createQueryBuilder();
-        $query = $qb->select('od')
+        $query = $qb->select('od.poID')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'od')
-            ->groupBy('od.poDetails')->orderBy('od.poDetails')->getQuery()->getResult();
+            ->groupBy('od.poDetails', 'od.poID')->orderBy('od.poDetails')->getQuery()->getResult();
 
         $optionDetails = [];
 
-        foreach($query as $optionName) {
+        foreach($query as $op) {
+            $optionName = ProductOption::getByID($op['poID']);
             if ($optionName->getDetails()) {
                 $optionDetails[$optionName->getDetails()] = $optionName;
             }
@@ -42,26 +46,28 @@ class Common extends DashboardSitePageController
         $this->set('optionDetails', array_values($optionDetails));
 
         $qb = $this->entityManager->createQueryBuilder();
-        $query = $qb->select('oi')
+        $query = $qb->select('oi.poiID')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'oi')
-            ->groupBy('oi.poiName')->orderBy('oi.poiName')->getQuery()->getResult();
+            ->groupBy('oi.poiName', 'oi.poiID')->orderBy('oi.poiName')->getQuery()->getResult();
 
         $optionItems = [];
 
-        foreach($query as $optionItem) {
+        foreach($query as $opit) {
+            $optionItem = ProductOptionItem::getByID($opit);
             $optionItems[$optionItem->getName()] = $optionItem;
         }
 
         $this->set('optionItems', array_values($optionItems));
 
         $qb = $this->entityManager->createQueryBuilder();
-        $query = $qb->select('ois')
+        $query = $qb->select('ois.poiID')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem', 'ois')
-            ->groupBy('ois.poiSelectorName')->orderBy('ois.poiSelectorName')->getQuery()->getResult();
+            ->groupBy('ois.poiSelectorName', 'ois.poiID')->orderBy('ois.poiSelectorName')->getQuery()->getResult();
 
         $optionSelectorNames = [];
 
-        foreach($query as $optionItem) {
+        foreach($query as $opit) {
+            $optionItem = ProductOptionItem::getByID($opit);
             if ($optionItem->getSelectorName()) {
                 $optionSelectorNames[$optionItem->getSelectorName()] = $optionItem;
             }
