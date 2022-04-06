@@ -517,7 +517,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 <?php
 
-                if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . '/application/elements/cart_list.php')) {
+                if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
                     View::element('cart_list', array('cart' => $cart));
                 } else {
                     View::element('cart_list', array('cart' => $cart), 'community_store');

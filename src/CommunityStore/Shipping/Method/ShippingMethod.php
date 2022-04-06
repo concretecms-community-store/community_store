@@ -324,9 +324,9 @@ class ShippingMethod
 
     public function getShippingMethodSelector()
     {
-        if (Filesystem::exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
+        if (file_exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
             View::element("checkout/shipping_methods");
-        } elseif (Filesystem::exists(DIR_BASE . "/packages/" . $this->getPackageHandle() . "/elements/checkout/shipping_methods.php")) {
+        } elseif (file_exists(DIR_BASE . "/packages/" . $this->getPackageHandle() . "/elements/checkout/shipping_methods.php")) {
             View::element("checkout/shipping_methods", $this, $this->getPackageHandle());
         } else {
             View::element("checkout/shipping_methods", "community_store");

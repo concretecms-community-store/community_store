@@ -616,7 +616,7 @@ class Checkout extends PageController
     {
         $cart = Cart::getCart();
 
-        if (Filesystem::exists(DIR_BASE . '/application/elements/cart_list.php')) {
+        if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
             View::element('cart_list', ['cart' => $cart]);
         } else {
             View::element('cart_list', ['cart' => $cart], 'community_store');

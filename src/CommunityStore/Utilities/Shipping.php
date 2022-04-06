@@ -12,7 +12,7 @@ class Shipping extends Controller
 {
     public function getShippingMethods()
     {
-        if (Filesystem::exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
+        if (file_exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
             View::element("checkout/shipping_methods");
         } else {
             View::element("checkout/shipping_methods", null, "community_store");
