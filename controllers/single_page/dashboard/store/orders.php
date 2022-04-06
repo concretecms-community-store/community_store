@@ -287,7 +287,7 @@ class Orders extends DashboardPageController
         $o = Order::getByID($oID);
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($o->getCustomerID()));
 
-        if (\Illuminate\Filesystem\Filesystem::exists(DIR_BASE . "/application/elements/order_slip.php")) {
+        if (file_exists(DIR_BASE . "/application/elements/order_slip.php")) {
             View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
         } else {
             View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], "community_store");
