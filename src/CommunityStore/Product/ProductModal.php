@@ -22,7 +22,7 @@ class ProductModal extends Controller
             $product = Product::getByID($pID);
 
             if ($product) {
-                if (Filesystem::exists(DIR_BASE . "/application/elements/product_modal.php")) {
+                if (file_exists(DIR_BASE . "/application/elements/product_modal.php")) {
                     View::element("product_modal", ["product" => $product]);
 
                     return;

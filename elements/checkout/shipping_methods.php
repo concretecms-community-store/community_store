@@ -23,11 +23,11 @@ $csm = $app->make('cs/helper/multilingual');
 		$type = $method->getShippingMethodType();
 		$handle = $type->getHandle();
         ?>
-		<?php if ($pkgHandle !== 'community_store' && Filesystem::exists(DIR_BASE . '/packages/' . $pkgHandle . '/elements/checkout/' .$handle. '_shipping_methods.php')) { ?>
+		<?php if ($pkgHandle !== 'community_store' && file_exists(DIR_BASE . '/packages/' . $pkgHandle . '/elements/checkout/' .$handle. '_shipping_methods.php')) { ?>
 			<?php View::element('checkout/'.$handle.'_shipping_methods', array('method' => $method), $pkgHandle);
 			$foundOffer = true;
 			?>
-		<?php } elseif ($pkgHandle !== 'community_store' && Filesystem::exists(DIR_BASE . '/packages/' . $pkgHandle . '/elements/checkout/shipping_methods.php')) { ?>
+		<?php } elseif ($pkgHandle !== 'community_store' && file_exists(DIR_BASE . '/packages/' . $pkgHandle . '/elements/checkout/shipping_methods.php')) { ?>
 			<?php View::element('checkout/shipping_methods', array('method' => $method), $pkgHandle);
 			$foundOffer = true;
 			?>
