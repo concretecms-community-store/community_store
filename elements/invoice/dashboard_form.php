@@ -7,22 +7,22 @@ extract($vars);
 ?>
 
 <div class="form-group">
-    <label><?= t("Minimum Order Value")?></label>
-<input type="text" name="invoiceMinimum" value="<?= $invoiceMinimum?>" class="form-control">
+    <?= $form->label('invoiceMinimum', t('Minimum Order Value'))?>
+    <?= $form->number("invoiceMinimum", $invoiceMinimum, ['step'=>'0.01']); ?>
 </div>
 
 <div class="form-group">
-    <label><?= t("Maximum Order Value")?></label>
-    <input type="text" name="invoiceMaximum" value="<?= $invoiceMaximum?>" class="form-control">
+    <?= $form->label('invoiceMaximum', t('Maximum Order Value'))?>
+    <?= $form->number("invoiceMaximum", $invoiceMaximum, ['step'=>'0.01']); ?>
 </div>
 
 <div class="form-group">
-    <label><?= t("Payment Instructions")?></label>
+    <?= $form->label('paymentInstructions', t('Payment Instructions'))?>
     <?php $editor = $app->make('editor');
     echo $editor->outputStandardEditor('paymentInstructions', $paymentInstructions);?>
 </div>
 
 <div class="form-group">
-    <label><?= t("Mark Order As Paid")?></label>
+    <?= $form->label('markPaid', t('Mark Order As Paid'))?>
     <?= $form->select('markPaid', array('0'=>t('No, orders are left as unpaid'), '1'=>t('Yes, orders are immediately marked as paid')), $markPaid); ?>
 </div>

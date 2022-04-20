@@ -195,7 +195,7 @@ class Checkout extends PageController
             </script>
         ");
 
-            $availableMethods = PaymentMethod::getAvailableMethods($totals['total']);
+            $availableMethods = PaymentMethod::getAvailableMethods((float)$totals['subTotal']);
             $this->set("enabledPaymentMethods", $availableMethods);
 
             $apikey = Config::get('community_store.placesAPIKey');
