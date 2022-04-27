@@ -28,7 +28,8 @@ $(function () {
         pdb.find('.store-product-options select.store-product-variation, .store-product-options input.store-product-variation:checked').each(function () {
             ar.push($(this).val());
         });
-
+        
+        ar.sort(communityStore.sortNumber);
 
         let variation = variationData[pID][ar.join('_')];
         let priceHolder = pdb.find('.store-product-price');
