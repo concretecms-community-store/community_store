@@ -2059,7 +2059,7 @@ if (version_compare($version, '9.0', '<')) {
                         <td>
                             <?php $productgroups = $product->getGroups();
                             foreach ($productgroups as $pg) { ?>
-                                <span class="label label-primary <?= $badgeClass; ?> badge-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
+                                <span class="label label-primary <?= $badgeClass; ?> badge-primary bg-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
                             <?php } ?>
 
                             <?php if (empty($productgroups)) { ?>
