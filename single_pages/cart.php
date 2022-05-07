@@ -47,9 +47,9 @@ if ($cart) {
             <thead>
             <tr>
                 <th colspan="2"><?= t('Product'); ?></th>
-                <th class="text-right"><?= t('Price'); ?></th>
-                <th class="text-right"><?= t('Quantity'); ?></th>
-                <th class="text-right"><?= t('Remove'); ?></th>
+                <th class="text-right text-end""><?= t('Price'); ?></th>
+                <th class="text-right text-end""><?= t('Quantity'); ?></th>
+                <th class="text-right text-end""><?= t('Remove'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@ if ($cart) {
                             </div>
                         <?php } ?>
                         </td>
-                        <td class="store-cart-item-price text-right">
+                        <td class="store-cart-item-price text-right text-end"">
                             <?php if (isset($cartItem['product']['customerPrice'])) { ?>
                                 <?=Price::format($cartItem['product']['customerPrice'])?>
                             <?php } else {  ?>
@@ -137,7 +137,7 @@ if ($cart) {
                                 ?>
                             <?php } ?>
                         </td>
-                        <td class="store-cart-product-qty text-right">
+                        <td class="store-cart-product-qty text-right text-end"">
                             <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
                             <span class="store-qty-container pull-right float-end
@@ -148,16 +148,16 @@ if ($cart) {
                                 <?php if ($product->allowDecimalQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? '' : 'max="' .$max . '"'); ?> >
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control   text-end"" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> >
                                 <?php } else { ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right" value="<?= $qty ?>" min="1" step="1" <?= ($max ? '' : 'max="' .$max . '"'); ?>>
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right text-end"" value="<?= $qty ?>" min="1" step="1" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> >
                                 <?php } ?>
 
                                  <input type="hidden" name="instance[]" value="<?= $k ?>"/>
 
                             <?php } else { ?>
                                 <?php if ($quantityLabel) { ?>
-                                    <div  class="store-product-qty form-control text-right pull-right float-end form-control-static">1</div>
+                                    <div  class="store-product-qty form-control text-right text-end" pull-right float-end form-control-static">1</div>
                                 <?php } else { ?>
                                     1
                                 <?php } ?>
@@ -169,7 +169,7 @@ if ($cart) {
                             </span>
 
                         </td>
-                        <td class="text-right">
+                        <td class="text-right text-end">
                             <a name="action" data-instance="<?= $k ?>"
                                class="store-btn-cart-list-remove btn-xs btn btn-danger" type="submit"><i
                                         class="fa fa-remove fa-times"></i><?php //echo t("Remove")
@@ -183,7 +183,7 @@ if ($cart) {
 
             <tfoot>
             <tr>
-                <td colspan="5" class="text-right">
+                <td colspan="5" class="text-right text-end"">
                     <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-warning"
                             type="submit"><?= t("Clear Cart") ?></button>
                     <button name="action" value="update" class="store-btn-cart-list-update btn btn-primary"

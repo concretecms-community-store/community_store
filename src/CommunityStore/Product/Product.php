@@ -41,6 +41,7 @@ class Product
     // not stored, used for price/sku/etc lookup purposes
     public $priceAdjustment = 0;
     public $weightAdjustment = 0;
+    private $shallowClone = false;
     public $variation;
 
     use ObjectTrait;

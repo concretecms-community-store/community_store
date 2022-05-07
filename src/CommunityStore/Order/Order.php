@@ -1373,6 +1373,8 @@ class Order
             $return = ($langpath ? '/' . $langpath : '') . '/checkout/complete';
         }
 
+        $orderCompleteCID = false;
+
         foreach($this->getOrderItems() as $orderItem) {
             $product = $orderItem->getProductObject();
             if ($product && $product->getOrderCompleteCID()) {

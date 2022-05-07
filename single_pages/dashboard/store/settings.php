@@ -191,7 +191,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <?= $form->label("paymentMethodUserGroups[<?= $pm->getID(); ?>]", t("Available To User Groups")); ?>
+                                            <?= $form->label("paymentMethodUserGroups[" .  $pm->getID() . "]", t("Available To User Groups")); ?>
                                             <div class="ccm-search-field-content ccm-search-field-content-select2">
                                                 <select multiple="multiple" name="paymentMethodUserGroups[<?= $pm->getID(); ?>][]" id="groupselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups'); ?>">
                                                     <?php
@@ -204,7 +204,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <?= $form->label("paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>]", t("Exclude From User Groups")); ?>
+                                            <?= $form->label("paymentMethodExcludedUserGroups[" .  $pm->getID() . "]", t("Exclude From User Groups")); ?>
                                             <div class="ccm-search-field-content ccm-search-field-content-select2">
                                                 <select multiple="multiple" name="paymentMethodExcludedUserGroups[<?= $pm->getID(); ?>][]" id="groupexcludeselect-<?= $pm->getID(); ?>" class="selectize" style="width: 100%;" placeholder="<?= t('None'); ?>">
                                                     <?php
@@ -429,7 +429,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageWidth', Config::get('community_store.defaultSingleProductImageWidth') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH); ?>
@@ -440,7 +440,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageHeight', Config::get('community_store.defaultSingleProductImageHeight') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT); ?>
@@ -459,7 +459,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageWidth', Config::get('community_store.defaultProductListImageWidth') ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH); ?>
@@ -470,7 +470,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageHeight', Config::get('community_store.defaultProductListImageHeight') ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT); ?>
@@ -489,7 +489,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageWidth', Config::get('community_store.defaultProductModalImageWidth') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH); ?>
@@ -500,7 +500,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageHeight', Config::get('community_store.defaultProductModalImageHeight') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon">px</div>
+                        <div class="input-group-addon input-group-text">px</div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT); ?>
@@ -530,7 +530,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('download_expiry_hours', t('Digital Download Expiry')); ?>
                 <div class="input-group">
                     <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
-                    <div class="input-group-addon"><?= t('hours'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= t('hours'); ?></div>
                 </div>
                 <p class="help-block"><?= t('Number of hours before digital download links expiry'); ?></p>
             </div>
@@ -610,7 +610,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>
                 <div class="input-group">
                     <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
-                    <div class="input-group-addon"><?= t('px'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= t('px'); ?></div>
                 </div>
                 <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
             </div>

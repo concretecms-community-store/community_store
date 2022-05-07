@@ -45,9 +45,9 @@
 
 <div class="form-group">
     <?= $form->label('cartLabel', t('Cart Link Label')); ?>
-    <?= $form->text('cartLabel', $cartLabel ? $cartLabel : t("View Cart")); ?>
+    <?= $form->text('cartLabel', (isset($cartLabel) && $cartLabel) ?  $cartLabel : t("View Cart")); ?>
 </div>
 <div class="form-group">
     <?= $form->label('itemsLabel', t('Cart Items Label')); ?>
-    <?= $form->text('itemsLabel', $itemsLabel ? $itemsLabel : t("Items in Cart")); ?>
+    <?= $form->text('itemsLabel',  (isset($itemsLabel) && $itemsLabel) ? $itemsLabel : t("Items in Cart")); ?>
 </div>

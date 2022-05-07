@@ -721,7 +721,7 @@ class DiscountRule
         $discountRule->setDeductFrom($data['drDeductFrom']);
         $discountRule->setPercentage($data['drPercentage']);
         $discountRule->setValue($data['drValue']);
-        $discountRule->setSingleUseCodes($data['drSingleUseCodes'] ? true : false);
+        $discountRule->setSingleUseCodes(isset($data['drSingleUseCodes']) && $data['drSingleUseCodes']  ? true : false);
         $discountRule->setTrigger($data['drTrigger']);
         $discountRule->setDescription($data['drDescription']);
         $discountRule->setDateAdded(new \DateTime());

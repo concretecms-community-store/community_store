@@ -101,7 +101,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
             </div>
             <?php if ($order->isShippable()) { ?>
                 <div class="col-sm-4">
-                    <?php if ($order->getAttribute("shipping_address")->address1) { ?>
+                    <?php if ($order->getAttribute("shipping_address")) { ?>
                         <h4><?= t("Shipping Address") ?></h4>
                         <p>
                             <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?><br>
@@ -594,7 +594,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
     <div class="ccm-dashboard-header-buttons">
     </div>
 
-    <?php if ($shoppingDisabled) { ?>
+    <?php if (isset($shoppingDisabled) && $shoppingDisabled) { ?>
         <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
     <?php } ?>
 

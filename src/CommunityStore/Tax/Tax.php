@@ -63,7 +63,7 @@ class Tax
     {
         $product = Product::getByID($cartItem['product']['pID']);
 
-        if ($cartItem['product']['variation']) {
+        if (isset($cartItem['product']['variation']) && $cartItem['product']['variation']) {
             $product->shallowClone = true;
             $product = clone $product;
             $product->setVariation($cartItem['product']['variation']);

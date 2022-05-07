@@ -381,10 +381,13 @@ class Checkout extends PageController
                 echo $e->outputJSON();
             } else {
                 $customer = new Customer();
+                $notes = '';
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
-                    $notes = $data['notes'];
-                    Session::set('notes', $notes);
+                    if (isset($data['notes'])) {
+                        $notes = $data['notes'];
+                        Session::set('notes', $notes);
+                    }
                     $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
                     $company = Session::get('billing_company');
@@ -599,14 +602,18 @@ class Checkout extends PageController
         Session::set('billing_last_name', trim($data['lName']));
         Session::set('billing_phone', trim($data['phone']));
         Session::set('billing_address', $address);
-        Session::set('billing_company', trim($data['company']));
+        if (isset($data['company'])) {
+            Session::set('billing_company', trim($data['company']));
+        }
 
         if ($guest || !$noBillingSave) {
             $customer->setValue("billing_first_name", trim($data['fName']));
             $customer->setValue("billing_last_name", trim($data['lName']));
             $customer->setValue("billing_phone", trim($data['phone']));
             $customer->setValue("billing_address", $address);
-            $customer->setValue("billing_company", trim($data['company']));
+            if (isset($data['company'])) {
+                $customer->setValue("billing_company", trim($data['company']));
+            }
         }
 
         Session::set('community_store.smID', false);

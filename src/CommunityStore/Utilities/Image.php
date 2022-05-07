@@ -45,9 +45,14 @@ class Image
     public function __construct($resizingScheme = 'product_list', $thumbTypeHandle = null, $legacyThumbProps = null)
     {
         $this->app = Application::getFacadeApplication();
-        $this->legacyThumbProps = new stdClass();
+        $this->legacyThumbProps = (object) ['width'=>false, 'height'=>false, 'crop'=>false];
         $this->setResizingScheme($resizingScheme);
         $this->setThumbType($thumbTypeHandle);
+
+        if (!$legacyThumbProps) {
+            $legacyThumbProps= (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+        }
+
         $this->setLegacyThumbnailingValues($legacyThumbProps);
     }
 
@@ -100,11 +105,9 @@ class Image
      */
     protected function setLegacyThumbnailingValues($legacyThumbProps)
     {
-        $legacyThumbProps = is_object($legacyThumbProps) ? $legacyThumbProps : new stdClass();
-
-        $this->setLegacyThumbnailWidth($legacyThumbProps->width);
-        $this->setLegacyThumbnailHeight($legacyThumbProps->height);
-        $this->setLegacyThumbnailCrop($legacyThumbProps->crop);
+        $this->setLegacyThumbnailWidth($legacyThumbProps->width ?? false);
+        $this->setLegacyThumbnailHeight($legacyThumbProps->height ?? false);
+        $this->setLegacyThumbnailCrop($legacyThumbProps->crop ?? false);
     }
 
     /**
@@ -114,7 +117,7 @@ class Image
      */
     public function setLegacyThumbnailWidth($width)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : new stdClass();
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
 
         $this->legacyThumbProps->width = (isset($width) && !empty($width)) ? (int) $width : (int) Config::get('community_store.default' . $this->resizingScheme . 'ImageWidth');
 
@@ -131,7 +134,7 @@ class Image
      */
     public function setLegacyThumbnailHeight($height)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : new stdClass();
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
 
         $this->legacyThumbProps->height = (isset($height) && !empty($height)) ? (int) $height : (int) Config::get('community_store.default' . $this->resizingScheme . 'ImageHeight');
 
@@ -148,7 +151,7 @@ class Image
      */
     public function setLegacyThumbnailCrop($crop)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : new stdClass();
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
 
         $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : static::DEFAULT_IMG_CROP;
     }
@@ -198,9 +201,7 @@ class Image
      */
     public function getLegacyThumbnail(File $imgObj)
     {
-        $image = new stdClass();
         $this->imgObj = $imgObj;
-
         $thumb = $this->app->make('helper/image')->getThumbnail($imgObj, $this->legacyThumbProps->width, $this->legacyThumbProps->height, $this->legacyThumbProps->crop);
 
         return $thumb;

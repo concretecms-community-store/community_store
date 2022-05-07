@@ -143,6 +143,11 @@ class ProductOptionItem
         return $this->poiID;
     }
 
+    public function setID($poiID)
+    {
+        $this->poiID = $poiID;
+    }
+
     public function getOptionID()
     {
         return $this->poID;
@@ -234,7 +239,7 @@ class ProductOptionItem
 
     public function __clone()
     {
-        if ($this->id) {
+        if ($this->poiID) {
             $this->setID(null);
             $this->setOption(null);
         }

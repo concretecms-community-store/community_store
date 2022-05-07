@@ -175,6 +175,7 @@ class Products extends DashboardSitePageController
         $variationLookup = [];
         $optionArrays = [];
         $optionLookup = [];
+        $optionItemLookup = [];
         $optionItems = [];
 
         foreach ($options as $opt) {
@@ -191,7 +192,6 @@ class Products extends DashboardSitePageController
 
         $this->set('optionItems', $optionItems);
         $this->set('optionLookup', $optionLookup);
-        $this->set('optionItemLookup', $optionItemLookup);
 
         $optionArrays = array_values($optionArrays);
 

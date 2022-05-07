@@ -2,7 +2,7 @@
 
 <div class="form-group">
     <?= $form->label('productLocation', t('Product')); ?>
-    <?= $form->select('productLocation', ['search' => t('A selected product'), 'page' => t('Product associated with this page')], $productLocation, ['onChange' => 'updateProductLocation();']); ?>
+    <?= $form->select('productLocation', ['search' => t('A selected product'), 'page' => t('Product associated with this page')], isset($productLocation) ? $productLocation : false, ['onChange' => 'updateProductLocation();']); ?>
 </div>
 
 <div class="form-group" id="product-search">
@@ -63,7 +63,7 @@
         </div>
         <div class="form-check">
             <label>
-                <?= $form->checkbox('showWeight', 1, $showWeight); ?>
+                <?= $form->checkbox('showWeight', 1, $showWeight ?? false); ?>
                 <?= t('Display Weight'); ?>
             </label>
         </div>
@@ -83,19 +83,19 @@
         </div>
         <div class="form-check">
             <label>
-                <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured); ?>
+                <?= $form->checkbox('showIsFeatured', 1, $showIsFeatured ?? false); ?>
                 <?= t('Display If Featured'); ?>
             </label>
         </div>
         <div class="form-check">
             <label>
-                <?= $form->checkbox('showDimensions', 1, $showDimensions); ?>
+                <?= $form->checkbox('showDimensions', 1, $showDimensions ?? false); ?>
                 <?= t('Display Dimensions'); ?>
             </label>
         </div>
         <div class="form-check">
             <label>
-                <?= $form->checkbox('showQuantity', 1, $showQuantity); ?>
+                <?= $form->checkbox('showQuantity', 1, $showQuantity ?? false); ?>
                 <?= t('Display Quantity Selector'); ?>
             </label>
         </div>
@@ -107,7 +107,7 @@
     <div class="col-sm-12">
         <div class="form-group">
             <?= $form->label('btnText', t("Add to Cart Button Text")); ?>
-            <?= $form->text('btnText', $btnText, ['placeholder' => t('Add To Cart')]); ?>
+            <?= $form->text('btnText', $btnText ?? false, ['placeholder' => t('Add To Cart')]); ?>
         </div>
     </div>
 </div>
@@ -151,7 +151,7 @@
             },
             minimumInputLength: 2,
             initSelection: function(element, callback) {
-                callback({id: <?= ($pID ? $pID : 0); ?>, text: <?= ($product ? json_encode($product->getName()) : "''"); ?> });
+                callback({id: <?= ($pID ?? 0); ?>, text: <?= (isset($product) ? json_encode($product->getName()) : "''"); ?> });
             }
         }).select2('val', []);
     });

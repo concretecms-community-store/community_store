@@ -478,7 +478,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <?php
                             foreach ($enabledPaymentMethods as $pm) {
                                 echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
-                                 if ($pm->getHandle() == $lastPaymentMethodHandle) { ?>
+                                 if (isset($lastPaymentMethodHandle) && $pm->getHandle() == $lastPaymentMethodHandle) { ?>
                                 <div class="store-payment-errors alert alert-danger <?php if ($controller->getAction() == 'view') {
                                 echo "hidden";
                             } ?>"><?= $paymentErrors ?></div>
@@ -540,11 +540,11 @@ $csm = $app->make('cs/helper/multilingual');
                     <?php } ?>
                     <?php if ($discountsWithCodesExist) { ?>
                         <li class="list-group-item">
-                            <?php if ($codesuccess) { ?>
+                            <?php if (isset($codesuccess) && $codesuccess) { ?>
                                 <p><?= t('Discount has been applied');?></p>
                             <?php } ?>
 
-                            <?php if ($codeerror) { ?>
+                            <?php if (isset($codeerror)  && $codeerror) { ?>
                                 <p><?= t('Invalid code');?></p>
                             <?php } ?>
 
@@ -577,7 +577,7 @@ $csm = $app->make('cs/helper/multilingual');
                 <ul class="store-checkout-totals-line-items list-group mb-3">
                     <li class="store-line-item store-sub-total list-group-item">
                         <strong><?= t("Items Subtotal") ?>:</strong> <span class="store-sub-total-amount"><?= Price::format($subtotal); ?></span>
-                        <?php if ($calculation == 'extract') {
+                        <?php if (isset($calculation) && $calculation == 'extract') {
                             echo '<small class="text-muted">' . t("inc. taxes") . "</small>";
                         } ?>
                     </li>

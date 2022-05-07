@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
@@ -67,6 +68,7 @@ class Controller extends BlockController
         $this->set('inCart', $inCart);
         $this->set('app', $this->app);
         $this->set('langpath', $langpath);
+        $this->set('shoppingDisabled', Config::get('community_store.shoppingDisabled'));
     }
 
     public function registerViewAssets($outputContent = '')

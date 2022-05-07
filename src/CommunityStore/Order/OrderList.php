@@ -13,6 +13,11 @@ use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 
 class OrderList extends AttributedItemList implements PaginationProviderInterface
 {
+
+    private $limit = 0;
+    protected $searchRequest = false;
+
+
     protected function getAttributeKeyClassName()
     {
         return StoreOrderKey::class;

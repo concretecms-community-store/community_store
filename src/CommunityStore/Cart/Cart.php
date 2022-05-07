@@ -59,7 +59,7 @@ class Cart
 
                     $include = true;
 
-                    if ($cartitem['product']['variation']) {
+                    if (isset($cartitem['product']['variation']) && $cartitem['product']['variation']) {
                         if (!ProductVariation::getByID($cartitem['product']['variation'])) {
                             $include = false;
                             $update = true;
@@ -489,7 +489,7 @@ class Cart
                     if (empty($cartItem['productAttributes'])) {
                         // if we have no attributes, it's a direct match
 
-                        if ($cartItem['product']['customerPrice']) {
+                        if (isset($cartItem['product']['customerPrice']) && $cartItem['product']['customerPrice']) {
                             if ($cartItem['product']['customerPrice'] == $cart['product']['customerPrice']) {
                                 return ['exists' => true, 'cartItemKey' => $k];
                             }
@@ -565,7 +565,7 @@ class Cart
         if ($qty > 0 && $product) {
             $newquantity = $qty;
 
-            if ($cart[$instanceID]['product']['variation']) {
+            if (isset($cart[$instanceID]['product']['variation']) && $cart[$instanceID]['product']['variation']) {
                 $product->setVariation($cart[$instanceID]['product']['variation']);
             }
 

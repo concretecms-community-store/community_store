@@ -22,7 +22,7 @@ if ($action == 'view') { ?>
                     <div class="ccm-search-fields-submit col-md-12 col-md-6">
                         <div class="form-group">
                             <div class="ccm-search-main-lookup-field">
-                                <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style' => "min-width: 220px"]) ?>
+                                <?= $form->search('keywords', isset($searchRequest) ? $searchRequest['keywords'] : false, ['placeholder' => t('Search by Name or SKU'), 'style' => "min-width: 220px"]) ?>
                             </div>
 
                         </div>

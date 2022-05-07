@@ -32,6 +32,7 @@ if ($cart) {
 
             $qty = $cartItem['product']['qty'];
             $product = $cartItem['product']['object'];
+            $pID = $cartItem['product']['object']->getID();
 
             if ($i % 2 == 0) {
                 $classes = " striped";

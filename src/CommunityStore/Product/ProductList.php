@@ -15,9 +15,10 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $gIDs = [];
     protected $groupMatchAny = false;
     protected $groupNoMatchAny = false;
-    protected $sortBy = "alpha";
+    protected $sortBy = 'alpha';
+    protected $search = '';
     protected $randomSeed = '';
-    protected $sortByDirection = "desc";
+    protected $sortByDirection = 'desc';
     protected $featuredOnly = false;
     protected $showOutOfStock = false;
     protected $saleOnly = false;

@@ -207,17 +207,31 @@ class TaxRate
             $vatIsValid = true;
         }
 
-        switch ($taxAddress) {
-            case "billing":
-                $userCity = strtolower(trim($customer->getValue("billing_address")->city));
-                $userState = strtolower(trim($customer->getValue("billing_address")->state_province));
-                $userCountry = strtolower(trim($customer->getValue("billing_address")->country));
-                break;
-            case "shipping":
-                $userCity = strtolower(trim($customer->getValue("shipping_address")->city));
-                $userState = strtolower(trim($customer->getValue("shipping_address")->state_province));
-                $userCountry = strtolower(trim($customer->getValue("shipping_address")->country));
-                break;
+        $userCity = '';
+        $userState = '';
+        $userCountry = '';
+
+        if ($customer) {
+            switch ($taxAddress) {
+                case "billing":
+                    $billingAddress = $customer->getValue("billing_address");
+
+                    if ($billingAddress) {
+                        $userCity = strtolower(trim($billingAddress->city));
+                        $userState = strtolower(trim($billingAddress->state_province));
+                        $userCountry = strtolower(trim($billingAddress->country));
+                    }
+                    break;
+                case "shipping":
+                    $shippingAddress = $customer->getValue("shipping_address");
+
+                    if ($shippingAddress) {
+                        $userCity = strtolower(trim($shippingAddress->city));
+                        $userState = strtolower(trim($shippingAddress->state_province));
+                        $userCountry = strtolower(trim($shippingAddress->country));
+                    }
+                    break;
+            }
         }
 
         if (in_array($userCountry, $taxCountries)) {
@@ -251,7 +265,7 @@ class TaxRate
                 $qty = $cartItem['product']['qty'];
                 $product = Product::getByID($pID);
 
-                if ($cartItem['product']['variation']) {
+                if (isset($cartItem['product']['variation']) && $cartItem['product']['variation']) {
                     $product->shallowClone = true;
                     $product = clone $product;
                     $product->setVariation($cartItem['product']['variation']);

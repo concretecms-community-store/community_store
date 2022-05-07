@@ -79,12 +79,16 @@ class Customer
     {
         $valueCamel = camel_case($valuename);
 
-        if (method_exists($att, 'get' . $valueCamel)) {
-            $functionname = 'get' . $valueCamel;
+        if ($att) {
+            if (method_exists($att, 'get' . $valueCamel)) {
+                $functionname = 'get' . $valueCamel;
 
-            return $att->$functionname();
+                return $att->$functionname();
+            } else {
+                return $att->$valuename;
+            }
         } else {
-            return $att->$valuename;
+            return '';
         }
     }
 

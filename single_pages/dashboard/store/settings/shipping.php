@@ -21,26 +21,26 @@ if (in_array($controller->getAction(), $addViews)) {
                 ?>
                 <h3><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h3>
                 <?= $form->hidden('shippingMethodTypeID', $smt->getShippingMethodTypeID()); ?>
-                <?php if (is_object($sm)) { ?>
+                <?php if (isset($sm) && is_object($sm)) { ?>
                     <?= $form->hidden('shippingMethodID', $sm->getID()); ?>
                 <?php } ?>
                 <div class="row">
                     <div class="col-md-12 col-sm-6">
                         <div class="form-group">
                             <?= $form->label('methodName', t("Method Name")); ?>
-                            <?= $form->text('methodName', is_object($sm) ? $sm->getName() : ''); ?>
+                            <?= $form->text('methodName', isset($sm) && is_object($sm) ? $sm->getName() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodEnabled', t("Enabled")); ?>
-                            <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], is_object($sm) ? $sm->isEnabled() : ''); ?>
+                            <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], isset($sm) && is_object($sm) ? $sm->isEnabled() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodSortOrder', t("Sort Order")); ?>
-                            <?= $form->text('methodSortOrder', is_object($sm) ? $sm->getSortOrder() : ''); ?>
+                            <?= $form->text('methodSortOrder', isset($sm) && is_object($sm) ? $sm->getSortOrder() : ''); ?>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                 <select multiple="multiple" name="methodUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups'); ?>">
                                     <?php
                                     foreach ($allGroupList as $ugkey => $uglabel) { ?>
-                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (is_object($sm) ? $sm->getUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (isset($sm) && is_object($sm) ? $sm->getUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -66,7 +66,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                 <select multiple="multiple" name="methodExcludedUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('None'); ?>">
                                     <?php
                                     foreach ($allGroupList as $ugkey => $uglabel) { ?>
-                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (is_object($sm) ? $sm->getExcludedUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (isset($sm) && is_object($sm) ? $sm->getExcludedUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -90,14 +90,14 @@ if (in_array($controller->getAction(), $addViews)) {
                             <?php
                             $editor = $app->make('editor');
                             $editor->getPluginManager()->deselect(array('autogrow'));
-                            echo $editor->outputStandardEditor('methodDetails', is_object($sm) ? $sm->getDetails() : '');
+                            echo $editor->outputStandardEditor('methodDetails', isset($sm) && is_object($sm) ? $sm->getDetails() : '');
                             ?>
                         </div>
                     </div>
 
                 </div>
                 <hr>
-                <?php $smt->renderDashboardForm($sm); ?>
+                <?php isset($sm) ? $smt->renderDashboardForm($sm) : false; ?>
             </div>
         </div>
 

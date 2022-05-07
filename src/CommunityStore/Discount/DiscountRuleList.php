@@ -8,7 +8,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 
 class DiscountRuleList extends ItemList
 {
-    protected $sortBy = "alpha";
+    protected $sortBy = 'alpha';
+    protected $search = '';
 
     public function setGroupID($gID)
     {

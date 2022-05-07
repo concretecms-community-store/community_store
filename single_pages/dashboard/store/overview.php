@@ -155,7 +155,7 @@ if ($taxCalc == 'extract') {
             <div class="form-group">
 
                 <div class="input-group">
-                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Orders')]) ?>
+                    <?= $form->search('keywords', isset($searchRequest) ? $searchRequest['keywords'] : '', ['placeholder' => t('Search Orders')]) ?>
                     <span class="input-group-btn">
                             <button type="submit" class="btn btn-default btn-secondary"><i class="fa fa-search"></i></button>
                         </span>
@@ -172,7 +172,7 @@ if ($taxCalc == 'extract') {
         <form action="<?= Url::to('/dashboard/store/products') ?>">
             <div class="form-group">
                 <div class="input-group">
-                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Products')]) ?>
+                    <?= $form->search('keywords',isset($searchRequest) ? $searchRequest['keywords'] : '', ['placeholder' => t('Search Products')]) ?>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-default btn-secondary"><i class="fa fa-search"></i></button>
                     </span>

@@ -40,6 +40,8 @@ if (!$productsPerRow) {
     $productsPerRow = 1;
 }
 
+$activeclass = '';
+
 ?>
 
 <div class="store-product-list-block">

@@ -336,7 +336,9 @@ if (is_object($product) && $product->isActive()) {
 										foreach ($optionItems as $optionItem) {
                                             $noValue = false;
                                             if (!$optionItem->isHidden()) {
-                                                $variation = $variationLookup[$optionItem->getID()];
+                                                if (isset($variationLookup[$optionItem->getID()])) {
+                                                    $variation = $variationLookup[$optionItem->getID()];
+                                                }
                                                 $selected = '';
 
                                                 if (is_array($availableOptionsids) && in_array($optionItem->getID(), $availableOptionsids)) {

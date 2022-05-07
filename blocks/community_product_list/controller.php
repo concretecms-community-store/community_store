@@ -41,6 +41,32 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', []);
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
+        $this->set('filter', '');
+        $this->set('filterCID', false);
+        $this->set('sortOrder', '');
+        $this->set('showSortOption', false);
+        $this->set('groupMatchAny', false);
+        $this->set('showFeatured', false);
+        $this->set('showSale', false);
+        $this->set('showOutOfStock', false);
+        $this->set('showPagination', false);
+        $this->set('displayMode', '');
+        $this->set('maxProducts', '');
+        $this->set('productsPerRow', false);
+        $this->set('showSKU', false);
+        $this->set('noProductsMessage', '');
+        $this->set('showPrice', true);
+        $this->set('showName', true);
+        $this->set('showAddToCart', true);
+        $this->set('showQuantity', false);
+        $this->set('showDescription', true);
+        $this->set('showQuickViewLink', false);
+        $this->set('showPageLink', true);
+        $this->set('pageLinkText', '');
+        $this->set('btnText', '');
+        $this->set('relatedProduct', false);
+        $this->set('relatedPID', false);
+        $this->set('enableExternalFiltering', true);
 
     }
 
@@ -57,10 +83,11 @@ class Controller extends BlockController
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
+        $relatedProduct = false;
         if ($this->relatedPID) {
             $relatedProduct = Product::getByID($this->relatedPID);
-            $this->set('relatedProduct', $relatedProduct);
         }
+        $this->set('relatedProduct', $relatedProduct);
     }
 
     public function getGroupFilters()
@@ -196,7 +223,9 @@ class Controller extends BlockController
             $products->setGroupMatchAny($this->groupMatchAny);
         }
 
-        $products->setManufacturer($this->filterManufacturer);
+        if (isset($this->filterManufacturer)) {
+            $products->setManufacturer($this->filterManufacturer);
+        }
 
         if (!empty($this->attFilters)) {
             $products->setAttributeFilters($this->attFilters);
@@ -285,8 +314,10 @@ class Controller extends BlockController
             $args['relatedPID'] = 0;
         }
 
-        $filtergroups = $args['filtergroups'];
-        unset($args['filtergroups']);
+        if (isset($args['filtergroups'])) {
+            $filtergroups = $args['filtergroups'];
+            unset($args['filtergroups']);
+        }
 
         // $app = Application::getFacadeApplication();
         $db = $this->app->make('database')->connection();

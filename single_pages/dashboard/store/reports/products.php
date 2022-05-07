@@ -11,7 +11,7 @@ $task = $controller->getAction();
 
 
     <div class="ccm-dashboard-header-buttons">
-        <form class="pull-right float-end" method="get" id="duplicate" action="<?= Url::to(' /dashboard/store/reports/products/sheet', $pID) ?>">
+        <form class="pull-right float-end" method="get" action="<?= Url::to(' /dashboard/store/reports/products/sheet') ?>">
             <button class="btn btn-primary"><?= t("View Product Price/Shipping Sheet") ?></button>
         </form>
     </div>
@@ -26,7 +26,7 @@ $task = $controller->getAction();
                 <div class="form-group">
                     <?= $form->label('dateFrom', t('From')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= $app->make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
+                        <?= $app->make('helper/form/date_time')->date('dateFrom', isset($dateFrom) ? $dateFrom :false); ?>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@ $task = $controller->getAction();
                 <div class="form-group">
                     <?= $form->label('dateFrom', t('To')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= $app->make('helper/form/date_time')->date('dateTo', $dateTo); ?>
+                        <?= $app->make('helper/form/date_time')->date('dateTo', isset($dateTo) ? $dateTo :false); ?>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@ $task = $controller->getAction();
                 <div class="form-group">
                     <?= $form->label('orderBy', t('Order By')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
-                        <?= $form->select('orderBy', ['quantity' => t('Quantity Sold'), 'pricePaid' => t('Total')], $orderBy); ?>
+                        <?= $form->select('orderBy', ['quantity' => t('Quantity Sold'), 'pricePaid' => t('Total')], isset($orderBy) ? $orderBy : false); ?>
                     </div>
                 </div>
             </div>
