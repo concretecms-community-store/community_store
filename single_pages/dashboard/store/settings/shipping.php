@@ -97,7 +97,7 @@ if (in_array($controller->getAction(), $addViews)) {
 
                 </div>
                 <hr>
-                <?php isset($sm) ? $smt->renderDashboardForm($sm) : false; ?>
+                <?php isset($smt) ? $smt->renderDashboardForm($sm) : false; ?>
             </div>
         </div>
 
