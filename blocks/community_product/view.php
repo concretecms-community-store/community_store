@@ -36,7 +36,7 @@ if (is_object($product) && $product->isActive()) {
                         <h1 class="store-product-name"
                             itemprop="name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                          <?php if ($showProductSKU && $product->getSKU()) { ?>
-                             <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                             <small class="store-product-sku">(<span><?= h($product->getSKU()); ?></span>)</small>
                          <?php } ?>
                         </h1>
                         <meta itemprop="sku" content="<?= $product->getSKU(); ?>"/>
@@ -604,6 +604,7 @@ if (is_object($product) && $product->isActive()) {
                     'maxCart' => $variation->getMaxCartQty(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
+					'sku' => $variation->getVariationSKU(),
                     'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
                 ];
 

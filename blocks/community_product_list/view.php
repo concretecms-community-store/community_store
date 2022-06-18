@@ -118,7 +118,7 @@ $activeclass = '';
                         ?>
                         <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
                             <?php if ($showSKU && $product->getSKU()) { ?>
-                                <small class="store-product-sku">(<?= h($product->getSKU()); ?>)</small>
+                                <small class="store-product-sku">(<span><?= h($product->getSKU()); ?></span>)</small>
                             <?php } ?>
                         </h2>
                         <?php
@@ -497,6 +497,7 @@ $activeclass = '';
                                         'maxCart' => $variation->getMaxCartQty(),
                                         'imageThumb' => $thumb ? $thumb->src : '',
                                         'image' => $imgObj ? $imgObj->getRelativePath() : '',
+                                        'sku' => $variation->getVariationSKU(),
                                         'saleTemplate'=>'<span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
                                         ];
 

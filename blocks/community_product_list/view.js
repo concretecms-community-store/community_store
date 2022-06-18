@@ -86,6 +86,13 @@ $(function () {
                 }
             }
 
+            if (variation['sku']) {
+                let skuHolder = pdb.find('.store-product-sku');
+                if (skuHolder) {
+                    $('span',skuHolder).html(variation['sku']);
+                }
+            }
+
             var quantityField = pdb.find('.store-product-qty');
             if (variation['maxCart'] !== false) {
                 quantityField.prop('max', variation['maxCart']);
