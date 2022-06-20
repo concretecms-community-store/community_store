@@ -151,7 +151,7 @@
             },
             minimumInputLength: 2,
             initSelection: function(element, callback) {
-                callback({id: <?= ($pID ?? 0); ?>, text: <?= (isset($product) ? json_encode($product->getName()) : "''"); ?> });
+                callback({id: <?= ($pID ?? 0); ?>, text: <?= (isset($product) && is_object($product) ? json_encode($product->getName()) : "''"); ?> });
             }
         }).select2('val', []);
     });
