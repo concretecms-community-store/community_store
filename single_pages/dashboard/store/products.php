@@ -1985,7 +1985,8 @@ if (version_compare($version, '9.0', '<')) {
         <?php } ?>
 
         <div class="ccm-dashboard-content-full">
-        <table class="ccm-search-results-table">
+             <?php if (count($products) > 0) { ?>
+            <table class="ccm-search-results-table">
             <thead>
             <tr>
                 <th><a><?= t('Primary Image') ?></a></th>
@@ -2094,6 +2095,9 @@ if (version_compare($version, '9.0', '<')) {
             } ?>
             </tbody>
         </table>
+            <?php } else { ?>
+                 <br/><p class="alert alert-info"><?= t('No Products Found'); ?></p>
+            <?php } ?>
         </div>
 
         <?php if ($paginator->getTotalPages() > 1) { ?>
