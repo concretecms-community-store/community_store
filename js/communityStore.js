@@ -483,7 +483,14 @@ var communityStore = {
             searchstring += '#' + filterform.attr('id');
         }
 
-        window.location = '?' + searchstring;
+        var action = filterform.attr('action')
+        if (!action) {
+            action = '';
+        }
+
+        window.location = action + '?' + searchstring;
+
+
     },
     clearProductFilter: function(element) {
         var filterform = element.closest('form');
