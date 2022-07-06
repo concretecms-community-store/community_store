@@ -1335,7 +1335,7 @@ if (version_compare($version, '9.0', '<')) {
 
                         // add handler for hide checkbox, to adjust hidden value when changed
                         $(document).on('change', '.optionHiddenToggle', function () {
-                            $(this).prev().val(($(this).prop('checked') ? '1' : '0'));
+                            $('input[type=hidden]',$(this).closest('div.form-check-inline')).val(($(this).prop('checked') ? '1' : '0'));
                         });
 
                         $(function () {
