@@ -15,6 +15,9 @@ $attributeViews = ['attributes', 'attributeadded', 'attributeremoved'];
 $ps = $app->make('helper/form/page_selector');
 $dh = $app->make('helper/date');
 
+$editor = $app->make('editor');
+$editor->getPluginManager()->deselect(array('autogrow'));
+
 $version = $app->make('config')->get('concrete.version');
 $badgeClass = ' badge ';
 if (version_compare($version, '9.0', '<')) {
@@ -609,19 +612,13 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="form-group">
                         <?= $form->label("pDesc", t('Short Description')); ?><br>
                         <?php
-                        $editor = $app->make('editor');
-                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('pDesc', $product->getDesc());
-
-
                         ?>
                     </div>
 
                     <div class="form-group">
                         <?= $form->label("pDesc", t('Product Details (Long Description)')); ?><br>
                         <?php
-                        $editor = $app->make('editor');
-                        $editor->getPluginManager()->deselect(array('autogrow'));
                         echo $editor->outputStandardEditor('pDetail', $product->getDetail());
                         ?>
                     </div>
@@ -885,7 +882,7 @@ if (version_compare($version, '9.0', '<')) {
                         <span class="btn btn-sm btn-primary" id="btn-add-textarea"><?= t('Text Area') ?></span>
                         <span class="btn btn-sm btn-primary" id="btn-add-checkbox"><?= t('Checkbox') ?></span>
                         <span class="btn btn-sm btn-primary" id="btn-add-hidden"><?= t('Hidden Value') ?></span>
-                        <span class="btn btn-sm btn-primary" id="btn-add-static"><?= t('Static HTML') ?></span>
+                        <span class="btn btn-sm btn-primary" id="btn-add-static"><?= t('Content') ?></span>
                     </div>
 
                     <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
@@ -986,8 +983,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label"><?= t('Static HTML');?></label>
-                                            <textarea rows="3" class="form-control" name="poDetails[]"><%= poDetails.replace('~~~',"\n")%></textarea>
+                                            <textarea rows="3" id=""  class="form-control staticfield" name="poDetails[]"><%= poDetails %></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -1061,7 +1057,7 @@ if (version_compare($version, '9.0', '<')) {
                             $labels['textarea'] = t('Text Area Input');
                             $labels['checkbox'] = t('Checkbox');
                             $labels['hidden'] = t('Hidden Value');
-                            $labels['static'] = t('Static Text');
+                            $labels['static'] = t('Content');
 
 
                             if($options) {
@@ -1090,7 +1086,7 @@ if (version_compare($version, '9.0', '<')) {
                                 poDisplayType: '<?= $displayType ?>',
                                 poLabel: <?= json_encode($label); ?>,
                                 poHandle: <?= json_encode($handle); ?>,
-                                poDetails: <?= json_encode(str_replace(["\r\n", "\r", "\n"], "~~~", h($details))); ?>,
+                                poDetails: <?= json_encode(str_replace('~~~', '', $details)); ?>,
                                 poRequired: '<?= $required ? 1 : 0; ?>',
                                 poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
                                 sort: '<?= $optionsort ?>'
@@ -1230,6 +1226,9 @@ if (version_compare($version, '9.0', '<')) {
                                     poRequired: '',
                                     sort: temp
                                 }));
+
+                                initOptionEditor('.staticfield');
+                                $('.staticfield').removeClass('staticfield');
 
                                 //Init Index
                                 indexOptionGroups();
@@ -1383,6 +1382,16 @@ if (version_compare($version, '9.0', '<')) {
                         });
 
                     </script>
+
+
+                    <script>
+                        $(function() {
+                            initOptionEditor = <?php echo $editor->getEditorInitJSFunction(); ?>
+
+                            initOptionEditor('.staticfield');
+                            $('.staticfield').removeClass('staticfield');
+                        });
+                        </script>
 
                     <br/>
                     <div class="form-group">
