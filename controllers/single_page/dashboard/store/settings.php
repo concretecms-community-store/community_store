@@ -221,6 +221,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.productDefaultActive', $args['productDefaultActive'] ?? '') ;
                 Config::save('community_store.productDefaultShippingNo', $args['productDefaultShippingNo'] ?? '');
                 Config::save('community_store.variationDefaultUnlimited', $args['variationDefaultUnlimited'] ?? '');
+                Config::save('community_store.variationMaxVariations', (int) $args['variationMaxVariations'] ? : 50);
 
                 if ($args['currency']) {
                     $symbol = Currency::getSymbol($args['currency']);

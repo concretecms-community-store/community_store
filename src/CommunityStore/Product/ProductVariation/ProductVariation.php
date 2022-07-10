@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
 use Concrete\Core\File\File;
+use Concrete\Core\Support\Facade\Config;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -513,7 +514,7 @@ class ProductVariation
 
         $variationIDs = [];
 
-        $variationDefaultUnlimited = \Concrete\Core\Support\Facade\Config::get('community_store.variationDefaultUnlimited');
+        $variationDefaultUnlimited = Config::get('community_store.variationDefaultUnlimited');
 
         if (!empty($comboOptions)) {
             $sort = 0;
@@ -634,6 +635,9 @@ class ProductVariation
         return $em->find(get_class(), $pvID);
     }
 
+    /**
+     * @return ProductVariation | null
+     */
     public static function getBySKU($pvSKU)
     {
         $em = dbORM::entityManager();
@@ -741,8 +745,9 @@ class ProductVariation
             }
         }
 
-        if (count($result) > 50) {
-            return array_slice($result, 0, 50);
+        $max = Config::get('community_store.variationMaxVariations') ?: 50;
+        if (count($result) > $max) {
+            return array_slice($result, 0, $max);
         }
 
         return $result;
