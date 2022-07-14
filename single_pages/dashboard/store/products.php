@@ -75,7 +75,7 @@ if (version_compare($version, '9.0', '<')) {
         </div>
     <?php } ?>
 
-    <form method="post">
+    <form method="post" id="productForm">
         <?= $token->output('community_store'); ?>
         <input type="hidden" name="pID" value="<?= $product->getID() ?>"/>
 
@@ -1268,12 +1268,12 @@ if (version_compare($version, '9.0', '<')) {
                                             <div class="input-group-addon input-group-text input-sm">
                                                 <?= Config::get('community_store.symbol'); ?>
                                             </div>
-                                            <input type="number" step="0.01" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
+                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
                                         </div>
                                         </div>
                                         <div class="col-sm-6">
                                         <div class="input-group">
-                                            <input type="number" step="0.01" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
+                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
                                             <div class="input-group-addon input-group-text input-sm"><?= Config::get('community_store.weightUnit') ?></div>
                                         </div>
                                         </div>
@@ -1397,6 +1397,7 @@ if (version_compare($version, '9.0', '<')) {
 
                     </div>
 
+                    <input type="hidden" name="variationJSON" id="variationJSON">
                     <?php if (!empty($comboOptions)) { ?>
                         <div id="variations" class="<?= ($product->hasVariations() ? '' : 'hidden d-none'); ?>">
 
@@ -1411,6 +1412,10 @@ if (version_compare($version, '9.0', '<')) {
                                 <?php
                                 if ($product->hasVariations()) {
                                     $count = 0;
+
+                                    if (count($comboOptions) >= (Config::get('community_store.variationMaxVariations') ?: 50)) { ?>
+                                        <p class="alert alert-danger"><?= t('Maximum variations reached') ?></p>
+                                    <?php }
 
                                     foreach ($comboOptions as $comboKey => $combinedOptions) {
                                         ?>
@@ -1467,9 +1472,9 @@ if (version_compare($version, '9.0', '<')) {
                                                             <div class="input-group">
                                                                 <?php
                                                                 if ($variation) {
-                                                                    echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001]);
+                                                                    echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001, 'max'=>'99999999.999']);
                                                                 } else {
-                                                                    echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'step' => 0.001]);
+                                                                    echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'step' => 0.001, 'max'=>'99999999.999']);
                                                                 }
                                                                 ?>
 
@@ -1520,7 +1525,7 @@ if (version_compare($version, '9.0', '<')) {
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['step'=>'0.01', 'placeholder' => t('Base Price')]); ?>
+                                                                <?= $form->number("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Base Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1531,7 +1536,7 @@ if (version_compare($version, '9.0', '<')) {
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Wholesale Price')]); ?>
+                                                                <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Wholesale Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1542,7 +1547,7 @@ if (version_compare($version, '9.0', '<')) {
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvCostPrice[" . $varid . "]", $variation ? $variation->getVariationCostPrice() : '', ['step'=>'0.01', 'placeholder' => t('Cost Price')]); ?>
+                                                                <?= $form->number("pvCostPrice[" . $varid . "]", $variation ? $variation->getVariationCostPrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Cost Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1558,7 +1563,7 @@ if (version_compare($version, '9.0', '<')) {
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'placeholder' => t('Base Sale Price')]); ?>
+                                                                <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Base Sale Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1572,7 +1577,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Weight')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Weight')]) ?>
+                                                                <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Weight')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.weightUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1581,7 +1586,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Length')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Length')]) ?>
+                                                                <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Length')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1592,14 +1597,14 @@ if (version_compare($version, '9.0', '<')) {
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Number of Items')); ?>
-                                                            <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'placeholder' => t('Base Number Of Items')]) ?>
+                                                            <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'max' =>'2147483647', 'placeholder' => t('Base Number Of Items')]) ?>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Width')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step'=>'0.01','min'=>'0','placeholder' => t('Base Width')]) ?>
+                                                                <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step'=>'0.01','min'=>'0', 'max'=>'9999999.99', 'placeholder' => t('Base Width')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1614,7 +1619,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Height')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step'=>'0.01', 'min'=>0, 'placeholder' => t('Base Height')]) ?>
+                                                                <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Height')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1637,10 +1642,6 @@ if (version_compare($version, '9.0', '<')) {
                                             </div>
 
                                         </div>
-                                    <?php }
-
-                                    if (count($comboOptions) >= 50) { ?>
-                                        <p class="alert alert-warning"><?= t('Maximum variations reached') ?></p>
                                     <?php } ?>
 
                                 <?php } else { ?>
@@ -1922,6 +1923,12 @@ if (version_compare($version, '9.0', '<')) {
                 $('.variationdisplaybutton').click(function (el) {
                     $(this).closest('.panel').find('.extrafields').toggleClass('hidden d-none');
                     el.preventDefault();
+                });
+            });
+            $(document).ready(function () {
+                $('#productForm').submit(function () {
+                    $('#variationJSON').val(JSON.stringify($('#variations :input').serialize()));
+                    $('#variations :input').remove();
                 });
             });
         </script>
