@@ -261,11 +261,16 @@ var communityStore = {
                     $("#shipping-total").text(shippingTotal);
                 }
 
-                $("#store-taxes").html("");
-                for (var i = 0; i < taxes.length; i++) {
-                    if (taxes[i].taxed === true) {
-                        $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
+                
+                if (taxes.length > 0) {
+                    $("#store-taxes").html("").removeClass('d-none hidden');
+                    for (var i = 0; i < taxes.length; i++) {
+                        if (taxes[i].taxed === true) {
+                            $("#store-taxes").append('<li class="store-line-item store-tax-item list-group-item"><strong>' + taxes[i].name + ":</strong> <span class=\"store-tax-amount\">" + taxes[i].taxamount + "</span></li>");
+                        }
                     }
+                } else {
+                    $("#store-taxes").addClass('d-none hidden');
                 }
 
                 $(".store-sub-total-amount").text(subTotal);

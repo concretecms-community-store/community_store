@@ -591,9 +591,7 @@ $csm = $app->make('cs/helper/multilingual');
                  </ul>
 
 
-                    <?php
-                    if ($taxtotal > 0) { ?>
-                <ul class="store-checkout-totals-line-items list-group mb-3" id="store-taxes">
+                <ul class="store-checkout-totals-line-items list-group mb-3 <?= $taxtotal > 0 ? '' : 'd-none hidden' ;?>" id="store-taxes">
                         <?php foreach ($taxes as $tax) {
                             if ($tax['taxamount'] > 0) {
                                 $taxlabel = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
@@ -604,7 +602,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <?php }
                         } ?>
                 </ul>
-                    <?php } ?>
+
 
 
                 <ul class="store-checkout-totals-line-items list-group">
