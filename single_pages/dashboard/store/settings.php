@@ -393,6 +393,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('productPublishTarget', t('Page to Publish Product Pages Under')); ?>
                 <?= $pageSelector->selectPage('productPublishTarget', $productPublishTarget); ?>
             </div>
+
+            <div class="form-group col-md-4">
+                <label><?= t('Maximum number of product variations'); ?></label>
+                <?= $form->number('variationMaxVariations', Config::get('community_store.variationMaxVariations') ?: 50, ['min' => 50, 'max' => 150]) ?>
+            </div>
+
         </div>
 
         <!-- #settings-product-images -->

@@ -384,6 +384,13 @@ class Products extends DashboardSitePageController
     {
         $data = $this->request->request->all();
 
+        $payload = json_decode($this->request->get('variationJSON'), true);
+        if ($payload) {
+            $variations = [];
+            parse_str($payload, $variations);
+            $data = array_merge($data, $variations);
+        }
+
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $errors = $this->validate($data);
             $this->error = null; //clear errors
