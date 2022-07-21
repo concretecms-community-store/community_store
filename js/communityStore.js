@@ -261,7 +261,7 @@ var communityStore = {
                     $("#shipping-total").text(shippingTotal);
                 }
 
-                
+
                 if (taxes.length > 0) {
                     $("#store-taxes").html("").removeClass('d-none hidden');
                     for (var i = 0; i < taxes.length; i++) {
@@ -274,8 +274,7 @@ var communityStore = {
                 }
 
                 $(".store-sub-total-amount").text(subTotal);
-                $(".store-total-amount").text(total);
-                $(".store-total-amount").data('total-cents', totalCents);
+                $(".store-total-amount").text(total).data('total-cents', totalCents);
 
                 if (callback) {
                     callback();

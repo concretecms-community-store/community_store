@@ -20,6 +20,8 @@ class Controller extends BlockController
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
     protected $attTypes = ['select', 'text', 'boolean'];
+    protected $groupMatchAny = '';
+    protected $filterManufacturer = '';
 
     public function getBlockTypeDescription()
     {
@@ -40,6 +42,20 @@ class Controller extends BlockController
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         $this->set('attributes', $this->getAvailableAttributes());
         $this->set('app', $this->app);
+        $this->set('filterSource', '');
+        $this->set('filter', '');
+        $this->set('filterCID', '');
+        $this->set('showFeatured', false);
+        $this->set('showSale', false);
+        $this->set('showOutOfStock', false);
+        $this->set('showTotals', false);
+        $this->set('updateType', '');
+        $this->set('filterButtonText', '');
+        $this->set('displayClear', false);
+        $this->set('clearButtonText', '');
+        $this->set('jumpAnchor', '');
+        $this->set('relatedProduct', false);
+        $this->set('relatedPID', false);
     }
 
     public function edit()
@@ -57,6 +73,8 @@ class Controller extends BlockController
         if ($this->relatedPID) {
             $relatedProduct = Product::getByID($this->relatedPID);
             $this->set('relatedProduct', $relatedProduct);
+        } else {
+            $this->set('relatedProduct', false);
         }
     }
 
@@ -323,17 +341,20 @@ class Controller extends BlockController
         $hasprice = false;
 
         foreach ($selectedAttributeList as $att) {
-            $handle = $att['handle'];
+            if (isset($att['handle'])) {
 
-            if ('attr' == $att['type']) {
-                if (isset($attributemapping[$handle])) {
-                    $finalData[$handle] = ['type' => 'attr', 'data' => $attributemapping[$handle], 'label' => $att['label']];
-                }
-            } else {
-                $finalData[$att['type']] = ['type' => $att['type'], 'data' => false, 'label' => $att['label']];
+                $handle = $att['handle'];
 
-                if ('price' == $att['type']) {
-                    $hasprice = true;
+                if ('attr' == $att['type']) {
+                    if (isset($attributemapping[$handle])) {
+                        $finalData[$handle] = ['type' => 'attr', 'data' => $attributemapping[$handle], 'label' => $att['label']];
+                    }
+                } else {
+                    $finalData[$att['type']] = ['type' => $att['type'], 'data' => false, 'label' => $att['label']];
+
+                    if ('price' == $att['type']) {
+                        $hasprice = true;
+                    }
                 }
             }
         }
@@ -342,6 +363,8 @@ class Controller extends BlockController
         $maxPriceSelected = '';
         $minPrice = '';
         $maxPrice = '';
+
+        $this->set('priceFiltering', false);
 
         if ($hasprice) {
 
@@ -409,7 +432,12 @@ class Controller extends BlockController
             $args['relatedPID'] = 0;
         }
 
-        $filtergroups = $args['filtergroups'];
+        $filtergroups = [];
+
+        if (isset($args['filtergroups'])) {
+            $filtergroups = $args['filtergroups'];
+        }
+
         unset($args['filtergroups']);
 
         $db = $this->app->make('database')->connection();
@@ -427,11 +455,35 @@ class Controller extends BlockController
         $vals = [$this->bID];
         $db->query("DELETE FROM btCommunityStoreProductFilterAttributes where bID = ?", $vals);
 
-        $attributes = $args['attributes'];
-        $matchingTypes = $args['matchingType'];
-        $invalidHidings = $args['invalidHiding'];
-        $labels = $args['labels'];
-        $types = $args['types'];
+        $attributes = [];
+
+        if (isset($args['attributes'])) {
+            $attributes = $args['attributes'];
+        }
+
+        $matchingTypes = [];
+
+        if (isset($args['matchingType'])) {
+            $matchingTypes = $args['matchingType'];
+        }
+
+        $invalidHidings = [];
+
+        if (isset($args['invalidHiding'])) {
+            $invalidHidings = $args['invalidHiding'];
+        }
+
+        $labels = [];
+
+        if (isset($args['labels'])) {
+            $labels = $args['labels'];
+        }
+
+        $types = [];
+
+        if (isset($args['types'])) {
+            $types = $args['types'];
+        }
 
         //insert attribute selection
         $count = 0;

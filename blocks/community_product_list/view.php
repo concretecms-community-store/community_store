@@ -117,7 +117,7 @@ $activeclass = '';
                     <?php if ($showName && $displayMode != 'list') {
                         ?>
                         <h2 class="store-product-list-name"><?= $csm->t($product->getName(), 'productName', $product->getID()); ?>
-                            <?php if ($showSKU && $product->getSKU()) { ?>
+                            <?php if (isset($showSKU) && $showSKU && $product->getSKU()) { ?>
                                 <small class="store-product-sku">(<span><?= h($product->getSKU()); ?></span>)</small>
                             <?php } ?>
                         </h2>
