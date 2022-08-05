@@ -724,6 +724,7 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-email').html(response.email);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
                     obj.find('.store-checkout-form-group-summary .store-summary-notes').html(response.notes);
+                    obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
 
                     if (response.notes) {
                         obj.find('#store-check-notes-container').show();

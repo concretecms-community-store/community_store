@@ -359,6 +359,11 @@ $csm = $app->make('cs/helper/multilingual');
                                 <div class="col-sm-6">
                                     <label><?= t('Name'); ?></label>
                                     <p class="store-summary-name"><?= $customer->getValue("billing_first_name") . ' ' . $customer->getValue("billing_last_name"); ?></p>
+
+                                    <?php if ($companyField == 'required' || $companyField == 'optional') { ?>
+                                        <label><?= t('Company'); ?></label>
+                                        <p class="store-summary-company"><?= $customer->getValue('shipping_company'); ?></p>
+                                    <?php } ?>
                                 </div>
 
                                 <div class="col-sm-6">

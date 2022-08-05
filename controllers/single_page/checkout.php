@@ -604,6 +604,8 @@ class Checkout extends PageController
         Session::set('billing_address', $address);
         if (isset($data['company'])) {
             Session::set('billing_company', trim($data['company']));
+        } else {
+            Session::remove('billing_company');
         }
 
         if ($guest || !$noBillingSave) {
@@ -613,6 +615,8 @@ class Checkout extends PageController
             $customer->setValue("billing_address", $address);
             if (isset($data['company'])) {
                 $customer->setValue("billing_company", trim($data['company']));
+            } else {
+                $customer->setValue("billing_company", '');
             }
         }
 
