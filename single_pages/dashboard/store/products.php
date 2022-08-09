@@ -612,14 +612,14 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="form-group">
                         <?= $form->label("pDesc", t('Short Description')); ?><br>
                         <?php
-                        echo $editor->outputStandardEditor('pDesc', $product->getDesc());
+                        echo $editor->outputStandardEditor('pDesc', $product->getDescriptionEdit());
                         ?>
                     </div>
 
                     <div class="form-group">
                         <?= $form->label("pDesc", t('Product Details (Long Description)')); ?><br>
                         <?php
-                        echo $editor->outputStandardEditor('pDetail', $product->getDetail());
+                        echo $editor->outputStandardEditor('pDetail', $product->getDetailEdit());
                         ?>
                     </div>
 

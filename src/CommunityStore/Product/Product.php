@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Page\Page;
@@ -588,12 +589,12 @@ class Product
 
     public function setDescription($description)
     {
-        $this->pDesc = $description;
+        $this->pDesc = LinkAbstractor::translateTo($description);
     }
 
     public function setDetail($detail)
     {
-        $this->pDetail = $detail;
+        $this->pDetail =  LinkAbstractor::translateTo($detail);
     }
 
     public function setPrice($price)
@@ -1222,17 +1223,27 @@ class Product
 
     public function getDescription()
     {
-        return $this->pDesc;
+        return LinkAbstractor::translateFrom($this->pDesc);
+    }
+
+    public function getDescriptionEdit()
+    {
+        return LinkAbstractor::translateFromEditMode($this->pDesc);
     }
 
     public function getDesc()
     {
-        return $this->pDesc;
+        return LinkAbstractor::translateFrom($this->pDesc);
     }
 
     public function getDetail()
     {
-        return $this->pDetail;
+        return LinkAbstractor::translateFrom($this->pDetail);
+    }
+
+    public function getDetailEdit()
+    {
+        return LinkAbstractor::translateFromEditMode($this->pDetail);
     }
 
     public function getBasePrice()
