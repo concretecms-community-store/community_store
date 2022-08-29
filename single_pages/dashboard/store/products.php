@@ -27,7 +27,7 @@ if (version_compare($version, '9.0', '<')) {
 ?>
 
 <?php if (in_array($controller->getAction(), $addViews)) { //if adding or editing a product
-    if (!is_object($product)) {
+    if (!isset($product) || !is_object($product)) {
         $product = new Product();
         $product->setIsUnlimited(true);
         $product->setIsTaxable(true);
@@ -1060,7 +1060,7 @@ if (version_compare($version, '9.0', '<')) {
                             $labels['static'] = t('Content');
 
 
-                            if($options) {
+                            if(isset($options) && $options) {
                             $optionsort = 0;
                             foreach ($options as $option) {
 
@@ -1351,7 +1351,7 @@ if (version_compare($version, '9.0', '<')) {
 
                             //load up items
                             <?php
-                            if($options) {
+                            if(isset($options) && $options) {
                             $count = count($options);
                             for($i = 0;$i < $count;$i++){
                             foreach($options[$i]->getOptionItems() as $optionItem){
@@ -1915,7 +1915,7 @@ if (version_compare($version, '9.0', '<')) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/'. ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/'. (isset($groupSearch) ? $groupSearch : '') . (isset($keywordsSearch) ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
                 <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>

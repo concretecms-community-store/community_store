@@ -105,6 +105,8 @@ class Products extends DashboardSitePageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
+
+        $productgroups = [];
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
@@ -233,6 +235,7 @@ class Products extends DashboardSitePageController
 
         //populate "Groups" select box options
         $grouplist = StoreGroupList::getGroupList();
+        $productgroups = [];
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
@@ -487,24 +490,9 @@ class Products extends DashboardSitePageController
         if (strlen($args['pName']) > 255) {
             $e->add(t('The Product Name can not be greater than 255 Characters'));
         }
-        if (!is_numeric($args['pQty']) && !$args['pQtyUnlim']) {
-            $e->add(t('The Quantity must be set, and numeric'));
-        }
 
-        if (strlen($args['pEan']) > 13) {
-            $e->add(t('The EAN can not be greater than 13 Characters'));
-        }
-        if (strlen($args['pMpn']) > 255) {
-            $e->add(t('The MPN can not be greater than 255 Characters'));
-        }
-        if (strlen($args['pIsbn']) > 13) {
-            $e->add(t('The ISBN can not be greater than 13 Characters'));
-        }
-        if (strlen($args['pJan']) > 13) {
-            $e->add(t('The JAN can not be greater than 13 Characters'));
-        }
-        if (strlen($args['pUpc']) > 12) {
-            $e->add(t('The UPC can not be greater than 12 Characters'));
+        if (!isset($args['pQty']) && !$args['pQtyUnlim']) {
+            $e->add(t('The Quantity must be set, and numeric'));
         }
 
         return $e;

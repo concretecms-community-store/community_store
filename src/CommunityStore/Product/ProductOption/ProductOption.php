@@ -281,10 +281,15 @@ class ProductOption
 
     public static function addProductOptions($data, $product)
     {
-        self::removeOptionsForProduct($product, $data['poID']);
-        ProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
+        if (isset($data['poID'])) {
+            self::removeOptionsForProduct($product, $data['poID']);
 
-        if (is_array($data['poSort'])) {
+            if (isset($data['poiID'])) {
+                ProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
+            }
+        }
+
+        if (isset($data['poSort']) && is_array($data['poSort'])) {
             $count = count($data['poSort']);
             $ii = 0; //set counter for items
 

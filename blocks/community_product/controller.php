@@ -84,7 +84,7 @@ class Controller extends BlockController
             $this->set('showQuantity', $this->showQuantity);
             $this->set('showImage', $this->showImage);
             $this->set('showProductDetails', $this->showProductDetails);
-            $this->set('btnText', $this->btnText);
+            $this->set('btnText', isset($this->btnText) ? $this->btnText : false);
         }
 
         if ('all' == Config::get('community_store.shoppingDisabled')) {

@@ -1081,7 +1081,7 @@ class Product
         }
 
         $product->setIsFeatured($data['pFeatured']);
-        $product->setQty($data['pQty']);
+        $product->setQty(isset($data['pQty']) ? $data['pQty'] : 0);
         $product->setIsUnlimited($data['pQtyUnlim']);
         $product->setAllowBackOrder($data['pBackOrder']);
         $product->setNoQty($data['pNoQty']);
@@ -1089,7 +1089,7 @@ class Product
         $product->setIsTaxable($data['pTaxable']);
         $product->setImageID($data['pfID']);
         $product->setIsActive($data['pActive']);
-        $product->setCreatesUserAccount($data['pCreateUserAccount']);
+        $product->setCreatesUserAccount(isset($data['pCreateUserAccount']));
         $product->setIsShippable($data['pShippable']);
         $product->setWidth($data['pWidth']);
         $product->setHeight($data['pHeight']);
@@ -1099,18 +1099,18 @@ class Product
         $product->setPackageData($data['pPackageData']);
         $product->setNumberItems($data['pNumberItems']);
         $product->setSeparateShip($data['pSeperateShip']);
-        $product->setAutoCheckout($data['pAutoCheckout']);
-        $product->setIsExclusive($data['pExclusive']);
-        $product->setCustomerPrice($data['pCustomerPrice']);
+        $product->setAutoCheckout(isset($data['pAutoCheckout']));
+        $product->setIsExclusive(isset($data['pExclusive']));
+        $product->setCustomerPrice(isset($data['pCustomerPrice']));
         $product->setPriceSuggestions($data['pPriceSuggestions']);
         $product->setPriceMaximum($data['pPriceMaximum']);
         $product->setPriceMinimum($data['pPriceMinimum']);
-        $product->setQuantityPrice($data['pQuantityPrice']);
+        $product->setQuantityPrice(isset($data['pQuantityPrice']));
         $product->setAllowDecimalQty($data['pAllowDecimalQty']);
         $product->setQtySteps($data['pQtySteps'] > 0 ? $data['pQtySteps'] : null);
         $product->setQtyLabel($data['pQtyLabel']);
         $product->setMaxQty($data['pMaxQty']);
-        $product->setPageID($data['pageCID']);
+        $product->setPageID(isset($data['pageCID']) ? $data['pageCID'] : false);
         $product->setNotificationEmails($data['pNotificationEmails']);
         $product->setOrderCompleteCID($data['pOrderCompleteCID']);
 

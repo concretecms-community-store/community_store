@@ -158,7 +158,7 @@ class ProductGroup
 
         $existingGroups = $product->getGroups();
 
-        if (is_array($data['pProductGroups'])){
+        if (isset($data['pProductGroups']) && is_array($data['pProductGroups'])){
             foreach ($existingGroups as $existingGroup) {
                 if (!in_array($existingGroup->getGroupID(), $data['pProductGroups'])) {
                     // no longer in list, so remove
