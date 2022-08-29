@@ -86,6 +86,7 @@ class Sales extends DashboardPageController
             // get tax info for our export data
             $tax = $o->getTaxTotal();
             $includedTax = $o->getIncludedTaxTotal();
+            $orderTax = 0;
             if ($tax) {
                 $orderTax = Price::format($tax);
             } elseif ($includedTax) {
@@ -123,7 +124,7 @@ class Sales extends DashboardPageController
         if (count($export) > 0) {
             $filename = 'sale_report_' . date('Y-m-d') . ".csv";
 
-            $this->app->build(
+            $this->app->make(
                 CsvReportExporter::class,
                 [
                     'filename' => $filename,
