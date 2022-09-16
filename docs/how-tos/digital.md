@@ -18,5 +18,5 @@ These links expire after a number of hours (48 by default), to prevent hotlinkin
 This number of hours can be adjusted via the Digital Downloads tab of **Store / Settings**, using the _Number of hours before digital download links expiry_ field.
 :::
 
-If you intend that customers can return to your site and re-download files further into the future, with a list of digital downloads they have purchased displayed, it is suggest to create a protected page on your site, and use user accounts to control access. 
+If you intend that customers can return to your site and re-download files further into the future, with a list of digital downloads they have purchased displayed, it is suggested to create a protected page on your site, and use user accounts to control access. 
 
