@@ -1803,6 +1803,7 @@ if (version_compare($version, '9.0', '<')) {
                     <?php
                     $files = $product->getDownloadFileObjects();
                     for ($i = 0; $i < 1; $i++) {
+                        $file = false;
                         if (isset($files[$i])) {
                             $file = $files[$i];
                         }
