@@ -1802,8 +1802,10 @@ if (version_compare($version, '9.0', '<')) {
                 <div class="store-pane" id="product-digital">
                     <?php
                     $files = $product->getDownloadFileObjects();
-                    for ($i = 0; $i < count($files); $i++) {
-                        $file = $files[$i];
+                    for ($i = 0; $i < 1; $i++) {
+                        if (isset($files[$i])) {
+                            $file = $files[$i];
+                        }
                         ?>
                         <div class="form-group">
                             <?= $form->label("ddfID" . $i, t("File to download on purchase")); ?>
