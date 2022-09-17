@@ -199,7 +199,7 @@ class ProductLocation
 
     public function __clone()
     {
-        if ($this->id) {
+        if (isset($this->id) && $this->id) {
             $this->setID(null);
             $this->setProductID(null);
         }

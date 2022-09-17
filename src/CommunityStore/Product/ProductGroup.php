@@ -224,7 +224,7 @@ class ProductGroup
 
     public function __clone()
     {
-        if ($this->pgID) {
+        if (isset($this->pgID) && $this->pgID) {
             $this->setID(null);
             $this->setProductID(null);
         }
