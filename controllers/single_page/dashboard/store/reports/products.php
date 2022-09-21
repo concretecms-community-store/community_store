@@ -154,7 +154,7 @@ class Products extends DashboardPageController
                     $outputItems[] = $outputItem;
                 }
 
-                $this->app->build(
+                $this->app->make(
                     CsvReportExporter::class,
                     [
                         'filename' => t('product_orders') . '_' . $product->getID(),
