@@ -1388,8 +1388,10 @@ if (version_compare($version, '9.0', '<')) {
                         $(function() {
                             initOptionEditor = <?php echo $editor->getEditorInitJSFunction(); ?>
 
-                            initOptionEditor('.staticfield');
-                            $('.staticfield').removeClass('staticfield');
+                            if ($('.staticfield').length) {
+                                initOptionEditor('.staticfield');
+                                $('.staticfield').removeClass('staticfield');
+                            }
                         });
                         </script>
 
