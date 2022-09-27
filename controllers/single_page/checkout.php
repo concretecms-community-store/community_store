@@ -176,6 +176,8 @@ class Checkout extends PageController
 
             $this->set('total', $totals['total']);
             $this->set('shippingEnabled', Cart::isShippable());
+            $this->set('activeShippingLabel', ShippingMethod::getActiveShippingLabel());
+            $this->set('shippingTotal', Calculator::getShippingTotal());
             $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
             $this->set('shippingInstructions', Cart::getShippingInstructions());
 
@@ -349,6 +351,8 @@ class Checkout extends PageController
             return false;
         }
 
+        $requiresLoginOrDifferentEmail = false;
+
         if ($this->request->request->all()) {
             $data = $this->request->request->all();
             $billing = false;
@@ -357,8 +361,6 @@ class Checkout extends PageController
 
                 $u = new User();
                 $guest = !$u->isRegistered();
-
-                $requiresLoginOrDifferentEmail = false;
 
                 if ($guest) {
                     $emailexists = $this->validateAccountEmail($data['email']);
@@ -433,7 +435,7 @@ class Checkout extends PageController
                 $results['notes'] = nl2br(h($notes));
 
                 // If updating shipping method we need vat number
-                if ('shipping' == $data['adrType']) {
+                if ('shipping' == $data['adrType'] && isset($vat_number)) {
                     $results['vat_number'] = $vat_number;
                 }
 
@@ -485,16 +487,16 @@ class Checkout extends PageController
         if ($guest || !$noShippingSave) {
             $customer->setValue("shipping_first_name", trim($data['fName']));
             $customer->setValue("shipping_address", $address);
-            $customer->setValue("vat_number", $data['vat_number']);
+            $customer->setValue("vat_number", isset($data['vat_number']) ? $data['vat_number'] : '');
             $customer->setValue("shipping_last_name", trim($data['lName']));
-            $customer->setValue("shipping_company", trim($data['company']));
+            $customer->setValue("shipping_company", isset($data['company']) ? $data['company'] : '');
         }
 
         Session::set('shipping_first_name', trim($data['fName']));
         Session::set('shipping_last_name', trim($data['lName']));
         Session::set('shipping_address', $address);
-        Session::set('shipping_company', trim($data['company']));
-        Session::set('vat_number', $data['vat_number']);
+        Session::set('shipping_company', isset($data['company']) ? trim($data['company']) : '');
+        Session::set('vat_number', isset($data['vat_number']) ? $data['vat_number'] : '');
         Session::set('community_store.smID', false);
     }
 

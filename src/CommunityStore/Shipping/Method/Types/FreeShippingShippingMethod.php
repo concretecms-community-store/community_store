@@ -124,7 +124,8 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         $sm->setMinimumWeight($data['minimumWeight']);
         $sm->setMaximumWeight($data['maximumWeight']);
         $sm->setCountries($data['countries']);
-        if ($data['countriesSelected']) {
+        $countriesSelected = '';
+        if (isset($data['countriesSelected'])) {
             $countriesSelected = implode(',', $data['countriesSelected']);
         }
         $sm->setCountriesSelected($countriesSelected);

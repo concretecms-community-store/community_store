@@ -18,6 +18,7 @@ class Shipping extends DashboardPageController
     {
         $this->set('pageTitle', t("Add Shipping Method"));
         $smt = ShippingMethodType::getByID($smtID);
+        $this->set('sm', false);
         $this->set('smt', $smt);
         $this->set("task", t("Add"));
 
