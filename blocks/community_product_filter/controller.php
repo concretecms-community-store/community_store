@@ -171,7 +171,7 @@ class Controller extends BlockController
                     $attrFilterTypes[$handle] = $attr;
                 }
             }
-            ++$count;
+            $count++;
         }
 
         foreach ($attrList as $attitem) {
@@ -274,7 +274,11 @@ class Controller extends BlockController
                             foreach ($items as $item) {
                                 $item = trim($item);
                                 if ($item && isset($attrLookup[$handle]) && isset($attrLookup[$handle])) {
-                                    ++$attributemapping[$handle][$item];
+                                    if (isset($attributemapping[$handle][$item])) {
+                                        $attributemapping[$handle][$item]++;
+                                    } else {
+                                        $attributemapping[$handle][$item] = 1;
+                                    }
                                 }
                             }
                         }
@@ -285,6 +289,8 @@ class Controller extends BlockController
                     ksort($attributemapping[$attrhandle]);
                 }
             }
+
+            $hasfilters = false;
 
             if (!empty($attributemapping)) {
                 //  second pass to work out what attribute values are actually available
@@ -306,10 +312,7 @@ class Controller extends BlockController
 
                     foreach ($attributemapping as $handle => $values) {
                         foreach ($values as $k2 => $val2) {
-                            // if we only have one filter in place, don't reset the counts for that set of options
-                            //if (! (count($selectedarray) == 1 && isset($selectedarray[$handle])  && $attrFilterTypes[$handle]['matchingType'] == 'or' ) ) {
                             $attributemapping[$handle][$k2] = 0;
-                            //}
                         }
                     }
 
@@ -322,10 +325,11 @@ class Controller extends BlockController
                                 foreach ($items as $item) {
                                     $item = trim($item);
                                     if ($item) {
-                                        // if we only have one filter in place, don't reset the counts for that set of options
-                                        // if (!(count($selectedarray) == 1 && isset($selectedarray[$handle]) && $attrFilterTypes[$handle]['matchingType'] == 'or') && $attrLookup[$handle] ) {
-                                        ++$attributemapping[$handle][$item];
-                                        //}
+                                        if (isset($attributemapping[$handle][$item])) {
+                                            $attributemapping[$handle][$item]++;
+                                        } else {
+                                            $attributemapping[$handle][$item] = 1;
+                                        }
                                     }
                                 }
                             }
@@ -491,7 +495,7 @@ class Controller extends BlockController
             foreach ($attributes as $attributesid) {
                 $vals = [$this->bID, (int) $attributesid, $count, $types[$count], $matchingTypes[$count], $invalidHidings[$count],  $labels[$count]];
                 $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`, `type`, matchingType,invalidHiding, label) VALUES (?,?,?,?,?,?,?)", $vals);
-                ++$count;
+                $count++;
             }
         }
 
