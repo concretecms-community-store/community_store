@@ -152,13 +152,18 @@ class TaxClass
     public static function add($data)
     {
         $locked = 0;
-        if ($data['taxClassLocked']) {
+        if (isset($data['taxClassLocked'])) {
             $locked = $data['taxClassLocked'];
         }
         $tc = new self();
         $th = Application::getFacadeApplication()->make("helper/text");
         $tc->setTaxClassHandle($th->handle($data['taxClassName']));
         $tc->setTaxClassName($data['taxClassName']);
+
+        if (!isset($data['taxClassRates'])) {
+            $data['taxClassRates'] = [];
+        }
+
         $tc->setTaxClassRates($data['taxClassRates']);
         $tc->setTaxClassLock($locked);
         $tc->save();
@@ -168,11 +173,12 @@ class TaxClass
 
     public function update($data)
     {
-        $locked = 0;
-        if ($data['taxClassLocked']) {
-            $locked = $data['taxClassLocked'];
-        }
         $this->setTaxClassName($data['taxClassName']);
+
+        if (!isset($data['taxClassRates'])) {
+            $data['taxClassRates'] = [];
+        }
+
         $this->setTaxClassRates($data['taxClassRates']);
         $this->save();
     }

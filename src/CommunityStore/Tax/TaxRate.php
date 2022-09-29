@@ -348,13 +348,25 @@ class TaxRate
         $tr->setTaxRate($data['taxRate']);
         $tr->setTaxBasedOn($data['taxBased']);
         $tr->setTaxAddress($data['taxAddress']);
+
+        if (!isset($data['taxCountry'])) {
+            $data['taxCountry'] = [];
+        }
+
         $tr->setTaxCountry($data['taxCountry']);
         if (is_array($data['taxCountry']) && count($data['taxCountry']) > 1) {
             $data['taxState'] = '';
             $data['taxCity'] = '';
         }
-        $tr->setTaxState($data['taxState']);
-        $tr->setTaxCity($data['taxCity']);
+
+        if (isset($data['taxState'])) {
+            $tr->setTaxState($data['taxState']);
+        }
+
+        if (isset($data['taxCity'])) {
+            $tr->setTaxCity($data['taxCity']);
+        }
+
         $tr->setTaxVatExclude(isset($data['taxVatExclude']) ? $data['taxVatExclude'] : 0);
         $tr->save();
 

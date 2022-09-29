@@ -66,7 +66,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                 <label for="taxCountry" class="col-sm-5 control-label"><?= t("Country"); ?> <small class="text-muted"><?= t("Required"); ?></small></label>
                                 <div class="col-sm-7">
                                     <?php $country = $taxRate->getTaxCountry(); ?>
-                                    <?= $form->selectMultiple('taxCountry', $countries, $country ? $country : ['US'], ['onchange' => 'updateTaxStates()', 'class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select countries')]); ?>
+                                    <?= str_replace('form-select', '', $form->selectMultiple('taxCountry', $countries, $country ? $country : ['US'], ['onchange' => 'updateTaxStates()', 'class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select countries')])); ?>
 
                                     <script>
                                         $(document).ready(function() {

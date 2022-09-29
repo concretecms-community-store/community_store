@@ -248,19 +248,25 @@ class Products extends DashboardSitePageController
 
                 foreach ($mlist as $m) {
                     $relatedID = $m->getTranslatedPageID($productPage);
-                    $translatedPage = Page::getByID($relatedID);
-                    $productName = $csm->t(null, 'productName', $product->getID(), false, $m->getLocale());
 
-                    if ($productName) {
-                        $translatedPage->update(['cName' => $productName]);
-                    }
+                    if ($relatedID) {
+                        $translatedPage = Page::getByID($relatedID);
 
-                    $pageDescription = trim($translatedPage->getAttribute('meta_description'));
+                        if ($translatedPage) {
+                            $productName = $csm->t(null, 'productName', $product->getID(), false, $m->getLocale());
 
-                    $newDescription = $csm->t(null, 'productDescription', $product->getID(), false, $m->getLocale());
+                            if ($productName) {
+                                $translatedPage->update(['cName' => $productName]);
+                            }
 
-                    if ($newDescription && !$pageDescription) {
-                        $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
+                            $pageDescription = trim($translatedPage->getAttribute('meta_description'));
+
+                            $newDescription = $csm->t(null, 'productDescription', $product->getID(), false, $m->getLocale());
+
+                            if ($newDescription && !$pageDescription) {
+                                $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
+                            }
+                        }
                     }
                 }
             }

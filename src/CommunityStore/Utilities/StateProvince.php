@@ -67,7 +67,7 @@ class StateProvince extends Controller
             }
 
             if ("tax" == $type) {
-                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}>";
+                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}  value='$selectedState'>";
             } else {
                 $ret .= "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
             }
