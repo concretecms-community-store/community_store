@@ -21,6 +21,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Checkout extends PageController
 {
@@ -338,6 +339,11 @@ class Checkout extends PageController
 		if ($checkoutNonce !== $nonce) {
 			return Redirect::to($langpath . '/checkout');
 		}
+
+        $ajax = $this->app->make('helper/ajax');
+        if ($ajax->isAjaxRequest($this->request)){
+            return new JsonResponse(['OK'=>1]);
+        }
 
         $this->set('pm', $pm);
         $this->set('action', $pm->getMethodController()->getAction());

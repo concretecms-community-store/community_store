@@ -71,16 +71,25 @@ class Shipping extends DashboardPageController
         $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {
+
+            $sortOrder = $this->request->request->get('methodSortOrder');
+
+            if (!$sortOrder) {
+                $sortOrder = 1;
+            }
+
             if ($this->request->request->get('shippingMethodID')) {
                 //update
                 $shippingMethod = ShippingMethod::getByID($this->request->request->get('shippingMethodID'));
                 if ($shippingMethod) {
+
+
                     $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
                     $shippingMethodTypeMethod->update($this->request->request->all());
                     $shippingMethod->update($this->request->request->get('methodName'),
                                             $this->request->request->get('methodEnabled'),
                                             $this->request->request->get('methodDetails'),
-                                            $this->request->request->get('methodSortOrder'),
+                                            $sortOrder,
                                             $this->request->request->get('methodUserGroups'),
                                             $this->request->request->get('methodExcludedUserGroups')
                     );
@@ -99,7 +108,7 @@ class Shipping extends DashboardPageController
                             $shippingMethodType,
                             $this->request->request->get('methodName'), true,
                             $this->request->request->get('methodDetails'),
-                            $this->request->request->get('methodSortOrder'),
+                            $sortOrder,
                             $this->request->request->get('methodUserGroups'),
                             $this->request->request->get('methodExcludedUserGroups')
                 );
@@ -124,10 +133,6 @@ class Shipping extends DashboardPageController
         //check our manditory fields
         if ("" == $data['methodName']) {
             $e->add(t("Method Name must be set"));
-        }
-
-        if (!is_numeric($data['methodSortOrder'])) {
-            $e->add(t("Sort order must be a number."));
         }
 
         //pass the validator to the shipping method to check for it's own errors
