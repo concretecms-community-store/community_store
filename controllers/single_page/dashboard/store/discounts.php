@@ -48,6 +48,7 @@ class Discounts extends DashboardPageController
         $this->requireAsset('selectize');
         $this->set('pageTitle', t('Add Discount Rule'));
 
+        $productgroups = [];
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         foreach ($grouplist as $productgroup) {
@@ -72,6 +73,7 @@ class Discounts extends DashboardPageController
         $this->set('usergroups', $usergrouparray);
         $this->set('selectedproductgroups', []);
         $this->set('selectedusergroups', []);
+        $this->set('discountRule', false);
     }
 
     public function edit($drID)
@@ -82,6 +84,7 @@ class Discounts extends DashboardPageController
         $this->set('discountRule', $discountRule);
         $this->set('pageTitle', t('Edit Discount Rule'));
 
+        $productgroups = [];
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         foreach ($grouplist as $productgroup) {
@@ -163,6 +166,8 @@ class Discounts extends DashboardPageController
 
     public function addcodes($drID)
     {
+        $successcount = 0;
+
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $data = $this->request->request->all();
 
@@ -174,8 +179,6 @@ class Discounts extends DashboardPageController
                 $codes = explode("\n", $codes);
 
                 $failed = [];
-                $successcount = 0;
-
                 foreach ($codes as $code) {
                     $code = trim($code);
 
