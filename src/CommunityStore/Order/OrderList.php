@@ -270,7 +270,10 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         $db = $app->make('database')->connection();
         $date = $db->GetRow("SELECT * FROM CommunityStoreOrders ORDER BY oDate ASC LIMIT 1");
 
-        return $date['oDate'];
+        if (isset($date['oDate'])) {
+            return $date['oDate'];
+        }
+        return false;
     }
 
     public function getOrderItems()
