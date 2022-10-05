@@ -141,3 +141,10 @@ if ($controller->getAction() == 'add' ||
     </div>
 <?php }
 ?>
+
+
+<style>
+    .cke_editable {
+        min-height: 0;
+    }
+</style>

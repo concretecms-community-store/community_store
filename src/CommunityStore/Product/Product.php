@@ -1082,7 +1082,7 @@ class Product
 
         $product->setIsFeatured($data['pFeatured']);
         $product->setQty(isset($data['pQty']) ? $data['pQty'] : 0);
-        $product->setIsUnlimited($data['pQtyUnlim']);
+        $product->setIsUnlimited(isset($data['pQtyUnlim']));
         $product->setAllowBackOrder($data['pBackOrder']);
         $product->setNoQty($data['pNoQty']);
         $product->setTaxClass($data['pTaxClass']);

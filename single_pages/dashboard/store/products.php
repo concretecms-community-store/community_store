@@ -617,7 +617,7 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label("pDesc", t('Product Details (Long Description)')); ?><br>
+                        <?= $form->label("pDetail", t('Product Details (Long Description)')); ?><br>
                         <?php
                         echo $editor->outputStandardEditor('pDetail', $product->getDetailEdit());
                         ?>
@@ -730,7 +730,7 @@ if (version_compare($version, '9.0', '<')) {
                                 placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') : t('Select Product Groups')); ?>">
                             <?php
                             if (!empty($productgroups)) {
-                                if (!is_array($pgroups)) {
+                                if (!isset($pgroups) || !is_array($pgroups)) {
                                     $pgroups = [];
                                 }
                                 foreach ($productgroups as $pgkey => $pglabel) { ?>
@@ -1430,9 +1430,9 @@ if (version_compare($version, '9.0', '<')) {
 
                                     foreach ($comboOptions as $comboKey => $combinedOptions) {
                                         ?>
-                                        <div class="panel panel-default card-body">
-                                            <div class="panel-heading card-heading">
-                                                <?= t('Options') . ':'; ?>
+                                        <div class="panel panel-default card mb-3">
+                                            <div class="panel-heading ms-3 me-3 mt-3">
+                                                <span class="h5"><?= t('Options') . ':'; ?>
                                                 <?php
                                                 $comboIDs = [];
 
@@ -1440,7 +1440,7 @@ if (version_compare($version, '9.0', '<')) {
                                                     $comboIDs[] = $optionItemID;
                                                     sort($comboIDs);
                                                     $group = $optionLookup[$optionItemLookup[$optionItemID]->getOptionID()];
-                                                    echo '<span class="label label-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
+                                                    echo '<span class="label label-primary ' . $badgeClass .' bg-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
                                                 }
 
 												if (isset($variationLookup[implode('_', $comboIDs)])) {
@@ -1451,7 +1451,9 @@ if (version_compare($version, '9.0', '<')) {
 													$varid = '';
 												} ?>
 
-                                                <div class="form-group pull-right">
+                                                </span>
+
+                                                <div class="form-group pull-right mt-2">
 													<?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
 													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : false, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
                                                 </div>
@@ -2205,5 +2207,9 @@ if (version_compare($version, '9.0', '<')) {
 <style>
     #ccm-dashboard-content-regular .nav-pills.nav-stacked .active a {
         font-weight: bold
+    }
+
+    .cke_editable {
+        min-height: 0;
     }
 </style>

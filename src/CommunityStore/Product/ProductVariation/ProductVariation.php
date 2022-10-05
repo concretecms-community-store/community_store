@@ -570,7 +570,7 @@ class ProductVariation
                     $variation->setVariationCostPrice($data['pvCostPrice'][$key]);
                     $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
                     $variation->setVariationStockLevel($data['pvQty'][$key]);
-                    $variation->setVariationIsUnlimited($data['pvQtyUnlim'][$key]);
+                    $variation->setVariationIsUnlimited(isset($data['pvQtyUnlim'][$key]));
                     $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
                     $variation->setVariationWeight($data['pvWeight'][$key]);
                     $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
@@ -662,7 +662,7 @@ class ProductVariation
         $variation->setVariationHeight($data['pvHeight']);
         $variation->setVariationLength($data['pvLength']);
         $variation->setVariationWidth($data['pvWeight']);
-        $variation->setVariationPackageData($data['pvPackageData']);
+        $variation->setVariationPackageData(isset($data['pvPackageData']) ? $data['pvPackageData'] : '');
         $variation->setVariationSort($data['pvSort']);
         $variation->save($persistonly);
 
