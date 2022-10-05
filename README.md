@@ -1,4 +1,4 @@
-# Community Store add-on for concrete5
+# Community Store add-on for Concrete CMS
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
@@ -17,7 +17,7 @@ Version 2.4.3 and beyond of Community Store is intended for use with version 9 a
 Earlier releases of Community Store will not work or display correctly under version 9 of Concrete. If you are updating an existing version 8 install of Concrete with Community Store installed, please upgrade Community Store to version 2.4.3 or later.  
 
 ## Setup
-The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend Concrete' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concrete5-community-store/community_store/releases
+The package can be downloaded, unzipped into the /packages directory (ensuring the folder name is simply 'community_store') and installed via the 'Extend Concrete' option within the dashboard.  It is recommended that a 'release' be used instead of the master branch - https://github.com/concretecms-community-store/community_store/releases
 
 ## Development
 To install dependencies run:
@@ -27,22 +27,22 @@ To install dependencies run:
 Once installed the node_modules folder is not needed for deployment.
 
 ## Documentation
-Further documentation and how-tos can be found at https://concrete5-community-store.github.io/community_store/
-The documentation is automatically generated using https://vuepress.vuejs.org/, from the files within the [docs folder of the master branch](https://github.com/concrete5-community-store/community_store/tree/master/docs).
+Further documentation and how-tos can be found at https://concretecms-community-store.github.io/community_store/
+The documentation is automatically generated using https://vuepress.vuejs.org/, from the files within the [docs folder of the master branch](https://github.com/concretecms-community-store/community_store/tree/master/docs).
 Pull requests to the documentation are also welcome.
 
 ## Payment gateways
 To keep the 'core' store component as lightweight as possible it does not include a payment gateway other than the 'Invoice' type.
 Payment gateways are to be installed as additional add-ons.
 
-Additional gateways can be found at https://github.com/concrete5-community-store.
+Additional gateways can be found at https://github.com/concretecms-community-store.
 
 ## Shipping Methods
 The store features two built in shipping methods, but like payment gateways these can be extended with further packages. 
 An simple example shipping method has been created for reference and can be found at:
-https://github.com/concrete5-community-store/community_store_shipping_example
+https://github.com/concretecms-community-store/community_store_shipping_example
 
-Further pre-built shipping methods are also available at Additional gateways can be found at https://github.com/concrete5-community-store.
+Further pre-built shipping methods are also available at Additional gateways can be found at https://github.com/concretecms-community-store.
 
 ## Translations
 Interface translations for Community Store are managed at https://translate.concretecms.org/translate/package/community_store and can be installed via Concrete's dashboard.
