@@ -10,6 +10,11 @@ This command is useful if you have been testing an install and wish to clear tes
 
 Where the type options are:
 * `orders`
+* `order-number [number]`
 * `products`
 * `discounts`
-* `all` - combining all three options above
+* `all` - combining all four options above
+
+The `order-number` option will reset the next order number that will be allocated. This option defaults to 1, but a number can be specified as additional argument, e.g.:
+    
+    cstore:reset order-number 1000

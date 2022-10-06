@@ -10,7 +10,7 @@ module.exports = {
             {text: 'User Guide', link: '/user-guide/'},
             {text: 'How-Tos', link: '/how-tos/'},
             {text: 'Developers', link: '/developers/'},
-            {text: 'Github', link: 'https://github.com/concrete5-community-store'}
+            {text: 'Github', link: 'https://github.com/concretecms-community-store'}
         ],
         sidebar: {
             '/user-guide/':
