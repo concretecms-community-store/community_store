@@ -23,6 +23,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
+    public $groupMatchAny = '';
 
     public function getBlockTypeDescription()
     {
@@ -43,6 +44,7 @@ class Controller extends BlockController
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         $this->set('filter', '');
         $this->set('filterCID', false);
+        $this->set('filterManufacturer', false);
         $this->set('sortOrder', '');
         $this->set('showSortOption', false);
         $this->set('groupMatchAny', false);

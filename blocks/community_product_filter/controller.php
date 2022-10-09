@@ -43,6 +43,7 @@ class Controller extends BlockController
         $this->set('attributes', $this->getAvailableAttributes());
         $this->set('app', $this->app);
         $this->set('filterSource', '');
+        $this->set('filterManufacturer', false);
         $this->set('filter', '');
         $this->set('filterCID', '');
         $this->set('showFeatured', false);
@@ -493,7 +494,7 @@ class Controller extends BlockController
         $count = 0;
         if (!empty($attributes)) {
             foreach ($attributes as $attributesid) {
-                $vals = [$this->bID, (int) $attributesid, $count, $types[$count], $matchingTypes[$count], $invalidHidings[$count],  $labels[$count]];
+                $vals = [$this->bID, (int) $attributesid, $count, $types[$count], (isset($matchingTypes[$count]) ? $matchingTypes[$count] : ''), (isset($invalidHidings[$count]) ? $invalidHidings[$count] : '' ) ,  $labels[$count]];
                 $db->query("INSERT INTO btCommunityStoreProductFilterAttributes (bID, akID,`order`, `type`, matchingType,invalidHiding, label) VALUES (?,?,?,?,?,?,?)", $vals);
                 $count++;
             }

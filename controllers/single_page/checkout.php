@@ -35,10 +35,11 @@ class Checkout extends PageController
         }
 
         if ($this->request->request->all()) {
-            if ('code' == $this->request->request->get('action')) {
-                $codeerror = false;
-                $codesuccess = false;
 
+            $codeerror = false;
+            $codesuccess = false;
+
+            if ('code' == $this->request->request->get('action')) {
                 if ($this->request->request->get('code')) {
                     $codesuccess = DiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;

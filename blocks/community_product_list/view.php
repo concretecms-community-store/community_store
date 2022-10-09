@@ -485,6 +485,8 @@ $activeclass = '';
                                     $product->setPriceAdjustment(0);
                                     $imgObj = $product->getImageObj();
 
+                                    $thumb = false;
+
                                     if ($imgObj) {
                                         $thumb = $communityStoreImageHelper->getThumbnail($imgObj);
                                     }
