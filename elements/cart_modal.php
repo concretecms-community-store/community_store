@@ -38,11 +38,11 @@ if ($cartMode) {
                 <p class="alert alert-warning"><?= t('Item removed');?></p>
             <?php } ?>
 
-            <?php if($actiondata['quantity'] != $actiondata['added'] && !$actiondata['error']) { ?>
+            <?php if(isset($actiondata['quantity']) && ($actiondata['quantity'] != $actiondata['added']) && !$actiondata['error']) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
 
-            <?php if($actiondata['error']) {
+            <?php if(isset($actiondata['error'])) {
 				?>
                 <p class="alert alert-warning">
                     <?php
