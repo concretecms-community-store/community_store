@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Page\Page;
 use Concrete\Core\File\File;
@@ -316,6 +317,19 @@ class Product
      */
     protected $manufacturer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType", inversedBy="products")
+     * @ORM\JoinColumn(name="pType", referencedColumnName="ptID", onDelete="CASCADE")
+     */
+    protected $type;
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function setType($type) {
+        $this->type = $type;
+    }
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
@@ -1055,6 +1069,16 @@ class Product
         $product->setDetail($data['pDetail']);
         $product->setPrice($data['pPrice']);
         $product->setCostPrice($data['pCostPrice']);
+
+        if ($data['pType']) {
+            $type = ProductType::getByID($data['pType']);
+
+            if ($type) {
+                $product->setType($type);
+            }
+        } else {
+            $product->setType(null);
+        }
 
         if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);

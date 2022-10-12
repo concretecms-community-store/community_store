@@ -28,6 +28,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
@@ -105,6 +106,15 @@ class Products extends DashboardSitePageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
+
+        $typelist = ProductTypeList::getProductTypeList();
+
+        $producttypes = [];
+        foreach ($typelist as $type) {
+            $producttypes[$type->getTypeID()] = $type->getName();
+        }
+
+        $this->set("producttypes", $producttypes);
 
         $productgroups = [];
         foreach ($grouplist as $productgroup) {
@@ -240,6 +250,15 @@ class Products extends DashboardSitePageController
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
         $this->set("productgroups", $productgroups);
+
+        $typelist = ProductTypeList::getProductTypeList();
+
+        $producttypes = [];
+        foreach ($typelist as $type) {
+            $producttypes[$type->getTypeID()] = $type->getName();
+        }
+
+        $this->set("producttypes", $producttypes);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);

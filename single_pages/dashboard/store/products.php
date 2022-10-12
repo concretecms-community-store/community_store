@@ -101,19 +101,42 @@ if (version_compare($version, '9.0', '<')) {
             <div class="col-sm-9">
                 <div id="product-header">
 
+                    <?php
+                    $fieldWidth1 = 8;
+                    $fieldWidth2 = 4;
+                    $showProductType = false;
+
+                    if (count($producttypes)) {
+                        $fieldWidth1 = 6;
+                        $fieldWidth2 = 2;
+                        $showProductType = true;
+
+                        $producttypes = [''=>t('No Type')] + $producttypes;
+                    } ?>
+
                     <div class="row">
-                        <div class="col-md-8 col">
+                        <div class="col-md-<?= $fieldWidth1; ?> col">
                             <div class="form-group">
                                 <?= $form->label("pName", t('Product Name')); ?>
                                 <?= $form->text("pName", $product->getName(), ['required' => 'required']); ?>
                             </div>
                         </div>
-                        <div class="col-md-4 col">
+                        <div class="col-md-<?= $fieldWidth2; ?> col">
                             <div class="form-group">
                                 <?= $form->label("pSKU", t('Code / SKU')); ?>
                                 <?= $form->text("pSKU", $product->getSKU(), ['maxlength' => 100]); ?>
                             </div>
                         </div>
+
+                        <?php if ($showProductType) { ?>
+                        <div class="col-md-4 col">
+                            <div class="form-group">
+                                <?= $form->label("pType", t('Product Type')); ?>
+                                <?= $form->select('pType', $producttypes, $product->getType() ? $product->getType()->getTypeID() : ''); ?>
+                            </div>
+
+                        </div>
+                        <?php } ?>
 
                     </div>
                     <hr/>
