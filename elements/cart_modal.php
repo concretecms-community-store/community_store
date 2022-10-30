@@ -42,7 +42,7 @@ if ($cartMode) {
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
 
-            <?php if(isset($actiondata['error'])) {
+            <?php if(isset($actiondata['error']) && $actiondata['error']) {
 				?>
                 <p class="alert alert-warning">
                     <?php

@@ -40,10 +40,10 @@ class Controller extends BlockController
         $this->set("itemCount", $itemcount);
 
         if ($itemcount > 0) {
-            $totals = Calculator::getTotals();
+            $total = Calculator::getSubTotal();
 
-            if ($totals['total'] > 0) {
-                $this->set('total', Price::format($totals['total']));
+            if ($total> 0) {
+                $this->set('total', Price::format($total));
             } else {
                 $this->set('total', '');
             }

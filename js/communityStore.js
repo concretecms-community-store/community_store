@@ -77,7 +77,7 @@ var communityStore = {
             cache: false,
             dataType: 'text',
             data: res,
-            url: CARTURL + '/getmodal' + TRAILINGSLASH,
+            url: CARTURL + '/getmodal' + TRAILINGSLASH + '?t=' + Date.now(),
             success: function(data) {
                 communityStore.openModal(data, animatecart);
             }
@@ -225,7 +225,7 @@ var communityStore = {
     refreshCartTotals: function (callback, nobroadcast) {
         nobroadcast = nobroadcast || false;
         $.ajax({
-            url: CARTURL + '/getCartSummary' + TRAILINGSLASH,
+            url: CARTURL + '/getCartSummary' + TRAILINGSLASH + '?t=' + Date.now(),
             cache: false,
             dataType: 'text',
             success: function (response) {
@@ -248,8 +248,8 @@ var communityStore = {
                     $(".store-utility-links").addClass('store-cart-empty');
                 } else {
                     $(".store-utility-links .store-items-counter").text(itemCount);
-                    $(".store-cart-grand-total-value").text(total);
-                    $(".store-utility-links .store-total-cart-amount").text(total);
+                    $(".store-cart-grand-total-value").text(subTotal);
+                    $(".store-utility-links .store-total-cart-amount").text(subTotal);
                     $(".store-utility-links").removeClass('store-cart-empty');
                 }
 

@@ -252,9 +252,7 @@ class Cart extends PageController
 
         $cart = StoreCart::getCart();
         $discounts = StoreCart::getDiscounts();
-        $totals = Calculator::getTotals();
-
-        $total = $totals['subTotal'];
+        $total = Calculator::getSubTotal();
 
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $token = $app->make('token');
