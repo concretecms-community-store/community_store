@@ -9,12 +9,12 @@ use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price as Price;
 
 class Cart extends PageController
 {
@@ -293,7 +293,7 @@ class Cart extends PageController
             $shippingTotalRaw = $shippingTotal;
         }
 
-        $data = ['subTotal' => Price::format($subTotal), 'total' => Price::format($total), 'itemCount' => $itemCount, 'totalCents' => $total * 100, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => Price::format($shippingTotal)];
+        $data = ['subTotal' => Price::format($subTotal), 'subTotalCents' => Price::formatInNumberOfCents($subTotal), 'total' => Price::format($total), 'totalCents' => Price::formatInNumberOfCents($total), 'itemCount' => $itemCount, 'taxes' => $formattedtaxes, 'shippingTotalRaw' => $shippingTotalRaw, 'shippingTotal' => Price::format($shippingTotal)];
         echo json_encode($data);
 
         exit();
