@@ -16,10 +16,11 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
 
 <?php if($typelist){ ?>
 <div class="ccm-dashboard-content-full">
-    <table class="ccm-search-results-table">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th><a><?= t('Type Name')?></a></th>
+            <th><a><?= t('Handle')?></a></th>
             <th><a><?= t('Description')?></a></th>
             <th><a><?= t('Attributes')?></a></th>
         </tr>
@@ -27,11 +28,14 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
         <tbody>
         <?php foreach($typelist as $type){?>
             <tr>
-                <td><a href="<?= Url::to('/dashboard/store/products/types/edit/', $type->getTypeID())?>"><?= $type->getName()?></a></td>
+                <td><a href="<?= Url::to('/dashboard/store/products/types/edit/', $type->getTypeID())?>"><?= h($type->getName()) ?></a></td>
                 <td>
-                    <?= $type->getDescription()?>
+                    <?= h($type->getHandle()) ?>
                 </td>
-                <td><a href="<?= Url::to('/dashboard/store/products/types/attributes/', $type->getTypeID())?>"><?= t('Manage Attributes'); ?></a></td>
+                <td>
+                    <?= h($type->getDescription()) ?>
+                </td>
+                <td><a class="btn btn-secondary btn-sm" href="<?= Url::to('/dashboard/store/products/types/attributes/', $type->getTypeID())?>"><?= t('Manage Attributes'); ?></a></td>
             </tr>
 
 
@@ -65,6 +69,11 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
             <div class="form-group">
                 <?= $form->label('ptName',t("Type Name")); ?>
                 <?= $form->text('ptName',$type->getName(), array('required'=>'required')); ?>
+            </div>
+
+            <div class="form-group">
+                <?= $form->label('ptHandle',t("Type Handle")); ?>
+                <?= $form->text('ptHandle',$type->getHandle(), array('required'=>'required')); ?>
             </div>
 
 

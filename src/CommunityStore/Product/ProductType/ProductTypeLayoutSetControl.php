@@ -50,4 +50,105 @@ class ProductTypeLayoutSetControl
     protected $hidden;
 
 
+    public function getDisplayLabel() {
+        if ($this->customLabel) {
+            return $this->customLabel . ' (' . $this->getAttributeKey()->getAttributeKeyName() . ')';
+        } else {
+            return $this->getAttributeKey()->getAttributeKeyName();
+        }
+    }
+
+    public function getProductTypeLayoutSetControlID() {
+        return $this->ptlscID;
+    }
+
+
+    public function getLayoutSet()
+    {
+        return $this->set;
+    }
+
+    public function setLayoutSet($set)
+    {
+        $this->set = $set;
+    }
+
+    public function getAttributeKey()
+    {
+        return $this->attribute_key;
+    }
+
+
+    public function setAttributeKey($attribute_key)
+    {
+        $this->attribute_key = $attribute_key;
+    }
+
+
+    public function getDescription()
+    {
+        return $this->ptlsDescription;
+    }
+
+
+    public function setPtlsDescription($ptlsDescription)
+    {
+        $this->ptlsDescription = $ptlsDescription;
+    }
+
+
+    public function getCustomLabel()
+    {
+        return $this->customLabel;
+    }
+
+
+    public function setCustomLabel($customLabel)
+    {
+        $this->customLabel = trim($customLabel);
+    }
+
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+    }
+
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    public static function getByID($ptID)
+    {
+        $em = dbORM::entityManager();
+        return $em->find(get_called_class(), $ptID);
+    }
+
+    public function save()
+    {
+        $em = dbORM::entityManager();
+        $em->persist($this);
+        $em->flush();
+    }
+
+    public function delete()
+    {
+        $em = dbORM::entityManager();
+        $em->remove($this);
+        $em->flush();
+    }
+
+
+
+
 }

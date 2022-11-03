@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
@@ -26,12 +27,36 @@ class ProductType
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    protected $ptHandle;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     protected $ptName;
 
     /**
      * @ORM\Column(type="text",nullable=true)
      */
     protected $ptDescription;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeLayoutSet", mappedBy="productType",cascade={"persist"}))
+     * @ORM\OrderBy({"ptlsDisplayOrder" = "ASC"})
+     */
+    protected $layoutSets;
+
+
+    public function __construct()
+    {
+        $this->layoutSets = new ArrayCollection();
+    }
+
+
+
+    public function getLayoutSets()
+    {
+        return $this->layoutSets;
+    }
 
     /**
      * @return mixed
@@ -60,6 +85,22 @@ class ProductType
     /**
      * @return mixed
      */
+    public function getHandle()
+    {
+        return $this->ptHandle;
+    }
+
+    /**
+     * @param mixed $ptName
+     */
+    public function setHandle($ptHandle)
+    {
+        $this->ptHandle = $ptHandle;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->ptDescription;
@@ -82,19 +123,21 @@ class ProductType
     }
 
 
-    public static function add($name, $description)
+    public static function add($name, $handle, $description)
     {
-        $productGroup = new self();
-        $productGroup->setName($name);
-        $productGroup->setDescription($description);
-        $productGroup->save();
+        $productType = new self();
+        $productType->setName($name);
+        $productType->setHandle($handle);
+        $productType->setDescription($description);
+        $productType->save();
 
-        return $productGroup;
+        return $productType;
     }
 
-    public function update($name, $description)
+    public function update($name, $handle, $description)
     {
         $this->setName($name);
+        $this->setHandle($handle);
         $this->setDescription($description);
         $this->save();
 
