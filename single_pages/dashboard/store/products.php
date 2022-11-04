@@ -1777,51 +1777,80 @@ if (version_compare($version, '9.0', '<')) {
                 <div class="store-pane" id="product-attributes">
 
                     <?php
-                    $hasKeys = false;
-                    $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+                    $productType = $product->getType();
 
-                    foreach ($sets as $set) {
-                        echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
-                        foreach ($set->getAttributeKeys() as $key => $ak) {
-                            $hasKeys = true;
+                    if ($productType) {
+                        foreach($productType->getLayoutSets() as $set) {
 
-                            if (is_object($product)) {
-                                $caValue = $product->getAttributeValueObject($ak);
-                            }
-                            ?>
-                            <div class="form-group">
-                                <?= $ak->render('label'); ?>
-                                <div class="input">
-                                    <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                            echo '<h4>' . $set->getLayoutSetName() . '</h4>';
+
+                              $controls = $set->getLayoutSetControls();
+                            foreach ($controls as $control) {
+
+                                $ak = $control->getAttributeKey();
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php  }
-                    }
 
-                    $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
-                    if (count($attributeKeys) > 0) {
-                        if (count($sets) > 0) {
-                            echo '<h4>' . t('Other') . '</h4>';
+                            <?php }
+                        }
+                    } else {
+
+                        $hasKeys = false;
+                        $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+
+                        foreach ($sets as $set) {
+                            echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
+                            foreach ($set->getAttributeKeys() as $key => $ak) {
+                                $hasKeys = true;
+
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                    </div>
+                                </div>
+                            <?php  }
                         }
 
-                        foreach ($attributeKeys as $key => $ak) {
-                            $hasKeys = true;
-
-                            if (is_object($product)) {
-                                $caValue = $product->getAttributeValueObject($ak);
+                        $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
+                        if (count($attributeKeys) > 0) {
+                            if (count($sets) > 0) {
+                                echo '<h4>' . t('Other') . '</h4>';
                             }
-                            ?>
-                            <div class="form-group">
-                                <?= $ak->render('label'); ?>
-                                <div class="input">
-                                    <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
-                                </div>
-                            </div>
-                     <?php   }
-                    }
 
-                    if (!$hasKeys) { ?>
-                        <p><?= t('No product attributes defined') ?></p>
+                            foreach ($attributeKeys as $key => $ak) {
+                                $hasKeys = true;
+
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                    </div>
+                                </div>
+                         <?php   }
+                        }
+
+                        if (!$hasKeys) { ?>
+                            <p><?= t('No product attributes defined') ?></p>
+                        <?php } ?>
+
                     <?php } ?>
 
                 </div>

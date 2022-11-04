@@ -83,7 +83,7 @@ foreach($type->getLayoutSets() as $set) { ?>
                 <li><a href="#" data-dialog="add_control" data-set-id="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-plus"></i></a></a></li>
                 <li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fas fa-arrows-alt"></i></a></li>
                 <li><a href="#" data-edit-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-edit"></i></a></li>
-                <li><a href="#" data-delete-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-trash-alt"></i></a></li>
+                <li><a href="#" data-delete-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
             </ul>
             <div class="ccm-item-set-name" ><?php
                 if ($set->getLayoutSetName()) {
@@ -143,7 +143,7 @@ foreach($type->getLayoutSets() as $set) { ?>
                     <ul class="ccm-item-set-controls">
                         <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows-alt"></i></a></li>
                         <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>"><i class="fa fas fa-edit"></i></a></li>
-                        <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash-alt"></i></a></li>
+                        <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
                     </ul>
 
                     <div style="display: none">
