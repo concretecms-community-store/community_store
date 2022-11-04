@@ -134,8 +134,7 @@ class Controller extends BlockController
         if ('auto' == $this->filterSource) {
             $page = Page::getCurrentPage();
             $blocks = $page->getBlocks();
-            $block = null;
-            $groupfilters = $this->getGroupFilters();
+
             foreach ($blocks as $block) {
                 if ('community_product_list' == $block->getBlockTypeHandle()) {
                     $blockcontroller = $block->getController();
@@ -151,12 +150,13 @@ class Controller extends BlockController
                     break;
                 }
             }
+        } else {
+            $groupfilters = $this->getGroupFilters();
         }
 
         $selectedAttributeList = $this->getAttributes();
 
         $attrList = [];
-        $optionList = [];
         $attrFilterTypes = [];
 
         $count = 0;
