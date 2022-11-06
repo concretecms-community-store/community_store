@@ -14,8 +14,9 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
     <a href="<?= Url::to('/dashboard/store/products/types/', 'add')?>" class="btn btn-primary"><?= t("Add Product Type")?></a>
 </div>
 
-<?php if($typelist){ ?>
-<div class="ccm-dashboard-content-full">
+<?php if($typeList){ ?>
+<div class="">
+
     <table class="table table-striped">
         <thead>
         <tr>
@@ -26,7 +27,7 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($typelist as $type){?>
+        <?php foreach($typeList as $type){?>
             <tr>
                 <td><a href="<?= Url::to('/dashboard/store/products/types/edit/', $type->getTypeID())?>"><?= h($type->getName()) ?></a></td>
                 <td>
@@ -35,10 +36,8 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
                 <td>
                     <?= h($type->getDescription()) ?>
                 </td>
-                <td><a class="btn btn-secondary btn-sm" href="<?= Url::to('/dashboard/store/products/types/attributes/', $type->getTypeID())?>"><?= t('Manage Attributes'); ?></a></td>
+                <td><a class="btn btn-primary btn-secondary btn-sm" href="<?= Url::to('/dashboard/store/products/types/attributes/', $type->getTypeID())?>"><?= t('Manage Attributes'); ?></a></td>
             </tr>
-
-
         <?php } ?>
         </tbody>
 
@@ -68,7 +67,7 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
             <?= $token->output('community_store'); ?>
             <div class="form-group">
                 <?= $form->label('ptName',t("Type Name")); ?>
-                <?= $form->text('ptName',$type->getName(), array('required'=>'required')); ?>
+                <?= $form->text('ptName',$type->getTypeName(), array('required'=>'required')); ?>
             </div>
 
             <div class="form-group">

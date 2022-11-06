@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
@@ -93,6 +94,10 @@ class ProductTypeLayoutSet
         return $this->controls;
     }
 
+    public function getPublicLayoutSetControls() {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('hidden', '0'))->orderBy(array('displayOrder' => Criteria::ASC));
+        return $this->controls->matching($criteria);
+    }
 
     public function __construct()
     {

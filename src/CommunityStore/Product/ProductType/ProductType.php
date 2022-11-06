@@ -69,7 +69,7 @@ class ProductType
     /**
      * @return mixed
      */
-    public function getName()
+    public function getTypeName()
     {
         return $this->ptName;
     }
@@ -77,7 +77,7 @@ class ProductType
     /**
      * @param mixed $ptName
      */
-    public function setName($ptName)
+    public function setTypeName($ptName)
     {
         $this->ptName = $ptName;
     }
@@ -126,7 +126,7 @@ class ProductType
     public static function add($name, $handle, $description)
     {
         $productType = new self();
-        $productType->setName($name);
+        $productType->setTypeName($name);
         $productType->setHandle($handle);
         $productType->setDescription($description);
         $productType->save();
@@ -136,7 +136,7 @@ class ProductType
 
     public function update($name, $handle, $description)
     {
-        $this->setName($name);
+        $this->setTypeName($name);
         $this->setHandle($handle);
         $this->setDescription($description);
         $this->save();

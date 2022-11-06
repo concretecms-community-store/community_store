@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 $resolverManager = app(ResolverManagerInterface::class);
+$usedKeys = [];
 ?>
 
 
@@ -29,47 +30,10 @@ $resolverManager = app(ResolverManagerInterface::class);
 
 
 
-<div style="display: none">
-    <div id="ccm-product-type-set-add-control" class="ccm-ui">
-        <form action="<?= $view->action('add_control') ?>" method="post" >
-            <input type="hidden" name="ptlsID" id="ptlsID" value="" />
-            <input type="hidden" name="akID" id="akID" value="" />
-            <?php $token->output('add_control') ?>
-        <ul data-list="page-type-composer-control-type" class="item-select-list">
-        <?php
-
-        foreach ($controls as $ak) {
-            ?>
-            <li>
-                <a href="#"  data-ak-id="<?= $ak->getAttributeKeyID() ?>">
-
-                    <?php
-                    // recusing composer control, as all we want is the icon at this point
-                    $ac = new \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl();
-                    $ac->setAttributeKeyID($ak->getAttributeKeyID());
-                    $ac->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
-                    ?>
-
-                    <?= $ac->getPageTypeComposerControlIcon() ?>
-                    <?= $ak->getAttributeKeyName() ?>
-
-                </a>
-            </li>
-            <?php
-        }
-        ?>
-        </ul>
-
-        </form>
-        <div class="dialog-buttons">
-            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-        </div>
-    </div>
-</div>
 
 
 <div class="ccm-dashboard-header-buttons">
-    <a href="#" data-dialog="add_set" class="btn btn-secondary"><?= t('Add Attribute Set') ?></a>
+    <a href="#" data-dialog="add_set" class="btn btn-primary"><?= t('Add Attribute Set') ?></a>
 </div>
 
 
@@ -131,18 +95,22 @@ foreach($type->getLayoutSets() as $set) { ?>
             <?php $controls = $set->getLayoutSetControls();
             foreach ($controls as $control) {
 
+                $usedKeys[] = $control->getAttributeKey()->getAttributeKeyID();
 
 ?>
             <tr class="ccm-item-set-control"   data-page-product-type-layout-control-set-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" >
 
-                <td style="width: 100%;">
-                        <?= h($control->getDisplayLabel()) ; ?>
+                <td style="width: 85%;">
+                    <?= h($control->getDisplayLabel()) ; ?>
+                </td>
+                <td style="width: 15%;">
+                    <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all') ; ?></span>
                 </td>
 
                 <td style="text-align: right; white-space: nowrap;">
                     <ul class="ccm-item-set-controls">
                         <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows-alt"></i></a></li>
-                        <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>"><i class="fa fas fa-edit"></i></a></li>
+                        <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>" data-control-hidden="<?= h($control->getHidden() ? '1' : '0') ?>"><i class="fa fas fa-edit"></i></a></li>
                         <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
                     </ul>
 
@@ -185,6 +153,11 @@ foreach($type->getLayoutSets() as $set) { ?>
                 <?= $form->text('customLabel') ?>
             </div>
 
+            <div class="form-group">
+                <?= $form->label('hidden', t('Visibility')) ?>
+                <?= $form->select('hidden', [0=>t('Visible to all'), 1=>t('Dashboard only')]) ?>
+            </div>
+
         </form>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
@@ -192,6 +165,47 @@ foreach($type->getLayoutSets() as $set) { ?>
         </div>
     </div>
 </div>
+
+<div style="display: none">
+    <div id="ccm-product-type-set-add-control" class="ccm-ui">
+        <form action="<?= $view->action('add_control') ?>" method="post" >
+            <input type="hidden" name="ptlsID" id="ptlsID" value="" />
+            <input type="hidden" name="akID" id="akID" value="" />
+            <?php $token->output('add_control') ?>
+            <ul data-list="page-type-composer-control-type" class="item-select-list">
+                <?php
+
+                foreach ($keys as $ak) {
+                    if(!in_array($ak->getAttributeKeyID(), $usedKeys)) {
+                    ?>
+                    <li>
+                        <a href="#"  data-ak-id="<?= $ak->getAttributeKeyID() ?>">
+
+                            <?php
+                            // recusing composer control, as all we want is the icon at this point
+                            $ac = new \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl();
+                            $ac->setAttributeKeyID($ak->getAttributeKeyID());
+                            $ac->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
+                            ?>
+
+                            <?= $ac->getPageTypeComposerControlIcon() ?>
+                            <?= $ak->getAttributeKeyName() ?>
+
+                        </a>
+                    </li>
+                    <?php
+                }
+                }
+                ?>
+            </ul>
+
+        </form>
+        <div class="dialog-buttons">
+            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -250,6 +264,7 @@ foreach($type->getLayoutSets() as $set) { ?>
         $('a[data-dialog=edit_control]').on('click', function() {
             $('#ptlscID').val($(this).data('control-id'));
             $('#customLabel').val($(this).data('control-label'));
+            $('#hidden').val($(this).data('control-hidden'));
 
             jQuery.fn.dialog.open({
                 element: '#ccm-product-type-set-edit-control',

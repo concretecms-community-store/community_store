@@ -5,8 +5,10 @@ use Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeLayoutSet;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeLayoutSetControl;
@@ -18,9 +20,9 @@ class Types extends DashboardPageController
     {
         $this->set('pageTitle', t('Product Types'));
 
-        $typelist = ProductTypeList::getProductTypeList();
+        $typeList = ProductTypeList::getProductTypeList();
 
-        $this->set("typelist", $typelist);
+        $this->set("typeList", $typeList);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
@@ -47,7 +49,7 @@ class Types extends DashboardPageController
     public function attributes($ptID)
     {
         $type = ProductType::getByID($ptID);
-        $this->set('pageTitle', t('Manage Attributes for %s', $type->getName()));
+        $this->set('pageTitle', t('Manage Attributes for %s', $type->getTypeName()));
 
 
         if (!$type) {
@@ -60,7 +62,7 @@ class Types extends DashboardPageController
 
         $keys = AttributeKey::getAttributeKeyList('store_product');
 
-        $this->set('controls', $keys);
+        $this->set('keys', $keys);
 
     }
 
@@ -128,6 +130,7 @@ class Types extends DashboardPageController
     public function add_control() {
         $setID = $this->post('ptlsID');
         $akID = $this->post('akID');
+        $hidden = $this->post('hidden');
 
         $set = ProductTypeLayoutSet::getByID($setID);
 
@@ -141,6 +144,7 @@ class Types extends DashboardPageController
                 $control->setAttributeKey($attrKey);
                 $control->setLayoutSet($set);
                 $control->setDisplayOrder(0);
+                $control->setHidden($hidden);
                 $control->save();
 
                 $this->flash('success', t('Attribute Added'));
@@ -152,6 +156,7 @@ class Types extends DashboardPageController
     public function edit_control() {
         $ptlscID = $this->post('ptlscID');
         $customLabel = $this->post('customLabel');
+        $hidden = $this->post('hidden');
 
         $control = ProductTypeLayoutSetControl::getByID($ptlscID);
 
@@ -161,6 +166,7 @@ class Types extends DashboardPageController
                 $id = $control->getLayoutSet()->getProductType()->getTypeID();
 
                 $control->setCustomLabel($customLabel);
+                $control->setHidden($hidden);
                 $control->save();
 
                 $this->flash('success', t('Attribute Updated'));
@@ -229,8 +235,19 @@ class Types extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $data = $this->request->request->all();
-            ProductType::getByID($data['ptID'])->delete();
-            $this->flash('success', t('Product Type Deleted'));
+
+            $productType = ProductType::getByID($data['ptID']);
+
+            if ($productType) {
+
+                $app = Application::getFacadeApplication();
+                $db = $app->make('database')->connection();
+                $sql = 'Update CommunityStoreProducts set pType = null where pType = ?';
+                $db->query($sql, [$data['ptID']]);
+
+                $productType->delete();
+                $this->flash('success', t('Product Type Deleted'));
+            }
 
             return Redirect::to('/dashboard/store/products/types');
         }
