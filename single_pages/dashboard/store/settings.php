@@ -394,9 +394,19 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $pageSelector->selectPage('productPublishTarget', $productPublishTarget); ?>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group">
                 <label><?= t('Maximum number of product variations'); ?></label>
                 <?= $form->number('variationMaxVariations', Config::get('community_store.variationMaxVariations') ?: 50, ['min' => 50, 'max' => 150]) ?>
+            </div>
+
+            <div class="form-group">
+                <label><?= t('Allow attribute editing for products without a selected product type'); ?></label>
+
+                <div class="checkbox form-check">
+                    <div class="radio"><label><?= $form->radio('attributesRequireType', '0', !Config::get('community_store.attributesRequireType') ? '0' :''); ?><?php echo t('Yes, all attributes will be editable'); ?></label></div>
+                    <div class="radio"><label><?= $form->radio('attributesRequireType', '1', Config::get('community_store.attributesRequireType')  ? '1' : ''); ?><?php echo t('No, product attributes are only editable when a product type is selected'); ?></label></div>
+                </div>
+
             </div>
 
         </div>

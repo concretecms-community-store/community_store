@@ -101,19 +101,46 @@ if (version_compare($version, '9.0', '<')) {
             <div class="col-sm-9">
                 <div id="product-header">
 
+                    <?php
+                    $fieldWidth1 = 8;
+                    $fieldWidth2 = 4;
+                    $showProductType = false;
+
+                    if (!isset($productType) || !$productType) {
+                        $productType = $product->getType();
+                    }
+
+                    if (count($producttypes)) {
+                        $fieldWidth1 = 6;
+                        $fieldWidth2 = 2;
+                        $showProductType = true;
+
+                        $producttypes = [''=>t('No Type')] + $producttypes;
+                    } ?>
+
                     <div class="row">
-                        <div class="col-md-8 col">
+                        <div class="col-md-<?= $fieldWidth1; ?> col">
                             <div class="form-group">
                                 <?= $form->label("pName", t('Product Name')); ?>
                                 <?= $form->text("pName", $product->getName(), ['required' => 'required']); ?>
                             </div>
                         </div>
-                        <div class="col-md-4 col">
+                        <div class="col-md-<?= $fieldWidth2; ?> col">
                             <div class="form-group">
                                 <?= $form->label("pSKU", t('Code / SKU')); ?>
                                 <?= $form->text("pSKU", $product->getSKU(), ['maxlength' => 100]); ?>
                             </div>
                         </div>
+
+                        <?php if ($showProductType) { ?>
+                        <div class="col-md-4 col">
+                            <div class="form-group">
+                                <?= $form->label("pType", t('Product Type')); ?>
+                                <?= $form->select('pType', $producttypes, $productType ? $productType->getTypeID() : ''); ?>
+                            </div>
+
+                        </div>
+                        <?php } ?>
 
                     </div>
                     <hr/>
@@ -178,6 +205,17 @@ if (version_compare($version, '9.0', '<')) {
                                                 $('#variations,#variationnotice').removeClass('hidden d-none');
                                             } else {
                                                 $('#variations,#variationnotice').addClass('hidden d-none');
+                                            }
+                                        });
+
+                                        $('#pType').change(function () {
+
+                                            if ($(this).val() != '<?= $product->getType() ? $product->getType()->getTypeID() : ''; ?>') {
+                                                $('#attributeChangeNotice').removeClass('hidden d-none');
+                                                $('#attributeList').addClass('hidden d-none');
+                                            } else {
+                                                $('#attributeChangeNotice').addClass('hidden d-none');
+                                                $('#attributeList').removeClass('hidden d-none');
                                             }
                                         });
 
@@ -1752,55 +1790,94 @@ if (version_compare($version, '9.0', '<')) {
                 </div><!-- #product-related -->
 
                 <div class="store-pane" id="product-attributes">
-
+                    <div id="attributeList">
                     <?php
-                    $hasKeys = false;
-                    $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+                    if ($productType) {
 
-                    foreach ($sets as $set) {
-                        echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
-                        foreach ($set->getAttributeKeys() as $key => $ak) {
-                            $hasKeys = true;
+                        $outputAttributes = [];
 
-                            if (is_object($product)) {
-                                $caValue = $product->getAttributeValueObject($ak);
-                            }
-                            ?>
-                            <div class="form-group">
-                                <?= $ak->render('label'); ?>
-                                <div class="input">
-                                    <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                        foreach($productType->getLayoutSets() as $set) {
+
+                            echo '<h4>' . $set->getLayoutSetName() . '</h4>';
+
+                              $controls = $set->getLayoutSetControls();
+                            foreach ($controls as $control) {
+
+                                $ak = $control->getAttributeKey();
+                                $akID = $ak->getAttributeKeyID();
+                                if (!in_array($akID, $outputAttributes)) {
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                        <?php $outputAttributes[] = $ak->getAttributeKeyID(); ?>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php  }
-                    }
 
-                    $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
-                    if (count($attributeKeys) > 0) {
-                        if (count($sets) > 0) {
-                            echo '<h4>' . t('Other') . '</h4>';
+                            <?php }
+                            }
+                        }
+                    } else {
+
+                        if (Config::get('community_store.attributesRequireType') ) { ?>
+                            <p class="alert alert-info"><?= t('Attribute editing requires a product type to be selected') ?></p>
+                        <?php } else {
+                             $hasKeys = false;
+                        $sets = $productAttributeCategory->getController()->getSetManager()->getAttributeSets();
+
+                        foreach ($sets as $set) {
+                            echo '<h4>' . $set->getAttributeSetDisplayName() . '</h4>';
+                            foreach ($set->getAttributeKeys() as $key => $ak) {
+                                $hasKeys = true;
+
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                    </div>
+                                </div>
+                            <?php  }
                         }
 
-                        foreach ($attributeKeys as $key => $ak) {
-                            $hasKeys = true;
-
-                            if (is_object($product)) {
-                                $caValue = $product->getAttributeValueObject($ak);
+                        $attributeKeys = $productAttributeCategory->getController()->getSetManager()->getUnassignedAttributeKeys();
+                        if (count($attributeKeys) > 0) {
+                            if (count($sets) > 0) {
+                                echo '<h4>' . t('Other') . '</h4>';
                             }
-                            ?>
-                            <div class="form-group">
-                                <?= $ak->render('label'); ?>
-                                <div class="input">
-                                    <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+
+                            foreach ($attributeKeys as $key => $ak) {
+                                $hasKeys = true;
+
+                                if (is_object($product)) {
+                                    $caValue = $product->getAttributeValueObject($ak);
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?= $ak->render('label'); ?>
+                                    <div class="input">
+                                        <?= $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $caValue, true) ?>
+                                    </div>
                                 </div>
-                            </div>
-                     <?php   }
-                    }
+                         <?php   }
+                        }
 
-                    if (!$hasKeys) { ?>
-                        <p><?= t('No product attributes defined') ?></p>
-                    <?php } ?>
+                        if (!$hasKeys) { ?>
+                            <p><?= t('No product attributes defined') ?></p>
+                        <?php }
+                         }
 
+                      } ?>
+                    </div>
+                    <p class="alert alert-info hidden d-none" id="attributeChangeNotice"><?= t('The Product Type has changed - save the product to view related attributes') ?></p>
                 </div>
 
                 <div class="store-pane" id="product-digital">
@@ -1957,7 +2034,22 @@ if (version_compare($version, '9.0', '<')) {
     <div class="ccm-dashboard-header-buttons">
         <!--<a href="<?= Url::to('/dashboard/store/products/', 'attributes') ?>" class="btn btn-dark"><?= t("Manage Attributes") ?></a>-->
         <a href="<?= Url::to('/dashboard/store/products/', 'groups') ?>" class="btn btn-primary"><?= t("Manage Groups") ?></a>
-        <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
+
+        <div class="btn-group" >
+            <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
+
+            <?php if (count($typeList)) { ?>
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" >
+                <?php foreach($typeList as $type) { ?>
+                    <li><a class="nav-link" href="<?= Url::to('/dashboard/store/products/add/', $type->getTypeID()) ?>"><?= $type->getTypeName() ?></a></li>
+                <?php } ?>
+            </ul>
+            <?php } ?>
+        </div>
+
     </div>
 
     <div class="cccm-dashboard-content-inner">
@@ -1994,11 +2086,35 @@ if (version_compare($version, '9.0', '<')) {
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
+                                    <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($typeID ? '/0/' :'') . $typeID ) ?>"><?= t('All Groups') ?></a></li>
                                     <?php foreach ($grouplist as $group) { ?>
-                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID() .  ($typeID ? $typeID :'')) ?>"><?= $group->getGroupName() ?></a></li>
                                     <?php } ?>
                                 </ul>
+                            </li>
+
+                            <li role="presentation" class="dropdown <?= ($typeID ? 'active' : ''); ?> nav-item">
+                                <?php
+                                if ($gID) {
+                                    foreach ($grouplist as $group) {
+                                        if ($gID == $group->getGroupID()) {
+                                            $currentFilter = $group->getGroupName();
+                                        }
+                                    }
+                                } ?>
+
+                                <?php if ($typeList && count($typeList)) { ?>
+                                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <?= $currentFilter ? t('Product Type: %s', $currentTypeFilter) : t('Product Type'); ?> <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item <?= (!$typeID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/'. ($gID ? $gID : '0') ) ?>"><?= t('All Types') ?></a></li>
+                                    <?php foreach($typeList as $type) { ?>
+                                        <li class="nav-item <?= ($typeID == $type->getTypeID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($gID ? $gID : '0') . '/', $type->getTypeID()) ?>"><?= $type->getTypeName() ?></a></li>
+                                    <?php } ?>
+                                </ul>
+                                <?php } ?>
                             </li>
                         </ul><br />
                     <?php } ?>
@@ -2018,7 +2134,9 @@ if (version_compare($version, '9.0', '<')) {
                 <th><a><?= t('Stock Level') ?></a></th>
                 <th><a href="<?= $productList->getSortURL('price'); ?>"><?= t('Price') ?></a></th>
                 <th><a><?= t('Featured') ?></a></th>
-                <th><a><?= t('Groups') ?></a></th>
+                <th><a>
+                        <?= count($typeList) ? t('Type') . ' / ' : '' ;?>
+                        <?= t('Groups') ?></a></th>
                 <th><a><?= t('Actions') ?></a></th>
             </tr>
             </thead>
@@ -2081,9 +2199,14 @@ if (version_compare($version, '9.0', '<')) {
                             ?>
                         </td>
                         <td>
+                            <?php if ($productType = $product->getType()) { ?>
+                               <?= $productType->getTypeName(); ?>
+                            <?php } ?>
+
+
                             <?php $productgroups = $product->getGroups();
                             foreach ($productgroups as $pg) { ?>
-                                <span class="label label-primary <?= $badgeClass; ?> badge-primary bg-primary"><?= $pg->getGroup()->getGroupName(); ?></span>
+                                <span class="label label-primary <?= $badgeClass; ?> badge-primary bg-primary"><?= h($pg->getGroup()->getGroupName()); ?></span>
                             <?php } ?>
 
                             <?php if (empty($productgroups)) { ?>

@@ -430,6 +430,7 @@ class Installer
         self::installSinglePage('/dashboard/store/products/groups', $pkg);
         self::installSinglePage('/dashboard/store/products/categories', $pkg);
         self::installSinglePage('/dashboard/store/products/attributes', $pkg);
+        self::installSinglePage('/dashboard/store/products/types', $pkg);
         self::installSinglePage('/dashboard/store/manufacturers/', $pkg);
         self::installSinglePage('/dashboard/store/settings/', $pkg);
         self::installSinglePage('/dashboard/store/settings/shipping', $pkg);

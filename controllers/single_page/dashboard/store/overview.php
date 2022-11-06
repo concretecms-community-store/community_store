@@ -6,6 +6,7 @@ use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
 
 class Overview extends DashboardPageController {
@@ -43,8 +44,7 @@ class Overview extends DashboardPageController {
         if(!Config::get('community_store.emailalerts')) {
             $this->set('missingFromEmail', true);
         }
-
-
+        
         $this->set('pageTitle', t('Store'));
     }
 

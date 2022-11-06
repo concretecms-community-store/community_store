@@ -27,6 +27,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $relatedProduct = false;
     protected $manufacturer = '';
     protected $attFilters = [];
+    protected $productType = false;
 
     public function setGroupID($gID)
     {
@@ -106,6 +107,11 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function setRelatedProduct($product)
     {
         $this->relatedProduct = $product;
+    }
+
+    public function setProductType($type)
+    {
+        $this->productType = $type;
     }
 
     public function setAttributeFilters($filterArray)
@@ -353,6 +359,10 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
         if ($this->activeOnly) {
             $query->andWhere("pActive = 1");
+        }
+
+        if (is_object($this->productType)) {
+            $query->andWhere("pType = ?")->setParameter($paramcount++, $this->productType->getTypeID());
         }
 
         if ($this->sortBy == 'category') {

@@ -15,6 +15,7 @@ use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile;
@@ -28,6 +29,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 
@@ -35,14 +37,23 @@ class Products extends DashboardSitePageController
 {
     protected $headerSearch;
 
-    public function view($gID = null)
+    public function view($gID = null, $typeID = null)
     {
+        if ($gID == 0) {
+            $gID = null;
+        }
+
         $productsList = new ProductList();
         $productsList->setItemsPerPage(20);
         $productsList->setGroupID($gID);
         $productsList->setActiveOnly(false);
         $productsList->setShowOutOfStock(true);
         $productsList->setGroupMatchAny(true);
+
+        if ($typeID) {
+            $productType = ProductType::getByID($typeID);
+            $productsList->setProductType($productType);
+        }
 
         if ($this->request->query->get('ccm_order_by')) {
             $productsList->setSortBy($this->request->query->get('ccm_order_by'));
@@ -77,6 +88,8 @@ class Products extends DashboardSitePageController
         $this->set("grouplist", $grouplist);
         $this->set('gID', $gID);
 
+        $this->set('typeID', $typeID);
+
         if ($gID) {
             Session::set('communitystore.dashboard.products.group', $gID);
         } else {
@@ -87,11 +100,14 @@ class Products extends DashboardSitePageController
         $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
         $this->set('multilingualEnabled', (count($pages) > 1));
 
+        $typeList = ProductTypeList::getProductTypeList();
+        $this->set("typeList", $typeList);
+
         $headerSearch = $this->getHeaderSearch($grouplist, $gID);
         $this->set('headerSearch', $headerSearch);
     }
 
-    public function add()
+    public function add($typeID = false)
     {
         if ($this->request->getMethod() == 'POST') {
            $return = $this->save();
@@ -105,6 +121,15 @@ class Products extends DashboardSitePageController
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
+
+        $typeList = ProductTypeList::getProductTypeList();
+
+        $producttypes = [];
+        foreach ($typeList as $type) {
+            $producttypes[$type->getTypeID()] = $type->getName();
+        }
+
+        $this->set("producttypes", $producttypes);
 
         $productgroups = [];
         foreach ($grouplist as $productgroup) {
@@ -147,6 +172,12 @@ class Products extends DashboardSitePageController
         $this->set('page', false);
         $this->set('pageTitle', t('Add Product'));
         $this->set('usergroups', $usergrouparray);
+
+        $productType = false;
+        if ($typeID) {
+            $productType = ProductType::getByID($typeID);
+        }
+        $this->set('productType', $productType);
     }
 
     public function edit($pID)
@@ -240,6 +271,15 @@ class Products extends DashboardSitePageController
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
         $this->set("productgroups", $productgroups);
+
+        $typeList = ProductTypeList::getProductTypeList();
+
+        $producttypes = [];
+        foreach ($typeList as $type) {
+            $producttypes[$type->getTypeID()] = $type->getName();
+        }
+
+        $this->set("producttypes", $producttypes);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
