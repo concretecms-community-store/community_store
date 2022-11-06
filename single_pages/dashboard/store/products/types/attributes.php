@@ -45,7 +45,7 @@ foreach($type->getLayoutSets() as $set) { ?>
             <ul class="ccm-item-set-controls" style=" float: right;">
 
                 <li><a href="#" data-dialog="add_control" data-set-id="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-plus"></i></a></a></li>
-                <li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fas fa-arrows-alt"></i></a></li>
+                <li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
                 <li><a href="#" data-edit-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-edit"></i></a></li>
                 <li><a href="#" data-delete-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
             </ul>
@@ -109,7 +109,7 @@ foreach($type->getLayoutSets() as $set) { ?>
 
                 <td style="text-align: right; white-space: nowrap;">
                     <ul class="ccm-item-set-controls">
-                        <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows-alt"></i></a></li>
+                        <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
                         <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>" data-control-hidden="<?= h($control->getHidden() ? '1' : '0') ?>"><i class="fa fas fa-edit"></i></a></li>
                         <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
                     </ul>
@@ -172,7 +172,7 @@ foreach($type->getLayoutSets() as $set) { ?>
             <input type="hidden" name="ptlsID" id="ptlsID" value="" />
             <input type="hidden" name="akID" id="akID" value="" />
             <?php $token->output('add_control') ?>
-            <ul data-list="page-type-composer-control-type" class="item-select-list">
+            <ul data-list="page-type-composer-control-type" class="item-select-list" style="height: 600px; overflow-y: auto">
                 <?php
 
                 foreach ($keys as $ak) {

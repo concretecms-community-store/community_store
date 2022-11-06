@@ -110,10 +110,10 @@ class Products extends DashboardSitePageController
     public function add($typeID = false)
     {
         if ($this->request->getMethod() == 'POST') {
-           $return = $this->save();
-           if ($return) {
-               return $return;
-           }
+            $return = $this->save();
+            if ($return) {
+                return $return;
+            }
         }
 
         $this->loadFormAssets();
@@ -126,7 +126,7 @@ class Products extends DashboardSitePageController
 
         $producttypes = [];
         foreach ($typeList as $type) {
-            $producttypes[$type->getTypeID()] = $type->getName();
+            $producttypes[$type->getTypeID()] = $type->getTypeName();
         }
 
         $this->set("producttypes", $producttypes);
@@ -150,7 +150,7 @@ class Products extends DashboardSitePageController
             }
         }
 
-       $manufacturersList = ManufacturerList::getManufacturerList();
+        $manufacturersList = ManufacturerList::getManufacturerList();
 
         $this->set('manufacturersList', $manufacturersList);
         $productmanufacturers = array("0" => t("None"));
@@ -276,7 +276,7 @@ class Products extends DashboardSitePageController
 
         $producttypes = [];
         foreach ($typeList as $type) {
-            $producttypes[$type->getTypeID()] = $type->getName();
+            $producttypes[$type->getTypeID()] = $type->getTypeName();
         }
 
         $this->set("producttypes", $producttypes);
@@ -462,16 +462,29 @@ class Products extends DashboardSitePageController
                     }
                 }
 
+                $typeID = '';
+                if ($product) {
+                    $type = $product->getType();
+                    if ($type) {
+                        $typeID = $type->getTypeID();
+                    }
+                }
+
                 //save the product
                 $product = Product::saveProduct($data);
                 //save product attributes
-                $aks = ProductKey::getList();
 
-                foreach ($aks as $uak) {
-                    $controller = $uak->getController();
-                    $value = $controller->createAttributeValueFromRequest();
-                    $product->setAttribute($uak, $value);
+                // only save attributes if product type hasn't changed during save
+                if ($data['pType'] == $typeID) {
+                    $aks = ProductKey::getList();
+
+                    foreach ($aks as $uak) {
+                        $controller = $uak->getController();
+                        $value = $controller->createAttributeValueFromRequest();
+                        $product->setAttribute($uak, $value);
+                    }
                 }
+
                 //save images
                 ProductImage::addImagesForProduct($data, $product);
 

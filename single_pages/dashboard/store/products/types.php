@@ -29,7 +29,7 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
         <tbody>
         <?php foreach($typeList as $type){?>
             <tr>
-                <td><a href="<?= Url::to('/dashboard/store/products/types/edit/', $type->getTypeID())?>"><?= h($type->getName()) ?></a></td>
+                <td><a href="<?= Url::to('/dashboard/store/products/types/edit/', $type->getTypeID())?>"><?= h($type->getTypeName()) ?></a></td>
                 <td>
                     <?= h($type->getHandle()) ?>
                 </td>
