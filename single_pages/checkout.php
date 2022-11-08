@@ -462,7 +462,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php
                                 $i = 1;
                                 foreach ($enabledPaymentMethods as $pm) {
-                                    if (!isset($lastPaymentMethodHandle) && $i == 1 || $lastPaymentMethodHandle == $pm->getHandle()) {
+                                    if (!isset($lastPaymentMethodHandle) && $i == 1 || (isset($lastPaymentMethodHandle) && $lastPaymentMethodHandle == $pm->getHandle())) {
                                         $props = ['data-payment-method-id' => $pm->getID(), 'checked' => 'checked'];
                                     } else {
                                         $props = ['data-payment-method-id' => $pm->getID()];

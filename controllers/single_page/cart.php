@@ -75,14 +75,14 @@ class Cart extends PageController
 
             if ('clear' == $this->request->request->get('action')) {
                 StoreCart::clear();
-                $returndata = ['success' => true, 'action' => 'clear'];
+                $returndata = ['success' => true, 'action' => 'clear', 'quantity' => false, 'added' => false];
             }
 
             if ('remove' == $this->request->request->get('action')) {
                 $data = $this->request->request->all();
                 if (isset($data['instance'])) {
                     StoreCart::remove($data['instance']);
-                    $returndata = ['success' => true, 'action' => 'remove'];
+                    $returndata = ['success' => true, 'action' => 'remove', 'quantity' => false, 'added' => false];
                 }
             }
 
