@@ -152,6 +152,10 @@ class Calculator
             $includedTaxTotal = $discountRatio * $includedTaxTotal;
             $includedShippingTaxTotal = $discountShippingRatio * $includedShippingTaxTotal;
 
+            if ($discountRatio < 0) {
+                $discountRatio = 0;
+            }
+
             foreach ($taxes as $tax) {
                 $tax['taxamount'] = round(($discountRatio * $tax['producttaxamount']) + ($discountShippingRatio * $tax['shippingtaxamount']), 2);
                 $formattedtaxes[] = $tax;
