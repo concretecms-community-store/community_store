@@ -101,7 +101,7 @@ foreach($type->getLayoutSets() as $set) { ?>
             <tr class="ccm-item-set-control"   data-page-product-type-layout-control-set-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" >
 
                 <td style="width: 85%;">
-                    <?= h($control->getDisplayLabel()) ; ?>
+                    <?= h($control->getDisplayLabel(true)) ; ?>
                 </td>
                 <td style="width: 15%;">
                     <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all') ; ?></span>

@@ -2200,7 +2200,7 @@ if (version_compare($version, '9.0', '<')) {
                         </td>
                         <td>
                             <?php if ($productType = $product->getType()) { ?>
-                               <?= $productType->getTypeName(); ?>
+                               <?= $productType->getTypeName(); ?><br />
                             <?php } ?>
 
 

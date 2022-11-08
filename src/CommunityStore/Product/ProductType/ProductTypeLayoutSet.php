@@ -95,7 +95,9 @@ class ProductTypeLayoutSet
     }
 
     public function getPublicLayoutSetControls() {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('hidden', '0'))->orderBy(array('displayOrder' => Criteria::ASC));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('hidden', '0'))
+            ->orWhere(Criteria::expr()->isNull('hidden'))
+            ->orderBy(array('displayOrder' => Criteria::ASC));
         return $this->controls->matching($criteria);
     }
 

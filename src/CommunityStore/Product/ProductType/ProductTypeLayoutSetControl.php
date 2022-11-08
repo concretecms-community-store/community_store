@@ -50,9 +50,13 @@ class ProductTypeLayoutSetControl
     protected $hidden;
 
 
-    public function getDisplayLabel() {
+    public function getDisplayLabel($admin = false) {
         if ($this->customLabel) {
-            return $this->customLabel . ' (' . $this->getAttributeKey()->getAttributeKeyName() . ')';
+            if ($admin) {
+                return $this->customLabel . ' (' . $this->getAttributeKey()->getAttributeKeyName() . ')';
+            } else {
+                return $this->customLabel;
+            }
         } else {
             return $this->getAttributeKey()->getAttributeKeyName();
         }
