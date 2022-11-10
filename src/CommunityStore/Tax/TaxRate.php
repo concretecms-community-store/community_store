@@ -259,6 +259,8 @@ class TaxRate
         $cart = Cart::getCart();
         $producttaxtotal = 0;
         $shippingtaxtotal = 0;
+        $taxCalc = Config::get('community_store.calculation');
+
         if ($cart) {
             foreach ($cart as $cartItem) {
                 $pID = $cartItem['product']['pID'];
@@ -276,10 +278,9 @@ class TaxRate
                         //if this tax rate is in the tax class associated with this product
                         if (is_object($product->getTaxClass())) {
                             if ($product->getTaxClass()->taxClassContainsTaxRate($this)) {
-                                $taxCalc = Config::get('community_store.calculation');
-                                $productSubTotal = Calculator::getCartItemPrice($cartItem) * $qty;
 
-                                if ('extract' == $taxCalc) {
+                                $productSubTotal = Calculator::getCartItemPrice($cartItem) * $qty;
+                                if ($taxCalc == 'extract') {
                                     $taxrate = 1 + ($this->getTaxRate() / 100);
                                     $tax = $productSubTotal - ($productSubTotal / $taxrate);
                                 } else {
@@ -295,10 +296,10 @@ class TaxRate
             }//foreach
         }//if cart
 
-        if ('grandtotal' == $this->getTaxBasedOn()) {
+        if ($this->getTaxBasedOn() == 'grandtotal') {
             $shippingTotal = floatval(Calculator::getShippingTotal());
 
-            if ('extract' == $taxCalc) {
+            if ($taxCalc == 'extract') {
                 $taxrate = 1 + ($this->getTaxRate() / 100);
                 $shippingtaxtotal = $shippingTotal - ($shippingTotal / $taxrate);
             } else {
@@ -321,7 +322,7 @@ class TaxRate
                     $taxCalc = $taxCalc = Config::get('community_store.calculation');
                     $productSubTotal = $productObj->getActivePrice($qty) * $qty;
 
-                    if ('extract' == $taxCalc) {
+                    if ($taxCalc == 'extract') {
                         $taxrate = 1 + ($this->getTaxRate() / 100);
                         $tax = $productSubTotal - ($productSubTotal / $taxrate);
                     } else {
