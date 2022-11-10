@@ -96,7 +96,7 @@ class Cart
                         $checkeditems[] = $cartitem;
 
                         if ($stockLimited) {
-                            if ($cartitem['product']['variation']) {
+                            if (isset($cartitem['product']['variation'])) {
                                 if (!isset($stockTotals['variations'][$cartitem['product']['variation']])) {
                                     $stockTotals['variations'][$cartitem['product']['variation']] = ['cartQuantity' => $cartitem['product']['qty'], 'maxQuantity' => $maxQuantity];
                                 } else {
