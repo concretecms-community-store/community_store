@@ -9,7 +9,7 @@ $usedKeys = [];
 
 
 <div style="display: none">
-    <div id="ccm-page-type-composer-add-set" class="ccm-ui">
+    <div id="ccm-page-type-composer-add-set">
         <form method="post" action="<?= $view->action('add_set', $type->getTypeID()) ?>">
             <?php $token->output('add_set') ?>
             <div class="form-group">
@@ -23,7 +23,7 @@ $usedKeys = [];
         </form>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-primary float-end" onclick="$('#ccm-page-type-composer-add-set form').submit()"><?= t('Add Set') ?></button>
+            <button class="btn btn-primary float-end pull-right" onclick="$('#ccm-page-type-composer-add-set form').submit()"><?= t('Add Set') ?></button>
         </div>
     </div>
 </div>
@@ -37,112 +37,114 @@ $usedKeys = [];
 </div>
 
 
-<?php
+<div class="layout-sets">
+    <?php
 
-foreach($type->getLayoutSets() as $set) { ?>
-    <div class="ccm-item-set card panel panel-default" data-page-product-type-layout-control-set-id="<?= $set->getLayoutSetID() ?>">
-        <div class="card-header panel-heading">
-            <ul class="ccm-item-set-controls" style=" float: right;">
+    foreach($type->getLayoutSets() as $set) { ?>
+        <div class="ccm-item-set card panel panel-default" data-page-product-type-layout-control-set-id="<?= $set->getLayoutSetID() ?>">
+            <div class="card-header panel-heading">
+                <ul class="ccm-item-set-controls" style=" float: right;">
 
-                <li><a href="#" data-dialog="add_control" data-set-id="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-plus"></i></a></a></li>
-                <li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
-                <li><a href="#" data-edit-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-edit"></i></a></li>
-                <li><a href="#" data-delete-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
-            </ul>
-            <div class="ccm-item-set-name" ><?php
-                if ($set->getLayoutSetName()) {
-                    echo $set->getLayoutSetName();
-                } else {
-                    echo t('(No Name)');
-                } ?></div>
-        </div>
+                    <li><a href="#" data-dialog="add_control" data-set-id="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-plus"></i></a></a></li>
+                    <li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
+                    <li><a href="#" data-edit-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-edit"></i></a></li>
+                    <li><a href="#" data-delete-set="<?= $set->getLayoutSetID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
+                </ul>
+                <div class="ccm-item-set-name" ><?php
+                    if ($set->getLayoutSetName()) {
+                        echo $set->getLayoutSetName();
+                    } else {
+                        echo t('(No Name)');
+                    } ?></div>
+            </div>
 
-        <div style="display: none">
-            <div data-delete-set-dialog="<?= $set->getLayoutSetID() ?>">
-                <form data-delete-set-form="<?= $set->getLayoutSetID() ?>" action="<?= $view->action('delete_set', $set->getLayoutSetID()) ?>" method="post">
-                    <?= t('Delete this form layout set? This cannot be undone.') ?>
-                    <?php $token->output('delete_set') ?>
-                </form>
-                <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                    <button class="btn btn-danger float-end" onclick="$('form[data-delete-set-form=<?= $set->getLayoutSetID() ?>]').submit()"><?=t('Delete Set') ?></button>
+            <div style="display: none">
+                <div data-delete-set-dialog="<?= $set->getLayoutSetID() ?>">
+                    <form data-delete-set-form="<?= $set->getLayoutSetID() ?>" action="<?= $view->action('delete_set', $set->getLayoutSetID()) ?>" method="post">
+                        <?= t('Delete this form layout set? This cannot be undone.') ?>
+                        <?php $token->output('delete_set') ?>
+                    </form>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger float-end pull-right" onclick="$('form[data-delete-set-form=<?= $set->getLayoutSetID() ?>]').submit()"><?=t('Delete Set') ?></button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div style="display: none">
-            <div data-edit-set-dialog="<?= $set->getLayoutSetID() ?>" class="ccm-ui">
-                <form data-edit-set-form="<?= $set->getLayoutSetID() ?>" action="<?= $view->action('update_set', $set->getLayoutSetID()) ?>" method="post">
-                    <div class="form-group">
-                        <?= $form->label('ptLayoutSetName', tc('Name of a set', 'Set Name')) ?>
-                        <?= $form->text('ptLayoutSetName', $set->getLayoutSetName()) ?>
-                    </div>
-                    <div class="form-group">
-                        <?= $form->label('ptLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
-                        <?= $form->textarea('ptLayoutSetDescription', $set->getLayoutSetDescription()) ?>
-                    </div>
-                    <div class="dialog-buttons">
-                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop();"><?= t('Cancel') ?></button>
-                        <button class="btn btn-primary float-end" onclick="$('form[data-edit-set-form=<?= $set->getLayoutSetID() ?>]').submit();"><?=t('Update Set') ?></button>
-                    </div>
-                    <?php $token->output('update_set') ?>
-                </form>
-            </div>
-        </div>
-
-        <table class="table table-hover" style="width: 100%;">
-            <tbody class="ccm-item-set-inner">
-            <?php $controls = $set->getLayoutSetControls();
-            foreach ($controls as $control) {
-
-                $usedKeys[] = $control->getAttributeKey()->getAttributeKeyID();
-
-?>
-            <tr class="ccm-item-set-control"   data-page-product-type-layout-control-set-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" >
-
-                <td style="width: 85%;">
-                    <?= h($control->getDisplayLabel(true)) ; ?>
-                </td>
-                <td style="width: 15%;">
-                    <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all') ; ?></span>
-                </td>
-
-                <td style="text-align: right; white-space: nowrap;">
-                    <ul class="ccm-item-set-controls">
-                        <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
-                        <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>" data-control-hidden="<?= h($control->getHidden() ? '1' : '0') ?>"><i class="fa fas fa-edit"></i></a></li>
-                        <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
-                    </ul>
-
-                    <div style="display: none">
-                        <div data-delete-set-control-dialog="<?=$control->getProductTypeLayoutSetControlID() ?>">
-                            <?= app('helper/validation/token')->output('delete_set_control') ?>
-
-                            <form data-delete-set-control-form="<?= $control->getProductTypeLayoutSetControlID() ?>" action="<?= $view->action('delete_set_control', $control->getProductTypeLayoutSetControlID()) ?>" method="post">
-                                <?php $token->output('delete_set_control') ?>
-                            </form>
-
-                            <div class="dialog-buttons">
-                                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                                <button class="btn btn-danger float-end" onclick="$('form[data-delete-set-control-form=<?= $control->getProductTypeLayoutSetControlID() ?>]').submit()"><?= t('Remove Attribute From Set') ?></button>
-                            </div>
+            <div style="display: none;">
+                <div data-edit-set-dialog="<?= $set->getLayoutSetID() ?>" >
+                    <form data-edit-set-form="<?= $set->getLayoutSetID() ?>" action="<?= $view->action('update_set', $set->getLayoutSetID()) ?>" method="post">
+                        <div class="form-group">
+                            <?= $form->label('ptLayoutSetName', tc('Name of a set', 'Set Name')) ?>
+                            <?= $form->text('ptLayoutSetName', $set->getLayoutSetName()) ?>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                        <div class="form-group">
+                            <?= $form->label('ptLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
+                            <?= $form->textarea('ptLayoutSetDescription', $set->getLayoutSetDescription()) ?>
+                        </div>
+                        <div class="dialog-buttons">
+                            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop();"><?= t('Cancel') ?></button>
+                            <button class="btn btn-primary float-end pull-right" onclick="$('form[data-edit-set-form=<?= $set->getLayoutSetID() ?>]').submit();"><?=t('Update Set') ?></button>
+                        </div>
+                        <?php $token->output('update_set') ?>
+                    </form>
+                </div>
+            </div>
+
+            <table class="table table-hover" style="width: 100%;">
+                <tbody class="ccm-item-set-inner">
+                <?php $controls = $set->getLayoutSetControls();
+                foreach ($controls as $control) {
+
+                    $usedKeys[] = $control->getAttributeKey()->getAttributeKeyID();
+
+                    ?>
+                    <tr class="ccm-item-set-control"   data-page-product-type-layout-control-set-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" >
+
+                        <td style="width: 85%;">
+                            <?= h($control->getDisplayLabel(true)) ; ?>
+                        </td>
+                        <td style="width: 15%;">
+                            <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all') ; ?></span>
+                        </td>
+
+                        <td style="text-align: right; white-space: nowrap;">
+                            <ul class="ccm-item-set-controls">
+                                <li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fas fa-arrows fa-arrows-alt-v"></i></a></li>
+                                <li><a href="#" data-dialog="edit_control" data-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" data-control-label="<?= h($control->getCustomLabel()) ?>" data-control-hidden="<?= h($control->getHidden() ? '1' : '0') ?>"><i class="fa fas fa-edit"></i></a></li>
+                                <li><a href="#" data-delete-set-control="<?=$control->getProductTypeLayoutSetControlID() ?>"><i class="fa fas fa-trash fa-trash-alt"></i></a></li>
+                            </ul>
+
+                            <div style="display: none">
+                                <div data-delete-set-control-dialog="<?=$control->getProductTypeLayoutSetControlID() ?>">
+                                    <?= app('helper/validation/token')->output('delete_set_control') ?>
+
+                                    <form data-delete-set-control-form="<?= $control->getProductTypeLayoutSetControlID() ?>" action="<?= $view->action('delete_set_control', $control->getProductTypeLayoutSetControlID()) ?>" method="post">
+                                        <?php $token->output('delete_set_control') ?>
+                                    </form>
+
+                                    <div class="dialog-buttons">
+                                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                                        <button class="btn btn-danger float-end pull-right" onclick="$('form[data-delete-set-control-form=<?= $control->getProductTypeLayoutSetControlID() ?>]').submit()"><?= t('Remove Attribute From Set') ?></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
 
 
-            <?php
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
-<?php } ?>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    <?php } ?>
+</div>
 
 
 <div style="display: none">
-    <div id="ccm-product-type-set-edit-control" class="ccm-ui">
+    <div id="ccm-product-type-set-edit-control" >
         <form method="post" action="<?= $view->action('edit_control') ?>">
             <input type="hidden" name="ptlscID" id="ptlscID" value="" />
 
@@ -161,13 +163,13 @@ foreach($type->getLayoutSets() as $set) { ?>
         </form>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-primary float-end" onclick="$('#ccm-product-type-set-edit-control form').submit()"><?= t('Save') ?></button>
+            <button class="btn btn-primary float-end pull-right" onclick="$('#ccm-product-type-set-edit-control form').submit()"><?= t('Save') ?></button>
         </div>
     </div>
 </div>
 
 <div style="display: none">
-    <div id="ccm-product-type-set-add-control" class="ccm-ui">
+    <div id="ccm-product-type-set-add-control"  >
         <form action="<?= $view->action('add_control') ?>" method="post" >
             <input type="hidden" name="ptlsID" id="ptlsID" value="" />
             <input type="hidden" name="akID" id="akID" value="" />
@@ -177,31 +179,31 @@ foreach($type->getLayoutSets() as $set) { ?>
 
                 foreach ($keys as $ak) {
                     if(!in_array($ak->getAttributeKeyID(), $usedKeys)) {
-                    ?>
-                    <li>
-                        <a href="#"  data-ak-id="<?= $ak->getAttributeKeyID() ?>">
+                        ?>
+                        <li>
+                            <a href="#"  data-ak-id="<?= $ak->getAttributeKeyID() ?>">
 
-                            <?php
-                            // recusing composer control, as all we want is the icon at this point
-                            $ac = new \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl();
-                            $ac->setAttributeKeyID($ak->getAttributeKeyID());
-                            $ac->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
-                            ?>
+                                <?php
+                                // recusing composer control, as all we want is the icon at this point
+                                $ac = new \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl();
+                                $ac->setAttributeKeyID($ak->getAttributeKeyID());
+                                $ac->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
+                                ?>
 
-                            <?= $ac->getPageTypeComposerControlIcon() ?>
-                            <?= $ak->getAttributeKeyName() ?>
+                                <?= $ac->getPageTypeComposerControlIcon() ?>
+                                <?= $ak->getAttributeKeyName() ?>
 
-                        </a>
-                    </li>
-                    <?php
-                }
+                            </a>
+                        </li>
+                        <?php
+                    }
                 }
                 ?>
             </ul>
 
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-secondary float-start " onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
         </div>
     </div>
 </div>
@@ -239,6 +241,7 @@ foreach($type->getLayoutSets() as $set) { ?>
 
     $(function() {
         $('a[data-dialog=add_set]').on('click', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
             jQuery.fn.dialog.open({
                 element: '#ccm-page-type-composer-add-set',
                 modal: true,
@@ -249,6 +252,7 @@ foreach($type->getLayoutSets() as $set) { ?>
         });
 
         $('a[data-dialog=add_control]').on('click', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
             $('#ptlsID').val($(this).data('set-id'));
 
             jQuery.fn.dialog.open({
@@ -262,6 +266,7 @@ foreach($type->getLayoutSets() as $set) { ?>
 
 
         $('a[data-dialog=edit_control]').on('click', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
             $('#ptlscID').val($(this).data('control-id'));
             $('#customLabel').val($(this).data('control-label'));
             $('#hidden').val($(this).data('control-hidden'));
@@ -276,6 +281,7 @@ foreach($type->getLayoutSets() as $set) { ?>
         });
 
         $('a[data-delete-set]').on('click', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
             var ptLayoutSetID = $(this).attr('data-delete-set');
             jQuery.fn.dialog.open({
                 element: 'div[data-delete-set-dialog=' + ptLayoutSetID + ']',
@@ -286,6 +292,7 @@ foreach($type->getLayoutSets() as $set) { ?>
             });
         });
         $('a[data-edit-set]').on('click', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
             var ptLayoutSetID = $(this).attr('data-edit-set');
             jQuery.fn.dialog.open({
                 element: 'div[data-edit-set-dialog=' + ptLayoutSetID + ']',
@@ -296,7 +303,7 @@ foreach($type->getLayoutSets() as $set) { ?>
             });
         });
 
-        $('div.ccm-pane-body, #ccm-dashboard-content-regular').sortable({
+        $('.layout-sets').sortable({
             handle: 'a[data-command=move_set]',
             items: '.ccm-item-set',
             cursor: 'move',
