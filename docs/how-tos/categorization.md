@@ -43,6 +43,9 @@ In the above example you may wish to show all games products on the top level 'G
 To do this, you would add a Product List block and configure the **List Products** option to be **Under current page and child pages**.
 :::
 
+## Product Types
+
+A product can be marked as being of a specified Product Type, allowing a more specific set of attributes to be associated with that product.
 
 ## Manufacturers
 

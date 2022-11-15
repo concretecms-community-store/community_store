@@ -20,7 +20,7 @@ To create variations for a product:
 - Check the 'Options have different prices, SKUs or stock levels' towards the bottom of the Options and Variants tab
 - Update the Product and scroll down past your product options - the combinations of options, the variations will be displayed and be configured
 
-By default new variations are set to be unavailable.
+By default, new variations are set to be unavailable.
  
 Values or options entered for variations will apply for a product when its particular options are selected.
 If a variation value is not entered, for example the price, the store will refer to the product 'base' price.
@@ -31,13 +31,15 @@ Keep in mind that a variation of a product is created for every combination of o
 
 ## Groups, Categories and Manufacturers
 
-There are three different ways that products can be categorized, with each way being used for different organizational purposes:
+There are four different ways that products can be categorized, with each way being used for different organizational purposes:
 
 - Using Product Groups - use to group products so they can be filtered within the dashboard, as well as on product list blocks
 - Categorised under pages - uses pages within a site's sitemap 
 - Using Manufacturers - a way to group products that can be shown on product blocks, linking to a manufacturer page
+- Using Product Types
 
 Review the [Categorization How-To](/how-tos/categorization) page for more detail on how these group concepts are used
+
 
 ## Attributes
 
@@ -47,5 +49,12 @@ Such attributes are intended to be used programmatically, such as in custom bloc
 Attributes for a product can be _edited_ via the Attributes tab when adding or editing a product.
 
 The display of product attributes is only handled programmatically - see  [Product Attributes](/developers/attributes.html#product-attributes) for how to access product attribute data.
+
+## Product Types
+
+Product Types can be created to allow for the creation of attribute sets, and product attributes within these set.
+When a Product Type is selected against a product, the attribute list will only display the attributes associated with that Product Type.
+
+Attribute sets and attributes within them can be labeled and re-ordered. Individual attributes can be marked as 'Visable to All', or, 'Dashboard Only', which can then be used programatically to determine if an attribute is for admin use only.
 
 
