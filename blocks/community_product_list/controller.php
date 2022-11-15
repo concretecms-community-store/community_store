@@ -14,6 +14,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 
 class Controller extends BlockController
 {
@@ -22,8 +23,11 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "600";
     protected $btDefaultSet = 'community_store';
-    protected $attFilters = [];
+    public $attFilters = [];
     public $groupMatchAny = '';
+    public $filterManufacturer = '';
+    public $filterProductType = '';
+
 
     public function getBlockTypeDescription()
     {
@@ -69,6 +73,10 @@ class Controller extends BlockController
         $this->set('relatedProduct', false);
         $this->set('relatedPID', false);
         $this->set('enableExternalFiltering', true);
+        $this->set('filterProductType', false);
+
+        $typeList = ProductTypeList::getProductTypeList();
+        $this->set("productTypes", $typeList);
 
     }
 
@@ -90,6 +98,9 @@ class Controller extends BlockController
             $relatedProduct = Product::getByID($this->relatedPID);
         }
         $this->set('relatedProduct', $relatedProduct);
+
+        $typeList = ProductTypeList::getProductTypeList();
+        $this->set("productTypes", $typeList);
     }
 
     public function getGroupFilters()
@@ -229,6 +240,10 @@ class Controller extends BlockController
             $products->setManufacturer($this->filterManufacturer);
         }
 
+        if (isset($this->filterProductType)) {
+            $products->setProductType($this->filterProductType);
+        }
+
         if (!empty($this->attFilters)) {
             $products->setAttributeFilters($this->attFilters);
         }
@@ -311,6 +326,7 @@ class Controller extends BlockController
         $args['showSale'] = isset($args['showSale']) ? (int)$args['showSale'] : 0;
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
         $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
+        $args['filterProductType'] = isset($args['filterProductType']) ? (int)$args['filterProductType'] : 0;
 
         if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;

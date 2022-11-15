@@ -12,12 +12,13 @@ $csm = $app->make('cs/helper/multilingual');
         <?php
         if (!empty($filterData)) {
             foreach ($filterData as $akhandle => $data) {
-                $ak = $attributes[$akhandle];
                 ?>
                 <div class="form-group mb-3">
 
                     <h3 class="store-product-filter-block-option-title">
-                    <?php if ($data['type'] == 'attr') { ?>
+                    <?php if ($data['type'] == 'attr') {
+                        $ak = $attributes[$akhandle];
+                        ?>
                         <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
                     <?php } elseif ($data['type'] == 'price') { ?>
                       <?= t($data['label'] ? $data['label']  : t('Price')); ?>

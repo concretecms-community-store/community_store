@@ -64,6 +64,22 @@
 
             <legend><?= t('Filtering'); ?></legend>
 
+            <?php if (!empty($productTypes)) {
+                $productTypesList = [''=>t('All Product Types')];
+                foreach ($productTypes as $productType) {
+                    $productTypesList[$productType->getTypeID()] = $productType->getTypeName();
+                }
+                ?>
+
+                <div class="form-group">
+                    <?= $form->label('filterProductType', t('Filter by Product Group')); ?>
+                    <?= $form->select('filterProductType',$productTypesList, $filterProductType); ?>
+                </div>
+
+
+                <?php
+            } ?>
+
             <?php
             foreach ($grouplist as $productgroup) {
                 $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();

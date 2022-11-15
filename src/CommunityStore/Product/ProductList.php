@@ -9,6 +9,7 @@ use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as ProductReport;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 
 class ProductList extends AttributedItemList implements PaginationProviderInterface
 {
@@ -111,6 +112,10 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
     public function setProductType($type)
     {
+       if (is_integer($type)) {
+           $type = ProductType::getByID($type);
+       }
+
         $this->productType = $type;
     }
 

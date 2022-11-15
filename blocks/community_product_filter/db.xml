@@ -25,6 +25,7 @@
         <field name="showTotals" type="boolean"></field>
         <field name="jumpAnchor" type="boolean"></field>
         <field name="filterManufacturer" type="integer" size="2"></field>
+        <field name="filterProductType" type="integer"><unsigned/></field>
 
     </table>
 

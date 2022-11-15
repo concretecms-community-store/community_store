@@ -1166,7 +1166,7 @@ class Product
         if (empty($data['poName'])) {
             $product->setHasVariations(0);
         } else {
-            $product->setHasVariations($data['pVariations']);
+            $product->setHasVariations(isset($data['pVariations']) ? '1' : '0');
         }
 
         $product->save();

@@ -35,6 +35,7 @@
 		<field name="showQuantity" type="boolean"></field>
 		<field name="noProductsMessage" type="string" size="255"></field>
 		<field name="filterManufacturer" type="integer" size="2"></field>
+		<field name="filterProductType" type="integer"><unsigned/></field>
 	</table>
 
 	<table name="btCommunityStoreProductListGroups">

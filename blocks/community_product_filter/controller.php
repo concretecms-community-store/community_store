@@ -10,6 +10,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 
 class Controller extends BlockController
 {
@@ -20,8 +21,9 @@ class Controller extends BlockController
     protected $btDefaultSet = 'community_store';
     protected $attFilters = [];
     protected $attTypes = ['select', 'text', 'boolean'];
-    protected $groupMatchAny = '';
-    protected $filterManufacturer = '';
+    public $groupMatchAny = '';
+    public $filterManufacturer = '';
+    public $filterProductType = '';
 
     public function getBlockTypeDescription()
     {
@@ -57,6 +59,10 @@ class Controller extends BlockController
         $this->set('jumpAnchor', '');
         $this->set('relatedProduct', false);
         $this->set('relatedPID', false);
+        $this->set('filterProductType', false);
+
+        $typeList = ProductTypeList::getProductTypeList();
+        $this->set("productTypes", $typeList);
     }
 
     public function edit()
@@ -77,6 +83,9 @@ class Controller extends BlockController
         } else {
             $this->set('relatedProduct', false);
         }
+
+        $typeList = ProductTypeList::getProductTypeList();
+        $this->set("productTypes", $typeList);
     }
 
     private function getAvailableAttributes()
@@ -147,6 +156,7 @@ class Controller extends BlockController
                     $this->groupMatchAny = $blockcontroller->groupMatchAny;
                     $groupfilters = $blockcontroller->getGroupFilters();
                     $this->filterManufacturer = $blockcontroller->filterManufacturer;
+                    $this->filterProductType = $blockcontroller->filterProductType;
                     break;
                 }
             }
@@ -346,18 +356,17 @@ class Controller extends BlockController
         $hasprice = false;
 
         foreach ($selectedAttributeList as $att) {
-            if (isset($att['handle'])) {
-
-                $handle = $att['handle'];
+            if (isset($att['handle']) || $att['type'] == 'price') {
 
                 if ('attr' == $att['type']) {
+                    $handle = $att['handle'];
                     if (isset($attributemapping[$handle])) {
                         $finalData[$handle] = ['type' => 'attr', 'data' => $attributemapping[$handle], 'label' => $att['label']];
                     }
                 } else {
                     $finalData[$att['type']] = ['type' => $att['type'], 'data' => false, 'label' => $att['label']];
 
-                    if ('price' == $att['type']) {
+                    if ($att['type'] == 'price') {
                         $hasprice = true;
                     }
                 }
@@ -372,7 +381,6 @@ class Controller extends BlockController
         $this->set('priceFiltering', false);
 
         if ($hasprice) {
-
             if (count($unfilteredIDs) > 0) {
                 $minmax = $db->fetchAll('SELECT MIN(pPrice) as min_price, MAX(pPrice) as max_price
                                             FROM CommunityStoreProducts
@@ -381,7 +389,9 @@ class Controller extends BlockController
                                             ');
                 $minPrice = $minmax[0]['min_price'];
                 $maxPrice = $minmax[0]['max_price'];
+
             }
+
 
 
             $minPriceSelected = $minPrice;
@@ -401,6 +411,7 @@ class Controller extends BlockController
                 }
             }
         }
+
 
         $this->set('filterData', $finalData);
         $this->set('selectedAttributes', $selectedarray);
@@ -432,6 +443,7 @@ class Controller extends BlockController
         $args['displayClear'] = isset($args['displayClear']) ? 1 : 0;
         $args['showTotals'] = isset($args['showTotals']) ? 1 : 0;
         $args['jumpAnchor'] = isset($args['jumpAnchor']) ? 1 : 0;
+        $args['filterProductType'] = isset($args['filterProductType']) ? (int)$args['filterProductType'] : 0;
 
         if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;
