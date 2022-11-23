@@ -1070,7 +1070,7 @@ class Product
         $product->setPrice($data['pPrice']);
         $product->setCostPrice($data['pCostPrice']);
 
-        if ($data['pType']) {
+        if (isset($data['pType'])) {
             $type = ProductType::getByID($data['pType']);
 
             if ($type) {

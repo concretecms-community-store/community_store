@@ -516,7 +516,7 @@ class ProductVariation
 
         $variationDefaultUnlimited = Config::get('community_store.variationDefaultUnlimited');
 
-        if (!empty($comboOptions)) {
+        if (!empty($comboOptions) && isset($data['pVariations'])) {
             $sort = 0;
 
             foreach ($comboOptions as $key => $optioncombo) {
