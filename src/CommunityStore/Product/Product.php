@@ -1075,6 +1075,8 @@ class Product
 
             if ($type) {
                 $product->setType($type);
+            } else {
+                $product->setType(null);
             }
         } else {
             $product->setType(null);

@@ -463,7 +463,7 @@ class Products extends DashboardSitePageController
                 }
 
                 $typeID = '';
-                if ($product) {
+                if (isset($product)) {
                     $type = $product->getType();
                     if ($type) {
                         $typeID = $type->getTypeID();
