@@ -563,35 +563,37 @@ class ProductVariation
                 } else {
                     $key = $variation->getID();
 
-                    $variation->setVariationSKU($data['pvSKU'][$key]);
-                    $variation->setVariationBarcode($data['pvBarcode'][$key]);
-                    $variation->setVariationPrice($data['pvPrice'][$key]);
-                    $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
-                    $variation->setVariationCostPrice($data['pvCostPrice'][$key]);
-                    $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
-                    $variation->setVariationStockLevel($data['pvQty'][$key]);
-                    $variation->setVariationIsUnlimited(isset($data['pvQtyUnlim'][$key]));
-                    $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
-                    $variation->setVariationWeight($data['pvWeight'][$key]);
-                    $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
-                    $variation->setVariationWidth($data['pvWidth'][$key]);
-                    $variation->setVariationHeight($data['pvHeight'][$key]);
-                    $variation->setVariationLength($data['pvLength'][$key]);
-                    $variation->setVariationPackageData($data['pvPackageData'][$key]);
-                    $variation->setVariationSort($sort);
-                    if (isset($data['pvDisabled'][$key])) {
-						$variation->setVariationDisabled(1);
-					} else {
-                    	$variation->setVariationDisabled(0);
-					}
-                    $variation->setProduct($product);
-                    $variation->save(true);
+                    if (isset($data['pvSKU'][$key])) {
+                        $variation->setVariationSKU($data['pvSKU'][$key]);
+                        $variation->setVariationBarcode($data['pvBarcode'][$key]);
+                        $variation->setVariationPrice($data['pvPrice'][$key]);
+                        $variation->setVariationWholesalePrice($data['pvWholesalePrice'][$key]);
+                        $variation->setVariationCostPrice($data['pvCostPrice'][$key]);
+                        $variation->setVariationSalePrice($data['pvSalePrice'][$key]);
+                        $variation->setVariationStockLevel($data['pvQty'][$key]);
+                        $variation->setVariationIsUnlimited(isset($data['pvQtyUnlim'][$key]));
+                        $variation->setVariationFID($data['pvfID'][$key] ? $data['pvfID'][$key] : null);
+                        $variation->setVariationWeight($data['pvWeight'][$key]);
+                        $variation->setVariationNumberItems($data['pvNumberItems'][$key]);
+                        $variation->setVariationWidth($data['pvWidth'][$key]);
+                        $variation->setVariationHeight($data['pvHeight'][$key]);
+                        $variation->setVariationLength($data['pvLength'][$key]);
+                        $variation->setVariationPackageData($data['pvPackageData'][$key]);
+                        $variation->setVariationSort($sort);
+                        if (isset($data['pvDisabled'][$key])) {
+                            $variation->setVariationDisabled(1);
+                        } else {
+                            $variation->setVariationDisabled(0);
+                        }
+                        $variation->setProduct($product);
+                        $variation->save(true);
 
-                    $options = $variation->getOptions();
+                        $options = $variation->getOptions();
 
-                    foreach ($options as $opt) {
-                        if (!in_array($opt->getOptionItem()->getID(), $optioncombo)) {
-                            $opt->delete();
+                        foreach ($options as $opt) {
+                            if (!in_array($opt->getOptionItem()->getID(), $optioncombo)) {
+                                $opt->delete();
+                            }
                         }
                     }
                 }

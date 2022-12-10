@@ -226,7 +226,7 @@ class Checkout extends PageController
         $this->set('activeShippingLabel', ShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', Calculator::getShippingTotal());
         $this->set('lastPaymentMethodHandle', Session::get('paymentMethod'));
-        $this->view($guest);
+        return $this->view($guest);
     }
 
     public function submit($guest = false)

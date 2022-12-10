@@ -2120,7 +2120,7 @@ class Product
         if (count($variations) > 0) {
             foreach ($variations as $variation) {
                 $cloneVariation = clone $variation;
-                $cloneVariation->setProductID($newproduct->getID());
+                $cloneVariation->setProduct($newproduct);
                 $cloneVariation->save(true);
                 $newvariations[] = $cloneVariation;
             }
