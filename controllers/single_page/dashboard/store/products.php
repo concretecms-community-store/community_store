@@ -475,7 +475,7 @@ class Products extends DashboardSitePageController
                 //save product attributes
 
                 // only save attributes if product type hasn't changed during save
-                if (isset($data['pType']) && $data['pType'] == $typeID) {
+                if (!isset($data['pType']) || (isset($data['pType']) && $data['pType'] == $typeID)) {
                     $aks = ProductKey::getList();
 
                     foreach ($aks as $uak) {
