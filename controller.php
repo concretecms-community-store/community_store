@@ -2,7 +2,6 @@
 namespace Concrete\Package\CommunityStore;
 
 use Concrete\Core\Package\Package;
-use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
@@ -14,69 +13,50 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Page\Page;
-use Whoops\Exception\ErrorException;
+use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class Controller extends Package
 {
-    protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.4.8.4';
+    protected string $pkgHandle = 'community_store';
+    protected string $pkgVersion = '2.4.8.4';
 
-    protected $npmPackages = [
-        'sysend' => '1.3.4',
-        'chartist' => '0.11.4',
-        'chartist-plugin-tooltips' => '0.0.17',
-    ];
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
     ];
 
-    public function getPackageDescription()
+    protected array $npmPackages = [
+        'sysend' => '1.3.4',
+        'chartist' => '0.11.4',
+        'chartist-plugin-tooltips' => '0.0.17',
+    ];
+
+    public function getPackageDescription(): string
     {
         return t("Add a store to your site");
     }
 
-    public function getPackageName()
+    public function getPackageName(): string
     {
         return t("Community Store");
     }
 
-    public function installStore($pkg)
-    {
-        Installer::installBlocks($pkg);
-        Installer::installProductParentPage($pkg);
-        Installer::installSinglePages($pkg);
-        Installer::installStoreProductPageType($pkg);
-        Installer::setDefaultConfigValues($pkg);
-        Installer::installPaymentMethods($pkg);
-        Installer::installShippingMethods($pkg);
-        Installer::setPageTypeDefaults($pkg);
-        Installer::installCustomerGroups($pkg);
-        Installer::installUserAttributes($pkg);
-        Installer::installOrderAttributes($pkg);
-        Installer::installProductAttributes($pkg);
-        Installer::createDDFileset($pkg);
-        Installer::installOrderStatuses($pkg);
-        Installer::installDefaultTaxClass($pkg);
-    }
-
+    /**
+     * @throws BindingResolutionException
+     * @throws Exception
+     */
     public function install()
     {
-        $template = PageTemplate::getByHandle('full');
-
-        if (!$template) {
-            throw new ErrorException(t("This package requires that a page template exists with the handle of 'full'. This can be adjusted or removed after the installation if required."));
+        if ($this->app->isRunThroughCommandLineInterface()) {
+            throw new Exception('This package can only be installed through the dashboard because of some required installer parameters');
         }
 
         $this->registerCategories();
-        parent::install();
-
-
-        if ($this->app->isRunThroughCommandLineInterface()) {
-            $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-            $this->installStore($pkg);
-        }
+        $package = parent::install();
+        $installer = $this->app->make(Installer::class);
+        $installer->install($package);
     }
 
     public function upgrade()
