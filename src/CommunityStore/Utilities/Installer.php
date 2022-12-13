@@ -13,7 +13,6 @@ use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
@@ -22,11 +21,11 @@ use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\PaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\ShippingMethodType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
@@ -73,7 +72,8 @@ class Installer
 
     public function __construct(
         private Application $application,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private Repository $config,
     ) {}
 
     public function install(Package $package, array $installerOptions = []): void
@@ -81,20 +81,23 @@ class Installer
         $this->createBlockTypes($package);
         $this->createSinglePages($package);
         $this->createDefaultPaymentMethod($package);
-        $this->installDefaultShippingMethods($package);
+        $this->createDefaultShippingMethodTypes($package);
         $this->setDefaultConfigValues();
+        $this->createDefaultTaxClass();
 
         $this->installProductParentPage($package);
         $this->createStoreProductPageType($package);
+
+        $this->createDigitalDownloadFileset();
+
 
         $this->setPageTypeDefaults();
         $this->installCustomerGroups();
         $this->installUserAttributes($package);
         $this->installOrderAttributes($package);
         $this->installProductAttributes($package);
-        $this->createDDFileset();
         $this->installOrderStatuses();
-        $this->installDefaultTaxClass($package);
+
     }
 
     private function createBlockTypes(Package $package): void
@@ -146,11 +149,27 @@ class Installer
         $this->entityManager->flush();
     }
 
+    private function createDefaultShippingMethodTypes(Package $package): void
+    {
+        $shippingMethodTypes = ['flat_rate' => 'Flat Rate', 'free_shipping' => 'Free Shipping'];
+        foreach ($shippingMethodTypes as $handle => $name) {
+            $shippingMethodType = $this->entityManager->getRepository(ShippingMethodType::class)->findOneBy(['handle' => $handle]);
+            if (!$shippingMethodType instanceof ShippingMethodType) {
+                $shippingMethodType = new ShippingMethodType();
+                $shippingMethodType->setHandle($handle)
+                    ->setName($name)
+                    ->setPackage($package);
+
+                $this->entityManager->persist($shippingMethodType);
+            }
+        }
+
+        $this->entityManager->flush();
+    }
+
     private function setDefaultConfigValues(): void
     {
-        /** @var Repository $config */
-        $config = $this->application->make('config');
-        $config->save('community_store', [
+        $this->config->save('community_store', [
             'symbol' => '$',
             'whole' => '.',
             'thousand' => ',',
@@ -159,6 +178,22 @@ class Installer
             'taxName' =>  t('Tax'),
             'guestCheckout' => 'always'
         ]);
+    }
+
+    private function createDefaultTaxClass(): void
+    {
+        $taxClass = $this->entityManager->getRepository(TaxClass::class)->findOneBy(['handle' => 'default']);
+        if ($taxClass instanceof TaxClass) {
+            return;
+        }
+
+        $taxClass = new TaxClass();
+        $taxClass->setHandle('default')
+            ->setName(t('Default'))
+            ->setLocked(true);
+
+        $this->entityManager->persist($taxClass);
+        $this->entityManager->flush();
     }
 
     private function createStoreProductPageType(Package $package, int $pageTypeId): void
@@ -271,6 +306,17 @@ class Installer
         $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
     }
 
+    private function createDigitalDownloadFileset(): void
+    {
+        $fileSetId = $this->config->get('community_store.digitalDownloadFileSet');
+        $fileSet = empty($fileSetId) ? FileSet::getByName(t('Digital Downloads')) : FileSet::getByID($fileSetId);
+        if (!$fileSet instanceof FileSet) {
+            $fileSet = FileSet::create(t("Digital Downloads"));
+        }
+
+        $this->config->save('community_store.digitalDownloadFileSet', $fileSet->getFileSetID());
+    }
+
 //    public function getDefaultSlug()
 //    {
 //        $site = $this->app->make('site')->getSite();
@@ -288,20 +334,6 @@ class Installer
 //
 //        return $defaultSlug;
 //    }
-
-    public static function installShippingMethods($pkg)
-    {
-        self::installShippingMethod('flat_rate', 'Flat Rate', $pkg);
-        self::installShippingMethod('free_shipping', 'Free Shipping', $pkg);
-    }
-
-    public static function installShippingMethod($handle, $name, $pkg)
-    {
-        $smt = ShippingMethodType::getByHandle($handle);
-        if (!is_object($smt)) {
-            ShippingMethodType::add($handle, $name, $pkg);
-        }
-    }
 
     public static function setPageTypeDefaults()
     {
@@ -347,39 +379,6 @@ class Installer
             OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
         }
     }
-
-    public static function installDefaultTaxClass($pkg)
-    {
-        $defaultTaxClass = TaxClass::getByHandle("default");
-        if (!is_object($defaultTaxClass)) {
-            $data = [
-                'taxClassName' => t('Default'),
-                'taxClassLocked' => true,
-            ];
-            $defaultTaxClass = TaxClass::add($data);
-        }
-    }
-
-    public static function upgrade($pkg)
-    {
-        // trigger a reinstall to add the select attribute type to the product category
-        self::installProductAttributes($pkg);
-        // trigger a reinstall in case new fields have been added
-        self::installOrderAttributes($pkg);
-        self::installUserAttributes($pkg);
-        self::installBlocks($pkg);
-
-        // pass an upgrade value of true, to avoid recreating cart/checkout pages again
-        self::createSinglePages($pkg, true);
-
-        // in case the customer group and digital download fileset are not saved in config yet
-        self::installCustomerGroups($pkg);
-        self::createDDFileset($pkg);
-
-        Localization::clearCache();
-    }
-
-
 
     public static function installOrderAttributes($pkg)
     {
@@ -534,23 +533,5 @@ class Installer
         }
         Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
 
-    }
-
-    private function createDDFileset(): void
-    {
-        //create fileset to place digital downloads
-        $fsID = Config::get('community_store.digitalDownloadFileSet');
-
-        if (empty($fsID)) {
-            $fs = FileSet::getByName(t('Digital Downloads'));
-        } else {
-            $fs = FileSet::getByID($fsID);
-        }
-
-        if (!is_object($fs)) {
-            $fs = FileSet::create(t("Digital Downloads"));
-        }
-
-        Config::save('community_store.digitalDownloadFileSet', $fs->getFileSetID());
     }
 }
