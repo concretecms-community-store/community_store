@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Package\Package;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
@@ -56,7 +57,7 @@ class Controller extends Package
         $this->registerCategories();
         $package = parent::install();
         $installer = $this->app->make(Installer::class);
-        $installer->install($package);
+        $installer->install($package, Request::getInstance()->request->all());
     }
 
     public function upgrade()
@@ -281,7 +282,7 @@ class Controller extends Package
         $this->app['manager/attribute/category']->extend(
             'store_order',
             function ($app) {
-                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
             }
         );
     }

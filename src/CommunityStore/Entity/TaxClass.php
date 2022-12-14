@@ -6,7 +6,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Repository\TaxClassReposi
 
 /**
  * @ORM\Entity(repositoryClass=TaxClassRepository::class)
- * @ORM\Table(name="CommunityStoreTaxClasses")
+ * @ORM\Table(name="CommunityStoreTaxClasses1")
  */
 class TaxClass
 {

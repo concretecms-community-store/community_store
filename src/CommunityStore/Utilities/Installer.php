@@ -2,24 +2,33 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Area\Area;
+use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
-use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\SetFactory;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Attribute\Category;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
+use Concrete\Core\Entity\Attribute\Set as AttributeSetEntity;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Page;
+use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Set as AttributeSet;
 use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\PaymentMethod;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\ShippingMethodType;
@@ -30,6 +39,7 @@ use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as Page
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Entity\Attribute\Type as AttributeTypeEntity;
 
 class Installer
 {
@@ -74,30 +84,134 @@ class Installer
         private Application $application,
         private EntityManagerInterface $entityManager,
         private Repository $config,
+        private CategoryService $categoryService
     ) {}
 
     public function install(Package $package, array $installerOptions = []): void
     {
+        $this->createCustomerGroups($package);
+        $this->createProductCategory($package);
+        $this->createOrderCategory($package);
+
         $this->createBlockTypes($package);
         $this->createSinglePages($package);
+        $this->createStoreProductPageType($package, $installerOptions['pageTypeId'] ?? null);
+
+        $this->createUserAttributes($package);
+
+        $this->setDefaultConfigValues();
         $this->createDefaultPaymentMethod($package);
         $this->createDefaultShippingMethodTypes($package);
-        $this->setDefaultConfigValues();
         $this->createDefaultTaxClass();
-
-        $this->installProductParentPage($package);
-        $this->createStoreProductPageType($package);
-
         $this->createDigitalDownloadFileset();
-
-
-        $this->setPageTypeDefaults();
-        $this->installCustomerGroups();
-        $this->installUserAttributes($package);
-        $this->installOrderAttributes($package);
-        $this->installProductAttributes($package);
         $this->installOrderStatuses();
 
+        if (isset($installerOptions['createParentProductPage'])) {
+            $this->installProductParentPage($package, $installerOptions['parentPage'] ?? null);
+        }
+    }
+
+    private function createCustomerGroups(Package $package): void
+    {
+        /** @var GroupRepository $groupRepository */
+        $groupRepository = $this->application->make(GroupRepository::class);
+        $customerGroupId = $this->config->get('community_store.customerGroup');
+
+        $group = empty($customerGroupId) ? $groupRepository->getGroupByPath('Store Customer') : $groupRepository->getGroupById($customerGroupId);
+        if (!$group instanceof Group) {
+            $group = $this->createCustomerGroup(
+                'Store Customer',
+                t('Registered Customer in your store'),
+                $package->getPackageID()
+            );
+        }
+
+        $this->config->save('community_store.customerGroup', $group->getGroupID());
+
+        $group =  $groupRepository->getGroupByPath('Wholesale Customer');
+        if (!$group instanceof Group) {
+            $group = $this->createCustomerGroup(
+                'Wholesale Customer',
+                t('These Customers get wholesale pricing in your store.'),
+                $package->getPackageID()
+            );
+        }
+
+        $this->config->save('community_store.wholesaleCustomerGroup', $group->getGroupID());
+    }
+
+    private function createProductCategory(Package $package): void
+    {
+        $category = $this->categoryService->getByHandle('store_product');
+        if (!$category instanceof Category) {
+            $categoryController = $this->categoryService->add('store_product', 1, $package);
+        } else {
+            $categoryController = $category->getController();
+        }
+
+        $this->associateAttributeKeyTypes($categoryController);
+    }
+
+    private function createUserAttributes(Package $package): void
+    {
+        $category = $this->categoryService->getByHandle('user');
+        $category->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
+
+        /** @var UserCategory $categoryController */
+        $categoryController = $category->getController();
+
+        $setFactory = $this->application->make(SetFactory::class);
+        $customerInfoSet = $setFactory->getByHandle('customer_info');
+        if (!$customerInfoSet instanceof AttributeSetEntity) {
+            $customerInfoSet = $categoryController->getSetManager()->addSet('customer_info', t('Store Customer Info'), $package);
+        }
+
+        $text = AttributeType::getByHandle('text');
+        $address = AttributeType::getByHandle('address');
+
+        $this->installUserAttribute('email', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('billing_first_name', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('billing_last_name', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('billing_address', $address, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('billing_phone', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('billing_company', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('shipping_first_name', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('shipping_last_name', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('shipping_address', $address, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('shipping_company', $text, $package, $customerInfoSet, $categoryController);
+        $this->installUserAttribute('vat_number', $text, $package, $customerInfoSet, $categoryController);
+    }
+
+    private function createOrderCategory(Package $package): void
+    {
+        /** @var SetFactory $attributeSetFactory */
+        $attributeSetFactory = $this->application->make(SetFactory::class);
+
+        $category = $this->categoryService->getByHandle('store_order');
+        /** @var StoreOrderCategory $categoryController */
+        if (!$category instanceof Category) {
+            $categoryController = $this->categoryService->add('store_order', 1, $package);
+        } else {
+            $categoryController = $category->getController();
+        }
+
+        // TODO: Discuss if this is still necessary and why
+        $indexer = $categoryController->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->createRepository($categoryController);
+        }
+
+        $this->associateAttributeKeyTypes($categoryController);
+
+        $orderCustomerSet = $attributeSetFactory->getByHandle('order_customer');
+        if (!$orderCustomerSet instanceof AttributeSet) {
+            $categoryController->getSetManager()->addSet('order_customer', t('Store Customer Info'), $package);
+        }
+
+        $orderChoiceSet = $attributeSetFactory->getByHandle('order_choices');
+        if (!$orderChoiceSet instanceof AttributeSet) {
+            $categoryController->getSetManager()->addSet('order_choices', t('Other Customer Choices'), $package);
+        }
     }
 
     private function createBlockTypes(Package $package): void
@@ -196,7 +310,7 @@ class Installer
         $this->entityManager->flush();
     }
 
-    private function createStoreProductPageType(Package $package, int $pageTypeId): void
+    private function createStoreProductPageType(Package $package, ?int $pageTypeId): void
     {
         $pageType = PageType::getByHandle('store_product');
         if ($pageType instanceof PageType) {
@@ -204,6 +318,10 @@ class Installer
         }
 
         $template = PageTemplate::getByID($pageTypeId);
+        if (!$template instanceof Template) {
+            return;
+        }
+
         $pageTypeOptions = [
             'handle' => 'store_product',
             'name' => t('Product'),
@@ -218,29 +336,27 @@ class Installer
         );
 
         PageType::add($pageTypeOptions, $package)->setConfiguredPageTypePublishTargetObject($publishTarget);
+
+        $this->setPageTypeDefaults();
     }
 
     private function installSinglePage($path, $pkg): Page
     {
         $page = Page::getByPath($path);
-        if ($page instanceof Page || $page->getError() !== COLLECTION_NOT_FOUND) {
+        if ($page instanceof Page && $page->getError() !== COLLECTION_NOT_FOUND) {
             return $page;
         }
 
         return SinglePage::add($path, $pkg);
     }
 
-    private function installProductParentPage(Package $package): void
+    private function installProductParentPage(Package $package, ?int $parentPageId): void
     {
-        $defaultSlug = self::getDefaultSlug();
+        $parentPage = Page::getByID($parentPageId);
+        $defaultSlug = $parentPage->getCollectionPath();
+
         $productParentPage = Page::getByPath($defaultSlug . '/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
-            if ($defaultSlug === '' || $defaultSlug === '/' || !$defaultSlug) {
-                $parentPage = Page::getByID(1);
-            } else {
-                $parentPage = Page::getByPath($defaultSlug);
-            }
-
             $productParentPage = $parentPage->add(
                 PageType::getByHandle('page'),
                 [
@@ -249,8 +365,6 @@ class Installer
                     'pkgID' => $package->getPackageID(),
                 ]
             );
-
-
             $main = new Area('Main');
 
             $bt = BlockType::getByHandle('content');
@@ -288,24 +402,6 @@ class Installer
         }
     }
 
-    private function installProductAttributes(Package $package): void
-    {
-        /** @var CategoryService $categoryService */
-        $categoryService = $this->application->make(CategoryService::class);
-        $category = $categoryService->getByHandle('store_product');
-        if (!$category instanceof \Concrete\Core\Entity\Attribute\Category) {
-            $category = $categoryService->add('store_product', 1, $package);
-        }
-
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('text'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('number'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('address'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('select'));
-        $category->getController()->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-    }
-
     private function createDigitalDownloadFileset(): void
     {
         $fileSetId = $this->config->get('community_store.digitalDownloadFileSet');
@@ -317,25 +413,120 @@ class Installer
         $this->config->save('community_store.digitalDownloadFileSet', $fileSet->getFileSetID());
     }
 
-//    public function getDefaultSlug()
-//    {
-//        $site = $this->app->make('site')->getSite();
-//        $defaultLocale = $site->getDefaultLocale();
-//        $defaultHome = $defaultLocale->getSiteTree()->getSiteHomePageObject();
-//        $defaultSlug = '';
-//
-//        if (is_object($defaultHome)) {
-//            $defaultSlug = (string)$defaultHome->getCollectionHandle();
-//
-//            if (!empty($defaultSlug)) {
-//                $defaultSlug = '/' . $defaultSlug;
-//            }
-//        }
-//
-//        return $defaultSlug;
-//    }
+    private function installOrderStatuses(): void
+    {
+        $table = OrderStatus::getTableName();
+        $db = $this->application->make('database')->connection();
+        $statuses = [
+            ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
+            ['osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
+            ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
+        ];
 
-    public static function setPageTypeDefaults()
+        $db->query("DELETE FROM " . $table);
+
+        foreach ($statuses as $status) {
+            OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
+        }
+    }
+
+    /** Dependency methods */
+    private function createCustomerGroup(string $name, string $description, int $packageId): Group
+    {
+        $command = new AddGroupCommand();
+        $command->setName($name)
+            ->setDescription($description)
+            ->setPackageID($packageId);
+
+        return $this->application->executeCommand($command);
+    }
+
+    private function associateAttributeKeyTypes(CategoryInterface $categoryController): void
+    {
+        $attributeTypeFactory = $this->application->make(TypeFactory::class);
+
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('text'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('textarea'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('number'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('address'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('boolean'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('select'));
+        $categoryController->associateAttributeKeyType($attributeTypeFactory->getByHandle('date_time'));
+    }
+
+    private function installUserAttribute(
+        string $handle,
+        AttributeTypeEntity $type,
+        Package $pkg,
+        AttributeSetEntity $set,
+        UserCategory $userCategoryController,
+    ): void {
+        $attributeKey = $userCategoryController->getAttributeKeyByHandle($handle);
+        if ($attributeKey instanceof AttributeKeyInterface) {
+            return;
+        }
+
+        $key = new UserKey();
+        $key->setAttributeKeyHandle($handle);
+        $key->setAttributeKeyName($this->application->make("helper/text")->unhandle($handle));
+        $key = $userCategoryController->add($type, $key, null, $pkg);
+
+        $set->addKey($key);
+    }
+
+    /**
+     * TODO: BUG, when executed during installation, it will throw the following error:
+     * Entity 'Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey' has to be part of the discriminator map of 'Concrete\Core\Entity\Attribute\Key\Key'
+     * Temporary fix: install order attributes when post_install element is loaded after redirect. This method works fine after refresh.
+     */
+    public function installOrderAttributes(Package $package): void
+    {
+        $attributeTypeFactory = $this->application->make(TypeFactory::class);
+        $attributeSetFactory = $this->application->make(SetFactory::class);
+
+        $text = $attributeTypeFactory->getByHandle('text');
+        $address = $attributeTypeFactory->getByHandle('address');
+
+        $attributes = [
+            'email' => $text,
+            'billing_first_name' => $text,
+            'billing_last_name' => $text,
+            'billing_address' => $address,
+            'billing_phone' => $text,
+            'billing_company' => $text,
+            'shipping_first_name' => $text,
+            'shipping_last_name' => $text,
+            'shipping_address' => $address,
+            'shipping_company' => $text,
+            'vat_number' => $text,
+        ];
+
+        $orderCategory = $this->application->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
+        $orderCustomerSet = $attributeSetFactory->getByHandle('order_customer');
+
+        foreach ($attributes as $handle => $type) {
+            $attr = $orderCategory->getAttributeKeyByHandle($handle);
+            if (is_object($attr)) {
+                continue;
+            }
+
+            $name = $this->application->make("helper/text")->unhandle($handle);
+
+            $key = new StoreOrderKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName(t($name));
+            $key->setPackage($package);
+
+            $key = $orderCategory->add($type, $key, null, $package);
+
+            $key->setAttributeSet($orderCustomerSet);
+        }
+    }
+
+    private function setPageTypeDefaults(): void
     {
         $pageType = PageType::getByHandle('store_product');
         $template = $pageType->getPageTypeDefaultPageTemplateObject();
@@ -357,181 +548,5 @@ class Installer
             ];
             $pageObj->addBlock($bt, 'Main', $data);
         }
-    }
-
-    public static function installOrderStatuses()
-    {
-        $table = OrderStatus::getTableName();
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $statuses = [
-            ['osHandle' => 'incomplete', 'osName' => t('Awaiting Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 1],
-            ['osHandle' => 'processing', 'osName' => t('Processing'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'shipped', 'osName' => t('Shipped'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'delivered', 'osName' => t('Delivered'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'nodelivery', 'osName' => t('Will not deliver'), 'osInformSite' => 1, 'osInformCustomer' => 1, 'osIsStartingStatus' => 0],
-            ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
-        ];
-
-        $db->query("DELETE FROM " . $table);
-
-        foreach ($statuses as $status) {
-            OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
-        }
-    }
-
-    public static function installOrderAttributes($pkg)
-    {
-        //create custom attribute category for orders
-
-        $orderCategory = Category::getByHandle('store_order');
-
-        if (!is_object($orderCategory)) {
-            $orderCategory = Category::add('store_order', 1, $pkg);
-        } else {
-            $indexer = $orderCategory->getController()->getSearchIndexer();
-            if (is_object($indexer)) {
-                $indexer->createRepository($orderCategory->getController());
-            }
-        }
-
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('text'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('textarea'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('number'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('address'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('boolean'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('select'));
-        $orderCategory->associateAttributeKeyType(AttributeType::getByHandle('date_time'));
-
-        $orderCustSet = AttributeSet::getByHandle('order_customer');
-        if (!is_object($orderCustSet)) {
-            $orderCustSet = $orderCategory->addSet('order_customer', t('Store Customer Info'), $pkg);
-        }
-
-        $orderChoiceSet = AttributeSet::getByHandle('order_choices');
-        if (!is_object($orderChoiceSet)) {
-            $orderChoiceSet = $orderCategory->addSet('order_choices', t('Other Customer Choices'), $pkg);
-        }
-
-        if (!$orderCustSet) {
-            $sets = $orderCategory->getAttributeSets();
-
-            foreach ($sets as $set) {
-                if ('order_customer' == $set->getAttributeSetHandle()) {
-                    $orderCustSet = $set;
-                }
-            }
-        }
-
-        $text = AttributeType::getByHandle('text');
-        $address = AttributeType::getByHandle('address');
-
-        self::installOrderAttribute('email', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('billing_first_name', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('billing_last_name', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('billing_address', $address, $pkg, $orderCustSet);
-        self::installOrderAttribute('billing_phone', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('billing_company', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('shipping_first_name', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('shipping_last_name', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('shipping_address', $address, $pkg, $orderCustSet);
-        self::installOrderAttribute('shipping_company', $text, $pkg, $orderCustSet);
-        self::installOrderAttribute('vat_number', $text, $pkg, $orderCustSet, [
-            'akHandle' => 'vat_number',
-            'akName' => t('VAT Number'),
-        ]);
-    }
-
-    public static function installOrderAttribute($handle, $type, $pkg, $set, $data = null)
-    {
-        $app = Application::getFacadeApplication();
-        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
-
-        $attr = $orderCategory->getAttributeKeyByHandle($handle);
-
-        if (!is_object($attr)) {
-            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
-
-            $key = new StoreOrderKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName(t($name));
-            $key = $orderCategory->add($type, $key, null, $pkg);
-            $key->setAttributeSet($set);
-        }
-    }
-
-    private function installUserAttributes($pkg): void
-    {
-        //user attributes for customers
-        $uakc = AttributeKeyCategory::getByHandle('user');
-        $uakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
-
-        //define attr group, and the different attribute types we'll use
-        $custSet = AttributeSet::getByHandle('customer_info');
-        if (!is_object($custSet)) {
-            $custSet = $uakc->addSet('customer_info', t('Store Customer Info'), $pkg);
-        }
-
-        $text = AttributeType::getByHandle('text');
-        $address = AttributeType::getByHandle('address');
-
-        $this->installUserAttribute('email', $text, $pkg, $custSet);
-        $this->installUserAttribute('billing_first_name', $text, $pkg, $custSet);
-        $this->installUserAttribute('billing_last_name', $text, $pkg, $custSet);
-        $this->installUserAttribute('billing_address', $address, $pkg, $custSet);
-        $this->installUserAttribute('billing_phone', $text, $pkg, $custSet);
-        $this->installUserAttribute('billing_company', $text, $pkg, $custSet);
-        $this->installUserAttribute('shipping_first_name', $text, $pkg, $custSet);
-        $this->installUserAttribute('shipping_last_name', $text, $pkg, $custSet);
-        $this->installUserAttribute('shipping_address', $address, $pkg, $custSet);
-        $this->installUserAttribute('shipping_company', $text, $pkg, $custSet);
-        $this->installUserAttribute('vat_number', $text, $pkg, $custSet, [
-            'akHandle' => 'vat_number',
-            'akName' => t('VAT Number'),
-        ]);
-    }
-
-    private function installUserAttribute($handle, $type, $pkg, $set, $data = null): void
-    {
-        $service = $this->application->make(CategoryService::class);
-        $categoryEntity = $service->getByHandle('user');
-        $category = $categoryEntity->getController();
-
-        $attr = $category->getAttributeKeyByHandle($handle);
-        if (!is_object($attr)) {
-            $name = $this->application->make("helper/text")->unhandle($handle);
-
-            $key = new UserKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName(t($name));
-            $key = $category->add($type, $key, null, $pkg);
-
-            $key->setAttributeSet($set);
-        }
-    }
-
-    private function installCustomerGroups(): void
-    {
-        $groupID = Config::get('community_store.customerGroup');
-
-        if (empty($groupID)) {
-            $group = Group::getByName('Store Customer');
-        } else {
-            $group = Group::getByID($groupID);
-        }
-
-        if (!$group || $group->getGroupID() < 1) {
-            $group = Group::add('Store Customer', t('Registered Customer in your store'));
-        }
-
-        Config::save('community_store.customerGroup', $group->getGroupID());
-
-        $group = Group::getByName('Wholesale Customer');
-
-        if (!$group || $group->getGroupID() < 1) {
-            $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
-        }
-        Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
-
     }
 }

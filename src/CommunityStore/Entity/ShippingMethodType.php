@@ -7,7 +7,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Repository\ShippingMethod
 
 /**
  * @ORM\Entity(repositoryClass=ShippingMethodTypeRepository::class)
- * @ORM\Table(name="CommunityStoreShippingMethodTypes")
+ * @ORM\Table(name="CommunityStoreShippingMethodTypes1")
 */
 class ShippingMethodType
 {
