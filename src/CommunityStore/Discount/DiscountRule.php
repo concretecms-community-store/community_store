@@ -626,9 +626,6 @@ class DiscountRule
                     $count = 0;
 
                     if (is_array($cartItems)) {
-                        $discountProductGroups = [];
-
-                        $dpg = trim($row['drProductGroups']);
                         $discountProductGroups = $discountRule->getProductGroups();
 
                         if (!empty($discountProductGroups)) {

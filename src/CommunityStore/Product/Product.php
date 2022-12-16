@@ -1164,11 +1164,11 @@ class Product
         $product->setManufacturer($manufacturer);
 
 
-        // if we have no product groups, we don't have variations to offer
+        // if we have no product options, we don't have variations to offer
         if (empty($data['poName'])) {
             $product->setHasVariations(0);
         } else {
-            $product->setHasVariations(isset($data['pVariations']) ? '1' : '0');
+            $product->setHasVariations(isset($data['pVariations']) && $data['pVariations'] ? '1' : '0');
         }
 
         $product->save();
