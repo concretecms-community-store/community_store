@@ -60,6 +60,7 @@ class Controller extends BlockController
         $this->set('relatedProduct', false);
         $this->set('relatedPID', false);
         $this->set('filterProductType', false);
+        $this->set('groupMatchAny', 0);
 
         $typeList = ProductTypeList::getProductTypeList();
         $this->set("productTypes", $typeList);
@@ -74,6 +75,7 @@ class Controller extends BlockController
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
         $this->set('attributes', $this->getAvailableAttributes());
         $this->set('app', $this->app);
+        $this->set('groupMatchAny', $this->groupMatchAny);
 
         $this->set('selectedAttributes', $this->getAttributes());
 
