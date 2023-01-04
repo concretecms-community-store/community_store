@@ -13,6 +13,7 @@ use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Attribute\Category;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Set as AttributeSetEntity;
 use Concrete\Core\Entity\Package;
@@ -29,6 +30,7 @@ use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\PaymentMethod;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Entity\ShippingMethodType;
@@ -40,9 +42,15 @@ use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Attribute\Type as AttributeTypeEntity;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use ReflectionException;
+use Doctrine\ORM\Mapping\MappingException as ORMMappingException;
+use Doctrine\Persistence\Mapping\MappingException as PersistenceMappingException;
 
 class Installer
 {
+    const STORE_PRODUCT_PAGE_TYPE = 'store_product';
+
     const BLOCK_TYPES = [
         'community_product_list',
         'community_utility_links',
@@ -80,6 +88,11 @@ class Installer
         '/checkout/complete'
     ];
 
+    const KEY_CATEGORIES = [
+        'storeorderkey' => StoreOrderKey::class,
+        'storeproductkey' => StoreProductKey::class,
+    ];
+
     public function __construct(
         private Application $application,
         private EntityManagerInterface $entityManager,
@@ -87,11 +100,16 @@ class Installer
         private CategoryService $categoryService
     ) {}
 
+    /**
+     * @throws ReflectionException|ORMMappingException|PersistenceMappingException|BindingResolutionException
+     */
     public function install(Package $package, array $installerOptions = []): void
     {
         $this->createCustomerGroups($package);
         $this->createProductCategory($package);
         $this->createOrderCategory($package);
+
+        $this->addNewCategoriesToDiscriminatorMap();
 
         $this->createBlockTypes($package);
         $this->createSinglePages($package);
@@ -105,6 +123,8 @@ class Installer
         $this->createDefaultTaxClass();
         $this->createDigitalDownloadFileset();
         $this->installOrderStatuses();
+
+        $this->installOrderAttributes($package);
 
         if (isset($installerOptions['createParentProductPage'])) {
             $this->installProductParentPage($package, $installerOptions['parentPage'] ?? null);
@@ -193,12 +213,6 @@ class Installer
             $categoryController = $this->categoryService->add('store_order', 1, $package);
         } else {
             $categoryController = $category->getController();
-        }
-
-        // TODO: Discuss if this is still necessary and why
-        $indexer = $categoryController->getSearchIndexer();
-        if (is_object($indexer)) {
-            $indexer->createRepository($categoryController);
         }
 
         $this->associateAttributeKeyTypes($categoryController);
@@ -312,7 +326,7 @@ class Installer
 
     private function createStoreProductPageType(Package $package, ?int $pageTypeId): void
     {
-        $pageType = PageType::getByHandle('store_product');
+        $pageType = PageType::getByHandle(self::STORE_PRODUCT_PAGE_TYPE);
         if ($pageType instanceof PageType) {
             return;
         }
@@ -478,9 +492,7 @@ class Installer
     }
 
     /**
-     * TODO: BUG, when executed during installation, it will throw the following error:
-     * Entity 'Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey' has to be part of the discriminator map of 'Concrete\Core\Entity\Attribute\Key\Key'
-     * Temporary fix: install order attributes when post_install element is loaded after redirect. This method works fine after refresh.
+     * @throws BindingResolutionException
      */
     public function installOrderAttributes(Package $package): void
     {
@@ -504,7 +516,7 @@ class Installer
             'vat_number' => $text,
         ];
 
-        $orderCategory = $this->application->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
+        $orderCategory = $this->application->make(StoreOrderCategory::class);
         $orderCustomerSet = $attributeSetFactory->getByHandle('order_customer');
 
         foreach ($attributes as $handle => $type) {
@@ -528,25 +540,38 @@ class Installer
 
     private function setPageTypeDefaults(): void
     {
-        $pageType = PageType::getByHandle('store_product');
+        $pageType = PageType::getByHandle(self::STORE_PRODUCT_PAGE_TYPE);
         $template = $pageType->getPageTypeDefaultPageTemplateObject();
         $pageObj = $pageType->getPageTypePageTemplateDefaultPageObject($template);
 
         $bt = BlockType::getByHandle('community_product');
         $blocks = $pageObj->getBlocks('Main');
-        //only install blocks if there's none on there.
-        if (count($blocks) < 1) {
-            $data = [
-                'productLocation' => 'page',
-                'showProductName' => 1,
-                'showProductDescription' => 1,
-                'showProductDetails' => 1,
-                'showProductPrice' => 1,
-                'showImage' => 1,
-                'showCartButton' => 1,
-                'showGroups' => 1,
-            ];
-            $pageObj->addBlock($bt, 'Main', $data);
+
+        if (count($blocks) > 0) {
+            return;
         }
+
+        $pageObj->addBlock($bt, new Area('Main'), [
+            'productLocation' => 'page',
+            'showProductName' => 1,
+            'showProductDescription' => 1,
+            'showProductDetails' => 1,
+            'showProductPrice' => 1,
+            'showImage' => 1,
+            'showCartButton' => 1,
+            'showGroups' => 1,
+        ]);
+    }
+
+    /**
+     * @throws ReflectionException|ORMMappingException|PersistenceMappingException
+     */
+    private function addNewCategoriesToDiscriminatorMap(): void
+    {
+        $metaData = $this->entityManager->getMetadataFactory()->getMetadataFor(Key::class);
+        foreach (self::KEY_CATEGORIES as $name => $className) {
+            $metaData->addDiscriminatorMapClass($name, $className);
+        }
+        $this->entityManager->getMetadataFactory()->setMetadataFor(Key::class, $metaData);
     }
 }

@@ -1,17 +1,4 @@
-<?php
-
-use Concrete\Core\Package\Package;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-
-defined('C5_EXECUTE') or die('Access Denied.');
-
-$application = Application::getFacadeApplication();
-
-/** @var Installer $installer */
-$installer = $application->make(Installer::class);
-$installer->installOrderAttributes(Package::getByHandle('community_store'));
-?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <p><?= t('Community Store is now installed.'); ?></p>
 
