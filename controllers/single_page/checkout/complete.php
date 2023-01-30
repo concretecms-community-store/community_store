@@ -30,6 +30,8 @@ class Complete extends PageController
         $lastorderid = $customer->getLastOrderID();
         $refreshCheck = false;
 
+        $order = false;
+
         if ($lastorderid) {
             $order = Order::getByID($customer->getLastOrderID());
         }

@@ -199,11 +199,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     } else {
                         if ($type == 'and') {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "\(^|\n)" . preg_quote($searchterm) . "($|\n)");
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . preg_quote($searchterm) . "($|\n)");
+                                $paramname = 'F' . $paramcount++;
                             }
                         } else {
                             $value = array_map('preg_quote', $value);
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode('($|\n)|(^|\n)', $value ) . "($|\n)");
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode("($|\n)|(^|\n)", $value ) . "($|\n)");
                         }
                     }
                 }

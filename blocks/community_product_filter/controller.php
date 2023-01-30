@@ -142,7 +142,7 @@ class Controller extends BlockController
         $selectedarray = [];
         $groupfilters = [];
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
-        if ('auto' == $this->filterSource) {
+        if ($this->filterSource == 'auto') {
             $page = Page::getCurrentPage();
             $blocks = $page->getBlocks();
 
@@ -174,7 +174,7 @@ class Controller extends BlockController
         $count = 0;
 
         foreach ($selectedAttributeList as $attr) {
-            if ('attr' == $attr['type']) {
+            if ($attr['type'] == 'attr') {
                 $attributeKey = ProductKey::getByID($attr['akID']);
 
                 if ($attributeKey) {
@@ -207,20 +207,20 @@ class Controller extends BlockController
 
         $products = new ProductList();
 
-        if ('current' == $this->filter || 'current_children' == $this->filter) {
+        if ($this->filter == 'current' || $this->filter == 'current_children') {
             $page = Page::getCurrentPage();
             $products->setCID($page->getCollectionID());
 
-            if ('current_children' == $this->filter) {
+            if ($this->filter == 'current_children') {
                 $products->setCIDs($page->getCollectionChildrenArray());
             }
         }
 
-        if ('page' == $this->filter || 'page_children' == $this->filter) {
+        if ($this->filter == 'page' || $this->filter == 'page_children') {
             if ($this->filterCID) {
                 $products->setCID($this->filterCID);
 
-                if ('page_children' == $this->filter) {
+                if ($this->filter == 'page_children') {
                     $targetpage = Page::getByID($this->filterCID);
                     if ($targetpage) {
                         $products->setCIDs($targetpage->getCollectionChildrenArray());
@@ -229,8 +229,8 @@ class Controller extends BlockController
             }
         }
 
-        if ('related' == $this->filter || 'related_product' == $this->filter) {
-            if ('related' == $this->filter) {
+        if ($this->filter == 'related' || $this->filter == 'related_product') {
+            if ($this->filter == 'related') {
                 $cID = Page::getCurrentPage()->getCollectionID();
                 $product = Product::getByCollectionID($cID);
             } else {
@@ -244,11 +244,11 @@ class Controller extends BlockController
             }
         }
 
-        if ('random' == $this->filter) {
+        if ($this->filter == 'random') {
             $products->setSortBy('random');
         }
 
-        if ('random_daily' == $this->filter) {
+        if ($this->filter == 'random_daily') {
             $products->setSortBy('random');
             $products->setRandomSeed(date('z'));
         }
@@ -280,6 +280,7 @@ class Controller extends BlockController
             if (!empty($attributedata)) {
                 foreach ($attributedata as $atdata) {
                     foreach ($atdata as $handle => $data) {
+                        $handle = strtolower($handle);
                         if ('pID' != $handle) {
                             $items = explode("\n", trim($data));
                             $handle = substr($handle, 3);
@@ -331,7 +332,8 @@ class Controller extends BlockController
 
                     foreach ($attributedata as $atdata) {
                         foreach ($atdata as $handle => $data) {
-                            if ('pID' != $handle) {
+                            $handle = strtolower($handle);
+                            if ($handle != 'pID') {
                                 $items = explode("\n", trim($data));
                                 $handle = substr($handle, 3);
 
@@ -360,7 +362,7 @@ class Controller extends BlockController
         foreach ($selectedAttributeList as $att) {
             if (isset($att['handle']) || $att['type'] == 'price') {
 
-                if ('attr' == $att['type']) {
+                if ($att['type'] == 'attr') {
                     $handle = $att['handle'];
                     if (isset($attributemapping[$handle])) {
                         $finalData[$handle] = ['type' => 'attr', 'data' => $attributemapping[$handle], 'label' => $att['label']];
