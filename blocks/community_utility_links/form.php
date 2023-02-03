@@ -29,7 +29,7 @@
 
 <div class="checkbox">
     <label>
-        <?= $form->checkbox('showGreeting', 1, isset($showSignIn) ? $showSignIn : 1); ?>
+        <?= $form->checkbox('showGreeting', 1, isset($showGreeting) ? $showGreeting : 1); ?>
         <?= t('Show Greeting'); ?>
     </label>
 </div>

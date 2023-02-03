@@ -24,7 +24,7 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Utility Links");
+        return t("Cart Links");
     }
 
     public function view()
