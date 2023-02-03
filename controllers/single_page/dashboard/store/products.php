@@ -480,8 +480,13 @@ class Products extends DashboardSitePageController
 
                     foreach ($aks as $uak) {
                         $controller = $uak->getController();
-                        $value = $controller->createAttributeValueFromRequest();
-                        $product->setAttribute($uak, $value);
+
+                        if (isset($this->request->request->get('akID')[$uak->getAttributeKeyID()])) {
+                            $value = $controller->createAttributeValueFromRequest();
+                            $product->setAttribute($uak, $value);
+                        } else {
+                            $product->setAttribute($uak, false);
+                        }
                     }
                 }
 
