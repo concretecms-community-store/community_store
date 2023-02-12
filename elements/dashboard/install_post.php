@@ -16,7 +16,7 @@ $pkg->installStore($pkg);
 </p>
 
 <p>
-    <a class="text-primary" target="_blank" href="https://concrete5-community-store.github.io/community_store/">
+    <a class="text-primary" target="_blank" href="https://concretecms-community-store.github.io/community_store/">
         <?= t('View Community Store Documentation'); ?> <i class="fa fa-external-link-alt"></i>
     </a>
 </p>
