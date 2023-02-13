@@ -513,7 +513,7 @@ class Cart
 
                         if ($attsmatch) {
                             // test for a customer entered price, treat a different item if different amount
-                            if ($cartItem['product']['customerPrice']) {
+                            if (!empty($cartItem['product']['customerPrice'])) {
                                 if ($cartItem['product']['customerPrice'] != $cart['product']['customerPrice']) {
                                     $attsmatch = false;
                                 }
