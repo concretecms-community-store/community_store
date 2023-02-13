@@ -195,11 +195,11 @@ if (version_compare($version, '9.0', '<')) {
                                 $restrictions = '';
 
                                 if ($discountRule->getValidFrom() > 0) {
-                                    $restrictions .= ' ' . t('starts') . ' ' . $dfh->formatDateTime($discountRule->getValidFrom());
+                                    $restrictions .= ' ' . tc(/* i18n: %s is a date/time */'DiscountRule', 'starts %s', $dfh->formatDateTime($discountRule->getValidFrom()));
                                 }
 
                                 if ($discountRule->getValidTo() > 0) {
-                                    $restrictions .= ' '. t('expires') . ' ' . $dfh->formatDateTime($discountRule->getValidTo());
+                                    $restrictions .= ' '. tc(/* i18n: %s is a date/time */'DiscountRule', 'expires %s', $dfh->formatDateTime($discountRule->getValidTo()));
                                 }
 
                                 if (!$restrictions) {
