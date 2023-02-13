@@ -451,7 +451,11 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="row">
                 <div class="form-group col-md-12">
                     <div class="alert alert-info small">
-                        <?= t("%sThumbnail types will be used if selected because they offer better performance. %sIf they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption. %sReasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type.%s", '<p>', '</p><p>', '</p><p>', '</p>'); ?>
+                        <p><?= implode('</p><p>', [
+                            t("Thumbnail types will be used if selected because they offer better performance."),
+                            t("If they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption."),
+                            t("Reasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type."),
+                        ]) ?></p>
                     </div>
                 </div>
             </div>
