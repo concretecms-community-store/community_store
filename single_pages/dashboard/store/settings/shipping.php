@@ -147,8 +147,8 @@ if (in_array($controller->getAction(), $addViews)) {
                         <tr>
                             <th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName()) ?></th>
                             <th style="width: 8%"><?= t("Enabled") ?></th>
-                            <th style="width: 20%"><?= t("Available To") ?></th>
-                            <th style="width: 20%"><?= t("Excluded From") ?></th>
+                            <th style="width: 20%"><?= tc("UserGroups", "Available To") ?></th>
+                            <th style="width: 20%"><?= tc("UserGroups", "Excluded From") ?></th>
                             <th style="width: 8%"><?= t("Sort Order") ?></th>
                             <th  style="width: 15%" class="text-right"><?= t("Actions") ?></th>
                         </tr>
