@@ -539,6 +539,7 @@ var communityStore = {
             var value = '0';
             var displayvalue = '';
             var isselect = false;
+            var addedNewField = false;
 
             // look for checkbox or radio
             if (!field.length) {
@@ -558,6 +559,7 @@ var communityStore = {
                         displayValuesArray.push($checkbox.closest('label').text().replaceAll(/\n|\t|\r/ig, ''));
                         newfield = $("<input type='hidden' name='akID["+akID+"][atSelectOptionValue][]' value='"+$checkbox.val()+"'>");
                         newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                        addedNewField = true;
                     });
                     displayvalue = displayValuesArray.join(", ");
 
@@ -605,8 +607,9 @@ var communityStore = {
                 if (isselect) {
                     newfield.val(field.val());
                 }
-
-                newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                if (!addedNewField) {
+                    newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                }
 
 
             }
