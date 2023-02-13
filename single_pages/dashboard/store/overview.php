@@ -115,9 +115,9 @@ if ($taxCalc == 'extract') {
 
                         labels: [ <?php for ($i = 0; $i < 7; $i++) {
                             if ($i != 6) {
-                                echo "'" . $months[$i]->format(t("m/d")) . "',";
+                                echo "'" . $months[$i]->format(tc(/* i18n: PHP format for month and day - see https://www.php.net/manual/datetime.format.php */'MonthAndDay', 'm/d')) . "',";
                             } else {
-                                echo "'" . $months[$i]->format(t("m/d")) . "'";
+                                echo "'" . $months[$i]->format(tc(/* i18n: PHP format for month and day - see https://www.php.net/manual/datetime.format.php */'MonthAndDay', 'm/d')) . "'";
                             }
                         } ?> ],
                         // Our series array that contains series objects or in this case series data arrays
