@@ -439,8 +439,8 @@ if (version_compare($version, '9.0', '<')) {
 
                             <div id="tierscontainer">
                                 <div class="row">
-                                    <div class="col-md-3"><strong><?= t('From'); ?></strong></div>
-                                    <div class="col-md-3"><strong><?= t('To'); ?></strong></div>
+                                    <div class="col-md-3"><strong><?= tc('QuantityStart', 'From'); ?></strong></div>
+                                    <div class="col-md-3"><strong><?= tc('QuantityEnd', 'To'); ?></strong></div>
                                     <div class="col-md-3"><strong><?= t('Price'); ?></strong></div>
                                     <th class="col-md-3"></th>
                                 </div>

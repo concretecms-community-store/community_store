@@ -24,7 +24,7 @@ $task = $controller->getAction();
             <div class="col-md-3">
 
                 <div class="form-group">
-                    <?= $form->label('dateFrom', t('From')) ?>
+                    <?= $form->label('dateFrom', tc('DateStart', 'From')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <?= $app->make('helper/form/date_time')->date('dateFrom', isset($dateFrom) ? $dateFrom :false); ?>
                     </div>
@@ -33,7 +33,7 @@ $task = $controller->getAction();
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <?= $form->label('dateFrom', t('To')) ?>
+                    <?= $form->label('dateFrom', tc('DateEnd', 'To')) ?>
                     <div class="ccm-search-field-content ccm-search-field-content-select2">
                         <?= $app->make('helper/form/date_time')->date('dateTo', isset($dateTo) ? $dateTo :false); ?>
                     </div>
