@@ -166,14 +166,14 @@ if (is_object($product) && $product->isActive()) {
                                 <span class="store-min-max help-block">
                                     <?php
                                     if (!is_null($min)) {
-                                        echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
+                                        echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'minimum %1$s%2$s', Config::get('community_store.symbol'), $min);
                                     }
 
                                     if (!is_null($max)) {
                                         if ($min >= 0) {
                                             echo ', ';
                                         }
-                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                                        echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'maximum %1$s%2$s', Config::get('community_store.symbol'), $max);
                                     } ?>
                                     </span>
                                 <?php
