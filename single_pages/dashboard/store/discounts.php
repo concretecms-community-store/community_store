@@ -144,14 +144,17 @@ if (version_compare($version, '9.0', '<')) {
                                         echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . t2(
                                             /* i18n: %1$s is the number of available codes, %2$s is the total number of codes*/
                                             '%1$s of %2$s code available',
-                                            '%1$s of %2$s codes available'
+                                            '%1$s of %2$s codes available',
+                                            $discountRule->availableCodes,
+                                            $discountRule->totalCodes
                                         ) . '</span><br />';
                                     } else {
                                         echo '<span class="label label-primary">' . t('when code entered'). '</span><br />';
                                         echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
                                             /* i18n: %s is a number */
                                             '%s code configured',
-                                            '%s codes configured'
+                                            '%s codes configured',
+                                            $discountRule->availableCodes
                                         ) . '</span><br />';
                                     }
 

@@ -196,7 +196,7 @@ if (is_object($product) && $product->isActive()) {
                             foreach ($pricetiers as $pricetier) {
                                 $pricetiersoutput[] = t(
                                     /* i18n: %1$s is the start of a quantity tier, %2$s is the end of a quantity tier, %3$s is a currency symbol, %4$s the tier price */
-                                    '%1$s to %2$s - %3$s',
+                                    '%1$s to %2$s - %3$s%4$s',
                                     $pricetier->getFrom(),
                                     $pricetier->getTo(),
                                     Config::get('community_store.symbol'),
