@@ -848,7 +848,7 @@ if (version_compare($version, '9.0', '<')) {
                             </div>
                             <div class="form-group">
                                 <?= $form->label("pSeperateShip", t('Product can be packaged with other items')); ?>
-                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as seperate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
+                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -892,13 +892,13 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
                             <div class="form-group">
                                 <?= $form->label("pPackageData", t('Or, Package(s) Data')); ?>
-                                <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
+                                <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
                                 <span class="help-block">
                                     <?= t('Values entered will override individual set weights and sizes'); ?>
                                     <br/>
                                     <?= t('Enter packages on new lines, using the format:'); ?>
                                     <br/>
-                                    <?= t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
+                                    <?= t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
                                     <br/>
                                     <?= t('E.g. 10 4x6x8'); ?>
                                 </span>
@@ -1686,7 +1686,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <div class="form-group">
 
                                                             <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data")); ?>
-                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
+                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
 
                                                         </div>
                                                     </div>

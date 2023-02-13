@@ -141,10 +141,18 @@ if (version_compare($version, '9.0', '<')) {
                                 } else {
                                     if ($discountRule->isSingleUse()) {
                                         echo '<span class="label label-primary badge bg-primary">' . t('when single use code entered'). '</span><br />';
-                                        echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . $discountRule->availableCodes . ' ' . t('of') . ' ' . $discountRule->totalCodes . ' ' . t('codes available') . '</span><br />';
+                                        echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . t2(
+                                            /* i18n: %1$s is the number of available codes, %2$s is the total number of codes*/
+                                            '%1$s of %2$s code available',
+                                            '%1$s of %2$s codes available'
+                                        ) . '</span><br />';
                                     } else {
                                         echo '<span class="label label-primary">' . t('when code entered'). '</span><br />';
-                                        echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . $discountRule->availableCodes . ' ' . ($discountRule->availableCodes == 1 ? t('code') : t('codes')) .' '.  t('configured') . '</span><br />';
+                                        echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
+                                            /* i18n: %s is a number */
+                                            '%s code configured',
+                                            '%s codes configured'
+                                        ) . '</span><br />';
                                     }
 
                                 }
