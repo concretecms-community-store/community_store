@@ -358,7 +358,7 @@ if (version_compare($version, '9.0', '<')) {
 
         <div id="codefields" <?= ($discountRule->getTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
             <div class="form-group">
-                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single use codes'); ?></label>
+                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single Use Codes'); ?></label>
             </div>
             <?php if (!$discountRule->getID()) { ?>
             <p class="alert alert-info"><?= t('Codes can be entered after creating rule');?></p>
