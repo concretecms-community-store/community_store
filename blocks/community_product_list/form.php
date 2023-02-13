@@ -162,7 +162,7 @@
 
             <div class="form-group">
                 <?= $form->label('maxProducts', t('Number of Products to Display')); ?>
-                <?= $form->number('maxProducts', $maxProducts, ['min' => '0', 'step' => '1', 'placeholder' => t('leave blank or 0 to list all matching products')]); ?>
+                <?= $form->number('maxProducts', $maxProducts, ['min' => '0', 'step' => '1', 'placeholder' => t('Leave blank or 0 to list all matching products')]); ?>
             </div>
 
             <div class="form-group form-check">
