@@ -1094,7 +1094,7 @@ if (version_compare($version, '9.0', '<')) {
                             $labels = [];
                             $labels['select'] = t('Option List');
                             $labels['text'] = t('Text Input');
-                            $labels['textarea'] = t('Text Area Input');
+                            $labels['textarea'] = t('Text Area');
                             $labels['checkbox'] = t('Checkbox');
                             $labels['hidden'] = t('Hidden Value');
                             $labels['static'] = t('Content');
