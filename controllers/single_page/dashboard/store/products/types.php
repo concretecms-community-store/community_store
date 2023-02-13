@@ -189,7 +189,7 @@ class Types extends DashboardPageController
                 $set->update($name, $description);
 
 
-                $this->flash('success', t('Product Set Update'));
+                $this->flash('success', t('Product Set Updated'));
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $set->getProductType()->getTypeID());
             }
         }
