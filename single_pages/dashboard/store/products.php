@@ -847,8 +847,8 @@ if (version_compare($version, '9.0', '<')) {
                                 <?= $form->number('pNumberItems', $product->getNumberItems(), ['min' => 0, 'step' => 1]) ?>
                             </div>
                             <div class="form-group">
-                                <?= $form->label("pSeparateShip", t('Product can be packaged with other items')); ?>
-                                <?= $form->select("pSeparateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
+                                <?= $form->label("pSeperateShip", t('Product can be packaged with other items')); ?>
+                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
