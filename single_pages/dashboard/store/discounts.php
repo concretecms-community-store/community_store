@@ -581,7 +581,7 @@ if (version_compare($version, '9.0', '<')) {
             <tr><th><?= t('Code'); ?></th>
 
                 <?php if ($discountRule->isSingleUse()) { ?>
-                <th><?=  t('Used'); ?></th>
+                <th><?=  tc('DiscountCode', 'Used'); ?></th>
                 <?php } ?>
 
                 <th></th></tr>
