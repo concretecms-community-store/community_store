@@ -19,18 +19,30 @@ if ($taxCalc == 'extract') {
 ?>
 
 <?php if (isset($shoppingDisabled)) { ?>
-    <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?>
-        <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
+    <p class="alert alert-warning text-center"><?= t(
+        /* i18n: the two %s contain HTML code */
+        'Cart and Ordering features are currently disabled. This setting can be changed via the %ssettings page%s.',
+        '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">',
+        '</a>'
+    ) ?></p>
 <?php } ?>
 
 <?php if (isset($missingNotificationEmails)) { ?>
-    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t('No notification emails are set - order notifications will be not be sent. This setting can be can entered via the'); ?>
-        <a href="<?= Url::to('/dashboard/store/settings#settings-notifications'); ?>"><?= t('settings page.'); ?></a></p>
+    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t(
+        /* i18n: the two %s contain HTML code */
+        'No notification emails are set - order notifications will be not be sent. This setting can be can entered via the %ssettings page%s.',
+        '<a href="' . Url::to('/dashboard/store/settings#settings-notifications') . '">',
+        '</a>'
+    ) ?></p>
 <?php } ?>
 
 <?php if (isset($missingFromEmail)) { ?>
-    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t("No 'From Email' has been configured. It is advised to specify this email address to ensure notifications and receipts are received correctly. This setting can be changed via the"); ?>
-        <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
+    <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t(
+        /* i18n: the two %s contain HTML code */
+        "No 'From Email' has been configured. It is advised to specify this email address to ensure notifications and receipts are received correctly. This setting can be changed via the %ssettings page%s.",
+        '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">',
+        '</a>'
+    ) ?></p>
 <?php } ?>
 
 

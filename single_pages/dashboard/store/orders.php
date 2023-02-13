@@ -595,7 +595,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
     </div>
 
     <?php if (isset($shoppingDisabled) && $shoppingDisabled) { ?>
-        <p class="alert alert-warning text-center"><?= t('Cart and Ordering features are currently disabled. This setting can be changed via the'); ?> <a href="<?= Url::to('/dashboard/store/settings#settings-checkout'); ?>"><?= t('settings page.'); ?></a></p>
+        <p class="alert alert-warning text-center"><?= t(/* i18n: the two %s contain HTML code */'Cart and Ordering features are currently disabled. This setting can be changed via the %ssettings page%s.', '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">', '</a>') ?></p>
     <?php } ?>
 
     <?php
