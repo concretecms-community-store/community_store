@@ -106,15 +106,31 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('weightUnit', t('Units for Weight')); ?>
-                        <?php ?>
-                        <?= $form->select('weightUnit', ['oz' => t('oz'), 'lb' => t('lb'), 'kg' => t('kg'), 'g' => t('g')], Config::get('community_store.weightUnit')); ?>
+                        <?= $form->select(
+                            'weightUnit',
+                            [
+                                'oz' => Punic\Unit::getName('mass/ounce', 'narrow'),
+                                'lb' => Punic\Unit::getName('mass/pound', 'narrow'),
+                                'kg' => Punic\Unit::getName('mass/kilogram', 'narrow'),
+                                'g' => Punic\Unit::getName('mass/gram', 'narrow'),
+                            ],
+                            Config::get('community_store.weightUnit')
+                        ); ?>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('sizeUnit', t('Units for Size')); ?>
                         <?php ?>
-                        <?= $form->select('sizeUnit', ['in' => t('in'), 'cm' => t('cm'), 'mm' => t('mm')], Config::get('community_store.sizeUnit')); ?>
+                        <?= $form->select(
+                            'sizeUnit',
+                            [
+                                'in' => Punic\Unit::getName('length/inch', 'narrow'),
+                                'cm' => Punic\Unit::getName('length/centimeter', 'narrow'),
+                                'mm' => Punic\Unit::getName('length/millimeter', 'narrow'),
+                            ],
+                            Config::get('community_store.sizeUnit')
+                        ); ?>
                     </div>
                 </div>
             </div>
