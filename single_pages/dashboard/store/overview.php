@@ -224,7 +224,7 @@ if ($taxCalc == 'extract') {
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><a><?= t("Order %s", "#") ?></a></th>
+                    <th><a><?= t("Order #") ?></a></th>
                     <th><a><?= t("Customer Name") ?></a></th>
                     <th><a><?= t("Order Date") ?></a></th>
                     <th><a><?= t("Total") ?></a></th>
