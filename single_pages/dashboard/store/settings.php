@@ -562,7 +562,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('download_expiry_hours', t('Digital Download Expiry')); ?>
                 <div class="input-group">
                     <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
-                    <div class="input-group-addon input-group-text"><?= t('hours'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('duration/hour', 'long'); ?></div>
                 </div>
                 <p class="help-block"><?= t('Number of hours before digital download links expiry'); ?></p>
             </div>
