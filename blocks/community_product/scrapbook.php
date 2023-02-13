@@ -50,8 +50,7 @@ $csm = $app->make('cs/helper/multilingual');
                         echo '<span style="text-decoration: line-through">' . $formattedOriginalPrice . '</span>';
                     } else {
                         $formattedPrice = $product->getFormattedPrice();
-                        echo t('Price%s', ':&nbsp;');
-                        echo $formattedPrice;
+                        echo '<span style="white-space: nowrap">', t('Price: ', $formattedPrice), '</span>';
                     } ?>
                 </em></li>
 
