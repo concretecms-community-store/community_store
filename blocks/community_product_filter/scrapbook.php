@@ -28,8 +28,11 @@ $filters = [
         $gIDs = $controller->getGroupFilters();
 
         if ($gIDs && count($gIDs) > 1) {
-            $anyOrAll = $groupMatchAny ? t("any"): t("all");
-            $groupText = t("Products must match %s of %s", $anyOrAll, t2('the %s group selected', 'the %s groups selected', count($gIDs)));
+            if ($groupMatchAny) {
+                $groupText = t2('Products must match any of the %s group selected', 'Products must match any of the %s groups selected', count($gIDs));
+            } else {
+                $groupText = t2('Products must match all of the %s group selected', 'Products must match all of the %s groups selected', count($gIDs));
+            }
         } elseif ($gIDs && count($gIDs) === 1) {
             $groupText = t("Products must match the selected group");
         }
