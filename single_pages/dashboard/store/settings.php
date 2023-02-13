@@ -461,7 +461,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageWidth', Config::get('community_store.defaultSingleProductImageWidth') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH); ?>
@@ -472,7 +472,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageHeight', Config::get('community_store.defaultSingleProductImageHeight') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT); ?>
@@ -491,7 +491,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageWidth', Config::get('community_store.defaultProductListImageWidth') ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH); ?>
@@ -502,7 +502,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageHeight', Config::get('community_store.defaultProductListImageHeight') ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT); ?>
@@ -521,7 +521,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageWidth', Config::get('community_store.defaultProductModalImageWidth') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH); ?>
@@ -532,7 +532,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageHeight', Config::get('community_store.defaultProductModalImageHeight') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT); ?>
@@ -642,7 +642,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>
                 <div class="input-group">
                     <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
-                    <div class="input-group-addon input-group-text"><?= t('px'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                 </div>
                 <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
             </div>
