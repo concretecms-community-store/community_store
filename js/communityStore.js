@@ -539,9 +539,12 @@ var communityStore = {
             var value = '0';
             var displayvalue = '';
             var isselect = false;
+            var addedNewField = false;
 
             // look for checkbox or radio
             if (!field.length) {
+                var isMultipleCheckboxes = $(el).find("[type=checkbox]").length > 1;
+
                 field = $(el).find("[type=checkbox]").first();
                 var label = $(el).find(".checkbox label").first();
 
@@ -549,7 +552,18 @@ var communityStore = {
                     label = $(field).next();
                 }
 
-                if (field.length) {
+                if (isMultipleCheckboxes) {
+                    var displayValuesArray = [];
+                    $(el).find("[type=checkbox]:checked").each(function() {
+                        var $checkbox = $(this);
+                        displayValuesArray.push($checkbox.closest('label').text().replaceAll(/\n|\t|\r/ig, ''));
+                        newfield = $("<input type='hidden' name='akID["+akID+"][atSelectOptionValue][]' value='"+$checkbox.val()+"'>");
+                        newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                        addedNewField = true;
+                    });
+                    displayvalue = displayValuesArray.join(", ");
+
+                } else if (field.length) {
                     if (field.is(':checked')) {
                         value = '1';
                         displayvalue = yesvalue;
@@ -593,8 +607,9 @@ var communityStore = {
                 if (isselect) {
                     newfield.val(field.val());
                 }
-
-                newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                if (!addedNewField) {
+                    newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
+                }
 
 
             }
