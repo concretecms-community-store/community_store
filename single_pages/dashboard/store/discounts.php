@@ -630,7 +630,7 @@ if (version_compare($version, '9.0', '<')) {
     <div class="form-group">
         <?= $form->label('codes', t('Code(s)'))?>
         <?= $form->textarea('codes', '')?>
-        <span class="help-block"><?= t('Seperate codes via lines or commas. Codes are case-insensitive.'); ?></span>
+        <span class="help-block"><?= t('Separate codes via lines or commas. Codes are case-insensitive.'); ?></span>
     </div>
 
     <div class="form-group">
