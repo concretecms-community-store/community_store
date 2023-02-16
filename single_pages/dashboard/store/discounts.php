@@ -141,10 +141,21 @@ if (version_compare($version, '9.0', '<')) {
                                 } else {
                                     if ($discountRule->isSingleUse()) {
                                         echo '<span class="label label-primary badge bg-primary">' . t('when single use code entered'). '</span><br />';
-                                        echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . $discountRule->availableCodes . ' ' . t('of') . ' ' . $discountRule->totalCodes . ' ' . t('codes available') . '</span><br />';
+                                        echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . t2(
+                                            /* i18n: %1$s is the number of available codes, %2$s is the total number of codes*/
+                                            '%1$s of %2$s code available',
+                                            '%1$s of %2$s codes available',
+                                            $discountRule->availableCodes,
+                                            $discountRule->totalCodes
+                                        ) . '</span><br />';
                                     } else {
                                         echo '<span class="label label-primary">' . t('when code entered'). '</span><br />';
-                                        echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . $discountRule->availableCodes . ' ' . ($discountRule->availableCodes == 1 ? t('code') : t('codes')) .' '.  t('configured') . '</span><br />';
+                                        echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
+                                            /* i18n: %s is a number */
+                                            '%s code configured',
+                                            '%s codes configured',
+                                            $discountRule->availableCodes
+                                        ) . '</span><br />';
                                     }
 
                                 }
@@ -187,11 +198,11 @@ if (version_compare($version, '9.0', '<')) {
                                 $restrictions = '';
 
                                 if ($discountRule->getValidFrom() > 0) {
-                                    $restrictions .= ' ' . t('starts') . ' ' . $dfh->formatDateTime($discountRule->getValidFrom());
+                                    $restrictions .= ' ' . tc(/* i18n: %s is a date/time */'DiscountRule', 'starts %s', $dfh->formatDateTime($discountRule->getValidFrom()));
                                 }
 
                                 if ($discountRule->getValidTo() > 0) {
-                                    $restrictions .= ' '. t('expires') . ' ' . $dfh->formatDateTime($discountRule->getValidTo());
+                                    $restrictions .= ' '. tc(/* i18n: %s is a date/time */'DiscountRule', 'expires %s', $dfh->formatDateTime($discountRule->getValidTo()));
                                 }
 
                                 if (!$restrictions) {
@@ -350,7 +361,7 @@ if (version_compare($version, '9.0', '<')) {
 
         <div id="codefields" <?= ($discountRule->getTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
             <div class="form-group">
-                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single use codes'); ?></label>
+                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single Use Codes'); ?></label>
             </div>
             <?php if (!$discountRule->getID()) { ?>
             <p class="alert alert-info"><?= t('Codes can be entered after creating rule');?></p>
@@ -573,7 +584,7 @@ if (version_compare($version, '9.0', '<')) {
             <tr><th><?= t('Code'); ?></th>
 
                 <?php if ($discountRule->isSingleUse()) { ?>
-                <th><?=  t('Used'); ?></th>
+                <th><?=  tc('DiscountCode', 'Used'); ?></th>
                 <?php } ?>
 
                 <th></th></tr>

@@ -19,13 +19,13 @@ ob_start();
   </style>
 </head>
 <body>
-    <h2><?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?></h2>
+    <h2><?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?> </h2>
 
     <p><?= t('Your username is');?>: <strong><?= $username; ?></strong></p>
     <p><?= t('Your password is');?>: <strong><?= $password; ?></strong></p>
 
 <?php if ($link) { ?>
-    <p><?= t('You can now access'); ?> <a href="<?= $link; ?>"><?= $link; ?></a></p>
+    <p><?= t(/* i18n: %s is a link*/'You can now access %s', "<a href=\"{$link}\">{$link}</a>") ?></p>
 <?php } ?>
 </body>
 </html>
@@ -42,13 +42,13 @@ $bodyHTML = ob_get_clean();
 ob_start();
 
 ?>
-<?= t('Thank you for your order, an account has been created for you at') ?> <?= $siteName ?>
+<?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?>
 
     <?= t('Your username is');?>: <?= $username; ?>
     <?= t('Your password is');?>: <?= $password; ?>
 
 <?php if ($link) { ?>
-    <?= t('You can now access'); ?> <?= $link; ?>
+    <?= t(/* i18n: %s is a link*/'You can now access %s', $link); ?>
 <?php } ?>
 
 <?php

@@ -166,14 +166,14 @@ if (is_object($product) && $product->isActive()) {
                                 <span class="store-min-max help-block">
                                     <?php
                                     if (!is_null($min)) {
-                                        echo t('minimum') . ' ' . Config::get('community_store.symbol') . $min;
+                                        echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'minimum %1$s%2$s', Config::get('community_store.symbol'), $min);
                                     }
 
                                     if (!is_null($max)) {
                                         if ($min >= 0) {
                                             echo ', ';
                                         }
-                                        echo t('maximum') . ' ' . Config::get('community_store.symbol') . $max;
+                                        echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'maximum %1$s%2$s', Config::get('community_store.symbol'), $max);
                                     } ?>
                                     </span>
                                 <?php
@@ -194,7 +194,14 @@ if (is_object($product) && $product->isActive()) {
                             $pricetiersoutput = [];
 
                             foreach ($pricetiers as $pricetier) {
-                                $pricetiersoutput[] = $pricetier->getFrom() . ' ' . t('to') . ' ' . $pricetier->getTo() . ' - ' . Config::get('community_store.symbol') . $pricetier->getPrice();
+                                $pricetiersoutput[] = t(
+                                    /* i18n: %1$s is the start of a quantity tier, %2$s is the end of a quantity tier, %3$s is a currency symbol, %4$s the tier price */
+                                    '%1$s to %2$s - %3$s%4$s',
+                                    $pricetier->getFrom(),
+                                    $pricetier->getTo(),
+                                    Config::get('community_store.symbol'),
+                                    $pricetier->getPrice()
+                                );
                             }
 
                             echo implode('<br>', $pricetiersoutput);

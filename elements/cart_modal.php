@@ -23,7 +23,10 @@ if ($cartMode) {
         <?php
         if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
-                <p class="alert alert-success"><strong><?=  h($csm->t( $actiondata['product']['pName'], 'productName',  $actiondata['product']['pID'])) ; ?></strong> <?= t('has been added to your cart');?></p>
+                <p class="alert alert-success"><?= t(
+                    '%s has been added to your cart',
+                    '<strong>' . h($csm->t($actiondata['product']['pName'], 'productName',  $actiondata['product']['pID'])) . '</strong>'
+                );?></p>
             <?php } ?>
 
             <?php if( $actiondata['action'] =='update') { ?>

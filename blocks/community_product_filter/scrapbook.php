@@ -7,13 +7,13 @@ $bt = $controller->getBlockObject()->getBlockTypeObject();
 $ci = $app->make('helper/concrete/urls');
 $csm = $app->make('cs/helper/multilingual');
 $filters = [
-                    'all' => t("All"),
-                    'current' => t('products under the current page'),
-                    'current_children' => t('products under the current page and child pages'),
-                    'page' => t('products under a specified page'),
-                    'page_children' => t('products under a specified page and child pages'),
-                    'showAddToCartrelated' => t('products related to the product displayed on this page'),
-                    'related_product' => t('products related to a specified product'),
+                    'all' => t("List All"),
+                    'current' => t('List products under the current page'),
+                    'current_children' => t('List products under the current page and child pages'),
+                    'page' => t('List products under a specified page'),
+                    'page_children' => t('List products under a specified page and child pages'),
+                    'showAddToCartrelated' => t('List products related to the product displayed on this page'),
+                    'related_product' => t('List products related to a specified product'),
 ];
 ?>
 <p style="padding-top: 5px;">
@@ -24,13 +24,15 @@ $filters = [
         $header = t("Filters will match the Product List block on the page");
     } elseif ($filterSource === 'manual') {
         $header = t("Filters were set manually");
-        $filterOption = $filters[$filter];
-        $filterText = t("List %s", $filterOption);
+        $filterText = $filters[$filter];
         $gIDs = $controller->getGroupFilters();
 
         if ($gIDs && count($gIDs) > 1) {
-            $anyOrAll = $groupMatchAny ? t("any"): t("all");
-            $groupText = t("Products must match %s of %s", $anyOrAll, t2('the %s group selected', 'the %s groups selected', count($gIDs)));
+            if ($groupMatchAny) {
+                $groupText = t2('Products must match any of the %s group selected', 'Products must match any of the %s groups selected', count($gIDs));
+            } else {
+                $groupText = t2('Products must match all of the %s group selected', 'Products must match all of the %s groups selected', count($gIDs));
+            }
         } elseif ($gIDs && count($gIDs) === 1) {
             $groupText = t("Products must match the selected group");
         }

@@ -106,15 +106,31 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('weightUnit', t('Units for Weight')); ?>
-                        <?php ?>
-                        <?= $form->select('weightUnit', ['oz' => t('oz'), 'lb' => t('lb'), 'kg' => t('kg'), 'g' => t('g')], Config::get('community_store.weightUnit')); ?>
+                        <?= $form->select(
+                            'weightUnit',
+                            [
+                                'oz' => Punic\Unit::getName('mass/ounce', 'narrow'),
+                                'lb' => Punic\Unit::getName('mass/pound', 'narrow'),
+                                'kg' => Punic\Unit::getName('mass/kilogram', 'narrow'),
+                                'g' => Punic\Unit::getName('mass/gram', 'narrow'),
+                            ],
+                            Config::get('community_store.weightUnit')
+                        ); ?>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $form->label('sizeUnit', t('Units for Size')); ?>
                         <?php ?>
-                        <?= $form->select('sizeUnit', ['in' => t('in'), 'cm' => t('cm'), 'mm' => t('mm')], Config::get('community_store.sizeUnit')); ?>
+                        <?= $form->select(
+                            'sizeUnit',
+                            [
+                                'in' => Punic\Unit::getName('length/inch', 'narrow'),
+                                'cm' => Punic\Unit::getName('length/centimeter', 'narrow'),
+                                'mm' => Punic\Unit::getName('length/millimeter', 'narrow'),
+                            ],
+                            Config::get('community_store.sizeUnit')
+                        ); ?>
                     </div>
                 </div>
             </div>
@@ -435,7 +451,11 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <div class="row">
                 <div class="form-group col-md-12">
                     <div class="alert alert-info small">
-                        <?= t("%sThumbnail types will be used if selected because they offer better performance. %sIf they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption. %sReasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type.%s", '<p>', '</p><p>', '</p><p>', '</p>'); ?>
+                        <p><?= implode('</p><p>', [
+                            t("Thumbnail types will be used if selected because they offer better performance."),
+                            t("If they are not available for any reason, the Legacy Thumbnailer Generator set below will be used as fallback to avoid any disruption."),
+                            t("Reasons thumbnail types can be unavailable are if you don't select one, if it was deleted or if the image displayed doesn't have a thumbnail of the selected type."),
+                        ]) ?></p>
                     </div>
                 </div>
             </div>
@@ -445,7 +465,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageWidth', Config::get('community_store.defaultSingleProductImageWidth') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH); ?>
@@ -456,7 +476,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultSingleProductImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultSingleProductImageHeight', Config::get('community_store.defaultSingleProductImageHeight') ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT); ?>
@@ -475,7 +495,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageWidth', Config::get('community_store.defaultProductListImageWidth') ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH); ?>
@@ -486,7 +506,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductListImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductListImageHeight', Config::get('community_store.defaultProductListImageHeight') ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT); ?>
@@ -505,7 +525,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageWidth', t('Image Width')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageWidth', Config::get('community_store.defaultProductModalImageWidth') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH); ?>
@@ -516,7 +536,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <?= $form->label('defaultProductModalImageHeight', t('Image Height')); ?>
                     <div class="input-group">
                         <?= $form->number('defaultProductModalImageHeight', Config::get('community_store.defaultProductModalImageHeight') ?: Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT, ['min' => '0', 'step' => '1']); ?>
-                        <div class="input-group-addon input-group-text">px</div>
+                        <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                     </div>
                     <div class="help-block">
                         <?= t("Default value: %s", Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT); ?>
@@ -546,7 +566,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('download_expiry_hours', t('Digital Download Expiry')); ?>
                 <div class="input-group">
                     <?= $form->number('download_expiry_hours', Config::get('community_store.download_expiry_hours'), ['placeholder' => '48']); ?>
-                    <div class="input-group-addon input-group-text"><?= t('hours'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('duration/hour', 'long'); ?></div>
                 </div>
                 <p class="help-block"><?= t('Number of hours before digital download links expiry'); ?></p>
             </div>
@@ -626,7 +646,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>
                 <div class="input-group">
                     <?= $form->number('checkoutScrollOffset', Config::get('community_store.checkout_scroll_offset')); ?>
-                    <div class="input-group-addon input-group-text"><?= t('px'); ?></div>
+                    <div class="input-group-addon input-group-text"><?= Punic\Unit::getName('graphics/pixel', 'narrow'); ?></div>
                 </div>
                 <span class="help-block"><?= t('If your theme has a fixed header area in the checkout, enter a height in pixels of this area to offset the automatic scroll amount'); ?></span>
             </div>

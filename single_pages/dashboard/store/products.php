@@ -439,8 +439,8 @@ if (version_compare($version, '9.0', '<')) {
 
                             <div id="tierscontainer">
                                 <div class="row">
-                                    <div class="col-md-3"><strong><?= t('From'); ?></strong></div>
-                                    <div class="col-md-3"><strong><?= t('To'); ?></strong></div>
+                                    <div class="col-md-3"><strong><?= tc('QuantityStart', 'From'); ?></strong></div>
+                                    <div class="col-md-3"><strong><?= tc('QuantityEnd', 'To'); ?></strong></div>
                                     <div class="col-md-3"><strong><?= t('Price'); ?></strong></div>
                                     <th class="col-md-3"></th>
                                 </div>
@@ -600,7 +600,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <?php $outOfStockMessage = $product->getOutOfStockMessage(); ?>
-                                <?= $form->label("pOutOfStockMessage", t('Out Of Stock Message')); ?>
+                                <?= $form->label("pOutOfStockMessage", t('Out of Stock Message')); ?>
                                 <?= $form->text("pOutOfStockMessage", $product->getOutOfStockMessage(), ['placeholder'=>t('Out of Stock'), 'maxlength'=>200]); ?>
                             </div>
                         </div>
@@ -848,7 +848,7 @@ if (version_compare($version, '9.0', '<')) {
                             </div>
                             <div class="form-group">
                                 <?= $form->label("pSeperateShip", t('Product can be packaged with other items')); ?>
-                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as seperate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
+                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -892,13 +892,13 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
                             <div class="form-group">
                                 <?= $form->label("pPackageData", t('Or, Package(s) Data')); ?>
-                                <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
+                                <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
                                 <span class="help-block">
                                     <?= t('Values entered will override individual set weights and sizes'); ?>
                                     <br/>
                                     <?= t('Enter packages on new lines, using the format:'); ?>
                                     <br/>
-                                    <?= t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
+                                    <?= t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit'))); ?>
                                     <br/>
                                     <?= t('E.g. 10 4x6x8'); ?>
                                 </span>
@@ -1094,7 +1094,7 @@ if (version_compare($version, '9.0', '<')) {
                             $labels = [];
                             $labels['select'] = t('Option List');
                             $labels['text'] = t('Text Input');
-                            $labels['textarea'] = t('Text Area Input');
+                            $labels['textarea'] = t('Text Area');
                             $labels['checkbox'] = t('Checkbox');
                             $labels['hidden'] = t('Hidden Value');
                             $labels['static'] = t('Content');
@@ -1686,7 +1686,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <div class="form-group">
 
                                                             <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data")); ?>
-                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t('%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
+                                                            <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
 
                                                         </div>
                                                     </div>

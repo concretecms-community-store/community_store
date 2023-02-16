@@ -526,11 +526,11 @@ class DiscountRule
             return $display;
         } else {
             if ($this->drDeductType == 'percentage') {
-                return $this->drPercentage . ' ' . t('off');
+                return tc('DiscountPercentage', '%s off', $this->drPercentage);
             }
 
             if ($this->drDeductType == 'value') {
-                return Price::format($this->drValue) . ' ' . t('off');
+                return tc('DiscountAmount', '%s off', Price::format($this->drValue));
             }
         }
 
