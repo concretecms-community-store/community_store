@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -18,12 +18,6 @@ class DiscountCode
      * @ORM\GeneratedValue
      */
     protected $dcID;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule", inversedBy="codes")
-     * @ORM\JoinColumn(name="drID", referencedColumnName="drID", onDelete="CASCADE")
-     */
-    private $discountRule;
 
     /**
      * @ORM\Column(type="string")
@@ -41,7 +35,13 @@ class DiscountCode
     protected $dcDateAdded;
 
     /**
-     * @ORM\return mixed
+     * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule", inversedBy="codes")
+     * @ORM\JoinColumn(name="drID", referencedColumnName="drID", onDelete="CASCADE")
+     */
+    private $discountRule;
+
+    /**
+     * @return mixed
      */
     public function getID()
     {
@@ -49,7 +49,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getCode()
     {
@@ -57,7 +57,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $dcCode
+     * @param mixed $dcCode
      */
     public function setCode($dcCode)
     {
@@ -65,7 +65,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDiscountRule()
     {
@@ -73,7 +73,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $discountRule
+     * @param mixed $discountRule
      */
     public function setDiscountRule($discountRule)
     {
@@ -81,7 +81,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOID()
     {
@@ -89,7 +89,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $oID
+     * @param mixed $oID
      */
     public function setOID($oID)
     {
@@ -97,7 +97,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDateAdded()
     {
@@ -110,7 +110,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $dcDateAdded
+     * @param mixed $dcDateAdded
      */
     public function setDateAdded($dcDateAdded)
     {
@@ -121,14 +121,14 @@ class DiscountCode
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $dcID);
+        return $em->find(__CLASS__, $dcID);
     }
 
     public static function getByCode($code)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['dcCode' => $code]);
+        return $em->getRepository(__CLASS__)->findOneBy(['dcCode' => $code]);
     }
 
     public static function add($discountRule, $code)
@@ -158,9 +158,7 @@ class DiscountCode
 
     public static function validate($args)
     {
-        $e = Application::getFacadeApplication()->make('helper/validation/error');
-
-        return $e;
+        return Application::getFacadeApplication()->make('helper/validation/error');
     }
 
     public static function storeCartCode($code)

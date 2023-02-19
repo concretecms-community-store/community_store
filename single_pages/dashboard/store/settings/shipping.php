@@ -1,8 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $addViews = ['add', 'add_method', 'edit'];
@@ -27,19 +27,19 @@ if (in_array($controller->getAction(), $addViews)) {
                 <div class="row">
                     <div class="col-md-12 col-sm-6">
                         <div class="form-group">
-                            <?= $form->label('methodName', t("Method Name")); ?>
+                            <?= $form->label('methodName', t('Method Name')); ?>
                             <?= $form->text('methodName', isset($sm) && is_object($sm) ? $sm->getName() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
-                            <?= $form->label('methodEnabled', t("Enabled")); ?>
+                            <?= $form->label('methodEnabled', t('Enabled')); ?>
                             <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], isset($sm) && is_object($sm) ? $sm->isEnabled() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
-                            <?= $form->label('methodSortOrder', t("Sort Order")); ?>
+                            <?= $form->label('methodSortOrder', t('Sort Order')); ?>
                             <?= $form->text('methodSortOrder', isset($sm) && is_object($sm) ? $sm->getSortOrder() : ''); ?>
                         </div>
                     </div>
@@ -48,7 +48,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <?= $form->label('methodUserGroups[]', t("Available To User Groups")); ?>
+                            <?= $form->label('methodUserGroups[]', t('Available To User Groups')); ?>
                             <div class="ccm-search-field-content ccm-search-field-content-select2">
                                 <select multiple="multiple" name="methodUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups'); ?>">
                                     <?php
@@ -61,7 +61,7 @@ if (in_array($controller->getAction(), $addViews)) {
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <?= $form->label('methodExcludedUserGroups[]', t("Exclude From User Groups")); ?>
+                            <?= $form->label('methodExcludedUserGroups[]', t('Exclude From User Groups')); ?>
                             <div class="ccm-search-field-content ccm-search-field-content-select2">
                                 <select multiple="multiple" name="methodExcludedUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('None'); ?>">
                                     <?php
@@ -86,10 +86,10 @@ if (in_array($controller->getAction(), $addViews)) {
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
-                            <?= $form->label('methodDetails', t("Details")); ?>
+                            <?= $form->label('methodDetails', t('Details')); ?>
                             <?php
                             $editor = $app->make('editor');
-                            $editor->getPluginManager()->deselect(array('autogrow'));
+                            $editor->getPluginManager()->deselect(['autogrow']);
                             echo $editor->outputStandardEditor('methodDetails', isset($sm) && is_object($sm) ? $sm->getDetails() : '');
                             ?>
                         </div>
@@ -126,7 +126,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 </ul>
             </div>
         <?php } ?>
-        <a href="<?= Url::to('/dashboard/store/settings#settings-shipping') ?>" class="btn btn-default btn-secondary"><i class="fa fa-gear"></i> <?= t("General Settings") ?></a>
+        <a href="<?= Url::to('/dashboard/store/settings#settings-shipping') ?>" class="btn btn-default btn-secondary"><i class="fa fa-gear"></i> <?= t('General Settings') ?></a>
     </div>
 
     <div class="dashboard-shipping-methods">
@@ -145,12 +145,12 @@ if (in_array($controller->getAction(), $addViews)) {
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th><?= t("%s Methods", $methodType->getMethodTypeController()->getShippingMethodTypeName()) ?></th>
-                            <th style="width: 8%"><?= t("Enabled") ?></th>
-                            <th style="width: 20%"><?= tc("UserGroups", "Available To") ?></th>
-                            <th style="width: 20%"><?= tc("UserGroups", "Excluded From") ?></th>
-                            <th style="width: 8%"><?= t("Sort Order") ?></th>
-                            <th  style="width: 15%" class="text-right"><?= t("Actions") ?></th>
+                            <th><?= t('%s Methods', $methodType->getMethodTypeController()->getShippingMethodTypeName()) ?></th>
+                            <th style="width: 8%"><?= t('Enabled') ?></th>
+                            <th style="width: 20%"><?= tc('UserGroups', 'Available To') ?></th>
+                            <th style="width: 20%"><?= tc('UserGroups', 'Excluded From') ?></th>
+                            <th style="width: 8%"><?= t('Sort Order') ?></th>
+                            <th  style="width: 15%" class="text-right"><?= t('Actions') ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -192,12 +192,12 @@ if (in_array($controller->getAction(), $addViews)) {
                                     <td><?= $method->getSortOrder() ?></td>
                                     <td class="text-right">
                                         <a href="<?= Url::to('/dashboard/store/settings/shipping/edit', $method->getID()) ?>"
-                                           class="btn btn-default btn-secondary"><?= t("Edit") ?></a>
+                                           class="btn btn-default btn-secondary"><?= t('Edit') ?></a>
                                         <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
-                                            <a href="" class="btn btn-default btn-secondary"><?= t("Disable") ?></a>
+                                            <a href="" class="btn btn-default btn-secondary"><?= t('Disable') ?></a>
                                         <?php } else { ?>
                                             <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
-                                               class="btn btn-danger"><?= t("Delete") ?></a>
+                                               class="btn btn-danger"><?= t('Delete') ?></a>
                                         <?php } ?>
                                     </td>
                                 </tr>

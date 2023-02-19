@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Application;
 
@@ -7,13 +7,13 @@ $bt = $controller->getBlockObject()->getBlockTypeObject();
 $ci = $app->make('helper/concrete/urls');
 $csm = $app->make('cs/helper/multilingual');
 $filters = [
-                    'all' => t("List All"),
-                    'current' => t('List products under the current page'),
-                    'current_children' => t('List products under the current page and child pages'),
-                    'page' => t('List products under a specified page'),
-                    'page_children' => t('List products under a specified page and child pages'),
-                    'showAddToCartrelated' => t('List products related to the product displayed on this page'),
-                    'related_product' => t('List products related to a specified product'),
+    'all' => t('List All'),
+    'current' => t('List products under the current page'),
+    'current_children' => t('List products under the current page and child pages'),
+    'page' => t('List products under a specified page'),
+    'page_children' => t('List products under a specified page and child pages'),
+    'showAddToCartrelated' => t('List products related to the product displayed on this page'),
+    'related_product' => t('List products related to a specified product'),
 ];
 ?>
 <p style="padding-top: 5px;">
@@ -21,9 +21,9 @@ $filters = [
     $groupText = false;
     $filterText = false;
     if ($filterSource === 'auto') {
-        $header = t("Filters will match the Product List block on the page");
+        $header = t('Filters will match the Product List block on the page');
     } elseif ($filterSource === 'manual') {
-        $header = t("Filters were set manually");
+        $header = t('Filters were set manually');
         $filterText = $filters[$filter];
         $gIDs = $controller->getGroupFilters();
 
@@ -34,9 +34,8 @@ $filters = [
                 $groupText = t2('Products must match all of the %s group selected', 'Products must match all of the %s groups selected', count($gIDs));
             }
         } elseif ($gIDs && count($gIDs) === 1) {
-            $groupText = t("Products must match the selected group");
+            $groupText = t('Products must match the selected group');
         }
-
     }
 ?>
     <img style="vertical-align: baseline; max-width: 16px; margin-right: 5px; display: inline-block;" src="<?= $ci->getBlockTypeIconURL($bt) ?>" /> <strong><?= $header; ?></strong>

@@ -3,22 +3,15 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Http\Request;
-use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Http\ResponseFactory;
-use Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\page;
-use Concrete\Core;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 
 class Manufacturers extends DashboardPageController
 {
-
     public function view()
     {
         $manufacturerList = new ManufacturerList();
@@ -32,7 +25,6 @@ class Manufacturers extends DashboardPageController
         $this->set('manufacturers', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
-
 
         $this->set('pageTitle', t('Manufacturers'));
     }
@@ -76,18 +68,16 @@ class Manufacturers extends DashboardPageController
             }
 
             $factory = $this->app->make(ResponseFactory::class);
+
             return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
         }
     }
 
     public function delete($mid)
     {
-
         $manufacturer = Manufacturer::getByID($mid);
 
-
         if ($manufacturer) {
-
             foreach($manufacturer->getProducts() as $product) {
                 $product->setManufacturer(null);
                 $product->save();
@@ -98,8 +88,7 @@ class Manufacturers extends DashboardPageController
             $this->flash('success', t('Manufacturer Deleted'));
             $factory = $this->app->make(ResponseFactory::class);
         }
+
         return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
-
     }
-
 }

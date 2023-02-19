@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Reports;
 
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 class Sales extends DashboardPageController
 {
@@ -62,10 +63,10 @@ class Sales extends DashboardPageController
 
         //TODO maybe get all existing orders if needed
         // set to and from
-        if ('' == $to || null == $to) {
+        if ($to == '' || $to == null) {
             $to = date('Y-m-d'); // set to today
         }
-        if ('' == $from || null == $from) {
+        if ($from == '' || $from == null) {
             $from = strtotime('-7 day', $to); // set from a week ago
         }
 
@@ -122,14 +123,14 @@ class Sales extends DashboardPageController
 
         // if we have something to export
         if (count($export) > 0) {
-            $filename = 'sale_report_' . date('Y-m-d') . ".csv";
+            $filename = 'sale_report_' . date('Y-m-d') . '.csv';
 
             $this->app->make(
                 CsvReportExporter::class,
                 [
                     'filename' => $filename,
                     'header' => array_keys(reset($export)),
-                    'rows' => $export
+                    'rows' => $export,
                 ]
             )->getCsv();
         }

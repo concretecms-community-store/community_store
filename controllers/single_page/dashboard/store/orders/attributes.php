@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Orders;
 
 use Concrete\Core\Attribute\Key\Category;
@@ -8,11 +9,6 @@ use Concrete\Core\Support\Facade\Url;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('store_order');
-    }
-
     public function view()
     {
         $this->renderList();
@@ -23,7 +19,8 @@ class Attributes extends DashboardAttributesPageController
         $this->requireAsset('selectize');
 
         $key = $this->getCategoryObject()->getController()->getByID($akID);
-        $this->renderEdit($key,
+        $this->renderEdit(
+            $key,
             Url::to('/dashboard/store/orders/attributes', 'view')
         );
     }
@@ -32,7 +29,8 @@ class Attributes extends DashboardAttributesPageController
     {
         $this->edit($akID);
         $key = $this->getCategoryObject()->getController()->getByID($akID);
-        $this->executeUpdate($key,
+        $this->executeUpdate(
+            $key,
             Url::to('/dashboard/store/orders/attributes', 'view')
         );
     }
@@ -41,7 +39,8 @@ class Attributes extends DashboardAttributesPageController
     {
         $this->requireAsset('selectize');
         $type = Type::getByID($type);
-        $this->renderAdd($type,
+        $this->renderAdd(
+            $type,
             Url::to('/dashboard/store/orders/attributes', 'view')
         );
     }
@@ -57,8 +56,14 @@ class Attributes extends DashboardAttributesPageController
     public function delete($akID = null)
     {
         $key = $this->getCategoryObject()->getController()->getByID($akID);
-        $this->executeDelete($key,
+        $this->executeDelete(
+            $key,
             Url::to('/dashboard/store/orders/attributes', 'view')
         );
+    }
+
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('store_order');
     }
 }

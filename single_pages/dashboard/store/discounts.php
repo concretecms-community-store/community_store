@@ -1,8 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
@@ -10,9 +10,9 @@ $form = $app->make('helper/form');
 $date = $app->make('helper/form/date_time');
 $dfh = $app->make('helper/date');
 
-$listViews = array('view','updated','removed','success', 'deleted');
-$addViews = array('add','edit','save');
-$codeViews = array('codes', 'addcodes');
+$listViews = ['view', 'updated', 'removed', 'success', 'deleted'];
+$addViews = ['add', 'edit', 'save'];
+$codeViews = ['codes', 'addcodes'];
 
 $currencySymbol = Config::get('community_store.symbol');
 
@@ -27,8 +27,8 @@ if (version_compare($version, '9.0', '<')) {
 
 <?php if (in_array($controller->getAction(), $listViews)){ ?>
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= Url::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t("Add Discount Rule")?></a>
-	</div>
+        <a href="<?= Url::to('/dashboard/store/discounts/', 'add')?>" class="btn btn-primary"><?= t('Add Discount Rule')?></a>
+    </div>
 
     <?php
     $version = $app->make('config')->get('concrete.version');
@@ -38,7 +38,7 @@ if (version_compare($version, '9.0', '<')) {
             <div class="form-group">
                 <div class="ccm-search-main-lookup-field">
                     <i class="fa fa-search"></i>
-                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Discounts'), 'style'=>"min-width: 300px"]) ?>
+                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search Discounts'), 'style' => 'min-width: 300px']) ?>
                 </div>
 
             </div>
@@ -47,7 +47,7 @@ if (version_compare($version, '9.0', '<')) {
     </form>
     <?php } ?>
 
-<?php if(count($discounts)>0) { ?>
+<?php if(count($discounts) > 0) { ?>
 
         <div class="ccm-dashboard-content-full">
         <table class="ccm-search-results-table">
@@ -65,7 +65,6 @@ if (version_compare($version, '9.0', '<')) {
 
                 <?php
                     foreach ($discounts as $discountRule) {
-
                         $usergroups = $discountRule->getUserGroups();
                         $productgroups = $discountRule->getProductGroups();
                         $deducttype = $discountRule->getDeductType();
@@ -73,11 +72,11 @@ if (version_compare($version, '9.0', '<')) {
 
                         $discountRuleDeduct = $discountRule->getDeductFrom();
 
-                        if (empty($productgroups) && $deducttype == 'percentage' ) {
+                        if (empty($productgroups) && $deducttype == 'percentage') {
                             $discountRuleDeduct = t('from all products');
                         }
 
-                        if (!empty($productgroups) && $deducttype == 'percentage' ) {
+                        if (!empty($productgroups) && $deducttype == 'percentage') {
                             $discountRuleDeduct = t('from matching products');
                         }
 
@@ -85,16 +84,16 @@ if (version_compare($version, '9.0', '<')) {
                             $discountRuleDeduct = t('from shipping when at least one product matches');
                         }
 
-                        if (!empty($productgroups) && $deducttype == 'value_all' ) {
+                        if (!empty($productgroups) && $deducttype == 'value_all') {
                             $discountRuleDeduct = t('from each matching product');
                         }
 
-                        if (empty($productgroups) && $deducttype == 'value_all' ) {
+                        if (empty($productgroups) && $deducttype == 'value_all') {
                             $discountRuleDeduct = t('from each product');
                             $discountRuleDeduct = t('from each product');
                         }
 
-                        if ($deducttype == 'percentage' && $deductfrom == 'shipping' ) {
+                        if ($deducttype == 'percentage' && $deductfrom == 'shipping') {
                             $discountRuleDeduct = t('from shipping');
                         }
 
@@ -102,11 +101,11 @@ if (version_compare($version, '9.0', '<')) {
                             $discountRuleDeduct = t('from shipping');
                         }
 
-                        if (!empty($productgroups) && $deducttype == 'fixed' ) {
+                        if (!empty($productgroups) && $deducttype == 'fixed') {
                             $discountRuleDeduct = t('set as price for all matching products');
                         }
 
-                        if (empty($productgroups) && $deducttype == 'fixed' ) {
+                        if (empty($productgroups) && $deducttype == 'fixed') {
                             $discountRuleDeduct = t('set as price for all products');
                         }
 
@@ -130,38 +129,36 @@ if (version_compare($version, '9.0', '<')) {
                                 <?php if ($deducttype == 'percentage') {
                                    echo  h($discountRule->getPercentage()) . '% ' . t($discountRuleDeduct);
                                 } else {
-                                    echo $currencySymbol .  h($discountRule->getValue()) . ' ' . $discountRuleDeduct;
+                                    echo $currencySymbol . h($discountRule->getValue()) . ' ' . $discountRuleDeduct;
                                 }
                                 ?>
                             </td>
                             <td><?php
 
                                 if ($discountRule->getTrigger() == 'auto') {
-                                    echo '<span class="label label-warning '.$badgeClass.' bg-warning">' . t('automatically') . '</span><br />';
+                                    echo '<span class="label label-warning ' . $badgeClass . ' bg-warning">' . t('automatically') . '</span><br />';
                                 } else {
                                     if ($discountRule->isSingleUse()) {
-                                        echo '<span class="label label-primary badge bg-primary">' . t('when single use code entered'). '</span><br />';
-                                        echo '<span class="label '. $badgeClass  .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary'). '">' . t2(
-                                            /* i18n: %1$s is the number of available codes, %2$s is the total number of codes*/
+                                        echo '<span class="label label-primary badge bg-primary">' . t('when single use code entered') . '</span><br />';
+                                        echo '<span class="label ' . $badgeClass . ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
+                                            // i18n: %1$s is the number of available codes, %2$s is the total number of codes
                                             '%1$s of %2$s code available',
                                             '%1$s of %2$s codes available',
                                             $discountRule->availableCodes,
                                             $discountRule->totalCodes
                                         ) . '</span><br />';
                                     } else {
-                                        echo '<span class="label label-primary">' . t('when code entered'). '</span><br />';
-                                        echo '<span class="label '  . $badgeClass .  ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
-                                            /* i18n: %s is a number */
+                                        echo '<span class="label label-primary">' . t('when code entered') . '</span><br />';
+                                        echo '<span class="label ' . $badgeClass . ($discountRule->availableCodes <= 0 ? 'label-danger bg-danger' : 'label-primary bg-primary') . '">' . t2(
+                                            // i18n: %s is a number
                                             '%s code configured',
                                             '%s codes configured',
                                             $discountRule->availableCodes
                                         ) . '</span><br />';
                                     }
-
                                 }
 
                                 if (!empty($productgroups)) {
-
                                     echo '<span class="label label-primary ' . $badgeClass . ' bg-primary">';
 
                                     if ($deducttype == 'percentage') {
@@ -174,7 +171,7 @@ if (version_compare($version, '9.0', '<')) {
                                 }
 
                                 if (!empty($usergroups)) {
-                                    echo '<span class="label label-primary ' . $badgeClass . ' bg-primary">' . t('to specific user groups'). '</span><br />';
+                                    echo '<span class="label label-primary ' . $badgeClass . ' bg-primary">' . t('to specific user groups') . '</span><br />';
                                 }
 
                                 if ($discountRule->getQuantity() > 0 || $discountRule->getMaximumQuantity() > 0) {
@@ -189,7 +186,6 @@ if (version_compare($version, '9.0', '<')) {
                                     echo '</span><br />';
                                 }
 
-
                                 ?></td>
                             <td>
 
@@ -202,13 +198,12 @@ if (version_compare($version, '9.0', '<')) {
                                 }
 
                                 if ($discountRule->getValidTo() > 0) {
-                                    $restrictions .= ' '. tc(/* i18n: %s is a date/time */'DiscountRule', 'expires %s', $dfh->formatDateTime($discountRule->getValidTo()));
+                                    $restrictions .= ' ' . tc(/* i18n: %s is a date/time */'DiscountRule', 'expires %s', $dfh->formatDateTime($discountRule->getValidTo()));
                                 }
 
                                 if (!$restrictions) {
                                     $restrictions = t('always');
                                 }
-
 
                                 echo trim($restrictions);
 
@@ -221,7 +216,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <p><a class="btn btn-primary btn-sm" href="<?= Url::to('/dashboard/store/discounts/edit/', $discountRule->getID())?>"><?= t('Manage'); ?></a></p>
                                 <?php
                                 if ($discountRule->getTrigger() == 'code') {
-                                    echo '<p>' . '<a class="btn btn-primary btn-sm" href="'. Url::to('/dashboard/store/discounts/codes/', $discountRule->getID()).'"><i class="fa fa-key"></i> '.t('Manage Codes').'</a></p>';
+                                    echo '<p>' . '<a class="btn btn-primary btn-sm" href="' . Url::to('/dashboard/store/discounts/codes/', $discountRule->getID()) . '"><i class="fa fa-key"></i> ' . t('Manage Codes') . '</a></p>';
                                 } ?>
 
                             </td>
@@ -283,17 +278,17 @@ if (version_compare($version, '9.0', '<')) {
 
         <div class="form-group">
             <?= $form->label('drName', t('Name'))?>
-            <?= $form->text('drName', $discountRule->getName(), array('required'=>'required'))?>
+            <?= $form->text('drName', $discountRule->getName(), ['required' => 'required'])?>
         </div>
 
         <div class="form-group">
             <?= $form->label('drEnabled', t('Enabled'))?>
-            <?= $form->select('drEnabled', array('1'=>t('Yes'), '0'=>t('No')), $discountRule->isEnabled() ? 1: 0)?>
+            <?= $form->select('drEnabled', ['1' => t('Yes'), '0' => t('No')], $discountRule->isEnabled() ? 1 : 0)?>
         </div>
 
         <div class="form-group">
             <?= $form->label('drDisplay', t('Display Text'))?>
-            <?= $form->text('drDisplay', $discountRule->getDisplay(), array('required'=>'required'))?>
+            <?= $form->text('drDisplay', $discountRule->getDisplay(), ['required' => 'required'])?>
         </div>
 
         <div class="form-group">
@@ -307,10 +302,10 @@ if (version_compare($version, '9.0', '<')) {
                 </div>
                 <div class="col-md-7 row">
                     <?php
-                    $fieldrequired = array('required'=>'required');
+                    $fieldrequired = ['required' => 'required'];
                     $visibility = '';
                     if($discountRule->getDeductType() == 'value' || $discountRule->getDeductType() == 'value_all' || $discountRule->getDeductType() == 'fixed') {
-                        $fieldrequired = array();
+                        $fieldrequired = [];
                         $visibility = 'style="display: none;"';
                     } ?>
 
@@ -323,10 +318,10 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
 
                     <?php
-                    $fieldrequired = array('required'=>'required');
+                    $fieldrequired = ['required' => 'required'];
                     $visibility = '';
                     if($discountRule->getDeductType() == 'percentage') {
-                        $fieldrequired = array();
+                        $fieldrequired = [];
                         $visibility = 'style="display: none;"';
                     } ?>
 
@@ -344,12 +339,12 @@ if (version_compare($version, '9.0', '<')) {
 
         <div class="form-group">
             <?= $form->label('drDeductFrom', t('Apply To'))?>
-            <?= $form->select('drDeductFrom', array('subtotal'=>t('Items In Cart'), 'shipping' => t('Shipping')), $discountRule->getDeductFrom())?>
+            <?= $form->select('drDeductFrom', ['subtotal' => t('Items In Cart'), 'shipping' => t('Shipping')], $discountRule->getDeductFrom())?>
         </div>
 
       <div class="form-group">
           <?= $form->label('drDiscountSalePrices', t('Discount Sale Prices'))?>
-          <?= $form->select('drDiscountSalePrices', array('0'=>t('No, sale prices will not be discounted'), '1' => t('Yes, sale prices will have discounts applied')), $discountRule->getDiscountSalePrices())?>
+          <?= $form->select('drDiscountSalePrices', ['0' => t('No, sale prices will not be discounted'), '1' => t('Yes, sale prices will have discounts applied')], $discountRule->getDiscountSalePrices())?>
       </div>
 
         <div class="form-group">
@@ -361,10 +356,10 @@ if (version_compare($version, '9.0', '<')) {
 
         <div id="codefields" <?= ($discountRule->getTrigger() == 'auto' ? 'style="display: none;"' : ''); ?>>
             <div class="form-group">
-                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1',$discountRule->isSingleUse())?> <?= t('Single Use Codes'); ?></label>
+                <label for="drSingleUseCodes"><?= $form->checkbox('drSingleUseCodes', '1', $discountRule->isSingleUse())?> <?= t('Single Use Codes'); ?></label>
             </div>
             <?php if (!$discountRule->getID()) { ?>
-            <p class="alert alert-info"><?= t('Codes can be entered after creating rule');?></p>
+            <p class="alert alert-info"><?= t('Codes can be entered after creating rule'); ?></p>
             <?php } ?>
         </div>
 
@@ -374,17 +369,17 @@ if (version_compare($version, '9.0', '<')) {
 
 <!--       <field name="drCurrency" type="C" size="20"></field>-->
 
-        <fieldset><legend><?= t('Restrictions');?></legend>
+        <fieldset><legend><?= t('Restrictions'); ?></legend>
 
             <div class="form-group">
 
                 <?= $form->label('drValidFrom', t('Starts'))?>
                 <div class="row">
                     <div class="col-md-4">
-                        <?= $form->select('validFrom', array('0'=>t('Immedately'), '1'=>t('From a specified date')), ($discountRule->getValidFrom() > 0 ? '1' : '0') )?>
+                        <?= $form->select('validFrom', ['0' => t('Immedately'), '1' => t('From a specified date')], ($discountRule->getValidFrom() > 0 ? '1' : '0'))?>
                     </div>
                     <div class="col-md-8" id="fromdate" <?= ($discountRule->getValidFrom() ? '' : 'style="display: none;"'); ?>>
-                        <?= $date->datetime('drValidFrom', $discountRule->getValidFrom());?>
+                        <?= $date->datetime('drValidFrom', $discountRule->getValidFrom()); ?>
                     </div>
                 </div>
 
@@ -394,7 +389,7 @@ if (version_compare($version, '9.0', '<')) {
                 <?= $form->label('drValidTo', t('Ends'))?>
                 <div class="row">
                     <div class="col-md-4">
-                        <?= $form->select('validTo', array('0'=>t('Never'), '1'=>t('At a specified date')),  ($discountRule->getValidTo() > 0 ? '1' : '0') )?>
+                        <?= $form->select('validTo', ['0' => t('Never'), '1' => t('At a specified date')], ($discountRule->getValidTo() > 0 ? '1' : '0'))?>
                     </div>
                     <div class="col-md-8" id="todate" <?= ($discountRule->getValidTo() ? '' : 'style="display: none;"'); ?>>
                          <?= $date->datetime('drValidTo', $discountRule->getValidTo())?>
@@ -408,11 +403,11 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="col-md-12">
                         <div class="ccm-search-field-content ccm-search-field-content-select2">
                             <select multiple="multiple" name="drProductGroups[]" class="selectize" style="width: 100%"
-                                    placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') :  t('Select Product Groups')); ?>">
+                                    placeholder="<?= (empty($productgroups) ? t('No Product Groups Available') : t('Select Product Groups')); ?>">
                                 <?php
                                 if (!empty($productgroups)) {
-                                    foreach ($productgroups as $pgkey=>$pglabel) { ?>
-                                        <option value="<?= $pgkey;?>" <?= (in_array($pgkey, $selectedproductgroups) ? 'selected="selected"' : ''); ?>>  <?= $pglabel; ?></option>
+                                    foreach ($productgroups as $pgkey => $pglabel) { ?>
+                                        <option value="<?= $pgkey; ?>" <?= (in_array($pgkey, $selectedproductgroups) ? 'selected="selected"' : ''); ?>>  <?= $pglabel; ?></option>
                                     <?php   }
                                 } ?>
                             </select>
@@ -422,12 +417,12 @@ if (version_compare($version, '9.0', '<')) {
             </div>
 
             <div class="form-group">
-                <?= $form->label("usergroups", t("User Groups"));?>
+                <?= $form->label('usergroups', t('User Groups')); ?>
                 <div class="ccm-search-field-content ccm-search-field-content-select2">
-                    <select multiple="multiple" name="drUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('Select User Groups');?>">
+                    <select multiple="multiple" name="drUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('Select User Groups'); ?>">
                         <?php
-                        foreach ($usergroups as $ugkey=>$uglabel) { ?>
-                            <option value="<?= $ugkey;?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                        foreach ($usergroups as $ugkey => $uglabel) { ?>
+                            <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -446,13 +441,13 @@ if (version_compare($version, '9.0', '<')) {
 
 
             <div class="form-group">
-                <?= $form->label("drQuantity", t("Minimum Quantity in Cart"));?>
+                <?= $form->label('drQuantity', t('Minimum Quantity in Cart')); ?>
                 <?= $form->text('drQuantity', $discountRule->getQuantity())?>
             </div>
 
 
             <div class="form-group">
-                <?= $form->label("drMaximumQuantity", t("Maximum Quantity in Cart"));?>
+                <?= $form->label('drMaximumQuantity', t('Maximum Quantity in Cart')); ?>
                 <?= $form->text('drMaximumQuantity', $discountRule->getMaximumQuantity())?>
             </div>
 
@@ -471,7 +466,7 @@ if (version_compare($version, '9.0', '<')) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : ''))?>" class="btn btn-default btn-secondary"><?= t('Cancel / View All Discount Rules')?></a>
+            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : ''))?>" class="btn btn-default btn-secondary"><?= t('Cancel / View All Discount Rules')?></a>
             <button class="pull-right btn btn-primary float-end" type="submit"><?= ($discountRule->getID() > 0 ? t('Update') : t('Add'))?></button>
         </div>
     </div>
@@ -481,7 +476,7 @@ if (version_compare($version, '9.0', '<')) {
     <script>
         $(function(){
             $('#deleterule').submit(function(e){
-                return confirm("<?= t('Are you sure you want to delete this discount rule?');?>");
+                return confirm("<?= t('Are you sure you want to delete this discount rule?'); ?>");
             });
 
             $('#drDeductType1').click(function() {
@@ -557,10 +552,10 @@ if (version_compare($version, '9.0', '<')) {
 
 <?php if (in_array($controller->getAction(), $codeViews)){ ?>
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= Url::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default btn-secondary"><?= t("Edit Discount Rule")?></a>
+    <a href="<?= Url::to('/dashboard/store/discounts/edit', $discountRule->getID())?>" class="btn btn-default btn-secondary"><?= t('Edit Discount Rule')?></a>
 </div>
 
-<?php if (isset($failedcodes) && count($failedcodes) > 0 ) { ?>
+<?php if (isset($failedcodes) && count($failedcodes) > 0) { ?>
     <p class="alert alert-warning"><?= t('The following codes are invalid or are already active:')  ?><br />
         <strong><?= implode('<br />', $failedcodes); ?></strong>
     </p>
@@ -605,7 +600,7 @@ if (version_compare($version, '9.0', '<')) {
                             <td>
                                 <form method="post" action="<?= Url::to('/dashboard/store/discounts/deletecode/')?>">
                                     <?= $token->output('community_store'); ?>
-                                    <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
+                                    <input type="hidden" name="dcID" value="<?= $code->getID(); ?>" />
                                     <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                 </form>
                                 </td>
@@ -617,7 +612,7 @@ if (version_compare($version, '9.0', '<')) {
                             <td>
                                 <form method="post" action="<?= Url::to('/dashboard/store/discounts/deletecode/')?>">
                                     <?= $token->output('community_store'); ?>
-                                    <input type="hidden" name="dcID" value="<?= $code->getID();?>" />
+                                    <input type="hidden" name="dcID" value="<?= $code->getID(); ?>" />
                                     <button class="btn btn-danger" ><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>
@@ -630,7 +625,7 @@ if (version_compare($version, '9.0', '<')) {
         </table>
 
     <?php } else { ?>
-    <p class="alert alert-warning"><?= t('No codes specified');?></p>
+    <p class="alert alert-warning"><?= t('No codes specified'); ?></p>
 
     <?php } ?>
 <br />
@@ -652,7 +647,7 @@ if (version_compare($version, '9.0', '<')) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary"><?= t('Return to Discount Rules')?></a>
+            <a href="<?= Url::to('/dashboard/store/discounts' . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary"><?= t('Return to Discount Rules')?></a>
         </div>
     </div>
 

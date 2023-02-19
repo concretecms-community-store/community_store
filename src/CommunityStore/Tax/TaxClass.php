@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -112,7 +113,7 @@ class TaxClass
     public function addTaxClassRate($trID)
     {
         $taxClassRates = $this->taxClassRates;
-        $taxClassRates = explode(",", $taxClassRates);
+        $taxClassRates = explode(',', $taxClassRates);
         $taxClassRates[] = $trID;
         $this->setTaxClassRates($taxClassRates);
         $this->save();
@@ -123,23 +124,23 @@ class TaxClass
         $trID = $taxRate->getTaxRateID();
         if (in_array($trID, $this->getTaxClassRateIDs())) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static function getByID($tcID)
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $tcID);
+        return $em->find(__CLASS__, $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['taxClassHandle' => $taxClassHandle]);
+        return $em->getRepository(__CLASS__)->findOneBy(['taxClassHandle' => $taxClassHandle]);
     }
 
     public static function getTaxClasses()
@@ -156,7 +157,7 @@ class TaxClass
             $locked = $data['taxClassLocked'];
         }
         $tc = new self();
-        $th = Application::getFacadeApplication()->make("helper/text");
+        $th = Application::getFacadeApplication()->make('helper/text');
         $tc->setTaxClassHandle($th->handle($data['taxClassName']));
         $tc->setTaxClassName($data['taxClassName']);
 

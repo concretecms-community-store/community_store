@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -28,7 +28,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($optionNames as $option) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                             <?php if ($option->getType() != 'static') { ?>
@@ -66,7 +65,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($optionDetails as $option) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -107,7 +105,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($optionItems as $option) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -142,7 +139,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($optionSelectorNames as $option) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -175,7 +171,7 @@ $localecount = count($locales);
 
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No Options or Option Values have been created on products"); ?></p>
+            <p class="alert alert-info"><?= t('No Options or Option Values have been created on products'); ?></p>
         <?php } ?>
 
     </fieldset>
@@ -198,7 +194,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($quantityLabels as $quantityLabel) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -231,7 +226,7 @@ $localecount = count($locales);
 
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No products have quantity labels entered"); ?></p>
+            <p class="alert alert-info"><?= t('No products have quantity labels entered'); ?></p>
         <?php } ?>
 
     </fieldset>
@@ -254,7 +249,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($attrList as $attr) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -290,9 +284,7 @@ $localecount = count($locales);
 
                 <?php
                 foreach ($attrOptions as $type => $typeAttrOptions) {
-
-                    foreach ($typeAttrOptions as $attrOption=>$x) {
-
+                    foreach ($typeAttrOptions as $attrOption => $x) {
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
                             <tr>
@@ -324,7 +316,7 @@ $localecount = count($locales);
                 }?>
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
+            <p class="alert alert-info"><?= t('No Attribute or Attribute Values have been created on products'); ?></p>
         <?php } ?>
 
     </fieldset>
@@ -347,7 +339,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($cartButtons as $cartButtonLabel) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -379,7 +370,7 @@ $localecount = count($locales);
 
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No products have Add To Cart Button Text entered"); ?></p>
+            <p class="alert alert-info"><?= t('No products have Add To Cart Button Text entered'); ?></p>
         <?php } ?>
 
     </fieldset>
@@ -402,7 +393,6 @@ $localecount = count($locales);
                 <?php
 
                 foreach ($outOfStock as $outOfStockMessage) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <tr>
@@ -435,7 +425,7 @@ $localecount = count($locales);
 
             </table>
         <?php } else { ?>
-            <p class="alert alert-info"><?= t("No products have an Out of Stock Message entered"); ?></p>
+            <p class="alert alert-info"><?= t('No products have an Out of Stock Message entered'); ?></p>
         <?php } ?>
 
     </fieldset>
@@ -449,7 +439,7 @@ $localecount = count($locales);
 
 </form>
 <?php } else { ?>
-    <p class="alert alert-info"><?= t('No additional locales have been defined');?></p>
+    <p class="alert alert-info"><?= t('No additional locales have been defined'); ?></p>
 <?php } ?>
 
 

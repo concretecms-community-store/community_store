@@ -1,37 +1,37 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Concrete\Core\File\Search\Menu\MenuFactory;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Filesystem\ElementManager;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Routing\Redirect;
-use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
-use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 
 class Products extends DashboardSitePageController
 {
@@ -85,7 +85,7 @@ class Products extends DashboardSitePageController
         $this->requireAsset('javascript', 'communityStoreFunctions');
 
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
         $this->set('gID', $gID);
 
         $this->set('typeID', $typeID);
@@ -101,7 +101,7 @@ class Products extends DashboardSitePageController
         $this->set('multilingualEnabled', (count($pages) > 1));
 
         $typeList = ProductTypeList::getProductTypeList();
-        $this->set("typeList", $typeList);
+        $this->set('typeList', $typeList);
 
         $headerSearch = $this->getHeaderSearch($grouplist, $gID);
         $this->set('headerSearch', $headerSearch);
@@ -117,10 +117,10 @@ class Products extends DashboardSitePageController
         }
 
         $this->loadFormAssets();
-        $this->set("actionType", t("Add"));
+        $this->set('actionType', t('Add'));
 
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
 
         $typeList = ProductTypeList::getProductTypeList();
 
@@ -129,13 +129,13 @@ class Products extends DashboardSitePageController
             $producttypes[$type->getTypeID()] = $type->getTypeName();
         }
 
-        $this->set("producttypes", $producttypes);
+        $this->set('producttypes', $producttypes);
 
         $productgroups = [];
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
-        $this->set("productgroups", $productgroups);
+        $this->set('productgroups', $productgroups);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
@@ -145,7 +145,7 @@ class Products extends DashboardSitePageController
         $usergrouparray = [];
 
         foreach ($usergroups as $ug) {
-            if ('Administrators' != $ug->gName) {
+            if ($ug->gName != 'Administrators') {
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
@@ -153,7 +153,7 @@ class Products extends DashboardSitePageController
         $manufacturersList = ManufacturerList::getManufacturerList();
 
         $this->set('manufacturersList', $manufacturersList);
-        $productmanufacturers = array("0" => t("None"));
+        $productmanufacturers = ['0' => t('None')];
         foreach ($manufacturersList as $productmanufacturer) {
             $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
@@ -190,7 +190,7 @@ class Products extends DashboardSitePageController
         }
 
         $this->loadFormAssets();
-        $this->set("actionType", t("Update"));
+        $this->set('actionType', t('Update'));
 
         //get the product
         $product = Product::getByID($pID);
@@ -270,7 +270,7 @@ class Products extends DashboardSitePageController
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
-        $this->set("productgroups", $productgroups);
+        $this->set('productgroups', $productgroups);
 
         $typeList = ProductTypeList::getProductTypeList();
 
@@ -279,7 +279,7 @@ class Products extends DashboardSitePageController
             $producttypes[$type->getTypeID()] = $type->getTypeName();
         }
 
-        $this->set("producttypes", $producttypes);
+        $this->set('producttypes', $producttypes);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
@@ -289,14 +289,14 @@ class Products extends DashboardSitePageController
         $usergrouparray = [];
 
         foreach ($usergroups as $ug) {
-            if ('Administrators' != $ug->gName) {
+            if ($ug->gName != 'Administrators') {
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
         $manufacturersList = ManufacturerList::getManufacturerList();
 
-        $this->set("manufacturersList", $manufacturersList);
-        $productmanufacturers = array("0" => t("None"));
+        $this->set('manufacturersList', $manufacturersList);
+        $productmanufacturers = ['0' => t('None')];
         foreach ($manufacturersList as $productmanufacturer) {
             $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
         }
@@ -386,7 +386,7 @@ class Products extends DashboardSitePageController
 
         $this->set('productAttributeCategory', Category::getByHandle('store_product'));
 
-        $pageType = PageType::getByHandle("store_product");
+        $pageType = PageType::getByHandle('store_product');
         $templates = [];
 
         $defaultTemplateID = 0;
@@ -419,8 +419,6 @@ class Products extends DashboardSitePageController
         $this->set('productDefaultActive', Config::get('community_store.productDefaultActive'));
         $this->set('productDefaultShippingNo', Config::get('community_store.productDefaultShippingNo'));
         $this->set('variationDefaultUnlimited', Config::get('community_store.variationDefaultUnlimited'));
-
-
     }
 
     public function save()
@@ -452,7 +450,7 @@ class Products extends DashboardSitePageController
                     $allowVariations = false;
 
                     foreach ($data['poIncludeVariations'] as $variationInclude) {
-                        if (1 == $variationInclude) {
+                        if ($variationInclude == 1) {
                             $allowVariations = true;
                         }
                     }
@@ -529,11 +527,12 @@ class Products extends DashboardSitePageController
 
                 if ($data['pID']) {
                     $this->flash('success', t('Product Updated'));
-                    return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
-                } else {
-                    $this->flash('success', t('Product Added'));
+
                     return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
                 }
+                $this->flash('success', t('Product Added'));
+
+                return Redirect::to('/dashboard/store/products/edit/' . $product->getID());
             }//if no errors
         }//if post
     }
@@ -542,7 +541,7 @@ class Products extends DashboardSitePageController
     {
         $e = $this->app->make('helper/validation/error');
 
-        if ("" == $args['pName']) {
+        if ($args['pName'] == '') {
             $e->add(t('Please enter a Product Name'));
         }
         if (strlen($args['pName']) > 255) {
@@ -559,8 +558,9 @@ class Products extends DashboardSitePageController
     protected function getHeaderSearch($groupList, $gID)
     {
         if (!isset($this->headerSearch)) {
-            $this->headerSearch = $this->app->make(ElementManager::class)->get('products/search', 'community_store', ['groupList'=>$groupList, 'gID'=>$gID]);
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('products/search', 'community_store', ['groupList' => $groupList, 'gID' => $gID]);
         }
+
         return $this->headerSearch;
     }
 }

@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
 if ($order && $orderItems) {
     $currency = Config::get('community_store.currency');
@@ -17,14 +17,14 @@ if ($order && $orderItems) {
         'currency' => $currency,
         'tax' => $order->getTaxTotal(),
         'shipping' => $order->getShippingTotal(),
-        'items' => []
+        'items' => [],
     ];
 
     foreach ($orderItems as $item) {
         $itemArray = [
             'name' => $item->getProductName(),
             'quantity' => $item->getQuantity(),
-            'price' => number_format($item->getPricePaid(), 2, '.', '')
+            'price' => number_format($item->getPricePaid(), 2, '.', ''),
         ];
 
         if ($item->getSKU()) {
@@ -53,15 +53,12 @@ if ($order && $orderItems) {
                 }
 
                 $variant .= implode(', ', $variants);
-
             }
 
             if ($variant) {
                 $itemArray['variant'] = $variant;
             }
-
         }
-
 
         $orderDetails['items'][] = $itemArray;
     }

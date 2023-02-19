@@ -1,17 +1,17 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
 
 ?>
 <div class="store-cart-page">
-<h1><?= t("Shopping Cart") ?></h1>
+<h1><?= t('Shopping Cart') ?></h1>
 
 <?php if (isset($actiondata) and !empty($actiondata)) { ?>
     <?php if ($actiondata['action'] == 'update') { ?>
@@ -55,7 +55,6 @@ if ($cart) {
             <tbody>
             <?php
             foreach ($cart as $k => $cartItem) {
-
                 $qty = $cartItem['product']['qty'];
                 $product = $cartItem['product']['object'];
                 if (is_object($product)) {
@@ -88,25 +87,24 @@ if ($cart) {
                         <?php if ($cartItem['productAttributes']) { ?>
                             <div class="store-cart-list-item-attributes">
                                 <?php foreach ($cartItem['productAttributes'] as $groupID => $valID) {
-
                                     if (substr($groupID, 0, 2) == 'po') {
-                                        $groupID = str_replace("po", "", $groupID);
+                                        $groupID = str_replace('po', '', $groupID);
                                         $optionvalue = ProductOptionItem::getByID($valID);
 
                                         if ($optionvalue) {
                                             $optionvalue = $optionvalue->getName();
                                         }
                                     } elseif (substr($groupID, 0, 2) == 'pt')  {
-                                        $groupID = str_replace("pt", "", $groupID);
+                                        $groupID = str_replace('pt', '', $groupID);
                                         $optionvalue = $valID;
                                     } elseif (substr($groupID, 0, 2) == 'pa')  {
-                                        $groupID = str_replace("pa", "", $groupID);
+                                        $groupID = str_replace('pa', '', $groupID);
                                         $optionvalue = $valID;
                                     } elseif (substr($groupID, 0, 2) == 'ph')  {
-                                        $groupID = str_replace("ph", "", $groupID);
+                                        $groupID = str_replace('ph', '', $groupID);
                                         $optionvalue = $valID;
                                     } elseif (substr($groupID, 0, 2) == 'pc')  {
-                                        $groupID = str_replace("pc", "", $groupID);
+                                        $groupID = str_replace('pc', '', $groupID);
                                         $optionvalue = $valID;
                                     }
 
@@ -129,7 +127,7 @@ if ($cart) {
                             <?php } else {  ?>
                                 <?php
                                 $salePrice = $product->getSalePrice();
-                                if (isset($salePrice) && $salePrice != "") {
+                                if (isset($salePrice) && $salePrice != '') {
                                     echo '<span class="sale-price">' . Price::format($salePrice) . '</span>';
                                 } else {
                                     echo Price::format($product->getActivePrice());
@@ -138,7 +136,7 @@ if ($cart) {
                             <?php } ?>
                         </td>
                         <td class="store-cart-product-qty text-right text-end"">
-                            <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
+                            <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID']); ?>
 
                             <span class="store-qty-container pull-right float-end
                             <?php if ($quantityLabel) { ?>input-group
@@ -148,9 +146,9 @@ if ($cart) {
                                 <?php if ($product->allowDecimalQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control   text-end"" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> >
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control   text-end"" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps(); ?>" <?= (isset($max) ? 'max="' . $max . '"' : ''); ?> >
                                 <?php } else { ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right text-end"" value="<?= $qty ?>" min="1" step="1" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> >
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control text-right text-end"" value="<?= $qty ?>" min="1" step="1" <?= (isset($max) ? 'max="' . $max . '"' : ''); ?> >
                                 <?php } ?>
 
                                  <input type="hidden" name="instance[]" value="<?= $k ?>"/>
@@ -185,9 +183,9 @@ if ($cart) {
             <tr>
                 <td colspan="5" class="text-right text-end"">
                     <button name="action" value="clear" class="store-btn-cart-list-clear btn btn-warning"
-                            type="submit"><?= t("Clear Cart") ?></button>
+                            type="submit"><?= t('Clear Cart') ?></button>
                     <button name="action" value="update" class="store-btn-cart-list-update btn btn-primary"
-                            type="submit"><?= t("Update") ?></button>
+                            type="submit"><?= t('Update') ?></button>
                 </td>
             </tr>
             </tfoot>
@@ -195,7 +193,7 @@ if ($cart) {
     </form>
 
     <!--    Hidden form for deleting-->
-    <form method="post" id="deleteform" action="<?=  Url::to($langpath  . '/cart/'); ?>">
+    <form method="post" id="deleteform" action="<?=  Url::to($langpath . '/cart/'); ?>">
         <?= $token->output('community_store'); ?>
         <input type="hidden" name="instance" value=""/>
         <input type="hidden" name="action" value="remove"/>
@@ -208,7 +206,7 @@ if ($cart) {
 if ($cart && !empty($cart)) { ?>
     <?php if ($discountsWithCodesExist && $cart) { ?>
         <h3><?= t('Enter Discount Code'); ?></h3>
-        <form method="post" action="<?= Url::to($langpath .'/cart/'); ?>" class="form-inline d-flex">
+        <form method="post" action="<?= Url::to($langpath . '/cart/'); ?>" class="form-inline d-flex">
             <?= $token->output('community_store'); ?>
             <div class="form-group me-3">
                 <input type="text" class="store-cart-page-discount-field form-control" name="code" placeholder="<?= t('Code'); ?>" />
@@ -231,9 +229,9 @@ if ($cart && !empty($cart)) { ?>
         <p class="store-cart-page-discounts text-right text-end">
             <strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?>:</strong>
             <?php
-            $discountstrings = array();
+            $discountstrings = [];
             foreach ($discounts as $discount) {
-                $discountstrings[] = h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
+                $discountstrings[] = h($csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID()));
             }
             echo implode(', ', $discountstrings);
             ?>
@@ -243,12 +241,12 @@ if ($cart && !empty($cart)) { ?>
 
 
     <p class="store-cart-page-cart-total text-right text-end">
-        <strong class="cart-grand-total-label"><?= t("Items Sub Total") ?>:</strong>
+        <strong class="cart-grand-total-label"><?= t('Items Sub Total') ?>:</strong>
         <span class="cart-grand-total-value"><?= Price::format($subTotal) ?></span>
     </p>
 
     <?php if ($shippingEnabled) { ?>
-        <p class="store-cart-page-shipping text-right text-end"><strong><?= t("Shipping") ?>:</strong>
+        <p class="store-cart-page-shipping text-right text-end"><strong><?= t('Shipping') ?>:</strong>
         <span id="store-shipping-total">
          <?= $shippingtotal !== false ? ($shippingtotal > 0 ? Price::format($shippingtotal) : t('No Charge')) : t('to be determined'); ?>
         </span></p>
@@ -259,7 +257,7 @@ if ($cart && !empty($cart)) { ?>
         foreach ($taxes as $tax) {
             if ($tax['taxamount'] > 0) { ?>
                 <p class="store-cart-page-tax text-right text-end">
-                    <strong><?= ($tax['name'] ? $tax['name'] : t("Tax")) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
+                    <strong><?= ($tax['name'] ? $tax['name'] : t('Tax')) ?>:</strong> <span class="tax-amount"><?= Price::format($tax['taxamount']); ?></span>
                 </p>
             <?php }
         }
@@ -267,7 +265,7 @@ if ($cart && !empty($cart)) { ?>
     ?>
 
     <p class="store-cart-page-cart-total text-right text-end">
-        <strong class="store-cart-grand-total-label"><?= t("Total") ?>:</strong>
+        <strong class="store-cart-grand-total-label"><?= t('Total') ?>:</strong>
         <span class="store-cart-grand-total-value"><?= Price::format($total) ?></span>
     </p>
 

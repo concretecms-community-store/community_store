@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
@@ -17,9 +18,8 @@ class Tax
         }
 
         $em = dbORM::entityManager();
-        $taxRates = $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
 
-        return $taxRates;
+        return $em->createQuery('select tr from \Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxRate tr')->getResult();
     }
 
     public static function getTaxes($format = false)
@@ -40,7 +40,7 @@ class Tax
                     } else {
                         $tax = false;
                     }
-                    if (true == $format) {
+                    if ($format == true) {
                         $taxAmount = Price::format($taxAmount);
                     }
                     $taxes[] = [

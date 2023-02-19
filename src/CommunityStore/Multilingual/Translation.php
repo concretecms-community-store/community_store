@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -58,7 +59,6 @@ class Translation
     {
         return $this->tID;
     }
-
 
     public function getLocale()
     {
@@ -143,5 +143,4 @@ class Translation
         $em->remove($this);
         $em->flush();
     }
-
 }

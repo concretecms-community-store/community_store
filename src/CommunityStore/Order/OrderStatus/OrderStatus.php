@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Utility\Service\Text as TextHelper;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Text as TextHelper;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -17,25 +18,37 @@ class OrderStatus
      */
     protected $osID;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     */
     protected $osHandle;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     */
     protected $osName;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     */
     protected $osInformSite;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     */
     protected $osInformCustomer;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     */
     protected $osIsStartingStatus;
 
-    /** @ORM\Column(type="integer",nullable=true) */
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
     protected $osSortOrder;
 
-    protected static $table = "CommunityStoreOrderStatuses";
+    protected static $table = 'CommunityStoreOrderStatuses';
 
     public static function getTableName()
     {
@@ -46,7 +59,7 @@ class OrderStatus
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $data = $db->GetRow("SELECT * FROM CommunityStoreOrderStatuses WHERE osID=?", $osID);
+        $data = $db->GetRow('SELECT * FROM CommunityStoreOrderStatuses WHERE osID=?', $osID);
         $orderStatus = null;
         if (!empty($data)) {
             $orderStatus = new self();
@@ -60,7 +73,7 @@ class OrderStatus
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $data = $db->GetRow("SELECT osID FROM CommunityStoreOrderStatuses WHERE osHandle=?", $osHandle);
+        $data = $db->GetRow('SELECT osID FROM CommunityStoreOrderStatuses WHERE osHandle=?', $osHandle);
 
         return self::getByID($data['osID']);
     }
@@ -69,7 +82,7 @@ class OrderStatus
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $rows = $db->GetAll("SELECT osID FROM CommunityStoreOrderStatuses ORDER BY osSortOrder ASC, osID ASC");
+        $rows = $db->GetAll('SELECT osID FROM CommunityStoreOrderStatuses ORDER BY osSortOrder ASC, osID ASC');
         $statuses = [];
         if (count($rows) > 0) {
             foreach ($rows as $row) {
@@ -92,13 +105,13 @@ class OrderStatus
 
     public static function add($osHandle, $osName = null, $osInformSite = 1, $osInformCustomer = 1, $osIsStartingStatus = 0)
     {
-        if (is_null($osName)) {
+        if ($osName === null) {
             $textHelper = new TextHelper();
             $osName = $textHelper->unhandle($osHandle);
         }
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $sql = "INSERT INTO CommunityStoreOrderStatuses (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)";
+        $sql = 'INSERT INTO CommunityStoreOrderStatuses (osHandle, osName, osInformSite, osInformCustomer, osIsStartingStatus) VALUES (?, ?, ?, ?, ?)';
         $values = [
             $osHandle,
             $osName,
@@ -189,14 +202,6 @@ class OrderStatus
         return $startingStatus;
     }
 
-    private function setColumn($column, $value)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $sql = "UPDATE CommunityStoreOrderStatuses SET " . $column . "=? WHERE osID=?";
-        $db->executeQuery($sql, [$column, $value]);
-    }
-
     public static function setNewStartingStatus($osHandle = null)
     {
         if ($osHandle) {
@@ -204,8 +209,8 @@ class OrderStatus
             if ($currentStartingStatus) {
                 $app = Application::getFacadeApplication();
                 $db = $app->make('database')->connection();
-                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=0 WHERE 1=1");
-                $db->query("UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=1 WHERE osHandle=?", [$osHandle]);
+                $db->query('UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=0 WHERE 1=1');
+                $db->query('UPDATE CommunityStoreOrderStatuses SET osIsStartingStatus=1 WHERE osHandle=?', [$osHandle]);
             }
         }
     }
@@ -226,12 +231,12 @@ class OrderStatus
         $orderStatusUpdateColumns = $ignoreFilledColumns ? array_diff($orderStatusArray, $data) : array_merge($orderStatusArray, $data);
         unset($orderStatusUpdateColumns['osID']);
         if (count($orderStatusUpdateColumns) > 0) {
-            $columnPhrase = implode('=?, ', array_keys($orderStatusUpdateColumns)) . "=?";
+            $columnPhrase = implode('=?, ', array_keys($orderStatusUpdateColumns)) . '=?';
             $values = array_values($orderStatusUpdateColumns);
             $values[] = $this->osID;
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
-            $db->executeQuery("UPDATE CommunityStoreOrderStatuses SET " . $columnPhrase . " WHERE osID=?", $values);
+            $db->executeQuery('UPDATE CommunityStoreOrderStatuses SET ' . $columnPhrase . ' WHERE osID=?', $values);
             if ($startingStatusHandle) {
                 self::setNewStartingStatus($startingStatusHandle);
             }
@@ -247,5 +252,13 @@ class OrderStatus
         foreach ($arr as $key => $prop) {
             $this->{$key} = $prop;
         }
+    }
+
+    private function setColumn($column, $value)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $sql = 'UPDATE CommunityStoreOrderStatuses SET ' . $column . '=? WHERE osID=?';
+        $db->executeQuery($sql, [$column, $value]);
     }
 }

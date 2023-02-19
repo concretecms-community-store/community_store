@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="container-fluid">
 <div class="row">
@@ -10,7 +10,7 @@
             <div class="form-group">
                 <?= $form->label('filter', t('List Products')); ?>
                 <?= $form->select('filter', [
-                    'all' => '** ' . t("All") . ' **',
+                    'all' => '** ' . t('All') . ' **',
                     'current' => t('Categorized under current page'),
                     'current_children' => t('Categorized under current page and child pages'),
                     'page' => t('Categorized under a specified page'),
@@ -23,7 +23,7 @@
 
             <div class="form-group" id="pageselector">
                 <div
-                    class="form-group" <?= 'page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'; ?> >
+                    class="form-group" <?= $filter == 'page' || $filter == 'page_children' ? '' : 'style="display: none"'; ?> >
                     <?php
                     $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     $ps = $app->make('helper/form/page_selector');
@@ -31,27 +31,27 @@
                 </div>
             </div>
 
-            <div class="form-group" id="product-search" <?= 'related_product' == $filter ? '' : 'style="display: none"'; ?>>
+            <div class="form-group" id="product-search" <?= $filter == 'related_product' ? '' : 'style="display: none"'; ?>>
                 <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?= t('Search for a Product'); ?>" />
             </div>
 
             <div class="form-group">
                 <?= $form->label('sortOrder', t('Sort Order')); ?>
                 <?= $form->select('sortOrder', [
-                    'alpha' => t("Alphabetical"),
-                    'alpha_desc' => t("Alphabetical, reversed"),
-                    'sku' => t("SKU Alphabetical"),
-                    'sku_desc' => t("SKU Alphabetical, reversed"),
+                    'alpha' => t('Alphabetical'),
+                    'alpha_desc' => t('Alphabetical, reversed'),
+                    'sku' => t('SKU Alphabetical'),
+                    'sku_desc' => t('SKU Alphabetical, reversed'),
                     'date' => t('Date Added'),
                     'price_asc' => t('Price Ascending'),
                     'price_desc' => t('Price Descending'),
                     'popular' => t('Best Sellers'),
-                    'related' => t("Related Products Order"),
-                    'category' => t("Category Sort Order"),
-                    'group' => t("Group Sort Order"),
+                    'related' => t('Related Products Order'),
+                    'category' => t('Category Sort Order'),
+                    'group' => t('Group Sort Order'),
                     'random' => t('Random order, changing each display'),
                     'random_daily' => t('Random order, changing each day'),
-                    ], $sortOrder); ?>
+                ], $sortOrder); ?>
             </div>
 
             <div class="form-group form-check">
@@ -65,7 +65,7 @@
             <legend><?= t('Filtering'); ?></legend>
 
             <?php if (!empty($productTypes)) {
-                $productTypesList = [''=>t('All Product Types')];
+                $productTypesList = ['' => t('All Product Types')];
                 foreach ($productTypes as $productType) {
                     $productTypesList[$productType->getTypeID()] = $productType->getTypeName();
                 }
@@ -73,7 +73,7 @@
 
                 <div class="form-group">
                     <?= $form->label('filterProductType', t('Filter by Product Group')); ?>
-                    <?= $form->select('filterProductType',$productTypesList, $filterProductType); ?>
+                    <?= $form->select('filterProductType', $productTypesList, $filterProductType); ?>
                 </div>
 
 
@@ -107,14 +107,14 @@
 
                 <div class="form-group">
                     <?= $form->label('groupMatchAny', t('Matching')); ?>
-                    <?= $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected'), '-1' => t("Excluding all groups selected")], $groupMatchAny); ?>
+                    <?= $form->select('groupMatchAny', ['0' => t('All groups selected'), '1' => t('Any group selected'), '-1' => t('Excluding all groups selected')], $groupMatchAny); ?>
                 </div>
 
             <?php
             } ?>
 
             <?php
-            $productmanufacturers = array("0" => t("None"));
+            $productmanufacturers = ['0' => t('None')];
             foreach ($manufacturersList as $productmanufacturer) {
                 $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
             }
@@ -123,7 +123,7 @@
             ?>
             <div class="form-group">
                 <?= $form->label('mID', t('Filter by Brand / Manufacturer')); ?>
-                <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer,  ['class' => 'selectize']); ?>
+                <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer, ['class' => 'selectize']); ?>
             </div>
                 <?php
             } ?>
@@ -182,7 +182,7 @@
                 <?= $form->select('productsPerRow', [1 => 1, 2 => 2, 3 => 3, 4 => 4, 6 => 6], $productsPerRow ? $productsPerRow : 1); ?>
             </div>
             <div class="form-group">
-                <?= $form->label('noProductsMessage', t("Display text when no products")); ?>
+                <?= $form->label('noProductsMessage', t('Display text when no products')); ?>
                 <?= $form->text('noProductsMessage', $noProductsMessage); ?>
             </div>
             <div class="form-group form-check">
@@ -210,8 +210,8 @@
                 </label>
             </div>
             <div class="form-group <?= $showAddToCart ? '' : 'hidden'; ?>" id="addToCartTextField">
-                <?= $form->label('btnText', t("Add To Cart Button Text")); ?>
-                <?= $form->text('btnText', $btnText, ['placeholder' => t("Defaults to: Add To Cart")]); ?>
+                <?= $form->label('btnText', t('Add To Cart Button Text')); ?>
+                <?= $form->text('btnText', $btnText, ['placeholder' => t('Defaults to: Add To Cart')]); ?>
             </div>
             <div class="form-group form-check">
                 <label>
@@ -227,7 +227,7 @@
             </div>
             <div class="form-group form-check">
                 <label>
-                    <?php if (0 != $showQuickViewLink) {
+                    <?php if ($showQuickViewLink != 0) {
                 $showQuickViewLink = 1;
             } ?>
                     <?= $form->checkbox('showQuickViewLink', 1, $showQuickViewLink); ?>
@@ -241,8 +241,8 @@
                 </label>
             </div>
             <div class="form-group <?= $showPageLink ? '' : 'hidden'; ?>" id="pageLinkTextField">
-                <?= $form->label('pageLinkText', t("Link To Product Page Text")); ?>
-                <?= $form->text('pageLinkText', $pageLinkText, ['placeholder' => t("Defaults to: More Details")]); ?>
+                <?= $form->label('pageLinkText', t('Link To Product Page Text')); ?>
+                <?= $form->text('pageLinkText', $pageLinkText, ['placeholder' => t('Defaults to: More Details')]); ?>
             </div>
 
     </div>

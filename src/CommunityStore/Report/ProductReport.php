@@ -1,15 +1,17 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Report;
 
-use Pagerfanta\Adapter\ArrayAdapter;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Pagerfanta\Adapter\ArrayAdapter;
 
 class ProductReport extends AbstractItemList
 {
     private $orderItems;
+
     private $products;
 
     public function __construct($from = null, $to = null)
@@ -35,13 +37,12 @@ class ProductReport extends AbstractItemList
         $this->orderItems = $orders->getOrderItems();
     }
 
-    public function setProductSearch($search = '') {
+    public function setProductSearch($search = '')
+    {
         if ($search) {
-
             $newlist = [];
 
             foreach ($this->products as $product) {
-
                 if (strpos($product['name'], $search) !== false) {
                     $newlist[] = $product;
                 }
@@ -78,7 +79,6 @@ class ProductReport extends AbstractItemList
                         'pricePaid' => $oi->getPricePaid() * $oi->getQty(),
                         'quantity' => $oi->getQty(),
                     ];
-
                 }
             }
         }
@@ -90,9 +90,9 @@ class ProductReport extends AbstractItemList
         $products = $this->products;
 
         if ($direction == 'desc') {
-            $func = function($a, $b) {
-                $a = $a["quantity"];
-                $b = $b["quantity"];
+            $func = function ($a, $b) {
+                $a = $a['quantity'];
+                $b = $b['quantity'];
 
                 if ($a == $b)
                 {
@@ -102,9 +102,9 @@ class ProductReport extends AbstractItemList
                 return ($a > $b) ? -1 : 1;
             };
         } else {
-            $func = function($a, $b) {
-                $a = $a["quantity"];
-                $b = $b["quantity"];
+            $func = function ($a, $b) {
+                $a = $a['quantity'];
+                $b = $b['quantity'];
 
                 if ($a == $b)
                 {
@@ -115,7 +115,7 @@ class ProductReport extends AbstractItemList
             };
         }
 
-        usort($products,$func);
+        usort($products, $func);
 
         $this->products = $products;
     }
@@ -125,9 +125,9 @@ class ProductReport extends AbstractItemList
         $products = $this->products;
 
         if ($direction == 'desc') {
-            $func = function($a, $b) {
-                $a = $a["pricePaid"];
-                $b = $b["pricePaid"];
+            $func = function ($a, $b) {
+                $a = $a['pricePaid'];
+                $b = $b['pricePaid'];
 
                 if ($a == $b)
                 {
@@ -137,9 +137,9 @@ class ProductReport extends AbstractItemList
                 return ($a > $b) ? -1 : 1;
             };
         } else {
-            $func = function($a, $b) {
-                $a = $a["pricePaid"];
-                $b = $b["pricePaid"];
+            $func = function ($a, $b) {
+                $a = $a['pricePaid'];
+                $b = $b['pricePaid'];
 
                 if ($a == $b)
                 {
@@ -150,7 +150,7 @@ class ProductReport extends AbstractItemList
             };
         }
 
-        usort($products,$func);
+        usort($products, $func);
 
         $this->products = $products;
     }
@@ -163,11 +163,6 @@ class ProductReport extends AbstractItemList
     public function getProducts()
     {
         return $this->products;
-    }
-
-    protected function executeSortBy($column, $direction = 'asc')
-    {
-        $this->query->orderBy($column, $direction);
     }
 
     public function executeGetResults()
@@ -183,13 +178,6 @@ class ProductReport extends AbstractItemList
     {
     }
 
-    protected function createPaginationObject()
-    {
-        $pagination = new Pagination($this, new ArrayAdapter($this->getProducts()));
-
-        return $pagination;
-    }
-
     public function getTotalResults()
     {
         return count($this->getProducts());
@@ -198,5 +186,15 @@ class ProductReport extends AbstractItemList
     public function getResult($queryRow)
     {
         return $queryRow;
+    }
+
+    protected function executeSortBy($column, $direction = 'asc')
+    {
+        $this->query->orderBy($column, $direction);
+    }
+
+    protected function createPaginationObject()
+    {
+        return new Pagination($this, new ArrayAdapter($this->getProducts()));
     }
 }

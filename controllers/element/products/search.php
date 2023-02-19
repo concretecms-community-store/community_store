@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\Element\Products;
 
-use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Controller\ElementController;
+use Concrete\Core\Entity\Search\Query;
 
 class Search extends ElementController
 {
-
     /**
      * This is where the header search bar in the page should point. This search bar allows keyword searching in
      * different contexts. Valid options are `view` and `folder`.
@@ -14,7 +14,9 @@ class Search extends ElementController
      * @var string
      */
     protected $headerSearchAction;
+
     protected $groupList;
+
     protected $gID;
 
     /**
@@ -63,7 +65,5 @@ class Search extends ElementController
         } else {
             $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/store/products' . ($this->gID ? '/' . $this->gID : '')));
         }
-
     }
-
 }

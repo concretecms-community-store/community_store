@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType;
 
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 /**
  * @ORM\Entity
@@ -45,10 +46,15 @@ class ProductTypeLayoutSet
      */
     protected $ptlsDisplayOrder;
 
-    public function getLayoutSetID() {
-        return $this->ptlsID;
+    public function __construct()
+    {
+        $this->controls = new ArrayCollection();
     }
 
+    public function getLayoutSetID()
+    {
+        return $this->ptlsID;
+    }
 
     public function getProductType()
     {
@@ -90,20 +96,19 @@ class ProductTypeLayoutSet
         $this->ptlsDisplayOrder = $ptlsDisplayOrder;
     }
 
-    public function getLayoutSetControls() {
+    public function getLayoutSetControls()
+    {
         return $this->controls;
     }
 
-    public function getPublicLayoutSetControls() {
+    public function getPublicLayoutSetControls()
+    {
         $criteria = Criteria::create()->where(Criteria::expr()->eq('hidden', '0'))
             ->orWhere(Criteria::expr()->isNull('hidden'))
-            ->orderBy(array('displayOrder' => Criteria::ASC));
-        return $this->controls->matching($criteria);
-    }
+            ->orderBy(['displayOrder' => Criteria::ASC])
+        ;
 
-    public function __construct()
-    {
-        $this->controls = new ArrayCollection();
+        return $this->controls->matching($criteria);
     }
 
     public static function add($productType, $name, $description)
@@ -121,9 +126,9 @@ class ProductTypeLayoutSet
     public static function getByID($ptID)
     {
         $em = dbORM::entityManager();
+
         return $em->find(get_called_class(), $ptID);
     }
-
 
     public function update($name, $description)
     {
@@ -147,6 +152,4 @@ class ProductTypeLayoutSet
         $em->remove($this);
         $em->flush();
     }
-
-
 }

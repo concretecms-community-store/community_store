@@ -1,8 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
@@ -25,7 +25,6 @@ $weightLabel = Config::get('community_store.weightUnit');
     <?php
     $odd = false;
 
-
     foreach ($products as $product) {
         $odd = !$odd;
         ?>
@@ -41,9 +40,9 @@ $weightLabel = Config::get('community_store.weightUnit');
             <td>
                 <?php
                 if ($product->isActive()) {
-                    echo "<span class='label label-success'>" . t('Active') . "</span>";
+                    echo "<span class='label label-success'>" . t('Active') . '</span>';
                 } else {
-                    echo "<span class='label label-default'>" . t('Inactive') . "</span>";
+                    echo "<span class='label label-default'>" . t('Inactive') . '</span>';
                 }
                 ?>
             </td>
@@ -67,14 +66,13 @@ $weightLabel = Config::get('community_store.weightUnit');
             <td>
                 <?php
                 if ($product->isShippable()) {
-
                     $packages = $product->getPackages();
 
                     $packagestring = '';
 
                     if (!empty($packages)) {
                         foreach ($packages as $package) {
-                            $packagestring .= $package->getWeight() . $weightLabel . ', ' . $package->getWidth() . 'x' . $package->getHeight() . 'x' . $package->getLength() . "<br />";
+                            $packagestring .= $package->getWeight() . $weightLabel . ', ' . $package->getWidth() . 'x' . $package->getHeight() . 'x' . $package->getLength() . '<br />';
                         }
                     }
 
@@ -88,7 +86,7 @@ $weightLabel = Config::get('community_store.weightUnit');
                 if ($product->hasVariations()) {
                     echo '<span class="label label-info">' . t('Multiple') . '</span>';
                 } else {
-                    echo($product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : floatval($product->getQty()));
+                    echo $product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : (float) ($product->getQty());
                 } ?>
 
 
@@ -131,14 +129,13 @@ $weightLabel = Config::get('community_store.weightUnit');
                     <td>
                         <?php
                         if ($product->isShippable()){
-
                         $packages = $product->getPackages();
 
                         $packagestring = '';
 
                         if (!empty($packages)) {
                             foreach ($packages as $package) {
-                                $packagestring .= $package->getWeight() . $weightLabel . ', ' . $package->getWidth() . 'x' . $package->getHeight() . 'x' . $package->getLength() . "<br />";
+                                $packagestring .= $package->getWeight() . $weightLabel . ', ' . $package->getWidth() . 'x' . $package->getHeight() . 'x' . $package->getLength() . '<br />';
                             }
                         }
 
@@ -147,7 +144,7 @@ $weightLabel = Config::get('community_store.weightUnit');
                         ?>
                     </td>
                     <td class="text-right">
-                        <?php echo($product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : floatval($product->getQty())); ?>
+                        <?php echo $product->isUnlimited() ? '<span class="label label-default">' . t('Unlimited') . '</span>' : (float) ($product->getQty()); ?>
                     </td>
                 </tr>
             <?php } ?>

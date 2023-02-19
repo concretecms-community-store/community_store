@@ -1,12 +1,13 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Page\Page;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
-/** @var $variationLookup ProductVariation [] */
+
+/** @var ProductVariation $variationLookup [] */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $listViews = ['view', 'updated', 'removed', 'success'];
@@ -16,7 +17,7 @@ $ps = $app->make('helper/form/page_selector');
 $dh = $app->make('helper/date');
 
 $editor = $app->make('editor');
-$editor->getPluginManager()->deselect(array('autogrow'));
+$editor->getPluginManager()->deselect(['autogrow']);
 
 $version = $app->make('config')->get('concrete.version');
 $badgeClass = ' badge ';
@@ -39,7 +40,6 @@ if (version_compare($version, '9.0', '<')) {
         if ($productDefaultActive) {
             $product->setIsActive(true);
         }
-
     } else {
         $images = $product->getImages();
         $options = $product->getOptions();
@@ -71,7 +71,7 @@ if (version_compare($version, '9.0', '<')) {
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#delete').submit(function () {
-                        return confirm('<?=  t("Are you sure you want to delete this product?"); ?>');
+                        return confirm('<?=  t('Are you sure you want to delete this product?'); ?>');
                     });
                 });
             </script>
@@ -93,8 +93,8 @@ if (version_compare($version, '9.0', '<')) {
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-options" data-pane-toggle><?= t('Options and Variants') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-related" data-pane-toggle><?= t('Related Products') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-attributes" data-pane-toggle><?= t('Attributes') ?></a></li>
-                    <li class="nav-item"><a class="nav-link text-primary" href="#product-digital" data-pane-toggle><?= t("Downloads and User Groups") ?></a></li>
-                    <li class="nav-item"><a class="nav-link text-primary" href="#product-checkout" data-pane-toggle><?= t("Checkout Options") ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-digital" data-pane-toggle><?= t('Downloads and User Groups') ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-primary" href="#product-checkout" data-pane-toggle><?= t('Checkout Options') ?></a></li>
                     <li class="nav-item"><a class="nav-link text-primary" href="#product-page" data-pane-toggle><?= t('Detail Page') ?></a></li>
                 </ul>
             </div>
@@ -115,27 +115,27 @@ if (version_compare($version, '9.0', '<')) {
                         $fieldWidth2 = 2;
                         $showProductType = true;
 
-                        $producttypes = [''=>t('No Type')] + $producttypes;
+                        $producttypes = ['' => t('No Type')] + $producttypes;
                     } ?>
 
                     <div class="row">
                         <div class="col-md-<?= $fieldWidth1; ?> col">
                             <div class="form-group">
-                                <?= $form->label("pName", t('Product Name')); ?>
-                                <?= $form->text("pName", $product->getName(), ['required' => 'required']); ?>
+                                <?= $form->label('pName', t('Product Name')); ?>
+                                <?= $form->text('pName', $product->getName(), ['required' => 'required']); ?>
                             </div>
                         </div>
                         <div class="col-md-<?= $fieldWidth2; ?> col">
                             <div class="form-group">
-                                <?= $form->label("pSKU", t('Code / SKU')); ?>
-                                <?= $form->text("pSKU", $product->getSKU(), ['maxlength' => 100]); ?>
+                                <?= $form->label('pSKU', t('Code / SKU')); ?>
+                                <?= $form->text('pSKU', $product->getSKU(), ['maxlength' => 100]); ?>
                             </div>
                         </div>
 
                         <?php if ($showProductType) { ?>
                         <div class="col-md-4 col">
                             <div class="form-group">
-                                <?= $form->label("pType", t('Product Type')); ?>
+                                <?= $form->label('pType', t('Product Type')); ?>
                                 <?= $form->select('pType', $producttypes, $productType ? $productType->getTypeID() : ''); ?>
                             </div>
 
@@ -151,20 +151,20 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <?= $form->label("pActive", t('Active')); ?>
-                                <?= $form->select("pActive", ['1' => t('Active'), '0' => t('Inactive')], $product->isActive() ? '1' : '0'); ?>
+                                <?= $form->label('pActive', t('Active')); ?>
+                                <?= $form->select('pActive', ['1' => t('Active'), '0' => t('Inactive')], $product->isActive() ? '1' : '0'); ?>
                             </div>
                         </div>
                         <div class="col-lg-5">
                         <div class="form-group">
-                            <?= $form->label("pQty", t('Stock Level')); ?>
+                            <?= $form->label('pQty', t('Stock Level')); ?>
                             <?php $qty = $product->getStockLevel(); ?>
                             <div class="input-group">
-                                <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'step' => 0.001]); ?>
+                                <?= $form->number('pQty', $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'step' => 0.001]); ?>
                                 <div class="input-group-addon input-group-text">
                                     <div class="form-check-inline">
-                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true),  ['class'=>'form-check-input']) ?>
-                                    <?= $form->label('pQtyUnlim', t('Unlimited'), ['class'=>'form-label form-check-label']) ?>
+                                    <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true), ['class' => 'form-check-input']) ?>
+                                    <?= $form->label('pQtyUnlim', t('Unlimited'), ['class' => 'form-label form-check-label']) ?>
                                     </div>
                                 </div>
 
@@ -235,8 +235,8 @@ if (version_compare($version, '9.0', '<')) {
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group" id="backorders" <?= ($product->isUnlimited(true) ? 'style="display: none"' : ''); ?>>
-                                <?= $form->label("pBackOrder", t('Allow Back Orders')); ?>
-                                <?= $form->select("pBackOrder", ['1' => t('Yes'), '0' => t('No')], $product->allowBackOrders() ? '1' : '0'); ?>
+                                <?= $form->label('pBackOrder', t('Allow Back Orders')); ?>
+                                <?= $form->select('pBackOrder', ['1' => t('Yes'), '0' => t('No')], $product->allowBackOrders() ? '1' : '0'); ?>
                             </div>
                         </div>
                     </div>
@@ -245,7 +245,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <?= $form->label("pDateAvailableStart", t('Stock Available From')); ?>
+                                    <?= $form->label('pDateAvailableStart', t('Stock Available From')); ?>
                                     <?= $app->make('helper/form/date_time')->datetime('pDateAvailableStart', $product->getDateAvailableStart()); ?>
                                 </div>
                             </div>
@@ -254,7 +254,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <?= $form->label("pDateAvailableEnd", t('Stock Available Until')); ?>
+                                    <?= $form->label('pDateAvailableEnd', t('Stock Available Until')); ?>
                                     <?= $app->make('helper/form/date_time')->datetime('pDateAvailableEnd', $product->getDateAvailableEnd()); ?>
                                 </div>
                             </div>
@@ -274,38 +274,38 @@ if (version_compare($version, '9.0', '<')) {
                                     $defaultpriceclass .= ' hidden d-none';
                                 }
                                 ?>
-                                <?= $form->label("pPrice", t("Price"), ['class' => $priceclass]); ?>
-                                <?= $form->label("pPrice", t("Default Price"), ['class' => $defaultpriceclass]); ?>
+                                <?= $form->label('pPrice', t('Price'), ['class' => $priceclass]); ?>
+                                <?= $form->label('pPrice', t('Default Price'), ['class' => $defaultpriceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
                                         <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $price = $product->getBasePrice(); ?>
-                                    <?= $form->number("pPrice", $price, ['step'=>'0.01', 'placeholder' => ($product->allowCustomerPrice() ? t('No Price Set') : '')]); ?>
+                                    <?= $form->number('pPrice', $price, ['step' => '0.01', 'placeholder' => ($product->allowCustomerPrice() ? t('No Price Set') : '')]); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 <?= ($hideWholesalePrice ? 'hidden d-none' : ''); ?>">
-                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : '');?> ">
-                                <?= $form->label("pWholesalePrice", t('Wholesale Price'), array('class'=>$priceclass));?>
+                            <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden' : ''); ?> ">
+                                <?= $form->label('pWholesalePrice', t('Wholesale Price'), ['class' => $priceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
-                                        <?= Config::get('community_store.symbol');?>
+                                        <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $wholesalePrice = $product->getWholesalePriceValue(); ?>
-                                    <?= $form->number("pWholesalePrice", $wholesalePrice, ['step'=>'0.01', 'placeholder'=>t('No Wholesale Price Set')]);?>
+                                    <?= $form->number('pWholesalePrice', $wholesalePrice, ['step' => '0.01', 'placeholder' => t('No Wholesale Price Set')]); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 <?= ($hideCostPrice ? 'hidden d-none' : ''); ?>">
                             <div class="form-group">
-                                <?= $form->label("pCostPrice", t('Cost Price'), array('class'=>$priceclass));?>
+                                <?= $form->label('pCostPrice', t('Cost Price'), ['class' => $priceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
-                                        <?= Config::get('community_store.symbol');?>
+                                        <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $costPrice = $product->getCostPrice(); ?>
-                                    <?= $form->number("pCostPrice", $costPrice, ['step'=>'0.01', 'placeholder'=>t('No Cost Price Set')]);?>
+                                    <?= $form->number('pCostPrice', $costPrice, ['step' => '0.01', 'placeholder' => t('No Cost Price Set')]); ?>
                                 </div>
                             </div>
                         </div>
@@ -326,13 +326,13 @@ if (version_compare($version, '9.0', '<')) {
 
                         <div class="col-md-6">
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSalePrice", t('Sale Price'), ['class' => $priceclass]); ?>
+                                <?= $form->label('pSalePrice', t('Sale Price'), ['class' => $priceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
                                         <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $salePrice = $product->getSalePriceValue(); ?>
-                                    <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
+                                    <?= $form->number('pSalePrice', $salePrice, ['step' => '0.01', 'placeholder' => t('No Sale Price Set')]); ?>
                                 </div>
                                 <span class="help-block <?=($salePrice ? 'hidden d-none' : ''); ?>" id="saleNote"><?= t('Enter a value to set start and end dates for the sale'); ?></span>
 
@@ -371,7 +371,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
 
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSaleStart", t('Sale Start')); ?>
+                                <?= $form->label('pSaleStart', t('Sale Start')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleStart', $product->getSaleStart()); ?>
                             </div>
 
@@ -380,7 +380,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
 
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSaleEnd", t('Sale End')); ?>
+                                <?= $form->label('pSaleEnd', t('Sale End')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleEnd', $product->getSaleEnd()); ?>
                             </div>
                             <style>
@@ -394,25 +394,25 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row priceentry <?= ($product->allowCustomerPrice() ? '' : 'hidden d-none'); ?>">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <?= $form->label("pPriceMinimum", t('Minimum Price')); ?>
+                                <?= $form->label('pPriceMinimum', t('Minimum Price')); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
                                         <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $minimumPrice = $product->getPriceMinimum(); ?>
-                                    <?= $form->number("pPriceMinimum", $minimumPrice, ['step'=>'0.01', 'placeholder' => t('No Minimum Price')]); ?>
+                                    <?= $form->number('pPriceMinimum', $minimumPrice, ['step' => '0.01', 'placeholder' => t('No Minimum Price')]); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <?= $form->label("pPriceMaximum", t('Maximum Price')); ?>
+                                <?= $form->label('pPriceMaximum', t('Maximum Price')); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
                                         <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $maximumPrice = $product->getPriceMaximum(); ?>
-                                    <?= $form->number("pPriceMaximum", $maximumPrice, ['step'=>'0.01', 'placeholder' => t('No Maximum Price')]); ?>
+                                    <?= $form->number('pPriceMaximum', $maximumPrice, ['step' => '0.01', 'placeholder' => t('No Maximum Price')]); ?>
                                 </div>
                             </div>
                         </div>
@@ -494,7 +494,6 @@ if (version_compare($version, '9.0', '<')) {
                                     if($priceTiers) {
                                     $tiersort = 0;
                                     foreach ($priceTiers as $priceTier) {
-
                                     ?>
                                     tiersContainer.append(tierTemplate({
                                         from: '<?= $priceTier->getFrom(); ?>',
@@ -545,14 +544,14 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <?= $form->label("pTaxable", t('Taxable')); ?>
-                                <?= $form->select("pTaxable", ['1' => t('Yes'), '0' => t('No')], $product->isTaxable() ? '1' : '0'); ?>
+                                <?= $form->label('pTaxable', t('Taxable')); ?>
+                                <?= $form->select('pTaxable', ['1' => t('Yes'), '0' => t('No')], $product->isTaxable() ? '1' : '0'); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <?= $form->label("pTaxClass", t('Tax Class')); ?>
-                                <?= $form->select("pTaxClass", $taxClasses, $product->getTaxClassID()); ?>
+                                <?= $form->label('pTaxClass', t('Tax Class')); ?>
+                                <?= $form->select('pTaxClass', $taxClasses, $product->getTaxClassID()); ?>
                             </div>
                         </div>
                     </div>
@@ -561,14 +560,14 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <?= $form->label("pNoQty", t('Offer quantity selection')); ?>
-                                <?= $form->select("pNoQty", ['0' => t('Yes'), '1' => t('No, only allow one of this product in a cart')], !$product->allowQuantity()); ?>
+                                <?= $form->label('pNoQty', t('Offer quantity selection')); ?>
+                                <?= $form->select('pNoQty', ['0' => t('Yes'), '1' => t('No, only allow one of this product in a cart')], !$product->allowQuantity()); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <?= $form->label("pQtyLabel", t('Quantity Label')); ?>
-                                <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => 'e.g. cm', 'maxlength'=>100]); ?>
+                                <?= $form->label('pQtyLabel', t('Quantity Label')); ?>
+                                <?= $form->text('pQtyLabel', $product->getQtyLabel(), ['placeholder' => 'e.g. cm', 'maxlength' => 100]); ?>
                             </div>
                         </div>
 
@@ -578,20 +577,20 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row <?= !$product->allowQuantity() ? 'hidden d-none' : ''; ?>" id="quantityoptions">
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <?= $form->label("pAllowDecimalQty", t('Allow Decimal Quantities')); ?>
-                                <?= $form->select("pAllowDecimalQty", ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
+                                <?= $form->label('pAllowDecimalQty', t('Allow Decimal Quantities')); ?>
+                                <?= $form->select('pAllowDecimalQty', ['0' => t('No, whole number quantities only'), '1' => t('Yes')], $product->getAllowDecimalQty()); ?>
                             </div>
                         </div>
                         <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden d-none'); ?>" id="quantitystepscontainer">
                             <div class="form-group">
-                                <?= $form->label("pQtySteps", t('Quantity Steps')); ?>
-                                <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
+                                <?= $form->label('pQtySteps', t('Quantity Steps')); ?>
+                                <?= $form->number('pQtySteps', $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <?= $form->label("pMaxQty", t('Maximum Quantity In Cart')); ?>
-                                <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
+                                <?= $form->label('pMaxQty', t('Maximum Quantity In Cart')); ?>
+                                <?= $form->number('pMaxQty', $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
                             </div>
                         </div>
                     </div>
@@ -600,14 +599,14 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <?php $outOfStockMessage = $product->getOutOfStockMessage(); ?>
-                                <?= $form->label("pOutOfStockMessage", t('Out of Stock Message')); ?>
-                                <?= $form->text("pOutOfStockMessage", $product->getOutOfStockMessage(), ['placeholder'=>t('Out of Stock'), 'maxlength'=>200]); ?>
+                                <?= $form->label('pOutOfStockMessage', t('Out of Stock Message')); ?>
+                                <?= $form->text('pOutOfStockMessage', $product->getOutOfStockMessage(), ['placeholder' => t('Out of Stock'), 'maxlength' => 200]); ?>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <?= $form->label("pAddToCartText", t('Add To Cart Button Text')); ?>
-                                <?= $form->text("pAddToCartText", $product->getAddToCartText(), ['placeholder'=>t('Add to Cart'), 'maxlength'=>120]); ?>
+                                <?= $form->label('pAddToCartText', t('Add To Cart Button Text')); ?>
+                                <?= $form->text('pAddToCartText', $product->getAddToCartText(), ['placeholder' => t('Add to Cart'), 'maxlength' => 120]); ?>
                             </div>
                         </div>
                     </div>
@@ -619,7 +618,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <?= $form->label("pDateAdded", t('Date Added')); ?>
+                                    <?= $form->label('pDateAdded', t('Date Added')); ?>
                                     <?= $app->make('helper/form/date_time')->datetime('pDateAdded', $product->getDateAdded()); ?>
                                 </div>
                                 <style>
@@ -631,7 +630,7 @@ if (version_compare($version, '9.0', '<')) {
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <?= $form->label("pDateUpdated", t('Last Updated')); ?>
+                                    <?= $form->label('pDateUpdated', t('Last Updated')); ?>
                                     <div class="form-control-static">
                                         <?= $dh->formatDateTime($product->getDateUpdated()); ?>
                                     </div>
@@ -648,29 +647,29 @@ if (version_compare($version, '9.0', '<')) {
                 <div class="store-pane" id="product-descriptions">
 
                     <div class="form-group">
-                        <?= $form->label("pDesc", t('Short Description')); ?><br>
+                        <?= $form->label('pDesc', t('Short Description')); ?><br>
                         <?php
                         echo $editor->outputStandardEditor('pDesc', $product->getDescriptionEdit());
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label("pDetail", t('Product Details (Long Description)')); ?><br>
+                        <?= $form->label('pDetail', t('Product Details (Long Description)')); ?><br>
                         <?php
                         echo $editor->outputStandardEditor('pDetail', $product->getDetailEdit());
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label("pManufacturer", t('Brand / Manufacturer')); ?>
-                        <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '',  ['class' => 'selectize']); ?>
+                        <?= $form->label('pManufacturer', t('Brand / Manufacturer')); ?>
+                        <?= $form->select('pManufacturer', $manufacturers, $product->getManufacturer() ? $product->getManufacturer()->getID() : '', ['class' => 'selectize']); ?>
                     </div>
 
 
 
                     <div class="form-group">
-                        <?= $form->label("pBarcode", t('Barcode')); ?>
-                        <?= $form->text("pBarcode", $product->getBarcode()); ?>
+                        <?= $form->label('pBarcode', t('Barcode')); ?>
+                        <?= $form->text('pBarcode', $product->getBarcode()); ?>
                     </div>
 
 
@@ -732,7 +731,7 @@ if (version_compare($version, '9.0', '<')) {
                 </div><!-- #product-images -->
 
                 <div class="store-pane" id="product-categories">
-                    <?= $form->label('', t("Categorized under pages")); ?>
+                    <?= $form->label('', t('Categorized under pages')); ?>
 
                     <div class="form-group" id="page_pickers">
 
@@ -780,8 +779,8 @@ if (version_compare($version, '9.0', '<')) {
 
                     <br />
                     <div class="form-group">
-                        <?= $form->label("pFeatured", t('Featured Product')); ?>
-                        <?= $form->select("pFeatured", ['0' => t('No'), '1' => t('Yes')], $product->isFeatured() ? '1' : '0'); ?>
+                        <?= $form->label('pFeatured', t('Featured Product')); ?>
+                        <?= $form->select('pFeatured', ['0' => t('No'), '1' => t('Yes')], $product->isFeatured() ? '1' : '0'); ?>
                     </div>
 
 
@@ -828,60 +827,60 @@ if (version_compare($version, '9.0', '<')) {
                 <div class="store-pane" id="product-shipping">
 
                     <div class="form-group">
-                        <?= $form->label("pShippable", t('Product is Shippable')); ?>
-                        <?= $form->select("pShippable", ['1' => t('Yes'), '0' => t('No')], ($product->isShippable() ? '1' : '0')); ?>
+                        <?= $form->label('pShippable', t('Product is Shippable')); ?>
+                        <?= $form->select('pShippable', ['1' => t('Yes'), '0' => t('No')], ($product->isShippable() ? '1' : '0')); ?>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <?= $form->label("pWeight", t('Weight')); ?>
+                                <?= $form->label('pWeight', t('Weight')); ?>
                                 <div class="input-group">
                                     <?php $weight = $product->getWeight(); ?>
-                                    <?= $form->number('pWeight', $weight ? $weight : '0', ['step'=>'0.01']) ?>
+                                    <?= $form->number('pWeight', $weight ? $weight : '0', ['step' => '0.01']) ?>
                                     <div class="input-group-addon input-group-text"><?= Config::get('community_store.weightUnit') ?></div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <?= $form->label("pNumberItems", t('Number Of Items')); ?>
+                                <?= $form->label('pNumberItems', t('Number Of Items')); ?>
                                 <?= $form->number('pNumberItems', $product->getNumberItems(), ['min' => 0, 'step' => 1]) ?>
                             </div>
                             <div class="form-group">
-                                <?= $form->label("pSeperateShip", t('Product can be packaged with other items')); ?>
-                                <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
+                                <?= $form->label('pSeperateShip', t('Product can be packaged with other items')); ?>
+                                <?= $form->select('pSeperateShip', ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-group">
-                                    <?= $form->label("pLength", t('Length')); ?>
+                                    <?= $form->label('pLength', t('Length')); ?>
                                     <div class="input-group">
                                         <?php $length = $product->getLength(); ?>
-                                        <?= $form->number('pLength', $length ? $length : '0', ['step'=>'0.01','min'=>0]) ?>
+                                        <?= $form->number('pLength', $length ? $length : '0', ['step' => '0.01', 'min' => 0]) ?>
                                         <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <?= $form->label("pWidth", t('Width')); ?>
+                                    <?= $form->label('pWidth', t('Width')); ?>
                                     <div class="input-group">
                                         <?php $width = $product->getWidth(); ?>
-                                        <?= $form->number('pWidth', $width ? $width : '0', ['step'=>'0.01','min'=>0]) ?>
+                                        <?= $form->number('pWidth', $width ? $width : '0', ['step' => '0.01', 'min' => 0]) ?>
                                         <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <?= $form->label("pHeight", t('Height')); ?>
+                                    <?= $form->label('pHeight', t('Height')); ?>
                                     <div class="input-group">
                                         <?php $height = $product->getHeight(); ?>
-                                        <?= $form->number('pHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
+                                        <?= $form->number('pHeight', $height ? $height : '0', ['step' => '0.01', 'min' => 0]) ?>
                                         <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <?= $form->label("pStackedHeight", t('Stacked Height')); ?>
+                                    <?= $form->label('pStackedHeight', t('Stacked Height')); ?>
                                     <div class="input-group">
                                         <?php $height = $product->getStackedHeight(); ?>
-                                        <?= $form->number('pStackedHeight', $height ? $height : '0', ['step'=>'0.01','min'=>0]) ?>
+                                        <?= $form->number('pStackedHeight', $height ? $height : '0', ['step' => '0.01', 'min' => 0]) ?>
                                         <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                     </div>
                                 </div>
@@ -891,7 +890,7 @@ if (version_compare($version, '9.0', '<')) {
                     <div class="row <?= Config::get('community_store.multiplePackages') ? '' : 'hidden d-none'; ?>">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <?= $form->label("pPackageData", t('Or, Package(s) Data')); ?>
+                                <?= $form->label('pPackageData', t('Or, Package(s) Data')); ?>
                                 <?= $form->textarea('pPackageData', $product->getPackageData(), ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
                                 <span class="help-block">
                                     <?= t('Values entered will override individual set weights and sizes'); ?>
@@ -910,7 +909,7 @@ if (version_compare($version, '9.0', '<')) {
 
                 <div class="store-pane" id="product-options">
 
-                    <?= $form->label('', t("Options")); ?>
+                    <?= $form->label('', t('Options')); ?>
                     <div id="product-options-container"></div>
 
                     <div class="clearfix mt-3">
@@ -994,7 +993,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
-                                            <label class="control-label"><?= t('Option Details');?></label>
+                                            <label class="control-label"><?= t('Option Details'); ?></label>
                                             <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
                                         </div>
                                     </div>
@@ -1099,18 +1098,15 @@ if (version_compare($version, '9.0', '<')) {
                             $labels['hidden'] = t('Hidden Value');
                             $labels['static'] = t('Content');
 
-
                             if(isset($options) && $options) {
                             $optionsort = 0;
                             foreach ($options as $option) {
-
                             $type = $option->getType();
                             $displayType = $option->getDisplayType();
                             $handle = $option->getHandle();
                             $details = $option->getDetails();
                             $required = $option->getRequired();
                             $includeVariations = $option->getIncludeVariations();
-
 
                             if (!$type) {
                                 $type = 'select';
@@ -1298,7 +1294,7 @@ if (version_compare($version, '9.0', '<')) {
                                         </div>
                                     </div>
                                     <br class="smallbreak">
-                                    <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control input-sm" value="<%=poiSelectorName%>">
+                                    <input type="text" placeholder="<?= t('Selector Display Label - Optional'); ?>" name="poiSelectorName[]" class="form-control input-sm" value="<%=poiSelectorName%>">
                                     <br class="smallbreak">
 
                                     <div class="row">
@@ -1307,12 +1303,12 @@ if (version_compare($version, '9.0', '<')) {
                                             <div class="input-group-addon input-group-text input-sm">
                                                 <?= Config::get('community_store.symbol'); ?>
                                             </div>
-                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
+                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment'); ?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
                                         </div>
                                         </div>
                                         <div class="col-sm-6">
                                         <div class="input-group">
-                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
+                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment'); ?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
                                             <div class="input-group-addon input-group-text input-sm"><?= Config::get('community_store.weightUnit') ?></div>
                                         </div>
                                         </div>
@@ -1393,10 +1389,9 @@ if (version_compare($version, '9.0', '<')) {
                             <?php
                             if(isset($options) && $options) {
                             $count = count($options);
-                            for($i = 0;$i < $count;$i++){
+                            for($i = 0; $i < $count; $i++){
                             foreach($options[$i]->getOptionItems() as $optionItem){
                             if($optionItem->getOptionID() == $options[$i]->getID()){
-
                             ?>
 
                             var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
@@ -1404,7 +1399,7 @@ if (version_compare($version, '9.0', '<')) {
                                 poiName: '<?= h($optionItem->getName())?>',
                                 poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
                                 poiPriceAdjust: '<?=  $optionItem->getPriceAdjustment() != 0 ? $optionItem->getPriceAdjustment() : ''; ?>',
-                                poiWeightAdjust: '<?= $optionItem->getWeightAdjustment() != 0  ? $optionItem->getWeightAdjustment() : ''?>',
+                                poiWeightAdjust: '<?= $optionItem->getWeightAdjustment() != 0 ? $optionItem->getWeightAdjustment() : ''?>',
                                 poiID: '<?= $optionItem->getID()?>',
                                 optGroup: <?= $i?>,
                                 sort: <?= $optionItem->getSort()?>,
@@ -1480,40 +1475,40 @@ if (version_compare($version, '9.0', '<')) {
                                                     $comboIDs[] = $optionItemID;
                                                     sort($comboIDs);
                                                     $group = $optionLookup[$optionItemLookup[$optionItemID]->getOptionID()];
-                                                    echo '<span class="label label-primary ' . $badgeClass .' bg-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
+                                                    echo '<span class="label label-primary ' . $badgeClass . ' bg-primary">' . ($group ? $group->getName() : '') . ': ' . $optionItemLookup[$optionItemID]->getName() . '</span> ';
                                                 }
 
-												if (isset($variationLookup[implode('_', $comboIDs)])) {
-													$variation = $variationLookup[implode('_', $comboIDs)];
-													$varid = $variation->getID();
-												} else {
-													$variation = null;
-													$varid = '';
-												} ?>
+                                                if (isset($variationLookup[implode('_', $comboIDs)])) {
+                                                    $variation = $variationLookup[implode('_', $comboIDs)];
+                                                    $varid = $variation->getID();
+                                                } else {
+                                                    $variation = null;
+                                                    $varid = '';
+                                                } ?>
 
                                                 </span>
 
                                                 <div class="form-group pull-right mt-2">
-													<?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
-													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : false, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
+                                                    <?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
+                                                    <?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : false, ['data-combokey' => $comboKey, 'class' => 'optionDisabled']) ?>
                                                 </div>
 
                                             </div>
 
-                                            <div data-combokey="<?= $comboKey ?>" class="panel-body card-body"<?= ($variation && $variation->getVariationDisabled()) ? ' style="display:none"' :'' ?>">
+                                            <div data-combokey="<?= $comboKey ?>" class="panel-body card-body"<?= ($variation && $variation->getVariationDisabled()) ? ' style="display:none"' : '' ?>">
                                                 <input type="hidden" name="option_combo[]" value="<?= implode('_', $comboIDs); ?>"/>
 
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Code / SKU')); ?>
-                                                            <?= $form->text("pvSKU[" . $varid . "]", $variation ? $variation->getVariationSKU() : '', ['placeholder' => t('Base SKU')]); ?>
+                                                            <?= $form->label('', t('Code / SKU')); ?>
+                                                            <?= $form->text('pvSKU[' . $varid . ']', $variation ? $variation->getVariationSKU() : '', ['placeholder' => t('Base SKU')]); ?>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Barcode')); ?>
-                                                            <?= $form->text("pvBarcode[" . $varid . "]", $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
+                                                            <?= $form->label('', t('Barcode')); ?>
+                                                            <?= $form->text('pvBarcode[' . $varid . ']', $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1521,13 +1516,13 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Stock Level')); ?>
+                                                            <?= $form->label('', t('Stock Level')); ?>
                                                             <div class="input-group">
                                                                 <?php
                                                                 if ($variation) {
-                                                                    echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001, 'max'=>'99999999.999']);
+                                                                    echo $form->number('pvQty[' . $varid . ']', round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001, 'max' => '99999999.999']);
                                                                 } else {
-                                                                    echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'step' => 0.001, 'max'=>'99999999.999']);
+                                                                    echo $form->number('pvQty[' . $varid . ']', '', ['readonly' => 'readonly', 'step' => 0.001, 'max' => '99999999.999']);
                                                                 }
                                                                 ?>
 
@@ -1565,7 +1560,7 @@ if (version_compare($version, '9.0', '<')) {
                                                         <input type="hidden" id="pvfID-<?= $varid; ?>" name="pvfID[<?= $varid; ?>]" value="<?= $pvfID; ?>" />
                                                       </div>
 
-                                                        <?php // $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null); ?>
+                                                        <?php // $al->image('ccm-image' . $count++, 'pvfID[' . $varid . ']', t('Choose Image'), $pvfID ? File::getByID($pvfID) : null);?>
                                                     </div>
                                                 </div>
 
@@ -1573,34 +1568,34 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Price')); ?>
+                                                            <?= $form->label('', t('Price')); ?>
                                                             <div class="input-group">
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvPrice[" . $varid . "]", $variation ? $variation->getVariationPrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Base Price')]); ?>
+                                                                <?= $form->number('pvPrice[' . $varid . ']', $variation ? $variation->getVariationPrice() : '', ['step' => '0.01', 'max' => '9999999.99', 'placeholder' => t('Base Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Wholesale Price')); ?>
+                                                            <?= $form->label('', t('Wholesale Price')); ?>
                                                             <div class="input-group">
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvWholesalePrice[" . $varid . "]", $variation ? $variation->getVariationWholesalePrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Wholesale Price')]); ?>
+                                                                <?= $form->number('pvWholesalePrice[' . $varid . ']', $variation ? $variation->getVariationWholesalePrice() : '', ['step' => '0.01', 'max' => '9999999.99', 'placeholder' => t('Wholesale Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Cost Price')); ?>
+                                                            <?= $form->label('', t('Cost Price')); ?>
                                                             <div class="input-group">
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvCostPrice[" . $varid . "]", $variation ? $variation->getVariationCostPrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Cost Price')]); ?>
+                                                                <?= $form->number('pvCostPrice[' . $varid . ']', $variation ? $variation->getVariationCostPrice() : '', ['step' => '0.01', 'max' => '9999999.99', 'placeholder' => t('Cost Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1610,13 +1605,13 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("pvSalePrice[]", t('Sale Price')); ?>
+                                                            <?= $form->label('pvSalePrice[]', t('Sale Price')); ?>
 
                                                             <div class="input-group">
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Base Sale Price')]); ?>
+                                                                <?= $form->number('pvSalePrice[' . $varid . ']', $variation ? $variation->getVariationSalePrice() : '', ['step' => '0.01', 'max' => '9999999.99', 'placeholder' => t('Base Sale Price')]); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1628,18 +1623,18 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Weight')); ?>
+                                                            <?= $form->label('', t('Weight')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Weight')]) ?>
+                                                                <?= $form->number('pvWeight[' . $varid . ']', $variation ? $variation->getVariationWeight() : '', ['step' => '0.01', 'min' => 0, 'max' => '9999999.99', 'placeholder' => t('Base Weight')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.weightUnit') ?></div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Length')); ?>
+                                                            <?= $form->label('', t('Length')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Length')]) ?>
+                                                                <?= $form->number('pvLength[' . $varid . ']', $variation ? $variation->getVariationLength() : '', ['step' => '0.01', 'min' => 0, 'max' => '9999999.99', 'placeholder' => t('Base Length')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1649,15 +1644,15 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Number of Items')); ?>
-                                                            <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'max' =>'2147483647', 'placeholder' => t('Base Number Of Items')]) ?>
+                                                            <?= $form->label('', t('Number of Items')); ?>
+                                                            <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min' => 0, 'step' => 1, 'max' => '2147483647', 'placeholder' => t('Base Number Of Items')]) ?>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Width')); ?>
+                                                            <?= $form->label('', t('Width')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step'=>'0.01','min'=>'0', 'max'=>'9999999.99', 'placeholder' => t('Base Width')]) ?>
+                                                                <?= $form->number('pvWidth[' . $varid . ']', $variation ? $variation->getVariationWidth() : '', ['step' => '0.01', 'min' => '0', 'max' => '9999999.99', 'placeholder' => t('Base Width')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1670,9 +1665,9 @@ if (version_compare($version, '9.0', '<')) {
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("", t('Height')); ?>
+                                                            <?= $form->label('', t('Height')); ?>
                                                             <div class="input-group">
-                                                                <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step'=>'0.01', 'min'=>0, 'max'=>'9999999.99', 'placeholder' => t('Base Height')]) ?>
+                                                                <?= $form->number('pvHeight[' . $varid . ']', $variation ? $variation->getVariationHeight() : '', ['step' => '0.01', 'min' => 0, 'max' => '9999999.99', 'placeholder' => t('Base Height')]) ?>
                                                                 <div class="input-group-addon input-group-text"><?= Config::get('community_store.sizeUnit') ?></div>
                                                             </div>
                                                         </div>
@@ -1685,7 +1680,7 @@ if (version_compare($version, '9.0', '<')) {
                                                     <div class="col-md-12 <?= Config::get('community_store.multiplePackages') ? '' : 'hidden d-none'; ?>">
                                                         <div class="form-group">
 
-                                                            <?= $form->label('pvPackageData[' . $varid . ']', t("Or, Package(s) Data")); ?>
+                                                            <?= $form->label('pvPackageData[' . $varid . ']', t('Or, Package(s) Data')); ?>
                                                             <?= $form->textarea('pvPackageData[' . $varid . ']', $variation ? $variation->getVariationPackageData() : '', ['rows' => 4, 'placeholder' => t(/* i18n: %s is a weight unit */'%s LENGTHxWIDTHxHEIGHT', strtoupper(Config::get('community_store.weightUnit')))]) ?>
 
                                                         </div>
@@ -1708,7 +1703,7 @@ if (version_compare($version, '9.0', '<')) {
 
                 <div class="store-pane" id="product-related">
 
-                    <?= $form->label("", t("Related Products")); ?>
+                    <?= $form->label('', t('Related Products')); ?>
 
                     <ul class="list-group multi-select-list multi-select-sortable" id="related-products">
                         <?php
@@ -1795,16 +1790,13 @@ if (version_compare($version, '9.0', '<')) {
                     <div id="attributeList">
                     <?php
                     if ($productType) {
-
                         $outputAttributes = [];
 
                         foreach($productType->getLayoutSets() as $set) {
-
                             echo '<h4>' . $set->getLayoutSetName() . '</h4>';
 
                               $controls = $set->getLayoutSetControls();
                             foreach ($controls as $control) {
-
                                 $ak = $control->getAttributeKey();
                                 $akID = $ak->getAttributeKeyID();
                                 if (!in_array($akID, $outputAttributes)) {
@@ -1825,8 +1817,7 @@ if (version_compare($version, '9.0', '<')) {
                             }
                         }
                     } else {
-
-                        if (Config::get('community_store.attributesRequireType') ) { ?>
+                        if (Config::get('community_store.attributesRequireType')) { ?>
                             <p class="alert alert-info"><?= t('Attribute editing requires a product type to be selected') ?></p>
                         <?php } else {
                              $hasKeys = false;
@@ -1876,7 +1867,6 @@ if (version_compare($version, '9.0', '<')) {
                             <p><?= t('No product attributes defined') ?></p>
                         <?php }
                          }
-
                       } ?>
                     </div>
                     <p class="alert alert-info hidden d-none" id="attributeChangeNotice"><?= t('The Product Type has changed - save the product to view related attributes') ?></p>
@@ -1892,7 +1882,7 @@ if (version_compare($version, '9.0', '<')) {
                         }
                         ?>
                         <div class="form-group">
-                            <?= $form->label("ddfID" . $i, t("File to download on purchase")); ?>
+                            <?= $form->label('ddfID' . $i, t('File to download on purchase')); ?>
                             <?= $al->file('ddfID' . $i, 'ddfID[]', t('Choose File'), is_object($file) ? $file : null) ?>
                         </div>
                     <?php } ?>
@@ -1903,7 +1893,7 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label("usergroups", t("On purchase add user to user groups")); ?>
+                        <?= $form->label('usergroups', t('On purchase add user to user groups')); ?>
                         <div class="ccm-search-field-content ccm-search-field-content-select2">
                             <select multiple="multiple" name="pUserGroups[]" id="groupselect" class="select2-select" style="width: 100%;" placeholder="<?= t('Select user groups'); ?>">
                                 <?php
@@ -1953,13 +1943,13 @@ if (version_compare($version, '9.0', '<')) {
                 <div class="store-pane" id="product-page">
 
                     <?php if ($page && !$page->isInTrash()) { ?>
-                        <p><strong><?= t("Detail Page is set to: ") ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong></p>
+                        <p><strong><?= t('Detail Page is set to: ') ?><a href="<?= $page->getCollectionLink() ?>" target="_blank"><?= $page->getCollectionName() ?></a></strong></p>
                         <?= $ps->selectPage('pageCID', $page->getCollectionID()); ?>
                     <?php } else { ?>
 
                         <?php if ($product->getID()) { ?>
                             <div class="alert alert-warning">
-                                <?= t("This product is missing a corresponding page in the sitemap") ?>
+                                <?= t('This product is missing a corresponding page in the sitemap') ?>
                             </div>
                             <label for="pageCID"><?= t('Associate with an existing page'); ?></label>
                             <?= $ps->selectPage('pageCID', ''); ?>
@@ -1967,7 +1957,7 @@ if (version_compare($version, '9.0', '<')) {
                             <label class="control-label"><?= t('Or, create a new product page'); ?></label><br /><br />
                         <?php } else { ?>
                             <div class="form-group">
-                                <?= $form->checkbox('createPage', '1',  true) ?>
+                                <?= $form->checkbox('createPage', '1', true) ?>
                                 <?= $form->label('createPage', t('Create Product Page In Sitemap')) ?>
                             </div>
                         <?php } ?>
@@ -1975,21 +1965,21 @@ if (version_compare($version, '9.0', '<')) {
                         <?php if ($productPublishTarget) { ?>
                             <?php if ($pageTemplates && !empty($pageTemplates)) { ?>
                                 <div class="form-group">
-                                    <label class="control-label"><?= t("Page Template") ?></label>
+                                    <label class="control-label"><?= t('Page Template') ?></label>
                                     <?= $form->select('selectPageTemplate', $pageTemplates, $defaultTemplateID); ?>
                                 </div>
 
                                 <?php if ($product->getID()) { ?>
-                                    <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" href="<?= Url::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page") ?></a>
+                                    <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" href="<?= Url::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t('Generate a Product Page') ?></a>
                                 <?php } ?>
                             <?php } else { ?>
                                 <div class="alert alert-warning">
-                                    <?= t("A Page Type with the handle store_product was not found") ?>
+                                    <?= t('A Page Type with the handle store_product was not found') ?>
                                 </div>
                             <?php } ?>
                         <?php } else { ?>
                             <div class="alert alert-warning">
-                                <?= t("No page is configured as the parent page for new products") ?>
+                                <?= t('No page is configured as the parent page for new products') ?>
                             </div>
                         <?php } ?>
 
@@ -2001,7 +1991,7 @@ if (version_compare($version, '9.0', '<')) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/'. (isset($groupSearch) ? $groupSearch : '') . (isset($keywordsSearch) ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
+                <a href="<?= Url::to('/dashboard/store/products/' . (isset($groupSearch) ? $groupSearch : '') . (isset($keywordsSearch) ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t('Cancel / View All Products') ?></a>
                 <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
             </div>
         </div>
@@ -2034,11 +2024,11 @@ if (version_compare($version, '9.0', '<')) {
 <?php } elseif (in_array($controller->getAction(), $listViews)) { ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <!--<a href="<?= Url::to('/dashboard/store/products/', 'attributes') ?>" class="btn btn-dark"><?= t("Manage Attributes") ?></a>-->
-        <a href="<?= Url::to('/dashboard/store/products/', 'groups') ?>" class="btn btn-primary"><?= t("Manage Groups") ?></a>
+        <!--<a href="<?= Url::to('/dashboard/store/products/', 'attributes') ?>" class="btn btn-dark"><?= t('Manage Attributes') ?></a>-->
+        <a href="<?= Url::to('/dashboard/store/products/', 'groups') ?>" class="btn btn-primary"><?= t('Manage Groups') ?></a>
 
         <div class="btn-group" >
-            <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t("Add Product") ?></a>
+            <a href="<?= Url::to('/dashboard/store/products/', 'add') ?>" class="btn btn-primary"><?= t('Add Product') ?></a>
 
             <?php if (count($typeList)) { ?>
             <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -2063,7 +2053,7 @@ if (version_compare($version, '9.0', '<')) {
         <form role="form" class="form-inline">
             <div class="row">
                 <div class="ccm-search-fields-submit col-sm-12 col-md-6">
-                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style'=>"min-width: 220px"]) ?>
+                    <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Search by Name or SKU'), 'style' => 'min-width: 220px']) ?>
                     <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
 
@@ -2088,9 +2078,9 @@ if (version_compare($version, '9.0', '<')) {
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($typeID ? '/0/' :'') . $typeID ) ?>"><?= t('All Groups') ?></a></li>
+                                    <li class="nav-item <?= (!$gID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($typeID ? '/0/' : '') . $typeID) ?>"><?= t('All Groups') ?></a></li>
                                     <?php foreach ($grouplist as $group) { ?>
-                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID() .  ($typeID ? $typeID :'')) ?>"><?= $group->getGroupName() ?></a></li>
+                                        <li class="nav-item <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID() . ($typeID ? $typeID : '')) ?>"><?= $group->getGroupName() ?></a></li>
                                     <?php } ?>
                                 </ul>
                             </li>
@@ -2111,7 +2101,7 @@ if (version_compare($version, '9.0', '<')) {
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item <?= (!$typeID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/'. ($gID ? $gID : '0') ) ?>"><?= t('All Types') ?></a></li>
+                                    <li class="nav-item <?= (!$typeID ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($gID ? $gID : '0')) ?>"><?= t('All Types') ?></a></li>
                                     <?php foreach($typeList as $type) { ?>
                                         <li class="nav-item <?= ($typeID == $type->getTypeID() ? 'active' : ''); ?>"><a class="nav-link" href="<?= Url::to('/dashboard/store/products/' . ($gID ? $gID : '0') . '/', $type->getTypeID()) ?>"><?= $type->getTypeName() ?></a></li>
                                     <?php } ?>
@@ -2137,7 +2127,7 @@ if (version_compare($version, '9.0', '<')) {
                 <th><a href="<?= $productList->getSortURL('price'); ?>"><?= t('Price') ?></a></th>
                 <th><a><?= t('Featured') ?></a></th>
                 <th><a>
-                        <?= count($typeList) ? t('Type') . ' / ' : '' ;?>
+                        <?= count($typeList) ? t('Type') . ' / ' : ''; ?>
                         <?= t('Groups') ?></a></th>
                 <th><a><?= t('Actions') ?></a></th>
             </tr>
@@ -2159,9 +2149,9 @@ if (version_compare($version, '9.0', '<')) {
                         <td>
                             <?php
                             if ($product->isActive()) {
-                                echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Active') . "</span>";
+                                echo "<span class='label label-success " . $badgeClass . " bg-success'>" . t('Active') . '</span>';
                             } else {
-                                echo "<span class='label label-default ". $badgeClass ." bg-secondary'>" . t('Inactive') . "</span>";
+                                echo "<span class='label label-default " . $badgeClass . " bg-secondary'>" . t('Inactive') . '</span>';
                             }
                             ?>
 
@@ -2170,7 +2160,7 @@ if (version_compare($version, '9.0', '<')) {
                             if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span>';
                             } else {
-                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty());
+                                echo $product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty();
                             } ?>
 
                             <?php
@@ -2194,9 +2184,9 @@ if (version_compare($version, '9.0', '<')) {
                         <td>
                             <?php
                             if ($product->isFeatured()) {
-                                echo "<span class='label label-success ". $badgeClass ." bg-success'>" . t('Featured') . "</span>";
+                                echo "<span class='label label-success " . $badgeClass . " bg-success'>" . t('Featured') . '</span>';
                             } else {
-                                echo "<span class='label label-default ". $badgeClass ." bg-secondary'>" . t('Not Featured') . "</span>";
+                                echo "<span class='label label-default " . $badgeClass . " bg-secondary'>" . t('Not Featured') . '</span>';
                             }
                             ?>
                         </td>
@@ -2232,7 +2222,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 <li><a class="nav-link"  style="pointer-events: none; cursor: none" disabled href=""><?= t('No product page'); ?></a></li>
                                             <?php } ?>
                                             <?php if ($multilingualEnabled) { ?>
-                                            <li><a class="nav-link"  target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
+                                            <li><a class="nav-link"  target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t('Translate') ?></a></li>
                                             <?php } ?>
                                         </ul>
 
@@ -2262,12 +2252,12 @@ if (version_compare($version, '9.0', '<')) {
     <form method="post" action="<?= $view->action('duplicate', $product->getID()) ?>">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
-            <?= $form->label('newName', t("New Product Name")); ?>
+            <?= $form->label('newName', t('New Product Name')); ?>
             <?= $form->text('newName', $product->getName() . ' ' . t('(Copy)')); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('newSKU', t("New Product SKU")); ?>
+            <?= $form->label('newSKU', t('New Product SKU')); ?>
             <?= $form->text('newSKU', $product->getSKU()); ?>
         </div>
 

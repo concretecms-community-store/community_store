@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Concrete\Core\Page\Page;
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -44,14 +44,12 @@ class ProductLocation
      */
     protected $productSortOrder;
 
-    private function setProductID($pID)
+    public function __clone()
     {
-        $this->pID = $pID;
-    }
-
-    private function setCollectionID($cID)
-    {
-        $this->cID = $cID;
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function getID()
@@ -103,21 +101,21 @@ class ProductLocation
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $cID);
+        return $em->find(__CLASS__, $cID);
     }
 
     public static function getLocationsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
     }
 
     public static function getProductsForLocation($cID)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
 
     public static function addLocationsForProduct(array $locations, Product $product)
@@ -197,14 +195,6 @@ class ProductLocation
         return $location;
     }
 
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-    }
-
     public function save()
     {
         $em = dbORM::entityManager();
@@ -217,5 +207,15 @@ class ProductLocation
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setProductID($pID)
+    {
+        $this->pID = $pID;
+    }
+
+    private function setCollectionID($cID)
+    {
+        $this->cID = $cID;
     }
 }

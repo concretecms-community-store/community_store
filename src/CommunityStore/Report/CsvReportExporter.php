@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Report;
 
 use League\Csv\Writer;
@@ -10,20 +11,20 @@ class CsvReportExporter
      * @var \DateTimeZone
      */
     protected $filename;
+
     protected $header;
+
     protected $rows;
 
     /**
      * Initialize the instance.
      *
-     * @param Writer $writer
-     * @param UserCategory $userCategory
-     * @param Date $dateService
+     * @param mixed $filename
      */
-    public function __construct($filename, Array $header, Array $rows)
+    public function __construct($filename, array $header, array $rows)
     {
         // if empty filename give it a default
-        $filename = empty($filename) ? 'report_' . date('Y-m-d') . ".csv" : $filename;
+        $filename = empty($filename) ? 'report_' . date('Y-m-d') . '.csv' : $filename;
         // add the 'csv' extension if not already present
         $filename = strtolower(substr(strrchr($filename, '.'), 1)) === 'csv' ? $filename : $filename . '.csv';
 
@@ -34,8 +35,8 @@ class CsvReportExporter
 
     public function getCsv()
     {
-        $now = gmdate("D, d M Y H:i:s");
-        $expire = gmdate("D, d M Y H:i:s", strtotime("+1 day"));
+        $now = gmdate('D, d M Y H:i:s');
+        $expire = gmdate('D, d M Y H:i:s', strtotime('+1 day'));
 
         $httpHeaders = [
             'Expires' => $expire . ' GMT',
@@ -43,7 +44,7 @@ class CsvReportExporter
             'Last-Modified' => $now . ' GMT',
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $this->filename . '"',
-            'Content-Transfer-Encoding' => 'binary'
+            'Content-Transfer-Encoding' => 'binary',
         ];
 
         $response = StreamedResponse::create(

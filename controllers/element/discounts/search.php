@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\Element\Discounts;
 
-use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Controller\ElementController;
+use Concrete\Core\Entity\Search\Query;
 
 class Search extends ElementController
 {
@@ -52,7 +53,5 @@ class Search extends ElementController
         } else {
             $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/store/discounts'));
         }
-
     }
-
 }

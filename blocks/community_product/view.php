@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'single_product']);
 $csm = $app->make('cs/helper/multilingual');
@@ -84,7 +84,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
                         $salePrice = $product->getSalePrice();
                         $price = $product->getPrice();
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment($product->getDiscountRules());
+                        $activePrice = ($salePrice ? $salePrice : $price) - $product->getPriceAdjustment($product->getDiscountRules());
 
                         if ($isWholesale) {
                             $msrp = $product->getFormattedOriginalPrice();
@@ -103,10 +103,8 @@ if (is_object($product) && $product->isActive()) {
                                 echo t('List Price') . ': <span class="store-list-price">' . $msrp . '</span><br />' . t('Wholesale Price') . ': <span class="store-wholesale-price">' . $formattedWholesalePrice . '</span>';
                                 echo '<meta itemprop="price" content="' . $wholesalePrice . '" />';
                                 echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
-
                             } else {
-
-                                if (isset($salePrice) && "" != $salePrice) {
+                                if (isset($salePrice) && $salePrice != '') {
                                     $formattedSalePrice = $product->getFormattedSalePrice();
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                                     echo t('On Sale') . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
@@ -115,7 +113,6 @@ if (is_object($product) && $product->isActive()) {
                                     echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
                                     echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
                                 } else {
-
                                     $formattedPrice = $product->getFormattedPrice();
 
                                     echo $formattedPrice;
@@ -165,11 +162,11 @@ if (is_object($product) && $product->isActive()) {
                                 ?>
                                 <span class="store-min-max help-block">
                                     <?php
-                                    if (!is_null($min)) {
+                                    if ($min !== null) {
                                         echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'minimum %1$s%2$s', Config::get('community_store.symbol'), $min);
                                     }
 
-                                    if (!is_null($max)) {
+                                    if ($max !== null) {
                                         if ($min >= 0) {
                                             echo ', ';
                                         }
@@ -195,7 +192,7 @@ if (is_object($product) && $product->isActive()) {
 
                             foreach ($pricetiers as $pricetier) {
                                 $pricetiersoutput[] = t(
-                                    /* i18n: %1$s is the start of a quantity tier, %2$s is the end of a quantity tier, %3$s is a currency symbol, %4$s the tier price */
+                                    // i18n: %1$s is the start of a quantity tier, %2$s is the end of a quantity tier, %3$s is a currency symbol, %4$s the tier price
                                     '%1$s to %2$s - %3$s%4$s',
                                     $pricetier->getFrom(),
                                     $pricetier->getTo(),
@@ -222,7 +219,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showDimensions) {
                         ?>
                         <div class="store-product-dimensions">
-                            <strong><?= t("Dimensions"); ?>:</strong>
+                            <strong><?= t('Dimensions'); ?>:</strong>
                             <?= $product->getDimensions(); ?>
                             <?= Config::get('community_store.sizeUnit'); ?>
                         </div>
@@ -232,7 +229,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showWeight) {
                         ?>
                         <div class="store-product-weight">
-                            <strong><?= t("Weight"); ?>:</strong>
+                            <strong><?= t('Weight'); ?>:</strong>
                             <?= $product->getWeight(); ?>
                             <?= Config::get('community_store.weightUnit'); ?>
                         </div>
@@ -256,7 +253,7 @@ if (is_object($product) && $product->isActive()) {
                     <?php if ($showIsFeatured) {
                         if ($product->isFeatured()) {
                             ?>
-                            <span class="store-product-featured"><?= t("Featured Item"); ?></span>
+                            <span class="store-product-featured"><?= t('Featured Item'); ?></span>
                             <?php
                         }
                     } ?>
@@ -327,7 +324,7 @@ if (is_object($product) && $product->isActive()) {
                                         <span class="store-product-option-help-text help-block"><?= h($csm->t($details, 'optionDetails', $product->getID(), $option->getID())); ?></span>
                                     <?php } ?>
 
-                                    <?php if ('radio' != $displayType) {
+                                    <?php if ($displayType != 'radio') {
                                     ?>
                                     <select <?= $required ? ' required="required" ' : ''; ?> class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control form-select"
                                             name="po<?= $option->getID(); ?>">
@@ -340,7 +337,7 @@ if (is_object($product) && $product->isActive()) {
                                         $outOfStock = false;
                                         $firstOptionItem = true;
                                         /** @var \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem[] $optionItems */
-										foreach ($optionItems as $optionItem) {
+                                        foreach ($optionItems as $optionItem) {
                                             $noValue = false;
                                             if (!$optionItem->isHidden()) {
                                                 if (isset($variationLookup[$optionItem->getID()])) {
@@ -355,7 +352,6 @@ if (is_object($product) && $product->isActive()) {
                                                 if (!empty($variation)) {
                                                     $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
                                                     $outOfStock = $variation->isSellable() ? '' : ' (' . t('out of stock') . ')';
-
                                                 } else {
                                                     $disabled = false;
                                                     if ($firstOptionItem) {
@@ -385,7 +381,7 @@ if (is_object($product) && $product->isActive()) {
                                                                 <?= $disabled . ($selected ? 'checked' : ''); ?>
                                                                       name="po<?= $option->getID(); ?>"
                                                                       value="<?= $optionItem->getID(); ?>"
-                                                                      data-adjustment="<?= (float)$optionItem->getPriceAdjustment($product->getDiscountRules()); ?>" />
+                                                                      data-adjustment="<?= (float) $optionItem->getPriceAdjustment($product->getDiscountRules()); ?>" />
 
                                                             <?= h($csm->t($optionLabel, $translateHandle, $product->getID(), $optionItem->getID())); ?>
                                                         </label>
@@ -479,17 +475,17 @@ if (is_object($product) && $product->isActive()) {
                                     }
                                     ?>
 
-                                    <?= ($buttonText ? h($buttonText) : t("Add to Cart")); ?>
+                                    <?= ($buttonText ? h($buttonText) : t('Add to Cart')); ?>
                                 </button>
                             </span>
                         </p>
                         <p class="store-out-of-stock-label alert alert-warning <?= ($isSellable ? 'hidden' : ''); ?>">
                             <?php $outOfStock = $csm->t($product->getOutOfStockMessage(), 'productOutOfStockMessage', $product->getID()); ?>
-                            <?= $outOfStock ? h($outOfStock) : t("Out of Stock"); ?>
+                            <?= $outOfStock ? h($outOfStock) : t('Out of Stock'); ?>
                         </p>
                         <p class="store-not-available-label alert alert-warning hidden">
-							<?php $notAvailable = $csm->t('Not Available', 'productNotAvailableMessage', $product->getID()); ?>
-							<?= $notAvailable ? h($notAvailable) : t('Not Available') ?>
+                            <?php $notAvailable = $csm->t('Not Available', 'productNotAvailableMessage', $product->getID()); ?>
+                            <?= $notAvailable ? h($notAvailable) : t('Not Available') ?>
                         </p>
                         <?php
                     } ?>
@@ -554,10 +550,10 @@ if (is_object($product) && $product->isActive()) {
                                     <?php
                                 }
 
-                                if ($loop > 0 && 0 == $loop % 2 && count($images) > $loop) {
+                                if ($loop > 0 && $loop % 2 == 0 && count($images) > $loop) {
                                     echo '</div><div class="clearfix no-gutter">';
                                 }
-                                ++$loop;
+                                $loop++;
                             }
                             echo '</div>';
                         } ?>
@@ -607,17 +603,17 @@ if (is_object($product) && $product->isActive()) {
                     'price' => $product->getPrice(),
                     'salePrice' => $product->getSalePrice(),
                     'available' => $variation->isSellable(),
-					'disabled' => $variation->getVariationDisabled(),
+                    'disabled' => $variation->getVariationDisabled(),
                     'maxCart' => $variation->getMaxCartQty(),
                     'imageThumb' => $thumb ? $thumb->src : '',
                     'image' => $imgObj ? $imgObj->getRelativePath() : '',
-					'sku' => $variation->getVariationSKU(),
-                    'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
+                    'sku' => $variation->getVariationSKU(),
+                    'saleTemplate' => t('On Sale') . ': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>',
                 ];
 
                 if ($isWholesale) {
                     $varationData[$key]['wholesalePrice'] = $product->getWholesalePrice();
-                    $varationData[$key]['wholesaleTemplate'] =  t('List Price') . ':&nbsp;<span class="store-list-price"></span><br />' . t('Wholesale Price') . ':&nbsp;<span class="store-wholesale-price"></span>';
+                    $varationData[$key]['wholesaleTemplate'] = t('List Price') . ':&nbsp;<span class="store-list-price"></span><br />' . t('Wholesale Price') . ':&nbsp;<span class="store-wholesale-price"></span>';
                 }
             }
 
@@ -631,6 +627,6 @@ if (is_object($product) && $product->isActive()) {
     <?php
 } else {
     ?>
-    <p class="alert alert-info"><?= t("Product not available"); ?></p>
+    <p class="alert alert-info"><?= t('Product not available'); ?></p>
     <?php
 } ?>

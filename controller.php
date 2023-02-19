@@ -1,25 +1,28 @@
 <?php
+
 namespace Concrete\Package\CommunityStore;
 
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Route;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-use Concrete\Core\Support\Facade\Route;
-use Concrete\Core\Asset\Asset;
-use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Support\Facade\Url;
-use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Page\Page;
 use Whoops\Exception\ErrorException;
 
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
+
     protected $appVersionRequired = '8.5';
+
     protected $pkgVersion = '2.4.8.5';
 
     protected $npmPackages = [
@@ -27,6 +30,7 @@ class Controller extends Package
         'chartist' => '0.11.4',
         'chartist-plugin-tooltips' => '0.0.17',
     ];
+
     protected $pkgAutoloaderRegistries = [
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
@@ -34,12 +38,12 @@ class Controller extends Package
 
     public function getPackageDescription()
     {
-        return t("Add a store to your site");
+        return t('Add a store to your site');
     }
 
     public function getPackageName()
     {
-        return t("Community Store");
+        return t('Community Store');
     }
 
     public function installStore($pkg)
@@ -72,7 +76,6 @@ class Controller extends Package
         $this->registerCategories();
         parent::install();
 
-
         if ($this->app->isRunThroughCommandLineInterface()) {
             $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
             $this->installStore($pkg);
@@ -89,7 +92,7 @@ class Controller extends Package
             parent::upgrade();
 
             // this was set to false in the Installer so setting it back to normal
-            $db->query("SET foreign_key_checks = 1");
+            $db->query('SET foreign_key_checks = 1');
 
             // We need to refresh our entities after install, otherwise the order attributes installation will fail
             Installer::refreshEntities();
@@ -170,7 +173,8 @@ class Controller extends Package
         $al->register('css', 'chartist', 'css/chartist/chartist.min.css', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'chartist-tooltip', 'js/chartist/chartist-plugin-tooltip.min.js', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('css', 'chartist-tooltip', 'css/chartist/chartist-plugin-tooltip.css', ['version' => $this->npmPackages['chartist-plugin-tooltips'], 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-        $al->registerGroup('chartist',
+        $al->registerGroup(
+            'chartist',
             [
                 ['javascript', 'chartist'],
                 ['javascript', 'chartist-tooltip'],
@@ -179,16 +183,17 @@ class Controller extends Package
             ]
         );
 
-        $select2 =  $al->getAssetGroup('select2');
+        $select2 = $al->getAssetGroup('select2');
 
         if (!$select2) {
             $al->register('css', 'select2', 'vendor/select2/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
             $al->register('javascript', 'select2', 'vendor/select2/select2/select2.js', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-            $al->registerGroup('select2',
+            $al->registerGroup(
+                'select2',
                 [
                     ['javascript', 'select2'],
-                    ['css', 'select2']
+                    ['css', 'select2'],
                 ]
             );
         }
@@ -196,14 +201,14 @@ class Controller extends Package
         $selectize = $al->getAssetGroup('selectize');
 
         if (!$selectize) {
-
             $al->register('css', 'selectize', 'css/selectize/selectize.css', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
             $al->register('javascript', 'selectize', 'js/selectize/selectize.min.js', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-            $al->registerGroup('selectize',
+            $al->registerGroup(
+                'selectize',
                 [
                     ['javascript', 'selectize'],
-                    ['css', 'selectize']
+                    ['css', 'selectize'],
                 ]
             );
         }
@@ -211,14 +216,14 @@ class Controller extends Package
         $lightbox = $al->getAssetGroup('core/lightbox');
 
         if (!$lightbox) {
-
             $al->register('css', 'lightbox', 'css/magnific-popup/magnific-popup.css', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
             $al->register('javascript', 'lightbox', 'js/magnific-popup/jquery.magnific-popup.js', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
-            $al->registerGroup('core/lightbox',
+            $al->registerGroup(
+                'core/lightbox',
                 [
                     ['javascript', 'lightbox'],
-                    ['css', 'lightbox']
+                    ['css', 'lightbox'],
                 ]
             );
         }
@@ -268,7 +273,7 @@ class Controller extends Package
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
@@ -282,9 +287,9 @@ class Controller extends Package
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
             var CHECKOUTSCROLLOFFSET = " . Config::get('community_store.checkout_scroll_offset', 0) . ";
             var CURRENCYCODE = '" . (Config::get('community_store.currency') ? Config::get('community_store.currency') : '') . "';
-            var CURRENCYSYMBOL = '" . Config::get('community_store.symbol')  . "';
-            var CURRENCYDECIMAL = '" . Config::get('community_store.whole')  . "';
-            var CURRENCYGROUP = '" . Config::get('community_store.thousand')   . "';
+            var CURRENCYSYMBOL = '" . Config::get('community_store.symbol') . "';
+            var CURRENCYDECIMAL = '" . Config::get('community_store.whole') . "';
+            var CURRENCYGROUP = '" . Config::get('community_store.thousand') . "';
         </script>
         ";
     }

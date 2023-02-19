@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Page;
-use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
-use \Concrete\Core\User\UserInfoRepository;
-use Concrete\Core\Page\Controller\PageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 
 class Complete extends PageController
 {
@@ -37,7 +38,7 @@ class Complete extends PageController
         }
 
         if (is_object($order)) {
-            $this->set("order", $order);
+            $this->set('order', $order);
 
             // if order has an associated user, and it's new, but not logged in, log them in now.
             if ($order->getCustomerID() && $order->getMemberCreated()) {
@@ -68,10 +69,9 @@ class Complete extends PageController
             $user = new User();
 
             if (!$user->isSuperUser()) {
-                return Redirect::to("/cart");
-            } else {
-                $this->set('order', new Order());
+                return Redirect::to('/cart');
             }
+            $this->set('order', new Order());
         }
 
         Cart::clear();
@@ -86,9 +86,9 @@ class Complete extends PageController
         $this->requireAsset('css', 'community-store');
 
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
-        $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
+        $this->set('orderChoicesEnabled', count($orderChoicesAttList) ? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-            $this->set("orderChoicesAttList", $orderChoicesAttList);
+            $this->set('orderChoicesAttList', $orderChoicesAttList);
         }
     }
 }

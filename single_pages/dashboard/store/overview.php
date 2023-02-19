@@ -1,8 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
@@ -20,7 +20,7 @@ if ($taxCalc == 'extract') {
 
 <?php if (isset($shoppingDisabled)) { ?>
     <p class="alert alert-warning text-center"><?= t(
-        /* i18n: the two %s contain HTML code */
+        // i18n: the two %s contain HTML code
         'Cart and Ordering features are currently disabled. This setting can be changed via the %ssettings page%s.',
         '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">',
         '</a>'
@@ -29,7 +29,7 @@ if ($taxCalc == 'extract') {
 
 <?php if (isset($missingNotificationEmails)) { ?>
     <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t(
-        /* i18n: the two %s contain HTML code */
+        // i18n: the two %s contain HTML code
         'No notification emails are set - order notifications will be not be sent. This setting can be can entered via the %ssettings page%s.',
         '<a href="' . Url::to('/dashboard/store/settings#settings-notifications') . '">',
         '</a>'
@@ -38,7 +38,7 @@ if ($taxCalc == 'extract') {
 
 <?php if (isset($missingFromEmail)) { ?>
     <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t(
-        /* i18n: the two %s contain HTML code */
+        // i18n: the two %s contain HTML code
         "No 'From Email' has been configured. It is advised to specify this email address to ensure notifications and receipts are received correctly. This setting can be changed via the %ssettings page%s.",
         '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">',
         '</a>'
@@ -82,7 +82,7 @@ if ($taxCalc == 'extract') {
             <div class="card-body">
                 <?php $ts = $sr->getTodaysSales(); ?>
                 <div class="panel-heading">
-                    <h4 class="panel-title card-title"><?= t("Sales this Week") ?></h4>
+                    <h4 class="panel-title card-title"><?= t('Sales this Week') ?></h4>
                 </div>
                 <div class="panel-body">
 
@@ -109,7 +109,7 @@ if ($taxCalc == 'extract') {
                             new DateTime(date('Y-M-d', strtotime('-3 days'))),
                             new DateTime(date('Y-M-d', strtotime('-2 days'))),
                             new DateTime(date('Y-M-d', strtotime('-1 day'))),
-                            new DateTime(date('Y-M-d'))
+                            new DateTime(date('Y-M-d')),
                         ];
                         ?>
 
@@ -128,9 +128,9 @@ if ($taxCalc == 'extract') {
                                     $date = $months[$i]->format('Y-m-d');
                                     $report = $sr->getTotalsByRange($date, $date);
                                     if ($i == 6) {
-                                        echo "{meta: '" . t('Total') . "', value: " . $report['total'] . "}";
+                                        echo "{meta: '" . t('Total') . "', value: " . $report['total'] . '}';
                                     } else {
-                                        echo "{meta: '" . t('Total') . "', value: " . $report['total'] . "},";
+                                        echo "{meta: '" . t('Total') . "', value: " . $report['total'] . '},';
                                     }
                                 }
                                 ?>
@@ -141,13 +141,13 @@ if ($taxCalc == 'extract') {
                         axisY: {
                             offset: 80,
                             labelInterpolationFnc: function (value) {
-                                return "<?= $symbol;?>" + value;
+                                return "<?= $symbol; ?>" + value;
                             }
                         },
                         plugins: [
                             Chartist.plugins.tooltip(
                                 {
-                                    currency: '<?= $symbol;?>'
+                                    currency: '<?= $symbol; ?>'
                                 }
                             )
                         ],
@@ -161,7 +161,7 @@ if ($taxCalc == 'extract') {
     </div>
     <div class="col-sm-6">
 
-        <h4><?= t("Orders") ?></h4>
+        <h4><?= t('Orders') ?></h4>
 
         <form action="<?= Url::to('/dashboard/store/orders') ?>">
             <div class="form-group">
@@ -179,12 +179,12 @@ if ($taxCalc == 'extract') {
 
         <hr>
 
-        <h4><?= t("Products") ?></h4>
+        <h4><?= t('Products') ?></h4>
 
         <form action="<?= Url::to('/dashboard/store/products') ?>">
             <div class="form-group">
                 <div class="input-group">
-                    <?= $form->search('keywords',isset($searchRequest) ? $searchRequest['keywords'] : '', ['placeholder' => t('Search Products')]) ?>
+                    <?= $form->search('keywords', isset($searchRequest) ? $searchRequest['keywords'] : '', ['placeholder' => t('Search Products')]) ?>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-default btn-secondary"><i class="fa fa-search"></i></button>
                     </span>
@@ -200,7 +200,7 @@ if ($taxCalc == 'extract') {
         <hr>
 
 
-        <h4><?= t("Discounts") ?></h4>
+        <h4><?= t('Discounts') ?></h4>
         <p class="pull-right float-end"><a href="<?= Url::to('/dashboard/store/discounts/add') ?>"><i class="fa fa-plus"></i>
                 <?= t('Add Discount Rule') ?></a></p>
         <p><a href="<?= Url::to('/dashboard/store/discounts') ?>"><i class="fa fa-scissors fa-ticket-alt"></i> <?= t('View Discount Rules') ?></a>
@@ -217,26 +217,25 @@ if ($taxCalc == 'extract') {
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <h4><?= t("Recent Orders") ?></h4>
+        <h4><?= t('Recent Orders') ?></h4>
 
         <?php
         if (!empty($orders)) { ?>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><a><?= t("Order #") ?></a></th>
-                    <th><a><?= t("Customer Name") ?></a></th>
-                    <th><a><?= t("Order Date") ?></a></th>
-                    <th><a><?= t("Total") ?></a></th>
-                    <th><a><?= t("Payment") ?></a></th>
-                    <th><a><?= t("Fulfilment") ?></a></th>
-                    <th><a><?= t("View") ?></a></th>
+                    <th><a><?= t('Order #') ?></a></th>
+                    <th><a><?= t('Customer Name') ?></a></th>
+                    <th><a><?= t('Order Date') ?></a></th>
+                    <th><a><?= t('Total') ?></a></th>
+                    <th><a><?= t('Payment') ?></a></th>
+                    <th><a><?= t('Fulfilment') ?></a></th>
+                    <th><a><?= t('View') ?></a></th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
                 foreach ($orders as $order) {
-
                     $cancelled = $order->getCancelled();
                     $canstart = '';
                     $canend = '';
@@ -288,19 +287,18 @@ if ($taxCalc == 'extract') {
                                 echo '<span class="label label-default">' . t('Free Order') . '</span>';
                             }
 
-
                             ?>
                         </td>
                         <td><?= t(ucwords($order->getStatus())) ?></td>
                         <td>
                             <div class="btn-group" style="width:100px">
                                 <a class="btn btn-primary btn-sm"
-                                   href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t("View") ?></a>
+                                   href="<?= URL::to('/dashboard/store/orders/order/', $order->getOrderID()) ?>"><?= t('View') ?></a>
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="nav-link" href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>"  target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip")?></a></li>
+                                    <li><a class="nav-link" href="<?=URL::to('/dashboard/store/orders/printslip/' . $order->getOrderID())?>"  target="_blank"><i class="fa fa-print"></i> <?= t('Print Order Slip')?></a></li>
                                 </ul>
                             </div>
                         </td>

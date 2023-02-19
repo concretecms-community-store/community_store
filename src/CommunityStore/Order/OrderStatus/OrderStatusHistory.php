@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus;
 
-use Concrete\Core\User\User;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\User\User;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -16,6 +16,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderSt
  */
 class OrderStatusHistory
 {
+    public static $table = 'CommunityStoreOrderStatusHistories';
+
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
@@ -28,19 +30,25 @@ class OrderStatusHistory
      */
     protected $order;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
     protected $oshComment;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     */
     protected $oshStatus;
 
-    /** @ORM\Column(type="datetime") */
+    /**
+     * @ORM\Column(type="datetime")
+     */
     protected $oshDate;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     protected $uID;
-
-    public static $table = 'CommunityStoreOrderStatusHistories';
 
     public function setOrder($order)
     {
@@ -83,9 +91,9 @@ class OrderStatusHistory
 
         if ($os) {
             return $os->getName();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function getDate($format = 'm/d/Y H:i:s')
@@ -121,31 +129,12 @@ class OrderStatusHistory
         }
     }
 
-    private static function getTableName()
-    {
-        return self::$table;
-    }
-
-    private static function getByID($oshID)
-    {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $data = $db->GetRow("SELECT * FROM " . self::getTableName() . " WHERE oshID=?", $oshID);
-        $history = null;
-        if (!empty($data)) {
-            $history = new self();
-            $history->setPropertiesFromArray($data);
-        }
-
-        return ($history instanceof self) ? $history : false;
-    }
-
     public static function getForOrder(Order $order)
     {
         if (!$order->getOrderID()) {
             return false;
         }
-        $sql = "SELECT * FROM " . self::$table . " WHERE oID=? ORDER BY oshDate DESC";
+        $sql = 'SELECT * FROM ' . self::$table . ' WHERE oID=? ORDER BY oshDate DESC';
         $rows = Database::connection()->getAll($sql, $order->getOrderID());
         $history = [];
         if (count($rows) > 0) {
@@ -169,24 +158,9 @@ class OrderStatusHistory
                 $event = new OrderEvent($order, $previousStatus);
                 Events::dispatch(OrderEvent::ORDER_STATUS_UPDATE, $event);
             }
-        } else if(!empty($history) && $history[0]->getOrderStatusHandle() == $statusHandle && $comment) {
+        } elseif(!empty($history) && $history[0]->getOrderStatusHandle() == $statusHandle && $comment) {
             self::recordStatusChange($order, $statusHandle, $comment);
         }
-
-    }
-
-    private static function recordStatusChange(Order $order, $statusHandle, $comment = null)
-    {
-        $user = new User();
-        $orderStatusHistory = new self();
-        $orderStatusHistory->setOrderStatusHandle($statusHandle);
-        $orderStatusHistory->setUserID($user->getUserID());
-        $orderStatusHistory->setDate(new \DateTime());
-        $orderStatusHistory->setOrder($order);
-        $orderStatusHistory->setOrderStatusComment($comment);
-        $orderStatusHistory->save();
-
-        return $orderStatusHistory->getOrderStatusHandle();
     }
 
     public function save()
@@ -208,5 +182,38 @@ class OrderStatusHistory
         foreach ($arr as $key => $prop) {
             $this->{$key} = $prop;
         }
+    }
+
+    private static function getTableName()
+    {
+        return self::$table;
+    }
+
+    private static function getByID($oshID)
+    {
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $data = $db->GetRow('SELECT * FROM ' . self::getTableName() . ' WHERE oshID=?', $oshID);
+        $history = null;
+        if (!empty($data)) {
+            $history = new self();
+            $history->setPropertiesFromArray($data);
+        }
+
+        return ($history instanceof self) ? $history : false;
+    }
+
+    private static function recordStatusChange(Order $order, $statusHandle, $comment = null)
+    {
+        $user = new User();
+        $orderStatusHistory = new self();
+        $orderStatusHistory->setOrderStatusHandle($statusHandle);
+        $orderStatusHistory->setUserID($user->getUserID());
+        $orderStatusHistory->setDate(new \DateTime());
+        $orderStatusHistory->setOrder($order);
+        $orderStatusHistory->setOrderStatusComment($comment);
+        $orderStatusHistory->save();
+
+        return $orderStatusHistory->getOrderStatusHandle();
     }
 }

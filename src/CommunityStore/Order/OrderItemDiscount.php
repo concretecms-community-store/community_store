@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity

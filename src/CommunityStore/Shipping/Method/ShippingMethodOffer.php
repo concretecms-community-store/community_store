@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
@@ -6,15 +7,21 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 class ShippingMethodOffer
 {
     private $label;
+
     private $key;
+
     private $offerLabel;
+
     private $offerDetails;
+
     private $rate;
+
     private $shipmentID;
+
     private $rateID;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getMethodLabel()
     {
@@ -22,7 +29,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $label
+     * @param mixed $label
      */
     public function setMethodLabel($label)
     {
@@ -30,7 +37,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getKey()
     {
@@ -38,7 +45,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $key
+     * @param mixed $key
      */
     public function setKey($key)
     {
@@ -49,13 +56,13 @@ class ShippingMethodOffer
     {
         if ($this->getOfferLabel()) {
             return $this->getOfferLabel();
-        } else {
-            return $this->getMethodLabel();
         }
+
+            return $this->getMethodLabel();
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOfferLabel()
     {
@@ -63,7 +70,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $offerLabel
+     * @param mixed $offerLabel
      */
     public function setOfferLabel($offerLabel)
     {
@@ -71,7 +78,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOfferDetails()
     {
@@ -79,7 +86,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $offerDetails
+     * @param mixed $offerDetails
      */
     public function setOfferDetails($offerDetails)
     {
@@ -87,7 +94,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getRate()
     {
@@ -103,7 +110,7 @@ class ShippingMethodOffer
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
                 if ($discount->getDeductFrom() == 'shipping') {
-                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() ==  'value_all') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $deduct += $discount->getValue();
                     }
 

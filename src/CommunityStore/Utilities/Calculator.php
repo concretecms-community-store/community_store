@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
 
 class Calculator
 {
@@ -20,6 +21,7 @@ class Calculator
         } else {
             $price = $product->getActivePrice($qty);
         }
+
         return $price;
     }
 
@@ -35,7 +37,7 @@ class Calculator
                 $product = $cartItem['product']['object'];
 
                 if (is_object($product)) {
-                    $price = Calculator::getCartItemPrice($cartItem);
+                    $price = self::getCartItemPrice($cartItem);
 
                     $productSubTotal = $price * $qty;
                     $subtotal = $subtotal + $productSubTotal;
@@ -101,7 +103,7 @@ class Calculator
 
         if ($taxes) {
             foreach ($taxes as $tax) {
-                if ('extract' != $taxCalc) {
+                if ($taxCalc != 'extract') {
                     $addedTaxTotal += $tax['producttaxamount'];
                     $addedShippingTaxTotal += $tax['shippingtaxamount'];
                 } else {
@@ -119,20 +121,20 @@ class Calculator
         $formattedtaxes = [];
         if (!empty($discounts)) {
             foreach ($discounts as $discount) {
-                if ('subtotal' == $discount->getDeductFrom()) {
-                    if ('value' == $discount->getDeductType()) {
+                if ($discount->getDeductFrom() == 'subtotal') {
+                    if ($discount->getDeductType() == 'value') {
                         $adjustedSubtotal -= $discount->getValue();
                     }
-                } elseif ('shipping' == $discount->getDeductFrom()) {
-                    if ('value' == $discount->getDeductType() || 'value_all' == $discount->getDeductType()) {
+                } elseif ($discount->getDeductFrom() == 'shipping') {
+                    if ($discount->getDeductType() == 'value' || $discount->getDeductType() == 'value_all') {
                         $adjustedShippingTotal -= $discount->getValue();
                     }
 
-                    if ('percentage' == $discount->getDeductType()) {
+                    if ($discount->getDeductType() == 'percentage') {
                         $adjustedShippingTotal -= ($discount->getPercentage() / 100 * $adjustedShippingTotal);
                     }
 
-                    if ('fixed' == $discount->getDeductType()) {
+                    if ($discount->getDeductType() == 'fixed') {
                         $adjustedShippingTotal = $discount->getValue();
                     }
                 }

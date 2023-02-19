@@ -1,8 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 $resolverManager = app(ResolverManagerInterface::class);
 $usedKeys = [];
 ?>
@@ -95,17 +95,16 @@ $usedKeys = [];
                 <tbody class="ccm-item-set-inner">
                 <?php $controls = $set->getLayoutSetControls();
                 foreach ($controls as $control) {
-
                     $usedKeys[] = $control->getAttributeKey()->getAttributeKeyID();
 
                     ?>
                     <tr class="ccm-item-set-control"   data-page-product-type-layout-control-set-control-id="<?=$control->getProductTypeLayoutSetControlID() ?>" >
 
                         <td style="width: 85%;">
-                            <?= h($control->getDisplayLabel(true)) ; ?>
+                            <?= h($control->getDisplayLabel(true)); ?>
                         </td>
                         <td style="width: 15%;">
-                            <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all') ; ?></span>
+                            <span class="badge <?= $control->getHidden() ? 'bg-warning badge-warning' : 'bg-primary badge-primary '?>"><?= $control->getHidden() ? t('Dashboard only') : t('Visible to all'); ?></span>
                         </td>
 
                         <td style="text-align: right; white-space: nowrap;">
@@ -157,7 +156,7 @@ $usedKeys = [];
 
             <div class="form-group">
                 <?= $form->label('hidden', t('Visibility')) ?>
-                <?= $form->select('hidden', [0=>t('Visible to all'), 1=>t('Dashboard only')]) ?>
+                <?= $form->select('hidden', [0 => t('Visible to all'), 1 => t('Dashboard only')]) ?>
             </div>
 
         </form>

@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -27,16 +28,6 @@ class ProductOptionItem
      * @ORM\JoinColumn(name="poID", referencedColumnName="poID", onDelete="CASCADE")
      */
     protected $option;
-
-    public function setOption($option)
-    {
-        return $this->option = $option;
-    }
-
-    public function getOption()
-    {
-        return $this->option;
-    }
 
     /**
      * @ORM\Column(type="string")
@@ -73,14 +64,22 @@ class ProductOptionItem
      */
     private $variationoptionitems;
 
-    private function setName($name)
+    public function __clone()
     {
-        $this->poiName = $name;
+        if ($this->poiID) {
+            $this->setID(null);
+            $this->setOption(null);
+        }
     }
 
-    private function setSelectorName($name)
+    public function setOption($option)
     {
-        $this->poiSelectorName = $name;
+        return $this->option = $option;
+    }
+
+    public function getOption()
+    {
+        return $this->option;
     }
 
     public function getSelectorName()
@@ -99,12 +98,12 @@ class ProductOptionItem
 
     public function getPriceAdjustment($discounts = false)
     {
-        if ($this->pPriceAdjust && $discounts &&!empty($discounts)) {
+        if ($this->pPriceAdjust && $discounts && !empty($discounts)) {
             foreach ($discounts as $discount) {
                 $discount->setApplicableTotal($this->pPriceAdjust);
                 $discountedprice = $discount->returnDiscountedPrice();
 
-                if (false !== $discountedprice) {
+                if ($discountedprice !== false) {
                     return $discountedprice;
                 }
             }
@@ -115,7 +114,7 @@ class ProductOptionItem
 
     public function setPriceAdjustment($priceAdjust)
     {
-        $this->pPriceAdjust = (float)$priceAdjust;
+        $this->pPriceAdjust = (float) $priceAdjust;
     }
 
     public function getWeightAdjustment()
@@ -125,17 +124,7 @@ class ProductOptionItem
 
     public function setWeightAdjustment($weightAdjust)
     {
-        $this->pWeightAdjust = (float)$weightAdjust;
-    }
-
-    private function setSort($sort)
-    {
-        $this->poiSort = $sort;
-    }
-
-    private function setHidden($hidden)
-    {
-        $this->poiHidden = (bool) $hidden;
+        $this->pWeightAdjust = (float) $weightAdjust;
     }
 
     public function getID()
@@ -177,14 +166,14 @@ class ProductOptionItem
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $id);
+        return $em->find(__CLASS__, $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
 
     public static function removeOptionItemsForProduct(Product $product, $excluding = [])
@@ -237,14 +226,6 @@ class ProductOptionItem
         return $this;
     }
 
-    public function __clone()
-    {
-        if ($this->poiID) {
-            $this->setID(null);
-            $this->setOption(null);
-        }
-    }
-
     public function save($persistonly = false)
     {
         $em = dbORM::entityManager();
@@ -260,5 +241,25 @@ class ProductOptionItem
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setName($name)
+    {
+        $this->poiName = $name;
+    }
+
+    private function setSelectorName($name)
+    {
+        $this->poiSelectorName = $name;
+    }
+
+    private function setSort($sort)
+    {
+        $this->poiSort = $sort;
+    }
+
+    private function setHidden($hidden)
+    {
+        $this->poiHidden = (bool) $hidden;
     }
 }

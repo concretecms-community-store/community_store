@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -47,9 +48,8 @@ class OrderItemOption
      */
     protected $oioWeightAdjust;
 
-
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -57,23 +57,20 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItem()
     {
         return $this->orderItem;
     }
 
-    /**
-     * @ORM\param mixed $orderItem
-     */
     public function setOrderItem(OrderItem $orderItem)
     {
         $this->orderItem = $orderItem;
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionKey()
     {
@@ -81,7 +78,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioKey
+     * @param mixed $oioKey
      */
     public function setOrderItemOptionKey($oioKey)
     {
@@ -89,7 +86,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioHandle
+     * @param mixed $oioHandle
      */
     public function setOrderItemOptionHandle($oioHandle)
     {
@@ -97,7 +94,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionValue()
     {
@@ -105,7 +102,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioValue
+     * @param mixed $oioValue
      */
     public function setOrderItemOptionValue($oioValue)
     {
@@ -113,7 +110,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionHandle()
     {
@@ -130,6 +127,7 @@ class OrderItemOption
 
     /**
      * @param mixed $oioPriceAdjust
+     * @param mixed $priceAdjust
      */
     public function setOrderItemOptionPriceAdjust($priceAdjust)
     {
@@ -146,19 +144,18 @@ class OrderItemOption
 
     /**
      * @param mixed $oioWeightAdjust
+     * @param mixed $weightAdjust
      */
     public function setOrderItemOptionWeightAdjust($weightAdjust)
     {
         $this->oioWeightAdjust = $weightAdjust;
     }
 
-
-
     public static function getByID($oioID)
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $oioID);
+        return $em->find(__CLASS__, $oioID);
     }
 
     public function save()

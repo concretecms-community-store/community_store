@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -76,24 +76,31 @@ class ProductOption
      */
     protected $poSort;
 
-    private function setID($poID)
+    public function __construct()
     {
-        $this->poID = $poID;
+        $this->optionItems = new ArrayCollection();
+    }
+
+    public function __clone()
+    {
+        $this->setID(null);
+        $this->setProduct(null);
+
+        $optionItems = $this->getOptionItems();
+        $this->optionItems = new ArrayCollection();
+        if (count($optionItems) > 0) {
+            foreach ($optionItems as $optionItem) {
+                $cloneOptionItem = clone $optionItem;
+                $cloneOptionItem->originalID = $optionItem->getID();
+                $cloneOptionItem->setOption($this);
+                $this->optionItems->add($cloneOptionItem);
+            }
+        }
     }
 
     public function setProduct($product)
     {
         return $this->product = $product;
-    }
-
-    private function setName($name)
-    {
-        $this->poName = $name;
-    }
-
-    private function setSort($sort)
-    {
-        $this->poSort = $sort;
     }
 
     public function getID()
@@ -168,17 +175,12 @@ class ProductOption
 
     public function getIncludeVariations()
     {
-        return (int) (is_null($this->poIncludeVariations) || 1 == $this->poIncludeVariations);
+        return (int) ($this->poIncludeVariations === null || $this->poIncludeVariations == 1);
     }
 
     public function setIncludeVariations($poIncludeVariations)
     {
         $this->poIncludeVariations = $poIncludeVariations;
-    }
-
-    public function __construct()
-    {
-        $this->optionItems = new ArrayCollection();
     }
 
     public function getOptionItems()
@@ -190,14 +192,14 @@ class ProductOption
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $id);
+        return $em->find(__CLASS__, $id);
     }
 
     public static function getOptionsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
     }
 
     public static function removeOptionsForProduct(Product $product, $excluding = [])
@@ -245,23 +247,6 @@ class ProductOption
         return $obj;
     }
 
-    public function __clone()
-    {
-        $this->setID(null);
-        $this->setProduct(null);
-
-        $optionItems = $this->getOptionItems();
-        $this->optionItems = new ArrayCollection();
-        if (count($optionItems) > 0) {
-            foreach ($optionItems as $optionItem) {
-                $cloneOptionItem = clone $optionItem;
-                $cloneOptionItem->originalID = $optionItem->getID();
-                $cloneOptionItem->setOption($this);
-                $this->optionItems->add($cloneOptionItem);
-            }
-        }
-    }
-
     public function save($persistonly = false)
     {
         $em = dbORM::entityManager();
@@ -294,7 +279,7 @@ class ProductOption
             $ii = 0; //set counter for items
 
             if ($count > 0) {
-                for ($i = 0; $i < $count; ++$i) {
+                for ($i = 0; $i < $count; $i++) {
                     if (isset($data['poID'][$i])) {
                         $option = self::getByID($data['poID'][$i]);
 
@@ -312,7 +297,7 @@ class ProductOption
 
                     if ($option) {
                         //add option items
-                        $itemsInGroup =  (isset($data['optGroup' . $i]) && is_array($data['optGroup' . $i])) ? count($data['optGroup' . $i]) : 0;
+                        $itemsInGroup = (isset($data['optGroup' . $i]) && is_array($data['optGroup' . $i])) ? count($data['optGroup' . $i]) : 0;
 
                         if ($itemsInGroup > 0) {
                             for ($gi = 0; $gi < $itemsInGroup; $gi++, $ii++) {
@@ -326,7 +311,8 @@ class ProductOption
                                             $data['poiPriceAdjust'][$ii],
                                             $data['poiWeightAdjust'][$ii],
                                             $data['poiHidden'][$ii],
-                                            true);
+                                            true
+                                        );
                                     }
                                 } else {
                                     if ($data['poiName'][$ii]) {
@@ -338,7 +324,8 @@ class ProductOption
                                             $data['poiPriceAdjust'][$ii],
                                             $data['poiWeightAdjust'][$ii],
                                             $data['poiHidden'][$ii],
-                                            true);
+                                            true
+                                        );
                                         $option->getOptionItems()->add($optionItem);
                                     }
                                 }
@@ -351,5 +338,20 @@ class ProductOption
                 $em->flush();
             }
         }
+    }
+
+    private function setID($poID)
+    {
+        $this->poID = $poID;
+    }
+
+    private function setName($name)
+    {
+        $this->poName = $name;
+    }
+
+    private function setSort($sort)
+    {
+        $this->poSort = $sort;
     }
 }

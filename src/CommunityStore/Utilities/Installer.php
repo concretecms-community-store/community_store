@@ -3,31 +3,31 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Area\Area;
-use Concrete\Core\Page\Page;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\File\Set\Set as FileSet;
-use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Entity\Attribute\Key\UserKey;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Page\Template as PageTemplate;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
+use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\User\Group\Group;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
-use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
-use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 
 class Installer
 {
@@ -51,38 +51,37 @@ class Installer
                 ]
             );
 
-
             $main = new Area('Main');
 
             $bt = BlockType::getByHandle('content');
-            $productParentPage->addBlock($bt, $main, ['content'=>'<h1>' .t('Products') , '</h1>']);
+            $productParentPage->addBlock($bt, $main, ['content' => '<h1>' . t('Products'), '</h1>']);
 
             $bt = BlockType::getByHandle('community_product_list');
             $data = [
-                'sortOrder' =>  'alpha',
-                'filter' =>  'all',
-                'filterCID' =>  0,
-                'relatedPID' =>  0,
-                'groupMatchAny' =>  0,
-                'maxProducts' =>  10,
-                'showOutOfStock' =>  0,
-                'productsPerRow' =>  1,
-                'displayMode' =>  'grid',
+                'sortOrder' => 'alpha',
+                'filter' => 'all',
+                'filterCID' => 0,
+                'relatedPID' => 0,
+                'groupMatchAny' => 0,
+                'maxProducts' => 10,
+                'showOutOfStock' => 0,
+                'productsPerRow' => 1,
+                'displayMode' => 'grid',
                 'showPagination' => 1,
-                'enableExternalFiltering' =>  1,
-                'showFeatured' =>  0,
-                'showSale' =>  0,
-                'showDescription' =>  1,
-                'showName' =>  1,
-                'showPrice' =>  1,
-                'showQuickViewLink' =>  0,
-                'showPageLink' =>  1,
-                'showSortOption' =>  0,
-                'pageLinkText' =>  '',
-                'showAddToCart' =>  1,
-                'btnText' =>  '',
-                'showQuantity' =>  0,
-                'noProductsMessage' =>  ''
+                'enableExternalFiltering' => 1,
+                'showFeatured' => 0,
+                'showSale' => 0,
+                'showDescription' => 1,
+                'showName' => 1,
+                'showPrice' => 1,
+                'showQuickViewLink' => 0,
+                'showPageLink' => 1,
+                'showSortOption' => 0,
+                'pageLinkText' => '',
+                'showAddToCart' => 1,
+                'btnText' => '',
+                'showQuantity' => 0,
+                'noProductsMessage' => '',
             ];
 
             $productParentPage->addBlock($bt, $main, $data);
@@ -98,7 +97,7 @@ class Installer
         $defaultSlug = '';
 
         if (is_object($defaultHome)) {
-            $defaultSlug = (string)$defaultHome->getCollectionHandle();
+            $defaultSlug = (string) $defaultHome->getCollectionHandle();
 
             if (!empty($defaultSlug)) {
                 $defaultSlug = '/' . $defaultSlug;
@@ -210,7 +209,7 @@ class Installer
             ['osHandle' => 'returned', 'osName' => t('Returned'), 'osInformSite' => 1, 'osInformCustomer' => 0, 'osIsStartingStatus' => 0],
         ];
 
-        $db->query("DELETE FROM " . $table);
+        $db->query('DELETE FROM ' . $table);
 
         foreach ($statuses as $status) {
             OrderStatus::add($status['osHandle'], $status['osName'], $status['osInformSite'], $status['osInformCustomer'], $status['osIsStartingStatus']);
@@ -219,7 +218,7 @@ class Installer
 
     public static function installDefaultTaxClass($pkg)
     {
-        $defaultTaxClass = TaxClass::getByHandle("default");
+        $defaultTaxClass = TaxClass::getByHandle('default');
         if (!is_object($defaultTaxClass)) {
             $data = [
                 'taxClassName' => t('Default'),
@@ -303,7 +302,7 @@ class Installer
             $sets = $orderCategory->getAttributeSets();
 
             foreach ($sets as $set) {
-                if ('order_customer' == $set->getAttributeSetHandle()) {
+                if ($set->getAttributeSetHandle() == 'order_customer') {
                     $orderCustSet = $set;
                 }
             }
@@ -336,7 +335,7 @@ class Installer
         $attr = $orderCategory->getAttributeKeyByHandle($handle);
 
         if (!is_object($attr)) {
-            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make('helper/text')->unhandle($handle);
 
             $key = new StoreOrderKey();
             $key->setAttributeKeyHandle($handle);
@@ -387,7 +386,7 @@ class Installer
         $attr = $category->getAttributeKeyByHandle($handle);
 
         if (!is_object($attr)) {
-            $name = Application::getFacadeApplication()->make("helper/text")->unhandle($handle);
+            $name = Application::getFacadeApplication()->make('helper/text')->unhandle($handle);
 
             $key = new UserKey();
             $key->setAttributeKeyHandle($handle);
@@ -402,7 +401,7 @@ class Installer
     {
         $bts = BlockTypeSet::getByHandle('community_store');
         if (!is_object($bts)) {
-            BlockTypeSet::add("community_store", "Store", $pkg);
+            BlockTypeSet::add('community_store', 'Store', $pkg);
         }
         self::installBlock('community_product_list', $pkg);
         self::installBlock('community_utility_links', $pkg);
@@ -451,7 +450,7 @@ class Installer
             '/dashboard/store/manufacturers/',
             '/dashboard/store/manufacturers/',
             '/dashboard/store/settings/',
-            '/dashboard/store/multilingual/'
+            '/dashboard/store/multilingual/',
         ];
 
         $count = 1;
@@ -460,7 +459,6 @@ class Installer
             $pageToReorder->updateDisplayOrder($count);
             $count++;
         }
-
 
         if (!$upgrade) {
             $cartPage = self::installSinglePage('/cart', $pkg);
@@ -519,7 +517,6 @@ class Installer
             $group = Group::add('Wholesale Customer', t('These Customers get wholesale pricing in your store. '));
         }
         Config::save('community_store.wholesaleCustomerGroup', $group->getGroupID());
-
     }
 
     public static function createDDFileset($pkg)
@@ -534,7 +531,7 @@ class Installer
         }
 
         if (!is_object($fs)) {
-            $fs = FileSet::create(t("Digital Downloads"));
+            $fs = FileSet::create(t('Digital Downloads'));
         }
 
         Config::save('community_store.digitalDownloadFileSet', $fs->getFileSetID());
@@ -550,7 +547,7 @@ class Installer
     public static function prepareUpgradeFromLegacy($db)
     {
         $app = Application::getFacadeApplication();
-        $installedVersion = $db->fetchColumn("SELECT pkgVersion from Packages WHERE pkgHandle=?", ['community_store']);
+        $installedVersion = $db->fetchColumn('SELECT pkgVersion from Packages WHERE pkgHandle=?', ['community_store']);
         $installedVersionFromConfig = Config::get('cs.pkgversion');
         $community_store = $app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
         if (
@@ -560,26 +557,26 @@ class Installer
                 || ($installedVersionFromConfig && version_compare($installedVersionFromConfig, '2.0', '<'))
             )
         ) {
-            $db->query("SET foreign_key_checks = 0");
+            $db->query('SET foreign_key_checks = 0');
 
             // First we have to delete orphan attribute values and keys so constraints can be added to the table
-            $db->query("DELETE FROM CommunityStoreProductAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreProducts WHERE pID = CommunityStoreProductAttributeValues.pID)");
-            $db->query("DELETE FROM CommunityStoreOrderAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreOrders WHERE oID = CommunityStoreOrderAttributeValues.oID)");
+            $db->query('DELETE FROM CommunityStoreProductAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreProducts WHERE pID = CommunityStoreProductAttributeValues.pID)');
+            $db->query('DELETE FROM CommunityStoreOrderAttributeValues WHERE NOT EXISTS(SELECT * FROM CommunityStoreOrders WHERE oID = CommunityStoreOrderAttributeValues.oID)');
 
-            $db->query("DELETE FROM CommunityStoreProductAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreProductAttributeKeys.akID)");
-            $db->query("DELETE FROM CommunityStoreOrderAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreOrderAttributeKeys.akID)");
+            $db->query('DELETE FROM CommunityStoreProductAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreProductAttributeKeys.akID)');
+            $db->query('DELETE FROM CommunityStoreOrderAttributeKeys WHERE NOT EXISTS(SELECT * FROM AttributeKeys WHERE akID = CommunityStoreOrderAttributeKeys.akID)');
 
             // then we make sure our attributes keys are not marked legacy anymore
-            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreProductAttributeKeys)", ["storeproductkey", "legacykey"]);
-            $db->query("UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreOrderAttributeKeys)", ["storeorderkey", "legacykey"]);
+            $db->query('UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreProductAttributeKeys)', ['storeproductkey', 'legacykey']);
+            $db->query('UPDATE AttributeKeys SET akCategory=? WHERE akCategory=? AND akID IN (SELECT akID FROM CommunityStoreOrderAttributeKeys)', ['storeorderkey', 'legacykey']);
 
             // And we remove them from the LegacyAttributeKeys table
-            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreProductAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
-            $db->query("DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreOrderAttributeKeys WHERE akID = LegacyAttributeKeys.akID)");
+            $db->query('DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreProductAttributeKeys WHERE akID = LegacyAttributeKeys.akID)');
+            $db->query('DELETE FROM LegacyAttributeKeys WHERE EXISTS(SELECT * FROM CommunityStoreOrderAttributeKeys WHERE akID = LegacyAttributeKeys.akID)');
 
             return $db;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

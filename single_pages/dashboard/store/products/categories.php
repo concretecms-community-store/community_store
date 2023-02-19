@@ -1,7 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
+
 ?>
 
 
@@ -29,11 +30,11 @@ use \Concrete\Core\Support\Facade\Url;
     <ul class="list-group" id="product-list">
     <?php foreach($products as $product) { ?>
         <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right float-end"></i>
-            <?= $product->getImageThumb();?>
+            <?= $product->getImageThumb(); ?>
 
             <?= $product->getName(); ?>
-            <?= $product->getSKU() ? '(' . $product->getSKU() . ')' : '' ; ?>
-            <?= ($product->isActive() ? '' : ' <span class="label label-default">' . t('Inactive'). '</span>'); ?>
+            <?= $product->getSKU() ? '(' . $product->getSKU() . ')' : ''; ?>
+            <?= ($product->isActive() ? '' : ' <span class="label label-default">' . t('Inactive') . '</span>'); ?>
 
             <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />
         </li>
@@ -49,7 +50,7 @@ use \Concrete\Core\Support\Facade\Url;
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel")?></a>
+        <a href="<?= Url::to('/dashboard/store/products/categories')?>" class="btn btn-default btn-secondary pull-left float-start"><?= t('Cancel')?></a>
         <button class="pull-right btn btn-success float-end"  type="submit" ><?= t('Save Category Product Order')?></button>
     </div>
 </div>

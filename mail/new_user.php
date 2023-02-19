@@ -1,10 +1,10 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-$subject = $siteName.' - '.t('account created');
+$subject = $siteName . ' - ' . t('account created');
 
 /**
- * HTML BODY START
+ * HTML BODY START.
  */
 ob_start();
 
@@ -21,8 +21,8 @@ ob_start();
 <body>
     <h2><?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?> </h2>
 
-    <p><?= t('Your username is');?>: <strong><?= $username; ?></strong></p>
-    <p><?= t('Your password is');?>: <strong><?= $password; ?></strong></p>
+    <p><?= t('Your username is'); ?>: <strong><?= $username; ?></strong></p>
+    <p><?= t('Your password is'); ?>: <strong><?= $password; ?></strong></p>
 
 <?php if ($link) { ?>
     <p><?= t(/* i18n: %s is a link*/'You can now access %s', "<a href=\"{$link}\">{$link}</a>") ?></p>
@@ -33,7 +33,7 @@ ob_start();
 <?php
 $bodyHTML = ob_get_clean();
 /**
- * HTML BODY END
+ * HTML BODY END.
  *
  * =====================
  *
@@ -44,8 +44,8 @@ ob_start();
 ?>
 <?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?>
 
-    <?= t('Your username is');?>: <?= $username; ?>
-    <?= t('Your password is');?>: <?= $password; ?>
+    <?= t('Your username is'); ?>: <?= $username; ?>
+    <?= t('Your password is'); ?>: <?= $password; ?>
 
 <?php if ($link) { ?>
     <?= t(/* i18n: %s is a link*/'You can now access %s', $link); ?>
@@ -57,5 +57,5 @@ $body = ob_get_clean();
 ob_end_clean();
 
 /**
- * PLAIN TEXT BODY END
+ * PLAIN TEXT BODY END.
  */

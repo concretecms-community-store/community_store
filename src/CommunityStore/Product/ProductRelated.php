@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -43,6 +43,14 @@ class ProductRelated
      * @ORM\JoinColumn(name="relatedPID", referencedColumnName="pID", onDelete="CASCADE")
      */
     protected $relatedProduct;
+
+    public function __clone()
+    {
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+    }
 
     public function getID()
     {
@@ -93,14 +101,14 @@ class ProductRelated
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $cID);
+        return $em->find(__CLASS__, $cID);
     }
 
     public static function getRelatedProducts(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
     }
 
     public static function addRelatedProducts(array $products, Product $product)
@@ -113,7 +121,7 @@ class ProductRelated
             foreach ($products['pRelatedProducts'] as $pID) {
                 if ($pID > 0) {
                     self::add($product, $pID, $count);
-                    ++$count;
+                    $count++;
                 }
             }
         }
@@ -139,14 +147,6 @@ class ProductRelated
         }
 
         return $relation;
-    }
-
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
     }
 
     public function save()

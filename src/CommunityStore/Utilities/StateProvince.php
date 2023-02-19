@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Controller\Controller;
@@ -34,10 +35,10 @@ class StateProvince extends Controller
             $class = trim(str_replace('form-select', '', $class));
             $class .= ' form-select';
 
-            if ("tax" == $type) {
+            if ($type == 'tax') {
                 $ret .= "<select name='taxState' id='taxState' class='{$class}'{$data}>";
             } else {
-                $ret .= "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
+                $ret .= "<select {$required} name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
             }
 
             $ret .= '<option {selected} value=""></option>';
@@ -52,7 +53,7 @@ class StateProvince extends Controller
                 }
             }
 
-            $ret .= "</select>";
+            $ret .= '</select>';
 
             if ($hasSelectedState) {
                 $ret = str_replace('{selected}', '', $ret);
@@ -66,8 +67,8 @@ class StateProvince extends Controller
                 $class = 'form-control';
             }
 
-            if ("tax" == $type) {
-                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}  value='$selectedState'>";
+            if ($type == 'tax') {
+                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}  value='{$selectedState}'>";
             } else {
                 $ret .= "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
             }

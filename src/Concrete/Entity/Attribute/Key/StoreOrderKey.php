@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
 
-use Concrete\Core\Entity\Attribute\Key\Key;
-
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -13,7 +13,6 @@ use Concrete\Core\Attribute\Set as AttributeSet;
  */
 class StoreOrderKey extends Key
 {
-
     /**
      * @ORM\Column(type="string",nullable=true)
      */
@@ -36,16 +35,16 @@ class StoreOrderKey extends Key
 
     public function getSearchIndexFieldDefinition()
     {
-        return array(
-            'columns' => array(
-                array(
+        return [
+            'columns' => [
+                [
                     'name' => 'oID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
-                ),
-            ),
-            'primary' => array('oID'),
-        );
+                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                ],
+            ],
+            'primary' => ['oID'],
+        ];
     }
 
     public static function getAttributeListBySet($set, $user = null)
@@ -63,12 +62,11 @@ class StoreOrderKey extends Key
         $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
         $attlist = $orderCategory->getList();
 
-
         foreach ($attlist as $ak) {
             if (in_array($set, $ak->getAttributeSets())) {
                 $attributeGroups = $ak->getAttributeUserGroups();
 
-                if (is_null($user) || (empty($attributeGroups) || array_intersect($attributeGroups, $uGroupIDs))) {
+                if ($user === null || (empty($attributeGroups) || array_intersect($attributeGroups, $uGroupIDs))) {
                     $akList[] = $ak;
                 }
             }
@@ -79,7 +77,7 @@ class StoreOrderKey extends Key
 
     public function isRequired()
     {
-        return (bool)$this->akRequired;
+        return (bool) $this->akRequired;
     }
 
     public function setRequired($required)
@@ -91,7 +89,7 @@ class StoreOrderKey extends Key
     {
         $groupids = trim($this->akUserGroups);
         if (!$groupids) {
-            return array();
+            return [];
         }
 
         return explode(',', $this->akUserGroups);
@@ -109,10 +107,10 @@ class StoreOrderKey extends Key
     public static function getByHandle($handle)
     {
         $em = \ORM::entityManager();
-        $type = $em->getRepository(self::class)->findOneBy(
-            array('akHandle' => $handle,
-            ));
 
-        return $type;
+        return $em->getRepository(self::class)->findOneBy(
+            ['akHandle' => $handle,
+            ]
+        );
     }
 }

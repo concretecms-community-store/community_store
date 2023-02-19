@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -30,13 +30,11 @@ $editor = $app->make('editor');
                     <?php
 
                     foreach ($paymentMethods as $paymentMethod) {
-
                         $rowcount = 2;
 
                         if ($paymentMethod->getMethodController()->getPaymentInstructions()) {
                             $rowcount = 3;
                         }
-
 
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
@@ -128,7 +126,7 @@ $editor = $app->make('editor');
                     <?php } ?>
                 </table>
             <?php } else { ?>
-                <p class="alert alert-info"><?= t("No Payment Methods are installed"); ?></p>
+                <p class="alert alert-info"><?= t('No Payment Methods are installed'); ?></p>
             <?php } ?>
 
         </fieldset>
@@ -153,7 +151,6 @@ $editor = $app->make('editor');
                     <?php
 
                     foreach ($shippingMethods as $shippingMethod) {
-
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
                             <tr>
@@ -240,7 +237,6 @@ $editor = $app->make('editor');
                     <?php
 
                     foreach ($taxRates as $taxRate) {
-
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
                             <tr>
@@ -298,7 +294,6 @@ $editor = $app->make('editor');
                     <?php
 
                     foreach ($discountRules as $discountRule) {
-
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
                             <tr>
@@ -355,7 +350,6 @@ $editor = $app->make('editor');
                     <?php
 
                     foreach ($orderAttributes as $attr) {
-
                         $firstrow = true;
                         foreach ($locales as $lp) { ?>
                             <tr>
@@ -389,7 +383,7 @@ $editor = $app->make('editor');
                     ?>
                 </table>
             <?php } else { ?>
-                <p class="alert alert-info"><?= t("No Attribute or Attribute Values have been created on products"); ?></p>
+                <p class="alert alert-info"><?= t('No Attribute or Attribute Values have been created on products'); ?></p>
             <?php } ?>
 
 
@@ -433,7 +427,7 @@ $editor = $app->make('editor');
 
                             <td>
                                 <?php
-                                $editor->getPluginManager()->deselect(array('autogrow'));
+                                $editor->getPluginManager()->deselect(['autogrow']);
                                 echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() . '][longText][receiptEmailHeader]', $csm->t(null, 'receiptEmailHeader', false, false, $lp->getLocale()));
                                 ?>
                             </td>
@@ -466,7 +460,7 @@ $editor = $app->make('editor');
 
                             <td>
                                 <?php
-                                $editor->getPluginManager()->deselect(array('autogrow'));
+                                $editor->getPluginManager()->deselect(['autogrow']);
                                 echo $editor->outputStandardEditor('configtranslation[' . $lp->getLocale() . '][longText][receiptEmailFooter]', $csm->t(null, 'receiptEmailFooter', false, false, $lp->getLocale()));
                                 ?>
                             </td>

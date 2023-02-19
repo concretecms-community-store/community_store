@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Report;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
@@ -36,16 +37,14 @@ class SalesReport extends OrderList
             $shippingTotal = $shippingTotal + $order->getShippingTotal();
         }
 
-        $totals = [
-            "total" => $total,
-            "productTotal" => $productTotal,
-            "taxTotal" => $taxTotal,
-            "includedTaxTotal" => $includedTaxTotal,
-            "shippingTotal" => $shippingTotal,
-            "orders" => $sr,
+        return [
+            'total' => $total,
+            'productTotal' => $productTotal,
+            'taxTotal' => $taxTotal,
+            'includedTaxTotal' => $includedTaxTotal,
+            'shippingTotal' => $shippingTotal,
+            'orders' => $sr,
         ];
-
-        return $totals;
     }
 
     public static function getTodaysSales()
@@ -66,8 +65,8 @@ class SalesReport extends OrderList
     public static function getYearToDate()
     {
         $today = date('Y-m-d');
-        $jan1 = new \DateTime(date("Y") . "-01-01");
-        $jan1 = $jan1->format("Y-m-d");
+        $jan1 = new \DateTime(date('Y') . '-01-01');
+        $jan1 = $jan1->format('Y-m-d');
 
         return self::getTotalsByRange($jan1, $today, 0);
     }

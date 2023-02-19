@@ -1,20 +1,20 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
-use Concrete\Core\View\View;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Core\View\View;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 class Cart extends PageController
 {
@@ -23,12 +23,12 @@ class Cart extends PageController
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
-            return Redirect::to("/");
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
+            return Redirect::to('/');
         }
 
         $cart = null;
@@ -39,7 +39,7 @@ class Cart extends PageController
 
         $token = $this->app->make('token');
         if ($this->request->request->all() && $token->validate('community_store')) {
-            if ('code' == $this->request->request->get('action')) {
+            if ($this->request->request->get('action') == 'code') {
                 $codeerror = false;
                 $codesuccess = false;
 
@@ -51,7 +51,7 @@ class Cart extends PageController
                 }
             }
 
-            if ('update' == $this->request->request->get('action')) {
+            if ($this->request->request->get('action') == 'update') {
                 $data = $this->request->request->all();
                 if (is_array($data['instance'])) {
                     $result = StoreCart::updateMultiple($data);
@@ -73,12 +73,12 @@ class Cart extends PageController
                 $returndata = ['success' => true, 'quantity' => $quantity, 'action' => 'update', 'added' => $added];
             }
 
-            if ('clear' == $this->request->request->get('action')) {
+            if ($this->request->request->get('action') == 'clear') {
                 StoreCart::clear();
                 $returndata = ['success' => true, 'action' => 'clear', 'quantity' => false, 'added' => false];
             }
 
-            if ('remove' == $this->request->request->get('action')) {
+            if ($this->request->request->get('action') == 'remove') {
                 $data = $this->request->request->all();
                 if (isset($data['instance'])) {
                     StoreCart::remove($data['instance']);
@@ -108,7 +108,7 @@ class Cart extends PageController
         $this->set('codeerror', $codeerror);
         $this->set('codesuccess', $codesuccess);
 
-        $cart = is_null($cart) ? StoreCart::getCart(true) : $cart;
+        $cart = $cart === null ? StoreCart::getCart(true) : $cart;
 
         $this->set('cart', $cart);
         $this->set('discounts', StoreCart::getDiscounts());
@@ -140,7 +140,7 @@ class Cart extends PageController
         $this->requireAsset('css', 'community-store');
 
         $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
-        $this->set("discountsWithCodesExist", $discountsWithCodesExist);
+        $this->set('discountsWithCodesExist', $discountsWithCodesExist);
 
         $this->set('token', $this->app->make('token'));
         $this->set('langpath', $langpath);
@@ -161,7 +161,7 @@ class Cart extends PageController
 
             if ($result['error']) {
                 $error = 1;
-				$errorMsg = $result['errorMsg'];
+                $errorMsg = $result['errorMsg'];
             }
 
             $product = Product::getByID($data['pID']);
@@ -246,7 +246,7 @@ class Cart extends PageController
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
@@ -260,9 +260,9 @@ class Cart extends PageController
         $cartMode = Config::get('community_store.cartMode');
 
         if (file_exists(DIR_BASE . '/application/elements/cart_modal.php')) {
-            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
+            View::element('cart_modal', ['cart' => $cart, 'cartMode' => $cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
         } else {
-            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
+            View::element('cart_modal', ['cart' => $cart, 'cartMode' => $cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
         }
 
         exit();
@@ -282,7 +282,7 @@ class Cart extends PageController
 
         foreach ($taxes as $tax) {
             // translate tax name
-            $tax['name'] = $csm->t($tax['name'] , 'taxRateName', null, $tax['id']);
+            $tax['name'] = $csm->t($tax['name'], 'taxRateName', null, $tax['id']);
             $tax['taxamount'] = Price::format($tax['taxamount']);
             $formattedtaxes[] = $tax;
         }

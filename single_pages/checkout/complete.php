@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
 
 use Concrete\Core\Support\Facade\Config;
@@ -10,8 +10,8 @@ $dh = $app->make('helper/date');
 
 <div class="store-order-complete-page">
 
-    <h1><?= t("Order #%s has been placed", $order->getOrderID()); ?></h1>
-    <p><?= t("Thank you for your order. A receipt will be emailed to you shortly."); ?></p>
+    <h1><?= t('Order #%s has been placed', $order->getOrderID()); ?></h1>
+    <p><?= t('Thank you for your order. A receipt will be emailed to you shortly.'); ?></p>
 
     <?php
     $a = new Area('Checkout Complete Header');
@@ -35,7 +35,7 @@ $dh = $app->make('helper/date');
     if (count($downloads) > 0 && $order->getPaid()) {
         ?>
         <fieldset>
-            <legend><?= t("Your Downloads"); ?></legend>
+            <legend><?= t('Your Downloads'); ?></legend>
             <ul class="order-downloads">
                 <?php
                 foreach ($downloads as $name => $file) {
@@ -65,22 +65,22 @@ $dh = $app->make('helper/date');
     ?>
 
     <fieldset>
-        <legend><?= t("Your Details"); ?></legend>
+        <legend><?= t('Your Details'); ?></legend>
 
         <div class="row">
             <div class="col-sm-4">
-                <?php $orderemail = $order->getAttribute("email"); ?>
+                <?php $orderemail = $order->getAttribute('email'); ?>
 
-                <p><strong><?= t("Name"); ?>:</strong> <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name"); ?><br>
+                <p><strong><?= t('Name'); ?>:</strong> <?= $order->getAttribute('billing_first_name') . ' ' . $order->getAttribute('billing_last_name'); ?><br>
 
                     <?php if ($orderemail) {
                         ?>
-                        <strong><?= t("Email"); ?>:</strong> <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
+                        <strong><?= t('Email'); ?>:</strong> <a href="mailto:<?= $order->getAttribute('email'); ?>"><?= $order->getAttribute('email'); ?></a><br>
                         <?php
                     } ?>
 
                     <?php
-                    $phone = $order->getAttribute("billing_phone");
+                    $phone = $order->getAttribute('billing_phone');
                     if ($phone) {
                         ?>
                         <strong><?= t('Phone'); ?>:</strong> <?= $phone; ?><br>
@@ -90,7 +90,7 @@ $dh = $app->make('helper/date');
                     <?php if (Config::get('community_store.vat_number')) {
                         ?>
                         <?php $vat_number = $order->getAttribute('vat_number'); ?>
-                        <strong><?= t("VAT Number"); ?>:</strong> <?= $vat_number; ?>
+                        <strong><?= t('VAT Number'); ?>:</strong> <?= $vat_number; ?>
                         <?php
                     } ?>
                 </p>
@@ -104,7 +104,7 @@ $dh = $app->make('helper/date');
                         if ($attValue) {
                             ?>
                             <h4><?= $ak->getAttributeKeyDisplayName(); ?></h4>
-                            <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
+                            <p><?= str_replace("\r\n", '<br>', $attValue->getValue('displaySanitized', 'display')); ?></p>
                             <?php
                         } ?>
                         <?php
@@ -114,9 +114,9 @@ $dh = $app->make('helper/date');
             </div>
 
             <div class="col-sm-4">
-                <h4><?= t("Billing Address"); ?></h4>
+                <h4><?= t('Billing Address'); ?></h4>
                 <p>
-                    <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")); ?><br>
+                    <?= h($order->getAttribute('billing_first_name')) . ' ' . h($order->getAttribute('billing_last_name')); ?><br>
                     <?php $billingaddress = $order->getAttributeValueObject('billing_address');
                     if ($billingaddress) {
                         echo $billingaddress->getValue('displaySanitized', 'display');
@@ -124,10 +124,10 @@ $dh = $app->make('helper/date');
                     ?>
                 </p>
 
-                <?php $billingcompany = $order->getAttribute("billing_company"); ?>
+                <?php $billingcompany = $order->getAttribute('billing_company'); ?>
                 <?php if ($billingcompany) {
                     ?>
-                    <h4><?= t("Company"); ?></h4>
+                    <h4><?= t('Company'); ?></h4>
                     <p>
                         <?= h($billingcompany); ?>
                     </p>
@@ -137,21 +137,21 @@ $dh = $app->make('helper/date');
             <?php if ($order->isShippable()) {
                 ?>
                 <div class="col-sm-4">
-                    <?php if ($order->getAttribute("shipping_address")->address1) {
+                    <?php if ($order->getAttribute('shipping_address')->address1) {
                         ?>
-                        <h4><?= t("Shipping Address"); ?></h4>
+                        <h4><?= t('Shipping Address'); ?></h4>
                         <p>
-                            <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name"); ?><br>
+                            <?= $order->getAttribute('shipping_first_name') . ' ' . $order->getAttribute('shipping_last_name'); ?><br>
                             <?php $shippingaddress = $order->getAttributeValueObject('shipping_address');
                             if ($shippingaddress) {
                                 echo $shippingaddress->getValue('displaySanitized', 'display');
                             } ?>
                         </p>
 
-                        <?php $shippingcompany = $order->getAttribute("shipping_company"); ?>
+                        <?php $shippingcompany = $order->getAttribute('shipping_company'); ?>
                         <?php if ($shippingcompany) {
                             ?>
-                            <h4><?= t("Company"); ?></h4>
+                            <h4><?= t('Company'); ?></h4>
                             <p>
                                 <?= h($shippingcompany); ?>
                             </p>
@@ -167,15 +167,15 @@ $dh = $app->make('helper/date');
     </fieldset>
     <br>
     <fieldset>
-        <legend><?= t("Order Items"); ?></legend>
+        <legend><?= t('Order Items'); ?></legend>
         <table class="table table-striped">
             <thead>
             <tr>
-                <th><strong><?= t("Product Name"); ?></strong></th>
-                <th><?= t("Product Options"); ?></th>
-                <th class="text-right"><?= t("Price"); ?></th>
-                <th class="text-right"><?= t("Quantity"); ?></th>
-                <th class="text-right"><?= t("Subtotal"); ?></th>
+                <th><strong><?= t('Product Name'); ?></strong></th>
+                <th><?= t('Product Options'); ?></th>
+                <th class="text-right"><?= t('Price'); ?></th>
+                <th class="text-right"><?= t('Quantity'); ?></th>
+                <th class="text-right"><?= t('Subtotal'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -203,7 +203,7 @@ $dh = $app->make('helper/date');
                                         <?php
                                     }
                                 }
-                                echo "</ul>";
+                                echo '</ul>';
                             } ?>
                         </td>
                         <td class="text-right"><?= Price::format($item->getPricePaid()); ?></td>
@@ -217,7 +217,7 @@ $dh = $app->make('helper/date');
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="4" class="text-right"><strong><?= t("Items Subtotal"); ?>:</strong></td>
+                <td colspan="4" class="text-right"><strong><?= t('Items Subtotal'); ?>:</strong></td>
                 <td class="text-right"><?= Price::format($order->getSubTotal()); ?></td>
             </tr>
             </tfoot>
@@ -228,13 +228,13 @@ $dh = $app->make('helper/date');
 
         if (!empty($applieddiscounts)) {
             ?>
-            <h4><?= t("Discounts Applied"); ?></h4>
+            <h4><?= t('Discounts Applied'); ?></h4>
             <table class="table table-striped">
                 <thead>
                 <tr>
 
-                    <th><?= t("Discount"); ?></th>
-                    <th><?= t("Amount"); ?></th>
+                    <th><?= t('Discount'); ?></th>
+                    <th><?= t('Amount'); ?></th>
                 </tr>
 
                 </thead>
@@ -256,7 +256,7 @@ $dh = $app->make('helper/date');
         <?php if ($order->isShippable()) {
             ?>
             <p>
-                <strong><?= t("Shipping"); ?>: </strong><?= Price::format($order->getShippingTotal()); ?>
+                <strong><?= t('Shipping'); ?>: </strong><?= Price::format($order->getShippingTotal()); ?>
             </p>
             <?php
         } ?>
@@ -279,10 +279,10 @@ $dh = $app->make('helper/date');
 
 
         <p>
-            <strong><?= t("Grand Total"); ?>: </strong><?= Price::format($order->getTotal()); ?>
+            <strong><?= t('Grand Total'); ?>: </strong><?= Price::format($order->getTotal()); ?>
         </p>
         <p>
-            <strong><?= t("Payment Method"); ?>: </strong><?= t($order->getPaymentMethodName()); ?><br>
+            <strong><?= t('Payment Method'); ?>: </strong><?= t($order->getPaymentMethodName()); ?><br>
         </p>
 
         <?php
@@ -306,7 +306,7 @@ $dh = $app->make('helper/date');
 
         <?php if ($status) {
             ?>
-            <p><strong><?= t("Payment Status"); ?></strong>: <?= $status; ?></p>
+            <p><strong><?= t('Payment Status'); ?></strong>: <?= $status; ?></p>
             <?php
         } ?>
 
@@ -314,14 +314,14 @@ $dh = $app->make('helper/date');
         <?php if ($order->isShippable()) {
             ?>
             <br/><p>
-                <strong><?= t("Shipping Method"); ?>: </strong><?= $order->getShippingMethodName(); ?>
+                <strong><?= t('Shipping Method'); ?>: </strong><?= $order->getShippingMethodName(); ?>
             </p>
 
             <?php
             $shippingInstructions = $order->getShippingInstructions();
             if ($shippingInstructions) {
                 ?>
-                <p><strong><?= t("Delivery Instructions"); ?>: </strong><?= h($shippingInstructions); ?></p>
+                <p><strong><?= t('Delivery Instructions'); ?>: </strong><?= h($shippingInstructions); ?></p>
                 <?php
             } ?>
 
@@ -331,7 +331,7 @@ $dh = $app->make('helper/date');
         <?php
         $notes = $order->getNotes();
         if ($notes) { ?>
-            <p><strong><?= t("Order notes") ?>: </strong><?= nl2br(h($notes)) ?></p>
+            <p><strong><?= t('Order notes') ?>: </strong><?= nl2br(h($notes)) ?></p>
         <?php } ?>
     </fieldset>
 
@@ -353,5 +353,5 @@ $dh = $app->make('helper/date');
 
 <?php
 // uncomment the following to output a gtag purchase event. Ensure you have include a 'global site tag' (gtag.js) before enabling this.
-// \Concrete\Core\View\View::element("checkout/gtag", ['order' => $order, 'orderItems' => $orderItems], 'community_store'); ?>
+// \Concrete\Core\View\View::element("checkout/gtag", ['order' => $order, 'orderItems' => $orderItems], 'community_store');?>
 

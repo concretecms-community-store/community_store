@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
-		xmlns="http://www.concrete5.org/doctrine-xml/0.5"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
-	<table name="btCommunityStoreProduct">
-		<field name="bID" type="integer"  size="10">
-			<unsigned />
-			<key />
-		</field>
-		<field name="productLocation" type="string" size="10"></field>
-		<field name="pID" type="integer"></field>
-		<field name="showProductName" type="boolean"></field>
-		<field name="showProductSKU" type="boolean"><unsigned/></field>
-		<field name="showManufacturer" type="boolean"></field>
-		<field name="showManufacturerDescription" type="boolean"></field>
-		<field name="showProductDescription" type="boolean"></field>
-		<field name="showProductDetails" type="boolean"></field>
-		<field name="showProductPrice" type="boolean"></field>
-		<field name="showWeight" type="boolean"></field>
-		<field name="showImage" type="boolean"></field>
-		<field name="showCartButton" type="boolean"></field>
-		<field name="showIsFeatured" type="boolean"></field>
-		<field name="showGroups" type="boolean"></field>
-		<field name="showDimensions" type="boolean"></field>
-		<field name="showQuantity" type="boolean"><unsigned/></field>
-		<field name="btnText" type="string" size="255"></field>
-	</table>
+        xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+    <table name="btCommunityStoreProduct">
+        <field name="bID" type="integer"  size="10">
+            <unsigned />
+            <key />
+        </field>
+        <field name="productLocation" type="string" size="10"></field>
+        <field name="pID" type="integer"></field>
+        <field name="showProductName" type="boolean"></field>
+        <field name="showProductSKU" type="boolean"><unsigned/></field>
+        <field name="showManufacturer" type="boolean"></field>
+        <field name="showManufacturerDescription" type="boolean"></field>
+        <field name="showProductDescription" type="boolean"></field>
+        <field name="showProductDetails" type="boolean"></field>
+        <field name="showProductPrice" type="boolean"></field>
+        <field name="showWeight" type="boolean"></field>
+        <field name="showImage" type="boolean"></field>
+        <field name="showCartButton" type="boolean"></field>
+        <field name="showIsFeatured" type="boolean"></field>
+        <field name="showGroups" type="boolean"></field>
+        <field name="showDimensions" type="boolean"></field>
+        <field name="showQuantity" type="boolean"><unsigned/></field>
+        <field name="btnText" type="string" size="255"></field>
+    </table>
 </schema>

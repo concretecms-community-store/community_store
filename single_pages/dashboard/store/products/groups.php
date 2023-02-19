@@ -1,17 +1,18 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
+
 ?>
 
 <?php
-$groupViews = ['view','groupadded'];
-$groupEdits = ['add','edit'];
+$groupViews = ['view', 'groupadded'];
+$groupEdits = ['add', 'edit'];
 
-if (in_array($controller->getAction(),$groupViews)){ ?>
+if (in_array($controller->getAction(), $groupViews)){ ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= Url::to('/dashboard/store/products/groups/', 'add')?>" class="btn btn-primary"><?= t("Add Product Group")?></a>
+        <a href="<?= Url::to('/dashboard/store/products/groups/', 'add')?>" class="btn btn-primary"><?= t('Add Product Group')?></a>
     </div>
 
     <?php if($grouplist){ ?>
@@ -36,7 +37,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                             echo '<span class="label label-primary">' . $product->getProduct()->getName() . '</span> ';
                         }
                     } else {
-                        echo '<em>'. t('None') . '</em>';
+                        echo '<em>' . t('None') . '</em>';
                     }
                     ?>
 
@@ -52,13 +53,13 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
 
     <?php } else { ?>
 
-        <div class="alert alert-info"><?= t("You have not added a group yet")?></div>
+        <div class="alert alert-info"><?= t('You have not added a group yet')?></div>
 
     <?php } ?>
 
 <?php }  ?>
 
-<?php if (in_array($controller->getAction(),$groupEdits)){ ?>
+<?php if (in_array($controller->getAction(), $groupEdits)){ ?>
 
     <?php if ($controller->getAction() == 'edit') { ?>
         <div class="ccm-dashboard-header-buttons">
@@ -70,21 +71,21 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
         </div>
     <?php } ?>
 
-    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' .$group->getGroupID()  : '' ;?>">
+    <form method="post" action="<?= $view->action($controller->getAction())?><?= $group->getGroupID() ? '/' . $group->getGroupID() : ''; ?>">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
-            <?= $form->label('groupName',t("Group Name")); ?>
-            <?= $form->text('groupName',$group->getGroupName(), array('required'=>'required')); ?>
+            <?= $form->label('groupName', t('Group Name')); ?>
+            <?= $form->text('groupName', $group->getGroupName(), ['required' => 'required']); ?>
         </div>
 
-        <label><?= t('Products within group');?></label>
+        <label><?= t('Products within group'); ?></label>
                 <?php $products = $group->getProducts(); ?>
                 <ul class="group-product-list list-group multi-select-list <?= count($products) == 0 ? 'hidden' : ''; ?>" id="group-products">
                     <?php
 
                     if ($products && count($products) > 0) {
                         foreach ($products as $product) {
-                            echo '<li class="list-group-item"><i class="fa fa-arrows-v fa-arrows-alt-v"></i>' . $product->getProduct()->getName() . ( $product->getProduct()->getSKU() ? ' (' . $product->getProduct()->getSKU() . ')' : '').  '<input type="hidden" name="sortOrder[]" value="'.$product->getProduct()->getID().'"/><input type="hidden" name="products[]" value="'.$product->getProduct()->getID().'" /><a><i class="pull-right fa fa-minus-circle float-end"></i></a></li>';
+                            echo '<li class="list-group-item"><i class="fa fa-arrows-v fa-arrows-alt-v"></i>' . $product->getProduct()->getName() . ($product->getProduct()->getSKU() ? ' (' . $product->getProduct()->getSKU() . ')' : '') . '<input type="hidden" name="sortOrder[]" value="' . $product->getProduct()->getID() . '"/><input type="hidden" name="products[]" value="' . $product->getProduct()->getID() . '" /><a><i class="pull-right fa fa-minus-circle float-end"></i></a></li>';
                         }
                     }
                     ?>
@@ -138,7 +139,7 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                         });
 
                         $('#deletegroup').submit(function(e){
-                            return confirm("<?= t('Are you sure you want to delete this product group?');?>");
+                            return confirm("<?= t('Are you sure you want to delete this product group?'); ?>");
                         });
 
 

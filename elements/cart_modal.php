@@ -1,10 +1,10 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -14,39 +14,38 @@ if ($cartMode) {
     $cartModeClass = 'store-cart-modal-' . $cartMode;
 }
 
-
 ?>
 <div class="store-cart-modal <?= $cartModeClass; ?> clearfix" id="cart-modal">
     <a href="#" class="store-modal-exit">&times;</a>
-    <h3><?= t("Shopping Cart")?></h3>
+    <h3><?= t('Shopping Cart')?></h3>
     <div class="store-cart-page-cart">
         <?php
         if (isset($actiondata) and !empty($actiondata)) { ?>
             <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
                 <p class="alert alert-success"><?= t(
                     '%s has been added to your cart',
-                    '<strong>' . h($csm->t($actiondata['product']['pName'], 'productName',  $actiondata['product']['pID'])) . '</strong>'
-                );?></p>
+                    '<strong>' . h($csm->t($actiondata['product']['pName'], 'productName', $actiondata['product']['pID'])) . '</strong>'
+                ); ?></p>
             <?php } ?>
 
-            <?php if( $actiondata['action'] =='update') { ?>
-                <p class="alert alert-success"><?= t('Your cart has been updated');?></p>
+            <?php if($actiondata['action'] == 'update') { ?>
+                <p class="alert alert-success"><?= t('Your cart has been updated'); ?></p>
             <?php } ?>
 
             <?php if($actiondata['action'] == 'clear') { ?>
-                <p class="alert alert-warning"><?= t('Your cart has been cleared');?></p>
+                <p class="alert alert-warning"><?= t('Your cart has been cleared'); ?></p>
             <?php } ?>
 
             <?php if($actiondata['action'] == 'remove') { ?>
-                <p class="alert alert-warning"><?= t('Item removed');?></p>
+                <p class="alert alert-warning"><?= t('Item removed'); ?></p>
             <?php } ?>
 
             <?php if(isset($actiondata['quantity']) && ($actiondata['quantity'] != $actiondata['added']) && !$actiondata['error']) { ?>
-                <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
+                <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited'); ?></p>
             <?php } ?>
 
             <?php if(isset($actiondata['error']) && $actiondata['error']) {
-				?>
+                ?>
                 <p class="alert alert-warning">
                     <?php
                 if ($actiondata['errorMsg']){
@@ -59,10 +58,10 @@ if ($cartMode) {
             <?php } ?>
         <?php } ?>
 
-        <input id='cartURL' type='hidden' data-cart-url='<?=Url::to("/cart/")?>'>
+        <input id='cartURL' type='hidden' data-cart-url='<?=Url::to('/cart/')?>'>
             <?php
             if($cart){ ?>
-            <form method="post" action="<?= Url::to('/cart/');?>" id="store-modal-cart">
+            <form method="post" action="<?= Url::to('/cart/'); ?>" id="store-modal-cart">
                 <?= $token->output('community_store'); ?>
                 <table id="cart" class="table table-hover table-condensed" >
                 <thead>
@@ -77,10 +76,9 @@ if ($cartMode) {
                 <tbody>
 
                 <?php
-                $i=1;
+                $i = 1;
                 $allowUpdate = false;
-                foreach ($cart as $k=>$cartItem){
-
+                foreach ($cart as $k => $cartItem){
                     $qty = $cartItem['product']['qty'];
                     $product = $cartItem['product']['object'];
 
@@ -88,7 +86,7 @@ if ($cartMode) {
                         $allowUpdate = true;
                     }
 
-                    if($i%2==0){$classes=" striped"; }else{ $classes=""; }
+                    if($i % 2 == 0){$classes = ' striped'; }else{ $classes = ''; }
                     if(is_object($product)){
                         $productPage = $product->getProductPage();
                         ?>
@@ -120,25 +118,24 @@ if ($cartMode) {
                                 <?php if($cartItem['productAttributes']){?>
                                     <div class="store-cart-list-item-attributes">
                                         <?php foreach($cartItem['productAttributes'] as $optionID => $valID){
-
                                             if (substr($optionID, 0, 2) == 'po') {
-                                                $optionID = str_replace("po", "", $optionID);
+                                                $optionID = str_replace('po', '', $optionID);
                                                 $optionvalue = ProductOptionItem::getByID($valID);
 
                                                 if ($optionvalue) {
                                                     $optionvalue = $optionvalue->getName();
                                                 }
                                             } elseif (substr($optionID, 0, 2) == 'pt')  {
-                                                $optionID = str_replace("pt", "", $optionID);
+                                                $optionID = str_replace('pt', '', $optionID);
                                                 $optionvalue = $valID;
                                             } elseif (substr($optionID, 0, 2) == 'pa')  {
-                                                $optionID = str_replace("pa", "", $optionID);
+                                                $optionID = str_replace('pa', '', $optionID);
                                                 $optionvalue = $valID;
                                             } elseif (substr($optionID, 0, 2) == 'ph')  {
-                                                $optionID = str_replace("ph", "", $optionID);
+                                                $optionID = str_replace('ph', '', $optionID);
                                                 $optionvalue = $valID;
                                             } elseif (substr($optionID, 0, 2) == 'pc')  {
-                                                $optionID = str_replace("pc", "", $optionID);
+                                                $optionID = str_replace('pc', '', $optionID);
                                                 $optionvalue = $valID;
                                             }
 
@@ -174,9 +171,9 @@ if ($cartMode) {
                                     $max = $product->getMaxCartQty();
                                     ?>
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps(); ?>" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
                                     <?php } else { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?>>
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control text-right pull-right text-end float-end" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : ''); ?>>
                                     <?php } ?>
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
@@ -201,7 +198,7 @@ if ($cartMode) {
                         <?php
                     }//if is_object
                     $i++;
-                }//foreach ?>
+                }//foreach?>
                 </tbody>
 
                 <tfoot>
@@ -211,7 +208,7 @@ if ($cartMode) {
                     <td></td>
                     <td colspan="2">
                         <?php if ($allowUpdate) { ?>
-                            <p class="text-right text-end "><button type="submit" class="store-btn-cart-modal-update btn btn-primary" data-modal="true" href="#"><?= t("Update")?></button></p>
+                            <p class="text-right text-end "><button type="submit" class="store-btn-cart-modal-update btn btn-primary" data-modal="true" href="#"><?= t('Update')?></button></p>
                         <?php } ?>
                     </td>
                 </tr>
@@ -226,15 +223,15 @@ if ($cartMode) {
 
 
 
-        <?php if ($cart  && !empty($cart)) { ?>
+        <?php if ($cart && !empty($cart)) { ?>
 
         <?php if(!empty($discounts)) { ?>
 
             <div class="store-cart-page-discounts">
-                <p><strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied'));?></strong></p>
+                <p><strong><?= (count($discounts) == 1 ? t('Discount Applied') : t('Discounts Applied')); ?></strong></p>
                 <ul>
                     <?php foreach($discounts as $discount) { ?>
-                        <li><?= h( $csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID())); ?></li>
+                        <li><?= h($csm->t($discount->getDisplay(), 'discountRuleDisplayName', null, $discount->getID())); ?></li>
                     <?php } ?>
                 </ul>
             </div>
@@ -242,7 +239,7 @@ if ($cartMode) {
         <?php }?>
 
         <p class="store-cart-page-cart-total text-right text-end">
-            <strong class="store-cart-grand-total-label"><?= t("Total")?>:</strong>
+            <strong class="store-cart-grand-total-label"><?= t('Total')?>:</strong>
             <span class="store-cart-grand-total-value"><?=Price::format($total)?></span>
         </p>
         <?php } else { ?>
@@ -252,11 +249,11 @@ if ($cartMode) {
 
         <div class="store-cart-page-cart-links">
             <p class="pull-left float-start">
-                <a class="store-btn-cart-modal-continue btn btn-default btn-secondary" href="#"><?= t("Continue Shopping")?></a>
-                <?php if ($cart  && !empty($cart)) { ?>
+                <a class="store-btn-cart-modal-continue btn btn-default btn-secondary" href="#"><?= t('Continue Shopping')?></a>
+                <?php if ($cart && !empty($cart)) { ?>
                 <a class="store-btn-cart-modal-clear btn btn-warning text-white " href="#"><?= t('Clear Cart')?></a>
             </p>
-            <p class="pull-right float-end"><a class="store-btn-cart-modal-checkout btn btn-success text-white" href="<?= Url::to($langpath .'/checkout')?>"><?= t('Checkout')?></a></p>
+            <p class="pull-right float-end"><a class="store-btn-cart-modal-checkout btn btn-success text-white" href="<?= Url::to($langpath . '/checkout')?>"><?= t('Checkout')?></a></p>
             <?php } ?>
         </div>
 

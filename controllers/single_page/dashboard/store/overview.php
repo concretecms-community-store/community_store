@@ -1,16 +1,16 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Http\Request;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
 
-class Overview extends DashboardPageController {
-
+class Overview extends DashboardPageController
+{
     public function view()
     {
         $sr = new SalesReport();
@@ -33,7 +33,7 @@ class Overview extends DashboardPageController {
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('shoppingDisabled', true);
         }
 
@@ -44,8 +44,7 @@ class Overview extends DashboardPageController {
         if(!Config::get('community_store.emailalerts')) {
             $this->set('missingFromEmail', true);
         }
-        
+
         $this->set('pageTitle', t('Store'));
     }
-
 }

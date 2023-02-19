@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Attribute\Category;
 
-use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue;
-use Concrete\Core\Entity\Attribute\Type;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCategory
@@ -27,16 +27,16 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
 
     public function getSearchIndexFieldDefinition()
     {
-        return array(
-            'columns' => array(
-                array(
+        return [
+            'columns' => [
+                [
                     'name' => 'oID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
-                ),
-            ),
-            'primary' => array('oID'),
-        );
+                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                ],
+            ],
+            'primary' => ['oID'],
+        ];
     }
 
     public function getAttributeKeyRepository()
@@ -51,21 +51,33 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
 
     public function getAttributeValues($order)
     {
-        $values = $this->getAttributeValueRepository()->findBy(array(
+        return $this->getAttributeValueRepository()->findBy([
             'order' => $order,
-        ));
-        return $values;
+        ]);
     }
 
     public function getAttributeValue(Key $key, $order)
     {
         $r = $this->entityManager->getRepository(StoreOrderValue::class);
-        $value = $r->findOneBy(array(
+
+        return $r->findOneBy([
             'order' => $order,
             'attribute_key' => $key,
-        ));
+        ]);
+    }
 
-        return $value;
+    public function addFromRequest(Type $type, Request $request)
+    {
+        $key = parent::addFromRequest($type, $request);
+
+        return $this->saveFromRequest($key, $request);
+    }
+
+    public function updateFromRequest(Key $key, Request $request)
+    {
+        $key = parent::updateFromRequest($key, $request);
+
+        return $this->saveFromRequest($key, $request);
     }
 
     protected function saveFromRequest(Key $key, Request $request)
@@ -74,18 +86,7 @@ class OrderCategory extends \Concrete\Core\Attribute\Category\AbstractStandardCa
         $key->setAttributeUserGroups($request->request->get('groups'));
         $this->entityManager->persist($key);
         $this->entityManager->flush();
+
         return $key;
-    }
-
-    public function addFromRequest(Type $type, Request $request)
-    {
-        $key = parent::addFromRequest($type, $request);
-        return $this->saveFromRequest($key, $request);
-    }
-
-    public function updateFromRequest(Key $key, Request $request)
-    {
-        $key = parent::updateFromRequest($key, $request);
-        return $this->saveFromRequest($key, $request);
     }
 }

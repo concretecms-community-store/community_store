@@ -1,13 +1,14 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+
 $csm = $app->make('cs/helper/multilingual');
 
 ?>
 
 <div class="store-product-filter-block" >
 
-    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-'. $bID .'"' : ''); ?>>
+    <form class="<?= ($updateType == 'auto' ? 'store-product-filter-block-auto' : ''); ?>" <?= ($jumpAnchor ? 'id="filter-' . $bID . '"' : ''); ?>>
 
         <?php
         if (!empty($filterData)) {
@@ -21,7 +22,7 @@ $csm = $app->make('cs/helper/multilingual');
                         ?>
                         <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
                     <?php } elseif ($data['type'] == 'price') { ?>
-                      <?= t($data['label'] ? $data['label']  : t('Price')); ?>
+                      <?= t($data['label'] ? $data['label'] : t('Price')); ?>
                     <?php } ?>
                     </h3>
 
@@ -29,7 +30,6 @@ $csm = $app->make('cs/helper/multilingual');
                     <?php if ($data['type'] == 'attr') { ?>
                         <?php
                         $optiondata = $data['data'];
-
 
                         $matchingType = $attrFilterTypes[$akhandle]['matchingType'];
                         $invalidHiding = $attrFilterTypes[$akhandle]['invalidHiding'];
@@ -60,7 +60,7 @@ $csm = $app->make('cs/helper/multilingual');
                                        value="<?= h($option); ?>" name="<?= $akhandle; ?>[]"/>
                                 <span class="store-product-filter-block-option">
                                     <?php
-                                    if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
+                                    if ($ak->getAttributeType()->getAttributeTypeHandle() == 'boolean') {
                                         // if dealing with a boolean use the label if exists
                                         $checkboxSettings = $ak->getAttributeKeySettings();
                                         $checkboxLabel = false;
@@ -78,7 +78,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     }
 
                                     ?>
-                                    <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !key_exists($akhandle, $selectedAttributes)))) { ?>
+                                    <?php if ($showTotals && ($matchingType == 'and' || ($matchingType == 'or' && !array_key_exists($akhandle, $selectedAttributes)))) { ?>
                                     <span class="store-product-filter-block-count">(<?= $count; ?>)</span>
                                     <?php } ?>
 

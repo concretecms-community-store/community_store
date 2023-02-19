@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 ?>
 
@@ -11,7 +11,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="form-group">
                 <?= $form->label('filterSource', t('Filter Settings')); ?>
-                <?= $form->select('filterSource', ['auto' => t("Automatically match settings from Product List block on page"), 'manual' => t('Manually configure')], $filterSource); ?>
+                <?= $form->select('filterSource', ['auto' => t('Automatically match settings from Product List block on page'), 'manual' => t('Manually configure')], $filterSource); ?>
             </div>
 
 
@@ -19,7 +19,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <div class="form-group">
                     <?= $form->label('filter', t('List Products')); ?>
                     <?= $form->select('filter', [
-                        'all' => '** ' . t("All") . ' **',
+                        'all' => '** ' . t('All') . ' **',
                         'current' => t('Under current page'),
                         'current_children' => t('Under current page and child pages'),
                         'page' => t('Under a specified page'),
@@ -31,14 +31,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
                 <div class="form-group" id="pageselector">
                     <div
-                        class="form-group" <?= ('page' == $filter || 'page_children' == $filter ? '' : 'style="display: none"'); ?> >
+                        class="form-group" <?= ($filter == 'page' || $filter == 'page_children' ? '' : 'style="display: none"'); ?> >
                         <?php
                         $ps = $app->make('helper/form/page_selector');
                         echo $ps->selectPage('filterCID', ($filterCID > 0 ? $filterCID : false)); ?>
                     </div>
                 </div>
 
-                <div class="form-group" id="product-search" <?= ('related_product' == $filter ? '' : 'style="display: none"'); ?>>
+                <div class="form-group" id="product-search" <?= ($filter == 'related_product' ? '' : 'style="display: none"'); ?>>
                     <input name="relatedPID" id="product-select"   style="width: 100%" placeholder="<?= t('Search for a Product'); ?>" />
                 </div>
 
@@ -46,7 +46,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 
                 <?php if (!empty($productTypes)) {
-                    $productTypesList = [''=>t('All Product Types')];
+                    $productTypesList = ['' => t('All Product Types')];
                     foreach ($productTypes as $productType) {
                         $productTypesList[$productType->getTypeID()] = $productType->getTypeName();
                     }
@@ -54,7 +54,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
                     <div class="form-group">
                         <?= $form->label('filterProductType', t('Filter by Product Group')); ?>
-                        <?= $form->select('filterProductType',$productTypesList, $filterProductType); ?>
+                        <?= $form->select('filterProductType', $productTypesList, $filterProductType); ?>
                     </div>
 
 
@@ -89,14 +89,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
                     <div class="form-group">
                         <?= $form->label('groupMatchAny', t('Matching')); ?>
-                        <?= $form->select('groupMatchAny', ['0' => t("All groups selected"), '1' => t('Any group selected'), '-1' => t("Excluding all groups selected")], $groupMatchAny); ?>
+                        <?= $form->select('groupMatchAny', ['0' => t('All groups selected'), '1' => t('Any group selected'), '-1' => t('Excluding all groups selected')], $groupMatchAny); ?>
                     </div>
 
                     <?php
                 } ?>
 
                 <?php
-                $productmanufacturers = array("0" => t("None"));
+                $productmanufacturers = ['0' => t('None')];
                 foreach ($manufacturersList as $productmanufacturer) {
                     $productmanufacturers[$productmanufacturer->getID()] = $productmanufacturer->getName();
                 }
@@ -105,7 +105,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     ?>
                     <div class="form-group">
                         <?= $form->label('mID', t('Filter by Brand / Manufacturer')); ?>
-                        <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer,  ['class' => 'selectize']); ?>
+                        <?= $form->select('filterManufacturer', $productmanufacturers, $filterManufacturer, ['class' => 'selectize']); ?>
                     </div>
                     <?php
                 } ?>
@@ -136,11 +136,11 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <?php
 
-                $typelookup = array();
+                $typelookup = [];
                 $typelookup['price'] = t('Price');
 
-                $otherfilters = array();
-                $selectattkeys = array();
+                $otherfilters = [];
+                $selectattkeys = [];
                 if (!empty($selectedAttributes)) {
                     foreach($selectedAttributes as $selectedatt) {
                         if ($selectedatt['type'] == 'attr') {
@@ -157,14 +157,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                     <label><?= t('Available Attributes'); ?></label>
 
                     <ul class="list-group" id="availableatts">
-                        <li class="list-group-item <?= (in_array('price', $otherfilters) ? 'hidden d-none' : ''); ?>" data-id="price"><a class="block" data-id="0" data-type="price" href="#"> <?= t('Price');?>
+                        <li class="list-group-item <?= (in_array('price', $otherfilters) ? 'hidden d-none' : ''); ?>" data-id="price"><a class="block" data-id="0" data-type="price" href="#"> <?= t('Price'); ?>
                                 <i class="pull-right float-end fa fa-angle-right"></i> </a></li>
                         <?php
-                        $attlookup = array();
+                        $attlookup = [];
                         foreach($attributes as $att) {
                             $attlookup[$att->getAttributeKeyID()] = $att->getAttributeKeyName();
                             ?>
-                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden d-none' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-type="attr" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName());?>
+                            <li class="list-group-item <?= (in_array($att->getAttributeKeyID(), $selectattkeys) ? 'hidden d-none' : ''); ?>" data-id="<?= $att->getAttributeKeyID(); ?>" ><a class="block" data-type="attr" data-id="<?= $att->getAttributeKeyID(); ?>" href="#"> <?= h($att->getAttributeKeyName()); ?>
                                 <i class="pull-right float-end fa fa-angle-right"></i> </a></li>
 
                         <?php } ?>
@@ -180,10 +180,10 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                         if (!empty($selectedAttributes)) {
                             foreach ($selectedAttributes as $selectedatt) {
                                 echo '<li data-id="' . ($selectedatt['akID'] > 0 ? $selectedatt['akID'] : $selectedatt['type']) . '" data-type="' . $selectedatt['type'] . '" class="clearfix list-group-item mb-1"><a href="#" class="attremove pull-right float-end">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v fa-arrows-alt-v"></i>&nbsp;&nbsp;' . ($selectedatt['type'] == 'attr' ? $attlookup[$selectedatt['akID']] : $typelookup[$selectedatt['type']]);
-                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 '. ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
-                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 '. ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
+                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 ' . ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="invalidHiding[]"><option value="disable" ' . ($selectedatt['invalidHiding'] == 'disable' ? 'selected="selected"' : '') . '>' . t('disable invalid') . '</option><option value="hide" ' . ($selectedatt['invalidHiding'] == 'hide' ? 'selected="selected"' : '') . '>' . t('hide invalid') . '</option></select>';
+                                echo '<select class="form-control form-select input-sm pull-right float-end mb-2 ' . ($selectedatt['type'] == 'attr' ? '' : 'hidden d-none') . '" name="matchingType[]"><option value="or" ' . ($selectedatt['matchingType'] == 'or' ? 'selected="selected"' : '') . '>' . t('match any') . '</option><option value="and" ' . ($selectedatt['matchingType'] == 'and' ? 'selected="selected"' : '') . '>' . t('match all') . '</option></select>';
                                 echo '<input type="hidden" name="types[]" value="' . $selectedatt['type'] . '" /><input type="hidden" name="attributes[]" value="' . $selectedatt['akID'] . '" />';
-                                echo '<br /><input class="form-control input-sm" placeholder="'.t('Custom Label') .'" type="text" name="labels[]" value="' . $selectedatt['label'] . '" />';
+                                echo '<br /><input class="form-control input-sm" placeholder="' . t('Custom Label') . '" type="text" name="labels[]" value="' . $selectedatt['label'] . '" />';
                                 echo '</li>';
                             }
                         }?>
@@ -206,11 +206,11 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="form-group">
                 <?= $form->label('updateType', t('Filter is applied')); ?>
-                <?= $form->select('updateType', ['auto' => t("Automatically when filters are selected"), 'button' => t('When filter button is pressed')], $updateType); ?>
+                <?= $form->select('updateType', ['auto' => t('Automatically when filters are selected'), 'button' => t('When filter button is pressed')], $updateType); ?>
             </div>
 
-            <div id="filterButtonTextField" class="form-group <?= $updateType == 'button' ? '' :'hidden d-none'; ?>">
-                <?= $form->label('filterButtonText', t("Filter Button Text")); ?>
+            <div id="filterButtonTextField" class="form-group <?= $updateType == 'button' ? '' : 'hidden d-none'; ?>">
+                <?= $form->label('filterButtonText', t('Filter Button Text')); ?>
                 <?= $form->text('filterButtonText', $filterButtonText, ['placeholder' => t('Filter')]); ?>
             </div>
 
@@ -221,8 +221,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 </label>
             </div>
 
-            <div id="clearButtonTextField" class="form-group <?= $displayClear ? '' :'hidden d-none'; ?>">
-                <?= $form->label('clearButtonText', t("Clear Button Text")); ?>
+            <div id="clearButtonTextField" class="form-group <?= $displayClear ? '' : 'hidden d-none'; ?>">
+                <?= $form->label('clearButtonText', t('Clear Button Text')); ?>
                 <?= $form->text('clearButtonText', $clearButtonText, ['placeholder' => t('Clear')]); ?>
             </div>
 

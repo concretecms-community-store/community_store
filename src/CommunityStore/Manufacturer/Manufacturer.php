@@ -2,11 +2,11 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer;
 
-use Concrete\Core\Page\Page;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -14,23 +14,21 @@ use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
  */
 class Manufacturer
 {
-
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $mID;
 
-
-    /** @ORM\Column(type="string",nullable=true) */
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
     protected $mName;
-
 
     /**
      * @ORM\Column(type="integer",nullable=true)
      */
     protected $cID;
-
 
     /**
      * @ORM\Column(type="text",nullable=true)
@@ -41,6 +39,11 @@ class Manufacturer
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product", mappedBy="manufacturer",cascade={"persist"}))
      */
     protected $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getProducts()
     {
@@ -83,7 +86,6 @@ class Manufacturer
             $pageID = $this->getPageID();
             $manufacturerPage = Page::getByID($pageID);
             if ($manufacturerPage && !$manufacturerPage->isError() && !$manufacturerPage->isInTrash()) {
-
                 $c = Page::getCurrentPage();
                 $lang = Section::getBySectionOfSite($c);
 
@@ -106,7 +108,6 @@ class Manufacturer
         return false;
     }
 
-
     public function getDescription()
     {
         return $this->mDesc;
@@ -117,17 +118,11 @@ class Manufacturer
         $this->mDesc = $mDesc;
     }
 
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
-
-
     public static function getByID($mID)
     {
         $em = dbORM::entityManager();
-        return $em->find(get_class(), $mID);
+
+        return $em->find(__CLASS__, $mID);
     }
 
     public function save()
@@ -143,5 +138,4 @@ class Manufacturer
         $em->remove($this);
         $em->flush();
     }
-
 }

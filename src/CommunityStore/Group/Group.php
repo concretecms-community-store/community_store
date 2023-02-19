@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Group;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -22,9 +23,15 @@ class Group
      */
     protected $groupName;
 
-    private function setGroupName($groupName)
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
+     * @ORM\OrderBy({"sortOrder" = "ASC"})
+     */
+    protected $products;
+
+    public function __construct()
     {
-        $this->groupName = $groupName;
+        $this->products = new ArrayCollection();
     }
 
     public function getGroupName()
@@ -42,20 +49,9 @@ class Group
         return $this->gID;
     }
 
-    /**
-     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="group",cascade={"persist"}))
-     * @ORM\OrderBy({"sortOrder" = "ASC"})
-     */
-    protected $products;
-
     public function getProducts()
     {
         return $this->products;
-    }
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
     }
 
     public static function getByID($gID)
@@ -69,7 +65,7 @@ class Group
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['groupName' => $gName]);
+        return $em->getRepository(__CLASS__)->findOneBy(['groupName' => $gName]);
     }
 
     public static function add($groupName)
@@ -101,5 +97,10 @@ class Group
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setGroupName($groupName)
+    {
+        $this->groupName = $groupName;
     }
 }

@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Http\Request;
-use Concrete\Core\Routing\Redirect;
-use Concrete\Core\User\Group\GroupList;
-use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRuleList;
@@ -50,11 +51,11 @@ class Discounts extends DashboardPageController
 
         $productgroups = [];
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
-        $this->set("productgroups", $productgroups);
+        $this->set('productgroups', $productgroups);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
@@ -64,7 +65,7 @@ class Discounts extends DashboardPageController
         $usergrouparray = [];
 
         foreach ($usergroups as $ug) {
-            if ('Administrators' != $ug->gName) {
+            if ($ug->gName != 'Administrators') {
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
@@ -86,11 +87,11 @@ class Discounts extends DashboardPageController
 
         $productgroups = [];
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
         foreach ($grouplist as $productgroup) {
             $productgroups[$productgroup->getGroupID()] = $productgroup->getGroupName();
         }
-        $this->set("productgroups", $productgroups);
+        $this->set('productgroups', $productgroups);
 
         $gl = new GroupList();
         $gl->setItemsPerPage(1000);
@@ -100,7 +101,7 @@ class Discounts extends DashboardPageController
         $usergrouparray = [];
 
         foreach ($usergroups as $ug) {
-            if ('Administrators' != $ug->gName) {
+            if ($ug->gName != 'Administrators') {
                 $usergrouparray[$ug->gID] = $ug->gName;
             }
         }
@@ -140,7 +141,8 @@ class Discounts extends DashboardPageController
                 $dr->delete();
                 $this->flash('success', t('Discount Rule Deleted'));
                 $keywordsSearch = Session::get('communitystore.dashboard.discounts.keywords');
-                return Redirect::to('/dashboard/store/discounts' . ($keywordsSearch ? '/?keywords='.urlencode($keywordsSearch) : ''));
+
+                return Redirect::to('/dashboard/store/discounts' . ($keywordsSearch ? '/?keywords=' . urlencode($keywordsSearch) : ''));
             }
         }
 
@@ -157,6 +159,7 @@ class Discounts extends DashboardPageController
                 $ruleid = $dc->getDiscountRule()->getID();
                 $dc->delete();
                 $this->flash('success', t('Code Deleted'));
+
                 return Redirect::to('/dashboard/store/discounts/codes/' . $ruleid);
             }
         }
@@ -175,7 +178,7 @@ class Discounts extends DashboardPageController
 
             $discountRule = DiscountRule::getByID($drID);
             if ($codes && $discountRule) {
-                $codes = str_replace(",", "\n", $codes);
+                $codes = str_replace(',', "\n", $codes);
                 $codes = explode("\n", $codes);
 
                 $failed = [];
@@ -186,7 +189,7 @@ class Discounts extends DashboardPageController
                         if (!DiscountCode::add($discountRule, $code)) {
                             $failed[] = $code;
                         } else {
-                            ++$successcount;
+                            $successcount++;
                         }
                     }
                 }
@@ -197,7 +200,7 @@ class Discounts extends DashboardPageController
             Session::set('communitystore.failedcodes', $failed);
         }
 
-        $this->flash('success', $successcount . ' ' . (1 == $successcount ? t('Code Added') : t('Codes Added')));
+        $this->flash('success', $successcount . ' ' . ($successcount == 1 ? t('Code Added') : t('Codes Added')));
 
         return Redirect::to('/dashboard/store/discounts/codes/' . $drID);
     }
@@ -218,20 +221,17 @@ class Discounts extends DashboardPageController
                     $this->flash('success', t('Discount Rule Updated'));
 
                     return Redirect::to('/dashboard/store/discounts/edit/' . $data['drID']);
-                } else {
-                    $discountrule = DiscountRule::add($data);
-                    if ('code' == $discountrule->getTrigger()) {
-                        return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
-                    } else {
-                        $this->flash('success', t('Discount Rule Added'));
-                        Session::remove('communitystore.dashboard.discounts.keywords');
-                        return Redirect::to('/dashboard/store/discounts/edit/' . $discountrule->getID());
-                    }
                 }
-            } else {
-                $this->error = $errors;
+                $discountrule = DiscountRule::add($data);
+                if ($discountrule->getTrigger() == 'code') {
+                    return Redirect::to('/dashboard/store/discounts/codes/' . $discountrule->getID());
+                }
+                $this->flash('success', t('Discount Rule Added'));
+                Session::remove('communitystore.dashboard.discounts.keywords');
+
+                return Redirect::to('/dashboard/store/discounts/edit/' . $discountrule->getID());
             }
-            //if no errors
+            $this->error = $errors;
         } // if post
     }
 
@@ -240,6 +240,7 @@ class Discounts extends DashboardPageController
         if (!isset($this->headerSearch)) {
             $this->headerSearch = $this->app->make(ElementManager::class)->get('discounts/search', 'community_store');
         }
+
         return $this->headerSearch;
     }
 }

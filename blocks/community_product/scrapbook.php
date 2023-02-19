@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Application;
 
@@ -42,7 +42,7 @@ $csm = $app->make('cs/helper/multilingual');
             <li><em>
                     <?php
                     $salePrice = $product->getSalePrice();
-                    if (isset($salePrice) && "" != $salePrice) {
+                    if (isset($salePrice) && $salePrice != '') {
                         $formattedSalePrice = $product->getFormattedSalePrice();
                         $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                         echo '<span style="white-space: nowrap">', t(/* i18n: %s is the on-sale price */'On Sale: %s', $formattedSalePrice), '</span>';

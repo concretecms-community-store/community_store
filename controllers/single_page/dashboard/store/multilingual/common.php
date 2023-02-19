@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Database;
-use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
@@ -18,7 +19,7 @@ class Common extends DashboardSitePageController
         $qb = $this->entityManager->createQueryBuilder();
         $query = $qb->select('o.poID')
             ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption', 'o')
-            ->groupBy('o.poName','o.poID' )->orderBy('o.poName')->getQuery()->getResult();
+            ->groupBy('o.poName', 'o.poID')->orderBy('o.poName')->getQuery()->getResult();
 
         $optionNames = [];
 
@@ -135,56 +136,34 @@ class Common extends DashboardSitePageController
             $attrOptions[$type] = $options;
         }
 
-        $this->set('attrOptions',$attrOptions);
+        $this->set('attrOptions', $attrOptions);
 
         $quantityLabels = [];
-        $quantityLabelsData =  $db->fetchAll('SELECT distinct pQtyLabel FROM CommunityStoreProducts where pQtyLabel <> ""');
+        $quantityLabelsData = $db->fetchAll('SELECT distinct pQtyLabel FROM CommunityStoreProducts where pQtyLabel <> ""');
 
         foreach($quantityLabelsData as $label) {
             $quantityLabels[] = $label['pQtyLabel'];
         }
 
-        $this->set('quantityLabels',$quantityLabels);
-
-
+        $this->set('quantityLabels', $quantityLabels);
 
         $cartButtons = [];
-        $cartButtonsData =  $db->fetchAll('SELECT distinct pAddToCartText FROM CommunityStoreProducts where pAddToCartText <> ""');
+        $cartButtonsData = $db->fetchAll('SELECT distinct pAddToCartText FROM CommunityStoreProducts where pAddToCartText <> ""');
 
         foreach($cartButtonsData as $label) {
             $cartButtons[] = $label['pAddToCartText'];
         }
 
-        $this->set('cartButtons',$cartButtons);
-
+        $this->set('cartButtons', $cartButtons);
 
         $outOfStock = [];
-        $outOfStockData =  $db->fetchAll('SELECT distinct pOutOfStockMessage FROM CommunityStoreProducts where pOutOfStockMessage <> ""');
+        $outOfStockData = $db->fetchAll('SELECT distinct pOutOfStockMessage FROM CommunityStoreProducts where pOutOfStockMessage <> ""');
 
         foreach($outOfStockData as $label) {
             $outOfStock[] = $label['pOutOfStockMessage'];
         }
 
-        $this->set('outOfStock',$outOfStock);
-
-    }
-
-    private function getLocales() {
-        $site = $this->getSite();
-        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
-        $locales = $site->getLocales();
-
-        $localePages = array('additional'=>array());
-
-        foreach($locales as $locale) {
-            if ($locale->getIsDefault()) {
-                $localePages['default'] = $locale;
-            } else {
-                $localePages['additional'][] = $locale;
-            }
-        }
-
-        return $localePages;
+        $this->set('outOfStock', $outOfStock);
     }
 
     public function save()
@@ -201,7 +180,8 @@ class Common extends DashboardSitePageController
                                 ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
                                 ->where('t.entityType = :type')->setParameter('type', $key)
                                 ->andWhere('t.locale = :locale')->setParameter('locale', $locale)
-                                ->andWhere('t.pID is null');
+                                ->andWhere('t.pID is null')
+                            ;
 
                             if ($key == 'productAttributeName') {
                                 $t->andWhere('t.entityID = :entityID')->setParameter('entityID', $original);
@@ -247,5 +227,24 @@ class Common extends DashboardSitePageController
         $this->flash('success', t('Common Translations Updated'));
 
         return Redirect::to('/dashboard/store/multilingual/common');
+    }
+
+    private function getLocales()
+    {
+        $site = $this->getSite();
+        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+        $locales = $site->getLocales();
+
+        $localePages = ['additional' => []];
+
+        foreach($locales as $locale) {
+            if ($locale->getIsDefault()) {
+                $localePages['default'] = $locale;
+            } else {
+                $localePages['additional'][] = $locale;
+            }
+        }
+
+        return $localePages;
     }
 }

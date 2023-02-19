@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
-		xmlns="http://www.concrete5.org/doctrine-xml/0.5"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
-	<table name="btCommunityStoreProductList">
-		<field name="bID" type="integer" size="10">
-			<unsigned />
-			<key />
-		</field>
-		<field name="sortOrder" type="string" size="30"></field>
-		<field name="gID" type="integer"><unsigned/></field>
-		<field name="filter" type="string" size="30"></field>
-		<field name="filterCID" type="integer"><unsigned/></field>
-		<field name="relatedPID" type="integer"><unsigned/></field>
-		<field name="groupMatchAny" type="boolean"></field>
-		<field name="maxProducts" type="integer"></field>
-		<field name="showOutOfStock" type="boolean"></field>
-		<field name="productsPerRow" type="integer" size="2"></field>
-		<field name="displayMode" type="string" size="30"></field>
-		<field name="showPagination" type="boolean"></field>
-		<field name="enableExternalFiltering" type="boolean"><default value="1"/></field>
-		<field name="showFeatured" type="boolean"></field>
-		<field name="showSale" type="boolean"></field>
-		<field name="showDescription" type="boolean"></field>
-		<field name="showName" type="boolean"><default value="1"/></field>
-		<field name="showSKU" type="boolean"><default value="1"/></field>
-		<field name="showPrice" type="boolean"><default value="1"/></field>
-		<field name="showQuickViewLink" type="boolean"></field>
-		<field name="showPageLink" type="boolean"><default value="1"/></field>
-		<field name="showSortOption" type="boolean"><default value="0"/></field>
-		<field name="pageLinkText" type="string" size="255"></field>
-		<field name="showAddToCart" type="boolean"><default value="1"/></field>
-		<field name="btnText" type="string" size="255"></field>
-		<field name="showQuantity" type="boolean"></field>
-		<field name="noProductsMessage" type="string" size="255"></field>
-		<field name="filterManufacturer" type="integer" size="2"></field>
-		<field name="filterProductType" type="integer"><unsigned/></field>
-	</table>
+        xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+    <table name="btCommunityStoreProductList">
+        <field name="bID" type="integer" size="10">
+            <unsigned />
+            <key />
+        </field>
+        <field name="sortOrder" type="string" size="30"></field>
+        <field name="gID" type="integer"><unsigned/></field>
+        <field name="filter" type="string" size="30"></field>
+        <field name="filterCID" type="integer"><unsigned/></field>
+        <field name="relatedPID" type="integer"><unsigned/></field>
+        <field name="groupMatchAny" type="boolean"></field>
+        <field name="maxProducts" type="integer"></field>
+        <field name="showOutOfStock" type="boolean"></field>
+        <field name="productsPerRow" type="integer" size="2"></field>
+        <field name="displayMode" type="string" size="30"></field>
+        <field name="showPagination" type="boolean"></field>
+        <field name="enableExternalFiltering" type="boolean"><default value="1"/></field>
+        <field name="showFeatured" type="boolean"></field>
+        <field name="showSale" type="boolean"></field>
+        <field name="showDescription" type="boolean"></field>
+        <field name="showName" type="boolean"><default value="1"/></field>
+        <field name="showSKU" type="boolean"><default value="1"/></field>
+        <field name="showPrice" type="boolean"><default value="1"/></field>
+        <field name="showQuickViewLink" type="boolean"></field>
+        <field name="showPageLink" type="boolean"><default value="1"/></field>
+        <field name="showSortOption" type="boolean"><default value="0"/></field>
+        <field name="pageLinkText" type="string" size="255"></field>
+        <field name="showAddToCart" type="boolean"><default value="1"/></field>
+        <field name="btnText" type="string" size="255"></field>
+        <field name="showQuantity" type="boolean"></field>
+        <field name="noProductsMessage" type="string" size="255"></field>
+        <field name="filterManufacturer" type="integer" size="2"></field>
+        <field name="filterProductType" type="integer"><unsigned/></field>
+    </table>
 
-	<table name="btCommunityStoreProductListGroups">
-		<field name="bID" type="integer" size="10"><unsigned /><key /></field>
-		<field name="gID" type="integer" size="10"><unsigned/><key /></field>
-	</table>
+    <table name="btCommunityStoreProductListGroups">
+        <field name="bID" type="integer" size="10"><unsigned /><key /></field>
+        <field name="gID" type="integer" size="10"><unsigned/><key /></field>
+    </table>
 </schema>

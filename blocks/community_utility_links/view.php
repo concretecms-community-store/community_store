@@ -1,23 +1,23 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php if (!$shoppingDisabled) {
     ?>
-<div class="store-utility-links <?= (0 == $itemCount ? 'store-cart-empty' : ''); ?>">
+<div class="store-utility-links <?= ($itemCount == 0 ? 'store-cart-empty' : ''); ?>">
     <?php if ($showSignIn || $showGreeting) {
         ?>
     <p class="store-utility-links-login">
         <?php if ($showSignIn) {
             $u = new User();
             if (!$u->isLoggedIn()) {
-                echo '<a href="' . \Concrete\Core\Support\Facade\Url::to('/login') . '">' . t("Sign In") . '</a>';
+                echo '<a href="' . \Concrete\Core\Support\Facade\Url::to('/login') . '">' . t('Sign In') . '</a>';
             }
         } ?>
         <?php if ($showGreeting) {
             $u = new User();
             if ($u->isLoggedIn()) {
-                $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
+                $msg = '<span class="store-welcome-message">' . t('Welcome back') . '</span>';
                 $ui = $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByID($u->getUserID());
                 if ($ui && $firstname = $ui->getAttribute('billing_first_name')) {
-                    $msg = '<span class="store-welcome-message">' . t("Welcome back, %s", '<span class="first-name">' . $firstname . '</span>') . '</span>';
+                    $msg = '<span class="store-welcome-message">' . t('Welcome back, %s', '<span class="first-name">' . $firstname . '</span>') . '</span>';
                 }
                 echo $msg;
             }
@@ -65,7 +65,7 @@
         <?php if ($showCheckout) {
             ?>
         <p  class="store-utility-links-checkout-link">
-            <a href="<?= \Concrete\Core\Support\Facade\Url::to($langpath . '/checkout'); ?>" class="store-cart-link"><?= t("Checkout"); ?></a>
+            <a href="<?= \Concrete\Core\Support\Facade\Url::to($langpath . '/checkout'); ?>" class="store-cart-link"><?= t('Checkout'); ?></a>
         </p>
         <?php
         } ?>

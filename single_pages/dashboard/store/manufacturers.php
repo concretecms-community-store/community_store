@@ -1,6 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $th = $app->make('helper/text');
@@ -10,7 +10,6 @@ $th = $app->make('helper/text');
 if ($controller->getAction() == 'add' ||
     $controller->getAction() == 'edit' ||
     $controller->getAction() == 'submit') {
-
     $mID = $manufacturer->getID();
     ?>
 
@@ -20,14 +19,14 @@ if ($controller->getAction() == 'add' ||
 
             <form class="pull-right float-end" method="post" id="delete" action="<?= Url::to('/dashboard/store/manufacturers/delete/', $mID) ?>">
                 <?= $token->output('community_store'); ?>&nbsp;
-                <button class="btn btn-danger"><?= t("Delete Manufacturer") ?></button>
+                <button class="btn btn-danger"><?= t('Delete Manufacturer') ?></button>
             </form>
 
 
             <script type="text/javascript">
                 $(function () {
                     $('#delete').submit(function () {
-                        return confirm('<?=  t("Are you sure you want to delete this manufacturer?"); ?>');
+                        return confirm('<?=  t('Are you sure you want to delete this manufacturer?'); ?>');
                     });
                 });
             </script>
@@ -40,21 +39,21 @@ if ($controller->getAction() == 'add' ||
         <?php echo $form->hidden('mID', $manufacturer->getID()) ?>
 
         <div class="form-group">
-            <?= $form->label("name", t("Name")); ?>
-            <?= $form->text("name", $manufacturer->getName()); ?>
+            <?= $form->label('name', t('Name')); ?>
+            <?= $form->text('name', $manufacturer->getName()); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label("name", t("Page")); ?>
+            <?= $form->label('name', t('Page')); ?>
             <?php $ps = $app->make('helper/form/page_selector'); ?>
             <?= $ps->selectPage('pageCID', $manufacturer->getPageID()); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label("description", t("Description")); ?>
+            <?= $form->label('description', t('Description')); ?>
             <?php
             $editor = $app->make('editor');
-            $editor->getPluginManager()->deselect(array('autogrow'));
+            $editor->getPluginManager()->deselect(['autogrow']);
             echo $editor->outputStandardEditor('description', $manufacturer->getDescription());
             ?>
         </div>
@@ -113,7 +112,7 @@ if ($controller->getAction() == 'add' ||
                         </td>
 
                         <td>
-                            <a class="btn btn-primary btn-sm" href="<?= Url::to('/dashboard/store/manufacturers/edit', $manufacturer->getID()) ?>"><?= t("Edit") ?></a>
+                            <a class="btn btn-primary btn-sm" href="<?= Url::to('/dashboard/store/manufacturers/edit', $manufacturer->getID()) ?>"><?= t('Edit') ?></a>
                         </td>
 
                     </tr>
@@ -137,7 +136,7 @@ if ($controller->getAction() == 'add' ||
     <?php } ?>
     <div class="ccm-dashboard-header-buttons">
         <a href="<?= \URL::to('/dashboard/store/manufacturers/', 'add') ?>"
-           class="btn btn-primary"><?= t("Add Manufacturer") ?></a>
+           class="btn btn-primary"><?= t('Add Manufacturer') ?></a>
     </div>
 <?php }
 ?>

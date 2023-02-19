@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Application;
 
@@ -13,7 +13,7 @@ $options = [
     'showCheckout' => t('Show Checkout Link'),
     'popUpCart' => t('Display Cart In Popup'),
     'showGreeting' => t('Show Greeting'),
-    'showSignIn' => t('Show Sign-In Link')
+    'showSignIn' => t('Show Sign-In Link'),
 ];
 ?>
 <p style="padding-top: 5px;">

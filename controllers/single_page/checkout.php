@@ -1,26 +1,26 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Page;
-use Concrete\Core\User\User;
-use Concrete\Core\View\View;
 use Concrete\Core\Routing\Redirect;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Checkout extends PageController
@@ -30,16 +30,15 @@ class Checkout extends PageController
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
         if ($this->request->request->all()) {
-
             $codeerror = false;
             $codesuccess = false;
 
-            if ('code' == $this->request->request->get('action')) {
+            if ($this->request->request->get('action') == 'code') {
                 if ($this->request->request->get('code')) {
                     $codesuccess = DiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
@@ -57,10 +56,9 @@ class Checkout extends PageController
                 // A coupon was added or removed so let's refresh other carts on other open pages
                 $this->addFooterItem('<script type="text/javascript">$(function() { communityStore.broadcastCartRefresh({action: \'code\'}); });</script>');
             }
-
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
             return Redirect::to($langpath . '/');
         }
 
@@ -78,15 +76,15 @@ class Checkout extends PageController
             return Redirect::to($langpath . '/cart/changed');
         }
 
-        if (0 == Cart::getTotalItemsInCart()) {
+        if (Cart::getTotalItemsInCart() == 0) {
             return Redirect::to($langpath . '/cart');
         }
-        $this->set('form', $this->app->make("helper/form"));
+        $this->set('form', $this->app->make('helper/form'));
 
         $useCaptcha = Config::get('community_store.useCaptcha');
 
         if ($useCaptcha) {
-            $captcha = $this->app->make("captcha");
+            $captcha = $this->app->make('captcha');
             $token = $this->app->make('token');
             $session = $this->app->make('session');
             if (!$session->get('securityCheck')) {
@@ -103,7 +101,6 @@ class Checkout extends PageController
         if ($useCaptcha && !$session->get('securityCheck')) {
             $this->render('/checkout/security');
         } else {
-
             $allcountries = $this->app->make('helper/lists/countries')->getCountries();
 
             $ak = UserAttributeKey::getByHandle('billing_address');
@@ -140,27 +137,27 @@ class Checkout extends PageController
 
             $discountsWithCodesExist = DiscountRule::discountsWithCodesExist();
 
-            $this->set("discountsWithCodesExist", $discountsWithCodesExist);
+            $this->set('discountsWithCodesExist', $discountsWithCodesExist);
             $this->set('cart', $cart);
             $this->set('discounts', Cart::getDiscounts());
             $this->set('hasCode', DiscountCode::hasCartCode());
 
-            $this->set("billingCountries", $billingCountries);
-            $this->set("shippingCountries", $shippingCountries);
+            $this->set('billingCountries', $billingCountries);
+            $this->set('shippingCountries', $shippingCountries);
 
-            $this->set("defaultBillingCountry", $defaultBillingCountry);
-            $this->set("defaultShippingCountry", $defaultShippingCountry);
+            $this->set('defaultBillingCountry', $defaultBillingCountry);
+            $this->set('defaultShippingCountry', $defaultShippingCountry);
 
             $this->set('notes', Session::get('notes'));
 
             $statelist = ['' => ''];
             $statelist = array_merge($statelist, $this->app->make('helper/lists/states_provinces')->getStates());
-            $this->set("states", $statelist);
+            $this->set('states', $statelist);
 
             $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
-            $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
+            $this->set('orderChoicesEnabled', count($orderChoicesAttList) ? true : false);
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-                $this->set("orderChoicesAttList", $orderChoicesAttList);
+                $this->set('orderChoicesAttList', $orderChoicesAttList);
             }
 
             $totals = Calculator::getTotals();
@@ -191,16 +188,16 @@ class Checkout extends PageController
             $this->requireAsset('javascript', 'community-store');
 
             $this->requireAsset('css', 'community-store');
-            $this->addFooterItem("
-            <script type=\"text/javascript\">
+            $this->addFooterItem('
+            <script type="text/javascript">
                 $(function() {
                     communityStore.loadViaHash();
                 });
             </script>
-        ");
+            ');
 
-            $availableMethods = PaymentMethod::getAvailableMethods((float)$totals['subTotal']);
-            $this->set("enabledPaymentMethods", $availableMethods);
+            $availableMethods = PaymentMethod::getAvailableMethods((float) $totals['subTotal']);
+            $this->set('enabledPaymentMethods', $availableMethods);
 
             $apikey = Config::get('community_store.placesAPIKey');
 
@@ -212,7 +209,6 @@ class Checkout extends PageController
                 $this->requireAsset('javascript', 'community-store-autocomplete');
                 $this->set('addressLookup', true);
             }
-
         }
 
         $this->set('token', $this->app->make('token'));
@@ -226,6 +222,7 @@ class Checkout extends PageController
         $this->set('activeShippingLabel', ShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', Calculator::getShippingTotal());
         $this->set('lastPaymentMethodHandle', Session::get('paymentMethod'));
+
         return $this->view($guest);
     }
 
@@ -236,7 +233,7 @@ class Checkout extends PageController
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
@@ -258,7 +255,7 @@ class Checkout extends PageController
         $pm = PaymentMethod::getByHandle($pmHandle);
 
         // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
-        if (false === $pm || (Cart::isShippable() && !Session::get('community_store.smID'))) {
+        if ($pm === false || (Cart::isShippable() && !Session::get('community_store.smID'))) {
             return Redirect::to($langpath . '/checkout');
         }
 
@@ -268,50 +265,49 @@ class Checkout extends PageController
         }
 
         if ($pm->getMethodController()->isExternal()) {
-            if (0 != Cart::getTotalItemsInCart()) {
-				if (! $this->request->isMethod('POST')) {
-					return Redirect::to($langpath . '/cart');
-				}
+            if (Cart::getTotalItemsInCart() != 0) {
+                if (!$this->request->isMethod('POST')) {
+                    return Redirect::to($langpath . '/cart');
+                }
 
-				$nonce = md5(uniqid('cs', true));
-				Session::set('checkoutNonce', $nonce);
+                $nonce = md5(uniqid('cs', true));
+                Session::set('checkoutNonce', $nonce);
 
-				$order = Order::add($pm, null, 'incomplete');
+                $order = Order::add($pm, null, 'incomplete');
                 Session::set('orderID', $order->getOrderID());
 
                 // unset the shipping type, as next order might be unshippable
                 Session::set('community_store.smID', '');
 
-				return Redirect::to($langpath . '/checkout/external',$nonce);
-            } else {
-                return Redirect::to($langpath . '/cart');
+                return Redirect::to($langpath . '/checkout/external', $nonce);
             }
-        } else {
-            Session::set('securityCheck', false);
 
-            $payment = $pm->submitPayment();
-            if (1 == $payment['error']) {
-                $errors = $payment['errorMessage'];
-                Session::set('paymentErrors', $errors);
-                if ($guest) {
-                    return Redirect::to($langpath . '/checkout/failed/1#payment');
-                } else {
-                    return Redirect::to($langpath . '/checkout/failed#payment');
-                }
-            } else {
-                $transactionReference = $payment['transactionReference'];
-
-                $order = Order::add($pm, $transactionReference);
-
-                // unset the shipping type, as next order might be unshippable
-                Session::set('community_store.smID', '');
-                Session::set('notes', '');
-                return Redirect::to($order->getOrderCompleteDestination());
-            }
+            return Redirect::to($langpath . '/cart');
         }
+        Session::set('securityCheck', false);
+
+        $payment = $pm->submitPayment();
+        if ($payment['error'] == 1) {
+            $errors = $payment['errorMessage'];
+            Session::set('paymentErrors', $errors);
+            if ($guest) {
+                return Redirect::to($langpath . '/checkout/failed/1#payment');
+            }
+
+            return Redirect::to($langpath . '/checkout/failed#payment');
+        }
+        $transactionReference = $payment['transactionReference'];
+
+        $order = Order::add($pm, $transactionReference);
+
+        // unset the shipping type, as next order might be unshippable
+        Session::set('community_store.smID', '');
+        Session::set('notes', '');
+
+        return Redirect::to($order->getOrderCompleteDestination());
     }
 
-	public function external($nonce = false)
+    public function external($nonce = false)
     {
         $this->requireAsset('javascript', 'jquery');
         $pmHandle = Session::get('paymentMethod');
@@ -321,29 +317,29 @@ class Checkout extends PageController
             $pm = PaymentMethod::getByHandle($pmHandle);
         }
 
-		$c = Page::getCurrentPage();
-		$al = Section::getBySectionOfSite($c);
-		$langpath = '';
-		if (null !== $al) {
-			$langpath = $al->getCollectionHandle();
-		}
+        $c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if ($al !== null) {
+            $langpath = $al->getCollectionHandle();
+        }
 
         if (!$pm) {
             return Redirect::to($langpath . '/checkout');
         }
 
-		$checkoutNonce = Session::get('checkoutNonce');
-		if (!$checkoutNonce) {
-			return Redirect::to($langpath . '/checkout');
-		}
-		Session::remove('checkoutNonce');
-		if ($checkoutNonce !== $nonce) {
-			return Redirect::to($langpath . '/checkout');
-		}
+        $checkoutNonce = Session::get('checkoutNonce');
+        if (!$checkoutNonce) {
+            return Redirect::to($langpath . '/checkout');
+        }
+        Session::remove('checkoutNonce');
+        if ($checkoutNonce !== $nonce) {
+            return Redirect::to($langpath . '/checkout');
+        }
 
         $ajax = $this->app->make('helper/ajax');
         if ($ajax->isAjaxRequest($this->request)){
-            return new JsonResponse(['OK'=>1]);
+            return new JsonResponse(['OK' => 1]);
         }
 
         $this->set('pm', $pm);
@@ -363,7 +359,7 @@ class Checkout extends PageController
         if ($this->request->request->all()) {
             $data = $this->request->request->all();
             $billing = false;
-            if ('billing' == $data['adrType']) {
+            if ($data['adrType'] == 'billing') {
                 $billing = true;
 
                 $u = new User();
@@ -391,7 +387,7 @@ class Checkout extends PageController
             } else {
                 $customer = new Customer();
                 $notes = '';
-                if ('billing' == $data['adrType']) {
+                if ($data['adrType'] == 'billing') {
                     $this->updateBilling($data);
                     if (isset($data['notes'])) {
                         $notes = $data['notes'];
@@ -405,7 +401,7 @@ class Checkout extends PageController
                     $email = $customer->getEmail();
                 }
 
-                if ('shipping' == $data['adrType']) {
+                if ($data['adrType'] == 'shipping') {
                     $this->updateShipping($data);
                     $address = Session::get('shipping_address');
                     $phone = '';
@@ -421,6 +417,7 @@ class Checkout extends PageController
                         $e = $taxHelper->validateVatNumber($vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
+
                             return;
                         }
                     }
@@ -442,7 +439,7 @@ class Checkout extends PageController
                 $results['notes'] = nl2br(h($notes));
 
                 // If updating shipping method we need vat number
-                if ('shipping' == $data['adrType'] && isset($vat_number)) {
+                if ($data['adrType'] == 'shipping' && isset($vat_number)) {
                     $results['vat_number'] = $vat_number;
                 }
 
@@ -450,7 +447,7 @@ class Checkout extends PageController
                 echo json_encode($results);
             }
         } else {
-            echo "An error occurred";
+            echo 'An error occurred';
         }
 
         exit();
@@ -483,20 +480,20 @@ class Checkout extends PageController
         }
 
         $address = [
-            "address1" => trim($data['addr1']),
-            "address2" => trim($data['addr2']),
-            "city" => trim($data['city']),
-            "state_province" => trim($data['state']),
-            "postal_code" => trim($data['postal']),
-            "country" => trim($data['count']),
+            'address1' => trim($data['addr1']),
+            'address2' => trim($data['addr2']),
+            'city' => trim($data['city']),
+            'state_province' => trim($data['state']),
+            'postal_code' => trim($data['postal']),
+            'country' => trim($data['count']),
         ];
 
         if ($guest || !$noShippingSave) {
-            $customer->setValue("shipping_first_name", trim($data['fName']));
-            $customer->setValue("shipping_address", $address);
-            $customer->setValue("vat_number", isset($data['vat_number']) ? $data['vat_number'] : '');
-            $customer->setValue("shipping_last_name", trim($data['lName']));
-            $customer->setValue("shipping_company", isset($data['company']) ? $data['company'] : '');
+            $customer->setValue('shipping_first_name', trim($data['fName']));
+            $customer->setValue('shipping_address', $address);
+            $customer->setValue('vat_number', isset($data['vat_number']) ? $data['vat_number'] : '');
+            $customer->setValue('shipping_last_name', trim($data['lName']));
+            $customer->setValue('shipping_company', isset($data['company']) ? $data['company'] : '');
         }
 
         Session::set('shipping_first_name', trim($data['fName']));
@@ -561,15 +558,28 @@ class Checkout extends PageController
         return $e;
     }
 
+    public function getCartList()
+    {
+        $cart = Cart::getCart();
+
+        if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
+            View::element('cart_list', ['cart' => $cart]);
+        } else {
+            View::element('cart_list', ['cart' => $cart], 'community_store');
+        }
+
+        exit();
+    }
+
     private function validateAccountEmail($email)
     {
         $user = $this->app->make('Concrete\Core\User\UserInfoRepository')->getByEmail($email);
 
         if ($user) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     private function updateBilling($data)
@@ -599,12 +609,12 @@ class Checkout extends PageController
         }
 
         $address = [
-            "address1" => trim($data['addr1']),
-            "address2" => trim($data['addr2']),
-            "city" => trim($data['city']),
-            "state_province" => trim($data['state']),
-            "postal_code" => trim($data['postal']),
-            "country" => trim($data['count']),
+            'address1' => trim($data['addr1']),
+            'address2' => trim($data['addr2']),
+            'city' => trim($data['city']),
+            'state_province' => trim($data['state']),
+            'postal_code' => trim($data['postal']),
+            'country' => trim($data['count']),
         ];
 
         Session::set('billing_first_name', trim($data['fName']));
@@ -618,30 +628,17 @@ class Checkout extends PageController
         }
 
         if ($guest || !$noBillingSave) {
-            $customer->setValue("billing_first_name", trim($data['fName']));
-            $customer->setValue("billing_last_name", trim($data['lName']));
-            $customer->setValue("billing_phone", trim($data['phone']));
-            $customer->setValue("billing_address", $address);
+            $customer->setValue('billing_first_name', trim($data['fName']));
+            $customer->setValue('billing_last_name', trim($data['lName']));
+            $customer->setValue('billing_phone', trim($data['phone']));
+            $customer->setValue('billing_address', $address);
             if (isset($data['company'])) {
-                $customer->setValue("billing_company", trim($data['company']));
+                $customer->setValue('billing_company', trim($data['company']));
             } else {
-                $customer->setValue("billing_company", '');
+                $customer->setValue('billing_company', '');
             }
         }
 
         Session::set('community_store.smID', false);
-    }
-
-    public function getCartList()
-    {
-        $cart = Cart::getCart();
-
-        if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
-            View::element('cart_list', ['cart' => $cart]);
-        } else {
-            View::element('cart_list', ['cart' => $cart], 'community_store');
-        }
-
-        exit();
     }
 }

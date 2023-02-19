@@ -1,19 +1,20 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
-use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
-use Concrete\Core\Routing\Redirect;
-use Concrete\Core\Support\Facade\Session;
-use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Support\Facade\Database;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 
 class Products extends DashboardSitePageController
 {
@@ -42,7 +43,6 @@ class Products extends DashboardSitePageController
             Session::remove('communitystore.dashboard.multilingual.keywords');
         }
 
-
         $this->set('productList', $productsList);
 
         $factory = new PaginationFactory($this->app->make(Request::class));
@@ -59,7 +59,7 @@ class Products extends DashboardSitePageController
         $this->set('locales', $this->getLocales()['additional']);
 
         $grouplist = GroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
         $this->set('gID', $gID);
 
         if ($gID) {
@@ -115,7 +115,7 @@ class Products extends DashboardSitePageController
         $db = Database::connection();
 
         if ($attrHandles) {
-            $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes where pID = ?',[$pID]);
+            $attributedata = $db->fetchAll('SELECT ' . implode(',', $attrHandles) . ' FROM CommunityStoreProductSearchIndexAttributes where pID = ?', [$pID]);
 
             if (!empty($attributedata)) {
                 foreach ($attributedata as $row) {
@@ -143,24 +143,6 @@ class Products extends DashboardSitePageController
 
         $this->set('keywordsSearch', Session::get('communitystore.dashboard.multilingual.keywords'));
         $this->set('groupSearch', Session::get('communitystore.dashboard.multilingual.group'));
-    }
-
-    private function getLocales() {
-        $site = $this->getSite();
-        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
-        $locales = $site->getLocales();
-
-        $localePages = array('additional'=>array());
-
-        foreach($locales as $locale) {
-            if ($locale->getIsDefault()) {
-                $localePages['default'] = $locale;
-            } else {
-                $localePages['additional'][] = $locale;
-            }
-        }
-
-        return $localePages;
     }
 
     public function save()
@@ -191,7 +173,7 @@ class Products extends DashboardSitePageController
                             $query->andWhere('t.locale = :locale')->setParameter('locale', $locale);
                             $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
 
-                            if ($key == 'optionName' || $key == 'optionValue' || $key == 'optionDetails' || $key == 'optionSelectorName' || $key == 'productAttributeName' ) {
+                            if ($key == 'optionName' || $key == 'optionValue' || $key == 'optionDetails' || $key == 'optionSelectorName' || $key == 'productAttributeName') {
                                 $query->andWhere('t.entityID = :entityID')->setParameter('entityID', $id);
                             }
 
@@ -235,7 +217,6 @@ class Products extends DashboardSitePageController
                 }
             }
 
-
             $productID = $this->request->request->get('pID');
 
             $mlist = Section::getList();
@@ -276,7 +257,26 @@ class Products extends DashboardSitePageController
             $keywords = Session::get('communitystore.dashboard.multilingual.keywords');
             $group = Session::get('communitystore.dashboard.multilingual.group');
 
-            return Redirect::to('/dashboard/store/multilingual/products/' . ($group ? $group : '') . ($keywords ? '?keywords='.urlencode($keywords) : ''));
+            return Redirect::to('/dashboard/store/multilingual/products/' . ($group ? $group : '') . ($keywords ? '?keywords=' . urlencode($keywords) : ''));
         }
+    }
+
+    private function getLocales()
+    {
+        $site = $this->getSite();
+        $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+        $locales = $site->getLocales();
+
+        $localePages = ['additional' => []];
+
+        foreach($locales as $locale) {
+            if ($locale->getIsDefault()) {
+                $localePages['default'] = $locale;
+            } else {
+                $localePages['additional'][] = $locale;
+            }
+        }
+
+        return $localePages;
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment;
 
-use Concrete\Core\User\User;
-use Concrete\Core\View\View;
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -21,28 +21,44 @@ class Method extends Controller
      */
     protected $pmID;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     */
     protected $pmHandle;
 
-    /** @ORM\Column(type="text") */
+    /**
+     * @ORM\Column(type="text")
+     */
     protected $pmName;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
     protected $pmDisplayName;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
     protected $pmButtonLabel;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
     protected $pmUserGroups;
 
-    /** @ORM\Column(type="string",nullable=true) */
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
     protected $pmExcludedUserGroups;
 
-    /** @ORM\Column(type="boolean") */
+    /**
+     * @ORM\Column(type="boolean")
+     */
     protected $pmEnabled;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     protected $pmSortOrder;
 
     /**
@@ -109,11 +125,11 @@ class Method extends Controller
 
     public function getDisplayName()
     {
-        if ("" == $this->pmDisplayName) {
+        if ($this->pmDisplayName == '') {
             return $this->pmName;
-        } else {
-            return $this->pmDisplayName;
         }
+
+        return $this->pmDisplayName;
     }
 
     public function setDisplayName($name)
@@ -162,7 +178,7 @@ class Method extends Controller
     public static function getByID($pmID)
     {
         $em = dbORM::entityManager();
-        $method = $em->find(get_class(), $pmID);
+        $method = $em->find(__CLASS__, $pmID);
 
         if ($method) {
             $method->setMethodController();
@@ -174,7 +190,7 @@ class Method extends Controller
     public static function getByHandle($pmHandle)
     {
         $em = dbORM::entityManager();
-        $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
+        $method = $em->getRepository(__CLASS__)->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
             $method->setMethodController();
@@ -187,24 +203,10 @@ class Method extends Controller
     {
         if ($this->pkgID > 0) {
             $pkg = Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
-            $dir = $pkg->getPackagePath() . "/src/CommunityStore/Payment/Methods/" . $this->pmHandle . "/";
+            $dir = $pkg->getPackagePath() . '/src/CommunityStore/Payment/Methods/' . $this->pmHandle . '/';
         }
 
         return $dir;
-    }
-
-    protected function setMethodController()
-    {
-        $app = Application::getFacadeApplication();
-
-        $th = $app->make("helper/text");
-        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
-
-        $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
-
-        $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
-        $namespace = $namespace . '\\' . $className;
-        $this->methodController = new $namespace();
     }
 
     public function getMethodController()
@@ -212,12 +214,12 @@ class Method extends Controller
         return $this->methodController;
     }
 
-    /*
-     * @ORM\param string $pmHandle
-     * @ORM\param string $pmName
-     * @ORM\pkg Package Object
-     * @ORM\param string $pmDisplayName
-     * @ORM\param bool $enabled
+    /**
+     * @param string $pmHandle
+     * @param string $pmName
+     * @param \Package $pkg
+     * @param mixed $pmButtonLabel
+     * @param bool $enabled
      */
     public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel = '', $enabled = false)
     {
@@ -238,9 +240,9 @@ class Method extends Controller
     {
         $em = dbORM::entityManager();
         if ($enabled) {
-            $methods = $em->getRepository(get_class())->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
+            $methods = $em->getRepository(__CLASS__)->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
         } else {
-            $methods = $em->getRepository(get_class())->findBy([], ['pmSortOrder' => 'ASC']);
+            $methods = $em->getRepository(__CLASS__)->findBy([], ['pmSortOrder' => 'ASC']);
         }
         foreach ($methods as $method) {
             $method->setMethodController();
@@ -254,7 +256,8 @@ class Method extends Controller
         return self::getMethods(true);
     }
 
-    public static function getAvailableMethods($total) {
+    public static function getAvailableMethods($total)
+    {
         $enabledMethods = self::getMethods(true);
 
         $availableMethods = [];
@@ -281,19 +284,18 @@ class Method extends Controller
             }
         }
 
-		$event = new PaymentEvent('add');
-		$event->setMethods($availableMethods);
+        $event = new PaymentEvent('add');
+        $event->setMethods($availableMethods);
 
-		\Events::dispatch(PaymentEvent::PAYMENT_ON_AVAILABLE_METHODS_GET, $event);
+        \Events::dispatch(PaymentEvent::PAYMENT_ON_AVAILABLE_METHODS_GET, $event);
 
-		$changed = $event->getChanged();
-		if ($changed){
-			$availableMethods = $event->getMethods();
-		}
+        $changed = $event->getChanged();
+        if ($changed){
+            $availableMethods = $event->getMethods();
+        }
 
-		return $availableMethods;
+        return $availableMethods;
     }
-
 
     public function renderCheckoutForm()
     {
@@ -385,5 +387,19 @@ class Method extends Controller
     public function getPaymentInstructions()
     {
         return '';
+    }
+
+    protected function setMethodController()
+    {
+        $app = Application::getFacadeApplication();
+
+        $th = $app->make('helper/text');
+        $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
+
+        $namespace = 'Concrete\\Package\\' . $th->camelcase($pkg->getPackageHandle()) . '\\Src\\CommunityStore\\Payment\\Methods\\' . $th->camelcase($this->pmHandle);
+
+        $className = $th->camelcase($this->pmHandle) . 'PaymentMethod';
+        $namespace = $namespace . '\\' . $className;
+        $this->methodController = new $namespace();
     }
 }

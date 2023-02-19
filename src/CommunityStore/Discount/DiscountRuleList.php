@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Discount;
 
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\ItemList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Core\Search\Pagination\Pagination;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class DiscountRuleList extends ItemList
 {
     protected $sortBy = 'alpha';
+
     protected $search = '';
 
     public function setGroupID($gID)
@@ -25,7 +26,8 @@ class DiscountRuleList extends ItemList
     {
         $this->query
             ->select('r.drID')
-            ->from('CommunityStoreDiscountRules', 'r');
+            ->from('CommunityStoreDiscountRules', 'r')
+        ;
     }
 
     public function setSearch($search)
@@ -41,7 +43,7 @@ class DiscountRuleList extends ItemList
             $query->where('gID = ?')->setParameter($paramcount++, $this->gID);
         }
         switch ($this->sortBy) {
-            case "alpha":
+            case 'alpha':
                 $query->orderBy('drName', 'ASC');
                 break;
         }
@@ -54,7 +56,6 @@ class DiscountRuleList extends ItemList
                 ->orWhere('dcCode like ?')->setParameter($paramcount++, '%' . $this->search . '%');
 
             $query->groupBy('r.drID');
-
         }
 
         $query->andWhere('drDeleted is NULL');
@@ -73,20 +74,19 @@ class DiscountRuleList extends ItemList
         return $dr;
     }
 
-    protected function createPaginationObject()
-    {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct r.drID)')->setMaxResults(1);
-        });
-        $pagination = new Pagination($this, $adapter);
-
-        return $pagination;
-    }
-
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
 
         return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct r.drID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    protected function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct r.drID)')->setMaxResults(1);
+        });
+
+        return new Pagination($this, $adapter);
     }
 }

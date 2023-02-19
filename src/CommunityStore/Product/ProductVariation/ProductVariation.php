@@ -1,16 +1,16 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation;
 
 use Concrete\Core\File\File;
-use Concrete\Core\Support\Facade\Config;
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
-use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -110,25 +110,48 @@ class ProductVariation
      */
     protected $pvSort;
 
-	/**
-	 * @ORM\Column(type="boolean",nullable=true)
-	 */
-	protected $pvDisabled;
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    protected $pvDisabled;
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariationOptionItem", mappedBy="variation", cascade={"persist"}))
      */
     protected $options;
 
-	public function getVariationDisabled()
-	{
-		return $this->pvDisabled ? 1 : 0;
-	}
+    public function __construct()
+    {
+        $this->options = new ArrayCollection();
+    }
 
-	public function setVariationDisabled($pvDisabled)
-	{
-		$this->pvDisabled = $pvDisabled ? 1 : 0;
-	}
+    public function __clone()
+    {
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+
+        $options = $this->getOptions();
+        $this->options = new ArrayCollection();
+        if (count($options) > 0) {
+            foreach ($options as $option) {
+                $cloneOption = clone $option;
+                $cloneOption->setVariation($this);
+                $this->options->add($cloneOption);
+            }
+        }
+    }
+
+    public function getVariationDisabled()
+    {
+        return $this->pvDisabled ? 1 : 0;
+    }
+
+    public function setVariationDisabled($pvDisabled)
+    {
+        $this->pvDisabled = $pvDisabled ? 1 : 0;
+    }
 
     public function getVariationFID()
     {
@@ -148,20 +171,13 @@ class ProductVariation
     public function getVariationImageObj()
     {
         if ($this->pvfID) {
-            $fileObj = File::getByID($this->pvfID);
-
-            return $fileObj;
+            return File::getByID($this->pvfID);
         }
     }
 
-    public function __construct()
-    {
-        $this->options = new ArrayCollection();
-    }
-
-	/**
-	 * @return ArrayCollection | ProductVariationOptionItem[]
-	 */
+    /**
+     * @return ArrayCollection|ProductVariationOptionItem[]
+     */
     public function getOptions()
     {
         return $this->options;
@@ -196,11 +212,13 @@ class ProductVariation
         return $this->pID;
     }
 
-    public function getProduct() {
+    public function getProduct()
+    {
         return $this->product;
     }
 
-    public function setProduct($product) {
+    public function setProduct($product)
+    {
         $this->product = $product;
     }
 
@@ -251,7 +269,7 @@ class ProductVariation
 
     public function setVariationPrice($pvPrice)
     {
-        if ('' != $pvPrice) {
+        if ($pvPrice != '') {
             $this->pvPrice = (float) $pvPrice;
         } else {
             $this->pvPrice = null;
@@ -261,7 +279,7 @@ class ProductVariation
     public function setVariationWholesalePrice($pvWholesalePrice)
     {
         if ($pvWholesalePrice != '') {
-            $this->pvWholesalePrice = (float)$pvWholesalePrice;
+            $this->pvWholesalePrice = (float) $pvWholesalePrice;
         } else {
             $this->pvWholesalePrice = null;
         }
@@ -270,7 +288,7 @@ class ProductVariation
     public function setVariationCostPrice($pvCostPrice)
     {
         if ($pvCostPrice != '') {
-            $this->pvCostPrice = (float)$pvCostPrice;
+            $this->pvCostPrice = (float) $pvCostPrice;
         } else {
             $this->pvCostPrice = null;
         }
@@ -288,7 +306,7 @@ class ProductVariation
 
     public function setVariationSalePrice($pvSalePrice)
     {
-        if ('' != $pvSalePrice) {
+        if ($pvSalePrice != '') {
             $this->pvSalePrice = (float) $pvSalePrice;
         } else {
             $this->pvSalePrice = null;
@@ -313,12 +331,12 @@ class ProductVariation
         if ($maxcart > 0) {
             if ($available > 0) {
                 return min($maxcart, $available);
-            } else {
-                return $maxcart;
             }
-        } else {
-            return $available;
+
+            return $maxcart;
         }
+
+        return $available;
     }
 
     /**
@@ -336,13 +354,16 @@ class ProductVariation
 
     /**
      * @deprecated
+     *
+     * @param mixed $pvQty
      */
-    public function setVariationQty($pvQty) {
+    public function setVariationQty($pvQty)
+    {
         $this->setVariationStockLevel($pvQty);
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getVariationQtyUnlim()
     {
@@ -351,6 +372,8 @@ class ProductVariation
 
     /**
      * @deprecated
+     *
+     * @param mixed $pvQtyUnlim
      */
     public function setVariationQtyUnlim($pvQtyUnlim)
     {
@@ -359,7 +382,7 @@ class ProductVariation
 
     public function setVariationIsUnlimited($bool)
     {
-        $this->pvQtyUnlim = (!is_null($bool) ? $bool : false);
+        $this->pvQtyUnlim = ($bool !== null ? $bool : false);
     }
 
     public function getVariationWidth()
@@ -369,7 +392,7 @@ class ProductVariation
 
     public function setVariationWidth($pvWidth)
     {
-        if ('' != $pvWidth) {
+        if ($pvWidth != '') {
             $this->pvWidth = (float) $pvWidth;
         } else {
             $this->pvWidth = null;
@@ -383,7 +406,7 @@ class ProductVariation
 
     public function setVariationHeight($pvHeight)
     {
-        if ('' != $pvHeight) {
+        if ($pvHeight != '') {
             $this->pvHeight = (float) $pvHeight;
         } else {
             $this->pvHeight = null;
@@ -397,7 +420,7 @@ class ProductVariation
 
     public function setVariationLength($pvLength)
     {
-        if ('' != $pvLength) {
+        if ($pvLength != '') {
             $this->pvLength = (float) $pvLength;
         } else {
             $this->pvLength = null;
@@ -411,7 +434,7 @@ class ProductVariation
 
     public function setVariationWeight($pvWeight)
     {
-        if ('' != $pvWeight) {
+        if ($pvWeight != '') {
             $this->pvWeight = (float) $pvWeight;
         } else {
             $this->pvWeight = null;
@@ -435,7 +458,7 @@ class ProductVariation
 
     public function setVariationNumberItems($pvNumberItems)
     {
-        if ('' != $pvNumberItems) {
+        if ($pvNumberItems != '') {
             $this->pvNumberItems = (int) $pvNumberItems;
         } else {
             $this->pvNumberItems = null;
@@ -476,14 +499,14 @@ class ProductVariation
         }
 
         if ($this->getVariationDisabled()) {
-        	return false;
-		}
+            return false;
+        }
 
         if ($this->isUnlimited() || $this->getStockLevel() > 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static function addVariations(array $data, Product $product)
@@ -495,7 +518,6 @@ class ProductVariation
         if (!empty($options)) {
             foreach ($options as $option) {
                 if ($option->getIncludeVariations()) {
-
                     $optionItems = $option->getOptionItems();
                     $sortedItems = [];
                     foreach($optionItems as $optionItem) {
@@ -504,7 +526,7 @@ class ProductVariation
 
                     foreach ($sortedItems as $optItem) {
                         $optionArrays[$option->getID()][] = $optItem->getID();
-                        $tempoptionArrays[] = ['id'=>$optItem->getID(), 'order'=>$optItem->getSort()];
+                        $tempoptionArrays[] = ['id' => $optItem->getID(), 'order' => $optItem->getSort()];
                     }
                 }
             }
@@ -532,22 +554,22 @@ class ProductVariation
                     $variation = self::add(
                         $product,
                         [
-                        'pvSKU' => '',
-                        'pvBarcode' => '',
-                        'pvPrice' => '',
-                        'pvWholesalePrice'=>'',
-                        'pvSalePrice' => '',
-                        'pvQty' => 0,
-                        'pvQtyUnlim' => ($variationDefaultUnlimited ? 1 : null) ,
-                        'pvfID' => null,
-                        'pvWeight' => '',
-                        'pvNumberItems' => '',
-                        'pvWidth' => '',
-                        'pvHeight' => '',
-                        'pvLength' => '',
-                        'pvSort' => $sort,
-                        'pvDisabled' => 0,
-                         true, ]
+                            'pvSKU' => '',
+                            'pvBarcode' => '',
+                            'pvPrice' => '',
+                            'pvWholesalePrice' => '',
+                            'pvSalePrice' => '',
+                            'pvQty' => 0,
+                            'pvQtyUnlim' => ($variationDefaultUnlimited ? 1 : null),
+                            'pvfID' => null,
+                            'pvWeight' => '',
+                            'pvNumberItems' => '',
+                            'pvWidth' => '',
+                            'pvHeight' => '',
+                            'pvLength' => '',
+                            'pvSort' => $sort,
+                            'pvDisabled' => 0,
+                            true, ]
                     );
 
                     foreach ($optioncombo as $optionvalue) {
@@ -599,7 +621,7 @@ class ProductVariation
                 }
 
                 $variationIDs[] = $variation->getID();
-                ++$sort;
+                $sort++;
             }
 
             $em = dbORM::entityManager();
@@ -612,9 +634,9 @@ class ProductVariation
         if (!empty($variationIDs)) {
             $options = implode(',', array_map('intval', $variationIDs));
 
-            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ($options)", [$product->getID()]);
+            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ? and pvID not in ({$options})", [$product->getID()]);
         } else {
-            $pvIDstoDelete = $db->getAll("SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?", [$product->getID()]);
+            $pvIDstoDelete = $db->getAll('SELECT pvID FROM CommunityStoreProductVariations WHERE pID = ?', [$product->getID()]);
         }
 
         if (!empty($pvIDstoDelete)) {
@@ -628,23 +650,27 @@ class ProductVariation
     }
 
     /**
-	 * @return ProductVariation | null
-	 */
+     * @param mixed $pvID
+     *
+     * @return ProductVariation|null
+     */
     public static function getByID($pvID)
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pvID);
+        return $em->find(__CLASS__, $pvID);
     }
 
     /**
-     * @return ProductVariation | null
+     * @param mixed $pvSKU
+     *
+     * @return ProductVariation|null
      */
     public static function getBySKU($pvSKU)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['pvSKU' => $pvSKU]);
+        return $em->getRepository(__CLASS__)->findOneBy(['pvSKU' => $pvSKU]);
     }
 
     public static function add($product, $data, $persistonly = false)
@@ -679,7 +705,7 @@ class ProductVariation
         if (is_array($optionids) && !empty($optionids)) {
             $options = implode(',', array_map('intval', $optionids));
 
-            $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ($options)
+            $pvID = $db->fetchColumn("SELECT pvID FROM CommunityStoreProductVariationOptionItems WHERE poiID in ({$options})
                                  group by pvID having count(*) = ? ", [count($optionids)]);
 
             return self::getByID($pvID);
@@ -753,23 +779,5 @@ class ProductVariation
         }
 
         return $result;
-    }
-
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-
-        $options = $this->getOptions();
-        $this->options = new ArrayCollection();
-        if (count($options) > 0) {
-            foreach ($options as $option) {
-                $cloneOption = clone $option;
-                $cloneOption->setVariation($this);
-                $this->options->add($cloneOption);
-            }
-        }
     }
 }

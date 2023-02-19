@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -33,14 +33,17 @@ class ProductUserGroup
      */
     protected $gID;
 
+    public function __clone()
+    {
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+    }
+
     public function setProduct($product)
     {
         return $this->product = $product;
-    }
-
-    private function setUserGroupID($gID)
-    {
-        $this->gID = $gID;
     }
 
     public function getProductID()
@@ -109,14 +112,6 @@ class ProductUserGroup
         return $productUserGroup;
     }
 
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-    }
-
     public function save()
     {
         $em = dbORM::entityManager();
@@ -129,5 +124,10 @@ class ProductUserGroup
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setUserGroupID($gID)
+    {
+        $this->gID = $gID;
     }
 }

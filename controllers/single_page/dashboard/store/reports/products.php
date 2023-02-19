@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Reports;
 
 use Concrete\Core\Http\Request;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\CsvReportExporter;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport;
 
 class Products extends DashboardPageController
 {
@@ -36,7 +37,7 @@ class Products extends DashboardPageController
         if (!$orderBy) {
             $orderBy = 'quantity';
         }
-        if ('quantity' == $orderBy) {
+        if ($orderBy == 'quantity') {
             $pr->sortByPopularity();
         } else {
             $pr->sortByTotal();
@@ -62,19 +63,19 @@ class Products extends DashboardPageController
     {
         $header = [];
 
-        $header[] = t("Order #");
-        $header[] = t("Last Name");
-        $header[] = t("First Name");
-        $header[] = t("Email");
-        $header[] = t("Phone");
-        $header[] = t("Product");
-        $header[] = t("Quantity");
-        $header[] = t("Options");
-        $header[] = t("Order Date");
-        $header[] = t("Order Status");
-        $header[] = t("Payment");
-        $header[] = t("Method");
-        $header[] = t("Amount");
+        $header[] = t('Order #');
+        $header[] = t('Last Name');
+        $header[] = t('First Name');
+        $header[] = t('Email');
+        $header[] = t('Phone');
+        $header[] = t('Product');
+        $header[] = t('Quantity');
+        $header[] = t('Options');
+        $header[] = t('Order Date');
+        $header[] = t('Order Status');
+        $header[] = t('Payment');
+        $header[] = t('Method');
+        $header[] = t('Amount');
 
         $this->set('reportHeader', $header);
 
@@ -107,10 +108,10 @@ class Products extends DashboardPageController
 
                     $outputItem = [];
                     $outputItem[] = $order->getOrderID();
-                    $outputItem[] = $order->getAttribute("billing_last_name");
-                    $outputItem[] = $order->getAttribute("billing_first_name");
-                    $outputItem[] = $order->getAttribute("email");
-                    $outputItem[] = $order->getAttribute("billing_phone");
+                    $outputItem[] = $order->getAttribute('billing_last_name');
+                    $outputItem[] = $order->getAttribute('billing_first_name');
+                    $outputItem[] = $order->getAttribute('email');
+                    $outputItem[] = $order->getAttribute('billing_phone');
 
                     $productName = $item->getProductName();
 
@@ -125,7 +126,7 @@ class Products extends DashboardPageController
                     $optionStrings = [];
                     if ($options) {
                         foreach ($options as $option) {
-                            $optionStrings[] = $option['oioKey'] . ": " . $option['oioValue'];
+                            $optionStrings[] = $option['oioKey'] . ': ' . $option['oioValue'];
                         }
                     }
                     $outputItem[] = implode(', ', $optionStrings);
@@ -159,7 +160,7 @@ class Products extends DashboardPageController
                     [
                         'filename' => t('product_orders') . '_' . $product->getID(),
                         'header' => $header,
-                        'rows' => $outputItems
+                        'rows' => $outputItems,
                     ]
                 )->getCsv();
             }
@@ -173,7 +174,8 @@ class Products extends DashboardPageController
         }
     }
 
-    public function sheet() {
+    public function sheet()
+    {
         $productsList = new ProductList();
         $productsList->setItemsPerPage(20);
         $productsList->setActiveOnly(false);
@@ -187,5 +189,4 @@ class Products extends DashboardPageController
         $this->set('pageTitle', 'Product Price/Shipping Sheet');
         $this->render('/dashboard/store/reports/products/sheet');
     }
-
 }

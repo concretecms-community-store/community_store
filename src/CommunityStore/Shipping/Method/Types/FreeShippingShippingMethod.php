@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\Types;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodOffer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodTypeMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -20,6 +21,7 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
      * @ORM\Column(type="float")
      */
     protected $minimumAmount;
+
     /**
      * @ORM\Column(type="float")
      */
@@ -29,14 +31,17 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
      * @ORM\Column(type="float")
      */
     protected $minimumWeight;
+
     /**
      * @ORM\Column(type="float")
      */
     protected $maximumWeight;
+
     /**
      * @ORM\Column(type="string")
      */
     protected $countries;
+
     /**
      * @ORM\Column(type="text",nullable=true)
      */
@@ -112,9 +117,116 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         return $this->addOrUpdate('update', $data);
     }
 
+    public function dashboardForm($shippingMethod = null)
+    {
+        $app = Application::getFacadeApplication();
+        $this->set('form', $app->make('helper/form'));
+        $this->set('smt', $this);
+        $this->set('countryList', $app->make('helper/lists/countries')->getCountries());
+
+        if (is_object($shippingMethod)) {
+            $smtm = $shippingMethod->getShippingMethodTypeMethod();
+        } else {
+            $smtm = new self();
+        }
+        $this->set('smtm', $smtm);
+    }
+
+    public function validate($args, $e)
+    {
+        return $e;
+    }
+
+    public function isEligible()
+    {
+        //three checks - within countries, price range, and weight
+        if ($this->isWithinRange()) {
+            if ($this->isWithinSelectedCountries()) {
+                if ($this->isWithinWeight()) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public function isWithinRange()
+    {
+        $subtotal = Calculator::getSubTotal();
+        $max = $this->getMaximumAmount();
+        if ($max != 0) {
+            if ($subtotal >= $this->getMinimumAmount() && $subtotal <= $this->getMaximumAmount()) {
+                return true;
+            }
+
+            return false;
+        }
+        if ($subtotal >= $this->getMinimumAmount()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isWithinWeight()
+    {
+        $totalWeight = Cart::getCartWeight();
+        $maxWeight = $this->getMaximumWeight();
+        if ($maxWeight != 0) {
+            if ($totalWeight >= $this->getMinimumWeight() && $totalWeight <= $this->getMaximumWeight()) {
+                return true;
+            }
+
+            return false;
+        }
+        if ($totalWeight >= $this->getMinimumWeight()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isWithinSelectedCountries()
+    {
+        $customer = new Customer();
+        $custCountry = $customer->getValue('shipping_address')->country;
+        if ($this->getCountries() != 'all') {
+            $selectedCountries = explode(',', $this->getCountriesSelected());
+            if (in_array($custCountry, $selectedCountries)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getOffers()
+    {
+        $offers = [];
+
+        $offer = new ShippingMethodOffer();
+        $offer->setRate($this->getRate());
+
+        $offers[] = $offer;
+
+        return $offers;
+    }
+
+    public function getShippingMethodTypeName()
+    {
+        return t('Free Shipping');
+    }
+
     private function addOrUpdate($type, $data)
     {
-        if ("update" == $type) {
+        if ($type == 'update') {
             $sm = $this;
         } else {
             $sm = new self();
@@ -137,113 +249,8 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
         return $sm;
     }
 
-    public function dashboardForm($shippingMethod = null)
-    {
-        $app = Application::getFacadeApplication();
-        $this->set('form', $app->make("helper/form"));
-        $this->set('smt', $this);
-        $this->set('countryList', $app->make('helper/lists/countries')->getCountries());
-
-        if (is_object($shippingMethod)) {
-            $smtm = $shippingMethod->getShippingMethodTypeMethod();
-        } else {
-            $smtm = new self();
-        }
-        $this->set("smtm", $smtm);
-    }
-
-    public function validate($args, $e)
-    {
-        return $e;
-    }
-
-    public function isEligible()
-    {
-        //three checks - within countries, price range, and weight
-        if ($this->isWithinRange()) {
-            if ($this->isWithinSelectedCountries()) {
-                if ($this->isWithinWeight()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    public function isWithinRange()
-    {
-        $subtotal = Calculator::getSubTotal();
-        $max = $this->getMaximumAmount();
-        if (0 != $max) {
-            if ($subtotal >= $this->getMinimumAmount() && $subtotal <= $this->getMaximumAmount()) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($subtotal >= $this->getMinimumAmount()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function isWithinWeight()
-    {
-        $totalWeight = Cart::getCartWeight();
-        $maxWeight = $this->getMaximumWeight();
-        if (0 != $maxWeight) {
-            if ($totalWeight >= $this->getMinimumWeight() && $totalWeight <= $this->getMaximumWeight()) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($totalWeight >= $this->getMinimumWeight()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function isWithinSelectedCountries()
-    {
-        $customer = new Customer();
-        $custCountry = $customer->getValue('shipping_address')->country;
-        if ('all' != $this->getCountries()) {
-            $selectedCountries = explode(',', $this->getCountriesSelected());
-            if (in_array($custCountry, $selectedCountries)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    public function getOffers()
-    {
-        $offers = [];
-
-        $offer = new ShippingMethodOffer();
-        $offer->setRate($this->getRate());
-
-        $offers[] = $offer;
-
-        return $offers;
-    }
-
     private function getRate()
     {
         return 0;
-    }
-
-    public function getShippingMethodTypeName()
-    {
-        return t('Free Shipping');
     }
 }

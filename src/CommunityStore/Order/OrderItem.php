@@ -1,15 +1,14 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -80,7 +79,7 @@ class OrderItem
     protected $oiQtyLabel;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -88,7 +87,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getProductName()
     {
@@ -96,7 +95,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiProductName
+     * @param mixed $oiProductName
      */
     public function setProductName($oiProductName)
     {
@@ -104,7 +103,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getSKU()
     {
@@ -112,7 +111,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiSKU
+     * @param mixed $oiSKU
      */
     public function setSKU($oiSKU)
     {
@@ -120,7 +119,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getPricePaid()
     {
@@ -128,7 +127,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiPricePaid
+     * @param mixed $oiPricePaid
      */
     public function setPricePaid($oiPricePaid)
     {
@@ -136,7 +135,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTax()
     {
@@ -144,7 +143,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiTax
+     * @param mixed $oitax
      */
     public function setTax($oitax)
     {
@@ -152,7 +151,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTaxIncluded()
     {
@@ -160,7 +159,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oitaxIncluded
+     * @param mixed $oiTaxIncluded
      */
     public function setTaxIncluded($oiTaxIncluded)
     {
@@ -168,7 +167,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTaxName()
     {
@@ -176,7 +175,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiTaxName
+     * @param mixed $oiTaxName
      */
     public function setTaxName($oiTaxName)
     {
@@ -184,9 +183,10 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
-    public function getQuantity() {
+    public function getQuantity()
+    {
         return round($this->oiQty, 4);
     }
 
@@ -199,7 +199,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiQty
+     * @param mixed $oiQty
      */
     public function setQuantity($oiQty)
     {
@@ -208,6 +208,8 @@ class OrderItem
 
     /**
      * @deprecated
+     *
+     * @param mixed $oiQty
      */
     public function setQty($oiQty)
     {
@@ -215,7 +217,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getQuantityLabel()
     {
@@ -231,7 +233,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiQtyLabel
+     * @param mixed $oiQtyLabel
      */
     public function setQuantityLabel($oiQtyLabel)
     {
@@ -240,6 +242,8 @@ class OrderItem
 
     /**
      * @deprecated
+     *
+     * @param mixed $oiQtyLabel
      */
     public function setQtyLabel($oiQtyLabel)
     {
@@ -266,9 +270,8 @@ class OrderItem
         return $this->pvID;
     }
 
-
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrder()
     {
@@ -276,7 +279,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $order
+     * @param mixed $order
      */
     public function setOrder($order)
     {
@@ -287,7 +290,7 @@ class OrderItem
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $oiID);
+        return $em->find(__CLASS__, $oiID);
     }
 
     public static function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)
@@ -330,28 +333,27 @@ class OrderItem
             $orderItem->setVariationID($variation->getID());
         }
 
-
         $orderItem->save();
 
         foreach ($data['productAttributes'] as $groupID => $valID) {
-            if ('po' == substr($groupID, 0, 2)) {
-                $groupID = str_replace("po", "", $groupID);
+            if (substr($groupID, 0, 2) == 'po') {
+                $groupID = str_replace('po', '', $groupID);
                 $optionvalue = ProductOptionItem::getByID($valID);
 
                 if ($optionvalue) {
                     $optionvalue = $csm->t($optionvalue->getName(), 'optionValue');
                 }
-            } elseif ('pt' == substr($groupID, 0, 2)) {
-                $groupID = str_replace("pt", "", $groupID);
+            } elseif (substr($groupID, 0, 2) == 'pt') {
+                $groupID = str_replace('pt', '', $groupID);
                 $optionvalue = $valID;
-            } elseif ('pa' == substr($groupID, 0, 2)) {
-                $groupID = str_replace("pa", "", $groupID);
+            } elseif (substr($groupID, 0, 2) == 'pa') {
+                $groupID = str_replace('pa', '', $groupID);
                 $optionvalue = $valID;
-            } elseif ('ph' == substr($groupID, 0, 2)) {
-                $groupID = str_replace("ph", "", $groupID);
+            } elseif (substr($groupID, 0, 2) == 'ph') {
+                $groupID = str_replace('ph', '', $groupID);
                 $optionvalue = $valID;
-            } elseif ('pc' == substr($groupID, 0, 2)) {
-                $groupID = str_replace("pc", "", $groupID);
+            } elseif (substr($groupID, 0, 2) == 'pc') {
+                $groupID = str_replace('pc', '', $groupID);
                 $optionvalue = $valID;
             }
 
@@ -376,14 +378,13 @@ class OrderItem
     {
         $price = $this->getPricePaid();
         $qty = $this->getQuantity();
-        $subtotal = $qty * $price;
 
-        return $subtotal;
+        return $qty * $price;
     }
 
     public function getProductOptions()
     {
-        return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
+        return Database::connection()->GetAll('SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?', $this->oiID);
     }
 
     public function getProductObject()

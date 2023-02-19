@@ -1,12 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $action = $controller->getAction();
 $csm = $app->make('cs/helper/multilingual');
 $editor = $app->make('editor');
-
 
 if ($action == 'view') { ?>
 
@@ -22,7 +21,7 @@ if ($action == 'view') { ?>
                     <div class="ccm-search-fields-submit col-md-12 col-md-6">
                         <div class="form-group">
                             <div class="ccm-search-main-lookup-field">
-                                <?= $form->search('keywords', isset($searchRequest) ? $searchRequest['keywords'] : false, ['placeholder' => t('Search by Name or SKU'), 'style' => "min-width: 220px"]) ?>
+                                <?= $form->search('keywords', isset($searchRequest) ? $searchRequest['keywords'] : false, ['placeholder' => t('Search by Name or SKU'), 'style' => 'min-width: 220px']) ?>
                             </div>
 
                         </div>
@@ -74,7 +73,6 @@ if ($action == 'view') { ?>
 
                     <?php
                     foreach ($locales
-
                     as $lp) { ?>
                     <th><a><?= $lp->getLanguageText($lp->getLocale()); ?> (<?= $lp->getLocale() ?>)</a>
                     <th>
@@ -102,9 +100,9 @@ if ($action == 'view') { ?>
                             <td>
                                 <?php
                                 if ($product->isActive()) {
-                                    echo "<span class='label label-success'>" . t('Active') . "</span>";
+                                    echo "<span class='label label-success'>" . t('Active') . '</span>';
                                 } else {
-                                    echo "<span class='label label-default'>" . t('Inactive') . "</span>";
+                                    echo "<span class='label label-default'>" . t('Inactive') . '</span>';
                                 }
                                 ?>
                             </td>
@@ -121,7 +119,6 @@ if ($action == 'view') { ?>
                             </td>
 
                             <?php foreach ($locales
-
                             as $lp) { ?>
                             <td>
                                 <?= $csm->t(null, 'productName', $product->getID(), null, $lp->getLocale()); ?>
@@ -152,7 +149,6 @@ if ($action == 'view') { ?>
 <?php } ?>
 
 <?php if ($action == 'translate') {
-
 $localecount = count($locales);
 
 ?>
@@ -227,7 +223,7 @@ $localecount = count($locales);
                     <td>
 
                         <?php
-                        $editor->getPluginManager()->deselect(array('autogrow'));
+                        $editor->getPluginManager()->deselect(['autogrow']);
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDescription]', $csm->t(null, 'productDescription', $product->getID(), false, $lp->getLocale()));
                         ?>
 
@@ -257,7 +253,7 @@ $localecount = count($locales);
 
                     <td>
                         <?php
-                        $editor->getPluginManager()->deselect(array('autogrow'));
+                        $editor->getPluginManager()->deselect(['autogrow']);
                         echo $editor->outputStandardEditor('translation[' . $lp->getLocale() . '][longText][productDetails]', $csm->t(null, 'productDetails', $product->getID(), false, $lp->getLocale()));
                         ?>
                     </td>
@@ -378,7 +374,6 @@ $localecount = count($locales);
                 </tr>
 
                 <?php foreach ($product->getOptions() as $option) {
-
                     $firstrow = true;
                     foreach ($locales as $lp) { ?>
                         <?php if ($option->getType() != 'static') { ?>
@@ -541,7 +536,6 @@ $localecount = count($locales);
             <?php
 
             foreach ($attrList as $attr) {
-
                 $firstrow = true;
                 foreach ($locales as $lp) { ?>
                     <tr>
@@ -571,7 +565,6 @@ $localecount = count($locales);
                     </tr>
                 <?php } ?>
             <?php }
-
 
             foreach ($attrOptions as $type => $typeAttrOptions) {
                 foreach ($typeAttrOptions as $attrOption => $x) {
@@ -617,7 +610,7 @@ $localecount = count($locales);
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/multilingual/products/' . ($groupSearch ? $groupSearch : '') . ($keywordsSearch ? '?keywords=' . urlencode($keywordsSearch) : '')) ?>"
-               class="btn btn-default btn-secondary pull-left"><?= t("Cancel") ?></a>
+               class="btn btn-default btn-secondary pull-left"><?= t('Cancel') ?></a>
             <button class="pull-right btn btn-success float-end" type="submit"><?= t('Save Product Translation') ?></button>
         </div>
     </div>

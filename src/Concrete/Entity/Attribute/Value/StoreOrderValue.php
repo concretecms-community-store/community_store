@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Entity\Attribute\Value;
 
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;

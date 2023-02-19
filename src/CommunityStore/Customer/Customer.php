@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
-use Concrete\Core\Support\Facade\Application;
 
 class Customer
 {
@@ -15,7 +16,7 @@ class Customer
         $app = Application::getFacadeApplication();
         $u = new User();
 
-        if (!is_null($uID)) {
+        if ($uID !== null) {
             $this->ui = $app->make(UserInfoRepository::class)->getByID($uID);
         } elseif ($u->isRegistered()) {
             $this->ui = $app->make(UserInfoRepository::class)->getByID($u->getUserID());
@@ -48,9 +49,9 @@ class Customer
             }
 
             return self::formatAddress($addressraw);
-        } else {
-            return (string) $this->ui->getAttribute($handle);
         }
+
+        return (string) $this->ui->getAttribute($handle);
     }
 
     public function getValue($handle)
@@ -63,9 +64,9 @@ class Customer
             }
 
             return $val;
-        } else {
-            return $this->ui->getAttribute($handle);
         }
+
+         return $this->ui->getAttribute($handle);
     }
 
     public function getAddressValue($handle, $valuename)
@@ -75,55 +76,36 @@ class Customer
         return $this->returnAttributeValue($att, $valuename);
     }
 
-    private static function returnAttributeValue($att, $valuename)
-    {
-        $valueCamel = camel_case($valuename);
-
-        if ($att) {
-            if (method_exists($att, 'get' . $valueCamel)) {
-                $functionname = 'get' . $valueCamel;
-
-                return $att->$functionname();
-            } else {
-                return $att->$valuename;
-            }
-        } else {
-            return '';
-        }
-    }
-
     public function getValueArray($handle)
     {
         if ($this->isGuest()) {
-            $val = Session::get('community_' . $handle);
-
-            return $val;
-        } else {
-            return $this->ui->getAttribute($handle);
+            return Session::get('community_' . $handle);
         }
+
+        return $this->ui->getAttribute($handle);
     }
 
     public function isGuest()
     {
-        return is_null($this->ui);
+        return $this->ui === null;
     }
 
     public function getUserID()
     {
         if ($this->isGuest()) {
             return 0;
-        } else {
-            return $this->ui->getUserID();
         }
+
+        return $this->ui->getUserID();
     }
 
     public function getEmail()
     {
         if ($this->isGuest()) {
             return Session::get('community_email');
-        } else {
-            return $this->ui->getUserEmail();
         }
+
+        return $this->ui->getUserEmail();
     }
 
     public function setEmail($email)
@@ -164,18 +146,18 @@ class Customer
             $ret .= $city;
         }
         if ($state_province) {
-            $ret .= ", ";
+            $ret .= ', ';
         }
         if ($state_province) {
             $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ('' == $val) {
+            if ($val == '') {
                 $ret .= $state_province;
             } else {
                 $ret .= $val;
             }
         }
         if ($postal_code) {
-            $ret .= " " . $postal_code;
+            $ret .= ' ' . $postal_code;
         }
         if ($city || $state_province || $postal_code) {
             $ret .= "\n";
@@ -203,7 +185,7 @@ class Customer
             $ret .= $address1;
         }
         if ($address2) {
-            $ret .= ", " . $address2;
+            $ret .= ', ' . $address2;
         }
 
         $ret .= "\n";
@@ -212,18 +194,18 @@ class Customer
             $ret .= $city;
         }
         if ($state_province) {
-            $ret .= ", ";
+            $ret .= ', ';
         }
         if ($state_province) {
             $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ('' == $val) {
+            if ($val == '') {
                 $ret .= $state_province;
             } else {
                 $ret .= $val;
             }
         }
         if ($postal_code) {
-            $ret .= " " . $postal_code;
+            $ret .= ' ' . $postal_code;
         }
         if ($city || $state_province || $postal_code) {
             $ret .= "\n";
@@ -233,5 +215,22 @@ class Customer
         }
 
         return $ret;
+    }
+
+    private static function returnAttributeValue($att, $valuename)
+    {
+        $valueCamel = camel_case($valuename);
+
+        if ($att) {
+            if (method_exists($att, 'get' . $valueCamel)) {
+                $functionname = 'get' . $valueCamel;
+
+                return $att->$functionname();
+            }
+
+                return $att->$valuename;
+        }
+
+        return '';
     }
 }

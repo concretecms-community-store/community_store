@@ -1,33 +1,49 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product as Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as ProductReport;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Report\ProductReport as ProductReport;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class ProductList extends AttributedItemList implements PaginationProviderInterface
 {
     protected $gIDs = [];
+
     protected $groupMatchAny = false;
+
     protected $groupNoMatchAny = false;
+
     protected $sortBy = 'alpha';
+
     protected $search = '';
+
     protected $randomSeed = '';
+
     protected $sortByDirection = 'desc';
+
     protected $featuredOnly = false;
+
     protected $showOutOfStock = false;
+
     protected $saleOnly = false;
+
     protected $activeOnly = true;
+
     protected $cIDs = [];
+
     protected $relatedProduct = false;
+
     protected $manufacturer = '';
+
     protected $attFilters = [];
+
     protected $productType = false;
 
     public function setGroupID($gID)
@@ -112,7 +128,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
     public function setProductType($type)
     {
-       if (is_integer($type)) {
+       if (is_int($type)) {
            $type = ProductType::getByID($type);
        }
 
@@ -127,7 +143,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         if (!empty($this->attFilters)) {
             foreach ($this->attFilters as $handle => $value) {
-                if ('price' == $handle) {
+                if ($handle == 'price') {
                     $this->filterByPrice($value);
                 } else {
                     $ak = $productCategory->getByHandle($handle);
@@ -175,7 +191,6 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             }
         }
 
-
         $app = Application::getFacadeApplication();
         $productCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\ProductCategory');
 
@@ -195,16 +210,16 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                 if (is_object($ak)) {
                     $value = array_filter($value);
                     if ($ak->getAttributeType()->getAttributeTypeHandle() == 'boolean') {
-                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = :'. $paramname)->setParameter($paramname, $value[0]);
+                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = :' . $paramname)->setParameter($paramname, $value[0]);
                     } else {
                         if ($type == 'and') {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . preg_quote($searchterm) . "($|\n)");
+                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' . $paramname)->setParameter($paramname, "(^|\n)" . preg_quote($searchterm) . "($|\n)");
                                 $paramname = 'F' . $paramcount++;
                             }
                         } else {
                             $value = array_map('preg_quote', $value);
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode("($|\n)|(^|\n)", $value ) . "($|\n)");
+                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' . $paramname)->setParameter($paramname, "(^|\n)" . implode("($|\n)|(^|\n)", $value) . "($|\n)");
                         }
                     }
                 }
@@ -224,16 +239,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
     }
 
-    protected function getAttributeKeyClassName()
-    {
-        return StoreProductKey::class;
-    }
-
     public function createQuery()
     {
         $this->query
-        ->select('p.pID')
-        ->from('CommunityStoreProducts', 'p');
+            ->select('p.pID')
+            ->from('CommunityStoreProducts', 'p')
+        ;
     }
 
     public function setSearch($search)
@@ -271,8 +282,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         // if we have a true value for related, we don't have an object, meaning it couldn't find a product to look for related products for
         // this means we should return no products
-        if (true === $this->relatedProduct) {
-            $query->andWhere("1 = 0");
+        if ($this->relatedProduct === true) {
+            $query->andWhere('1 = 0');
         } elseif (is_object($this->relatedProduct)) {
             $related = $this->relatedProduct->getRelatedProducts();
 
@@ -290,40 +301,40 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
 
         switch ($this->sortBy) {
-            case "alpha":
+            case 'alpha':
                 $query->orderBy('pName', $this->getSortByDirection());
                 break;
-            case "alpha_asc":
+            case 'alpha_asc':
                 $query->orderBy('pName', 'asc');
                 break;
-            case "alpha_desc":
+            case 'alpha_desc':
                 $query->orderBy('pName', 'desc');
                 break;
-            case "sku":
+            case 'sku':
                 $query->orderBy('pSKU', $this->getSortByDirection());
                 break;
-            case "sku_asc":
+            case 'sku_asc':
                 $query->orderBy('pSKU', 'asc');
                 break;
-            case "sku_desc":
+            case 'sku_desc':
                 $query->orderBy('pSKU', 'desc');
                 break;
-            case "price":
+            case 'price':
                 $query->orderBy('pPrice', $this->getSortByDirection());
                 break;
-            case "price_asc":
+            case 'price_asc':
                 $query->orderBy('pPrice', 'asc');
                 break;
-            case "price_desc":
+            case 'price_desc':
                 $query->orderBy('pPrice', 'desc');
                 break;
-            case "active":
+            case 'active':
                 $query->orderBy('pActive', $this->getSortByDirection());
                 break;
-            case "date":
+            case 'date':
                 $query->orderBy('pDateAdded', $this->getSortByDirection());
                 break;
-            case "popular":
+            case 'popular':
                 $pr = new ProductReport();
                 $pr->sortByPopularity();
                 $products = $pr->getProducts();
@@ -336,39 +347,39 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                     $query->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')');
                 }
                 break;
-            case "related":
+            case 'related':
                 if (!empty($relatedids)) {
                     $query->addOrderBy('FIELD (p.pID, ' . implode(',', $relatedids) . ')');
                 }
                 break;
-            case "category":
+            case 'category':
                 $query->addOrderBy('categorySortOrder');
                 break;
-            case "group" && !empty($validgids) && !$this->groupNoMatchAny:
+            case 'group' && !empty($validgids) && !$this->groupNoMatchAny:
                 $query->addOrderBy('sortOrder');
                 break;
-            case "random":
+            case 'random':
                 $query->orderBy('RAND(' . $this->randomSeed . ')', null); break;
                 break;
         }
         if ($this->featuredOnly) {
-            $query->andWhere("pFeatured = 1");
+            $query->andWhere('pFeatured = 1');
         }
         if ($this->manufacturer) {
-            $query->andWhere("pManufacturer = ?")->setParameter($paramcount++, $this->manufacturer);
+            $query->andWhere('pManufacturer = ?')->setParameter($paramcount++, $this->manufacturer);
         }
         if ($this->saleOnly) {
-            $query->andWhere("pSalePrice is not null");
+            $query->andWhere('pSalePrice is not null');
         }
         if (!$this->showOutOfStock) {
-            $query->andWhere("pQty > 0 OR pQtyUnlim = 1");
+            $query->andWhere('pQty > 0 OR pQtyUnlim = 1');
         }
         if ($this->activeOnly) {
-            $query->andWhere("pActive = 1");
+            $query->andWhere('pActive = 1');
         }
 
         if (is_object($this->productType)) {
-            $query->andWhere("pType = ?")->setParameter($paramcount++, $this->productType->getTypeID());
+            $query->andWhere('pType = ?')->setParameter($paramcount++, $this->productType->getTypeID());
         }
 
         if ($this->sortBy == 'category') {
@@ -393,20 +404,9 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         return Product::getByID($queryRow['pID']);
     }
 
-    protected function createPaginationObject()
-    {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
-        });
-        $pagination = new Pagination($this, $adapter);
-
-        return $pagination;
-    }
-
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $reset = ['groupBy', 'orderBy'];
 
             if (!$this->groupMatchAny) {
@@ -415,13 +415,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
             $query->resetQueryParts($reset)->select('count(distinct p.pID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
+
         return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
@@ -437,5 +436,19 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
 
         return $productids;
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return StoreProductKey::class;
+    }
+
+    protected function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.pID)')->setMaxResults(1)->execute()->fetchColumn();
+        });
+
+        return new Pagination($this, $adapter);
     }
 }

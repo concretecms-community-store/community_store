@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="form-group">
     <?= $form->label('productLocation', t('Product')); ?>
@@ -10,7 +10,7 @@
     <input name="pID" id="product-select"  class="select2-select" style="width: 100%" placeholder="<?= t('Select Product'); ?>" />
 </div>
 
-<legend><?= t("Display Options"); ?></legend>
+<legend><?= t('Display Options'); ?></legend>
 
 <div class="row">
     <div class="col-sm-6">
@@ -106,7 +106,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="form-group">
-            <?= $form->label('btnText', t("Add to Cart Button Text")); ?>
+            <?= $form->label('btnText', t('Add to Cart Button Text')); ?>
             <?= $form->text('btnText', $btnText ?? false, ['placeholder' => t('Add To Cart')]); ?>
         </div>
     </div>

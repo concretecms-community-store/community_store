@@ -1,14 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
-use Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
-use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeLayoutSet;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeLayoutSetControl;
@@ -22,11 +20,10 @@ class Types extends DashboardPageController
 
         $typeList = ProductTypeList::getProductTypeList();
 
-        $this->set("typeList", $typeList);
+        $this->set('typeList', $typeList);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
-
 
     public function add()
     {
@@ -38,9 +35,10 @@ class Types extends DashboardPageController
             $errors = $this->validateType($this->request->request->all());
             $this->error = $errors;
             if (!$errors->has()) {
-                $newtype = ProductType::add($this->request->request->get('ptName'),$this->request->request->get('ptHandle'), $this->request->request->get('ptDescription'));
+                $newtype = ProductType::add($this->request->request->get('ptName'), $this->request->request->get('ptHandle'), $this->request->request->get('ptDescription'));
 
                 $this->flash('success', t('Product Type Added'));
+
                 return Redirect::to('/dashboard/store/products/types');
             }
         }
@@ -51,7 +49,6 @@ class Types extends DashboardPageController
         $type = ProductType::getByID($ptID);
         $this->set('pageTitle', t('Manage Attributes for %s', $type->getTypeName()));
 
-
         if (!$type) {
             return Redirect::to('/dashboard/store/products/types');
         }
@@ -59,11 +56,9 @@ class Types extends DashboardPageController
         $this->set('type', $type);
         $this->render('/dashboard/store/products/types/attributes');
 
-
         $keys = AttributeKey::getAttributeKeyList('store_product');
 
         $this->set('keys', $keys);
-
     }
 
     public function edit($ptID)
@@ -97,7 +92,7 @@ class Types extends DashboardPageController
     {
         $e = $this->app->make('helper/validation/error');
 
-        if ("" == $args['ptName']) {
+        if ($args['ptName'] == '') {
             $e->add(t('Please enter a Product Type Name'));
         }
         if (strlen($args['ptName']) > 255) {
@@ -107,7 +102,6 @@ class Types extends DashboardPageController
         return $e;
     }
 
-
     public function add_set($ptID = false)
     {
         $sec = $this->app->make('helper/security');
@@ -115,7 +109,6 @@ class Types extends DashboardPageController
         $name = $sec->sanitizeString($this->post('ptLayoutSetName'));
         $description = $sec->sanitizeString($this->post('ptLayoutSetDescription'));
         if ($this->token->validate('add_set')) {
-
             $pt = ProductType::getByID($ptID);
 
             if ($pt) {
@@ -123,11 +116,13 @@ class Types extends DashboardPageController
             }
 
             $this->flash('success', t('Product Set Created'));
+
             return Redirect::to('/dashboard/store/products/types/attributes/' . $ptID);
         }
     }
 
-    public function add_control() {
+    public function add_control()
+    {
         $setID = $this->post('ptlsID');
         $akID = $this->post('akID');
         $hidden = $this->post('hidden');
@@ -148,12 +143,14 @@ class Types extends DashboardPageController
                 $control->save();
 
                 $this->flash('success', t('Attribute Added'));
+
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $id);
             }
         }
     }
 
-    public function edit_control() {
+    public function edit_control()
+    {
         $ptlscID = $this->post('ptlscID');
         $customLabel = $this->post('customLabel');
         $hidden = $this->post('hidden');
@@ -162,7 +159,6 @@ class Types extends DashboardPageController
 
         if ($this->token->validate('edit_control')) {
             if ($control) {
-
                 $id = $control->getLayoutSet()->getProductType()->getTypeID();
 
                 $control->setCustomLabel($customLabel);
@@ -170,6 +166,7 @@ class Types extends DashboardPageController
                 $control->save();
 
                 $this->flash('success', t('Attribute Updated'));
+
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $id);
             }
         }
@@ -182,24 +179,21 @@ class Types extends DashboardPageController
         $name = $sec->sanitizeString($this->post('ptLayoutSetName'));
         $description = $sec->sanitizeString($this->post('ptLayoutSetDescription'));
         if ($this->token->validate('update_set')) {
-
             $set = ProductTypeLayoutSet::getByID($setID);
 
             if ($set) {
                 $set->update($name, $description);
 
-
                 $this->flash('success', t('Product Set Updated'));
+
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $set->getProductType()->getTypeID());
             }
         }
     }
 
-
     public function delete_set($setID = false)
     {
         if ($this->token->validate('delete_set')) {
-
             $set = ProductTypeLayoutSet::getByID($setID);
 
             if ($set) {
@@ -207,27 +201,25 @@ class Types extends DashboardPageController
                 $set->delete();
 
                 $this->flash('success', t('Product Set Deleted'));
+
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $id);
             }
         }
     }
 
-
     public function delete_set_control($controlID = false)
     {
         if ($this->token->validate('delete_set_control')) {
-
             $control = ProductTypeLayoutSetControl::getByID($controlID);
 
             if ($control) {
-
                 $id = $control->getLayoutSet()->getProductType()->getTypeID();
                 $control->delete();
 
                 $this->flash('success', t('Attribute Removed From Set'));
+
                 return Redirect::to('/dashboard/store/products/types/attributes/' . $id);
             }
-
         }
     }
 
@@ -239,7 +231,6 @@ class Types extends DashboardPageController
             $productType = ProductType::getByID($data['ptID']);
 
             if ($productType) {
-
                 $app = Application::getFacadeApplication();
                 $db = $app->make('database')->connection();
                 $sql = 'Update CommunityStoreProducts set pType = null where pType = ?';
@@ -251,11 +242,10 @@ class Types extends DashboardPageController
 
             return Redirect::to('/dashboard/store/products/types');
         }
-
     }
 
-    public function update_set_display_order() {
-
+    public function update_set_display_order()
+    {
         if ($this->token->validate('update_set_display_order')) {
             $setIDs = $this->post('ptLayoutSetID');
 
@@ -271,8 +261,8 @@ class Types extends DashboardPageController
         exit();
     }
 
-    public function update_set_control_display_order() {
-
+    public function update_set_control_display_order()
+    {
         if ($this->token->validate('update_set_control_display_order')) {
             $controlIDs = $this->post('ptLayoutSetControlID');
 

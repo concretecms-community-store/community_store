@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -45,6 +45,14 @@ class ProductGroup
      */
     protected $sortOrder;
 
+    public function __clone()
+    {
+        if (isset($this->pgID) && $this->pgID) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+    }
+
     public function getGroup()
     {
         return $this->group;
@@ -53,16 +61,6 @@ class ProductGroup
     public function setGroup($group)
     {
         $this->group = $group;
-    }
-
-    private function setProductID($pID)
-    {
-        $this->pID = $pID;
-    }
-
-    private function setGroupID($gID)
-    {
-        $this->gID = $gID;
     }
 
     public function setSortOrder($sortOrder)
@@ -109,13 +107,13 @@ class ProductGroup
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pgID);
+        return $em->find(__CLASS__, $pgID);
     }
 
     public static function getGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
-        $productGroups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        $productGroups = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
         $groups = [];
         if (count($productGroups)) {
             foreach ($productGroups as $productGroup) {
@@ -131,7 +129,7 @@ class ProductGroup
         $em = dbORM::entityManager();
         $gID = $group->getGroupID();
 
-        $productGroup = $em->getRepository(get_class())->findBy(['pID' => $product->getID(), 'gID' => $gID]);
+        $productGroup = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID(), 'gID' => $gID]);
         if (count($productGroup)) {
             return true;
         }
@@ -179,13 +177,12 @@ class ProductGroup
                 }
             }
         }
-
     }
 
     public static function removeGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
-        $groups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        $groups = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
         }
@@ -194,7 +191,7 @@ class ProductGroup
     public static function removeProductsForGroup(StoreGroup $group)
     {
         $em = dbORM::entityManager();
-        $groups = $em->getRepository(get_class())->findBy(['gID' => $group->getID()]);
+        $groups = $em->getRepository(__CLASS__)->findBy(['gID' => $group->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
         }
@@ -222,14 +219,6 @@ class ProductGroup
         return false;
     }
 
-    public function __clone()
-    {
-        if (isset($this->pgID) && $this->pgID) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-    }
-
     public function save()
     {
         $em = dbORM::entityManager();
@@ -242,5 +231,15 @@ class ProductGroup
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setProductID($pID)
+    {
+        $this->pID = $pID;
+    }
+
+    private function setGroupID($gID)
+    {
+        $this->gID = $gID;
     }
 }

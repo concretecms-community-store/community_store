@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -42,6 +42,14 @@ class ProductPriceTier
      * @ORM\Column(type="integer")
      */
     protected $ptTo;
+
+    public function __clone()
+    {
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
+    }
 
     public function setProduct($product)
     {
@@ -100,10 +108,10 @@ class ProductPriceTier
         //add new ones.
         if (!empty($data['ptFrom'])) {
             foreach ($data['ptFrom'] as $gID) {
-                if ('' != $data['ptPrice'][$count] && $data['ptFrom'][$count] && $data['ptTo'][$count]) {
+                if ($data['ptPrice'][$count] != '' && $data['ptFrom'][$count] && $data['ptTo'][$count]) {
                     self::add($product, $data['ptFrom'][$count], $data['ptTo'][$count], $data['ptPrice'][$count]);
                 }
-                ++$count;
+                $count++;
             }
         }
     }
@@ -128,14 +136,6 @@ class ProductPriceTier
         $productPriceTier->save();
 
         return $productPriceTier;
-    }
-
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
     }
 
     public function save()

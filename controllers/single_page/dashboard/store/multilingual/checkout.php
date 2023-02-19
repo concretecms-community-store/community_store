@@ -1,25 +1,26 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Multilingual;
 
-use Concrete\Core\Routing\Redirect;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\Tax;
 
 class Checkout extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set("paymentMethods", PaymentMethod::getMethods());
-        $this->set("shippingMethods", ShippingMethod::getMethods());
-        $this->set("taxRates", Tax::getTaxRates());
-        $this->set("discountRules", DiscountRule::getRules());
+        $this->set('paymentMethods', PaymentMethod::getMethods());
+        $this->set('shippingMethods', ShippingMethod::getMethods());
+        $this->set('taxRates', Tax::getTaxRates());
+        $this->set('discountRules', DiscountRule::getRules());
 
         $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');
         $this->set('orderAttributes', $orderAttributes);
@@ -31,25 +32,6 @@ class Checkout extends DashboardSitePageController
         $this->set('defaultLocale', $this->getLocales()['default']);
         $this->set('locales', $this->getLocales()['additional']);
         $this->set('pageTitle', t('Checkout Related Translations'));
-    }
-
-    private function getLocales()
-    {
-        $site = $this->getSite();
-        $pages = Section::getList($site);
-        $locales = $site->getLocales();
-
-        $localePages = ['additional'=>[]];
-
-        foreach($locales as $locale) {
-            if ($locale->getIsDefault()) {
-                $localePages['default'] = $locale;
-            } else {
-                $localePages['additional'][] = $locale;
-            }
-        }
-
-        return $localePages;
     }
 
     public function save()
@@ -97,7 +79,6 @@ class Checkout extends DashboardSitePageController
                 }
             }
 
-
             $translations = $this->post('configtranslation');
             foreach ($translations as $locale => $types) {
                 foreach ($types as $type => $items) {
@@ -137,5 +118,24 @@ class Checkout extends DashboardSitePageController
         $this->flash('success', t('Checkout Translations Updated'));
 
         return Redirect::to('/dashboard/store/multilingual/checkout');
+    }
+
+    private function getLocales()
+    {
+        $site = $this->getSite();
+        $pages = Section::getList($site);
+        $locales = $site->getLocales();
+
+        $localePages = ['additional' => []];
+
+        foreach($locales as $locale) {
+            if ($locale->getIsDefault()) {
+                $localePages['default'] = $locale;
+            } else {
+                $localePages['additional'][] = $locale;
+            }
+        }
+
+        return $localePages;
     }
 }

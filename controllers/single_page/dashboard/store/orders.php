@@ -1,28 +1,28 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
-use Concrete\Core\Http\Request;
-use Concrete\Core\Routing\Redirect;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
 
 class Orders extends DashboardPageController
 {
     public function view($status = 'all', $paymentMethod = 'all', $paymentStatus = 'all')
     {
-
         $statusFilter = $status;
-        $paymentMethodFilter  = $paymentMethod;
+        $paymentMethodFilter = $paymentMethod;
         $paymentStatusFilter = $paymentStatus;
 
         if ($status == 'all') {
@@ -62,7 +62,6 @@ class Orders extends DashboardPageController
             $orderList->setItemsPerPage(20);
         }
 
-
         if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
             $orderList->setIncludeExternalPaymentRequested(true);
         }
@@ -75,18 +74,18 @@ class Orders extends DashboardPageController
         $this->set('orderList', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
-        $statuses =  OrderStatus::getList();
+        $statuses = OrderStatus::getList();
         $this->set('orderStatuses', $statuses);
         $this->set('status', $status);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
-        $fulfilmentStatuses =  OrderStatus::getAll();
+        $fulfilmentStatuses = OrderStatus::getAll();
         $this->set('statuses', $fulfilmentStatuses);
         $this->set('paymentMethod', $paymentMethod);
-        $this->set("enabledPaymentMethods", $paymentMethods);
+        $this->set('enabledPaymentMethods', $paymentMethods);
         $this->set('paymentStatus', $paymentStatus);
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if (Config::get('community_store.shoppingDisabled') == 'all') {
             $this->set('shoppingDisabled', true);
         }
         $this->set('pageTitle', t('Orders'));
@@ -111,13 +110,13 @@ class Orders extends DashboardPageController
         $order = Order::getByID($oID);
 
         if ($order) {
-            $this->set("order", $order);
+            $this->set('order', $order);
             $this->set('orderStatuses', OrderStatus::getList());
             $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-                $this->set("orderChoicesAttList", $orderChoicesAttList);
+                $this->set('orderChoicesAttList', $orderChoicesAttList);
             } else {
-                $this->set("orderChoicesAttList", []);
+                $this->set('orderChoicesAttList', []);
             }
             $this->requireAsset('javascript', 'communityStoreFunctions');
         } else {
@@ -126,7 +125,7 @@ class Orders extends DashboardPageController
 
         $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
 
-        $this->set('pageTitle', t("Order #") . $order->getOrderID());
+        $this->set('pageTitle', t('Order #') . $order->getOrderID());
     }
 
     public function updatestatus($oID)
@@ -263,7 +262,7 @@ class Orders extends DashboardPageController
 
             if ($order && $emails) {
                 $order->sendNotifications($this->request->request->get('email'));
-                $notificationEmails = explode(",", trim($emails));
+                $notificationEmails = explode(',', trim($emails));
                 $notificationEmails = array_map('trim', $notificationEmails);
                 $this->flash('success', t('Notification Email resent to %s', implode(', ', $notificationEmails)));
             }
@@ -287,10 +286,10 @@ class Orders extends DashboardPageController
         $o = Order::getByID($oID);
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', User::getByUserID($o->getCustomerID()));
 
-        if (file_exists(DIR_BASE . "/application/elements/order_slip.php")) {
-            View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
+        if (file_exists(DIR_BASE . '/application/elements/order_slip.php')) {
+            View::element('order_slip', ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList]);
         } else {
-            View::element("order_slip", ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], "community_store");
+            View::element('order_slip', ['order' => $o, 'orderChoicesAttList' => $orderChoicesAttList], 'community_store');
         }
 
         exit();
@@ -299,8 +298,9 @@ class Orders extends DashboardPageController
     protected function getHeaderSearch($paymentMethods, $paymentMethod, $paymentStatuses, $paymentStatus, $fulfilmentStatuses, $status)
     {
         if (!isset($this->headerSearch)) {
-            $this->headerSearch = $this->app->make(ElementManager::class)->get('orders/search', 'community_store', ['paymentMethods'=>$paymentMethods, 'paymentMethod'=>$paymentMethod, 'paymentStatuses'=>$paymentStatuses, 'paymentStatus'=>$paymentStatus, 'fulfilmentStatuses'=>$fulfilmentStatuses, 'status'=>$status]);
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('orders/search', 'community_store', ['paymentMethods' => $paymentMethods, 'paymentMethod' => $paymentMethod, 'paymentStatuses' => $paymentStatuses, 'paymentStatus' => $paymentStatus, 'fulfilmentStatuses' => $fulfilmentStatuses, 'status' => $status]);
         }
+
         return $this->headerSearch;
     }
 }

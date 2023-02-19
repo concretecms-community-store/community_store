@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType;
 
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -26,7 +26,7 @@ class ProductTypeLayoutSetControl
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID", onDelete="CASCADE")
-     **/
+     */
     protected $attribute_key;
 
     /**
@@ -49,23 +49,23 @@ class ProductTypeLayoutSetControl
      */
     protected $hidden;
 
-
-    public function getDisplayLabel($admin = false) {
+    public function getDisplayLabel($admin = false)
+    {
         if ($this->customLabel) {
             if ($admin) {
                 return $this->customLabel . ' (' . $this->getAttributeKey()->getAttributeKeyName() . ')';
-            } else {
-                return $this->customLabel;
             }
-        } else {
-            return $this->getAttributeKey()->getAttributeKeyName();
+
+            return $this->customLabel;
         }
+
+        return $this->getAttributeKey()->getAttributeKeyName();
     }
 
-    public function getProductTypeLayoutSetControlID() {
+    public function getProductTypeLayoutSetControlID()
+    {
         return $this->ptlscID;
     }
-
 
     public function getLayoutSet()
     {
@@ -82,30 +82,25 @@ class ProductTypeLayoutSetControl
         return $this->attribute_key;
     }
 
-
     public function setAttributeKey($attribute_key)
     {
         $this->attribute_key = $attribute_key;
     }
-
 
     public function getDescription()
     {
         return $this->ptlsDescription;
     }
 
-
     public function setPtlsDescription($ptlsDescription)
     {
         $this->ptlsDescription = $ptlsDescription;
     }
 
-
     public function getCustomLabel()
     {
         return $this->customLabel;
     }
-
 
     public function setCustomLabel($customLabel)
     {
@@ -135,6 +130,7 @@ class ProductTypeLayoutSetControl
     public static function getByID($ptID)
     {
         $em = dbORM::entityManager();
+
         return $em->find(get_called_class(), $ptID);
     }
 
@@ -151,8 +147,4 @@ class ProductTypeLayoutSetControl
         $em->remove($this);
         $em->flush();
     }
-
-
-
-
 }

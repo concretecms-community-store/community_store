@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -10,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class StoreProductKey extends Key
 {
-
     public function getAttributeKeyCategoryHandle()
     {
         return 'store_product';
@@ -23,25 +23,26 @@ class StoreProductKey extends Key
 
     public function getSearchIndexFieldDefinition()
     {
-        return array(
-            'columns' => array(
-                array(
+        return [
+            'columns' => [
+                [
                     'name' => 'pID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
-                ),
-            ),
-            'primary' => array('pID'),
-        );
+                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                ],
+            ],
+            'primary' => ['pID'],
+        ];
     }
 
     public static function getByHandle($handle)
     {
         $em = \ORM::entityManager();
-        $type = $em->getRepository(self::class)->findOneBy(
-            array('akHandle' => $handle,
-            ));
 
-        return $type;
+        return $em->getRepository(self::class)->findOneBy(
+            [
+                'akHandle' => $handle,
+            ]
+        );
     }
 }

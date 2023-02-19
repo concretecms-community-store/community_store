@@ -1,38 +1,30 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Editor\LinkAbstractor;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Page\Page;
 use Concrete\Core\File\File;
-use Concrete\Core\Package\Package;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Support\Facade\Events;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Page\Type\Type as PageType;
-use Doctrine\Common\Collections\ArrayCollection;
-use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductEvent;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
+use Concrete\Core\Support\Facade\Events;
 use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
-
-use \Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Package as StorePackage;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -40,19 +32,22 @@ use \Concrete\Core\Attribute\ObjectTrait;
  */
 class Product
 {
+    use ObjectTrait;
+
     // not stored, used for price/sku/etc lookup purposes
     public $priceAdjustment = 0;
+
     public $weightAdjustment = 0;
+
     public $shallowClone = false;
+
     public $variation;
 
-    use ObjectTrait;
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $pID;
-
 
     /**
      * @ORM\Column(type="integer",nullable=true)
@@ -94,12 +89,10 @@ class Product
      */
     protected $pWholesalePrice;
 
-
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     protected $pCostPrice;
-
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -251,10 +244,10 @@ class Product
      */
     protected $pHeight;
 
-	/**
-	 * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
-	 */
-	protected $pStackedHeight;
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
+     */
+    protected $pStackedHeight;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
@@ -323,64 +316,30 @@ class Product
      */
     protected $type;
 
-    public function getType() {
-        return $this->type;
-    }
-
-    public function setType($type) {
-        $this->type = $type;
-    }
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductLocation", mappedBy="product",cascade={"persist"}))
      */
     protected $locations;
-
-
-    public function getLocations()
-    {
-        return $this->locations;
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup", mappedBy="product",cascade={"persist"})
      */
     protected $groups;
 
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductFile", mappedBy="product",cascade={"persist"}))
      */
     protected $files;
-
-    public function getFiles()
-    {
-        return $this->files;
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductImage", mappedBy="product",cascade={"persist"}))
      */
     protected $images;
 
-    public function getImages()
-    {
-        return $this->images;
-    }
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductUserGroup", mappedBy="product",cascade={"persist"}))
      */
     protected $userGroups;
-
-    public function getUserGroups()
-    {
-        return $this->userGroups;
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption", mappedBy="product",cascade={"persist"}))
@@ -388,20 +347,10 @@ class Product
      */
     protected $options;
 
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductRelated", mappedBy="product",cascade={"persist"}))
      */
     protected $related;
-
-    public function getRelatedProducts()
-    {
-        return $this->related;
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductPriceTier", mappedBy="product", cascade={"persist"}))
@@ -409,30 +358,158 @@ class Product
      */
     protected $priceTiers;
 
-
-    public function getPriceTiers()
-    {
-        return $this->priceTiers;
-    }
-
-
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation", mappedBy="product",cascade={"persist"}))
      * @ORM\OrderBy({"pvSort" = "ASC"})
      */
     protected $variations;
 
+    protected $discountRules;
+
+    protected $discountRuleIDs;
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->options = new ArrayCollection();
+        $this->related = new ArrayCollection();
+        $this->priceTiers = new ArrayCollection();
+        $this->variations = new ArrayCollection();
+    }
+
+    public function __clone()
+    {
+        if ($this->shallowClone) {
+            return;
+        }
+
+        if ($this->pID) {
+            $this->setId(null);
+            $this->setPageID(null);
+
+            $locations = $this->getLocations();
+            $this->locations = new ArrayCollection();
+            if (count($locations) > 0) {
+                foreach ($locations as $loc) {
+                    $cloneLocation = clone $loc;
+                    $this->locations->add($cloneLocation);
+                    $cloneLocation->setProduct($this);
+                }
+            }
+
+            $groups = $this->getGroups();
+            $this->groups = new ArrayCollection();
+            if (count($groups) > 0) {
+                foreach ($groups as $group) {
+                    $cloneGroup = clone $group;
+                    $this->groups->add($cloneGroup);
+                    $cloneGroup->setProduct($this);
+                }
+            }
+
+            $images = $this->getImages();
+            $this->images = new ArrayCollection();
+            if (count($images) > 0) {
+                foreach ($images as $image) {
+                    $cloneImage = clone $image;
+                    $this->images->add($cloneImage);
+                    $cloneImage->setProduct($this);
+                }
+            }
+
+            $files = $this->getFiles();
+            $this->files = new ArrayCollection();
+            if (count($files) > 0) {
+                foreach ($files as $file) {
+                    $cloneFile = clone $file;
+                    $this->files->add($cloneFile);
+                    $cloneFile->setProduct($this);
+                }
+            }
+
+            $userGroups = $this->getUserGroups();
+            $this->userGroups = new ArrayCollection();
+            if (count($userGroups) > 0) {
+                foreach ($userGroups as $userGroup) {
+                    $cloneUserGroup = clone $userGroup;
+                    $this->userGroups->add($cloneUserGroup);
+                    $cloneUserGroup->setProduct($this);
+                }
+            }
+
+            $options = $this->getOptions();
+            $this->options = new ArrayCollection();
+            if (count($options) > 0) {
+                foreach ($options as $option) {
+                    $cloneOption = clone $option;
+                    $this->options->add($cloneOption);
+                    $cloneOption->setProduct($this);
+                }
+            }
+        }
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    public function getUserGroups()
+    {
+        return $this->userGroups;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function getRelatedProducts()
+    {
+        return $this->related;
+    }
+
+    public function getPriceTiers()
+    {
+        return $this->priceTiers;
+    }
+
     public function getVariations()
     {
         return $this->variations;
     }
 
-    protected $discountRules;
-
-    protected $discountRuleIDs;
-
-
-    public function clearDiscountRules() {
+    public function clearDiscountRules()
+    {
         $this->discountRules = [];
         $this->discountRuleIDs = [];
     }
@@ -477,30 +554,19 @@ class Product
         return is_array($this->discountRules) ? $this->discountRules : [];
     }
 
-    public function __construct()
+    public function setPriceAdjustment($adjustment)
     {
-        $this->locations = new ArrayCollection();
-        $this->groups = new ArrayCollection();
-        $this->files = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->userGroups = new ArrayCollection();
-        $this->options = new ArrayCollection();
-        $this->related = new ArrayCollection();
-        $this->priceTiers = new ArrayCollection();
-        $this->variations = new ArrayCollection();
-    }
-
-    public function setPriceAdjustment($adjustment){
         $this->priceAdjustment = $adjustment;
     }
 
-    public function getPriceAdjustment($discounts = false){
-        if ($this->priceAdjustment && $discounts &&!empty($discounts)) {
+    public function getPriceAdjustment($discounts = false)
+    {
+        if ($this->priceAdjustment && $discounts && !empty($discounts)) {
             foreach ($discounts as $discount) {
                 $discount->setApplicableTotal($this->priceAdjustment);
                 $discountedprice = $discount->returnDiscountedPrice();
 
-                if (false !== $discountedprice) {
+                if ($discountedprice !== false) {
                     return $discountedprice;
                 }
             }
@@ -509,11 +575,13 @@ class Product
         return $this->priceAdjustment;
     }
 
-    public function setWeightAdjustment($adjustment){
+    public function setWeightAdjustment($adjustment)
+    {
         $this->weightAdjustment = $adjustment;
     }
 
-    public function getWeightAdjustment(){
+    public function getWeightAdjustment()
+    {
         return $this->weightAdjustment;
     }
 
@@ -521,7 +589,7 @@ class Product
     {
         if (is_object($variation)) {
             $this->variation = $variation;
-        } elseif (is_integer($variation)) {
+        } elseif (is_int($variation)) {
             $variation = ProductVariation::getByID($variation);
 
             if ($variation) {
@@ -587,9 +655,9 @@ class Product
 
                 if ($vbarcode) {
                     return $vbarcode;
-                } else {
-                    return $this->pBarcode;
                 }
+
+                return $this->pBarcode;
             }
         } else {
             return $this->pBarcode;
@@ -608,32 +676,32 @@ class Product
 
     public function setDetail($detail)
     {
-        $this->pDetail =  LinkAbstractor::translateTo($detail);
+        $this->pDetail = LinkAbstractor::translateTo($detail);
     }
 
     public function setPrice($price)
     {
-        $this->pPrice = ($price !== '' ? (float)$price : 0);
+        $this->pPrice = ($price !== '' ? (float) $price : 0);
     }
 
     public function setWholesalePrice($price)
     {
-        $this->pWholesalePrice = ($price !== '' ? (float)$price : null);
+        $this->pWholesalePrice = ($price !== '' ? (float) $price : null);
     }
 
     public function setCostPrice($price)
     {
-        $this->pCostPrice = ($price !== '' ? (float)$price : null);
+        $this->pCostPrice = ($price !== '' ? (float) $price : null);
     }
 
     public function setSalePrice($price)
     {
-        $this->pSalePrice = (empty($price) && !is_numeric($price) ?  null : (float)$price );
+        $this->pSalePrice = (empty($price) && !is_numeric($price) ? null : (float) $price);
     }
 
     public function setCustomerPrice($bool)
     {
-        $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
+        $this->pCustomerPrice = ($bool !== null ? $bool : false);
     }
 
     public function getPriceMaximum()
@@ -643,7 +711,7 @@ class Product
 
     public function setPriceMaximum($pPriceMaximum)
     {
-        $this->pPriceMaximum = '' != $pPriceMaximum ? $pPriceMaximum : null;
+        $this->pPriceMaximum = $pPriceMaximum != '' ? $pPriceMaximum : null;
     }
 
     public function getPriceMinimum()
@@ -653,7 +721,7 @@ class Product
 
     public function setPriceMinimum($pPriceMinimum)
     {
-        $this->pPriceMinimum = '' != $pPriceMinimum ? $pPriceMinimum : null;
+        $this->pPriceMinimum = $pPriceMinimum != '' ? $pPriceMinimum : null;
     }
 
     public function getPriceSuggestions()
@@ -673,7 +741,7 @@ class Product
 
     public function setIsFeatured($bool)
     {
-        $this->pFeatured = (!is_null($bool) ? $bool : false);
+        $this->pFeatured = ($bool !== null ? $bool : false);
     }
 
     public function setQty($qty)
@@ -687,7 +755,7 @@ class Product
 
     public function setIsUnlimited($bool)
     {
-        $this->pQtyUnlim = (!is_null($bool) ? $bool : false);
+        $this->pQtyUnlim = ($bool !== null ? $bool : false);
     }
 
     public function getDateAvailableStart()
@@ -732,7 +800,7 @@ class Product
 
     public function setAllowBackOrder($bool)
     {
-        $this->pBackOrder = (!is_null($bool) ? $bool : false);
+        $this->pBackOrder = ($bool !== null ? $bool : false);
     }
 
     public function setNoQty($bool)
@@ -752,7 +820,7 @@ class Product
 
     public function getAllowDecimalQty()
     {
-        return '1' == $this->pAllowDecimalQty;
+        return $this->pAllowDecimalQty == '1';
     }
 
     public function allowDecimalQuantity()
@@ -802,7 +870,7 @@ class Product
 
     public function setIsTaxable($bool)
     {
-        $this->pTaxable = (!is_null($bool) ? $bool : false);
+        $this->pTaxable = ($bool !== null ? $bool : false);
     }
 
     public function setImageID($fID)
@@ -827,29 +895,31 @@ class Product
 
     public function setIsShippable($bool)
     {
-        $this->pShippable = (!is_null($bool) ? $bool : false);
+        $this->pShippable = ($bool !== null ? $bool : false);
     }
 
     public function setSeparateShip($bool)
     {
-        $this->pSeperateShip = (!is_null($bool) ? $bool : false);
+        $this->pSeperateShip = ($bool !== null ? $bool : false);
     }
 
     /**
      * @deprecated
+     *
+     * @param mixed $bool
      */
     public function setSeperateShip($bool)
     {
-        $this->pSeperateShip = (!is_null($bool) ? $bool : false);
+        $this->pSeperateShip = ($bool !== null ? $bool : false);
     }
 
     public function getPackageData()
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getVariationPackageData();
-        } else {
-            return $this->pPackageData;
         }
+
+        return $this->pPackageData;
     }
 
     public function setPackageData($pPackageData)
@@ -893,10 +963,10 @@ class Product
         $this->pHeight = (float) $height;
     }
 
-	public function setStackedHeight($height)
-	{
-		$this->pStackedHeight = (float) $height;
-	}
+    public function setStackedHeight($height)
+    {
+        $this->pStackedHeight = (float) $height;
+    }
 
     public function setLength($length)
     {
@@ -910,17 +980,17 @@ class Product
 
     public function setNumberItems($number)
     {
-        $this->pNumberItems = ('' != $number ? $number : null);
+        $this->pNumberItems = ($number != '' ? $number : null);
     }
 
     public function setCreatesUserAccount($bool)
     {
-        $this->pCreateUserAccount = (!is_null($bool) ? $bool : false);
+        $this->pCreateUserAccount = ($bool !== null ? $bool : false);
     }
 
     public function setAutoCheckout($bool)
     {
-        $this->pAutoCheckout = (!is_null($bool) ? $bool : false);
+        $this->pAutoCheckout = ($bool !== null ? $bool : false);
     }
 
     public function getOrderCompleteCID()
@@ -935,12 +1005,12 @@ class Product
 
     public function setIsExclusive($bool)
     {
-        $this->pExclusive = (!is_null($bool) ? $bool : false);
+        $this->pExclusive = ($bool !== null ? $bool : false);
     }
 
     public function setHasVariations($bool)
     {
-        $this->pVariations = (!is_null($bool) ? $bool : false);
+        $this->pVariations = ($bool !== null ? $bool : false);
     }
 
     public function getNotificationEmails()
@@ -948,13 +1018,15 @@ class Product
         return $this->pNotificationEmails;
     }
 
-    public function getNotificationEmailsArray() {
+    public function getNotificationEmailsArray()
+    {
         if ($this->pNotificationEmails) {
             $notificationEmails = explode(',', $this->pNotificationEmails);
+
             return array_map('trim', $notificationEmails);
-        } else {
-            return array();
         }
+
+        return [];
     }
 
     public function setNotificationEmails($pNotificationEmails)
@@ -972,7 +1044,6 @@ class Product
         $this->manufacturer = $manufacturer;
     }
 
-
     public function setStockLevel($qty)
     {
         if ($this->hasVariations() && $variation = $this->getVariation()) {
@@ -988,39 +1059,49 @@ class Product
 
     /**
      * @deprecated
+     *
+     * @param mixed $qty
      */
-    public function updateProductQty($qty) {
+    public function updateProductQty($qty)
+    {
         $this->setStockLevel($qty);
     }
 
-	/**
-	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
-	 */
+    /**
+     * @param mixed $pID
+     *
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+     */
     public static function getByID($pID)
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pID);
+        return $em->find(__CLASS__, $pID);
     }
 
-	/**
-	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
-	 */
+    /**
+     * @param mixed $pSKU
+     *
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+     */
     public static function getBySKU($pSKU)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
+        return $em->getRepository(__CLASS__)->findOneBy(['pSKU' => $pSKU]);
     }
 
-	/**
-	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
-	 */
+    /**
+     * @param mixed $cID
+     * @param mixed $allLocales
+     *
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+     */
     public static function getByCollectionID($cID, $allLocales = true)
     {
         $em = dbORM::entityManager();
 
-        $product =  $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+        $product = $em->getRepository(__CLASS__)->findOneBy(['cID' => $cID]);
 
         // if product not found, look for it via multilingual related page
         if ($allLocales && !$product) {
@@ -1031,15 +1112,13 @@ class Product
 
                 if ($locale) {
                     $originalcID = Section::getRelatedCollectionIDForLocale($cID, $locale->getLocale());
-                    $product = Product::getByCollectionID($originalcID, false);
+                    $product = self::getByCollectionID($originalcID, false);
                 }
             }
         }
 
         return $product;
-
     }
-
 
     public function getAttributes()
     {
@@ -1085,7 +1164,7 @@ class Product
         if ($data['pWholesalePrice'] !== '') {
             $product->setWholesalePrice($data['pWholesalePrice']);
         } else {
-            $product->setWholesalePrice( '');
+            $product->setWholesalePrice('');
         }
 
         if ($data['pSalePrice'] !== '') {
@@ -1095,13 +1174,13 @@ class Product
         }
 
         if ($data['pSaleStart_dt']) {
-            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m']  . (isset($data['pSaleStart_a']) ? $data['pSaleStart_a'] : '')));
+            $product->setSaleStart(new \DateTime($data['pSaleStart_dt'] . ' ' . $data['pSaleStart_h'] . ':' . $data['pSaleStart_m'] . (isset($data['pSaleStart_a']) ? $data['pSaleStart_a'] : '')));
         } else {
             $product->setSaleStart(null);
         }
 
         if ($data['pSaleEnd_dt']) {
-            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m']  . (isset($data['pSaleEnd_a']) ? $data['pSaleEnd_a'] : '') ));
+            $product->setSaleEnd(new \DateTime($data['pSaleEnd_dt'] . ' ' . $data['pSaleEnd_h'] . ':' . $data['pSaleEnd_m'] . (isset($data['pSaleEnd_a']) ? $data['pSaleEnd_a'] : '')));
         }else {
             $product->setSaleEnd(null);
         }
@@ -1163,7 +1242,6 @@ class Product
 
         $product->setManufacturer($manufacturer);
 
-
         // if we have no product options, we don't have variations to offer
         if (empty($data['poName'])) {
             $product->setHasVariations(0);
@@ -1204,9 +1282,9 @@ class Product
 
                 if ($varsku) {
                     return $varsku;
-                } else {
-                    return $this->pSKU;
                 }
+
+                return $this->pSKU;
             }
         } else {
             return $this->pSKU;
@@ -1224,7 +1302,6 @@ class Product
             $pageID = $this->getPageID();
             $productPage = Page::getByID($pageID);
             if ($productPage && !$productPage->isError() && !$productPage->isInTrash()) {
-
                 $c = Page::getCurrentPage();
                 $lang = Section::getBySectionOfSite($c);
 
@@ -1304,7 +1381,7 @@ class Product
                     $discount->setApplicableTotal($price);
                     $discountedprice = $discount->returnDiscountedPrice();
 
-                    if (false !== $discountedprice) {
+                    if ($discountedprice !== false) {
                         $price = $discountedprice;
                     }
                 }
@@ -1314,11 +1391,13 @@ class Product
         return $price;
     }
 
-    public function getWholesalePriceValue() {
+    public function getWholesalePriceValue()
+    {
         return $this->pWholesalePrice;
     }
 
-    public function getCostPrice() {
+    public function getCostPrice()
+    {
         return $this->pCostPrice;
     }
 
@@ -1351,26 +1430,6 @@ class Product
         return $price;
     }
 
-    private function getQuantityAdjustedPrice($qty = 1) {
-        if ($this->hasQuantityPrice()) {
-            $priceTiers = $this->getPriceTiers();
-
-            if (count($priceTiers) > 0) {
-                foreach ($priceTiers as $pt) {
-                    if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
-                        return $pt->getPrice();
-                    }
-                }
-
-                if ($qty >= $pt->getFrom()) {
-                    return $pt->getPrice();
-                }
-            }
-        }
-
-        return $this->pPrice;
-    }
-
     public function getFormattedOriginalPrice($ignoreDiscounts = true)
     {
         return Price::format($this->getPrice(1, $ignoreDiscounts));
@@ -1386,7 +1445,8 @@ class Product
         return Price::format($this->getWholesalePrice());
     }
 
-    public function getSalePriceValue() {
+    public function getSalePriceValue()
+    {
         return $this->pSalePrice;
     }
 
@@ -1433,7 +1493,7 @@ class Product
                             $discount->setApplicableTotal($price);
                             $discountedprice = $discount->returnDiscountedPrice();
 
-                            if (false !== $discountedprice) {
+                            if ($discountedprice !== false) {
                                 $price = $discountedprice;
                             }
                         }
@@ -1449,7 +1509,7 @@ class Product
     {
         $saleprice = $this->getSalePrice();
 
-        if ('' != $saleprice) {
+        if ($saleprice != '') {
             return Price::format($saleprice);
         }
     }
@@ -1478,13 +1538,13 @@ class Product
     {
         if(Wholesale::isUserWholesale()){
             return $this->getWholesalePrice();
-        } else {
-            $salePrice = $this->getSalePrice();
-            if ($salePrice != "" && !$this->hasQuantityPrice()) {
-                return $salePrice;
-            }
-            return $this->getPrice($qty, $ignoreDiscounts);
         }
+        $salePrice = $this->getSalePrice();
+        if ($salePrice != '' && !$this->hasQuantityPrice()) {
+            return $salePrice;
+        }
+
+        return $this->getPrice($qty, $ignoreDiscounts);
     }
 
     public function getFormattedActivePrice($qty = 1, $ignoreDiscounts = false)
@@ -1539,7 +1599,7 @@ class Product
 
     public function setQuantityPrice($bool)
     {
-        $this->pQuantityPrice = (!is_null($bool) ? $bool : false);
+        $this->pQuantityPrice = ($bool !== null ? $bool : false);
     }
 
     public function getDimensions($whl = null)
@@ -1553,27 +1613,27 @@ class Product
             $varHeight = $variation->getVariationHeight();
             $varLength = $variation->getVariationLength();
 
-            if ('' != $varWidth) {
+            if ($varWidth != '') {
                 $width = $varWidth;
             }
 
-            if ('' != $varHeight) {
+            if ($varHeight != '') {
                 $height = $varHeight;
             }
 
-            if ('' != $varLength) {
+            if ($varLength != '') {
                 $length = $varLength;
             }
         }
 
         switch ($whl) {
-            case "w":
+            case 'w':
                 return $width;
                 break;
-            case "h":
+            case 'h':
                 return $height;
                 break;
-            case "l":
+            case 'l':
                 return $length;
                 break;
             default:
@@ -1623,11 +1683,10 @@ class Product
         return $this->pHeight;
     }
 
-
-	public function getStackedHeight()
-	{
-		return $this->pStackedHeight;
-	}
+    public function getStackedHeight()
+    {
+        return $this->pStackedHeight;
+    }
 
     public function getLength()
     {
@@ -1654,6 +1713,7 @@ class Product
         }
 
         $weight += $this->getWeightAdjustment();
+
         return $weight;
     }
 
@@ -1666,12 +1726,12 @@ class Product
 
             if ($varNumberItems) {
                 return $varNumberItems;
-            } else {
-                return $numberItems;
             }
-        } else {
+
             return $numberItems;
         }
+
+        return $numberItems;
     }
 
     public function getPackages()
@@ -1716,20 +1776,18 @@ class Product
             $id = $variation->getVariationImageID();
             if (!$id) {
                 return $this->pfID;
-            } else {
-                return $id;
             }
-        } else {
-            return $this->pfID;
+
+            return $id;
         }
+
+        return $this->pfID;
     }
 
     public function getImageObj()
     {
         if ($this->getImageID()) {
-            $fileObj = File::getByID($this->getImageID());
-
-            return $fileObj;
+            return File::getByID($this->getImageID());
         }
     }
 
@@ -1741,9 +1799,7 @@ class Product
     public function getBaseProductImageObj()
     {
         if ($this->getBaseProductImageID()) {
-            $fileObj = File::getByID($this->getBaseProductImageID());
-
-            return $fileObj;
+            return File::getByID($this->getBaseProductImageID());
         }
     }
 
@@ -1798,12 +1854,11 @@ class Product
             }
         }
 
-
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isUnlimited();
-        } else {
-            return (bool) $this->pQtyUnlim;
         }
+
+        return (bool) $this->pQtyUnlim;
     }
 
     public function autoCheckout()
@@ -1842,8 +1897,8 @@ class Product
         }
     }
 
-    public function getStockLevel() {
-
+    public function getStockLevel()
+    {
         $now = new \DateTime();
         $startAvailable = $this->getDateAvailableStart();
         $endAvailable = $this->getDateAvailableEnd();
@@ -1858,9 +1913,9 @@ class Product
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getStockLevel();
-        } else {
-            return $this->pQty;
         }
+
+        return $this->pQty;
     }
 
     /**
@@ -1884,12 +1939,12 @@ class Product
         if ($maxcart > 0) {
             if ($available > 0) {
                 return min($maxcart, $available);
-            } else {
-                return $maxcart;
             }
-        } else {
-            return $available;
+
+            return $maxcart;
         }
+
+        return $available;
     }
 
     public function isSellable()
@@ -1914,21 +1969,18 @@ class Product
             $variation = $this->getVariation();
             if ($variation) {
                 return $variation->isSellable();
-            } else {
-                return false;
             }
 
-        } else {
-            if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
-                return true;
-            } else {
-                if ($this->allowBackOrders()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            return false;
         }
+        if ($this->getStockLevel() > 0 || $this->isUnlimited()) {
+            return true;
+        }
+        if ($this->allowBackOrders()) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getimagesobjects()
@@ -1955,9 +2007,9 @@ class Product
     {
         if ($this->pDateUpdated) {
             return $this->pDateUpdated;
-        } else {
-            return $this->getDateAdded();
         }
+
+        return $this->getDateAdded();
     }
 
     public function save()
@@ -2007,78 +2059,6 @@ class Product
         }
     }
 
-    public function __clone()
-    {
-        if ($this->shallowClone) {
-            return;
-        }
-
-        if ($this->pID) {
-            $this->setId(null);
-            $this->setPageID(null);
-
-            $locations = $this->getLocations();
-            $this->locations = new ArrayCollection();
-            if (count($locations) > 0) {
-                foreach ($locations as $loc) {
-                    $cloneLocation = clone $loc;
-                    $this->locations->add($cloneLocation);
-                    $cloneLocation->setProduct($this);
-                }
-            }
-
-            $groups = $this->getGroups();
-            $this->groups = new ArrayCollection();
-            if (count($groups) > 0) {
-                foreach ($groups as $group) {
-                    $cloneGroup = clone $group;
-                    $this->groups->add($cloneGroup);
-                    $cloneGroup->setProduct($this);
-                }
-            }
-
-            $images = $this->getImages();
-            $this->images = new ArrayCollection();
-            if (count($images) > 0) {
-                foreach ($images as $image) {
-                    $cloneImage = clone $image;
-                    $this->images->add($cloneImage);
-                    $cloneImage->setProduct($this);
-                }
-            }
-
-            $files = $this->getFiles();
-            $this->files = new ArrayCollection();
-            if (count($files) > 0) {
-                foreach ($files as $file) {
-                    $cloneFile = clone $file;
-                    $this->files->add($cloneFile);
-                    $cloneFile->setProduct($this);
-                }
-            }
-
-            $userGroups = $this->getUserGroups();
-            $this->userGroups = new ArrayCollection();
-            if (count($userGroups) > 0) {
-                foreach ($userGroups as $userGroup) {
-                    $cloneUserGroup = clone $userGroup;
-                    $this->userGroups->add($cloneUserGroup);
-                    $cloneUserGroup->setProduct($this);
-                }
-            }
-
-            $options = $this->getOptions();
-            $this->options = new ArrayCollection();
-            if (count($options) > 0) {
-                foreach ($options as $option) {
-                    $cloneOption = clone $option;
-                    $this->options->add($cloneOption);
-                    $cloneOption->setProduct($this);
-                }
-            }
-        }
-    }
-
     public function duplicate($newName, $newSKU = '')
     {
         $newproduct = clone $this;
@@ -2104,7 +2084,7 @@ class Product
                 if ($ak && is_object($ak)) {
                     $value = $att->getValue();
 
-                    if (is_object($value) && !is_subclass_of($value,  'Concrete\Core\Entity\File\File')) {
+                    if (is_object($value) && !is_subclass_of($value, 'Concrete\Core\Entity\File\File')) {
                         $newvalue = clone $value;
                     } else {
                         $newvalue = $value;
@@ -2252,7 +2232,7 @@ class Product
             if (is_object($productPage) && $productPage->getCollectionID() > 0) {
                 $pageDescription = trim($productPage->getAttribute('meta_description'));
                 // if it's the same as the current product description, it hasn't been updated independently of the product
-                if ('' == $pageDescription || $productDescription == $pageDescription) {
+                if ($pageDescription == '' || $productDescription == $pageDescription) {
                     $productPage->setAttribute('meta_description', strip_tags($newDescription));
                 }
             }
@@ -2278,7 +2258,7 @@ class Product
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $results = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE pID = ?", $this->pID);
+        $results = $db->GetAll('SELECT * FROM CommunityStoreOrderItems WHERE pID = ?', $this->pID);
 
         return count($results);
     }
@@ -2303,14 +2283,15 @@ class Product
 
         if ($value) {
             return $value;
-        } elseif ($createIfNotExists) {
+        }
+        if ($createIfNotExists) {
             $attributeValue = new StoreProductValue();
             $attributeValue->setProduct($this);
             $attributeValue->setAttributeKey($ak);
+
             return $attributeValue;
         }
     }
-
 
     public function getVariationData()
     {
@@ -2332,15 +2313,14 @@ class Product
                     foreach ($variationOptions as $variationOption) {
                         $opt = $variationOption->getOptionItem();
 
-                        $foundOptionids[] = $variationOption->getOptionItem()->getOption()->getID() ;
+                        $foundOptionids[] = $variationOption->getOptionItem()->getOption()->getID();
 
                         if ($opt->isHidden()) {
                             $isAvailable = false;
                             break;
-                        } else {
-                            $isAvailable = true;
-                            $adjustment += $opt->getPriceAdjustment();
                         }
+                        $isAvailable = true;
+                        $adjustment += $opt->getPriceAdjustment();
                     }
                     if ($isAvailable) {
                         $availableOptionsids = $variation->getOptionItemIDs();
@@ -2368,7 +2348,7 @@ class Product
             }
         }
 
-        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids, 'priceAdjustment'=>$adjustment];
+        return ['firstAvailableVariation' => $firstAvailableVariation, 'availableOptionsids' => $availableOptionsids, 'priceAdjustment' => $adjustment];
     }
 
     // helper function for working with variation options
@@ -2391,5 +2371,26 @@ class Product
         }
 
         return $variationLookup;
+    }
+
+    private function getQuantityAdjustedPrice($qty = 1)
+    {
+        if ($this->hasQuantityPrice()) {
+            $priceTiers = $this->getPriceTiers();
+
+            if (count($priceTiers) > 0) {
+                foreach ($priceTiers as $pt) {
+                    if ($qty >= $pt->getFrom() && $qty <= $pt->getTo()) {
+                        return $pt->getPrice();
+                    }
+                }
+
+                if ($qty >= $pt->getFrom()) {
+                    return $pt->getPrice();
+                }
+            }
+        }
+
+        return $this->pPrice;
     }
 }

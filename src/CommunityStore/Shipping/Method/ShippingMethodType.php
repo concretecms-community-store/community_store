@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Concrete\Core\View\View;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\View\View;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod as ShippingMethod;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -66,10 +66,10 @@ class ShippingMethodType
             return false;
         }
 
-        $th = $app->make("helper/text");
-        $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Shipping\\Method\\Types";
+        $th = $app->make('helper/text');
+        $namespace = 'Concrete\\Package\\' . $th->camelcase($pkg->getPackageHandle()) . '\\Src\\CommunityStore\\Shipping\\Method\\Types';
 
-        $className = $th->camelcase($this->smtHandle) . "ShippingMethod";
+        $className = $th->camelcase($this->smtHandle) . 'ShippingMethod';
         $obj = $namespace . '\\' . $className;
         $this->methodTypeController = new $obj();
     }
@@ -109,10 +109,11 @@ class ShippingMethodType
         return $this->methodTypeController;
     }
 
-	/**
-	 * @param $smtID
-	 * @return ShippingMethodType
-	 */
+    /**
+     * @param mixed $smtID
+     *
+     * @return ShippingMethodType
+     */
     public static function getByID($smtID)
     {
         $em = dbORM::entityManager();
@@ -122,10 +123,11 @@ class ShippingMethodType
         return $obj;
     }
 
-	/**
-	 * @param $smtHandle
-	 * @return ShippingMethodType|null
-	 */
+    /**
+     * @param mixed $smtHandle
+     *
+     * @return ShippingMethodType|null
+     */
     public static function getByHandle($smtHandle)
     {
         $em = dbORM::entityManager();
@@ -195,7 +197,6 @@ class ShippingMethodType
 
     public function addMethod($data)
     {
-        $sm = $this->getMethodTypeController()->addMethodTypeMethod($data);
-        return $sm;
+        return $this->getMethodTypeController()->addMethodTypeMethod($data);
     }
 }

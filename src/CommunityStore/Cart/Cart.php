@@ -1,20 +1,22 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Cart;
 
-use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Config;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\CartEvent;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
 class Cart
 {
-    protected static $cart = null;
-    protected static $discounts = null;
+    protected static $cart;
+
+    protected static $discounts;
+
     protected static $hasChanged = false;
 
     // if force set to true, will get cart details fresh, useful if programatically adding things to the cart
@@ -39,12 +41,11 @@ class Cart
             foreach ($cart as $cartitem) {
                 $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
 
-                $product = Product::getByID((int)$cartitem['product']['pID']);
+                $product = Product::getByID((int) $cartitem['product']['pID']);
 
                 $maxQuantity = 10000000;
 
                 if ($product) {
-
                     $stockLimited = false;
 
                     // check that we dont have a non-quantity product in cart with a quantity > 1
@@ -69,7 +70,6 @@ class Cart
                             $product->setVariation($cartitem['product']['variation']);
                         }
                     }
-
 
                     // if the cart has greater stock than available
                     if (!$product->isUnlimited() && !$product->allowBackOrders()) {
@@ -127,7 +127,7 @@ class Cart
                 }
 
                 if (count($variationsToReduce) > 0) {
-                    foreach(array_reverse($checkeditems) as $key=>$item) {
+                    foreach(array_reverse($checkeditems) as $key => $item) {
                         if (in_array($item['product']['variation'], $variationsToReduce)) {
                             unset($checkeditems[$key]);
                             $update = true;
@@ -135,9 +135,7 @@ class Cart
                         }
                     }
                 }
-
             }
-
 
             if (isset($stockTotals['products'])) {
                 foreach ($stockTotals['products'] as $productID => $data) {
@@ -147,7 +145,7 @@ class Cart
                 }
 
                 if (count($productsToReduce) > 0) {
-                    foreach(array_reverse($checkeditems) as $key=>$item) {
+                    foreach(array_reverse($checkeditems) as $key => $item) {
                         if (in_array($item['product']['pID'], $productsToReduce)) {
                             unset($checkeditems[$key]);
                             $update = true;
@@ -156,7 +154,6 @@ class Cart
                     }
                 }
             }
-
 
             Session::set('communitystore.cart', $checkeditems);
 
@@ -182,7 +179,6 @@ class Cart
             foreach ($checkeditems as $key => $cartitem) {
                 $cartitem['product']['object']->clearDiscountRules();
             }
-
 
             if (count($rules) > 0) {
                 foreach ($rules as $rule) {
@@ -223,7 +219,7 @@ class Cart
             $event = new CartEvent('get');
             $event->setData([
                 'cart' => self::$cart,
-                'discounts' => self::$discounts
+                'discounts' => self::$discounts,
             ]);
             \Events::dispatch(CartEvent::CART_GET, $event);
             if($event->updatedCart()) {
@@ -253,7 +249,6 @@ class Cart
 
     public static function add($data)
     {
-
         $error = false;
         Session::set('community_store.smID', false);
         $product = Product::getByID((int) $data['pID']);
@@ -275,11 +270,11 @@ class Cart
             $max = $product->getPriceMaximum();
             $min = $product->getPriceMinimum();
 
-            if (!is_null($min) && $customerPrice < (float) $min) {
+            if ($min !== null && $customerPrice < (float) $min) {
                 $error = true;
             }
 
-            if (!is_null($max) && $customerPrice > (float) $max) {
+            if ($max !== null && $customerPrice > (float) $max) {
                 $error = true;
             }
         }
@@ -302,25 +297,21 @@ class Cart
 
             if ($customerPrice) {
                 $cartItem['product'] = [
-                    "pID" => (int) $data['pID'],
-                    "qty" => $data['quantity'],
-                    "customerPrice" => $customerPrice,
+                    'pID' => (int) $data['pID'],
+                    'qty' => $data['quantity'],
+                    'customerPrice' => $customerPrice,
                 ];
             } else {
                 $cartItem['product'] = [
-                    "pID" => (int) $data['pID'],
-                    "qty" => $data['quantity'],
+                    'pID' => (int) $data['pID'],
+                    'qty' => $data['quantity'],
                 ];
             }
 
-            unset($data['pID']);
-            unset($data['quantity']);
-            unset($data['customerPrice']);
-            unset($data['ccm_token']);
+            unset($data['pID'], $data['quantity'], $data['customerPrice'], $data['ccm_token']);
 
             //since we removed the ID/qty, we're left with just the attributes
             $cartItem['productAttributes'] = $data;
-
 
             $removeexistingexclusive = false;
 
@@ -344,9 +335,9 @@ class Cart
                 $groupID = false;
                 $isOptionList = false;
 
-                if ('po' == substr($name, 0, 2)) {
+                if (substr($name, 0, 2) == 'po') {
                     $isOptionList = true;
-                    $groupID = str_replace("po", "", $name);
+                    $groupID = str_replace('po', '', $name);
 
                     $optionListItem = ProductOptionItem::getByID($value);
 
@@ -356,14 +347,14 @@ class Cart
                     if (!$value) {
                         $error = true;  // if we have select option but no value
                     }
-                } elseif ('pt' == substr($name, 0, 2)) {
-                    $groupID = str_replace("pt", "", $name);
-                } elseif ('pa' == substr($name, 0, 2)) {
-                    $groupID = str_replace("pa", "", $name);
-                } elseif ('ph' == substr($name, 0, 2)) {
-                    $groupID = str_replace("ph", "", $name);
-                } elseif ('pc' == substr($name, 0, 2)) {
-                    $groupID = str_replace("pc", "", $name);
+                } elseif (substr($name, 0, 2) == 'pt') {
+                    $groupID = str_replace('pt', '', $name);
+                } elseif (substr($name, 0, 2) == 'pa') {
+                    $groupID = str_replace('pa', '', $name);
+                } elseif (substr($name, 0, 2) == 'ph') {
+                    $groupID = str_replace('ph', '', $name);
+                } elseif (substr($name, 0, 2) == 'pc') {
+                    $groupID = str_replace('pc', '', $name);
                 }
 
                 // if there is a groupID, check to see if it's a required field, reject if no value
@@ -384,7 +375,6 @@ class Cart
             $cartItem['weightAdjustment'] = $weightAdjustment;
             $product->setPriceAdjustment($priceAdjustment);
             $product->setWeightAdjustment($weightAdjustment);
-
 
             if (!empty($optionsInVariations) && $product->hasVariations()) {
                 // find the variation via the ids of the options
@@ -456,7 +446,6 @@ class Cart
 
                 $cartItem['product']['qty'] = $newquantity;
 
-
                 if ($cartItem['product']['qty'] > 0) {
                     if ($product->isExclusive()) {
                         $cart = [$cartItem];
@@ -494,9 +483,8 @@ class Cart
                                 return ['exists' => true, 'cartItemKey' => $k];
                             }
                         } else {
-							return ['exists' => true, 'cartItemKey' => $k];
+                            return ['exists' => true, 'cartItemKey' => $k];
                         }
-
                     } else {
                         // otherwise loop through attributes
                         $attsmatch = true;
@@ -538,7 +526,7 @@ class Cart
         $multipleResult = [];
         foreach ($data['instance'] as $instance) {
             $multipleResult[] = self::update(['instance' => $instance, 'pQty' => $data['pQty'][$count]]);
-            ++$count;
+            $count++;
         }
 
         return $multipleResult;
@@ -603,7 +591,7 @@ class Cart
         $product = Product::getByID((int) $cart[$instanceID]['product']['pID']);
         $event = new CartEvent('remove');
         $event->setProduct($product);
-        $event->setData(['cartItem'=>$instanceID]);
+        $event->setData(['cartItem' => $instanceID]);
 
         \Events::dispatch(CartEvent::CART_PRE_REMOVE, $event);
 
@@ -617,7 +605,6 @@ class Cart
 
     public static function clear()
     {
-
         $event = new CartEvent('clear');
         \Events::dispatch(CartEvent::CART_PRE_CLEAR, $event);
         Session::set('community_store.smID', false);
@@ -649,12 +636,12 @@ class Cart
         if (count($shippingMethods) > 0) {
             if (count($shippableItems) > 0) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
+
             return false;
         }
+
+        return false;
     }
 
     public static function getShippableItems()
@@ -695,28 +682,28 @@ class Cart
 
             if ($storeweightunit != $unit) {
                 // convert to grams first
-                if ('kg' == $storeweightunit) {
+                if ($storeweightunit == 'kg') {
                     $totalWeight *= 1000;
                 }
 
-                if ('oz' == $storeweightunit) {
+                if ($storeweightunit == 'oz') {
                     $totalWeight *= 28.3495;
                 }
 
-                if ('lb' == $storeweightunit) {
+                if ($storeweightunit == 'lb') {
                     $totalWeight *= 453.592;
                 }
                 // end convert to grams
 
-                if ('kg' == $unit) {
+                if ($unit == 'kg') {
                     $totalWeight *= 0.001;
                 }
 
-                if ('oz' == $unit) {
+                if ($unit == 'oz') {
                     $totalWeight *= 0.035274;
                 }
 
-                if ('lb' == $unit) {
+                if ($unit == 'lb') {
                     $totalWeight *= 0.00220462;
                 }
             }

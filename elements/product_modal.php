@@ -1,6 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
@@ -28,7 +26,7 @@ $token = $app->make('token');
         <p class="store-product-modal-price">
             <?php
             $salePrice = $product->getSalePrice();
-            if (isset($salePrice) && "" != $salePrice) {
+            if (isset($salePrice) && $salePrice != '') {
                 $formattedSalePrice = $product->getFormattedSalePrice();
                 $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                 echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
@@ -44,7 +42,7 @@ $token = $app->make('token');
             <?= $csm->t($product->getDesc(), 'productDetails', $product->getID()); ?>
         </div>
         <div class="store-product-modal-options">
-            <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
+            <?php if (Config::get('community_store.shoppingDisabled') != 'all') {
                 ?>
             <div class="store-product-modal-quantity form-group">
                 <?php if ($product->allowQuantity() && $showQuantity) {
@@ -103,11 +101,11 @@ $token = $app->make('token');
                     $requiredAttr = ' required="required" placeholder="' . t('Required') . '" ';
                 } ?>
 
-                <?php if (!$optionType || 'select' == $optionType) {
+                <?php if (!$optionType || $optionType == 'select') {
                     ?>
                     <div class="store-product-option-group form-group <?= h($option->getHandle()); ?>">
                         <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
-                        <?php if ('radio' != $displayType) {
+                        <?php if ($displayType != 'radio') {
                         ?>
                         <select class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : ''; ?> form-control"
                                 name="po<?= $option->getID(); ?>">
@@ -134,7 +132,7 @@ $token = $app->make('token');
                                     <?php if ($displayType == 'radio') { ?>
                                         <div class="radio">
                                             <label><input type="radio" required class="store-product-option <?= $option->getIncludeVariations() ? 'store-product-variation' : '' ?> "
-                                                    <?= $disabled .  ($selected ? 'checked' : ''); ?> name="po<?= $option->getID();?>" value="<?= $optionItem->getID(); ?>" /><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID()));?></label>
+                                                    <?= $disabled . ($selected ? 'checked' : ''); ?> name="po<?= $option->getID(); ?>" value="<?= $optionItem->getID(); ?>" /><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())); ?></label>
                                         </div>
                                     <?php } else { ?>
                                         <option <?= $disabled . ' ' . $selected; ?>value="<?= $optionItem->getID(); ?>"><?= h($csm->t($optionItem->getName(), 'optionValue', $product->getID(), $optionItem->getID())) . $outOfStock; ?></option>
@@ -148,7 +146,7 @@ $token = $app->make('token');
                     <?php } ?>
                     </div>
                     <?php
-                } elseif ('text' == $optionType) {
+                } elseif ($optionType == 'text') {
                     ?>
                     <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                         <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -156,7 +154,7 @@ $token = $app->make('token');
                                name="pt<?= $option->getID(); ?>"/>
                     </div>
                     <?php
-                } elseif ('textarea' == $optionType) {
+                } elseif ($optionType == 'textarea') {
                     ?>
                     <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                         <label class="store-product-option-group-label"><?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
@@ -164,7 +162,7 @@ $token = $app->make('token');
                                               name="pa<?= $option->getID(); ?>"></textarea>
                     </div>
                     <?php
-                } elseif ('checkbox' == $optionType) {
+                } elseif ($optionType == 'checkbox') {
                     ?>
                     <div class="store-product-option-group form-group <?= $option->getHandle(); ?>">
                         <label class="store-product-option-group-label">
@@ -176,7 +174,7 @@ $token = $app->make('token');
                                    name="pc<?= $option->getID(); ?>"/> <?= h($csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())); ?></label>
                     </div>
                     <?php
-                } elseif ('hidden' == $optionType) {
+                } elseif ($optionType == 'hidden') {
                     ?>
                     <input type="hidden" class="store-product-option-hidden <?= $option->getHandle(); ?>"
                            name="ph<?= $option->getID(); ?>"/>
@@ -187,11 +185,11 @@ $token = $app->make('token');
 
         </div>
         <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
-        <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
+        <?php if (Config::get('community_store.shoppingDisabled') != 'all') {
                 ?>
         <div class="store-product-modal-buttons">
-            <p><button data-add-type="modal" data-product-id="<?= $product->getID(); ?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t("Add to Cart")); ?></button></p>
-            <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : ''); ?>"><?= t("Out of Stock"); ?></p>
+            <p><button data-add-type="modal" data-product-id="<?= $product->getID(); ?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t('Add to Cart')); ?></button></p>
+            <p class="store-out-of-stock-label alert alert-warning <?= ($product->isSellable() ? 'hidden' : ''); ?>"><?= t('Out of Stock'); ?></p>
         </div>
         <?php
             } ?>
@@ -230,11 +228,11 @@ if ($product->hasVariations()) {
         }
 
         $varationData[$key] = [
-                'price' => $product->getFormattedOriginalPrice(),
-                'saleprice' => $product->getFormattedSalePrice(),
-                'available' => ($variation->isSellable()),
-                'imageThumb' => $thumb ? $thumb->src : '',
-                'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
+            'price' => $product->getFormattedOriginalPrice(),
+            'saleprice' => $product->getFormattedSalePrice(),
+            'available' => ($variation->isSellable()),
+            'imageThumb' => $thumb ? $thumb->src : '',
+            'image' => $imgObj ? $imgObj->getRelativePath() : '', ];
     } ?>
 
 

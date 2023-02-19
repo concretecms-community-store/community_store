@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Methods\Invoice;
 
 use Concrete\Core\Support\Facade\Application;
@@ -14,7 +15,7 @@ class InvoicePaymentMethod extends PaymentMethod
 
     public function dashboardForm()
     {
-        $this->set('form', Application::getFacadeApplication()->make("helper/form"));
+        $this->set('form', Application::getFacadeApplication()->make('helper/form'));
         $this->set('invoiceMinimum', Config::get('community_store.invoiceMinimum'));
         $this->set('invoiceMaximum', Config::get('community_store.invoiceMaximum'));
         $this->set('paymentInstructions', Config::get('community_store.paymentInstructions'));
@@ -63,11 +64,11 @@ class InvoicePaymentMethod extends PaymentMethod
 
         $minconfig = trim(Config::get('community_store.invoiceMinimum'));
 
-        if ('' == $minconfig) {
+        if ($minconfig == '') {
             return $defaultMin;
-        } else {
-            return max($minconfig, $defaultMin);
         }
+
+        return max($minconfig, $defaultMin);
     }
 
     public function getPaymentMaximum()
@@ -75,11 +76,11 @@ class InvoicePaymentMethod extends PaymentMethod
         $defaultMax = 1000000000;
 
         $maxconfig = trim(Config::get('community_store.invoiceMaximum'));
-        if ('' == $maxconfig) {
+        if ($maxconfig == '') {
             return $defaultMax;
-        } else {
-            return min($maxconfig, $defaultMax);
         }
+
+        return min($maxconfig, $defaultMax);
     }
 
     public function markPaid()

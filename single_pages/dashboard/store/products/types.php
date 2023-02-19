@@ -1,17 +1,18 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Support\Facade\Url;
+
 ?>
 
 <?php
-$typeViews = ['view','typeadded'];
-$typeEdits = ['add','edit'];
+$typeViews = ['view', 'typeadded'];
+$typeEdits = ['add', 'edit'];
 
-if (in_array($controller->getAction(),$typeViews)){ ?>
+if (in_array($controller->getAction(), $typeViews)){ ?>
 
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= Url::to('/dashboard/store/products/types/', 'add')?>" class="btn btn-primary"><?= t("Add Product Type")?></a>
+    <a href="<?= Url::to('/dashboard/store/products/types/', 'add')?>" class="btn btn-primary"><?= t('Add Product Type')?></a>
 </div>
 
 <?php if($typeList){ ?>
@@ -45,13 +46,13 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
 
     <?php } else { ?>
 
-        <div class="alert alert-info"><?= t("You have not added a product type yet")?></div>
+        <div class="alert alert-info"><?= t('You have not added a product type yet')?></div>
 
     <?php } ?>
 
     <?php }  ?>
 
-    <?php if (in_array($controller->getAction(),$typeEdits)){ ?>
+    <?php if (in_array($controller->getAction(), $typeEdits)){ ?>
 
         <?php if ($controller->getAction() == 'edit') { ?>
             <div class="ccm-dashboard-header-buttons">
@@ -63,22 +64,22 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
             </div>
         <?php } ?>
 
-        <form method="post" action="<?= $view->action($controller->getAction())?><?= $type->getTypeID() ? '/' .$type->getTypeID()  : '' ;?>">
+        <form method="post" action="<?= $view->action($controller->getAction())?><?= $type->getTypeID() ? '/' . $type->getTypeID() : ''; ?>">
             <?= $token->output('community_store'); ?>
             <div class="form-group">
-                <?= $form->label('ptName',t("Type Name")); ?>
-                <?= $form->text('ptName',$type->getTypeName(), array('required'=>'required')); ?>
+                <?= $form->label('ptName', t('Type Name')); ?>
+                <?= $form->text('ptName', $type->getTypeName(), ['required' => 'required']); ?>
             </div>
 
             <div class="form-group">
-                <?= $form->label('ptHandle',t("Type Handle")); ?>
-                <?= $form->text('ptHandle',$type->getHandle(), array('required'=>'required')); ?>
+                <?= $form->label('ptHandle', t('Type Handle')); ?>
+                <?= $form->text('ptHandle', $type->getHandle(), ['required' => 'required']); ?>
             </div>
 
 
             <div class="form-group">
-                <?= $form->label('ptDescription',t("Type Description")); ?>
-                <?= $form->textarea('ptDescription',$type->getDescription()); ?>
+                <?= $form->label('ptDescription', t('Type Description')); ?>
+                <?= $form->textarea('ptDescription', $type->getDescription()); ?>
             </div>
 
 
@@ -86,7 +87,7 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
 
                 $(function(){
                     $('#deletetype').submit(function(e){
-                        return confirm("<?= t('Are you sure you want to delete this product type?');?>");
+                        return confirm("<?= t('Are you sure you want to delete this product type?'); ?>");
                     });
 
                 });

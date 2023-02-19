@@ -1,12 +1,14 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use \Concrete\Core\User\Group\Group;
-use \Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\User\Group\Group;
 
-class Wholesale {
-
-    public static function isUserWholesale(){
+class Wholesale
+{
+    public static function isUserWholesale()
+    {
         $user = new \User();
 
         $wholesaleCustomerGroupID = Config::get('community_store.wholesaleCustomerGroup');

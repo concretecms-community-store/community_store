@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Attribute;
 
 use Concrete\Core\Support\Facade\Facade;

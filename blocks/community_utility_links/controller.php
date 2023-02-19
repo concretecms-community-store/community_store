@@ -1,30 +1,35 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Block\CommunityUtilityLinks;
 
-use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityUtilityLinks';
-    protected $btInterfaceWidth = "450";
+
+    protected $btInterfaceWidth = '450';
+
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "460";
+
+    protected $btInterfaceHeight = '460';
+
     protected $btDefaultSet = 'community_store';
 
     public function getBlockTypeDescription()
     {
-        return t("Add your cart links for Community Store");
+        return t('Add your cart links for Community Store');
     }
 
     public function getBlockTypeName()
     {
-        return t("Cart Links");
+        return t('Cart Links');
     }
 
     public function view()
@@ -32,17 +37,17 @@ class Controller extends BlockController
         $c = Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $langpath = '';
-        if (null !== $al) {
+        if ($al !== null) {
             $langpath = $al->getCollectionHandle();
         }
 
         $itemcount = Cart::getTotalItemsInCart();
-        $this->set("itemCount", $itemcount);
+        $this->set('itemCount', $itemcount);
 
         if ($itemcount > 0) {
             $total = Calculator::getSubTotal();
 
-            if ($total> 0) {
+            if ($total > 0) {
                 $this->set('total', Price::format($total));
             } else {
                 $this->set('total', '');
@@ -51,16 +56,16 @@ class Controller extends BlockController
             $this->set('total', '');
         }
 
-        $collectionHandle =  $c->getCollectionHandle();
+        $collectionHandle = $c->getCollectionHandle();
 
         $inCheckout = false;
         $inCart = false;
 
-        if ('checkout' == $collectionHandle) {
+        if ($collectionHandle == 'checkout') {
             $inCheckout = true;
         }
 
-        if ('cart' == $collectionHandle) {
+        if ($collectionHandle == 'cart') {
             $inCart = true;
         }
 
@@ -95,8 +100,8 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = $this->app->make("helper/validation/error");
-        if ("" == $args['cartLabel']) {
+        $e = $this->app->make('helper/validation/error');
+        if ($args['cartLabel'] == '') {
             $e->add(t('Cart Label must be set'));
         }
         if (strlen($args['cartLabel']) > 255) {

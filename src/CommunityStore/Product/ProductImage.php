@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Concrete\Core\File\File;
-use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -39,24 +39,17 @@ class ProductImage
      */
     protected $piSort;
 
-    private function setProductID($pID)
+    public function __clone()
     {
-        $this->pID = $pID;
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function setProduct($product)
     {
         return $this->product = $product;
-    }
-
-    private function setFileID($pifID)
-    {
-        $this->pifID = $pifID;
-    }
-
-    private function setSort($piSort)
-    {
-        $this->piSort = $piSort;
     }
 
     public function getID()
@@ -83,14 +76,14 @@ class ProductImage
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $piID);
+        return $em->find(__CLASS__, $piID);
     }
 
     public static function getImagesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['piSort' => 'ASC']);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()], ['piSort' => 'ASC']);
     }
 
     public static function getImageObjectsForProduct(Product $product)
@@ -110,7 +103,7 @@ class ProductImage
 
         //add new ones.
         if (isset($images['pifID']) && is_array($images['pifID'])) {
-            for ($i = 0; $i < count($images['pifID']); ++$i) {
+            for ($i = 0; $i < count($images['pifID']); $i++) {
                 self::add($product, $images['pifID'][$i], $i);
             }
         }
@@ -135,14 +128,6 @@ class ProductImage
         return $productImage;
     }
 
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-    }
-
     public function save()
     {
         $em = dbORM::entityManager();
@@ -155,5 +140,20 @@ class ProductImage
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setProductID($pID)
+    {
+        $this->pID = $pID;
+    }
+
+    private function setFileID($pifID)
+    {
+        $this->pifID = $pifID;
+    }
+
+    private function setSort($piSort)
+    {
+        $this->piSort = $piSort;
     }
 }

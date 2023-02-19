@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use stdClass;
 use Concrete\Core\Entity\File\File;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
+use stdClass;
 
 /**
  * Image helper to get image information using thumbnail types with fallback on the legacy thumbnailer
@@ -16,25 +17,48 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
 class Image
 {
     const IMG_FOR_PRODUCT_LIST = 'product_list';
+
     const IMG_FOR_SINGLE_PRODUCT = 'single_product';
+
     const IMG_FOR_PRODUCT_MODAL = 'product_modal';
+
     const DEFAULT_SINGLE_PRODUCT_IMG_WIDTH = 720;
+
     const DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT = 720;
+
     const DEFAULT_PRODUCT_LIST_IMG_WIDTH = 400;
+
     const DEFAULT_PRODUCT_LIST_IMG_HEIGHT = 280;
+
     const DEFAULT_PRODUCT_MODAL_IMG_WIDTH = 560;
+
     const DEFAULT_PRODUCT_MODAL_IMG_HEIGHT = 999;
+
     const DEFAULT_IMG_CROP = false;
 
-    /** @var Application $app */
+    /**
+     * @var Application
+     */
     protected $app;
-    /** @var File $imgObj */
+
+    /**
+     * @var File
+     */
     protected $imgObj;
-    /** @var stdClass $legacyThumbProps with properties width, height and crop */
+
+    /**
+     * @var stdClass with properties width, height and crop
+     */
     protected $legacyThumbProps;
-    /** @var ThumbType $thumbType core thumbnail type */
-    protected $thumbType = null;
-    /** @var string $resizingScheme CamelCase version of either static::IMG_FOR_PRODUCT_LIST, static::IMG_FOR_SINGLE_PRODUCT or static::IMG_FOR_PRODUCT_MODAL */
+
+    /**
+     * @var ThumbType core thumbnail type
+     */
+    protected $thumbType;
+
+    /**
+     * @var string $resizingScheme CamelCase version of either static::IMG_FOR_PRODUCT_LIST, static::IMG_FOR_SINGLE_PRODUCT or static::IMG_FOR_PRODUCT_MODAL
+     */
     protected $resizingScheme;
 
     /**
@@ -45,12 +69,12 @@ class Image
     public function __construct($resizingScheme = 'product_list', $thumbTypeHandle = null, $legacyThumbProps = null)
     {
         $this->app = Application::getFacadeApplication();
-        $this->legacyThumbProps = (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+        $this->legacyThumbProps = (object) ['width' => false, 'height' => false, 'crop' => false];
         $this->setResizingScheme($resizingScheme);
         $this->setThumbType($thumbTypeHandle);
 
         if (!$legacyThumbProps) {
-            $legacyThumbProps= (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+            $legacyThumbProps = (object) ['width' => false, 'height' => false, 'crop' => false];
         }
 
         $this->setLegacyThumbnailingValues($legacyThumbProps);
@@ -99,25 +123,13 @@ class Image
     }
 
     /**
-     * Sets the legacy thumbnailer's width, height, and crop values.
-     *
-     * @param stdClass $legacyThumbProps {width: integer|null, height: integer|null, crop: boolean|null}
-     */
-    protected function setLegacyThumbnailingValues($legacyThumbProps)
-    {
-        $this->setLegacyThumbnailWidth($legacyThumbProps->width ?? false);
-        $this->setLegacyThumbnailHeight($legacyThumbProps->height ?? false);
-        $this->setLegacyThumbnailCrop($legacyThumbProps->crop ?? false);
-    }
-
-    /**
      * Sets the legacy thumbnailer's width.
      *
      * @param int|string $width
      */
     public function setLegacyThumbnailWidth($width)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width' => false, 'height' => false, 'crop' => false];
 
         $this->legacyThumbProps->width = (isset($width) && !empty($width)) ? (int) $width : (int) Config::get('community_store.default' . $this->resizingScheme . 'ImageWidth');
 
@@ -134,7 +146,7 @@ class Image
      */
     public function setLegacyThumbnailHeight($height)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width' => false, 'height' => false, 'crop' => false];
 
         $this->legacyThumbProps->height = (isset($height) && !empty($height)) ? (int) $height : (int) Config::get('community_store.default' . $this->resizingScheme . 'ImageHeight');
 
@@ -151,7 +163,7 @@ class Image
      */
     public function setLegacyThumbnailCrop($crop)
     {
-        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
+        $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width' => false, 'height' => false, 'crop' => false];
 
         $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : static::DEFAULT_IMG_CROP;
     }
@@ -162,7 +174,7 @@ class Image
      * @param File $imgObj
      *
      * @return returns stdClass with property src and optionally retinaSrc
-     * [object Object]
+     *                 [object Object]
      */
     public function getThumbnail(File $imgObj)
     {
@@ -202,8 +214,19 @@ class Image
     public function getLegacyThumbnail(File $imgObj)
     {
         $this->imgObj = $imgObj;
-        $thumb = $this->app->make('helper/image')->getThumbnail($imgObj, $this->legacyThumbProps->width, $this->legacyThumbProps->height, $this->legacyThumbProps->crop);
 
-        return $thumb;
+        return $this->app->make('helper/image')->getThumbnail($imgObj, $this->legacyThumbProps->width, $this->legacyThumbProps->height, $this->legacyThumbProps->crop);
+    }
+
+    /**
+     * Sets the legacy thumbnailer's width, height, and crop values.
+     *
+     * @param stdClass $legacyThumbProps {width: integer|null, height: integer|null, crop: boolean|null}
+     */
+    protected function setLegacyThumbnailingValues($legacyThumbProps)
+    {
+        $this->setLegacyThumbnailWidth($legacyThumbProps->width ?? false);
+        $this->setLegacyThumbnailHeight($legacyThumbProps->height ?? false);
+        $this->setLegacyThumbnailCrop($legacyThumbProps->crop ?? false);
     }
 }

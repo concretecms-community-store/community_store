@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Localization\Localization;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Localization\Localization;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Multilingual
 {
@@ -11,6 +12,7 @@ class Multilingual
      * @var \Concrete\Core\Application\Application
      */
     protected $app;
+
     protected $entityManager;
 
     protected $longTextTypes = [
@@ -19,7 +21,7 @@ class Multilingual
         'receiptEmailHeader',
         'receiptEmailFooter',
         'shippingDetails',
-        'paymentInstructions'
+        'paymentInstructions',
     ];
 
     public function __construct(Localization $localization, Application $application, EntityManagerInterface $entityManager)
@@ -32,11 +34,11 @@ class Multilingual
     /**
      * Translate text using Community Store's translation system.
      *
-     * @param string $text The text to be translated.
-     * @param integer $productID The ID of the product (if applicable).
-     * @param string $context The type of text being translated.
-     * @param integer $id The ID of the entity being translated, for example an attribute's ID.
-     * @param string $forcedLocale Force the translation to a specified locale, instead of determining it automatically.
+     * @param string $text the text to be translated
+     * @param int $productID the ID of the product (if applicable)
+     * @param string $context the type of text being translated
+     * @param int $id the ID of the entity being translated, for example an attribute's ID
+     * @param string $forcedLocale force the translation to a specified locale, instead of determining it automatically
      * @param true $useCommon Return a common translation for a string if available
      *
      * @return string Returns the translated text.
@@ -76,7 +78,7 @@ class Multilingual
             'optionName',
             'optionDetails',
             'optionSelectorName',
-            'optionValue'
+            'optionValue',
         ];
 
         if ($locale != $defaultSourceLocale || $forcedLocale) {
@@ -85,7 +87,8 @@ class Multilingual
             $query = $qb->select('t')
                 ->from('Concrete\Package\CommunityStore\Src\CommunityStore\Multilingual\Translation', 't')
                 ->where('t.entityType = :type')
-                ->setParameter('type', $context);
+                ->setParameter('type', $context)
+            ;
 
             if ($id) {
                 if ($useCommon) {
@@ -99,17 +102,17 @@ class Multilingual
 
             if ($productID) {
                 if ($useCommon) {
-					switch ($context) {
-						case 'productQuantityLabel':
-						case 'productAddToCartText':
-						case 'productOutOfStockMessage':
-						case 'productNotAvailableMessage':
-							$query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
-							break;
-						default:
-							$query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
-							break;
-					}
+                    switch ($context) {
+                        case 'productQuantityLabel':
+                        case 'productAddToCartText':
+                        case 'productOutOfStockMessage':
+                        case 'productNotAvailableMessage':
+                            $query->andWhere('t.pID = :pid or (t.originalText = :text)')->setParameter('pid', $productID)->setParameter('text', $text);
+                            break;
+                        default:
+                            $query->andWhere('t.pID = :pid or (t.pID is null)')->setParameter('pid', $productID);
+                            break;
+                    }
                 } else {
                     $query->andWhere('t.pID = :pid')->setParameter('pid', $productID);
                 }
@@ -146,8 +149,8 @@ class Multilingual
 
         if (!$forcedLocale) {
             return $text;
-        } else {
-            return '';
         }
+
+        return '';
     }
 }

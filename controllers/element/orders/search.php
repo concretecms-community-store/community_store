@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\Element\Orders;
 
-use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Controller\ElementController;
+use Concrete\Core\Entity\Search\Query;
 
 class Search extends ElementController
 {
-
     /**
      * This is where the header search bar in the page should point. This search bar allows keyword searching in
      * different contexts. Valid options are `view` and `folder`.
@@ -14,11 +14,17 @@ class Search extends ElementController
      * @var string
      */
     protected $headerSearchAction;
+
     protected $paymentMethods;
+
     protected $paymentMethod;
+
     protected $paymentStatuses;
+
     protected $paymentStatus;
+
     protected $fulfilmentStatuses;
+
     protected $status;
 
     /**
@@ -74,9 +80,7 @@ class Search extends ElementController
         if (isset($this->headerSearchAction)) {
             $this->set('headerSearchAction', $this->headerSearchAction);
         } else {
-            $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/store/orders/' . ($this->status ?  $this->status : 'all')  .'/' . ($this->paymentMethod ?  $this->paymentMethod : 'all') . '/' . ($this->paymentStatus ?  $this->paymentStatus : 'all')   ));
+            $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/store/orders/' . ($this->status ? $this->status : 'all') . '/' . ($this->paymentMethod ? $this->paymentMethod : 'all') . '/' . ($this->paymentStatus ? $this->paymentStatus : 'all')));
         }
-
     }
-
 }

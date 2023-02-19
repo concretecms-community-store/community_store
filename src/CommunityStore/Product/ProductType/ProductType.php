@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType;
 
-
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 
 /**
  * @ORM\Entity
@@ -45,13 +45,10 @@ class ProductType
      */
     protected $layoutSets;
 
-
     public function __construct()
     {
         $this->layoutSets = new ArrayCollection();
     }
-
-
 
     public function getLayoutSets()
     {
@@ -91,7 +88,7 @@ class ProductType
     }
 
     /**
-     * @param mixed $ptName
+     * @param mixed $ptHandle
      */
     public function setHandle($ptHandle)
     {
@@ -114,14 +111,12 @@ class ProductType
         $this->ptDescription = $ptDescription;
     }
 
-
-
     public static function getByID($ptID)
     {
         $em = dbORM::entityManager();
+
         return $em->find(get_called_class(), $ptID);
     }
-
 
     public static function add($name, $handle, $description)
     {

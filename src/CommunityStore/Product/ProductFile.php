@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
 use Concrete\Core\File\File;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -36,19 +36,17 @@ class ProductFile
      */
     protected $dffID;
 
-    private function setProductID($pID)
+    public function __clone()
     {
-        $this->pID = $pID;
+        if (isset($this->id) && $this->id) {
+            $this->setID(null);
+            $this->setProductID(null);
+        }
     }
 
     public function setProduct($product)
     {
         return $this->product = $product;
-    }
-
-    private function setFileID($fID)
-    {
-        $this->dffID = $fID;
     }
 
     public function getID()
@@ -70,14 +68,14 @@ class ProductFile
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $id);
+        return $em->find(__CLASS__, $id);
     }
 
     public static function getFilesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
     }
 
     public static function getFileObjectsForProduct(Product $product)
@@ -128,14 +126,6 @@ class ProductFile
         return $productFile;
     }
 
-    public function __clone()
-    {
-        if (isset($this->id) && $this->id) {
-            $this->setID(null);
-            $this->setProductID(null);
-        }
-    }
-
     public function save()
     {
         $em = dbORM::entityManager();
@@ -148,5 +138,15 @@ class ProductFile
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
+    }
+
+    private function setProductID($pID)
+    {
+        $this->pID = $pID;
+    }
+
+    private function setFileID($fID)
+    {
+        $this->dffID = $fID;
     }
 }

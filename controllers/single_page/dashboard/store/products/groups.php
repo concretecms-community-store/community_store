@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
-use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group as StoreGroup;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreGroupList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
 
 class Groups extends DashboardPageController
 {
@@ -13,7 +14,7 @@ class Groups extends DashboardPageController
     {
         $this->set('pageTitle', t('Product Groups'));
         $grouplist = StoreGroupList::getGroupList();
-        $this->set("grouplist", $grouplist);
+        $this->set('grouplist', $grouplist);
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->requireAsset('javascript', 'communityStoreFunctions');
     }
@@ -94,7 +95,7 @@ class Groups extends DashboardPageController
     {
         $e = $this->app->make('helper/validation/error');
 
-        if ("" == $args['groupName']) {
+        if ($args['groupName'] == '') {
             $e->add(t('Please enter a Group Name'));
         }
         if (strlen($args['groupName']) > 100) {

@@ -2,32 +2,25 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class OrderList extends AttributedItemList implements PaginationProviderInterface
 {
-
-    private $limit = 0;
     protected $searchRequest = false;
 
-
-    protected function getAttributeKeyClassName()
-    {
-        return StoreOrderKey::class;
-    }
+    private $limit = 0;
 
     public function createQuery()
     {
         $this->query
             ->select('o.oID')
-            ->from('CommunityStoreOrders', 'o');
+            ->from('CommunityStoreOrders', 'o')
+        ;
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -40,7 +33,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
 
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
-            $matchingOrders = $db->query("SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?", ['%' . $this->search . '%']);
+            $matchingOrders = $db->query('SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?', ['%' . $this->search . '%']);
 
             $orderIDs = [];
             while ($value = $matchingOrders->fetch()) {
@@ -55,11 +48,11 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         if (isset($this->status)) {
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();
-            $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrderStatusHistories t1
+            $matchingOrders = $db->query('SELECT oID FROM CommunityStoreOrderStatusHistories t1
                                             WHERE oshStatus = ? and
                                                 t1.oshID = (SELECT MAX(t2.oshID)
                                                              FROM CommunityStoreOrderStatusHistories t2
-                                                             WHERE t2.oID = t1.oID)", [$this->status]);
+                                                             WHERE t2.oID = t1.oID)', [$this->status]);
             $orderIDs = [];
 
             while ($value = $matchingOrders->fetch()) {
@@ -76,7 +69,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
                 $this->query->where('1 = 0');
             }
         }
-
 
         if (isset($this->paymentStatus)) {
             $app = Application::getFacadeApplication();
@@ -143,7 +135,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         }
 
         if (isset($this->externalPaymentRequested) && $this->externalPaymentRequested) {
-
         } else {
             $this->query->andWhere('o.externalPaymentRequested is null');
         }
@@ -238,23 +229,11 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         $this->cID = $cID;
     }
 
-    protected function createPaginationObject()
-    {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
-        });
-        $pagination = new Pagination($this, $adapter);
-
-        return $pagination;
-    }
-
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     public function getTotalResults()
@@ -268,11 +247,12 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $date = $db->GetRow("SELECT * FROM CommunityStoreOrders ORDER BY oDate ASC LIMIT 1");
+        $date = $db->GetRow('SELECT * FROM CommunityStoreOrders ORDER BY oDate ASC LIMIT 1');
 
         if (isset($date['oDate'])) {
             return $date['oDate'];
         }
+
         return false;
     }
 
@@ -284,7 +264,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         $db = $app->make('database')->connection();
         foreach ($orders as $order) {
             $oID = $order->getOrderID();
-            $OrderOrderItems = $db->GetAll("SELECT * FROM CommunityStoreOrderItems WHERE oID=?", $oID);
+            $OrderOrderItems = $db->GetAll('SELECT * FROM CommunityStoreOrderItems WHERE oID=?', $oID);
             foreach ($OrderOrderItems as $oi) {
                 $oi = OrderItem::getByID($oi['oiID']);
                 $orderItems[] = $oi;
@@ -292,5 +272,19 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         }
 
         return $orderItems;
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return StoreOrderKey::class;
+    }
+
+    protected function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct o.oID)')->setMaxResults(1);
+        });
+
+        return new Pagination($this, $adapter);
     }
 }

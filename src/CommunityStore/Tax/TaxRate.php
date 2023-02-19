@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Tax;
 
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -179,7 +180,7 @@ class TaxRate
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $trID);
+        return $em->find(__CLASS__, $trID);
     }
 
     public function isVatNumberEligible()
@@ -194,14 +195,14 @@ class TaxRate
         $taxCountries = array_map('strtolower', $taxCountries);
         $taxState = strtolower(trim($this->getTaxState()));
         $taxCity = strtolower(trim($this->getTaxCity()));
-        $taxVatExclude = 1 == $this->getTaxVatExclude() ? true : false;
-        $taxSettingEnabled = '1' == Config::get('community_store.vat_number') ? true : false;
+        $taxVatExclude = $this->getTaxVatExclude() == 1 ? true : false;
+        $taxSettingEnabled = Config::get('community_store.vat_number') == '1' ? true : false;
         $customer = new Customer();
         $customerIsTaxable = false;
 
         // If they have a vat_number check if it's valid and if so, don't apply tax
         $vatIsValid = false;
-        $vat_number = $customer->getValue("vat_number");
+        $vat_number = $customer->getValue('vat_number');
         $taxHelper = Application::getFacadeApplication()->make(TaxHelper::class);
         if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number)) {
             $vatIsValid = true;
@@ -213,8 +214,8 @@ class TaxRate
 
         if ($customer) {
             switch ($taxAddress) {
-                case "billing":
-                    $billingAddress = $customer->getValue("billing_address");
+                case 'billing':
+                    $billingAddress = $customer->getValue('billing_address');
 
                     if ($billingAddress) {
                         $userCity = strtolower(trim($billingAddress->city));
@@ -222,8 +223,8 @@ class TaxRate
                         $userCountry = strtolower(trim($billingAddress->country));
                     }
                     break;
-                case "shipping":
-                    $shippingAddress = $customer->getValue("shipping_address");
+                case 'shipping':
+                    $shippingAddress = $customer->getValue('shipping_address');
 
                     if ($shippingAddress) {
                         $userCity = strtolower(trim($shippingAddress->city));
@@ -278,7 +279,6 @@ class TaxRate
                         //if this tax rate is in the tax class associated with this product
                         if (is_object($product->getTaxClass())) {
                             if ($product->getTaxClass()->taxClassContainsTaxRate($this)) {
-
                                 $productSubTotal = Calculator::getCartItemPrice($cartItem) * $qty;
                                 if ($taxCalc == 'extract') {
                                     $taxrate = 1 + ($this->getTaxRate() / 100);
@@ -297,7 +297,7 @@ class TaxRate
         }//if cart
 
         if ($this->getTaxBasedOn() == 'grandtotal') {
-            $shippingTotal = floatval(Calculator::getShippingTotal());
+            $shippingTotal = (float) (Calculator::getShippingTotal());
 
             if ($taxCalc == 'extract') {
                 $taxrate = 1 + ($this->getTaxRate() / 100);
@@ -334,6 +334,7 @@ class TaxRate
                 }//if in products tax class
             }//if product is taxable
         }//if obj
+
         return $taxtotal;
     }
 

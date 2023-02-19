@@ -1,9 +1,9 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
@@ -29,15 +29,14 @@ if ($cart) {
     <tbody>
         <?php
         foreach ($cart as $k => $cartItem) {
-
             $qty = $cartItem['product']['qty'];
             $product = $cartItem['product']['object'];
             $pID = $cartItem['product']['object']->getID();
 
             if ($i % 2 == 0) {
-                $classes = " striped";
+                $classes = ' striped';
             } else {
-                $classes = "";
+                $classes = '';
             }
             if (is_object($product)) {
                 $productPage = $product->getProductPage();
@@ -76,25 +75,24 @@ if ($cart) {
                 <?php if ($cartItem['productAttributes']) { ?>
                 <div class="store-cart-item-attributes">
                     <?php foreach ($cartItem['productAttributes'] as $optionID => $valID) {
-
                         if (substr($optionID, 0, 2) == 'po') {
-                            $optionID = str_replace("po", "", $optionID);
+                            $optionID = str_replace('po', '', $optionID);
                             $optionvalue = ProductOptionItem::getByID($valID);
 
                             if ($optionvalue) {
                                 $optionvalue = $optionvalue->getName();
                             }
                         } elseif (substr($optionID, 0, 2) == 'pt') {
-                            $optionID = str_replace("pt", "", $optionID);
+                            $optionID = str_replace('pt', '', $optionID);
                             $optionvalue = $valID;
                         } elseif (substr($optionID, 0, 2) == 'pa') {
-                            $optionID = str_replace("pa", "", $optionID);
+                            $optionID = str_replace('pa', '', $optionID);
                             $optionvalue = $valID;
                         } elseif (substr($optionID, 0, 2) == 'ph') {
-                            $optionID = str_replace("ph", "", $optionID);
+                            $optionID = str_replace('ph', '', $optionID);
                             $optionvalue = $valID;
                         } elseif (substr($optionID, 0, 2) == 'pc') {
-                            $optionID = str_replace("pc", "", $optionID);
+                            $optionID = str_replace('pc', '', $optionID);
                             $optionvalue = $valID;
                         }
 
