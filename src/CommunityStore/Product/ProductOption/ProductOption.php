@@ -281,8 +281,9 @@ class ProductOption
 
     public static function addProductOptions($data, $product)
     {
+        self::removeOptionsForProduct($product, isset($data['poID']) ? $data['poID'] : [] );
+
         if (isset($data['poID'])) {
-            self::removeOptionsForProduct($product, $data['poID']);
 
             if (isset($data['poiID'])) {
                 ProductOptionItem::removeOptionItemsForProduct($product, $data['poiID']);
