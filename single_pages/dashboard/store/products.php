@@ -1944,7 +1944,7 @@ if (version_compare($version, '9.0', '<')) {
 
                     <div class="form-group">
                         <?= $form->label('pNotificationEmails', t('If order contains this product also send order notification to email(s)')); ?>
-                        <?= $form->text('pNotificationEmails', $product->getNotificationEmails(), ['placeholder' => t('Email Address')]); ?>
+                        <?= $form->email('pNotificationEmails', $product->getNotificationEmails(), ['placeholder' => t('Email Address'), 'multiple'=>'multiple']); ?>
                         <span class="help-block"><?= t('separate multiple emails with commas'); ?></span>
                     </div>
 
