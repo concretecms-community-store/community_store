@@ -117,7 +117,7 @@ class Products extends DashboardSitePageController
         }
 
         $this->loadFormAssets();
-        $this->set("actionType", t("Add"));
+        $this->set('actionDescription', t('Add Product'));
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
@@ -190,7 +190,7 @@ class Products extends DashboardSitePageController
         }
 
         $this->loadFormAssets();
-        $this->set("actionType", t("Update"));
+        $this->set('actionDescription', t('Update Product'));
 
         //get the product
         $product = Product::getByID($pID);

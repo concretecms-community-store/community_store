@@ -6,7 +6,11 @@ use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
-/** @var $variationLookup ProductVariation [] */
+
+/**
+ * @var ProductVariation $variationLookup []
+ * @var string $actionDescription
+ */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $listViews = ['view', 'updated', 'removed', 'success'];
@@ -2002,7 +2006,7 @@ if (version_compare($version, '9.0', '<')) {
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= Url::to('/dashboard/store/products/'. (isset($groupSearch) ? $groupSearch : '') . (isset($keywordsSearch) ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
-                <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= t('%s Product', $actionType) ?></button>
+                <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= $actionDescription ?></button>
             </div>
         </div>
 
