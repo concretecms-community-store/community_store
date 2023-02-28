@@ -241,12 +241,12 @@ class ShippingMethod
     }
 
     /**
-     * @ORM\param StoreShippingMethodTypeMethod $smtm
-     * @ORM\param StoreShippingMethodType $smt
-     * @ORM\param string $smName
-     * @ORM\param bool $smEnabled
+     * @param StoreShippingMethodTypeMethod $smtm
+     * @param StoreShippingMethodType $smt
+     * @param string $smName
+     * @param bool $smEnabled
      *
-     * @ORM\return ShippingMethod
+     * @return ShippingMethod
      */
     public static function add($smtm, $smt, $smName, $smEnabled, $smDetails, $smSortOrder, $userGroups, $excludedUserGroups)
     {

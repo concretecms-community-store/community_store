@@ -14,7 +14,7 @@ class ShippingMethodOffer
     private $rateID;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getMethodLabel()
     {
@@ -22,7 +22,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $label
+     * @param mixed $label
      */
     public function setMethodLabel($label)
     {
@@ -30,7 +30,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getKey()
     {
@@ -38,7 +38,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $key
+     * @param mixed $key
      */
     public function setKey($key)
     {
@@ -55,7 +55,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOfferLabel()
     {
@@ -63,7 +63,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $offerLabel
+     * @param mixed $offerLabel
      */
     public function setOfferLabel($offerLabel)
     {
@@ -71,7 +71,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOfferDetails()
     {
@@ -79,7 +79,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\param mixed $offerDetails
+     * @param mixed $offerDetails
      */
     public function setOfferDetails($offerDetails)
     {
@@ -87,7 +87,7 @@ class ShippingMethodOffer
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getRate()
     {

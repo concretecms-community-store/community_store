@@ -9,7 +9,7 @@ class Package
     protected $height;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getWeight()
     {
@@ -17,7 +17,7 @@ class Package
     }
 
     /**
-     * @ORM\param mixed $weight
+     * @param mixed $weight
      */
     public function setWeight($weight)
     {
@@ -25,7 +25,7 @@ class Package
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getLength()
     {
@@ -33,7 +33,7 @@ class Package
     }
 
     /**
-     * @ORM\param mixed $length
+     * @param mixed $length
      */
     public function setLength($length)
     {
@@ -41,7 +41,7 @@ class Package
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getWidth()
     {
@@ -49,7 +49,7 @@ class Package
     }
 
     /**
-     * @ORM\param mixed $width
+     * @param mixed $width
      */
     public function setWidth($width)
     {
@@ -57,7 +57,7 @@ class Package
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getHeight()
     {
@@ -65,7 +65,7 @@ class Package
     }
 
     /**
-     * @ORM\param mixed $height
+     * @param mixed $height
      */
     public function setHeight($height)
     {

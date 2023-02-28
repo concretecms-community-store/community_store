@@ -172,7 +172,7 @@ class DiscountRule
     private $codes;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getCodes()
     {
@@ -186,7 +186,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -194,7 +194,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getName()
     {
@@ -202,7 +202,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drName
+     * @param mixed $drName
      */
     public function setName($drName)
     {
@@ -210,7 +210,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getEnabled()
     {
@@ -223,7 +223,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drEnabled
+     * @param mixed $drEnabled
      */
     public function setEnabled($drEnabled)
     {
@@ -231,7 +231,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDisplay()
     {
@@ -239,7 +239,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDisplay
+     * @param mixed $drDisplay
      */
     public function setDisplay($drDisplay)
     {
@@ -247,7 +247,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDescription()
     {
@@ -255,7 +255,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDescription
+     * @param mixed $drDescription
      */
     public function setDescription($drDescription)
     {
@@ -263,7 +263,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDeductType()
     {
@@ -271,7 +271,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDeductType
+     * @param mixed $drDeductType
      */
     public function setDeductType($drDeductType)
     {
@@ -279,7 +279,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getValue()
     {
@@ -287,7 +287,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drValue
+     * @param mixed $drValue
      */
     public function setValue($drValue)
     {
@@ -295,7 +295,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getPercentage()
     {
@@ -303,7 +303,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drPercentage
+     * @param mixed $drPercentage
      */
     public function setPercentage($drPercentage)
     {
@@ -311,7 +311,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDeductFrom()
     {
@@ -319,7 +319,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDeductFrom
+     * @param mixed $drDeductFrom
      */
     public function setDeductFrom($drDeductFrom)
     {
@@ -327,7 +327,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTrigger()
     {
@@ -335,7 +335,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drTrigger
+     * @param mixed $drTrigger
      */
     public function setTrigger($drTrigger)
     {
@@ -348,7 +348,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getSingleUseCodes()
     {
@@ -361,7 +361,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drSingleUseCodes
+     * @param mixed $drSingleUseCodes
      */
     public function setSingleUseCodes($drSingleUseCodes)
     {
@@ -369,7 +369,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getCurrency()
     {
@@ -377,7 +377,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drCurrency
+     * @param mixed $drCurrency
      */
     public function setCurrency($drCurrency)
     {
@@ -385,7 +385,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getValidFrom()
     {
@@ -393,7 +393,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drValidFrom
+     * @param mixed $drValidFrom
      */
     public function setValidFrom($drValidFrom)
     {
@@ -401,7 +401,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getValidTo()
     {
@@ -409,7 +409,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drValidTo
+     * @param mixed $drValidTo
      */
     public function setValidTo($drValidTo)
     {
@@ -417,7 +417,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return array
+     * @return array
      */
     public function getProductGroups()
     {
@@ -425,7 +425,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param array $drProductGroups
+     * @param array $drProductGroups
      */
     public function setProductGroups($drProductGroups)
     {
@@ -437,7 +437,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return array
+     * @return array
      */
     public function getUserGroups()
     {
@@ -445,7 +445,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param array $drUserGroups
+     * @param array $drUserGroups
      */
     public function setUserGroups($drUserGroups)
     {
@@ -487,7 +487,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDateAdded()
     {
@@ -495,7 +495,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDateAdded
+     * @param mixed $drDateAdded
      */
     public function setDateAdded($drDateAdded)
     {
@@ -503,7 +503,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDeleted()
     {
@@ -511,7 +511,7 @@ class DiscountRule
     }
 
     /**
-     * @ORM\param mixed $drDeleted
+     * @param mixed $drDeleted
      */
     public function setDeleted($drDeleted)
     {
