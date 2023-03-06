@@ -182,8 +182,8 @@ class Controller extends Package
         $select2 =  $al->getAssetGroup('select2');
 
         if (!$select2) {
-            $al->register('css', 'select2', 'vendor/select2/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-            $al->register('javascript', 'select2', 'vendor/select2/select2/select2.js', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+            $al->register('css', 'select2', 'css/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+            $al->register('javascript', 'select2', 'js/select2.js', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
             $al->registerGroup('select2',
                 [
