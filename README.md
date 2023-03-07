@@ -62,3 +62,6 @@ https://marketplace.concretecms.com/marketplace/addons/omni-gallery-for-communit
 ### Community Store Import
 Import products via a CSV file.
 https://github.com/dbuonomo/community-store-import
+
+### Sendy Subscribing
+https://github.com/cahueya/community_store_sendy_subscribing
