@@ -342,7 +342,7 @@ class ProductVariation
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getVariationQtyUnlim()
     {

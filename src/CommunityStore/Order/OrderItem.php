@@ -80,7 +80,7 @@ class OrderItem
     protected $oiQtyLabel;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -88,7 +88,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getProductName()
     {
@@ -96,7 +96,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiProductName
+     * @param mixed $oiProductName
      */
     public function setProductName($oiProductName)
     {
@@ -104,7 +104,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getSKU()
     {
@@ -112,7 +112,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiSKU
+     * @param mixed $oiSKU
      */
     public function setSKU($oiSKU)
     {
@@ -120,7 +120,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getPricePaid()
     {
@@ -128,7 +128,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiPricePaid
+     * @param mixed $oiPricePaid
      */
     public function setPricePaid($oiPricePaid)
     {
@@ -136,7 +136,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTax()
     {
@@ -144,7 +144,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiTax
+     * @param mixed $oiTax
      */
     public function setTax($oitax)
     {
@@ -152,7 +152,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTaxIncluded()
     {
@@ -160,7 +160,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oitaxIncluded
+     * @param mixed $oitaxIncluded
      */
     public function setTaxIncluded($oiTaxIncluded)
     {
@@ -168,7 +168,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getTaxName()
     {
@@ -176,7 +176,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiTaxName
+     * @param mixed $oiTaxName
      */
     public function setTaxName($oiTaxName)
     {
@@ -184,7 +184,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getQuantity() {
         return round($this->oiQty, 4);
@@ -199,7 +199,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiQty
+     * @param mixed $oiQty
      */
     public function setQuantity($oiQty)
     {
@@ -215,7 +215,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getQuantityLabel()
     {
@@ -231,7 +231,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $oiQtyLabel
+     * @param mixed $oiQtyLabel
      */
     public function setQuantityLabel($oiQtyLabel)
     {
@@ -268,7 +268,7 @@ class OrderItem
 
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrder()
     {
@@ -276,7 +276,7 @@ class OrderItem
     }
 
     /**
-     * @ORM\param mixed $order
+     * @param mixed $order
      */
     public function setOrder($order)
     {

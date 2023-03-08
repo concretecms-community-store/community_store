@@ -542,12 +542,12 @@ class Order
     }
 
     /**
-     * @ORM\param array $data
-     * @ORM\param StorePaymentMethod $pm
-     * @ORM\param string $transactionReference
-     * @ORM\param bool $status
+     * @param array $data
+     * @param StorePaymentMethod $pm
+     * @param string $transactionReference
+     * @param bool $status
      *
-     * @ORM\return Order
+     * @return Order
      */
     public static function add($pm, $transactionReference = '', $status = null)
     {
@@ -662,8 +662,8 @@ class Order
     }
 
     /**
-     * @ORM\param StoreCustomer $customer
-     * @ORM\param bool $includeShipping
+     * @param StoreCustomer $customer
+     * @param bool $includeShipping
      */
     public function addCustomerAddress($customer = null, $includeShipping = true)
     {

@@ -213,11 +213,11 @@ class Method extends Controller
     }
 
     /*
-     * @ORM\param string $pmHandle
-     * @ORM\param string $pmName
+     * @param string $pmHandle
+     * @param string $pmName
      * @ORM\pkg Package Object
-     * @ORM\param string $pmDisplayName
-     * @ORM\param bool $enabled
+     * @param string $pmDisplayName
+     * @param bool $enabled
      */
     public static function add($pmHandle, $pmName, $pkg = null, $pmButtonLabel = '', $enabled = false)
     {

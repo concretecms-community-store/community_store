@@ -41,7 +41,7 @@ class DiscountCode
     protected $dcDateAdded;
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -49,7 +49,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getCode()
     {
@@ -57,7 +57,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $dcCode
+     * @param mixed $dcCode
      */
     public function setCode($dcCode)
     {
@@ -65,7 +65,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDiscountRule()
     {
@@ -73,7 +73,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $discountRule
+     * @param mixed $discountRule
      */
     public function setDiscountRule($discountRule)
     {
@@ -81,7 +81,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOID()
     {
@@ -89,7 +89,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $oID
+     * @param mixed $oID
      */
     public function setOID($oID)
     {
@@ -97,7 +97,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getDateAdded()
     {
@@ -110,7 +110,7 @@ class DiscountCode
     }
 
     /**
-     * @ORM\param mixed $dcDateAdded
+     * @param mixed $dcDateAdded
      */
     public function setDateAdded($dcDateAdded)
     {

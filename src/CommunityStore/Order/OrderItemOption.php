@@ -49,7 +49,7 @@ class OrderItemOption
 
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getID()
     {
@@ -57,7 +57,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItem()
     {
@@ -65,7 +65,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $orderItem
+     * @param mixed $orderItem
      */
     public function setOrderItem(OrderItem $orderItem)
     {
@@ -73,7 +73,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionKey()
     {
@@ -81,7 +81,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioKey
+     * @param mixed $oioKey
      */
     public function setOrderItemOptionKey($oioKey)
     {
@@ -89,7 +89,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioHandle
+     * @param mixed $oioHandle
      */
     public function setOrderItemOptionHandle($oioHandle)
     {
@@ -97,7 +97,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionValue()
     {
@@ -105,7 +105,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\param mixed $oioValue
+     * @param mixed $oioValue
      */
     public function setOrderItemOptionValue($oioValue)
     {
@@ -113,7 +113,7 @@ class OrderItemOption
     }
 
     /**
-     * @ORM\return mixed
+     * @return mixed
      */
     public function getOrderItemOptionHandle()
     {
