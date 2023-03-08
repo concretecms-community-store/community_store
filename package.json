@@ -12,6 +12,7 @@
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips": "0.0.17",
     "magnific-popup": "^1.1.0",
+    "select2": "3.5.2-browserify",
     "selectize": "^0.12.6",
     "sysend": "^1.10.0"
   },
@@ -51,6 +52,26 @@
     {
       "from": "node_modules/magnific-popup/dist/jquery.magnific-popup.js",
       "to": "js/magnific-popup/jquery.magnific-popup.js"
+    },
+    {
+      "from": "node_modules/select2/select2.min.js",
+      "to": "js/select2.js"
+    },
+    {
+      "from": "node_modules/select2/select2.css",
+      "to": "css/select2/select2.css"
+    },
+    {
+      "from": "node_modules/select2/select2.png",
+      "to": "css/select2/select2.png"
+    },
+    {
+      "from": "node_modules/select2/select2-spinner.gif",
+      "to": "css/select2/select2-spinner.gif"
+    },
+    {
+      "from": "node_modules/select2/select2x2.png",
+      "to": "css/select2/select2x2.png"
     }
   ]
 }

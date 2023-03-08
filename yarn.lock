@@ -6200,6 +6200,11 @@ select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/select-hose/-/select-hose-2.0.0.tgz"
 
+select2@3.5.2-browserify:
+  version "3.5.2-browserify"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-3.5.2-browserify.tgz#dc4dafda38d67a734e8a97a46f0d3529ae05391d"
+  integrity sha512-Hyzje+ALhhsuS7e40qON9MCEtv5Sk/6BbbewxsyFWSR6rvOBlwp+2ZE5N6+nSDJplfO//tJrUoqcmJxoKGa+Hg==
+
 selectize@^0.12.6:
   version "0.12.6"
   resolved "https://registry.npmjs.org/selectize/-/selectize-0.12.6.tgz"
