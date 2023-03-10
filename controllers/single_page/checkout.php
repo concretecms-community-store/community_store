@@ -487,7 +487,7 @@ class Checkout extends PageController
             "address2" => trim($data['addr2']),
             "city" => trim($data['city']),
             "state_province" => trim($data['state']),
-            "postal_code" => trim($data['postal']),
+            "postal_code" => strtoupper(trim($data['postal'])),
             "country" => trim($data['count']),
         ];
 
@@ -603,7 +603,7 @@ class Checkout extends PageController
             "address2" => trim($data['addr2']),
             "city" => trim($data['city']),
             "state_province" => trim($data['state']),
-            "postal_code" => trim($data['postal']),
+            "postal_code" => strtoupper(trim($data['postal'])),
             "country" => trim($data['count']),
         ];
 

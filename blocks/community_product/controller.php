@@ -18,6 +18,7 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "538";
     protected $btDefaultSet = 'community_store';
+    public $pID = false;
 
     public function getBlockTypeDescription()
     {

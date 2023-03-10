@@ -43,7 +43,7 @@ class Products extends DashboardPageController
         }
 
         $this->set('dateFrom', $dateFrom);
-        $this->set('dateFrom', $dateFrom);
+        $this->set('dateTo', $dateTo);
         $this->set('productSearch', $productSearch);
 
         $pr->setItemsPerPage(20);
