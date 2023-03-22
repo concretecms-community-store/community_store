@@ -23,8 +23,8 @@ class Sales extends DashboardPageController
         $this->set('defaultFromDate', $thirtyDaysAgo);
         $this->set('defaultToDate', $today);
 
-        $dateFrom = $this->request->request->get('dateFrom');
-        $dateTo = $this->request->request->get('dateTo');
+        $dateFrom = $this->request->get('dateFrom');
+        $dateTo = $this->request->get('dateTo');
         if (!$dateFrom) {
             $dateFrom = $thirtyDaysAgo;
         }
@@ -40,7 +40,7 @@ class Sales extends DashboardPageController
         $orderList = new OrderList();
         $orderList->setFromDate($dateFrom);
         $orderList->setToDate($dateTo);
-        $orderList->setItemsPerPage(10);
+        $orderList->setItemsPerPage(20);
         $orderList->setPaid(true);
         $orderList->setCancelled(false);
 

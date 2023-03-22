@@ -20,52 +20,56 @@ if ($taxCalc == 'extract') {
 
 <div class="row">
 	<div class="col-sm-12 col-md-4">
-		<div class="panel-sale panel panel-default">
+		<div class="panel-sale panel panel-default mb-3">
 			<?php $ts = SalesReport::getTodaysSales(); ?>
 			<div class="panel-heading">
 				<h2 class="panel-title"><?= t("Today's Sales")?></h2>
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Total')?> </strong> <?=Price::format($ts['total'])?>
+                    <div class="col-md-12 col-sm-12 stat">
+                        <strong><?= t('Number')?>:</strong> <?= $ts['count']?>
+                    </div>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Total')?>:</strong> <?=Price::format($ts['total'])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Products')?></strong> <?=Price::format($ts['productTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Products')?>:</strong> <?=Price::format($ts['productTotal'])?>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($ts[$taxValue])?>
+
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Tax')?> <?= $extraTaxLable?>:</strong> <?=Price::format($ts[$taxValue])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Shipping')?></strong> <?=Price::format($ts['shippingTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Shipping')?>:</strong> <?=Price::format($ts['shippingTotal'])?>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-sm-12 col-md-4">
-		<div class="panel-sale panel panel-default">
+		<div class="panel-sale panel panel-default mb-3">
 			<?php $td = SalesReport::getThirtyDays(); ?>
 			<div class="panel-heading">
 				<h2 class="panel-title"><?= t('Past 30 Days')?></h2>
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Total')?></strong> <?=Price::format($td['total'])?>
+                    <div class="col-md-12 col-sm-12 stat">
+                        <strong><?= t('Number')?>:</strong> <?= $td['count']?>
+                    </div>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Total')?>: </strong> <?=Price::format($td['total'])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Products')?></strong> <?=Price::format($td['productTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Products')?>: </strong> <?=Price::format($td['productTotal'])?>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($td[$taxValue])?>
+
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Tax')?> <?= $extraTaxLable?>:</strong> <?=Price::format($td[$taxValue])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Shipping')?></strong> <?=Price::format($td['shippingTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Shipping')?>:</strong> <?=Price::format($td['shippingTotal'])?>
 					</div>
 				</div>
 			</div>
@@ -79,19 +83,21 @@ if ($taxCalc == 'extract') {
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Total')?></strong> <?=Price::format($ytd['total'])?>
+                    <div class="col-md-12 col-sm-12 stat">
+                        <strong><?= t('Number')?>:</strong> <?= $ytd['count']?>
+                    </div>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Total')?>:</strong> <?=Price::format($ytd['total'])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Products')?></strong> <?=Price::format($ytd['productTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Products')?>:</strong> <?=Price::format($ytd['productTotal'])?>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Tax')?> <?= $extraTaxLable?></strong> <?=Price::format($ytd[$taxValue])?>
+
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Tax')?> <?= $extraTaxLable?>:</strong> <?=Price::format($ytd[$taxValue])?>
 					</div>
-					<div class="col-md-12 col-sm-6 stat">
-						<strong><?= t('Shipping')?></strong> <?=Price::format($ytd['shippingTotal'])?>
+					<div class="col-md-12 col-sm-12 stat">
+						<strong><?= t('Shipping')?>:</strong> <?=Price::format($ytd['shippingTotal'])?>
 					</div>
 				</div>
 			</div>
@@ -99,7 +105,7 @@ if ($taxCalc == 'extract') {
 	</div>
 </div>
 <hr>
-<div id="sales-chart"></div>
+<div id="sales-chart" style="position: relative"></div>
 <hr>
 <script type="text/javascript">
 $(function(){
@@ -186,14 +192,14 @@ $(function(){
 			<h3><?= t("View Orders by Date")?></h3>
 		</div>
 		<div class="col-md-12 col-sm-8 text-right">
-			<form action="<?=Url::to('/dashboard/store/reports/sales')?>" method="post" class="form form-inline order-report-form">
+			<form action="<?=Url::to('/dashboard/store/reports/sales')?>" method="get" class="form form-inline order-report-form">
 				<div class="form-group">
 					<?= $app->make('helper/form/date_time')->date('dateFrom', $dateFrom); ?>
 				</div>
 				<div class="form-group">
 					<?= $app->make('helper/form/date_time')->date('dateTo', $dateTo); ?>
 				</div>
-				<input type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary"><?= t('View'); ?></button>
 			</form>
 		</div>
 	</div>

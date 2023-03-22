@@ -28,12 +28,14 @@ class SalesReport extends OrderList
         $taxTotal = 0;
         $includedTaxTotal = 0;
         $shippingTotal = 0;
+        $count = 0;
         foreach ($sr->getResults() as $order) {
             $total = $total + $order->getTotal();
             $productTotal = $productTotal + $order->getSubTotal();
             $taxTotal = $taxTotal + $order->getTaxTotal();
             $includedTaxTotal = $includedTaxTotal + $order->getIncludedTaxTotal();
             $shippingTotal = $shippingTotal + $order->getShippingTotal();
+            $count++;
         }
 
         $totals = [
@@ -43,6 +45,7 @@ class SalesReport extends OrderList
             "includedTaxTotal" => $includedTaxTotal,
             "shippingTotal" => $shippingTotal,
             "orders" => $sr,
+            "count" => $count,
         ];
 
         return $totals;
