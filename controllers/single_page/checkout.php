@@ -202,6 +202,14 @@ class Checkout extends PageController
             $availableMethods = PaymentMethod::getAvailableMethods((float)$totals['subTotal']);
             $this->set("enabledPaymentMethods", $availableMethods);
 
+            $orderID = Session::get('community_store.tempOrderID');
+            $order = false;
+            if ($orderID) {
+                $order = Order::getByID($orderID);
+            }
+
+            $this->set('order', $order);
+
             $apikey = Config::get('community_store.placesAPIKey');
 
             if ($apikey) {
@@ -214,6 +222,8 @@ class Checkout extends PageController
             }
 
         }
+
+        $this->set('orderAttributes', Session::get('orderAttributes'));
 
         $this->set('token', $this->app->make('token'));
         $this->set('langpath', $langpath);
@@ -446,11 +456,30 @@ class Checkout extends PageController
                     $results['vat_number'] = $vat_number;
                 }
 
+                $results['attribute_display'] = Session::get('community_store.attributeDisplay');
+
                 // Return JSON with results
                 echo json_encode($results);
             }
         } else {
             echo "An error occurred";
+        }
+
+        exit();
+    }
+
+    public function attributeupdater()
+    {
+        $token = $this->app->make('token');
+
+        if (!$token->validate('community_store')) {
+            return false;
+        }
+
+        if ($this->request->request->all()) {
+            $data = $this->request->request->all();
+            Session::set('orderAttributes', $data['attrData']);
+            echo json_encode(['error'=>false]);
         }
 
         exit();
@@ -483,26 +512,26 @@ class Checkout extends PageController
         }
 
         $address = [
-            "address1" => trim($data['addr1']),
-            "address2" => trim($data['addr2']),
-            "city" => trim($data['city']),
-            "state_province" => trim($data['state']),
-            "postal_code" => strtoupper(trim($data['postal'])),
-            "country" => trim($data['count']),
+            "address1" => trim($data['store-checkout-shipping-address-1']),
+            "address2" => trim($data['store-checkout-shipping-address-2']),
+            "city" => trim($data['store-checkout-shipping-city']),
+            "state_province" => trim($data['store-checkout-shipping-state']),
+            "postal_code" => strtoupper(trim($data['store-checkout-shipping-zip'])),
+            "country" => trim($data['store-checkout-shipping-country']),
         ];
 
         if ($guest || !$noShippingSave) {
-            $customer->setValue("shipping_first_name", trim($data['fName']));
+            $customer->setValue("shipping_first_name", trim($data['store-checkout-shipping-first-name']));
             $customer->setValue("shipping_address", $address);
             $customer->setValue("vat_number", isset($data['vat_number']) ? $data['vat_number'] : '');
-            $customer->setValue("shipping_last_name", trim($data['lName']));
-            $customer->setValue("shipping_company", isset($data['company']) ? $data['company'] : '');
+            $customer->setValue("shipping_last_name", trim($data['store-checkout-shipping-last-name']));
+            $customer->setValue("shipping_company", isset($data['store-checkout-shipping-company']) ? $data['store-checkout-shipping-company'] : '');
         }
 
-        Session::set('shipping_first_name', trim($data['fName']));
-        Session::set('shipping_last_name', trim($data['lName']));
+        Session::set('shipping_first_name', trim($data['store-checkout-shipping-first-name']));
+        Session::set('shipping_last_name', trim($data['store-checkout-shipping-last-name']));
         Session::set('shipping_address', $address);
-        Session::set('shipping_company', isset($data['company']) ? trim($data['company']) : '');
+        Session::set('shipping_company', isset($data['store-checkout-shipping-company']) ? trim($data['store-checkout-shipping-company']) : '');
         Session::set('vat_number', isset($data['vat_number']) ? $data['vat_number'] : '');
         Session::set('community_store.smID', false);
     }
@@ -521,40 +550,46 @@ class Checkout extends PageController
             }
         }
 
-        if (strlen($data['fName']) < 1) {
+        $type = '-shipping-';
+
+        if ($billing) {
+            $type = '-billing-';
+        }
+
+        if (strlen($data['store-checkout' . $type . 'first-name']) < 1) {
             $e->add(t('You must enter a first name'));
         }
-        if (strlen($data['fName']) > 255) {
+        if (strlen($data['store-checkout' . $type . 'first-name']) > 255) {
             $e->add(t('Please enter a first name under 255 characters'));
         }
-        if (strlen($data['lName']) < 1) {
+        if (strlen($data['store-checkout' . $type . 'last-name']) < 1) {
             $e->add(t('You must enter a Last Name'));
         }
-        if (strlen($data['lName']) > 255) {
+        if (strlen($data['store-checkout' . $type . 'last-name']) > 255) {
             $e->add(t('Please enter a last name under 255 characters'));
         }
-        if (strlen($data['addr1']) < 3) {
+        if (strlen($data['store-checkout' . $type . 'address-1']) < 3) {
             $e->add(t('You must enter an address'));
         }
-        if (strlen($data['addr1']) > 255) {
+        if (strlen($data['store-checkout' . $type . 'address-1']) > 255) {
             $e->add(t('Please enter a street name under 255 characters'));
         }
-        if (strlen($data['count']) < 2) {
+        if (strlen($data['store-checkout' . $type . 'country']) < 2) {
             $e->add(t('You must enter a Country'));
         }
-        if (strlen($data['count']) > 30) {
+        if (strlen($data['store-checkout' . $type . 'country']) > 30) {
             $e->add(t('You did not select a Country from the list'));
         }
-        if (strlen($data['city']) < 2) {
+        if (strlen($data['store-checkout' . $type . 'city']) < 2) {
             $e->add(t('You must enter a City'));
         }
-        if (strlen($data['city']) > 30) {
+        if (strlen($data['store-checkout' . $type . 'city']) > 30) {
             $e->add(t('You must enter a valid City'));
         }
-        if (strlen($data['postal']) > 10) {
+        if (strlen($data['store-checkout' . $type . 'zip']) > 10) {
             $e->add(t('You must enter a valid Postal Code'));
         }
-        if (strlen($data['postal']) < 2) {
+        if (strlen($data['store-checkout' . $type . 'zip']) < 2) {
             $e->add(t('You must enter a valid Postal Code'));
         }
 
@@ -599,37 +634,80 @@ class Checkout extends PageController
         }
 
         $address = [
-            "address1" => trim($data['addr1']),
-            "address2" => trim($data['addr2']),
-            "city" => trim($data['city']),
-            "state_province" => trim($data['state']),
-            "postal_code" => strtoupper(trim($data['postal'])),
-            "country" => trim($data['count']),
+            "address1" => trim($data['store-checkout-billing-address-1']),
+            "address2" => trim($data['store-checkout-billing-address-2']),
+            "city" => trim($data['store-checkout-billing-city']),
+            "state_province" => trim($data['store-checkout-billing-state']),
+            "postal_code" => strtoupper(trim($data['store-checkout-billing-zip'])),
+            "country" => trim($data['store-checkout-billing-country']),
         ];
 
-        Session::set('billing_first_name', trim($data['fName']));
-        Session::set('billing_last_name', trim($data['lName']));
-        Session::set('billing_phone', trim($data['phone']));
+        Session::set('billing_first_name', trim($data['store-checkout-billing-first-name']));
+        Session::set('billing_last_name', trim($data['store-checkout-billing-last-name']));
+        Session::set('billing_phone', trim($data['store-checkout-billing-phone']));
         Session::set('billing_address', $address);
-        if (isset($data['company'])) {
-            Session::set('billing_company', trim($data['company']));
+        if (isset($data['store-checkout-billing-company'])) {
+            Session::set('billing_company', trim($data['store-checkout-billing-company']));
         } else {
             Session::remove('billing_company');
         }
 
         if ($guest || !$noBillingSave) {
-            $customer->setValue("billing_first_name", trim($data['fName']));
-            $customer->setValue("billing_last_name", trim($data['lName']));
-            $customer->setValue("billing_phone", trim($data['phone']));
+            $customer->setValue("billing_first_name", trim($data['store-checkout-billing-first-name']));
+            $customer->setValue("billing_last_name", trim($data['store-checkout-billing-last-name']));
+            $customer->setValue("billing_phone", trim($data['store-checkout-billing-phone']));
             $customer->setValue("billing_address", $address);
-            if (isset($data['company'])) {
-                $customer->setValue("billing_company", trim($data['company']));
+            if (isset($data['store-checkout-billing-company'])) {
+                $customer->setValue("billing_company", trim($data['store-checkout-billing-company']));
             } else {
                 $customer->setValue("billing_company", '');
             }
         }
 
         Session::set('community_store.smID', false);
+
+        $orderID = Session::get('community_store.tempOrderID');
+        $orderTimestamp = Session::get('community_store.tempOrderIDTimeStamp');
+
+        $order = false;
+        if ($orderID) {
+            $order = Order::getByID($orderID);
+
+            // also check timestamp, in case visitor has returned with still active session after long period and order ID has been reclaimed
+            if ($order && $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+                $order = false;
+            }
+        }
+
+        if (!$order) {
+            $order = new Order();
+            $now = new \DateTime();
+            $order->setDate($now);
+            $order->setTotal(0);
+        }
+
+        $order->setTemporaryRecordCreated(true);
+        $order->save();
+
+        $order->saveOrderChoices();
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+
+        Session::set('community_store.tempOrderID', $order->getOrderID());
+        Session::set('community_store.tempOrderIDTimeStamp', $order->getTemporaryRecordCreated()->format(DATE_RFC3339));
+
+        $attributeDisplay = '';
+        if (count($orderChoicesAttList)) {
+            ob_start();
+            if (file_exists(DIR_BASE . '/application/elements/checkout/order_attributes.php')) {
+                View::element('checkout/order_attributes', ['order' => $order, 'orderChoicesAttList' => $orderChoicesAttList]);
+            } else {
+                View::element('checkout/order_attributes', ['order' => $order, 'orderChoicesAttList' => $orderChoicesAttList], 'community_store');
+            }
+            $attributeDisplay = ob_get_clean();
+        }
+
+        Session::set('community_store.attributeDisplay', $attributeDisplay);
+
     }
 
     public function getCartList()

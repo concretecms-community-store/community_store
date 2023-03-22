@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Form\Context\ContextInterface;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
@@ -197,7 +198,11 @@ $csm = $app->make('cs/helper/multilingual');
                                                 <div class="form-group" id="store-att-<?= $ak->getAttributeKeyHandle(); ?>">
                                                     <label><?= $csm->t($ak->getAttributeKeyDisplayName(), 'orderAttributeName', null, $ak->getAttributeKeyID()); ?></label><br />
                                                      <?php
-                                                     $fieldoutput = $ak->getAttributeType()->render('form', $ak, '', true);
+                                                     $cv = $ak->getControlView(new \Concrete\Core\Attribute\Context\FrontendFormContext());
+                                                     if ($order) {
+                                                         $cv->setValue($order->getAttributeValueObject($ak));
+                                                     }
+                                                     $fieldoutput = $cv->renderControl();
                                                      if ($ak->isRequired()) {
                                                          $fieldoutput = str_replace('<input', '<input required ', $fieldoutput);
                                                          $fieldoutput = str_replace('<select', '<select required ', $fieldoutput);
@@ -253,13 +258,8 @@ $csm = $app->make('cs/helper/multilingual');
 
                             <?php if ($orderChoicesEnabled) { ?>
 
-                                <div class="col-sm-12">
-                                    <?php foreach ($orderChoicesAttList as $ak) { ?>
-                                        <div id="store-att-display-<?= $ak->getAttributeKeyHandle(); ?>">
-                                            <label><?= $ak->getAttributeKeyDisplayName()?></label>
-                                            <p class="store-summary-order-choices-<?= $ak->getAttributeKeyID()?>"></p>
-                                        </div>
-                                    <?php } ?>
+                                <div class="col-sm-12" id="store-attribute-values">
+
                                 </div>
 
                             <?php } ?>

@@ -156,6 +156,8 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
             $this->query->andWhere('o.pmID = ?')->setParameter($paramcount++, $this->paymentMethod);
         }
 
+        $this->query->andWhere('o.temporaryRecordCreated is null');
+
         $this->query->leftJoin('o', 'CommunityStoreOrderSearchIndexAttributes', 'csi', 'o.oID = csi.oID');
         $this->query->orderBy('oID', 'DESC');
 

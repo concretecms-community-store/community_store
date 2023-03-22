@@ -5,6 +5,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
 use Concrete\Core\User\UserInfo;
@@ -135,6 +136,9 @@ class Order
 
     /** @ORM\Column(type="datetime", nullable=true) */
     protected $externalPaymentRequested;
+
+    /** @ORM\Column(type="datetime", nullable=true) */
+    protected $temporaryRecordCreated;
 
     /** @ORM\Column(type="string", length=10, nullable=true) */
     protected $locale;
@@ -522,6 +526,21 @@ class Order
         }
     }
 
+    public function getTemporaryRecordCreated()
+    {
+        return $this->temporaryRecordCreated;
+    }
+
+    public function setTemporaryRecordCreated($bool)
+    {
+        if ($bool) {
+            $this->temporaryRecordCreated = new \DateTime();
+        } else {
+            $this->temporaryRecordCreated = null;
+        }
+    }
+
+
     public static function getByID($oID)
     {
         $em = dbORM::entityManager();
@@ -554,8 +573,8 @@ class Order
         $app = Application::getFacadeApplication();
         $csm = $app->make('cs/helper/multilingual');
 
-        $userAgent = session::get('CLIENT_HTTP_USER_AGENT');
-        $notes = session::get('notes');
+        $userAgent = Session::get('CLIENT_HTTP_USER_AGENT');
+        $notes = Session::get('notes');
 
         $customer = new Customer();
         $now = new \DateTime();
@@ -568,9 +587,12 @@ class Order
         $taxes = $totals['taxes'];
         $total = $totals['total'];
         $discountRatio = $totals['discountRatio'];
-
-        $pmName = $pm->getName();
-        $pmDisplayName = $csm->t($pm->getDisplayName(), 'paymentDisplayName', null, $pm->getID());
+        $pmName = '';
+        $pmDisplayName = '';
+        if ($pm) {
+            $pmName = $pm->getName();
+            $pmDisplayName = $csm->t($pm->getDisplayName(), 'paymentDisplayName', null, $pm->getID());
+        }
 
         $taxCalc = Config::get('community_store.calculation');
 
@@ -596,10 +618,22 @@ class Order
         $taxLabels = implode(',', $taxLabels);
 
         $order = new self();
+
+        $orderID = Session::get('community_store.tempOrderID');
+        $order = false;
+        if ($orderID) {
+            $order = Order::getByID($orderID);
+        }
+
+        if (!$order) {
+            $order = new self();
+        }
+
+        $order->setTemporaryRecordCreated(false);
         $order->setCustomerID($customer->getUserID());
         $order->setDate($now);
         $order->setPaymentMethodName($pmDisplayName ? $pmDisplayName : $pmName);
-        $order->setPaymentMethodID($pm->getID());
+        $order->setPaymentMethodID($pm ? $pm->getID() : '');
         $order->setShippingMethodName($smName);
         $order->setShipmentID($sShipmentID);
         $order->setRateID($sRateID);
@@ -615,7 +649,7 @@ class Order
 
         $order->setLocale(Localization::activeLocale());
 
-        if ($pm->getMethodController()->isExternal()) {
+        if ($pm && $pm->getMethodController()->isExternal()) {
             $order->setExternalPaymentRequested(true);
         }
 
@@ -648,15 +682,16 @@ class Order
         $customer->setLastOrderID($order->getOrderID());
         $order->updateStatus($status);
         $order->addCustomerAddress($customer, $order->isShippable());
-        $order->saveOrderChoices($order);
         $order->addOrderItems(Cart::getCart(), $discountRatio);
 
         $event = new OrderEvent($order);
         Events::dispatch(OrderEvent::ORDER_CREATED, $event);
 
-        if (!$pm->getMethodController()->isExternal()) {
+        if ($pm && !$pm->getMethodController()->isExternal()) {
             $order->completeOrder($transactionReference, true);
         }
+
+        Session::set('community_store.tempOrderID', false);
 
         return $order;
     }
@@ -1317,7 +1352,7 @@ class Order
         return $rows;
     }
 
-    public function saveOrderChoices($order)
+    public function  saveOrderChoices()
     {
         $aks = StoreOrderKey::getAttributeListBySet('order_choices', new User());
 
@@ -1337,11 +1372,15 @@ class Order
                    $dh->getTimezone('user')
                );
            } else {
+               $value = false;
+               $controller = $uak->getController();
                $value = $controller->createAttributeValueFromRequest();
            }
 
-           $order->setAttribute($uak, $value);
+           $this->setAttribute($uak, $value);
         }
+
+
     }
 
     public function getAddressValue($handle, $valuename)
@@ -1420,6 +1459,33 @@ class Order
             return $att->$functionname();
         } else {
             return $att->$valuename;
+        }
+    }
+
+
+    public static function clearTemporaryOrders() {
+        $db = app()->make('database')->connection();
+        $sql = 'SELECT oID from CommunityStoreOrders where temporaryRecordCreated is not null and temporaryRecordCreated < DATE_SUB(NOW(), INTERVAL 30 DAY )';
+        $rows = $db->getAll($sql);
+
+        foreach($rows as $row) {
+            $order = self::getByID($row['oID']);
+
+            if ($order && !$order->getPaid()) {
+                $order->remove();
+            }
+        }
+
+        $sql = 'SELECT MAX(oID) as max_id from CommunityStoreOrders';
+        $result = $db->query($sql);
+
+        foreach($result as $r) {
+            $max = $r['max_id'];
+        }
+
+        if ($max) {
+            $sql = 'ALTER TABLE CommunityStoreOrders AUTO_INCREMENT = ' .(int)$max +1 ;
+            $db->query($sql);
         }
     }
 }

@@ -8,7 +8,6 @@ use \Concrete\Core\Support\Facade\Url;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $csm = $app->make('cs/helper/multilingual');
-
 ?>
 <div class="store-cart-page">
 <h1><?= t("Shopping Cart") ?></h1>

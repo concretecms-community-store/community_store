@@ -509,113 +509,7 @@ var communityStore = {
 
         communityStore.submitProductFilter(element);
     },
-    processOtherAttributes: function() {
 
-        var extrafields = $('#store-checkout-form-group-payment #store-extrafields');
-
-        if (extrafields.length) {
-            extrafields.remove();
-        }
-
-        $('#store-checkout-form-group-payment').append('<div id="store-extrafields" style="display: none"></div>');
-
-        $("#store-checkout-form-group-other-attributes .row").each(function(index, el) {
-
-            var novalue = $("#store-checkout-form-group-other-attributes").data('no-value');
-
-            if (!novalue) {
-                novalue = '';
-            }
-
-            var yesvalue = $("#store-checkout-form-group-other-attributes").data('yes-value');
-
-            if (!yesvalue) {
-                yesvalue = 'Yes';
-            }
-
-            var akID = $(el).data("akid");
-            var field = $(el).find(".form-control");
-
-            var value = '0';
-            var displayvalue = '';
-            var isselect = false;
-            var addedNewField = false;
-
-            // look for checkbox or radio
-            if (!field.length) {
-                var isMultipleCheckboxes = $(el).find("[type=checkbox]").length > 1;
-
-                field = $(el).find("[type=checkbox]").first();
-                var label = $(el).find(".checkbox label").first();
-
-                if (!label.text()) {
-                    label = $(field).next();
-                }
-
-                if (isMultipleCheckboxes) {
-                    var displayValuesArray = [];
-                    $(el).find("[type=checkbox]:checked").each(function() {
-                        var $checkbox = $(this);
-                        displayValuesArray.push($checkbox.closest('label').text().replaceAll(/\n|\t|\r/ig, ''));
-                        newfield = $("<input type='hidden' name='akID["+akID+"][atSelectOptionValue][]' value='"+$checkbox.val()+"'>");
-                        newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
-                        addedNewField = true;
-                    });
-                    displayvalue = displayValuesArray.join(", ");
-
-                } else if (field.length) {
-                    if (field.is(':checked')) {
-                        value = '1';
-                        displayvalue = yesvalue;
-                    } else {
-                        displayvalue = novalue;
-                    }
-                } else {
-                    field = $(el).find('input[type=radio]:checked');
-                    if (field) {
-                        displayvalue = field.closest('label').text().trim();
-                    }
-                }
-            } else {
-                value = field.val();
-
-                if (field.is('select')) {
-                    displayvalue = field.children(':selected').text();
-                    var isselect = true;
-                } else {
-                    displayvalue = value;
-                }
-            }
-
-
-            if (field.length) {
-                displayvalue = displayvalue.replace(/[\n\r]/g, '<br>').trim();
-
-                if (!displayvalue) {
-                    displayvalue = '-';
-                }
-
-                $('.store-summary-order-choices-' + akID).html(displayvalue);
-                $('#akIDinput' + akID).remove();
-
-                var newfield = field.clone();
-
-                if (!newfield.prop('name')) {
-                    newfield.prop('name', "akID[" + akID + "][value]")
-                }
-
-                if (isselect) {
-                    newfield.val(field.val());
-                }
-                if (!addedNewField) {
-                    newfield.appendTo($('#store-checkout-form-group-payment #store-extrafields'));
-                }
-
-
-            }
-        });
-
-    },
     number_format: function (number, decimals, dec_point, thousands_sep) {
         number  = number*1;//makes sure `number` is numeric value
         var str = number.toFixed(decimals?decimals:0).toString().split('.');
@@ -694,8 +588,10 @@ $(document).ready(function () {
         var ccm_token = $(this).find('[name=ccm_token]').val();
 
         if ($('#store-checkout-form-group-billing #store-checkout-form-group-other-attributes').length) {
-            communityStore.processOtherAttributes();
+            //communityStore.processOtherAttributes();
         }
+
+        var fieldData = $(this).serialize() + '&adrType=billing';
 
         communityStore.waiting();
         var obj = $(this);
@@ -704,22 +600,7 @@ $(document).ready(function () {
             type: 'post',
             cache: false,
             dataType: 'text',
-            data: {
-                ccm_token: ccm_token,
-                adrType: 'billing',
-                email: email,
-                fName: bfName,
-                lName: blName,
-                phone: bPhone,
-                company: bCompany,
-                addr1: bAddress1,
-                addr2: bAddress2,
-                count: bCountry,
-                city: bCity,
-                state: bState,
-                postal: bPostal,
-                notes: notes
-            },
+            data: fieldData,
             success: function(result) {
                 //var test = null;
                 var response = JSON.parse(result);
@@ -740,6 +621,13 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
                     obj.find('.store-checkout-form-group-summary .store-summary-notes').html(response.notes);
                     obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
+
+                    if (response.attribute_display) {
+                        obj.find('#store-attribute-values').show().html(response.attribute_display);
+                    } else {
+                        obj.find('#store-attribute-values').hide();
+                    }
+
 
                     if (response.notes) {
                         obj.find('#store-check-notes-container').show();
@@ -783,9 +671,7 @@ $(document).ready(function () {
 
         var ccm_token = $(this).find('[name=ccm_token]').val();
 
-        if ($('#store-checkout-form-group-shipping #store-checkout-form-group-other-attributes').length) {
-            communityStore.processOtherAttributes();
-        }
+        var fieldData = $(this).serialize() + '&adrType=shipping';
 
         communityStore.waiting();
         var obj = $(this);
@@ -794,19 +680,7 @@ $(document).ready(function () {
             type: 'post',
             cache: false,
             dataType: 'text',
-            data: {
-                ccm_token: ccm_token,
-                adrType: 'shipping',
-                fName: sfName,
-                lName: slName,
-                company: sCompany,
-                addr1: sAddress1,
-                addr2: sAddress2,
-                count: sCountry,
-                city: sCity,
-                state: sState,
-                postal: sPostal
-            },
+            data: fieldData,
             //dataType: 'json',
             success: function(result) {
                 var response = JSON.parse(result);
@@ -814,6 +688,7 @@ $(document).ready(function () {
                     obj.find('.store-checkout-form-group-summary .store-summary-name').html(response.first_name + ' ' + response.last_name);
                     obj.find('.store-checkout-form-group-summary .store-summary-address').html(response.address);
                     obj.find('.store-checkout-form-group-summary .store-summary-company').html(response.company);
+
                     if (response.vat_number != '') {
                         obj.find('.store-checkout-form-group-summary .store-summary-vat-number').html(response.vat_number);
                     } else {
@@ -841,10 +716,6 @@ $(document).ready(function () {
         var vat_number = $("#store-checkout-shipping-vat-number").val();
         $("#store-checkout-form-group-vat .store-checkout-errors").remove();
         var ccm_token = $(this).find('[name=ccm_token]').val();
-
-        if ($('#store-checkout-form-group-vat #store-checkout-form-group-other-attributes').length) {
-            communityStore.processOtherAttributes();
-        }
 
         communityStore.waiting();
         var obj = $(this);
