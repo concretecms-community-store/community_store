@@ -736,17 +736,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                         $paid = $order->getPaid();
 
                         if ($refunded) {
-                            echo '<span class="label label-warning">' . t('Refunded') . '</span>';
+                            echo '<span class="label label-warning badge bg-warning">' . t('Refunded') . '</span>';
                         } elseif ($paid) {
-                            echo '<span class="label label-success">' . t('Paid') . '</span>';
+                            echo '<span class="label label-success badge bg-success">' . t('Paid') . '</span>';
                         } elseif ($order->getTotal() > 0) {
-                            echo '<span class="label label-danger">' . t('Unpaid') . '</span>';
+                            echo '<span class="label label-danger badge bg-danger">' . t('Unpaid') . '</span>';
 
                             if ($order->getExternalPaymentRequested()) {
-                                echo ' <span class="label label-default">' . t('Incomplete') . '</span>';
+                                echo ' <span class="label label-default badge bg-black">' . t('Incomplete') . '</span>';
                             }
                         } else {
-                            echo '<span class="label label-default">' . t('Free Order') . '</span>';
+                            echo '<span class="label label-primary  badge bg-primary">' . t('Free Order') . '</span>';
                         }
 
 
