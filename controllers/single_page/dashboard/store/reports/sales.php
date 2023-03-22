@@ -5,6 +5,7 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Report\SalesReport;
@@ -106,7 +107,7 @@ class Sales extends DashboardPageController
                 $customerName = '-';
             }
 
-            $export[] = [
+            $row = [
                 'Order #' => $o->getOrderID(),
                 'Date' => $date->format('Y-m-d H:i:s'),
                 'Products' => $o->getSubTotal(),
@@ -118,6 +119,12 @@ class Sales extends DashboardPageController
                 'Customer Name' => $customerName,
                 'Customer Email' => $o->getAttribute('email'),
             ];
+
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new \User());
+            foreach ($orderChoicesAttList as $item) {
+                $row[$item->getAttributeKeyDisplayName()] = $o->getAttribute($item->getAttributeKeyHandle());
+            }
+            $export[] = $row;
         }
 
         // if we have something to export
