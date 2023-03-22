@@ -641,6 +641,17 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <?= $form->text('placesAPIKey', Config::get('community_store.placesAPIKey')); ?>
             </div>
 
+            <div class="form-group">
+                <?= $form->label('enableGtagPurchase', t('Send Purchase Event')); ?>
+                <br/>
+                <label><?= $form->checkbox('enableGtagPurchase', '1', Config::get('community_store.enableGtagPurchase')); ?>
+                    <?= t('Send Google Analytics purchase event on order completion'); ?>
+
+                </label>
+                <span class="help-block"><?= t('Requires Google tag (gtag.js) to be configured in Tracking Codes'); ?></span>
+
+            </div>
+
 
             <div class="form-group">
                 <?= $form->label('checkoutScrollOffset', t('Checkout Scroll Offset')); ?>

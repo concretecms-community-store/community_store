@@ -223,6 +223,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.variationDefaultUnlimited', $args['variationDefaultUnlimited'] ?? '');
                 Config::save('community_store.variationMaxVariations', (int) $args['variationMaxVariations'] ? : 50);
                 Config::save('community_store.attributesRequireType', $args['attributesRequireType'] == '1');
+                Config::save('community_store.enableGtagPurchase', isset($args['enableGtagPurchase']) ?? false);
 
                 if ($args['currency']) {
                     $symbol = Currency::getSymbol($args['currency']);

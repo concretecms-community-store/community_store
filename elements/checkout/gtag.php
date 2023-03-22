@@ -42,24 +42,6 @@ if ($order && $orderItems) {
                 }
             }
 
-            $variant = '';
-            $options = $item->getProductOptions();
-            if ($options) {
-                $variants = [];
-                foreach ($options as $option) {
-                    if ($option['oioValue']) {
-                        $variants[] = $option['oioKey'] . ': ' . $option['oioValue'];
-                    }
-                }
-
-                $variant .= implode(', ', $variants);
-
-            }
-
-            if ($variant) {
-                $itemArray['variant'] = $variant;
-            }
-
         }
 
 

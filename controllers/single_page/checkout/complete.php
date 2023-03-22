@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Checkout;
 
 use Concrete\Core\Page\Page;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Session;
@@ -94,5 +95,8 @@ class Complete extends PageController
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
             $this->set("orderChoicesAttList", $orderChoicesAttList);
         }
+
+        $gtagEnabled = Config::get('community_store.enableGtagPurchase');
+        $this->set('gtagEnabled', (bool)$gtagEnabled);
     }
 }
