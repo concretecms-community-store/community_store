@@ -203,9 +203,16 @@ class Checkout extends PageController
             $this->set("enabledPaymentMethods", $availableMethods);
 
             $orderID = Session::get('community_store.tempOrderID');
+            $orderTimestamp = Session::get('community_store.tempOrderIDTimeStamp');
+
             $order = false;
             if ($orderID) {
                 $order = Order::getByID($orderID);
+
+                // also check timestamp, in case visitor has returned with still active session after long period and order ID has been reclaimed
+                if ($order && $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+                    $order = false;
+                }
             }
 
             $this->set('order', $order);

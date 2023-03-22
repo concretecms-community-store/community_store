@@ -620,9 +620,15 @@ class Order
         $order = new self();
 
         $orderID = Session::get('community_store.tempOrderID');
+        $orderTimestamp = Session::get('community_store.tempOrderIDTimeStamp');
+
         $order = false;
         if ($orderID) {
             $order = Order::getByID($orderID);
+
+            if ($order && $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+                $order = false;
+            }
         }
 
         if (!$order) {
