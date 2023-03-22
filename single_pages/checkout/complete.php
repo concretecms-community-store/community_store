@@ -347,11 +347,11 @@ $dh = $app->make('helper/date');
     <script>
         setTimeout(function () {
             window.location.reload(1);
-        }, 2000);
+        }, 5000);
     </script>
 <?php } ?>
 
 <?php
-// uncomment the following to output a gtag purchase event. Ensure you have include a 'global site tag' (gtag.js) before enabling this.
+// uncomment the following to output a gtag purchase event. Ensure you have included a 'global site tag' (gtag.js) before enabling this.
 // \Concrete\Core\View\View::element("checkout/gtag", ['order' => $order, 'orderItems' => $orderItems], 'community_store'); ?>
 
