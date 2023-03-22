@@ -61,7 +61,11 @@ class Complete extends PageController
             } else {
                 if ($order->getExternalPaymentRequested()) {
                     // if it's not paid, but external payment was requested e.g. payment, trigger a check/refresh
-                    $refreshCheck = true;
+
+                    if (Session::get('community_store.refreshCheck') != $order->getOrderID()) {
+                        $refreshCheck = true;
+                        Session::set('community_store.refreshCheck', $order->getOrderID());
+                    }
                 }
             }
         } else {
