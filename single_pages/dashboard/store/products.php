@@ -164,7 +164,7 @@ if (version_compare($version, '9.0', '<')) {
                             <?= $form->label("pQty", t('Stock Level')); ?>
                             <?php $qty = $product->getStockLevel(); ?>
                             <div class="input-group">
-                                <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'step' => 0.001]); ?>
+                                <?= $form->number("pQty", $qty !== '' ? round($qty, 3) : '999', [($product->isUnlimited(true) ? 'disabled' : '') => ($product->isUnlimited(true) ? 'disabled' : ''), 'class' => 'cstore-qty-step']); ?>
                                 <div class="input-group-addon input-group-text">
                                     <div class="form-check-inline">
                                     <?= $form->checkbox('pQtyUnlim', '1', $product->isUnlimited(true),  ['class'=>'form-check-input']) ?>
@@ -179,9 +179,26 @@ if (version_compare($version, '9.0', '<')) {
                                             $('#backorders').toggle();
                                         });
 
-                                        $('#pAllowDecimalQty').change(function () {
-                                            $('#quantitystepscontainer').toggleClass('hidden d-none');
-                                        });
+                                        function updateDecimalQty()
+                                        {
+                                            var allowDecimalQty = $('#pAllowDecimalQty').val() == 1;
+                                            $('#quantitystepscontainer' ).toggleClass('hidden d-none', allowDecimalQty ? false : true);
+                                            var step;
+                                            if (allowDecimalQty) {
+                                                step = parseFloat($('#pQtySteps').val());
+                                                if (!step || step <= 0) {
+                                                    step = 0.001;
+                                                }
+                                            } else {
+                                                step = 1;
+                                            }
+                                            $('.cstore-qty-step').attr('step', step);
+                                        }
+                                        updateDecimalQty();
+
+                                        $('#pAllowDecimalQty,#pQtySteps').on('change', function() {
+                                            updateDecimalQty();
+                                        })
 
                                         $('#pQuantityPrice').change(function () {
                                             $('#tieredoptionscontainer').toggleClass('hidden d-none');
@@ -194,12 +211,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 $('#quantitystepscontainer').addClass('hidden d-none');
                                             } else {
                                                 $('#quantityoptions').removeClass('hidden d-none');
-
-                                                if ($('#pAllowDecimalQty').val() == 1) {
-                                                    $('#quantitystepscontainer').removeClass('hidden d-none');
-                                                } else {
-                                                    $('#quantitystepscontainer').addClass('hidden d-none');
-                                                }
+                                                updateDecimalQty();
                                             }
 
                                         });
@@ -595,7 +607,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <?= $form->label("pMaxQty", t('Maximum Quantity In Cart')); ?>
-                                <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'step' => 0.01]); ?>
+                                <?= $form->number("pMaxQty", $product->getMaxQty(), ['min' => 0, 'class' => 'cstore-qty-step']); ?>
                             </div>
                         </div>
                     </div>
@@ -1529,9 +1541,9 @@ if (version_compare($version, '9.0', '<')) {
                                                             <div class="input-group">
                                                                 <?php
                                                                 if ($variation) {
-                                                                    echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'step' => 0.001, 'max'=>'99999999.999']);
+                                                                    echo $form->number("pvQty[" . $varid . "]", round($variation->getVariationQty(), 3), [($variation->isUnlimited(true) ? 'readonly' : '') => ($variation->isUnlimited(true) ? 'readonly' : ''), 'class' => 'cstore-qty-step', 'max'=>'99999999.999']);
                                                                 } else {
-                                                                    echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'step' => 0.001, 'max'=>'99999999.999']);
+                                                                    echo $form->number("pvQty[" . $varid . "]", '', ['readonly' => 'readonly', 'class' => 'cstore-qty-step', 'max'=>'99999999.999']);
                                                                 }
                                                                 ?>
 
