@@ -367,8 +367,8 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             $query->andWhere("pActive = 1");
         }
 
-        if (is_object($this->productType)) {
-            $query->andWhere("pType = ?")->setParameter($paramcount++, $this->productType->getTypeID());
+        if ($this->productType && is_object($this->productType)) {
+            $query->andWhere("pType = :pType")->setParameter('pType', $this->productType->getTypeID());
         }
 
         if ($this->sortBy == 'category') {
