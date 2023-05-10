@@ -369,6 +369,11 @@ var communityStore = {
             });
 
             pane.find('input').first().focus();
+
+
+            if (pane[0].id === 'store-checkout-form-group-payment') {
+                communityStore.showPaymentMethods();
+            }
         }
     },
 
@@ -395,10 +400,34 @@ var communityStore = {
         });
     },
 
+    showPaymentMethods: function(callback) {
+        $.ajax({
+            url: HELPERSURL + "/shipping/getpaymentmethods" + TRAILINGSLASH,
+            cache: false,
+            dataType: 'text',
+            success: function(html) {
+                $("#store-checkout-payment-method-options").html(html);
+
+                var paymentForm = $("#store-checkout-form-group-payment");
+                const evt = new Event('load')
+                window.dispatchEvent(evt);
+                paymentForm.addClass('payment-form-ready');
+                communityStore.showPaymentForm();
+                $('.store-whiteout').remove();
+
+            },
+            failure: function() {
+                $('.store-whiteout').remove();
+            }
+        });
+    },
+
     showPaymentForm: function() {
         var pmID = $("#store-checkout-payment-method-options input[type='radio']:checked").attr('data-payment-method-id');
         $('.store-payment-method-container').addClass('hidden');
         $(".store-payment-method-container[data-payment-method-id='" + pmID + "']").removeClass('hidden');
+
+
     },
 
     copyBillingToShipping: function() {
@@ -792,7 +821,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".store-btn-previous-pane").click(function(e) {
+    $(document).on('click', '.store-btn-previous-pane', function(e) {
         //hide the body of the current pane, go to the next pane, show that body.
         var pane = $(this).closest(".store-checkout-form-group").find('.store-checkout-form-group-body').parent().prev();
         $('.store-active-form-group').removeClass('store-active-form-group');
@@ -806,7 +835,7 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $("#store-checkout-payment-method-options input[type='radio']").change(function() {
+    $(document).on('change', '#store-checkout-payment-method-options input[type=\'radio\']', function(e) {
         communityStore.showPaymentForm();
     });
 

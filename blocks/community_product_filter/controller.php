@@ -258,6 +258,10 @@ class Controller extends BlockController
         $products->setSaleOnly($this->showSale);
         $products->setShowOutOfStock($this->showOutOfStock);
 
+        if ($this->filterProductType) {
+            $products->setProductType($this->filterProductType);
+        }
+
         if ($this->groupMatchAny === '-1') {
             $products->setGroupNoMatchAny(true);
         } else {

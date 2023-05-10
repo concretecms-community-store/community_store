@@ -83,6 +83,7 @@ class Checkout extends PageController
         }
         $this->set('form', $this->app->make("helper/form"));
 
+
         $useCaptcha = Config::get('community_store.useCaptcha');
 
         if ($useCaptcha) {
@@ -164,6 +165,15 @@ class Checkout extends PageController
             }
 
             $totals = Calculator::getTotals();
+            $availableMethods = PaymentMethod::getAvailableMethods((float)$totals['subTotal']);
+
+            foreach($availableMethods as $pm) {
+                $pmController = $pm->getMethodController();
+
+                if (method_exists($pmController, 'headerScripts')) {
+                    $pmController->headerScripts($this->view);
+                }
+            }
 
             $this->set('subtotal', $totals['subTotal']);
             $this->set('taxes', $totals['taxes']);
@@ -199,8 +209,6 @@ class Checkout extends PageController
             </script>
         ");
 
-            $availableMethods = PaymentMethod::getAvailableMethods((float)$totals['subTotal']);
-            $this->set("enabledPaymentMethods", $availableMethods);
 
             $orderID = Session::get('community_store.tempOrderID');
             $orderTimestamp = Session::get('community_store.tempOrderIDTimeStamp');
@@ -243,6 +251,7 @@ class Checkout extends PageController
         $this->set('activeShippingLabel', ShippingMethod::getActiveShippingLabel());
         $this->set('shippingTotal', Calculator::getShippingTotal());
         $this->set('lastPaymentMethodHandle', Session::get('paymentMethod'));
+        $this->set('token', $this->app->make('token'));
         return $this->view($guest);
     }
 

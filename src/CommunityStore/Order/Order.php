@@ -1489,8 +1489,9 @@ class Order
             $max = $r['max_id'];
         }
 
+
         if ($max) {
-            $sql = 'ALTER TABLE CommunityStoreOrders AUTO_INCREMENT = ' .(int)$max +1 ;
+            $sql = 'ALTER TABLE CommunityStoreOrders AUTO_INCREMENT = ' . ((int)$max +1) ;
             $db->query($sql);
         }
     }

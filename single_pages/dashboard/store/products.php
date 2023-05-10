@@ -2243,12 +2243,12 @@ if (version_compare($version, '9.0', '<')) {
                                             <?php
                                             $page = $product->getProductPage();
                                             if ($page && !$page->isInTrash()) { ?>
-                                                <li><a class="nav-link"  target="_blank" href="<?= $page->getCollectionLink() ?>"><?= t('View Product Page') ?></a></li>
+                                                <li><a class="dropdown-item"  target="_blank" href="<?= $page->getCollectionLink() ?>"><?= t('View Product Page') ?></a></li>
                                             <?php } else { ?>
-                                                <li><a class="nav-link"  style="pointer-events: none; cursor: none" disabled href=""><?= t('No product page'); ?></a></li>
+                                                <li><a class="dropdown-item"  style="pointer-events: none; cursor: none" disabled href=""><?= t('No product page'); ?></a></li>
                                             <?php } ?>
                                             <?php if ($multilingualEnabled) { ?>
-                                            <li><a class="nav-link"  target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
+                                            <li><a class="dropdown-item"  target="_blank" href="<?= Url::to('/dashboard/store/multilingual/products/translate/' . $product->getID()) ?>"><?= t("Translate") ?></a></li>
                                             <?php } ?>
                                         </ul>
 

@@ -194,6 +194,8 @@ $activeclass = '';
                             } else {
                                 $formattedPrice = $product->getFormattedPrice();
                                 echo $formattedPrice;
+
+                                echo \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price::format($product->getBasePrice());
                             } ?>
                         </p>
                         <?php

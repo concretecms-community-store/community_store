@@ -123,6 +123,7 @@ class Controller extends Package
     {
         Route::register('/helpers/stateprovince/getstates', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\StateProvince::getStates');
         Route::register('/helpers/shipping/getshippingmethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Shipping::getShippingMethods');
+        Route::register('/helpers/shipping/getpaymentmethods', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Payment::getPaymentMethods');
         Route::register('/helpers/shipping/selectshipping', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Shipping::selectShipping');
         Route::register('/helpers/tax/setvatnumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax::setVatNumber');
 

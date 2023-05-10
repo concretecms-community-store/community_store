@@ -451,65 +451,14 @@ $csm = $app->make('cs/helper/multilingual');
                 <form class="store-checkout-form-group " id="store-checkout-form-group-payment" method="post"
                       action="<?= Url::to($langpath.'/checkout/submit'. ($guest ? '/1' : '')) ?>">
                     <?= $token->output('community_store'); ?>
-
                     <div class="store-checkout-form-group-body">
                         <h2><?= t("Payment") ?></h2>
-                        <?php
-                        if ($enabledPaymentMethods) {
-                            ?>
-                            <div id="store-checkout-payment-method-options"
-                                 class="<?= count($enabledPaymentMethods) == 1 ? "hidden" : ""; ?>">
-                                <?php
-                                $i = 1;
-                                foreach ($enabledPaymentMethods as $pm) {
-                                    if (!isset($lastPaymentMethodHandle) && $i == 1 || (isset($lastPaymentMethodHandle) && $lastPaymentMethodHandle == $pm->getHandle())) {
-                                        $props = ['data-payment-method-id' => $pm->getID(), 'checked' => 'checked'];
-                                    } else {
-                                        $props = ['data-payment-method-id' => $pm->getID()];
-                                    }
-                                    ?>
-                                    <div class='radio'>
-                                        <label>
-                                            <?= $form->radio('payment-method', $pm->getHandle(), false, $props) ?>
-                                            <?= $csm->t($pm->getDisplayName(), 'paymentDisplayName', false, $pm->getID()); ?>
 
-                                        </label>
-                                    </div>
-                                    <?php
-                                    $i++;
-                                } ?>
-                            </div>
-
-                            <?php
-                            foreach ($enabledPaymentMethods as $pm) {
-                                echo '<div class="store-payment-method-container hidden" data-payment-method-id="' . $pm->getID() . '">';
-                                 if (isset($lastPaymentMethodHandle) && $pm->getHandle() == $lastPaymentMethodHandle) { ?>
-                                <div class="store-payment-errors alert alert-danger <?php if ($controller->getAction() == 'view') {
-                                echo "hidden";
-                            } ?>"><?= $paymentErrors ?></div>
-                                <?php }
-
-
-                                $pm->renderCheckoutForm();
-                                ?>
-                                <div class="store-checkout-form-group-buttons mb-3 mt-3">
-                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-complete-order btn btn-success pull-right float-end" value="<?= $csm->t($pm->getButtonLabel()? $pm->getButtonLabel() : t("Complete Order") , 'paymentButtonLabel', false, $pm->getID()); ?>  ">
-
-                                </div>
-                                </div>
-
-                            <?php    }
-                        } else {  //if payment methods
-                            ?>
-                            <p class="alert alert-warning"><?= t('There are currently no payment methods available to process your order.'); ?></p>
-                        <?php } ?>
-
-
+                        <div id="store-checkout-payment-method-options" class="mb-1 mt-3"></div>
 
                     </div>
-
                 </form>
+
 
             <?php } ?>
 
