@@ -68,8 +68,8 @@ if ($cartMode) {
                 <thead>
                 <tr>
                     <th colspan="2" ><?= t('Product'); ?></th>
-                    <th class="text-right"><?= t('Price'); ?></th>
-                    <th class="text-right"><?= t('Quantity'); ?></th>
+                    <th class="text-right text-end"><?= t('Price'); ?></th>
+                    <th class="text-right text-end"><?= t('Quantity'); ?></th>
                     <th></th>
 
                 </tr>

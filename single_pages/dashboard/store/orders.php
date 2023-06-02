@@ -497,7 +497,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
                                     <form action="<?= Url::to("/dashboard/store/orders/reverserefund", $order->getOrderID()) ?>" method="post">
                                         <?= $token->output('community_store'); ?>
-                                        <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-link" value="<?= t("reverse") ?>">
+                                        <input data-confirm-message="<?= h(t('Are you sure you wish to reverse this refund?')); ?>" type="submit" class="confirm-action btn-sm btn btn-warning" value="<?= t("reverse") ?>">
                                     </form>
 
                                 </td>

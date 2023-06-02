@@ -20,7 +20,7 @@ $csm = $app->make('cs/helper/multilingual');
 
     <div class="store-checkout-form-row row">
 
-        <div class="store-checkout-form-shell col-md-8 clearfix">
+        <div class="store-checkout-form-shell col-md-8 clearfix mb-4">
 
             <?php
             if ($customer->isGuest() && ($requiresLogin || $guestCheckout == 'off' || ($guestCheckout == 'option' && !$guest))) {
@@ -299,38 +299,38 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="row mb-3">
+                            <div class="row">
                                 <div class="col-md-12">
                                     <label for="store-checkout-shipping-address-1"><?= t("Address") ?></label>
                                 </div>
-                                <div class="col-md-7">
+                                <div class="col-md-7 mb-3" >
                                     <div class="form-group">
                                         <?= $form->text('store-checkout-shipping-address-1', $customer->getAddressValue('shipping_address', 'address1'), ['required'=>'required','placeholder'=>t('Street Address')]); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-5 mb-3">
                                     <div class="form-group">
                                         <?= $form->text('store-checkout-shipping-address-2', $customer->getAddressValue('shipping_address', 'address2'), ['placeholder'=>t('Apartment, unit, etc (optional)')]); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-city"><?= t("City") ?></label>
                                         <?= $form->text('store-checkout-shipping-city', $customer->getAddressValue('shipping_address', 'city'), ['required'=>'required', 'placeholder'=>t('City')]); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-country"><?= t("Country") ?></label>
                                         <?php $country = $customer->getAddressValue('shipping_address', 'country'); ?>
                                         <?= $form->select('store-checkout-shipping-country', $shippingCountries, $country && array_key_exists($country, $shippingCountries)  ? $country : ($defaultShippingCountry ? $defaultShippingCountry : 'US'), ["onchange" => "communityStore.updateShippingStates()", 'class'=>'form-control form-select']); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-state"><?= t("State / Province") ?></label>
                                         <?php $shippingState = $customer->getAddressValue('shipping_address', 'state_province'); ?>
@@ -338,7 +338,7 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                     <input type="hidden" id="store-checkout-saved-shipping-state" value="<?= $shippingState ?>">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
                                         <label for="store-checkout-shipping-zip"><?= t("Postal Code") ?></label>
                                             <?= $form->text('store-checkout-shipping-zip', $customer->getAddressValue('shipping_address', 'postal_code'), ['required'=>'required', 'placeholder'=>t('Postal Code')]); ?>
