@@ -1,0 +1,5 @@
+/docs/ export-ignore
+/package.json export-ignore
+/README.md export-ignore
+/yarn.lock export-ignore
+/.* export-ignore
