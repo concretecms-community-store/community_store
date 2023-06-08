@@ -199,12 +199,9 @@ class Method extends Controller
 
         $th = $app->make("helper/text");
         $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
-
         $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
-
         $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
-        $namespace = $namespace . '\\' . $className;
-        $this->methodController = new $namespace();
+        $this->methodController = $app->make($namespace . '\\' . $className);
     }
 
     public function getMethodController()
