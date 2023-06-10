@@ -2186,7 +2186,7 @@ if (version_compare($version, '9.0', '<')) {
                             if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span>';
                             } else {
-                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty());
+                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty() + 0);
                             } ?>
 
                             <?php
