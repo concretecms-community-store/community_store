@@ -20,6 +20,10 @@ $c = \Concrete\Core\Page\Page::getCurrentPage();
 
 $columnClass = 'col-md-12';
 
+if (empty($productsPerRow)) {
+    $productsPerRow = 1;
+}
+
 if ($productsPerRow == 2) {
     $columnClass = 'col-md-6 col-sm-6 col-xs-12';
 }
@@ -34,10 +38,6 @@ if ($productsPerRow == 4) {
 
 if ($productsPerRow == 6) {
     $columnClass = 'col-md-2 col-sm-6 col-xs-12';
-}
-
-if (!$productsPerRow) {
-    $productsPerRow = 1;
 }
 
 $activeclass = '';
