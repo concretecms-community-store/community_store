@@ -371,9 +371,13 @@ class Checkout extends PageController
         if ($ajax->isAjaxRequest($this->request)){
             return new JsonResponse(['OK'=>1]);
         }
-
+        $pmController = $pm->getMethodController();
+        $action = $pmController->getAction();
+        if ($pmController->isExternalActionGET()) {
+            return $this->buildRedirect($action);
+        }
         $this->set('pm', $pm);
-        $this->set('action', $pm->getMethodController()->getAction());
+        $this->set('action', $action);
     }
 
     public function updater()
