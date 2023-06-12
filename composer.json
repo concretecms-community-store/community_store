@@ -1,5 +1,5 @@
 {
-    "name": "concrete5-community-store/community_store",
+    "name": "concretecms-community-store/community_store",
     "description": "An open, free and community developed eCommerce system for Concrete CMS",
     "type": "concrete5-package",
     "homepage": "https://github.com/concretecms-community-store/community_store",
