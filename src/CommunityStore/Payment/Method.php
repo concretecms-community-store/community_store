@@ -358,6 +358,19 @@ class Method extends Controller
         return false;
     }
 
+    /**
+     * For external payment methods only.
+     *
+     * If the external URL should be invoked with a POST (whose body is specified in the redirectForm() method and redirect_form element), return false.
+     * If the external URL should be invoked with GET, return true.
+     * 
+     * @return bool
+     */
+    public function isExternalActionGET()
+    {
+        return false;
+    }
+
     public function markPaid()
     {
         return true;
