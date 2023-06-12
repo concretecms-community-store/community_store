@@ -22,7 +22,6 @@ The package can be downloaded, unzipped into the /packages directory (ensuring t
 ## Development
 To install dependencies run:
 - npm install --include=dev
-- composer install
 
 Once installed the node_modules folder is not needed for deployment.
 
