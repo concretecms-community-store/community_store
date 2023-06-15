@@ -12,27 +12,37 @@ $csm = $app->make('cs/helper/multilingual');
 <div class="store-cart-page">
 <h1><?= t("Shopping Cart") ?></h1>
 
-<?php if (isset($actiondata) and !empty($actiondata)) { ?>
-    <?php if ($actiondata['action'] == 'update') { ?>
-        <p class="alert alert-success"><?= t('Your cart has been updated'); ?></p>
-    <?php } ?>
-
-    <?php if ($actiondata['action'] == 'changed') { ?>
-        <p class="alert alert-success"><?= t('Your cart has been updated due to changes in stock levels'); ?></p>
-    <?php } ?>
-
-    <?php if ($actiondata['action'] == 'clear') { ?>
-        <p class="alert alert-warning"><?= t('Your cart has been cleared'); ?></p>
-    <?php } ?>
-
-    <?php if ($actiondata['action'] == 'remove') { ?>
-        <p class="alert alert-warning"><?= t('Item removed'); ?></p>
-    <?php } ?>
-
-    <?php if ($actiondata['quantity'] != $actiondata['added']) { ?>
-        <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited'); ?></p>
-    <?php } ?>
-<?php } ?>
+<?php
+if (!empty($actiondata)) {
+    switch (isset($actiondata['action']) ? $actiondata['action'] : '') {
+        case 'update':
+            ?>
+            <p class="alert alert-success"><?= t('Your cart has been updated') ?></p>
+            <?php
+            break;
+        case 'changed':
+            ?>
+            <p class="alert alert-success"><?= t('Your cart has been updated due to changes in stock levels') ?></p>
+            <?php
+            break;
+        case 'clear':
+            ?>
+            <p class="alert alert-warning"><?= t('Your cart has been cleared') ?></p>
+            <?php
+            break;
+        case 'remove':
+            ?>
+            <p class="alert alert-warning"><?= t('Item removed') ?></p>
+            <?php
+            break;
+    }
+    if (array_key_exists('quantity', $actiondata) && array_key_exists('added', $actiondata) && $actiondata['quantity'] != $actiondata['added']) {
+        ?>
+        <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited') ?></p>
+        <?php
+    }
+}
+?>
 
 <input id='cartURL' type='hidden' data-cart-url='<?= Url::to($langpath . '/cart/') ?>'>
 
