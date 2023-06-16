@@ -47,7 +47,7 @@ $token = $app->make('token');
             <?php if ('all' != Config::get('community_store.shoppingDisabled')) {
                 ?>
             <div class="store-product-modal-quantity form-group">
-                <?php if ($product->allowQuantity() && $showQuantity) {
+                <?php if ($product->allowQuantity() && !empty($showQuantity)) {
                     ?>
                     <div class="store-product-quantity form-group">
                         <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
