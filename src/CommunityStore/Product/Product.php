@@ -418,7 +418,7 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation", mappedBy="product",cascade={"persist"}))
-     * @ORM\OrderBy({"pvSort" = "ASC"})
+     * @ORM\OrderBy({"pvSort" = "ASC", "pvID" = "ASC"})
      */
     protected $variations;
 
