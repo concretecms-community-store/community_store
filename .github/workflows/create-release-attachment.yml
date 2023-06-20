@@ -1,52 +1,30 @@
+name: Attach ZIP to GitHub Release
+
 on:
   release:
     types:
       - published
 
-env:
-  PACKAGE_HANDLE: community_store
-
 jobs:
-  create-release-attachment:
-    name: Create Release Attachment
+  attach-zip:
+    name: Attach ZIP to release
     runs-on: ubuntu-latest
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-            php-version: '7.4'
-            tools: composer:v2
-            coverage: none
+          php-version: '7.4'
+          tools: composer:v2
+          coverage: none
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Prepare working directory
-        run: |
-            rm -rf /tmp/$PACKAGE_HANDLE /tmp/$PACKAGE_HANDLE.zip
-            mkdir /tmp/$PACKAGE_HANDLE
-      - name: Export repository
-        run: git archive --format=tar HEAD | tar x -C /tmp/$PACKAGE_HANDLE
-      - name: Install composer dependencies
-        run: composer update --prefer-dist --no-dev --no-progress --optimize-autoloader --ansi --no-interaction --no-cache --working-dir=/tmp/$PACKAGE_HANDLE
-      - name: Check if composer directory is needed
-        run: |
-            if [ -z "$(ls -l /tmp/$PACKAGE_HANDLE/vendor/ | grep -E ^d | grep -vE ' composer$')" ]; then
-                echo 'No composer dependencies found: deleting the vendor directory'
-                rm -rf /tmp/$PACKAGE_HANDLE/vendor
-            else
-                echo 'No composer dependencies found: keeping the vendor directory'
-            fi
-      - name: Copying additional files
-        run: >
-          cp -t /tmp/$PACKAGE_HANDLE
-          README.md
-      - name: Remove unneeded files
-        run: >
-          rm
-          /tmp/$PACKAGE_HANDLE/composer.json
-          /tmp/$PACKAGE_HANDLE/composer.lock
-      - name: Creating final ZIP archive
-        run: (cd /tmp && zip -r $PACKAGE_HANDLE.zip $PACKAGE_HANDLE)
-      - name: Attach ZIP archive to release
+      - name: Create and attach ZIP
+        uses: concrete5-community/gh-package-release-attach@main
         env:
-          GH_TOKEN: ${{ secrets.ATTACH_ASSETS_SECRET }}
-        run: gh release upload "$GITHUB_REF_NAME" /tmp/$PACKAGE_HANDLE.zip
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          remove-files: |
+            composer.json
+            composer.lock
+          keep-files: |
+            README.md
