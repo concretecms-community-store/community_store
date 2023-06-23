@@ -554,7 +554,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                             <label for="email"><?= t('Email'); ?></label>
                             <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?= $order->getAttribute('email'); ?>"/>
                         </div>
-                        <input type="submit" class="btn btn-default" value="<?= t("Resend Invoice") ?>">
+                        <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Resend Invoice") ?>">
                     </form>
                 </div>
             </div>

@@ -1,237 +1,308 @@
 <?php
+
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 
-use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\Session\SessionValidator;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
-use Concrete\Core\Support\Facade\Application;
 
 class Customer
 {
+    /**
+     * @var \Concrete\Core\User\UserInfo|null
+     */
     protected $ui;
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface|null
+     */
+    private $session;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param int|null $uID NULL to retrieve the current customer, the ID of a user otherwise
+     */
     public function __construct($uID = null)
     {
         $app = Application::getFacadeApplication();
-        $u = new User();
-
-        if (!is_null($uID)) {
+        if ($uID !== null) {
             $this->ui = $app->make(UserInfoRepository::class)->getByID($uID);
-        } elseif ($u->isRegistered()) {
-            $this->ui = $app->make(UserInfoRepository::class)->getByID($u->getUserID());
         } else {
-            $this->ui = null;
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
+                $this->ui = $app->make(UserInfoRepository::class)->getByID($u->getUserID());
+            }
         }
     }
 
+    /**
+     * Return FALSE if this instance is associated to a user, TRUE if it's a guest.
+     *
+     * @return bool
+     */
+    public function isGuest()
+    {
+        return $this->getUserInfo() === null;
+    }
+
+    /**
+     * Get the UserInfo object associated to this customer, or NULL if it's a guest.
+     *
+     * @return \Concrete\Core\User\UserInfo|null
+     */
     public function getUserInfo()
     {
         return $this->ui;
     }
 
+    /**
+     * Get the ID of the user associated to this customer, or 0 if it's a guest.
+     *
+     * @return int
+     */
+    public function getUserID()
+    {
+        $ui = $this->getUserInfo();
+
+        return $ui === null ? 0 : (int) $ui->getUserID();
+    }
+
+    /**
+     * Get the email address of the associated user, or the guest email address previusly stored in the session.
+     *
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        $ui = $this->getUserInfo();
+        if ($ui !== null) {
+            return $ui->getUserEmail();
+        }
+        $session = $this->getSession(false);
+
+        return $session === null ? null : $session->get('community_email');
+    }
+
+    /**
+     * Store the customer email address in the session.
+     *
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->getSession()->set('community_email', $email);
+    }
+
+    /**
+     * Get the ID of the last order as stored in the session.
+     *
+     * @return int|null NULL if no ID was stored
+     */
+    public function getLastOrderID()
+    {
+        $session = $this->getSession(false);
+
+        return $session === null ? null : $session->get('community_lastOrderID');
+    }
+
+    /**
+     * Store the ID of the last order in the session.
+     *
+     * @param int $id
+     */
+    public function setLastOrderID($id)
+    {
+        $this->getSession()->set('community_lastOrderID', $id);
+    }
+
+    /**
+     * @param string $handle
+     * @param mixed $value
+     */
     public function setValue($handle, $value)
     {
-        if ($this->isGuest()) {
-            Session::set('community_' . $handle, $value);
+        $ui = $this->getUserInfo();
+        if ($ui === null) {
+            $this->getSession()->set('community_' . $handle, $value);
         } else {
-            $this->ui->setAttribute($handle, $value);
+            $ui->setAttribute($handle, $value);
         }
     }
 
+    /**
+     * @param string $handle
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|mixed|null
+     */
+    public function getValue($handle)
+    {
+        $ui = $this->getUserInfo();
+        if ($ui === null) {
+            $session = $this->getSession(false);
+            $val = $session === null ? null : $session->get('community_' . $handle);
+
+            return is_array($val) ? (object) $val : $val;
+        }
+
+        return $ui->getAttribute($handle);
+    }
+
+    /**
+     * @param string $handle
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|mixed|null
+     */
+    public function getValueArray($handle)
+    {
+        $ui = $this->getUserInfo();
+        if ($ui === null) {
+            $session = $this->getSession(false);
+
+            return $session === null ? null : $session->get('community_' . $handle);
+        }
+
+        return $ui->getAttribute($handle);
+    }
+
+    /**
+     * @param string $handle
+     *
+     * @return string
+     */
     public function getAddress($handle)
     {
-        if ($this->isGuest()) {
-            $addressraw = Session::get('community_' . $handle);
-
+        $ui = $this->getUserInfo();
+        if ($ui === null) {
+            $session = $this->getSession(false);
+            $addressraw = $session === null ? null : $session->get('community_' . $handle);
             if (is_array($addressraw)) {
                 $addressraw = (object) $addressraw;
             }
 
-            return self::formatAddress($addressraw);
-        } else {
-            return (string) $this->ui->getAttribute($handle);
+            return static::formatAddress($addressraw);
         }
+
+        return (string) $ui->getAttribute($handle);
     }
 
-    public function getValue($handle)
+    /**
+     * @param string $handle
+     * @param string $field
+     *
+     * @return string
+     */
+    public function getAddressValue($handle, $field)
     {
-        if ($this->isGuest()) {
-            $val = Session::get('community_' . $handle);
+        $attributeValue = $this->getValue($handle);
 
-            if (is_array($val)) {
-                return (object) $val;
-            }
-
-            return $val;
-        } else {
-            return $this->ui->getAttribute($handle);
-        }
+        return static::extractStringAttributeField($attributeValue, $field);
     }
 
-    public function getAddressValue($handle, $valuename)
-    {
-        $att = $this->getValue($handle);
-
-        return $this->returnAttributeValue($att, $valuename);
-    }
-
-    private static function returnAttributeValue($att, $valuename)
-    {
-        $valueCamel = camel_case($valuename);
-
-        if ($att) {
-            if (method_exists($att, 'get' . $valueCamel)) {
-                $functionname = 'get' . $valueCamel;
-
-                return $att->$functionname();
-            } else {
-                return $att->$valuename;
-            }
-        } else {
-            return '';
-        }
-    }
-
-    public function getValueArray($handle)
-    {
-        if ($this->isGuest()) {
-            $val = Session::get('community_' . $handle);
-
-            return $val;
-        } else {
-            return $this->ui->getAttribute($handle);
-        }
-    }
-
-    public function isGuest()
-    {
-        return is_null($this->ui);
-    }
-
-    public function getUserID()
-    {
-        if ($this->isGuest()) {
-            return 0;
-        } else {
-            return $this->ui->getUserID();
-        }
-    }
-
-    public function getEmail()
-    {
-        if ($this->isGuest()) {
-            return Session::get('community_email');
-        } else {
-            return $this->ui->getUserEmail();
-        }
-    }
-
-    public function setEmail($email)
-    {
-        Session::set('community_email', $email);
-    }
-
-    public function getLastOrderID()
-    {
-        return Session::get('community_lastOrderID');
-    }
-
-    public function setLastOrderID($id)
-    {
-        Session::set('community_lastOrderID', $id);
-    }
-
-    // 5.7 compatibility function
+    /**
+     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|mixed|null $address
+     *
+     * @return string
+     */
     public static function formatAddress($address)
     {
-        $app = Application::getFacadeApplication();
-
-        $ret = '';
-        $address1 = self::returnAttributeValue($address, 'address1');
-        $address2 = self::returnAttributeValue($address, 'address2');
-        $city = self::returnAttributeValue($address, 'city');
-        $state_province = self::returnAttributeValue($address, 'state_province');
-        $postal_code = self::returnAttributeValue($address, 'postal_code');
-        $country = self::returnAttributeValue($address, 'country');
-
-        if ($address1) {
-            $ret .= $address1 . "\n";
-        }
-        if ($address2) {
-            $ret .= $address2 . "\n";
-        }
-        if ($city) {
-            $ret .= $city;
-        }
-        if ($state_province) {
-            $ret .= ", ";
-        }
-        if ($state_province) {
-            $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ('' == $val) {
-                $ret .= $state_province;
-            } else {
-                $ret .= $val;
-            }
-        }
-        if ($postal_code) {
-            $ret .= " " . $postal_code;
-        }
-        if ($city || $state_province || $postal_code) {
-            $ret .= "\n";
-        }
-        if ($country) {
-            $ret .= $app->make('helper/lists/countries')->getCountryName($country);
+        $array = [];
+        foreach ([
+            'address1',
+            'address2',
+            'city',
+            'state_province',
+            'postal_code',
+            'country',
+        ] as $field) {
+            $array[$field] = static::extractStringAttributeField($address, $field);
         }
 
-        return $ret;
+        return static::formatAddressArray($array);
     }
 
+    /**
+     * @param array|\ArrayAccess $address
+     *
+     * @return string
+     */
     public static function formatAddressArray($address)
     {
         $app = Application::getFacadeApplication();
 
-        $ret = '';
-        $address1 = $address['address1'];
-        $address2 = $address['address2'];
-        $city = $address['city'];
-        $state_province = $address['state_province'];
-        $postal_code = $address['postal_code'];
-        $country = $address['country'];
+        $address1 = isset($address['address1']) ? trim((string) $address['address1']) : '';
+        $address2 = isset($address['address2']) ? trim((string) $address['address2']) : '';
+        $city = isset($address['city']) ? trim((string) $address['city']) : '';
+        $stateProvince = isset($address['state_province']) ? trim((string) $address['state_province']) : '';
+        $postalCode = isset($address['postal_code']) ? trim((string) $address['postal_code']) : '';
+        $country = isset($address['country']) ? trim((string) $address['country']) : '';
 
-        if ($address1) {
-            $ret .= $address1;
+        $lines = [];
+        if ($address1 !== '') {
+            $lines[] = $address1;
         }
-        if ($address2) {
-            $ret .= ", " . $address2;
+        if ($address2 !== '') {
+            $lines[] = $address2;
+        }
+        $line = $city;
+        if ($stateProvince !== '') {
+            if ($line !== '') {
+                $line .= ', ';
+            }
+            $line .= $app->make('helper/lists/states_provinces')->getStateProvinceName($stateProvince, $country) ?: $stateProvince;
+        }
+        if ($postalCode !== '') {
+            if ($line !== '') {
+                $line .= ' ';
+            }
+            $line .= $postalCode;
+        }
+        if ($line !== '') {
+            $lines[] = $line;
+        }
+        if ($country !== '') {
+            $lines[] = $app->make('helper/lists/countries')->getCountryName($country) ?: $country;
         }
 
-        $ret .= "\n";
+        return implode("\n", $lines);
+    }
 
-        if ($city) {
-            $ret .= $city;
-        }
-        if ($state_province) {
-            $ret .= ", ";
-        }
-        if ($state_province) {
-            $val = $app->make('helper/lists/states_provinces')->getStateProvinceName($state_province, $country);
-            if ('' == $val) {
-                $ret .= $state_province;
-            } else {
-                $ret .= $val;
+    /**
+     * Get the current user session.
+     *
+     * @param bool $required
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\SessionInterface|null
+     */
+    protected function getSession($required = true)
+    {
+        if ($this->session === null) {
+            $app = Application::getFacadeApplication();
+            if ($required || $app->make(SessionValidator::class)->hasActiveSession()) {
+                $this->session = $app->make('session');
             }
         }
-        if ($postal_code) {
-            $ret .= " " . $postal_code;
+
+        return $this->session;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|mixed|null $attributeValue
+     * @param string $field
+     *
+     * @return string
+     */
+    protected static function extractStringAttributeField($attributeValue, $field)
+    {
+        if (!$attributeValue) {
+            return '';
         }
-        if ($city || $state_province || $postal_code) {
-            $ret .= "\n";
-        }
-        if ($country) {
-            $ret .= $app->make('helper/lists/countries')->getCountryName($country);
+        $functionname = 'get' . camel_case($field);
+        if (method_exists($attributeValue, $functionname)) {
+            return (string) $attributeValue->$functionname();
         }
 
-        return $ret;
+        return isset($attributeValue->{$field}) ? (string) $attributeValue->{$field} : '';
     }
 }

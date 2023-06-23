@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage;
 
+use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -104,13 +105,21 @@ class Checkout extends PageController
         if ($useCaptcha && !$session->get('securityCheck')) {
             $this->render('/checkout/security');
         } else {
-
+            $countryFromIP = null;
             $allcountries = $this->app->make('helper/lists/countries')->getCountries();
 
             $ak = UserAttributeKey::getByHandle('billing_address');
 
             $keysettings = $ak->getController()->getAttributeKeySettings();
             $defaultBillingCountry = $keysettings->getDefaultCountry();
+            if (method_exists($keysettings, 'geolocateCountry') && $keysettings->geolocateCountry()) {
+                if ($countryFromIP === null) {
+                    $countryFromIP = $this->geolocateCountry();
+                }
+                if ($countryFromIP !== '') {
+                    $defaultBillingCountry = $countryFromIP;
+                }
+            }
             $hasCustomerBillingCountries = $keysettings->hasCustomCountries();
             $availableBillingCountries = $keysettings->getCustomCountries();
 
@@ -127,6 +136,14 @@ class Checkout extends PageController
 
             $keysettings = $ak->getController()->getAttributeKeySettings();
             $defaultShippingCountry = $keysettings->getDefaultCountry();
+            if (method_exists($keysettings, 'geolocateCountry') && $keysettings->geolocateCountry()) {
+                if ($countryFromIP === null) {
+                    $countryFromIP = $this->geolocateCountry();
+                }
+                if ($countryFromIP !== '') {
+                    $defaultShippingCountry = $countryFromIP;
+                }
+            }
             $hasCustomerShippingCountries = $keysettings->hasCustomCountries();
             $availableShippingCountries = $keysettings->getCustomCountries();
 
@@ -743,5 +760,19 @@ class Checkout extends PageController
         }
 
         exit();
+    }
+
+    /**
+     * Try to detect the code of the current visitor's Country.
+     * 
+     * @return string empty string in case of errors.
+     */
+    private function geolocateCountry()
+    {
+        if (!class_exists(GeolocationResult::class)) {
+            return '';
+        }
+
+        return $this->app->make(GeolocationResult::class)->getCountryCode();
     }
 }

@@ -285,18 +285,18 @@ class FlatRateShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinSelectedCountries()
     {
-        $customer = new Customer();
-        $custCountry = $customer->getValue('shipping_address')->country;
-        if ('all' != $this->getCountries()) {
-            $selectedCountries = explode(',', $this->getCountriesSelected());
-            if (in_array($custCountry, $selectedCountries)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if ($this->getCountries() === 'all') {
             return true;
         }
+        $customer = new Customer();
+        $address = $customer->getValue('shipping_address');
+        $custCountry = $address ? (string) $address->country : '';
+        if ($custCountry === '') {
+            return false;
+        }
+        $selectedCountries = explode(',', $this->getCountriesSelected());
+
+        return in_array($custCountry, $selectedCountries, true);
     }
 
     private function getRate()
