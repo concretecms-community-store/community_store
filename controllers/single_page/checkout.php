@@ -399,6 +399,8 @@ class Checkout extends PageController
                 $u = new User();
                 $guest = !$u->isRegistered();
 
+                $emailexists = false;
+
                 if ($guest) {
                     $emailexists = $this->validateAccountEmail($data['email']);
                 }
