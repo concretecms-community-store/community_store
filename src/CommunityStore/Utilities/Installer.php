@@ -408,6 +408,7 @@ class Installer
         self::installBlock('community_utility_links', $pkg);
         self::installBlock('community_product', $pkg);
         self::installBlock('community_product_filter', $pkg);
+        self::installBlock('community_suspension_message', $pkg);
     }
 
     public static function installBlock($handle, $pkg)

@@ -15,6 +15,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart as StoreCart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Cart extends PageController
 {
@@ -27,7 +28,7 @@ class Cart extends PageController
             $langpath = $al->getCollectionHandle();
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if ('all' == Config::get('community_store.shoppingDisabled') || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             return Redirect::to("/");
         }
 

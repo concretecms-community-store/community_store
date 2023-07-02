@@ -10,6 +10,7 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Form\Service\Widget;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
@@ -17,6 +18,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as OrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Settings extends DashboardPageController
 {
@@ -27,6 +29,7 @@ class Settings extends DashboardPageController
         }
 
         $this->loadFormAssets();
+        $this->set('dateTimeWidget', $this->app->make(Widget\DateTime::class));
         $editor = $this->app->make('editor');
         $editor->getPluginManager()->deselect(['autogrow']);
         $this->set('editor', $editor);
@@ -116,6 +119,8 @@ class Settings extends DashboardPageController
 
         $currencyList = Currency::getAllCurrencies(false, false,Localization::activeLanguage());
         $this->set('currencyList', $currencyList);
+
+        $this->set('salesSuspension', $this->app->make(SalesSuspension::class));
     }
 
     public function loadFormAssets()
@@ -153,12 +158,13 @@ class Settings extends DashboardPageController
     public function save()
     {
         $args = $this->request->request->all();
-
         if ($args && $this->token->validate('community_store')) {
             $errors = $this->validate($args);
             $this->error = $errors;
 
             if (!$errors->has()) {
+                $salesSuspension = $this->app->make(SalesSuspension::class);
+                $dateTimeWidget = $this->app->make(Widget\DateTime::class);
                 $startingCurrency =  Config::get('community_store.currency');
 
                 Config::save('community_store.symbol', $args['symbol']);
@@ -292,6 +298,12 @@ class Settings extends DashboardPageController
                 }
 
                 $this->saveOrderStatuses($args);
+                $salesSuspension
+                    ->setSuspended(isset($args['salesSuspensionSuspend']) ? $args['salesSuspensionSuspend'] : false)
+                    ->setSuspensionMessage(isset($args['salesSuspensionMessage']) ? $args['salesSuspensionMessage'] : '')
+                    ->setSuspendedFrom($dateTimeWidget->translate('salesSuspensionFrom', $args, true))
+                    ->setSuspendedTo($dateTimeWidget->translate('salesSuspensionTo', $args, true))
+                ;
                 $this->flash('success', t('Settings Saved'));
 
                 return Redirect::to('/dashboard/store/settings');
