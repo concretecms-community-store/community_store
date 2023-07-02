@@ -27,6 +27,9 @@ class Settings extends DashboardPageController
         }
 
         $this->loadFormAssets();
+        $editor = $this->app->make('editor');
+        $editor->getPluginManager()->deselect(['autogrow']);
+        $this->set('editor', $editor);
         $this->set('thumbnailTypes', $this->getThumbTypesList());
         $this->set("pageSelector", $this->app->make('helper/form/page_selector'));
         $this->set("countries", $this->app->make('helper/lists/countries')->getCountries());

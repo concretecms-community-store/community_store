@@ -1,10 +1,30 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
 
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+/**
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Editor\EditorInterface $editor
+ * @var Concrete\Core\Form\Service\Widget\PageSelector $pageSelector
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method[] $installedPaymentMethods
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus[] $orderStatuses
+ * @var array $allGroupList
+ * @var array $currencyList
+ * @var array $fileSets
+ * @var array $groupList
+ * @var array $thumbnailTypes
+ * @var int|null $customerGroup
+ * @var int|null $wholesaleCustomerGroup
+ * @var int|null $digitalDownloadFileSet
+ * @var int|false|null $productPublishTarget
+ */
+
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -358,16 +378,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="form-group">
                 <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
-                <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(['autogrow']);
-                echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
+                <?= $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')) ?>
             </div>
 
             <div class="form-group">
                 <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
-                <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(['autogrow']);
-                echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
+                <?= $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')) ?>
             </div>
 
             <div class="form-group">
