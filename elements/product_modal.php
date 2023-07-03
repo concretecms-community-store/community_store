@@ -120,7 +120,7 @@ $token = $app->make('token');
                             $outOfStock = false;
                             foreach ($optionItems as $optionItem) {
                                 if (!$optionItem->isHidden()) {
-                                    $variation = $variationLookup[$optionItem->getID()];
+                                    $variation = isset($variationLookup[$optionItem->getID()]) ? $variationLookup[$optionItem->getID()] : null;
                                     if (!empty($variation)) {
                                         $firstAvailableVariation = (!$firstAvailableVariation && $variation->isSellable()) ? $variation : $firstAvailableVariation;
                                         $disabled = $variation->isSellable() ? '' : 'disabled="disabled" ';
