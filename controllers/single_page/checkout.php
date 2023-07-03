@@ -419,7 +419,7 @@ class Checkout extends PageController
                 $emailexists = false;
 
                 if ($guest) {
-                    $emailexists = $this->validateAccountEmail($data['email']);
+                    $emailexists = $this->validateAccountEmail(empty($data['store-email']) ? '' : $data['store-email']);
                 }
 
                 $orderRequiresLogin = Cart::requiresLogin();
@@ -583,7 +583,7 @@ class Checkout extends PageController
 
         if ($billing) {
             if ($customer->isGuest()) {
-                if (!$vals->email($data['email'])) {
+                if (!$vals->email(empty($data['store-email']) ? '' : $data['store-email'])) {
                     $e->add(t('You must enter a valid email address'));
                 }
             }
@@ -656,7 +656,7 @@ class Checkout extends PageController
         $noBillingSave = Config::get('community_store.noBillingSave');
 
         if ($guest) {
-            $customer->setEmail(trim($data['email']));
+            $customer->setEmail(empty($data['store-email']) ? '' : trim($data['store-email']));
         } else {
             $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
             $user = new User();
