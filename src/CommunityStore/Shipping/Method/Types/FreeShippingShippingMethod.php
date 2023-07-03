@@ -211,18 +211,18 @@ class FreeShippingShippingMethod extends ShippingMethodTypeMethod
 
     public function isWithinSelectedCountries()
     {
-        $customer = new Customer();
-        $custCountry = $customer->getValue('shipping_address')->country;
-        if ('all' != $this->getCountries()) {
-            $selectedCountries = explode(',', $this->getCountriesSelected());
-            if (in_array($custCountry, $selectedCountries)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if ($this->getCountries() === 'all') {
             return true;
         }
+        $customer = new Customer();
+        $shippingAddress = $customer->getValue('shipping_address');
+        $custCountry = isset($shippingAddress->country) ? $shippingAddress->country : '';
+        if (empty($custCountry)) {
+            return false;
+        }
+        $selectedCountries = explode(',', $this->getCountriesSelected());
+
+        return in_array($custCountry, $selectedCountries, true);
     }
 
     public function getOffers()
