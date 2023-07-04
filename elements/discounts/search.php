@@ -14,7 +14,7 @@ use Concrete\Core\Support\Facade\Url;
 
         <div class="ccm-header-search-form-input input-group">
 
-            <input type="search" id="keywords" name="keywords" value="<?= h($keywords); ?>" style="min-width: 220px" placeholder="Search Discounts" class="form-control border-end-0" autocomplete="off">
+            <input type="search" id="keywords" name="keywords" value="<?= h($keywords); ?>" style="min-width: 220px" placeholder="<?= t('Search Discounts') ?>" class="form-control border-end-0" autocomplete="off">
             <button type="submit" class="input-group-icon">
                 <svg width="16" height="16">
                     <use xlink:href="#icon-search"></use>

@@ -41,7 +41,7 @@ use Concrete\Core\Support\Facade\Url;
                 </div>
             <?php } ?>
 
-            <input type="search" id="keywords" name="keywords" value="<?= h($keywords); ?>" style="min-width: 220px" placeholder="Search by Name or SKU" class="form-control border-end-0" autocomplete="off">
+            <input type="search" id="keywords" name="keywords" value="<?= h($keywords); ?>" style="min-width: 220px" placeholder="<?= t('Search by Name or SKU') ?>" class="form-control border-end-0" autocomplete="off">
             <button type="submit" class="input-group-icon">
                 <svg width="16" height="16">
                     <use xlink:href="#icon-search"></use>

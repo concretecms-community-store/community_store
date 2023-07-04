@@ -52,7 +52,7 @@ $task = $controller->getAction();
             <div class="col-md-3">
                 <div class="form-group">
                     <?= $form->label('orderBy', t('Product Search')) ?>
-                    <?= $form->text('productSearch', h($productSearch), array('placeholder'=>'All Products') ); ?>
+                    <?= $form->text('productSearch', h($productSearch), array('placeholder' => t('All Products')) ); ?>
                 </div>
             </div>
 

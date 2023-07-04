@@ -404,7 +404,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                 <?= $form->select("orderStatus", $orderStatuses, $order->getStatusHandle()); ?>
                             </div>
                             <div class="form-group col-md-6">
-                                <?= $form->text("comment", ['placeholder' => 'Comment']); ?>
+                                <?= $form->text("comment", ['placeholder' => t('Comment')]); ?>
                             </div>
                         </div>
 

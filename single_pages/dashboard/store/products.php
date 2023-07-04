@@ -584,7 +584,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <?= $form->label("pQtyLabel", t('Quantity Label')); ?>
-                                <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => 'e.g. cm', 'maxlength'=>100]); ?>
+                                <?= $form->text("pQtyLabel", $product->getQtyLabel(), ['placeholder' => t('e.g. cm'), 'maxlength'=>100]); ?>
                             </div>
                         </div>
 
@@ -601,7 +601,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-lg-4 <?= ($product->getAllowDecimalQty() ? '' : 'hidden d-none'); ?>" id="quantitystepscontainer">
                             <div class="form-group">
                                 <?= $form->label("pQtySteps", t('Quantity Steps')); ?>
-                                <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => 'e.g. 0.1']); ?>
+                                <?= $form->number("pQtySteps", $product->getQtySteps() > 0 ? round($product->getQtySteps(), 4) : '', ['min' => 0, 'step' => 0.001, 'placeholder' => t('e.g. 0.1')]); ?>
                             </div>
                         </div>
                         <div class="col-lg-4">
