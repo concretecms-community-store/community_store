@@ -752,7 +752,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
                         ?>
                     </td>
-                    <td><?= t(ucwords($order->getStatus())) ?></td>
+                    <td><?= $order->getStatus() ?></td>
                     <td>
                         <div class="btn-group" style="width:100px">
                             <a class="btn btn-primary btn-sm"
