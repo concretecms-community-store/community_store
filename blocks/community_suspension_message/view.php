@@ -29,3 +29,5 @@ $localization->pushActiveContext(Localization::CONTEXT_UI);
         <?= $message ?>
     </div>
 </div>
+<?php
+$localization->popActiveContext();
