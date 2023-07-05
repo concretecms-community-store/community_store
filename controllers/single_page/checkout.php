@@ -62,7 +62,7 @@ class Checkout extends PageController
 
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled') || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
+        if ($this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             return Redirect::to($langpath . '/');
         }
 

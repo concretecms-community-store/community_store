@@ -594,14 +594,6 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
         <!-- #settings-checkout -->
         <div class="col-sm-9 store-pane" id="settings-checkout">
             <h3><?= t('Cart and Checkout'); ?></h3>
-            <div class="form-group">
-                <?php $shoppingDisabled = Config::get('community_store.shoppingDisabled');
-                ?>
-                <div class="checkbox form-check">
-                    <div class="radio"><label><?= $form->radio('shoppingDisabled', ' ', ('' == $shoppingDisabled)); ?><?php echo t('Enabled'); ?></label></div>
-                    <div class="radio"><label><?= $form->radio('shoppingDisabled', 'all', 'all' == $shoppingDisabled); ?><?php echo t('Disabled (Catalog Mode)'); ?></label></div>
-                </div>
-            </div>
 
             <div class="form-group">
                 <?= $form->label('orderNotesEnabled', t('Order notes')); ?>
@@ -858,9 +850,10 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                     'salesSuspensionSuspend',
                     [
                         '0' => t('Sales are active'),
-                        '1' => t('Suspend Sales')
+                        '1' => t('Sales are disabled (Catalog Mode)'),
+                        '2' => t('Sales are temporarily suspended')
                     ],
-                    $salesSuspension->isSuspended() ? '1' : '0'
+                    $salesSuspension->salesPermanentlyDisabled() ? '1' : ($salesSuspension->isSuspended() ? '2' : '0')
                 ) ?>
             </div>
             <div class="form-group">
@@ -883,7 +876,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
         $(document).ready(function() {
             $('#salesSuspensionSuspend')
                 .on('change', function() {
-                    $('.salesSuspensionSuspend-on').toggle(parseInt($('#salesSuspensionSuspend').val()) ? true : false);
+                    $('.salesSuspensionSuspend-on').toggle(parseInt($('#salesSuspensionSuspend').val()) === 2);
                 })
                 .trigger('change')
             ;

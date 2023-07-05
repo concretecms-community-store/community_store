@@ -15,6 +15,7 @@ use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Orders extends DashboardPageController
 {
@@ -86,9 +87,7 @@ class Orders extends DashboardPageController
         $this->set("enabledPaymentMethods", $paymentMethods);
         $this->set('paymentStatus', $paymentStatus);
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
-            $this->set('shoppingDisabled', true);
-        }
+        $this->set('shoppingDisabled', $this->app->make(SalesSuspension::class)->salesPermanentlyDisabled());
         $this->set('pageTitle', t('Orders'));
 
         $paymentStatuses = [];

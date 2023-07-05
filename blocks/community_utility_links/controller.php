@@ -69,8 +69,7 @@ class Controller extends BlockController
         $this->set('inCart', $inCart);
         $this->set('app', $this->app);
         $this->set('langpath', $langpath);
-        $this->set('shoppingDisabled', Config::get('community_store.shoppingDisabled'));
-        $this->set('salesSuspended', $this->app->make(SalesSuspension::class)->salesCurrentlySuspended());
+        $this->set('shoppingDisabled', $this->app->make(SalesSuspension::class)->salesCurrentlySuspended());
     }
 
     public function registerViewAssets($outputContent = '')

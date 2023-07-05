@@ -28,7 +28,7 @@ class Cart extends PageController
             $langpath = $al->getCollectionHandle();
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled') || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
+        if ($this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             return Redirect::to("/");
         }
 

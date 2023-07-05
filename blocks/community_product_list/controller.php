@@ -275,7 +275,7 @@ class Controller extends BlockController
         $this->set('ih', $this->app->make('helper/image'));
         $this->set('th', $this->app->make('helper/text'));
 
-        if (Config::get('community_store.shoppingDisabled') == 'all' || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
+        if ($this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             $this->set('showAddToCart', false);
         }
 
