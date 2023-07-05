@@ -187,16 +187,12 @@ class Settings extends DashboardPageController
                 Config::save('community_store.productPublishTarget', $args['productPublishTarget']);
                 Config::save('community_store.defaultSingleProductThumbType', $args['defaultSingleProductThumbType']);
                 Config::save('community_store.defaultProductListThumbType', $args['defaultProductListThumbType']);
-                Config::save('community_store.defaultProductModalThumbType', $args['defaultProductModalThumbType']);
                 Config::save('community_store.defaultSingleProductImageWidth', $args['defaultSingleProductImageWidth'] ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_WIDTH);
                 Config::save('community_store.defaultSingleProductImageHeight', $args['defaultSingleProductImageHeight'] ?: Image::DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT);
                 Config::save('community_store.defaultProductListImageWidth', $args['defaultProductListImageWidth'] ?: Image::DEFAULT_PRODUCT_LIST_IMG_WIDTH);
                 Config::save('community_store.defaultProductListImageHeight', $args['defaultProductListImageHeight'] ?: Image::DEFAULT_PRODUCT_LIST_IMG_HEIGHT);
-                Config::save('community_store.defaultProductModalImageWidth', $args['defaultProductModalImageWidth'] ?: Image::DEFAULT_PRODUCT_MODAL_IMG_WIDTH);
-                Config::save('community_store.defaultProductModalImageHeight', $args['defaultProductModalImageHeight'] ?: Image::DEFAULT_PRODUCT_MODAL_IMG_HEIGHT);
                 Config::save('community_store.defaultSingleProductCrop', $args['defaultSingleProductCrop']);
                 Config::save('community_store.defaultProductListCrop', $args['defaultProductListCrop']);
-                Config::save('community_store.defaultProductListCrop', $args['defaultProductModalCrop']);
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
                 Config::save('community_store.useCaptcha', $args['useCaptcha'] ?? false);
                 Config::save('community_store.companyField', $args['companyField']);

@@ -227,15 +227,6 @@
             </div>
             <div class="form-group form-check">
                 <label>
-                    <?php if (0 != $showQuickViewLink) {
-                $showQuickViewLink = 1;
-            } ?>
-                    <?= $form->checkbox('showQuickViewLink', 1, $showQuickViewLink); ?>
-                    <?= t('Display Quickview Link (Modal Window)'); ?>
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label>
                     <?= $form->checkbox('showPageLink', 1, $showPageLink); ?>
                     <?= t('Display Link To Product Page'); ?>
                 </label>

@@ -891,11 +891,6 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('.store-product-quick-view').click(function(e) {
-        communityStore.productModal($(this).data('product-id'), $(this).data('locale'));
-        e.preventDefault();
-    });
-
     $('.store-cart-link-modal').click(function(e) {
         communityStore.displayCart(false, true);
         e.preventDefault();

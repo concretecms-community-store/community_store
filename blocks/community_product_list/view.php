@@ -138,14 +138,7 @@ $activeclass = '';
                         <?php } ?>
 
                             <p class="store-product-list-thumbnail">
-                                <?php if ($showQuickViewLink) {
-                                    ?>
-                                    <a class="store-product-quick-view" data-product-id="<?= $product->getID(); ?>" data-locale="<?= $locale; ?>" href="#">
-                                        <img src="<?= $thumb->src; ?>" class="img-responsive img-fluid" alt="<?= $product->getName() ?>">
-                                    </a>
-                                    <?php
-                                } elseif ($showPageLink && $productPage) {
-                                    ?>
+                                <?php if ($showPageLink && $productPage) { ?>
                                     <a href="<?= \Concrete\Core\Support\Facade\Url::to($productPage); ?>">
                                         <img src="<?= $thumb->src; ?>" class="img-responsive img-fluid" alt="<?= $product->getName() ?>">
                                     </a>
@@ -264,7 +257,7 @@ $activeclass = '';
                     <div class="store-product-options">
                         <?php if ($isSellable && $product->allowQuantity() && $showQuantity) {
                             ?>
-                            <div class="store-product-quantity form-group">
+                            <div class="store-product-quantity form-group mb-3">
                                 <label class="store-product-option-group-label"><?= t('Quantity'); ?></label>
 
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>

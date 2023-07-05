@@ -294,6 +294,9 @@ class Controller extends BlockController
         $this->set('locale', Localization::activeLocale());
 
         $this->set('isWholesale', \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale());
+
+        // deprecated, provided to avoid breaking older templates
+        $this->set('showQuickViewLink', false);
     }
 
     public function registerViewAssets($outputContent = '')

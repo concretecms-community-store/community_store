@@ -17,7 +17,6 @@ class Image
 {
     const IMG_FOR_PRODUCT_LIST = 'product_list';
     const IMG_FOR_SINGLE_PRODUCT = 'single_product';
-    const IMG_FOR_PRODUCT_MODAL = 'product_modal';
     const DEFAULT_SINGLE_PRODUCT_IMG_WIDTH = 720;
     const DEFAULT_SINGLE_PRODUCT_IMG_HEIGHT = 720;
     const DEFAULT_PRODUCT_LIST_IMG_WIDTH = 400;
@@ -67,7 +66,6 @@ class Image
         switch ($resizingScheme) {
             case static::IMG_FOR_PRODUCT_LIST:
             case static::IMG_FOR_SINGLE_PRODUCT:
-            case static::IMG_FOR_PRODUCT_MODAL:
                 $this->resizingScheme = camelcase($resizingScheme);
                 break;
             default:
