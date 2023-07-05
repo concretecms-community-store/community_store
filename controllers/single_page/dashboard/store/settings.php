@@ -301,13 +301,9 @@ class Settings extends DashboardPageController
                 $salesSuspension
                     ->setSuspended($salesSuspensionSuspend !== 0)
                     ->setSuspensionMessage(isset($args['salesSuspensionMessage']) ? $args['salesSuspensionMessage'] : '')
+                    ->setSuspendedFrom($salesSuspensionSuspend === 2 ? $dateTimeWidget->translate('salesSuspensionFrom', $args, true) : null)
+                    ->setSuspendedTo($salesSuspensionSuspend === 2 ? $dateTimeWidget->translate('salesSuspensionTo', $args, true) : null)
                 ;
-                if ($salesSuspensionSuspend === 2) {
-                    $salesSuspension
-                        ->setSuspendedFrom($dateTimeWidget->translate('salesSuspensionFrom', $args, true))
-                        ->setSuspendedTo($dateTimeWidget->translate('salesSuspensionTo', $args, true))
-                    ;
-                }
                 $this->flash('success', t('Settings Saved'));
 
                 return Redirect::to('/dashboard/store/settings');
