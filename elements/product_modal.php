@@ -47,9 +47,7 @@ $salesSuspension = $app->make(SalesSuspension::class);
         </div>
         <div class="store-product-modal-options">
             <?php
-            if ('all' === Config::get('community_store.shoppingDisabled')) {
-                // Kiosk mode
-            } elseif ($salesSuspension->salesCurrentlySuspended()) {
+            if ($salesSuspension->salesCurrentlySuspended()) {
                 ?>
                 <div class="alert alert-danger">
                     <?= $salesSuspension->getSuspensionMessage() ?>
@@ -194,7 +192,7 @@ $salesSuspension = $app->make(SalesSuspension::class);
         </div>
         <input type="hidden" name="pID" value="<?= $product->getID(); ?>">
         <?php
-        if ('all' != Config::get('community_store.shoppingDisabled') && !$salesSuspension->salesCurrentlySuspended()) {
+        if (!$salesSuspension->salesCurrentlySuspended()) {
             ?>
             <div class="store-product-modal-buttons">
                 <p><button data-add-type="modal" data-product-id="<?= $product->getID(); ?>" class="store-btn-add-to-cart btn btn-primary <?= ($product->isSellable() ? '' : 'hidden'); ?> "><?=  ($btnText ? h($btnText) : t("Add to Cart")); ?></button></p>

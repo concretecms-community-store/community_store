@@ -5,6 +5,7 @@ use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
 
 /**
+ * @var bool $shoppingDisabled
  * @var bool $salesSuspended
  */
 
@@ -23,7 +24,7 @@ if ($taxCalc == 'extract') {
 ?>
 
 <?php
-if (isset($shoppingDisabled)) {
+if ($shoppingDisabled) {
     ?>
     <p class="alert alert-warning text-center"><?= t(
         /* i18n: the two %s contain HTML code */

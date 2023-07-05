@@ -35,10 +35,8 @@ class Overview extends DashboardPageController {
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
-            $this->set('shoppingDisabled', true);
-        }
         $salesSuspension = $this->app->make(SalesSuspension::class);
+        $this->set('shoppingDisabled', $salesSuspension->salesPermanentlyDisabled());
         $this->set('salesSuspended', $salesSuspension->salesCurrentlySuspended());
 
         if (!Config::get('community_store.notificationemails')) {

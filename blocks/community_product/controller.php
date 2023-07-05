@@ -91,7 +91,7 @@ class Controller extends BlockController
             $this->set('product', false);
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled') || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
+        if ($this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             $this->set('showCartButton', false);
         }
 

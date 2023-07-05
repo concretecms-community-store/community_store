@@ -27,6 +27,16 @@ class SalesSuspension
     }
 
     /**
+     * Check if sales are permanently disabled ("Catalog Mode").
+     *
+     * @return bool
+     */
+    public function salesPermanentlyDisabled()
+    {
+        return $this->isSuspended() && $this->getSuspendedFrom() === null && $this->getSuspendedTo() === null;
+    }
+
+    /**
      * Check if the sales are currently suspended, considering both the "sales suspended" flag and the suspension dates.
      *
      * @return bool
@@ -73,8 +83,6 @@ class SalesSuspension
     public function isSuspended()
     {
         return (bool) $this->config->get('community_store.salesSuspension.suspend');
-
-        return $this;
     }
 
     /**
