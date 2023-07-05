@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if (!$shoppingDisabled) {
+<?php if (!$shoppingDisabled && empty($salesSuspended)) {
     ?>
 <div class="store-utility-links <?= (0 == $itemCount ? 'store-cart-empty' : ''); ?>">
     <?php if ($showSignIn || $showGreeting) {

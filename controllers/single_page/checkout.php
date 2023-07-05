@@ -23,6 +23,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelpe
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Checkout extends PageController
 {
@@ -61,7 +62,7 @@ class Checkout extends PageController
 
         }
 
-        if ('all' == Config::get('community_store.shoppingDisabled')) {
+        if ('all' == Config::get('community_store.shoppingDisabled') || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             return Redirect::to($langpath . '/');
         }
 

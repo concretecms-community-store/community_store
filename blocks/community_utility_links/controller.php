@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Config;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Controller extends BlockController
 {
@@ -69,6 +70,7 @@ class Controller extends BlockController
         $this->set('app', $this->app);
         $this->set('langpath', $langpath);
         $this->set('shoppingDisabled', Config::get('community_store.shoppingDisabled'));
+        $this->set('salesSuspended', $this->app->make(SalesSuspension::class)->salesCurrentlySuspended());
     }
 
     public function registerViewAssets($outputContent = '')

@@ -1,10 +1,32 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
 
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+/**
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Form\Service\Widget\DateTime $dateTimeWidget
+ * @var Concrete\Core\Editor\EditorInterface $editor
+ * @var Concrete\Core\Form\Service\Widget\PageSelector $pageSelector
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method[] $installedPaymentMethods
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus[] $orderStatuses
+ * @var array $allGroupList
+ * @var array $currencyList
+ * @var array $fileSets
+ * @var array $groupList
+ * @var array $thumbnailTypes
+ * @var int|null $customerGroup
+ * @var int|null $wholesaleCustomerGroup
+ * @var int|null $digitalDownloadFileSet
+ * @var int|false|null $productPublishTarget
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension $salesSuspension
+ */
+
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -32,6 +54,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-user-interface" data-pane-toggle><?= t('User Interface'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-sales-suspension" data-pane-toggle><?= t('Sales Suspension'); ?></a></li>
             </ul>
 
         </div>
@@ -358,16 +381,12 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
             <div class="form-group">
                 <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
-                <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(['autogrow']);
-                echo $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')); ?>
+                <?= $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')) ?>
             </div>
 
             <div class="form-group">
                 <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
-                <?php $editor = $app->make('editor');
-                $editor->getPluginManager()->deselect(['autogrow']);
-                echo $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')); ?>
+                <?= $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')) ?>
             </div>
 
             <div class="form-group">
@@ -828,6 +847,48 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </div>
 
         </div>
+
+        <!-- #settings-sales-suspension -->
+        <div class="col-sm-9 store-pane" id="settings-sales-suspension">
+            <h3><?= t('Sales Suspension') ?></h3>
+
+            <div class="form-group">
+                <?= $form->label('salesSuspensionSuspend', t('Suspend Sales')); ?>
+                <?= $form->select(
+                    'salesSuspensionSuspend',
+                    [
+                        '0' => t('Sales are active'),
+                        '1' => t('Suspend Sales')
+                    ],
+                    $salesSuspension->isSuspended() ? '1' : '0'
+                ) ?>
+            </div>
+            <div class="form-group">
+                <?= $form->label('salesSuspensionMessage', t('Sales suspension message')); ?>
+                <?= $editor->outputStandardEditor('salesSuspensionMessage', $salesSuspension->getSuspensionMessage(true)) ?>
+                <div class="small text-muted"><?= t('Leave empty to use the default message') ?></div>
+            </div>
+            <div class="form-group salesSuspensionSuspend-on"<?= $salesSuspension->isSuspended() ? '' : ' style="display:none"' ?>>
+                <?= $form->label('salesSuspensionFrom', t('Date/time when the suspension starts')) ?>
+                <?= $dateTimeWidget->datetime('salesSuspensionFrom', $salesSuspension->getSuspendedFrom()) ?>
+                <div class="small text-muted"><?= t('Leave empty to suspend sales immediately') ?></div>
+            </div>
+            <div class="form-group salesSuspensionSuspend-on"<?= $salesSuspension->isSuspended() ? '' : ' style="display:none"' ?>>
+                <?= $form->label('salesSuspensionTo', t('Date/time when the suspension ends')) ?>
+                <?= $dateTimeWidget->datetime('salesSuspensionTo', $salesSuspension->getSuspendedTo()) ?>
+                <div class="small text-muted"><?= t('Leave empty to suspend sales indefinitely') ?></div>
+            </div>
+        </div>
+        <script>
+        $(document).ready(function() {
+            $('#salesSuspensionSuspend')
+                .on('change', function() {
+                    $('.salesSuspensionSuspend-on').toggle(parseInt($('#salesSuspensionSuspend').val()) ? true : false);
+                })
+                .trigger('change')
+            ;
+        });
+        </script>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">

@@ -4,6 +4,10 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Support\Facade\Config;
 
+/**
+ * @var bool $salesSuspended
+ */
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 $taxCalc = Config::get('community_store.calculation');
@@ -18,16 +22,27 @@ if ($taxCalc == 'extract') {
 }
 ?>
 
-<?php if (isset($shoppingDisabled)) { ?>
+<?php
+if (isset($shoppingDisabled)) {
+    ?>
     <p class="alert alert-warning text-center"><?= t(
         /* i18n: the two %s contain HTML code */
         'Cart and Ordering features are currently disabled. This setting can be changed via the %ssettings page%s.',
         '<a href="' . Url::to('/dashboard/store/settings#settings-checkout') . '">',
         '</a>'
     ) ?></p>
-<?php } ?>
-
-<?php if (isset($missingNotificationEmails)) { ?>
+    <?php 
+} elseif ($salesSuspended) {
+    ?>
+    <p class="alert alert-warning text-center"><?= t(
+        'Sales are currently suspended. This setting can be changed via the %ssettings page%s.',
+        '<a href="' . Url::to('/dashboard/store/settings#settings-sales-suspension') . '">',
+        '</a>'
+    ) ?></p>
+    <?php 
+    
+}
+if (isset($missingNotificationEmails)) { ?>
     <p class="alert alert-warning small"><i class="fa fa-warning fa-exclamation-triangle"></i> <?= t(
         /* i18n: the two %s contain HTML code */
         'No notification emails are set - order notifications will be not be sent. This setting can be can entered via the %ssettings page%s.',

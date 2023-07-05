@@ -15,6 +15,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Controller extends BlockController
 {
@@ -274,7 +275,7 @@ class Controller extends BlockController
         $this->set('ih', $this->app->make('helper/image'));
         $this->set('th', $this->app->make('helper/text'));
 
-        if (Config::get('community_store.shoppingDisabled') == 'all') {
+        if (Config::get('community_store.shoppingDisabled') == 'all' || $this->app->make(SalesSuspension::class)->salesCurrentlySuspended()) {
             $this->set('showAddToCart', false);
         }
 
