@@ -33,7 +33,7 @@ class Controller extends Package
     ];
 
     /**
-     * @var string|null
+     * @var string
      */    
     private static $upgradingFromVersion = '';
 
