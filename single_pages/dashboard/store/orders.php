@@ -761,7 +761,7 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link"  href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
+                                <li class="dropdown-item"><a class="nav-link"  href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a></li>
                             </ul>
                         </div>
                     </td>
