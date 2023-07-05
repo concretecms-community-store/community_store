@@ -140,10 +140,15 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
     }
 
+
     public function processUrlFilters(\Concrete\Core\Http\Request $request)
     {
         $service = Application::getFacadeApplication()->make('helper/security');
         $querystring = $request->getQueryString();
+
+        // if query string has match=any, will combine matches across different attributes, instead of further filtering results
+        $match = $request->get('match');
+        $orOperation = ($match == 'any');
 
         $params = explode('&', $querystring);
 
@@ -181,6 +186,10 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
 
         $paramcount = 1;
 
+        $query = $this->getQueryObject();
+
+        $orFilters = [];
+
         foreach ($searchparams as $handle => $searchvalue) {
             $type = $searchvalue['type'];
             $value = $searchvalue['values'];
@@ -195,19 +204,41 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                 if (is_object($ak)) {
                     $value = array_filter($value);
                     if ($ak->getAttributeType()->getAttributeTypeHandle() == 'boolean') {
-                        $this->getQueryObject()->andWhere('ak_' . $handle . ' = :'. $paramname)->setParameter($paramname, $value[0]);
+                        $query->andWhere('ak_' . $handle . ' = :'. $paramname);
+                        $query->setParameter($paramname, $value[0]);
                     } else {
                         if ($type == 'and') {
                             foreach ($value as $searchterm) {
-                                $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . preg_quote($searchterm) . "($|\n)");
+                                if ($orOperation) {
+                                    $orFilters[] = 'ak_' . $handle . ' REGEXP :' .$paramname;
+                                } else {
+                                    $query->andWhere('ak_' . $handle . ' REGEXP :' .$paramname);
+                                }
+
+                                $query->setParameter($paramname, "(^|\n)" . preg_quote($searchterm) . "($|\n)");
                                 $paramname = 'F' . $paramcount++;
                             }
                         } else {
                             $value = array_map('preg_quote', $value);
-                            $this->getQueryObject()->andWhere('ak_' . $handle . ' REGEXP :' .$paramname)->setParameter($paramname, "(^|\n)" . implode("($|\n)|(^|\n)", $value ) . "($|\n)");
+
+                            if ($orOperation) {
+                                $orFilters[] = 'ak_' . $handle . ' REGEXP :' .$paramname;
+                            } else {
+                                $query->andWhere('ak_' . $handle . ' REGEXP :' .$paramname);
+                            }
+
+                            $query->setParameter($paramname, "(^|\n)" . implode("($|\n)|(^|\n)", $value ) . "($|\n)");
                         }
                     }
                 }
+            }
+        }
+
+        if ($orOperation) {
+            $orString = implode(' OR ', $orFilters);
+
+            if ($orString) {
+                $query->andWhere('(' . $orString . ')');
             }
         }
     }
