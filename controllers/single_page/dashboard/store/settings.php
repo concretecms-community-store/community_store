@@ -196,7 +196,6 @@ class Settings extends DashboardPageController
                 Config::save('community_store.guestCheckout', $args['guestCheckout']);
                 Config::save('community_store.useCaptcha', $args['useCaptcha'] ?? false);
                 Config::save('community_store.companyField', $args['companyField']);
-                Config::save('community_store.shoppingDisabled', trim($args['shoppingDisabled']));
                 Config::save('community_store.orderNotesEnabled', isset($args['orderNotesEnabled']) ??  false );
                 Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
@@ -294,12 +293,17 @@ class Settings extends DashboardPageController
                 }
 
                 $this->saveOrderStatuses($args);
+                $salesSuspensionSuspend = empty($args['salesSuspensionSuspend']) || !is_numeric($args['salesSuspensionSuspend']) ? 0 : (int) $args['salesSuspensionSuspend'];
                 $salesSuspension
-                    ->setSuspended(isset($args['salesSuspensionSuspend']) ? $args['salesSuspensionSuspend'] : false)
+                    ->setSuspended($salesSuspensionSuspend !== 0)
                     ->setSuspensionMessage(isset($args['salesSuspensionMessage']) ? $args['salesSuspensionMessage'] : '')
-                    ->setSuspendedFrom($dateTimeWidget->translate('salesSuspensionFrom', $args, true))
-                    ->setSuspendedTo($dateTimeWidget->translate('salesSuspensionTo', $args, true))
                 ;
+                if ($salesSuspensionSuspend === 2) {
+                    $salesSuspension
+                        ->setSuspendedFrom($dateTimeWidget->translate('salesSuspensionFrom', $args, true))
+                        ->setSuspendedTo($dateTimeWidget->translate('salesSuspensionTo', $args, true))
+                    ;
+                }
                 $this->flash('success', t('Settings Saved'));
 
                 return Redirect::to('/dashboard/store/settings');

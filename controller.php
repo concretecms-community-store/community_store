@@ -20,7 +20,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.5.1';
+    protected $pkgVersion = '2.6.0';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -31,6 +31,11 @@ class Controller extends Package
         'src/CommunityStore' => '\Concrete\Package\CommunityStore\Src\CommunityStore',
         'src/Concrete/Attribute' => 'Concrete\Package\CommunityStore\Attribute',
     ];
+
+    /**
+     * @var string|null
+     */    
+    private static $upgradingFromVersion = '';
 
     public function getPackageDescription()
     {
@@ -79,8 +84,24 @@ class Controller extends Package
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::upgradeCoreData()
+     */
+    public function upgradeCoreData()
+    {
+        $packageEntity = $this->getPackageEntity();
+        self::$upgradingFromVersion = $packageEntity === null ? '' : (string) $packageEntity->getPackageVersion();
+        parent::upgradeCoreData();
+    }
+    
     public function upgrade()
     {
+        if (self::$upgradingFromVersion !== '' && version_compare(self::$upgradingFromVersion, '2.6.0') < 0) {
+            $config = $this->app->make('config');
+            $config->save('community_store.salesSuspension.suspend', $config->get('community_store.shoppingDisabled') === 'all');
+        }
         $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
         $db = $this->app->make('database')->connection();
         $db = Installer::prepareUpgradeFromLegacy($db);
