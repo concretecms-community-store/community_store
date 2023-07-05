@@ -106,11 +106,6 @@ class Controller extends BlockController
         $this->set('customMessage', $this->customMessage ? LinkAbstractor::translateFromEditMode($this->customMessage) : '');
     }
 
-    public function scrapbook()
-    {
-        throw new \Exception('x');
-    }
-
     public function view()
     {
         $editMode = false;
