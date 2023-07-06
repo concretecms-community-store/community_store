@@ -82,9 +82,12 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                     ?>
 
                     <?php if ($showProductPrice && !$product->allowCustomerPrice()) {
-                        $salePrice = $product->getSalePrice();
-                        $price = $product->getPrice();
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment($product->getDiscountRules());
+                        $salePrice = $product->getSalePrice() ?: $product->getPrice();
+                        $price = $product->getPrice(1, true);
+                        if ($salePrice == $price) {
+                            $salePrice = false;
+                        }
+                        $activePrice = ($salePrice ?: $price) - $product->getPriceAdjustment($product->getDiscountRules());
 
                         if ($isWholesale) {
                             $msrp = $product->getFormattedOriginalPrice();
@@ -107,7 +110,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                             } else {
 
                                 if (isset($salePrice) && "" != $salePrice) {
-                                    $formattedSalePrice = $product->getFormattedSalePrice();
+                                    $formattedSalePrice = $product->getFormattedSalePrice() ?: $product->getFormattedPrice(1, false);
                                     $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                                     echo t('On Sale') . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                     echo '&nbsp;' . t('was') . '&nbsp;';
