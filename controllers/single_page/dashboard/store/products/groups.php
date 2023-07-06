@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup;
@@ -47,6 +48,10 @@ class Groups extends DashboardPageController
                 return Redirect::to('/dashboard/store/products/groups');
             }
         }
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Product Group')));
+        }
     }
 
     public function edit($gID)
@@ -88,6 +93,10 @@ class Groups extends DashboardPageController
         }
 
         $this->set('group', $group);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $group->getGroupName()));
+        }
     }
 
     public function validateGroup($args)

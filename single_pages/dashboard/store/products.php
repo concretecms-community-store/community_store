@@ -2274,12 +2274,17 @@ if (version_compare($version, '9.0', '<')) {
 
 <?php } ?>
 
-<?php if ($controller->getAction() == 'duplicate') { ?>
+<?php
+if ($controller->getAction() == 'duplicate') {
+    /**
+     * @var string $newProductName
+     */
+    ?>
     <form method="post" action="<?= $view->action('duplicate', $product->getID()) ?>">
         <?= $token->output('community_store'); ?>
         <div class="form-group">
             <?= $form->label('newName', t("New Product Name")); ?>
-            <?= $form->text('newName', $product->getName() . ' ' . t('(Copy)')); ?>
+            <?= $form->text('newName', $newProductName); ?>
         </div>
 
         <div class="form-group">

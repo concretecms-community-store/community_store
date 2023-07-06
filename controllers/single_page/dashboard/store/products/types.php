@@ -2,11 +2,13 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Package\CommunityStore\Attribute\ProductKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductType;
@@ -44,17 +46,19 @@ class Types extends DashboardPageController
                 return Redirect::to('/dashboard/store/products/types');
             }
         }
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Product Type')));
+        }
     }
 
     public function attributes($ptID)
     {
         $type = ProductType::getByID($ptID);
-        $this->set('pageTitle', t('Manage Attributes for %s', $type->getTypeName()));
-
-
         if (!$type) {
             return Redirect::to('/dashboard/store/products/types');
         }
+        $this->set('pageTitle', t('Manage Attributes for %s', $type->getTypeName()));
 
         $this->set('type', $type);
         $this->render('/dashboard/store/products/types/attributes');
@@ -63,7 +67,12 @@ class Types extends DashboardPageController
         $keys = AttributeKey::getAttributeKeyList('store_product');
 
         $this->set('keys', $keys);
-
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $rm = $this->app->make(ResolverManagerInterface::class);
+            $breacrumb->add(new Item($rm->resolve(['/dashboard/store/products/types/edit', $type->getTypeID()]), $type->getTypeName()));
+            $breacrumb->add(new Item('#', t('Attributes')));
+        }
     }
 
     public function edit($ptID)
@@ -91,6 +100,10 @@ class Types extends DashboardPageController
         }
 
         $this->set('type', $type);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $type->getTypeName()));
+        }
     }
 
     public function validateType($args)
