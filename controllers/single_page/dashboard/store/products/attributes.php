@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
@@ -21,9 +22,16 @@ class Attributes extends DashboardAttributesPageController
     public function edit($akID = null)
     {
         $key = $this->getCategoryObject()->getController()->getByID($akID);
+        if ($key === null) {
+            return $this->buildRedirect('/dashboard/store/products/attributes');
+        }
         $this->renderEdit($key,
             Url::to('/dashboard/store/products/attributes', 'view')
         );
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $key->getAttributeKeyDisplayName('text')));
+        }
     }
 
     public function update($akID = null)
@@ -38,9 +46,16 @@ class Attributes extends DashboardAttributesPageController
     public function select_type($type = null)
     {
         $type = Type::getByID($type);
+        if ($type === null) {
+            return $this->buildRedirect('/dashboard/store/products/attributes');
+        }
         $this->renderAdd($type,
             Url::to('/dashboard/store/products/attributes', 'view')
         );
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Attribute')));
+        }
     }
 
     public function add($type = null)

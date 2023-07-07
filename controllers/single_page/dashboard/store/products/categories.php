@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Products;
 
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -22,7 +23,7 @@ class Categories extends DashboardPageController
 
         $page = Page::getByID($cID);
 
-        if (!$page) {
+        if (!$page || $page->isError()) {
             return Redirect::to('/dashboard/store/products/categories');
         }
 
@@ -35,14 +36,16 @@ class Categories extends DashboardPageController
         $this->set('page', $page);
         $this->set('cID', $cID);
         $this->set('pageTitle', t('Manage Category: ' . $page->getCollectionName()));
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $page->getCollectionName()));
+        }
     }
 
     public function save($cID)
     {
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $data = $this->request->request->all();
-
-            $count = 0;
 
             $productLocations = ProductLocation::getProductsForLocation($cID);
 

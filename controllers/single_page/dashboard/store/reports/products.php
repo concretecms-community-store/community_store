@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Reports;
 
 use Concrete\Core\Http\Request;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
@@ -186,6 +187,10 @@ class Products extends DashboardPageController
         $this->set('products', $allproducts);
         $this->set('pageTitle', 'Product Price/Shipping Sheet');
         $this->render('/dashboard/store/reports/products/sheet');
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Product Price/Shipping Sheet')));
+        }
     }
 
 }

@@ -3,6 +3,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Session;
@@ -74,12 +75,19 @@ class Discounts extends DashboardPageController
         $this->set('selectedproductgroups', []);
         $this->set('selectedusergroups', []);
         $this->set('discountRule', false);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Discount Rule')));
+        }
     }
 
     public function edit($drID)
     {
         $this->requireAsset('selectize');
         $discountRule = DiscountRule::getByID($drID);
+        if ($discountRule === null) {
+            return $this->buildRedirect('/dashboard/store/discounts');
+        }
 
         $this->set('discountRule', $discountRule);
         $this->set('pageTitle', t('Edit Discount Rule'));
@@ -109,6 +117,10 @@ class Discounts extends DashboardPageController
         $this->set('selectedproductgroups', $discountRule->getProductGroups());
         $this->set('selectedusergroups', $discountRule->getUserGroups());
         $this->set('usergroups', $usergrouparray);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $discountRule->getName()));
+        }
     }
 
     public function codes($drID)

@@ -5,6 +5,7 @@ use Concrete\Core\File\Search\Menu\MenuFactory;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Support\Facade\Config;
@@ -178,6 +179,11 @@ class Products extends DashboardSitePageController
             $productType = ProductType::getByID($typeID);
         }
         $this->set('productType', $productType);
+
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Product')));
+        }
     }
 
     public function edit($pID)
@@ -330,6 +336,11 @@ class Products extends DashboardSitePageController
 
         $this->set('keywordsSearch', Session::get('communitystore.dashboard.products.keywords'));
         $this->set('groupSearch', Session::get('communitystore.dashboard.products.group'));
+
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $product->getName()));
+        }
     }
 
     public function generate($pID, $templateID = null)
@@ -355,6 +366,13 @@ class Products extends DashboardSitePageController
 
         $this->set('pageTitle', t('Duplicate Product'));
         $this->set('product', $product);
+        $newProductName = $product->getName() . ' ' . t('(Copy)');
+        $this->set('newProductName', $newProductName);
+
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $newProductName));
+        }
     }
 
     public function delete($pID)

@@ -5,6 +5,7 @@ namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Support\Facade\Config;
@@ -42,13 +43,24 @@ class Manufacturers extends DashboardPageController
         $this->set('pageTitle', t('Add Manufacturer'));
         $manufacturer = new Manufacturer();
         $this->set('manufacturer', $manufacturer);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Manufacturer')));
+        }
     }
 
     public function edit($id = 0)
     {
-        $this->set('pageTitle', t('Edit Manufacturer'));
         $manufacturer = Manufacturer::getByID($id);
+        if ($manufacturer === null) {
+            return $this->buildRedirect('/dashboard/store/manufacturers');
+        }
+        $this->set('pageTitle', t('Edit Manufacturer'));
         $this->set('manufacturer', $manufacturer);
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $manufacturer->getName()));
+        }
     }
 
     public function submit()

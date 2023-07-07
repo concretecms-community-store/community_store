@@ -5,6 +5,7 @@ use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Search\Pagination\PaginationFactory;
@@ -126,6 +127,10 @@ class Orders extends DashboardPageController
         $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
 
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t("Order #") . $order->getOrderID()));
+        }
     }
 
     public function updatestatus($oID)
