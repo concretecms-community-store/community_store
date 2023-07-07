@@ -112,7 +112,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                                     echo t('On Sale') . ': <span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                     echo '&nbsp;' . t('was') . '&nbsp;';
                                     echo '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
-                                    echo '<meta itemprop="price" content="' . $formattedSalePrice . '" />';
+                                    echo '<meta itemprop="price" content="' . $salePrice . '" />';
                                     echo '<link itemprop="availability " href="' . $stockstatus . '"/>';
                                 } else {
 
