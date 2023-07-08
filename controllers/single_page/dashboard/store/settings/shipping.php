@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Settings;
 
-use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
@@ -16,8 +17,11 @@ class Shipping extends DashboardPageController
 
     public function add($smtID)
     {
-        $this->set('pageTitle', t("Add Shipping Method"));
         $smt = ShippingMethodType::getByID($smtID);
+        if ($smt === null) {
+            return $this->buildRedirect('/dashboard/store/settings/shipping');
+        }
+        $this->set('pageTitle', t("Add Shipping Method"));
         $this->set('sm', false);
         $this->set('smt', $smt);
         $this->set("task", t("Add"));
@@ -32,12 +36,19 @@ class Shipping extends DashboardPageController
 
         $this->set('allGroupList', $allGroupList);
         $this->requireAsset('selectize');
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Shipping Method')));
+        }
     }
 
     public function edit($smID)
     {
-        $this->set('pageTitle', t("Edit Shipping Method"));
         $sm = ShippingMethod::getByID($smID);
+        if ($sm === null || $sm === false) {
+            return $this->buildRedirect('/dashboard/store/settings/shipping');
+        }
+        $this->set('pageTitle', t("Edit Shipping Method"));
         $smt = $sm->getShippingMethodType();
         $this->set('sm', $sm);
         $this->set('smt', $smt);
@@ -53,6 +64,10 @@ class Shipping extends DashboardPageController
 
         $this->set('allGroupList', $allGroupList);
         $this->requireAsset('selectize');
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $sm->getName()));
+        }
     }
 
     public function delete($smID)

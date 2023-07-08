@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Settings;
 
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -22,14 +23,26 @@ class Tax extends DashboardPageController
         $this->set("task", t("Add"));
         $this->set("taxRate", new TaxRate()); //shuts up errors when adding
         $this->loadFormAssets();
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Tax Rate')));
+        }
     }
 
     public function edit($trID)
     {
+        $tr = TaxRate::getByID($trID);
+        if ($tr === null) {
+            return $this->buildRedirect('/dashboard/store/settings/tax');
+        }
         $this->set('pageTitle', t("Edit Tax Rate"));
         $this->set("task", t("Update"));
-        $this->set("taxRate", TaxRate::getByID($trID));
+        $this->set("taxRate", $tr);
         $this->loadFormAssets();
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $tr->getTaxLabel()));
+        }
     }
 
     public function delete($trID)
@@ -102,15 +115,27 @@ class Tax extends DashboardPageController
         $this->set('tc', new TaxClass());
         $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', t('Add Tax Class')));
+        }
     }
 
     public function edit_class($tcID)
     {
+        $tc = TaxClass::getByID($tcID);
+        if ($tc === null) {
+            return $this->buildRedirect('/dashboard/store/settings/tax');
+        }
         $this->set('pageTitle', t("Edit Tax Class"));
         $this->set('task', t("Update"));
-        $this->set('tc', TaxClass::getByID($tcID));
+        $this->set('tc', $tc);
         $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');
+        if (method_exists($this, 'createBreadcrumb')) {
+            $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
+            $breacrumb->add(new Item('#', $tc->getTaxClassName()));
+        }
     }
 
     public function save_class()
