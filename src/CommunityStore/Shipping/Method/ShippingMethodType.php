@@ -111,12 +111,15 @@ class ShippingMethodType
 
 	/**
 	 * @param $smtID
-	 * @return ShippingMethodType
+	 * @return ShippingMethodType|null
 	 */
     public static function getByID($smtID)
     {
         $em = dbORM::entityManager();
         $obj = $em->find(get_called_class(), $smtID);
+        if ($obj === null) {
+            return null;
+        }
         $obj->setMethodTypeController();
 
         return $obj;
