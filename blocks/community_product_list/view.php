@@ -172,15 +172,17 @@ $activeclass = '';
                     } ?>
 
                     <?php if ($showPrice && !$product->allowCustomerPrice()) {
-                        $salePrice = $product->getSalePrice();
-                        $price = $product->getPrice();
-                        $activePrice = ($salePrice ? $salePrice : $price ) - $product->getPriceAdjustment($product->getDiscountRules());
+                        $salePrice = $product->getSalePrice() ?: $product->getPrice();
+                        $price = $product->getPrice(1, true);
+                        if ($salePrice == $price) {
+                            $salePrice = false;
+                        }
+                        $activePrice = ($salePrice ?: $price) - $product->getPriceAdjustment($product->getDiscountRules());
                         ?>
                         <p class="store-product-price store-product-list-price" data-price="<?= $activePrice; ?>" data-original-price="<?= ($salePrice ? $price : ''); ?>" >
                             <?php
-                            $salePrice = $product->getSalePrice();
                             if (isset($salePrice) && "" != $salePrice) {
-                                $formattedSalePrice = $product->getFormattedSalePrice();
+                                $formattedSalePrice = $product->getFormattedSalePrice() ?: $product->getFormattedPrice(1, false);
                                 $formattedOriginalPrice = $product->getFormattedOriginalPrice();
                                 echo '<span class="store-sale-price">' . $formattedSalePrice . '</span>';
                                 echo '&nbsp;' . t('was') . '&nbsp;' . '<span class="store-original-price">' . $formattedOriginalPrice . '</span>';
