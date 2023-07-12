@@ -348,8 +348,11 @@ if (version_compare($version, '9.0', '<')) {
         </div>
 
       <div class="form-group">
-          <?= $form->label('drDiscountSalePrices', t('Discount Sale Prices'))?>
-          <?= $form->select('drDiscountSalePrices', array('0'=>t('No, sale prices will not be discounted'), '1' => t('Yes, sale prices will have discounts applied')), $discountRule->getDiscountSalePrices())?>
+          <?= $form->label('drDiscountSalePrices', tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Discount Sale Prices'))?>
+          <?= $form->select('drDiscountSalePrices', [
+              '0' => tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'No, sale prices will not be discounted'),
+              '1' => tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Yes, sale prices will have discounts applied'),
+          ], $discountRule->getDiscountSalePrices())?>
       </div>
 
         <div class="form-group">

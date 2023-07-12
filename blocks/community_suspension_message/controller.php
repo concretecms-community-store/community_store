@@ -72,7 +72,7 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t('Display a message to your customer when sales are suspended');
+        return tc(/* i18n: sale here means the act of selling */ 'Selling', 'Display a message to your customer when sales are suspended');
     }
 
     /**

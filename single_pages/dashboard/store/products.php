@@ -342,15 +342,17 @@ if (version_compare($version, '9.0', '<')) {
 
                         <div class="col-md-6">
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSalePrice", t('Sale Price'), ['class' => $priceclass]); ?>
+                                <?= $form->label("pSalePrice", tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale Price'), ['class' => $priceclass]); ?>
                                 <div class="input-group">
                                     <div class="input-group-addon input-group-text">
                                         <?= Config::get('community_store.symbol'); ?>
                                     </div>
                                     <?php $salePrice = $product->getSalePriceValue(); ?>
-                                    <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => t('No Sale Price Set')]); ?>
+                                    <?= $form->number("pSalePrice", $salePrice, ['step'=>'0.01', 'placeholder' => tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'No Sale Price Set')]); ?>
                                 </div>
-                                <span class="help-block <?=($salePrice ? 'hidden d-none' : ''); ?>" id="saleNote"><?= t('Enter a value to set start and end dates for the sale'); ?></span>
+                                <span class="help-block <?=($salePrice ? 'hidden d-none' : ''); ?>" id="saleNote">
+                                    <?= tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Enter a value to set start and end dates for the sale') ?>
+                                </span>
 
                                 <script>
                                     $(document).ready(function () {
@@ -387,7 +389,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
 
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSaleStart", t('Sale Start')); ?>
+                                <?= $form->label("pSaleStart", tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale Start')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleStart', $product->getSaleStart()); ?>
                             </div>
 
@@ -396,7 +398,7 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="col-md-12">
 
                             <div class="form-group nonpriceentry <?= ($product->allowCustomerPrice() ? 'hidden d-none' : ''); ?>">
-                                <?= $form->label("pSaleEnd", t('Sale End')); ?>
+                                <?= $form->label("pSaleEnd", tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale End')); ?>
                                 <?= $app->make('helper/form/date_time')->datetime('pSaleEnd', $product->getSaleEnd()); ?>
                             </div>
                             <style>
@@ -447,7 +449,9 @@ if (version_compare($version, '9.0', '<')) {
                             <div class="form-group">
                                 <?= $form->checkbox('pQuantityPrice', '1', $product->hasQuantityPrice()) ?>
                                 <?= $form->label('pQuantityPrice', t('Quantity based pricing')) ?>
-                                <span id="tieredoptionsnote" class="help-block <?= $product->hasQuantityPrice() ? '' : 'hidden d-none' ?>"><?= t('Note: quantity based pricing is not overridden by a sale price'); ?></span>
+                                <span id="tieredoptionsnote" class="help-block <?= $product->hasQuantityPrice() ? '' : 'hidden d-none' ?>">
+                                    <?= tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Note: quantity based pricing is not overridden by a sale price') ?>
+                                </span>
                             </div>
                         </div>
 
@@ -1626,13 +1630,21 @@ if (version_compare($version, '9.0', '<')) {
                                                 <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <?= $form->label("pvSalePrice[]", t('Sale Price')); ?>
+                                                            <?= $form->label("pvSalePrice[]", tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale Price')); ?>
 
                                                             <div class="input-group">
                                                                 <div class="input-group-addon input-group-text">
                                                                     <?= Config::get('community_store.symbol'); ?>
                                                                 </div>
-                                                                <?= $form->number("pvSalePrice[" . $varid . "]", $variation ? $variation->getVariationSalePrice() : '', ['step'=>'0.01', 'max'=>'9999999.99', 'placeholder' => t('Base Sale Price')]); ?>
+                                                                <?= $form->number(
+                                                                    "pvSalePrice[" . $varid . "]",
+                                                                    $variation ? $variation->getVariationSalePrice() : '',
+                                                                    [
+                                                                        'step' => '0.01',
+                                                                        'max' => '9999999.99',
+                                                                        'placeholder' => tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Base Sale Price'),
+                                                                    ]
+                                                                ) ?>
                                                             </div>
                                                         </div>
                                                     </div>
