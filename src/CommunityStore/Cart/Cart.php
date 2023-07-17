@@ -600,19 +600,22 @@ class Cart
         Session::set('community_store.smID', false);
 
         $cart = self::getCart();
-        $product = Product::getByID((int) $cart[$instanceID]['product']['pID']);
-        $event = new CartEvent('remove');
-        $event->setProduct($product);
-        $event->setData(['cartItem'=>$instanceID]);
 
-        \Events::dispatch(CartEvent::CART_PRE_REMOVE, $event);
+        if (isset($cart[$instanceID]['product']['pID'])) {
+            $product = Product::getByID((int)$cart[$instanceID]['product']['pID']);
+            $event = new CartEvent('remove');
+            $event->setProduct($product);
+            $event->setData(['cartItem' => $instanceID]);
 
-        unset($cart[$instanceID]);
-        Session::set('communitystore.cart', $cart);
-        self::$cart = null;
+            \Events::dispatch(CartEvent::CART_PRE_REMOVE, $event);
 
-        \Events::dispatch(CartEvent::CART_ACTION, $event);
-        \Events::dispatch(CartEvent::CART_POST_REMOVE, $event);
+            unset($cart[$instanceID]);
+            Session::set('communitystore.cart', $cart);
+            self::$cart = null;
+
+            \Events::dispatch(CartEvent::CART_ACTION, $event);
+            \Events::dispatch(CartEvent::CART_POST_REMOVE, $event);
+        }
     }
 
     public static function clear()
