@@ -717,10 +717,15 @@ class Checkout extends PageController
         if ($orderID) {
             $order = Order::getByID($orderID);
 
-            // also check timestamp, in case visitor has returned with still active session after long period and order ID has been reclaimed
-            if ($order && $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+            if (!$order || !$order->getTemporaryRecordCreated()) {
                 $order = false;
+            } else {
+                // also check timestamp, in case visitor has returned with still active session after long period and order ID has been reclaimed
+                if ($orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+                    $order = false;
+                }
             }
+
         }
 
         if (!$order) {
