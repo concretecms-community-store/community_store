@@ -159,7 +159,7 @@ ob_start();
             <?php
             $discountsApplied = array();
             foreach ($applieddiscounts as $discount) {
-                $discountsApplied[] = $discount['odDisplay'];
+                $discountsApplied[] = $discount['odDisplay'] . (($discount['odName'] && $discount['odName'] != $discount['odDisplay']) ? ' (' . $discount['odName']  .')' : '' );
             }
             echo implode(',', $discountsApplied);
             ?>
