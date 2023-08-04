@@ -71,7 +71,7 @@ if (isset($missingNotificationEmails)) { ?>
             <div class="card-body">
                 <?php $ts = $sr->getTodaysSales(); ?>
                 <div class="panel-heading">
-                    <h4 class="panel-title card-title"><?= tc(/* i18n: sale here means the act of selling */ 'Selling', "Today's Sales") ?></h4>
+                    <h4 class="panel-title card-title"><?= tc(/* i18n: orders that have been placed */ 'Orders', "Today's Sales") ?></h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -100,7 +100,7 @@ if (isset($missingNotificationEmails)) { ?>
             <div class="card-body">
                 <?php $ts = $sr->getTodaysSales(); ?>
                 <div class="panel-heading">
-                    <h4 class="panel-title card-title"><?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales this Week') ?></h4>
+                    <h4 class="panel-title card-title"><?= tc(/* i18n: orders that have been placed */ 'Orders', 'Sales this Week') ?></h4>
                 </div>
                 <div class="panel-body">
 
@@ -108,7 +108,7 @@ if (isset($missingNotificationEmails)) { ?>
                     <div id="sales-chart"></div>
                 </div>
                 <div class="panel-footer">
-                    <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart fa-chart-line"></i> <?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'View Sales Report') ?></a>
+                    <a href="<?= Url::to('/dashboard/store/reports') ?>"><i class="fa fa-line-chart fa-chart-line"></i> <?= tc(/* i18n: orders that have been placed */ 'Orders', 'View Sales Report') ?></a>
                 </div>
             </div>
         </div>
