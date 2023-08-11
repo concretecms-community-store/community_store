@@ -55,7 +55,7 @@ class Installer
             $main = new Area('Main');
 
             $bt = BlockType::getByHandle('content');
-            $productParentPage->addBlock($bt, $main, ['content'=>'<h1>' .t('Products') , '</h1>']);
+            $productParentPage->addBlock($bt, $main, ['content'=>'<h1>' .t('Products') . '</h1>']);
 
             $bt = BlockType::getByHandle('community_product_list');
             $data = [
