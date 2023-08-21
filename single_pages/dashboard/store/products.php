@@ -982,7 +982,7 @@ if (version_compare($version, '9.0', '<')) {
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label  class="control-label"><?= t('In Variants'); ?></label>
-                                            <select class="form-control" name="poIncludeVariations[]">
+                                            <select class="form-control form-select" name="poIncludeVariations[]">
                                                 <option value="1"
                                                 <% if (poIncludeVariations == 1) { %>selected="selected"<% } %>><?= t('Yes'); ?></option>
                                                 <option value="0"
@@ -1019,7 +1019,7 @@ if (version_compare($version, '9.0', '<')) {
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Display Type'); ?></label>
-                                            <select class="form-control" name="poDisplayType[]">
+                                            <select class="form-control form-select" name="poDisplayType[]">
                                                 <option value="select"
                                                 <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down'); ?></option>
                                                 <option value="radio"
@@ -2149,8 +2149,8 @@ if (version_compare($version, '9.0', '<')) {
                 <th><a><?= t('Primary Image') ?></a></th>
                 <th><a href="<?= $productList->getSortURL('alpha'); ?>"><?= t('Product Name') ?></a></th>
                 <th><a href="<?= $productList->getSortURL('active'); ?>"><?= t('Active') ?></a></th>
-                <th><a><?= t('Stock Level') ?></a></th>
-                <th><a href="<?= $productList->getSortURL('price'); ?>"><?= t('Price') ?></a></th>
+                <th class="text-end"><a><?= t('Stock Level') ?></a></th>
+                <th class="text-end"><a href="<?= $productList->getSortURL('price'); ?>"><?= t('Price') ?></a></th>
                 <th><a><?= t('Featured') ?></a></th>
                 <th><a>
                         <?= count($typeList) ? t('Type') . ' / ' : '' ;?>
@@ -2182,11 +2182,41 @@ if (version_compare($version, '9.0', '<')) {
                             ?>
 
                         </td>
-                        <td><?php
+                        <td class="text-end"><?php
                             if ($product->hasVariations()) {
-                                echo '<span class="label label-info">' . t('Multiple') . '</span>';
+                                $total = 0;
+                                $allUnlimited = true;
+                                $unlimitedOption = false;
+                                $oneOption = false;
+                                foreach($product->getVariations()  as $variation) {
+                                    if (!$variation->getVariationDisabled()) {
+                                        if (!$variation->isUnlimited()) {
+                                            $total += ($variation->getStockLevel() + 0);
+                                            $allUnlimited = false;
+                                        } else {
+                                            $unlimitedOption = true;
+                                        }
+
+                                        $oneOption = true;
+                                    }
+                                }
+
+                                if ($oneOption) {
+                                    if ($allUnlimited) {
+                                        echo t('Unlimited');
+                                    } else {
+                                        echo $total;
+
+                                        if ($unlimitedOption) {
+                                            echo t(', with unlimited variants');
+                                        }
+                                    }
+                                } else {
+                                    echo 0;
+                                }
+
                             } else {
-                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getQty() + 0);
+                                echo($product->isUnlimited(true) ? '<span class="label label-default">' . t('Unlimited') . '</span>' : $product->getStockLevel() + 0);
                             } ?>
 
                             <?php
@@ -2199,7 +2229,7 @@ if (version_compare($version, '9.0', '<')) {
                             ?>
 
                         </td>
-                        <td>
+                        <td class="text-end">
                             <?php
                             if ($product->hasVariations()) {
                                 echo '<span class="label label-info">' . t('Multiple') . '</span><br />';
