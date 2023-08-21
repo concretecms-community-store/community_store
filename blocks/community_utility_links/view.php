@@ -7,13 +7,13 @@
     <p class="store-utility-links-login">
         <?php if ($showSignIn) {
             $u = new User();
-            if (!$u->isLoggedIn()) {
+            if (!$u->isRegistered()) {
                 echo '<a href="' . \Concrete\Core\Support\Facade\Url::to('/login') . '">' . t("Sign In") . '</a>';
             }
         } ?>
         <?php if ($showGreeting) {
             $u = new User();
-            if ($u->isLoggedIn()) {
+            if ($u->isRegistered()) {
                 $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
                 $ui = $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByID($u->getUserID());
                 if ($ui && $firstname = $ui->getAttribute('billing_first_name')) {
