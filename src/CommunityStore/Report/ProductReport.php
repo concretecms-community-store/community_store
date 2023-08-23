@@ -42,7 +42,7 @@ class ProductReport extends AbstractItemList
 
             foreach ($this->products as $product) {
 
-                if (strpos($product['name'], $search) !== false) {
+                if (stripos($product['name'], $search) !== false) {
                     $newlist[] = $product;
                 }
             }
