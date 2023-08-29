@@ -105,7 +105,7 @@ class Image
     {
         $this->setLegacyThumbnailWidth($legacyThumbProps->width ?? false);
         $this->setLegacyThumbnailHeight($legacyThumbProps->height ?? false);
-        $this->setLegacyThumbnailCrop($legacyThumbProps->crop ?? false);
+        $this->setLegacyThumbnailCrop($legacyThumbProps->crop ?? null);
     }
 
     /**
@@ -151,7 +151,7 @@ class Image
     {
         $this->legacyThumbProps = is_object($this->legacyThumbProps) ? $this->legacyThumbProps : (object) ['width'=>false, 'height'=>false, 'crop'=>false];
 
-        $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : static::DEFAULT_IMG_CROP;
+        $this->legacyThumbProps->crop = isset($crop) ? (bool) $crop : (bool)Config::get('community_store.default' . $this->resizingScheme . 'Crop');
     }
 
     /**
