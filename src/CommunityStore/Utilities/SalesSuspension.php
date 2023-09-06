@@ -142,7 +142,7 @@ class SalesSuspension
         if ($message === '') {
             $to = $this->getSuspendedTo();
 
-            return $to === null ? t('Sales are currently suspended.') : t('Sales are currently suspended until %s.', $this->dateService->formatDateTime($to, true));
+            return $to === null ? tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales are currently suspended.') : tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales are currently suspended until %s.', $this->dateService->formatDateTime($to, true));
         }
 
         return LinkAbstractor::translateFrom($message);

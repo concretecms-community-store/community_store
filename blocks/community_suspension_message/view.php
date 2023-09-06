@@ -24,7 +24,7 @@ if (!$editMode) {
 $localization->pushActiveContext(Localization::CONTEXT_UI);
 ?>
 <div class="ccm-edit-mode-disabled-item">
-    <?= t('When the sales will be suspended, site visitors will see the following message:') ?>
+    <?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'When the sales will be suspended, site visitors will see the following message:') ?>
     <div<?= $cssClass === '' ? '' : (' class="' . h($cssClass) . '"') ?>>
         <?= $message ?>
     </div>

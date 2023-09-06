@@ -17,7 +17,7 @@ $weightLabel = Config::get('community_store.weightUnit');
         <th><?= t('Active'); ?></th>
         <th><?= t('Configuration'); ?></th>
         <th class="text-right"><?= t('Price'); ?></th>
-        <th class="text-right"><?= t('Sale Price'); ?></th>
+        <th class="text-right"><?= tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale Price'); ?></th>
         <th><?= t('Shipping Data'); ?></th>
         <th  class="text-right"><?= t('Stock Level'); ?></th>
     </tr>
