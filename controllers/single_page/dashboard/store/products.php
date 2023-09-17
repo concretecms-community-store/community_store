@@ -65,12 +65,22 @@ class Products extends DashboardSitePageController
         }
 
         $keywords = trim($this->request->query->get('keywords'));
-
         if ($keywords) {
             $productsList->setSearch($keywords);
             Session::set('communitystore.dashboard.products.keywords', $keywords);
         } else {
             Session::remove('communitystore.dashboard.products.keywords');
+        }
+
+        $featured = $this->request->query->get('featured');
+        if ($featured) {
+            $productsList->setFeaturedOnly(true);
+            Session::set('communitystore.dashboard.products.featured', true);
+        } elseif ($featured !== null && $featured !== '') {
+            $productsList->setNotFeaturedOnly(true);
+            Session::set('communitystore.dashboard.products.featured', false);
+        } else {
+            Session::remove('communitystore.dashboard.products.featured');
         }
 
         $this->set('productList', $productsList);
@@ -335,6 +345,7 @@ class Products extends DashboardSitePageController
         $this->set('usergroups', $usergrouparray);
 
         $this->set('keywordsSearch', Session::get('communitystore.dashboard.products.keywords'));
+        $this->set('featuredSearch', Session::get('communitystore.dashboard.products.featured'));
         $this->set('groupSearch', Session::get('communitystore.dashboard.products.group'));
 
         if (method_exists($this, 'createBreadcrumb')) {

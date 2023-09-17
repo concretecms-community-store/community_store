@@ -2029,7 +2029,16 @@ if (version_compare($version, '9.0', '<')) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= Url::to('/dashboard/store/products/'. (isset($groupSearch) ? $groupSearch : '') . (isset($keywordsSearch) ? '?keywords='.urlencode($keywordsSearch) : '')) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
+                <?php
+                $qs = [];
+                if (isset($keywordsSearch)) {
+                    $qs[] = 'keywords=' . urlencode($keywordsSearch);
+                }
+                if (isset($featuredSearch)) {
+                    $qs[] = 'featured=' . ($featuredSearch ? '1' : '0');
+                }
+                ?>
+                <a href="<?= Url::to('/dashboard/store/products/'. (isset($groupSearch) ? $groupSearch : '') . ($qs === [] ? '' : ('?' . implode('&', $qs)))) ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View All Products") ?></a>
                 <button class="float-end pull-right btn btn-primary" disabled="disabled" type="submit"><?= $actionDescription ?></button>
             </div>
         </div>
