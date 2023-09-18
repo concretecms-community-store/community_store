@@ -78,6 +78,13 @@ class Customer
     {
         $ui = $this->getUserInfo();
         if ($ui !== null) {
+
+            // if receipt email is set on user account, use instead
+            $receiptEmail = $ui->getAttribute('receipt_email');
+            if ($receiptEmail) {
+                return $receiptEmail;
+            }
+
             return $ui->getUserEmail();
         }
         $session = $this->getSession(false);
