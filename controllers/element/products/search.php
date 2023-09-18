@@ -55,9 +55,17 @@ class Search extends ElementController
         $this->set('gID', $this->gID);
         $this->set('groupList', $this->groupList);
         $this->set('token', $this->app->make('token'));
-
-        $this->set('keywords', $this->app->request->request('keywords'));
-
+        $request = isset($this->request) ? $this->request : $this->app->request;
+        $this->set('keywords', $request->request('keywords'));
+        $featured = $request->request('featured');
+        if ($featured) {
+            $featured = true;
+        } elseif ($featured !== null && $featured !== '') {
+            $featured = false;
+        } else {
+            $featured = null;
+        }
+        $this->set('featured', $featured);
         if (isset($this->headerSearchAction)) {
             $this->set('headerSearchAction', $this->headerSearchAction);
         } else {
