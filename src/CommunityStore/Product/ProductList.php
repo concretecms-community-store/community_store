@@ -21,6 +21,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $randomSeed = '';
     protected $sortByDirection = 'desc';
     protected $featuredOnly = false;
+    protected $notFeaturedOnly = false;
     protected $showOutOfStock = false;
     protected $saleOnly = false;
     protected $activeOnly = true;
@@ -83,6 +84,11 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function setFeaturedOnly($bool)
     {
         $this->featuredOnly = $bool;
+    }
+
+    public function setNotFeaturedOnly($bool)
+    {
+        $this->notFeaturedOnly = $bool;
     }
 
     public function setManufacturer($manufacturer)
@@ -384,6 +390,9 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
         if ($this->featuredOnly) {
             $query->andWhere("pFeatured = 1");
+        }
+        if ($this->notFeaturedOnly) {
+            $query->andWhere('pFeatured = 0');
         }
         if ($this->manufacturer) {
             $query->andWhere("pManufacturer = ?")->setParameter($paramcount++, $this->manufacturer);

@@ -54,7 +54,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-checkout" data-pane-toggle><?= t('Cart and Checkout'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-orders" data-pane-toggle><?= t('Orders'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-user-interface" data-pane-toggle><?= t('User Interface'); ?></a></li>
-                <li class="nav-item"><a class="nav-link text-primary" href="#settings-sales-suspension" data-pane-toggle><?= t('Sales Suspension'); ?></a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="#settings-sales-suspension" data-pane-toggle><?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales Suspension'); ?></a></li>
             </ul>
 
         </div>
@@ -742,7 +742,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
                 <div class="checkbox form-check">
                     <label><?= $form->checkbox('hideSalePrice', true, Config::get('community_store.hideSalePrice')); ?>
-                        <?= t('Hide sale price'); ?>
+                        <?= tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Hide sale price'); ?>
                     </label>
                 </div>
 
@@ -808,34 +808,34 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
         <!-- #settings-sales-suspension -->
         <div class="col-sm-9 store-pane" id="settings-sales-suspension">
-            <h3><?= t('Sales Suspension') ?></h3>
+            <h3><?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales Suspension') ?></h3>
 
             <div class="form-group">
-                <?= $form->label('salesSuspensionSuspend', t('Suspend Sales')); ?>
+                <?= $form->label('salesSuspensionSuspend', tc(/* i18n: sale here means the act of selling */ 'Selling', 'Suspend Sales')); ?>
                 <?= $form->select(
                     'salesSuspensionSuspend',
                     [
-                        '0' => t('Sales are active'),
-                        '1' => t('Sales are disabled (Catalog Mode)'),
-                        '2' => t('Sales are temporarily suspended')
+                        '0' => tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales are active'),
+                        '1' => tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales are disabled (Catalog Mode)'),
+                        '2' => tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales are temporarily suspended')
                     ],
                     $salesSuspension->salesPermanentlyDisabled() ? '1' : ($salesSuspension->isSuspended() ? '2' : '0')
                 ) ?>
             </div>
             <div class="form-group">
-                <?= $form->label('salesSuspensionMessage', t('Sales suspension message')); ?>
+                <?= $form->label('salesSuspensionMessage', tc(/* i18n: sale here means the act of selling */ 'Selling', 'Sales suspension message')); ?>
                 <?= $editor->outputStandardEditor('salesSuspensionMessage', $salesSuspension->getSuspensionMessage(true)) ?>
                 <div class="small text-muted"><?= t('Leave empty to use the default message') ?></div>
             </div>
             <div class="form-group salesSuspensionSuspend-on"<?= $salesSuspension->isSuspended() ? '' : ' style="display:none"' ?>>
                 <?= $form->label('salesSuspensionFrom', t('Date/time when the suspension starts')) ?>
                 <?= $dateTimeWidget->datetime('salesSuspensionFrom', $salesSuspension->getSuspendedFrom()) ?>
-                <div class="small text-muted"><?= t('Leave empty to suspend sales immediately') ?></div>
+                <div class="small text-muted"><?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'Leave empty to suspend sales immediately') ?></div>
             </div>
             <div class="form-group salesSuspensionSuspend-on"<?= $salesSuspension->isSuspended() ? '' : ' style="display:none"' ?>>
                 <?= $form->label('salesSuspensionTo', t('Date/time when the suspension ends')) ?>
                 <?= $dateTimeWidget->datetime('salesSuspensionTo', $salesSuspension->getSuspendedTo()) ?>
-                <div class="small text-muted"><?= t('Leave empty to suspend sales indefinitely') ?></div>
+                <div class="small text-muted"><?= tc(/* i18n: sale here means the act of selling */ 'Selling', 'Leave empty to suspend sales indefinitely') ?></div>
             </div>
         </div>
         <script>

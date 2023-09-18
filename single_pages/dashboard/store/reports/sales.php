@@ -23,7 +23,7 @@ if ($taxCalc == 'extract') {
 		<div class="panel-sale panel panel-default mb-3">
 			<?php $ts = SalesReport::getTodaysSales(); ?>
 			<div class="panel-heading">
-				<h2 class="panel-title"><?= t("Today's Sales")?></h2>
+				<h2 class="panel-title"><?= tc(/* i18n: sale here means the act of selling */ 'Selling', "Today's Sales")?></h2>
 			</div>
 			<div class="panel-body">
 				<div class="row">
