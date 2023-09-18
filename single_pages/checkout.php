@@ -430,7 +430,7 @@ $csm = $app->make('cs/helper/multilingual');
                             </div>
                             <div class="store-checkout-form-group-buttons mb-3 mt-3">
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
-                                <input type="submit" class="store-btn-next-pane btn btn-default btn-secondary pull-right float-end" value="<?= t("Next") ?>">
+                                <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
 
