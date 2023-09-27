@@ -4,6 +4,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
 
+/**
+ * @var string $actionDescription
+ */
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $addViews = ['add', 'add_method', 'edit'];
 $editViews = ['edit'];
@@ -104,7 +108,7 @@ if (in_array($controller->getAction(), $addViews)) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-primary float-end" type="submit"><?= t('%s Shipping Method', $task) ?></button>
+                <button class="pull-right btn btn-primary float-end" type="submit"><?= $actionDescription ?></button>
             </div>
         </div>
 

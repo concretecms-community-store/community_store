@@ -20,7 +20,7 @@ class Tax extends DashboardPageController
     public function add()
     {
         $this->set('pageTitle', t("Add Tax Rate"));
-        $this->set("task", t("Add"));
+        $this->set('actionDescription', t('Add Tax Rate'));
         $this->set("taxRate", new TaxRate()); //shuts up errors when adding
         $this->loadFormAssets();
         if (method_exists($this, 'createBreadcrumb')) {
@@ -36,7 +36,7 @@ class Tax extends DashboardPageController
             return $this->buildRedirect('/dashboard/store/settings/tax');
         }
         $this->set('pageTitle', t("Edit Tax Rate"));
-        $this->set("task", t("Update"));
+        $this->set('actionDescription', t('Update Tax Rate'));
         $this->set("taxRate", $tr);
         $this->loadFormAssets();
         if (method_exists($this, 'createBreadcrumb')) {
@@ -111,7 +111,7 @@ class Tax extends DashboardPageController
     public function add_class()
     {
         $this->set('pageTitle', t("Add Tax Class"));
-        $this->set('task', t("Add"));
+        $this->set('actionDescription', t('Add Tax Class'));
         $this->set('tc', new TaxClass());
         $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');
@@ -128,7 +128,7 @@ class Tax extends DashboardPageController
             return $this->buildRedirect('/dashboard/store/settings/tax');
         }
         $this->set('pageTitle', t("Edit Tax Class"));
-        $this->set('task', t("Update"));
+        $this->set('actionDescription', t('Update Tax Class'));
         $this->set('tc', $tc);
         $this->set('taxRates', StoreTax::getTaxRates(true));
         $this->requireAsset('selectize');

@@ -3,6 +3,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Support\Facade\Config;
 
+/**
+ * @var string $actionDescription
+ */
+
 $listViews = ['view', 'success', 'updated', 'removed', 'class_deleted', 'class_updated', 'class_added'];
 $addViews = ['add', 'add_rate', 'edit'];
 $addClassViews = ['add_class', 'edit_class', 'save_class'];
@@ -130,7 +134,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default  btn-secondary pull-left float-start"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right btn btn-primary float-end" type="submit" ><?= t('%s Tax Rate', $task); ?></button>
+            <button class="pull-right btn btn-primary float-end" type="submit" ><?= $actionDescription ?></button>
         </div>
     </div>
 
@@ -291,7 +295,7 @@ if (in_array($controller->getAction(), $addViews)) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= Url::to('/dashboard/store/settings/tax'); ?>" class="btn btn-default btn-secondary pull-left float-start"><?= t("Cancel / View Taxes"); ?></a>
-            <button class="pull-right float-end btn btn-primary" type="submit"><?= t('%s Tax Class', $task); ?></button>
+            <button class="pull-right float-end btn btn-primary" type="submit"><?= $actionDescription ?></button>
         </div>
     </div>
 

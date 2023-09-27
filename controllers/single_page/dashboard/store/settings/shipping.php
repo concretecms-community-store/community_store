@@ -24,7 +24,7 @@ class Shipping extends DashboardPageController
         $this->set('pageTitle', t("Add Shipping Method"));
         $this->set('sm', false);
         $this->set('smt', $smt);
-        $this->set("task", t("Add"));
+        $this->set('actionDescription', t('Add Shipping Method'));
 
         $allGroupList = [];
 
@@ -52,7 +52,7 @@ class Shipping extends DashboardPageController
         $smt = $sm->getShippingMethodType();
         $this->set('sm', $sm);
         $this->set('smt', $smt);
-        $this->set("task", t("Update"));
+        $this->set('actionDescription', t('Update Shipping Method'));
 
         $allGroupList = [];
 
