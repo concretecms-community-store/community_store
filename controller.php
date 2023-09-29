@@ -247,7 +247,7 @@ class Controller extends Package
             try {
                 $app = $this->app->make('console');
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
             }
         }
     }
