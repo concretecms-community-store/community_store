@@ -5,8 +5,8 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 
 class DoctrineORMEventsSubscriber implements EventSubscriber
 {
@@ -29,30 +29,42 @@ class DoctrineORMEventsSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::preFlush,
+            Events::onFlush,
         ];
     }
 
-    public function preFlush(PreFlushEventArgs $e)
+    public function onFlush(OnFlushEventArgs $e)
     {
         if ($this->service->isEnabled()) {
             $em = $e->getEntityManager();
             $uow = $em->getUnitOfWork();
-            $map = $uow->getIdentityMap();
-            // Let's retrieve all the Product instances that have already been loaded (and possibily changed)
-            $products = isset($map[Product::class]) ? $map[Product::class] : [];
-            // Let's retrieve all the ProductVariation instances that have already been loaded (and possibily changed)
-            if (isset($map[ProductVariation::class])) {
-                foreach ($map[ProductVariation::class] as $productVariation) {
-                    $product = $productVariation->getProduct();
-                    if (!in_array($product, $products, true)) {
-                        $products[] = $product;
+            $products = [];
+            foreach ([
+                $uow->getScheduledEntityInsertions(),
+                $uow->getScheduledEntityUpdates(),
+                $uow->getScheduledEntityDeletions(),
+            ] as $entities) {
+                foreach ($entities as $entity) {
+                    if ($entity instanceof Product) {
+                        if (!in_array($entity, $products, true)) {
+                            $products[] = $entity;
+                        }
+                    } elseif ($entity instanceof ProductVariation) {
+                        $product = $entity->getProduct();
+                        if (!in_array($product, $products, true)) {
+                            $products[] = $product;
+                        }
                     }
                 }
             }
-            foreach ($products as $product) {
-                if ($product->hasVariations()) {
-                    $this->service->update($product);
+            if ($products !== []) {
+                $class = $em->getClassMetadata(Product::class);
+                foreach ($products as $product) {
+                    if ($product->hasVariations()) {
+                        if ($this->service->update($product)) {
+                            $uow->computeChangeSet($class, $product);
+                        }
+                    }
                 }
             }
         }
