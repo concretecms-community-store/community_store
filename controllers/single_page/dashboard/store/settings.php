@@ -1,24 +1,27 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
-use Punic\Currency;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Routing\Redirect;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\File\Set\SetList;
-use Concrete\Core\User\Group\GroupList;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Package\PackageService;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\File\Set\SetList;
 use Concrete\Core\Form\Service\Widget;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus as OrderStatus;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
+use Punic\Currency;
 
 class Settings extends DashboardPageController
 {
@@ -121,6 +124,7 @@ class Settings extends DashboardPageController
         $this->set('currencyList', $currencyList);
 
         $this->set('salesSuspension', $this->app->make(SalesSuspension::class));
+        $this->set('automaticProductQuantitiesMessage', $this->buildAutomaticProductQuantitiesMessage());
     }
 
     public function loadFormAssets()
@@ -225,6 +229,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.productDefaultShippingNo', $args['productDefaultShippingNo'] ?? '');
                 Config::save('community_store.variationDefaultUnlimited', $args['variationDefaultUnlimited'] ?? '');
                 Config::save('community_store.variationMaxVariations', (int) $args['variationMaxVariations'] ? : 50);
+                Config::save(AutoUpdaterQuantitiesFromVariations::CONFIGURATION_KEY, !empty($args['automaticProductQuantities']));
                 Config::save('community_store.attributesRequireType', $args['attributesRequireType'] == '1');
                 Config::save('community_store.enableGtagPurchase', isset($args['enableGtagPurchase']) ?? false);
 
@@ -379,5 +384,49 @@ class Settings extends DashboardPageController
         }
 
         return $e;
+    }
+
+    /**
+     * @return string
+     */
+    private function buildAutomaticProductQuantitiesMessage()
+    {
+        $useTasks = class_exists(\Concrete\Core\Entity\Automation\Task::class);
+        $pageUrl = '';
+        $pagePath = $useTasks ? '/dashboard/system/automation/tasks' : '/dashboard/system/optimization/jobs';
+        $page = Page::getByPath($pagePath);
+        if ($page && !$page->isError()) {
+            $checker = new Checker($page);
+            if ($checker->canViewPage()) {
+                $pageUrl = h((string) $this->app->make(ResolverManagerInterface::class)->resolve([$page]));
+            }
+        }
+        $cliName = '<code>' . h($this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Console\Command\AutoUpdateQuantitiesFromVariations::class)->getName()) . '</code>';
+        if ($useTasks) {
+            $taskName = h($this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\AutoUpdateQuantitiesFromVariations::class)->getName());
+            if ($pageUrl !== '') {
+                $taskName = "<a href=\"{$pageUrl}\" target=\"_blank\">{$taskName}</a>";
+            } else {
+                $taskName = "<b>{$taskName}</b>";
+            }
+            return t(
+                'You can automatically update all the products with variations with the %s CLI Command or with the %s Task',
+                $cliName,
+                $taskName
+            );
+        }
+
+        $jobName = h($this->app->make(\Concrete\Package\CommunityStore\Job\AutoUpdateQuantitiesFromVariations::class)->getJobName());
+        if ($pageUrl !== '') {
+            $jobName = "<a href=\"{$pageUrl}\" target=\"_blank\">{$jobName}</a>";
+        } else {
+            $jobName = "<b>{$taskName}</b>";
+        }
+        
+        return t(
+            'You can automatically update all the products with variations with the %s CLI Command or with the %s Automated Job',
+            $cliName,
+            $jobName
+        );
     }
 }

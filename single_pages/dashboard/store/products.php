@@ -1,11 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-use \Concrete\Core\Page\Page;
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Core\Support\Facade\Config;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 
 /**
  * @var ProductVariation $variationLookup []
@@ -31,6 +32,7 @@ if (version_compare($version, '9.0', '<')) {
 ?>
 
 <?php if (in_array($controller->getAction(), $addViews)) { //if adding or editing a product
+    $automaticProductQuantities = $app->make(AutoUpdaterQuantitiesFromVariations::class)->isEnabled();
     if (!isset($product) || !is_object($product)) {
         $product = new Product();
         $product->setIsUnlimited(true);
@@ -159,7 +161,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <?= $form->select("pActive", ['1' => t('Active'), '0' => t('Inactive')], $product->isActive() ? '1' : '0'); ?>
                             </div>
                         </div>
-                        <div class="col-lg-5">
+                        <div id="main-product-stock-level" class="col-lg-5<?= $automaticProductQuantities && $product->hasVariations() ? ' hidden d-none' : ''?>">
                         <div class="form-group">
                             <?= $form->label("pQty", t('Stock Level')); ?>
                             <?php $qty = $product->getStockLevel(); ?>
@@ -219,10 +221,24 @@ if (version_compare($version, '9.0', '<')) {
                                         $('#pVariations').change(function () {
                                             if ($(this).prop('checked')) {
                                                 $('#variations,#variationnotice').removeClass('hidden d-none');
+                                                <?php
+                                                if ($automaticProductQuantities) {
+                                                    ?>
+                                                    $('#main-product-stock-level').addClass('hidden d-none');;
+                                                    <?php
+                                                }
+                                                ?>
                                             } else {
                                                 $('#variations,#variationnotice').addClass('hidden d-none');
+                                                <?php
+                                                if ($automaticProductQuantities) {
+                                                    ?>
+                                                    $('#main-product-stock-level').removeClass('hidden d-none');
+                                                    <?php
+                                                }
+                                                ?>
                                             }
-                                        });
+                                        }).trigger('change');
 
                                         $('#pType').change(function () {
 

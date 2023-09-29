@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
 /**
@@ -25,6 +26,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
  * @var int|null $digitalDownloadFileSet
  * @var int|false|null $productPublishTarget
  * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension $salesSuspension
+ * @var string $automaticProductQuantitiesMessage
  */
 
 ?>
@@ -442,6 +444,18 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                     <div class="radio"><label><?= $form->radio('attributesRequireType', '1', Config::get('community_store.attributesRequireType')  ? '1' : ''); ?><?php echo t('No, product attributes are only editable when a product type is selected'); ?></label></div>
                 </div>
 
+            </div>
+
+            <div class="form-group">
+                <label><?= t('Calculate automatically the quantities for products with variations') ?></label>
+                <div class="checkbox form-check">
+                    <?php
+                    $automaticProductQuantities = Config::get(AutoUpdaterQuantitiesFromVariations::CONFIGURATION_KEY) ? '1' : '0';
+                    ?>
+                    <div class="radio"><label><?= $form->radio('automaticProductQuantities', '1', $automaticProductQuantities) ?><?= t('Yes, product quantities will be derived from variations') ?></label></div>
+                    <div class="radio"><label><?= $form->radio('automaticProductQuantities', '0', $automaticProductQuantities) ?><?= t('No, I will manually manage product quantities') ?></label></div>
+                </div>
+                <div class="small text-muted"><?= $automaticProductQuantitiesMessage ?></div>
             </div>
 
         </div>
