@@ -41,7 +41,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
         <div class="col-sm-3">
 
             <ul class="nav nav-pills nav-stacked flex-column">
-                <li class="nav-item active"><a class="nav-link text-primary"" href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
+                <li class="nav-item active"><a class="nav-link text-primary" href="#settings-currency" data-pane-toggle><?= t('Currency'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-tax" data-pane-toggle><?= t('Tax'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-shipping" data-pane-toggle><?= t('Shipping'); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-primary" href="#settings-payments" data-pane-toggle><?= t('Payments'); ?></a></li>
