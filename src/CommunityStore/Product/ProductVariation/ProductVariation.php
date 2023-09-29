@@ -552,6 +552,7 @@ class ProductVariation
                         'pvDisabled' => 0,
                          true, ]
                     );
+                    $product->getVariations()->add($variation);
 
                     foreach ($optioncombo as $optionvalue) {
                         $option = ProductOptionItem::getByID($optionvalue);
@@ -707,6 +708,8 @@ class ProductVariation
 
     public function delete()
     {
+        $product = $this->getProduct();
+        $product->getVariations()->removeElement($this);
         $em = dbORM::entityManager();
         $em->remove($this);
         $em->flush();
