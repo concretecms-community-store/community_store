@@ -196,6 +196,9 @@ class ProductVariation
         return $this->pID;
     }
 
+    /**
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+     */
     public function getProduct() {
         return $this->product;
     }
