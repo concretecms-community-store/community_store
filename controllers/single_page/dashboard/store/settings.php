@@ -165,7 +165,6 @@ class Settings extends DashboardPageController
             if (!$errors->has()) {
                 $salesSuspension = $this->app->make(SalesSuspension::class);
                 $dateTimeWidget = $this->app->make(Widget\DateTime::class);
-                $startingCurrency =  Config::get('community_store.currency');
 
                 Config::save('community_store.symbol', $args['symbol']);
                 Config::save('community_store.currency', $args['currency']);
