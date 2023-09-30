@@ -39,10 +39,11 @@ class DoctrineORMEventsSubscriber implements EventSubscriber
             $em = $e->getEntityManager();
             $uow = $em->getUnitOfWork();
             $products = [];
+            $entityDeletions = $uow->getScheduledEntityDeletions();
             foreach ([
                 $uow->getScheduledEntityInsertions(),
                 $uow->getScheduledEntityUpdates(),
-                $uow->getScheduledEntityDeletions(),
+                $entityDeletions,
             ] as $entities) {
                 foreach ($entities as $entity) {
                     if ($entity instanceof Product) {
@@ -60,7 +61,7 @@ class DoctrineORMEventsSubscriber implements EventSubscriber
             if ($products !== []) {
                 $class = $em->getClassMetadata(Product::class);
                 foreach ($products as $product) {
-                    if ($product->hasVariations()) {
+                    if (!in_array($product, $entityDeletions, true) && $product->hasVariations()) {
                         if ($this->service->update($product)) {
                             $uow->computeChangeSet($class, $product);
                         }
