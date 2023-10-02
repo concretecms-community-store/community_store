@@ -113,11 +113,11 @@ EOT
             }
         }
         $result = false;
-        if ($pQty !== (float) $product->getStockLevel()) {
+        if ($pQty !== (float) $product->getProductStockLevel()) {
             $product->setQty($pQty);
             $result = true;
         }
-        if ($pQtyUnlim !== (bool) $product->isUnlimited(true)) {
+        if ($pQtyUnlim !== $product->isProductUnlimited()) {
             $product->setIsUnlimited($pQtyUnlim);
             $result = true;
         }

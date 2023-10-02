@@ -1801,9 +1801,22 @@ class Product
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->isUnlimited();
-        } else {
-            return (bool) $this->pQtyUnlim;
         }
+
+        return $this->isProductUnlimited();
+    }
+
+    /**
+     * Is the actual quantity associated to the product (not to the possibly loaded variation) unlimited?
+     * The date interval won't be considered.
+     *
+     * @return bool
+     *
+     * @see \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product::isUnlimited() you may want to use isUnlimited() instead
+     */
+    public function isProductUnlimited()
+    {
+        return (bool) $this->pQtyUnlim;
     }
 
     public function autoCheckout()
@@ -1858,9 +1871,22 @@ class Product
 
         if ($this->hasVariations() && $variation = $this->getVariation()) {
             return $variation->getStockLevel();
-        } else {
-            return $this->pQty;
         }
+
+        return $this->getProductStockLevel();
+    }
+
+    /**
+     * Get the actual quantity associated to the product, not to the possibly loaded variation.
+     * The date interval won't be considered.
+     *
+     * @return float|string|null
+     *
+     * @see \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product::getStockLevel() you may want to use getStockLevel() instead
+     */
+    public function getProductStockLevel()
+    {
+        return $this->pQty;
     }
 
     /**
