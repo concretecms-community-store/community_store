@@ -3,31 +3,36 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Area\Area;
-use Concrete\Core\Page\Page;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\File\Set\Set as FileSet;
-use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Entity\Attribute\Key\UserKey;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Page\Template as PageTemplate;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
+use Concrete\Core\Entity\Automation\Task;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Job\Job;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
+use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\User\Group\Group;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
-use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType;
-use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration as PageTypePublishTargetAllConfiguration;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
+use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Command\Task\TaskSetService;
 
 class Installer
 {
@@ -91,7 +96,7 @@ class Installer
 
     public static function getDefaultSlug()
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $site = $app->make('site')->getSite();
         $defaultLocale = $site->getDefaultLocale();
         $defaultHome = $defaultLocale->getSiteTree()->getSiteHomePageObject();
@@ -229,7 +234,7 @@ class Installer
         }
     }
 
-    public static function upgrade($pkg)
+    public static function upgrade($pkg, $fromVersion = '')
     {
         // trigger a reinstall to add the select attribute type to the product category
         self::installProductAttributes($pkg);
@@ -244,6 +249,10 @@ class Installer
         // in case the customer group and digital download fileset are not saved in config yet
         self::installCustomerGroups($pkg);
         self::createDDFileset($pkg);
+        if (empty($fromVersion) || version_compare($fromVersion, '2.6.1-alpha2') < 0) {
+            self::installJobs();
+            self::installTasks();
+        }
 
         Localization::clearCache();
     }
@@ -581,6 +590,41 @@ class Installer
             return $db;
         } else {
             return false;
+        }
+    }
+
+    public static function installJobs()
+    {
+        if (Job::getByHandle('auto_update_quantities_from_variations') === null) {
+            $app = Application::getFacadeApplication();
+            $package = $app->make(PackageService::class)->getByHandle('community_store');
+            Job::installByPackage('auto_update_quantities_from_variations', $package);
+        }
+    }
+
+    public static function installTasks()
+    {
+        if (!class_exists(Task::class)) {
+            return;
+        }
+        $app = Application::getFacadeApplication();
+        $package = $app->make(PackageService::class)->getByHandle('community_store');
+        $em = $app->make(EntityManagerInterface::class);
+        $taskSetService = $app->make(TaskSetService::class);
+        $taskSet = $taskSetService->getByHandle('community_store');
+        if ($taskSet === null) {
+            $taskSet = $taskSetService->add('community_store', t('Community Store', $package));
+        }
+        $task = $em->getRepository(Task::class)->findOneByHandle('auto_update_quantities_from_variations');
+        if ($task === null) {
+            $task = new Task();
+            $task->setHandle('auto_update_quantities_from_variations');
+            $task->setPackage($package);
+            $em->persist($task);
+            $em->flush();
+        }
+        if (!$taskSetService->taskSetContainsTask($taskSet, $task)) {
+            $taskSetService->addTaskToSet($task, $taskSet);
         }
     }
 }
