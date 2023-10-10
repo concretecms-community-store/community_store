@@ -613,7 +613,7 @@ class Installer
         $taskSetService = $app->make(TaskSetService::class);
         $taskSet = $taskSetService->getByHandle('community_store');
         if ($taskSet === null) {
-            $taskSet = $taskSetService->add('community_store', t('Community Store', $package));
+            $taskSet = $taskSetService->add('community_store', t('Community Store'), $package);
         }
         $task = $em->getRepository(Task::class)->findOneByHandle('auto_update_quantities_from_variations');
         if ($task === null) {
