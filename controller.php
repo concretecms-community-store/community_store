@@ -1,26 +1,29 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
-use Concrete\Core\Package\Package;
-use Concrete\Core\Page\Template as PageTemplate;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
-use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Command\Task\Manager as TaskManager;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Route;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\DoctrineORMEventsSubscriber;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
+use Doctrine\ORM\EntityManagerInterface;
 use Whoops\Exception\ErrorException;
 
 class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.6.1-alpha1';
+    protected $pkgVersion = '2.6.1-alpha2';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -64,6 +67,8 @@ class Controller extends Package
         Installer::createDDFileset($pkg);
         Installer::installOrderStatuses($pkg);
         Installer::installDefaultTaxClass($pkg);
+        Installer::installJobs();
+        Installer::installTasks();
     }
 
     public function install()
@@ -118,7 +123,7 @@ class Controller extends Package
             parent::upgrade();
         }
 
-        Installer::upgrade($pkg);
+        Installer::upgrade($pkg, self::$upgradingFromVersion);
         $this->app->clearCaches();
     }
 
@@ -175,6 +180,7 @@ class Controller extends Package
         $this->registerHelpers();
         $this->registerRoutes();
         $this->registerCategories();
+        $this->registerEventSubscribers();
 
         $version = $this->getPackageVersion();
 
@@ -247,8 +253,16 @@ class Controller extends Package
             try {
                 $app = $this->app->make('console');
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
-            } catch (Exception $e) {
+                $app->add(new Src\CommunityStore\Console\Command\AutoUpdateQuantitiesFromVariations());
+            } catch (\Exception $e) {
             }
+        }
+
+        if (class_exists(TaskManager::class)) {
+            $manager = $this->app->make(TaskManager::class);
+            $manager->extend('auto_update_quantities_from_variations', function () {
+                return $this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\AutoUpdateQuantitiesFromVariations::class);
+            });
         }
     }
 
@@ -324,5 +338,12 @@ class Controller extends Package
                 return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
             }
         );
+    }
+
+    private function registerEventSubscribers()
+    {
+        $subscriber = $this->app->make(DoctrineORMEventsSubscriber::class);
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $entityManager->getEventManager()->addEventSubscriber($subscriber);
     }
 }
