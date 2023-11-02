@@ -211,6 +211,8 @@ class Checkout extends PageController
             $this->set('orderNotesEnabled', Config::get('community_store.orderNotesEnabled'));
             $this->set('shippingInstructions', Cart::getShippingInstructions());
 
+            $this->set('paymentErrors', Session::get('paymentErrors'));
+
             $this->requireAsset('javascript', 'jquery');
             $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
             $this->addFooterItem($js);
@@ -340,11 +342,11 @@ class Checkout extends PageController
             $payment = $pm->submitPayment();
             if (1 == $payment['error']) {
                 $errors = $payment['errorMessage'];
-                Session::set('paymentErrors', $errors);
+                $this->flash('paymentErrors', $errors);
                 if ($guest) {
-                    return Redirect::to($langpath . '/checkout/failed/1#payment');
+                    return Redirect::to($langpath . '/checkout/1');
                 } else {
-                    return Redirect::to($langpath . '/checkout/failed#payment');
+                    return Redirect::to($langpath . '/checkout/');
                 }
             } else {
                 $transactionReference = $payment['transactionReference'];

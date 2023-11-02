@@ -22,6 +22,10 @@ $csm = $app->make('cs/helper/multilingual');
 
         <div class="store-checkout-form-shell col-md-8 clearfix mb-4">
 
+            <?php if (isset($paymentErrors) && $paymentErrors) { ?>
+                <p class="alert alert-danger text-center"><strong><?= h($paymentErrors); ?></strong></p>
+            <?php } ?>
+
             <?php
             if ($customer->isGuest() && ($requiresLogin || $guestCheckout == 'off' || ($guestCheckout == 'option' && !$guest))) {
                 ?>
@@ -59,7 +63,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 </div>
             <?php } else { ?>
-                <form class="store-checkout-form-group store-active-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-billing" action="">
+                <form class="store-checkout-form-group store-active-form-group " id="store-checkout-form-group-billing" action="">
                     <?= $token->output('community_store'); ?>
                     <div class="store-checkout-form-group-body">
 
@@ -189,7 +193,7 @@ $csm = $app->make('cs/helper/multilingual');
                         </div>
 
                         <?php if ($orderChoicesEnabled) { ?>
-                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" data-yes-value="<?= t('Yes');?>" class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>">
+                            <div id="store-checkout-form-group-other-attributes" data-no-value="<?= t('No');?>" data-yes-value="<?= t('Yes');?>" class="store-checkout-form-group ">
 
                                 <div class="">
                                     <?php foreach ($orderChoicesAttList as $ak) { ?>
@@ -271,7 +275,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 </form>
                 <?php if ($shippingEnabled) { ?>
-                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping">
+                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping">
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping Address") ?></h2>
@@ -375,7 +379,7 @@ $csm = $app->make('cs/helper/multilingual');
                         </div>
                     </form>
 
-                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-shipping-method">
+                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping-method">
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>
@@ -416,7 +420,7 @@ $csm = $app->make('cs/helper/multilingual');
                 <?php } ?>
 
                 <?php if (Config::get('community_store.vat_number')) { ?>
-                    <form class="store-checkout-form-group <?= isset($paymentErrors) ? 'store-checkout-form-group-complete' : '';?>" id="store-checkout-form-group-vat">
+                    <form class="store-checkout-form-group " id="store-checkout-form-group-vat">
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("VAT Number") ?></h2>
