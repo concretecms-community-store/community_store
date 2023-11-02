@@ -395,7 +395,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             $query->andWhere('pFeatured = 0');
         }
         if ($this->manufacturer) {
-            $query->andWhere("pManufacturer = ?")->setParameter($paramcount++, $this->manufacturer);
+            $query->andWhere("pManufacturer = :pManufacturer")->setParameter('pManufacturer', $this->manufacturer);
         }
         if ($this->saleOnly) {
             $query->andWhere("pSalePrice is not null");
@@ -420,7 +420,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
 
         if ($this->search) {
-            $query->andWhere('pName like ?')->setParameter($paramcount++, '%' . $this->search . '%')->orWhere('pSKU like ?')->setParameter($paramcount++, '%' . $this->search . '%');
+            $query->andWhere('pName like :search')->setParameter(':search', '%' . $this->search . '%')->orWhere('pSKU like :searchsku')->setParameter('searchsku', '%' . $this->search . '%');
         }
 
         $query->leftJoin('p', 'CommunityStoreProductSearchIndexAttributes', 'csi', 'p.pID = csi.pID');
