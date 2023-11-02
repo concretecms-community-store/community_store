@@ -552,7 +552,6 @@ class ProductVariation
                         'pvDisabled' => 0,
                          true, ]
                     );
-                    $product->getVariations()->add($variation);
 
                     foreach ($optioncombo as $optionvalue) {
                         $option = ProductOptionItem::getByID($optionvalue);
@@ -670,6 +669,7 @@ class ProductVariation
         $variation->setVariationWidth($data['pvWeight']);
         $variation->setVariationPackageData(isset($data['pvPackageData']) ? $data['pvPackageData'] : '');
         $variation->setVariationSort($data['pvSort']);
+        $product->getVariations()->add($variation);
         $variation->save($persistonly);
 
         return $variation;
