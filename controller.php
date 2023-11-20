@@ -23,7 +23,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.6.1-alpha2';
+    protected $pkgVersion = '2.6.1';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
