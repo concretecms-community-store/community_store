@@ -206,7 +206,11 @@ $csm = $app->make('cs/helper/multilingual');
                                                      if ($order) {
                                                          $cv->setValue($order->getAttributeValueObject($ak));
                                                      }
-                                                     $fieldoutput = $cv->renderControl();
+                                                     ob_start();
+                                                     $fieldoutput1 = $cv->renderControl();
+                                                     $fieldoutput2 = ob_get_contents();
+                                                     ob_end_clean();
+                                                     $fieldoutput = $fieldoutput1 === null ? $fieldoutput2 : $fieldoutput1;
                                                      if ($ak->isRequired()) {
                                                          $fieldoutput = str_replace('<input', '<input required ', $fieldoutput);
                                                          $fieldoutput = str_replace('<select', '<select required ', $fieldoutput);
