@@ -4,6 +4,8 @@ namespace Concrete\Package\CommunityStore;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Command\Task\Manager as TaskManager;
+use Concrete\Core\Database\EntityManager\Provider\ProviderAggregateInterface;
+use Concrete\Core\Database\EntityManager\Provider\StandardPackageProvider;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Page\Page;
@@ -19,7 +21,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
 use Doctrine\ORM\EntityManagerInterface;
 use Whoops\Exception\ErrorException;
 
-class Controller extends Package
+class Controller extends Package implements ProviderAggregateInterface
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
@@ -37,7 +39,7 @@ class Controller extends Package
 
     /**
      * @var string
-     */    
+     */
     private static $upgradingFromVersion = '';
 
     public function getPackageDescription()
@@ -100,7 +102,7 @@ class Controller extends Package
         self::$upgradingFromVersion = $packageEntity === null ? '' : (string) $packageEntity->getPackageVersion();
         parent::upgradeCoreData();
     }
-    
+
     public function upgrade()
     {
         if (self::$upgradingFromVersion !== '' && version_compare(self::$upgradingFromVersion, '2.6.0') < 0) {
@@ -205,7 +207,7 @@ class Controller extends Package
             ]
         );
 
-        $select2 =  $al->getAssetGroup('select2');
+        $select2 = $al->getAssetGroup('select2');
 
         if (!$select2) {
             $al->register('css', 'select2', 'css/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
@@ -316,9 +318,9 @@ class Controller extends Package
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
             var CHECKOUTSCROLLOFFSET = " . Config::get('community_store.checkout_scroll_offset', 0) . ";
             var CURRENCYCODE = '" . (Config::get('community_store.currency') ? Config::get('community_store.currency') : '') . "';
-            var CURRENCYSYMBOL = '" . Config::get('community_store.symbol')  . "';
-            var CURRENCYDECIMAL = '" . Config::get('community_store.whole')  . "';
-            var CURRENCYGROUP = '" . Config::get('community_store.thousand')   . "';
+            var CURRENCYSYMBOL = '" . Config::get('community_store.symbol') . "';
+            var CURRENCYDECIMAL = '" . Config::get('community_store.whole') . "';
+            var CURRENCYGROUP = '" . Config::get('community_store.thousand') . "';
         </script>
         ";
     }
@@ -345,5 +347,32 @@ class Controller extends Package
         $subscriber = $this->app->make(DoctrineORMEventsSubscriber::class);
         $entityManager = $this->app->make(EntityManagerInterface::class);
         $entityManager->getEventManager()->addEventSubscriber($subscriber);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Database\EntityManager\Provider\ProviderAggregateInterface::getEntityManagerProvider()
+     */
+    public function getEntityManagerProvider()
+    {
+        $locations = [
+            'src/Concrete/Entity' => 'Concrete\Package\CommunityStore\Entity',
+        ];
+        foreach ([
+            'Discount',
+            'Group',
+            'Manufacturer',
+            'Multilingual',
+            'Order',
+            'Payment',
+            'Product',
+            'Shipping',
+            'Tax',
+        ] as $chunk) {
+            $locations['src/CommunityStore/' . $chunk] = 'Concrete\Package\CommunityStore\Src\CommunityStore\\' . $chunk;
+        }
+
+        return new StandardPackageProvider($this->app, $this, $locations);;
     }
 }
