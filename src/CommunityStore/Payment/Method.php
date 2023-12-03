@@ -165,7 +165,9 @@ class Method extends Controller
         $method = $em->find(get_class(), $pmID);
 
         if ($method) {
-            $method->setMethodController();
+            if ($method->setMethodController() === false) {
+                return false;
+            }
         }
 
         return ($method instanceof self) ? $method : false;
@@ -177,7 +179,9 @@ class Method extends Controller
         $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
-            $method->setMethodController();
+            if ($method->setMethodController() === false) {
+                return false;
+            }
         }
 
         return ($method instanceof self) ? $method : false;
@@ -193,15 +197,27 @@ class Method extends Controller
         return $dir;
     }
 
+    /**
+     * @return bool returns false in case the package/method controller doesn't exist (anymore), true otherwise
+     */
     protected function setMethodController()
     {
         $app = Application::getFacadeApplication();
 
         $th = $app->make("helper/text");
         $pkg = $app->make('Concrete\Core\Package\PackageService')->getByID($this->pkgID);
+        if ($pkg === null) {
+            return false;
+        }
         $namespace = "Concrete\\Package\\" . $th->camelcase($pkg->getPackageHandle()) . "\\Src\\CommunityStore\\Payment\\Methods\\" . $th->camelcase($this->pmHandle);
         $className = $th->camelcase($this->pmHandle) . "PaymentMethod";
-        $this->methodController = $app->make($namespace . '\\' . $className);
+        $fullyQualifiedClassName = $namespace . '\\' . $className;
+        if (!class_exists($fullyQualifiedClassName)) {
+            return false;
+        }
+        $this->methodController = $app->make($fullyQualifiedClassName);
+
+        return true;
     }
 
     public function getMethodController()
@@ -239,11 +255,14 @@ class Method extends Controller
         } else {
             $methods = $em->getRepository(get_class())->findBy([], ['pmSortOrder' => 'ASC']);
         }
+        $goodMethods = [];
         foreach ($methods as $method) {
-            $method->setMethodController();
+            if ($method->setMethodController() !== false) {
+                $goodMethods[] = $method;
+            }
         }
 
-        return $methods;
+        return $goodMethods;
     }
 
     public static function getEnabledMethods()
@@ -363,7 +382,7 @@ class Method extends Controller
      *
      * If the external URL should be invoked with a POST (whose body is specified in the redirectForm() method and redirect_form element), return false.
      * If the external URL should be invoked with GET, return true.
-     * 
+     *
      * @return bool
      */
     public function isExternalActionGET()
