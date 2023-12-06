@@ -27,9 +27,6 @@ class Overview extends DashboardPageController {
         $factory = new PaginationFactory($this->app->make(Request::class));
         $paginator = $factory->createPaginationObject($orderList);
 
-        $orders = new OrderList();
-        $orders->setItemsPerPage(10);
-
         $pagination = $paginator->renderDefaultView();
         $this->set('orders', $paginator->getCurrentPageResults());
         $this->set('pagination', $pagination);

@@ -224,7 +224,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 <?php
                                                 if ($automaticProductQuantities) {
                                                     ?>
-                                                    $('#main-product-stock-level').addClass('hidden d-none');;
+                                                    $('#main-product-stock-level').addClass('hidden d-none');
                                                     <?php
                                                 }
                                                 ?>
