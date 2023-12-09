@@ -1678,9 +1678,11 @@ class Product
     {
         $packages = [];
 
+        $multiplePackages = Config::get('community_store.multiplePackages');
+
         $packagedata = $this->getPackageData();
 
-        if ($packagedata) {
+        if ($multiplePackages && $packagedata) {
             $lines = explode("\n", $packagedata);
 
             foreach ($lines as $line) {
@@ -1700,9 +1702,9 @@ class Product
         } else {
             $package = new StorePackage();
             $package->setWeight($this->getWeight());
-            $package->setWidth($this->getLength());
-            $package->setHeight($this->getWidth());
-            $package->setLength($this->getHeight());
+            $package->setWidth($this->getWidth());
+            $package->setHeight($this->getHeight());
+            $package->setLength($this->getLength());
 
             $packages[] = $package;
         }
