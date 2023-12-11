@@ -37,15 +37,16 @@ $csm = $app->make('cs/helper/multilingual');
                 ?>
                 <div class="store-shipping-method">
                     <div class="store-shipping-method-option radio">
-                        <label>
-                            <input type="radio" name="shippingMethod" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
-                            <div class="store-shipping-details d-inline-block">
+                        <label class="form-check">
+                            <input type="radio" name="shippingMethod" class="form-check-input" value="<?= $offer->getKey()?>"<?php if($offer->getKey() == $currentShippingID|| !$currentShippingID && $count++ == 0 ){echo " checked";}?>>
+                            <div class="store-shipping-details form-check-label">
                                 <?php $rate = $offer->getDiscountedRate(); ?>
-                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName', false, $method->getID()); ?> - <?= $rate > 0 ? Price::format($rate) : t('No Charge');?></p>
+                                <p class="store-shipping-details-label"><?= $csm->t($offer->getLabel(), 'shippingName', false, $method->getID()); ?> - <?= $rate > 0 ? Price::format($rate) : t('No Charge');?>
                                 <?php $details = $offer->getOfferDetails();
                                 if ($details) { ?>
-                                <p class="store-shipping-details-details"><?= $details; ?></p>
+                                <br /><small class="store-shipping-details-details"> <?= $details; ?></small>
                                 <?php } ?>
+                                </p>
                             </div>
                         </label>
                     </div>
