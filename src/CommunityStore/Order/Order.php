@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
@@ -41,7 +42,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
  * @ORM\Entity
  * @ORM\Table(name="CommunityStoreOrders")
  */
-class Order
+class Order implements ObjectInterface
 {
     use ObjectTrait;
     /**
