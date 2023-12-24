@@ -158,7 +158,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                             <?php $min = $product->getPriceMinimum(); ?>
                             <?php $max = $product->getPriceMaximum(); ?>
                             <div class="input-group col-md-6 col-sm-6 col-sm-6">
-                                <div class="input-group-addon"><?= Config::get('community_store.symbol'); ?></div>
+                                <div class="input-group-addon input-group-text"><?= Config::get('community_store.symbol'); ?></div>
                                 <input type="number" <?= $min ? 'min="' . $min . '"' : ''; ?>
                                     <?= $max ? 'max="' . $max . '"' : ''; ?> step="0.01"
                                        class="store-product-customer-price-entry-field form-control"
