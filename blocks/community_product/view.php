@@ -514,7 +514,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                                 $imgTitle = $imgObj->getTitle();
                             }
                             ?>
-                            <div class="store-product-primary-image ">
+                            <div class="store-product-primary-image mb-sm-5 mb-2">
                                 <a itemprop="image" href="<?= $imgObj->getRelativePath(); ?>"
                                    title="<?= h($imgObj->getTitle()); ?>"
                                    class="store-product-thumb text-center center-block">
@@ -529,7 +529,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                         $images = $product->getImagesObjects();
                         if (count($images) > 0) {
                             $loop = 1;
-                            echo '<div class="store-product-additional-images clearfix no-gutter">';
+                            echo '<div class="store-product-additional-images row">';
 
                             // This is only needed if no thumbnail type was defined or for some reason
                             // we need to fallback on the legacy thumbnailer.
@@ -546,7 +546,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                                         $imgTitle = $secondaryImage->getTitle();
                                     }
                                     ?>
-                                    <div class="store-product-additional-image col-md-6 col-sm-6"><a
+                                    <div class="store-product-additional-image col-md-6 col-sm-6 mb-sm-5 mb-2"><a
                                                 href="<?= $secondaryImage->getRelativePath(); ?>"
                                                 title="<?= h($product->getName()); ?>"
                                                 class="store-product-thumb text-center center-block">
@@ -558,7 +558,7 @@ if (isset($product) && is_object($product) && $product->isActive()) {
                                 }
 
                                 if ($loop > 0 && 0 == $loop % 2 && count($images) > $loop) {
-                                    echo '</div><div class="clearfix no-gutter">';
+                                    echo '</div><div class="store-product-additional-images row">';
                                 }
                                 ++$loop;
                             }
