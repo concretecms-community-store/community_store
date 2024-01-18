@@ -51,7 +51,7 @@ class Orders extends DashboardPageController
         }
 
         if ($paymentMethodFilter) {
-            $orderList->setPaymentMethods($paymentMethodFilter);
+            $orderList->setPaymentMethod($paymentMethodFilter);
         }
 
         if ($paymentStatusFilter) {
