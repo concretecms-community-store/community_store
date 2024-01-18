@@ -85,6 +85,11 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     private $cID = null;
 
     /**
+     * @var int[]
+     */
+    private $orderIDs = [];
+
+    /**
      * @param int $limit
      */
     public function setLimit($limit = 0)
@@ -194,6 +199,19 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     public function setCustomerID($cID)
     {
         $this->cID = is_numeric($cID) ? (int) $cID : null;
+    }
+
+    /**
+     * @param int|int[] $value
+     */
+    public function setOrderIDs($value)
+    {
+        $this->orderIDs = [];
+        foreach ((is_array($value) ? $value : [$value]) as $item) {
+            if (is_numeric($item)) {
+                $this->orderIDs[] = (int) $item;
+            }
+        }
     }
 
     /**
@@ -344,12 +362,16 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
             $this->query->andWhere('o.pmID = ?')->setParameter($paramcount++, $this->paymentMethod);
         }
 
+        if ($this->orderIDs !== []) {
+            $cn = $this->query->getConnection();
+            $this->query->andWhere('o.oID IN [?]')->setParameter($paramcount++, $this->orderIDs, $cn::PARAM_INT_ARRAY);
+        }
+
         $this->query->andWhere('o.temporaryRecordCreated is null');
 
         $this->query->leftJoin('o', 'CommunityStoreOrderSearchIndexAttributes', 'csi', 'o.oID = csi.oID');
         $this->query->orderBy('oID', 'DESC');
 
-        throw new \Concrete\Core\Error\UserMessageException($this->query->getSQL());
         return $this->query;
     }
 
