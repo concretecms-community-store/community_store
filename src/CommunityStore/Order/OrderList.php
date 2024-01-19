@@ -245,12 +245,11 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     {
         $paramcount = 0;
 
+        $db = $query->getConnection();
         if ($this->search !== '') {
             $this->query->where('o.oID = ?')->setParameter($paramcount++, is_numeric($this->search) ? (int) $this->search : 0);
             $this->query->orWhere('transactionReference = ?')->setParameter($paramcount++, $this->search);
 
-            $app = Application::getFacadeApplication();
-            $db = $app->make('database')->connection();
             $matchingOrders = $db->query("SELECT DISTINCT(oID) FROM CommunityStoreOrderAttributeValues csoav INNER JOIN atDefault av ON csoav.avID = av.avID WHERE av.value LIKE ?", ['%' . $this->search . '%']);
 
             $orderIDs = [];
@@ -264,8 +263,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         }
 
         if ($this->status !== '') {
-            $app = Application::getFacadeApplication();
-            $db = $app->make('database')->connection();
             $matchingOrders = $db->query("SELECT oID FROM CommunityStoreOrderStatusHistories t1
                                             WHERE oshStatus = ? and
                                                 t1.oshID = (SELECT MAX(t2.oshID)
@@ -290,8 +287,6 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
 
 
         if ($this->paymentStatus !== '') {
-            $app = Application::getFacadeApplication();
-            $db = $app->make('database')->connection();
             switch ($this->paymentStatus) {
                 case 'paid':
                     $this->query->andWhere('oPaid is not null and oRefunded is null');
@@ -363,8 +358,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
         }
 
         if ($this->orderIDs !== []) {
-            $cn = $this->query->getConnection();
-            $this->query->andWhere('o.oID IN [?]')->setParameter($paramcount++, $this->orderIDs, $cn::PARAM_INT_ARRAY);
+            $this->query->andWhere('o.oID IN (?)')->setParameter($paramcount++, $this->orderIDs, $db::PARAM_INT_ARRAY);
         }
 
         $this->query->andWhere('o.temporaryRecordCreated is null');
