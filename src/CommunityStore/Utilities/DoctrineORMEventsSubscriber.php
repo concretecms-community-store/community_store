@@ -63,7 +63,7 @@ class DoctrineORMEventsSubscriber implements EventSubscriber
                 foreach ($products as $product) {
                     if (!in_array($product, $entityDeletions, true) && $product->hasVariations()) {
                         if ($this->service->update($product)) {
-                            $uow->computeChangeSet($class, $product);
+                            $uow->recomputeSingleEntityChangeSet($class, $product);
                         }
                     }
                 }
