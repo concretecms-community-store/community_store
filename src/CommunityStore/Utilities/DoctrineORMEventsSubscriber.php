@@ -35,38 +35,41 @@ class DoctrineORMEventsSubscriber implements EventSubscriber
 
     public function onFlush(OnFlushEventArgs $e)
     {
-        if ($this->service->isEnabled()) {
-            $em = $e->getEntityManager();
-            $uow = $em->getUnitOfWork();
-            $products = [];
-            $entityDeletions = $uow->getScheduledEntityDeletions();
-            foreach ([
-                $uow->getScheduledEntityInsertions(),
-                $uow->getScheduledEntityUpdates(),
-                $entityDeletions,
-            ] as $entities) {
-                foreach ($entities as $entity) {
-                    if ($entity instanceof Product) {
-                        if (!in_array($entity, $products, true)) {
-                            $products[] = $entity;
-                        }
-                    } elseif ($entity instanceof ProductVariation) {
-                        $product = $entity->getProduct();
-                        if (!in_array($product, $products, true)) {
-                            $products[] = $product;
-                        }
-                    }
+        if (!$this->service->isEnabled()) {
+            return;
+        }
+        $em = $e->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $products = [];
+        $entityDeletions = $uow->getScheduledEntityDeletions();
+        foreach ([
+            $uow->getScheduledEntityInsertions(),
+            $uow->getScheduledEntityUpdates(),
+            $entityDeletions,
+        ] as $entities) {
+            foreach ($entities as $entity) {
+                if ($entity instanceof Product) {
+                    $product = $entity;
+                } elseif ($entity instanceof ProductVariation) {
+                    $product = $entity->getProduct();
+                } else {
+                    continue;
+                }
+                if (!$product->hasVariations() || in_array($product, $entityDeletions, true)) {
+                    continue;
+                }
+                if (!in_array($product, $products, true)) {
+                    $products[] = $product;
                 }
             }
-            if ($products !== []) {
-                $class = $em->getClassMetadata(Product::class);
-                foreach ($products as $product) {
-                    if (!in_array($product, $entityDeletions, true) && $product->hasVariations()) {
-                        if ($this->service->update($product)) {
-                            $uow->computeChangeSet($class, $product);
-                        }
-                    }
-                }
+        }
+        if ($products === []) {
+            return;
+        }
+        $class = $em->getClassMetadata(Product::class);
+        foreach ($products as $product) {
+            if ($this->service->update($product)) {
+                $uow->recomputeSingleEntityChangeSet($class, $product);
             }
         }
     }
