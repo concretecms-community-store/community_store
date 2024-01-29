@@ -1,11 +1,16 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-use \Concrete\Core\Support\Facade\Url;
-use \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup\Criteria;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @var string $actionDescription
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store\Settings\Shipping $controller
  */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -13,38 +18,41 @@ $addViews = ['add', 'add_method', 'edit'];
 $editViews = ['edit'];
 
 if (in_array($controller->getAction(), $addViews)) {
-/// Add Shipping Method View
+    // Add Shipping Method View
+    /**
+     * @var Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType $smt
+     * @var Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod|null $sm
+     */
+    if (!isset($sm) || !is_object($sm)) {
+        $sm = null;
+    }
     ?>
-
-
     <form action="<?= Url::to('/dashboard/store/settings/shipping', 'add_method') ?>" method="post">
         <?= $token->output('community_store'); ?>
         <div class="row">
             <div class="col-md-12 col-md-12">
-                <?php //echo var_dump($smt);
-                ?>
                 <h3><?= $smt->getMethodTypeController()->getShippingMethodTypeName(); ?></h3>
                 <?= $form->hidden('shippingMethodTypeID', $smt->getShippingMethodTypeID()); ?>
-                <?php if (isset($sm) && is_object($sm)) { ?>
+                <?php if ($sm !== null) { ?>
                     <?= $form->hidden('shippingMethodID', $sm->getID()); ?>
                 <?php } ?>
                 <div class="row">
                     <div class="col-md-12 col-sm-6">
                         <div class="form-group">
                             <?= $form->label('methodName', t("Method Name")); ?>
-                            <?= $form->text('methodName', isset($sm) && is_object($sm) ? $sm->getName() : ''); ?>
+                            <?= $form->text('methodName', $sm !== null ? $sm->getName() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodEnabled', t("Enabled")); ?>
-                            <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], isset($sm) && is_object($sm) ? $sm->isEnabled() : ''); ?>
+                            <?= $form->select('methodEnabled', [true => t('Yes'), false => t('No')], $sm !== null ? $sm->isEnabled() : ''); ?>
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-3">
                         <div class="form-group">
                             <?= $form->label('methodSortOrder', t("Sort Order")); ?>
-                            <?= $form->text('methodSortOrder', isset($sm) && is_object($sm) ? $sm->getSortOrder() : ''); ?>
+                            <?= $form->text('methodSortOrder', $sm !== null ? $sm->getSortOrder() : ''); ?>
                         </div>
                     </div>
                 </div>
@@ -57,7 +65,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                 <select multiple="multiple" name="methodUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('All User Groups'); ?>">
                                     <?php
                                     foreach ($allGroupList as $ugkey => $uglabel) { ?>
-                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (isset($sm) && is_object($sm) ? $sm->getUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, ($sm !== null ? $sm->getUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -70,13 +78,56 @@ if (in_array($controller->getAction(), $addViews)) {
                                 <select multiple="multiple" name="methodExcludedUserGroups[]" id="groupselect" class="selectize" style="width: 100%;" placeholder="<?= t('None'); ?>">
                                     <?php
                                     foreach ($allGroupList as $ugkey => $uglabel) { ?>
-                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, (isset($sm) && is_object($sm) ? $sm->getExcludedUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                        <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, ($sm !== null ? $sm->getExcludedUserGroups() : [])) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $form->label('methodProductGroupsCriteria', t('Applicability based on product groups')) ?>
+                            <?= $form->select(
+                                'methodProductGroupsCriteria',
+                                [
+                                    0 => t("Don't care"),
+                                    Criteria::EXCLUDE_ANY_PRODUCT_ANY_GROUP => t("Don't offer this shipping method if any product is in any of the following groups"),
+                                    Criteria::EXCLUDE_ALL_PRODUCTS_ANY_GROUP => t("Don't offer this shipping method if all the products are any of the following groups"),
+                                    Criteria::ONLYIF_ANY_PRODUCT_ANY_GROUP => t("Only offer this shipping method if any product is in any of the following groups"),
+                                    Criteria::ONLYIF_ALL_PRODUCTS_ANY_GROUP => t("Only offer this shipping method if all the products are in any of the following groups"),
+                                ],
+                                $sm === null ? 0 : (int) $sm->getProductGroupsCriteria(),
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $form->label('methodProductGroups', t('Product groups')) ?>
+                            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                                <select multiple="multiple" name="methodProductGroups[]" id="methodProductGroups" class="selectize" style="width: 100%;" placeholder="<?= t('*** Please Select') ?>">
+                                    <?php
+                                    $selectedProductGroupIDs = $sm === null ? [] : $sm->getProductGroupIDs();
+                                    $em = app(EntityManagerInterface::class);
+                                    foreach ($em->getRepository(Group::class)->findBy([], ['groupName' => 'ASC']) as $productGroup) {
+                                        /** @var Group $productGroup */
+                                        $selected = in_array($productGroup->getID(), $selectedProductGroupIDs);
+                                        ?>
+                                        <option value="<?= $productGroup->getID() ?>"<?= $selected ? ' selected="selected"' : ''?>><?= h($productGroup->getGroupName()) ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
                     $(document).ready(function() {
                         $('.selectize').selectize({
@@ -84,6 +135,12 @@ if (in_array($controller->getAction(), $addViews)) {
                             selectOnTab: true
                         });
                         $('.selectize').removeClass('form-control');
+                        $('#methodProductGroupsCriteria')
+                            .on('change', function() {
+                                $('#methodProductGroups').closest('.row').toggle(parseInt($('#methodProductGroupsCriteria').val()) ? true : false);
+                            })
+                            .trigger('change')
+                        ;
                     });
                 </script>
 
@@ -94,14 +151,16 @@ if (in_array($controller->getAction(), $addViews)) {
                             <?php
                             $editor = $app->make('editor');
                             $editor->getPluginManager()->deselect(array('autogrow'));
-                            echo $editor->outputStandardEditor('methodDetails', isset($sm) && is_object($sm) ? $sm->getDetails() : '');
+                            echo $editor->outputStandardEditor('methodDetails', $sm !== null ? $sm->getDetails() : '');
                             ?>
                         </div>
                     </div>
 
                 </div>
                 <hr>
-                <?php isset($smt) ? $smt->renderDashboardForm($sm) : false; ?>
+                <?php
+                $smt->renderDashboardForm($sm);
+                ?>
             </div>
         </div>
 

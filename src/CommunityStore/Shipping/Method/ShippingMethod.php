@@ -1,14 +1,19 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method;
 
-use Concrete\Core\User\User;
-use Concrete\Core\View\View;
-use Doctrine\ORM\Mapping as ORM;
-use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
+use Concrete\Core\Support\Facade\Session;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup\Criteria;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethodType as ShippingMethodType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping as ORM;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * @ORM\Entity
@@ -58,6 +63,16 @@ class ShippingMethod
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $smSortOrder;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $smProductGroupsCriteria;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $smProductGroups;
 
     protected $smOfferKey;
 
@@ -216,6 +231,9 @@ class ShippingMethod
         return false;
     }
 
+    /**
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod[]
+     */
     public static function getAvailableMethods($methodTypeID = null)
     {
         $em = dbORM::entityManager();
@@ -294,6 +312,9 @@ class ShippingMethod
         $em->flush();
     }
 
+    /**
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingMethod[]
+     */
     public static function getEligibleMethods()
     {
         $allMethods = self::getAvailableMethods();
@@ -301,6 +322,8 @@ class ShippingMethod
 
         $u = new User();
         $userGroups = $u->getUserGroups();
+        $criteriaService = null;
+        $products = null;
 
         foreach ($allMethods as $method) {
             $includedGroups = $method->getUserGroups();
@@ -315,10 +338,26 @@ class ShippingMethod
             }
 
             if ($method->getShippingMethodTypeMethod()->isEligible()) {
+                $criteria = $method->getProductGroupsCriteria();
+                if ($criteria) {
+                    if ($criteriaService === null) {
+                        $criteriaService = app(Criteria::class);
+                    }
+                    if ($products === null) {
+                        $em = app(EntityManagerInterface::class);
+                        $products = [];
+                        foreach (Cart::getCart() as $entry) {
+                            $products[] = $em->find(Product::class, $entry['product']['pID']);
+                        }
+                    }
+                    if (!$criteriaService->check($criteria, $products, $method->getProductGroupIDs())) {
+                        continue;
+                    }
+                }
                 $eligibleMethods[] = $method;
             }
         }
-        
+
         return $eligibleMethods;
     }
 
@@ -388,5 +427,64 @@ class ShippingMethod
     public function getPackageHandle()
     {
         return Application::getFacadeApplication()->make('Concrete\Core\Package\PackageService')->getByID($this->getShippingMethodType()->getPackageID())->getPackageHandle();
+    }
+
+    /**
+     * @param int|null $value
+     *
+     * @return $this
+     *
+     * @see \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup\Criteria and its constants
+     */
+    public function setProductGroupsCriteria($value)
+    {
+        $this->smProductGroupsCriteria = empty($value) ? null : (int) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     *
+     * @see \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup\Criteria and its constants
+     */
+    public function getProductGroupsCriteria()
+    {
+        return $this->smProductGroupsCriteria? (int) $this->smProductGroupsCriteria : null;
+    }
+
+    /**
+     * @param int[]|\Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group[] $value
+     *
+     * @return $this
+     */
+    public function setProductGroups(array $value)
+    {
+        $ids = [];
+        foreach ($value as $item) {
+            if ($item instanceof Group) {
+                $ids[] = (int) $item->getID();
+            } elseif (is_numeric($item)) {
+                $ids[] = (int) $item;
+            }
+        }
+        $this->smProductGroups = implode(',', array_filter(array_unique($ids, SORT_NUMERIC)));
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getProductGroupIDs()
+    {
+        if (empty($this->smProductGroups)) {
+            return [];
+        }
+
+        return array_map(
+            'intval',
+            preg_split('/,/', (string) $this->smProductGroups, -1, PREG_SPLIT_NO_EMPTY)
+        );
     }
 }
