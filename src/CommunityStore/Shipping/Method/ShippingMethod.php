@@ -484,7 +484,7 @@ class ShippingMethod
 
         return array_map(
             'intval',
-            preg_split('/,/', (string) $this->smProductGroups, -1, PREG_SPLIT_NO_EMPTY)
+            preg_split('/,/', $this->smProductGroups, -1, PREG_SPLIT_NO_EMPTY)
         );
     }
 }
