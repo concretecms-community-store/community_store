@@ -61,13 +61,13 @@ class Criteria
             return true;
         }
         $products = $this->resolveProducts($products);
-        $groups = $this->resolveGroups($groups);
+        $groupIDs = $this->resolveGroupIDs($groups);
         $numProductsInGroups = 0;
         $numProductsNotInGroups = 0;
         foreach ($products as $product) {
             foreach ($product->getGroups() as $productGroup) {
                 /** @var \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductGroup $productGroup */
-                if (in_array($productGroup->getGroup(), $groups, true)) {
+                if (in_array((int) $productGroup->getGroup()->getID(), $groupIDs, true)) {
                     $numProductsInGroups++;
                     continue 2;
                 }
@@ -103,31 +103,34 @@ class Criteria
             } elseif (is_numeric($item)) {
                 $product = $this->em->find(Product::class, (int) $item);
             }
-            if ($product !== null && !in_array($product, $result, true)) {
-                $result[] = $product;
+            if ($product !== null) {
+                $result[$product->getID()] = $product;
             }
         }
 
-        return $result;
+        return array_values($result);
     }
 
     /**
      * @param int[]|\Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group[] $groups
      *
-     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Group\Group[];
+     * @return int[]
      */
-    protected function resolveGroups(array $groups)
+    protected function resolveGroupIDs(array $groups)
     {
         $result = [];
         foreach ($groups as $item) {
-            $group = null;
+            $id = null;
             if ($item instanceof Group) {
-                $group = $item;
+                $id = (int) $item->getID();
             } elseif (is_numeric($item)) {
                 $group = $this->em->find(Group::class, (int) $item);
+                if ($group !== null) {
+                    $id = (int) $group->getID();
+                }
             }
-            if ($group !== null && !in_array($group, $result, true)) {
-                $result[] = $group;
+            if ($id !== null && !in_array($id, $result, true)) {
+                $result[] = $id;
             }
         }
 
