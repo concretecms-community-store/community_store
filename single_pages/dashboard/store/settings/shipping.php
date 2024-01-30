@@ -89,7 +89,7 @@ if (in_array($controller->getAction(), $addViews)) {
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <?= $form->label('methodProductGroupsCriteria', t('Applicability based on product groups')) ?>
+                            <?= $form->label('methodProductGroupsCriteria', t('Shipping method offered based on product groups')) ?>
                             <?= $form->select(
                                 'methodProductGroupsCriteria',
                                 [
