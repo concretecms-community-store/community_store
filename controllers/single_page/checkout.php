@@ -449,8 +449,8 @@ class Checkout extends PageController
                 $notes = '';
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
-                    if (isset($data['notes'])) {
-                        $notes = $data['notes'];
+                    if (isset($data['store-checkout-notes'])) {
+                        $notes = $data['store-checkout-notes'];
                         Session::set('notes', $notes);
                     }
                     $address = Session::get('billing_address');
