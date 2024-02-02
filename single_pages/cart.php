@@ -173,7 +173,7 @@ if ($cart) {
                             <?php } ?>
 
                             <?php if ($quantityLabel) { ?>
-                                <div class="store-cart-qty-label input-group-addon"><?= $quantityLabel; ?></div>
+                                <div class="store-cart-qty-label input-group-addon input-group-text"><?= $quantityLabel; ?></div>
                             <?php } ?>
                             </span>
 
