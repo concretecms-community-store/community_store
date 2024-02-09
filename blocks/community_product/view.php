@@ -37,7 +37,6 @@ if (empty($product) || !$product->isActive()) {
 $communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'single_product']);
 $csm = $app->make('cs/helper/multilingual');
 
-$options = $product->getOptions();
 $variationLookup = $product->getVariationLookup();
 $variationData = $product->getVariationData();
 $availableOptionsids = $variationData['availableOptionsids'];
