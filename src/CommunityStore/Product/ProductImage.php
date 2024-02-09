@@ -93,12 +93,18 @@ class ProductImage
         return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['piSort' => 'ASC']);
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\File[]
+     */
     public static function getImageObjectsForProduct(Product $product)
     {
         $images = self::getImagesForProduct($product);
         $imageObjects = [];
         foreach ($images as $img) {
-            $imageObjects[] = File::getByID($img->getFileID());
+            $file = File::getByID($img->getFileID());
+            if ($file !== null) {
+                $imageObjects[] = $file;
+            }
         }
 
         return $imageObjects;

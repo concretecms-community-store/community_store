@@ -590,31 +590,29 @@ $isSellable = $product->isSellable();
                          */
                         $communityStoreImageHelper->setLegacyThumbnailCrop(true);
                         foreach ($images as $secondaryImage) {
-                            if (is_object($secondaryImage)) {
-                                $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage);
-                                $imgDescription = $secondaryImage->getDescription();
-                                if ($imgDescription) {
-                                    $imgTitle = $imgDescription;
-                                } else {
-                                    $imgTitle = $secondaryImage->getTitle();
-                                }
-                                ?>
-                                <div class="store-product-additional-image col-md-6 col-sm-6 mb-sm-5 mb-2">
-                                    <a
-                                        href="<?= $secondaryImage->getRelativePath() ?>"
-                                        title="<?= h($product->getName()) ?>"
-                                        class="store-product-thumb text-center center-block"
-                                    >
-                                        <img
-                                            class="img-responsive img-fluid"
-                                            src="<?= $thumb->src ?>"
-                                            title="<?= h($secondaryImage->getTitle()) ?>"
-                                            alt="<?= h($imgTitle) ?>"
-                                        />
-                                    </a>
-                                </div>
-                                <?php
+                            $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage);
+                            $imgDescription = $secondaryImage->getDescription();
+                            if ($imgDescription) {
+                                $imgTitle = $imgDescription;
+                            } else {
+                                $imgTitle = $secondaryImage->getTitle();
                             }
+                            ?>
+                            <div class="store-product-additional-image col-md-6 col-sm-6 mb-sm-5 mb-2">
+                                <a
+                                    href="<?= $secondaryImage->getRelativePath() ?>"
+                                    title="<?= h($product->getName()) ?>"
+                                    class="store-product-thumb text-center center-block"
+                                >
+                                    <img
+                                        class="img-responsive img-fluid"
+                                        src="<?= $thumb->src ?>"
+                                        title="<?= h($secondaryImage->getTitle()) ?>"
+                                        alt="<?= h($imgTitle) ?>"
+                                    />
+                                </a>
+                            </div>
+                            <?php
                             if ($loop > 0 && 0 == $loop % 2 && count($images) > $loop) {
                                 echo '</div><div class="store-product-additional-images row">';
                             }

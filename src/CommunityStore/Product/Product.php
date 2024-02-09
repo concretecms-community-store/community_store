@@ -1959,6 +1959,9 @@ class Product
         }
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\File[]
+     */
     public function getimagesobjects()
     {
         return ProductImage::getImageObjectsForProduct($this);
