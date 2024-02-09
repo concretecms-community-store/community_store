@@ -1,6 +1,31 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product|false $product
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var string $langpath
+ * @var bool $isWholesale
+ * @var Concrete\Core\Application\Application $app
+ * 
+ * When $product is a Product instance:
+ *
+ * @var bool|int|string|null $showProductName
+ * @var bool|int|string|null $showProductSKU
+ * @var bool|int|string|null $showProductPrice
+ * @var bool|int|string|null $showProductDescription
+ * @var bool|int|string|null $showManufacturer
+ * @var bool|int|string|null $showManufacturerDescription
+ * @var bool|int|string|null $showDimensions
+ * @var bool|int|string|null $showWeight
+ * @var bool|int|string|null $showGroups
+ * @var bool|int|string|null $showCartButton
+ * @var bool|int|string|null $showQuantity
+ * @var bool|int|string|null $showImage
+ * @var bool|int|string|null $showProductDetails
+ * @var string|false $btnText
+ */
+
 $communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'single_product']);
 $csm = $app->make('cs/helper/multilingual');
 

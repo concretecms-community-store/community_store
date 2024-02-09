@@ -994,7 +994,7 @@ class Product
     }
 
 	/**
-	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product|null
 	 */
     public static function getByID($pID)
     {
@@ -1014,7 +1014,7 @@ class Product
     }
 
 	/**
-	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product
+	 * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product|null
 	 */
     public static function getByCollectionID($cID, $allLocales = true)
     {
