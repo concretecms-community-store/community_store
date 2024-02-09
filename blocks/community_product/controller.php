@@ -83,6 +83,7 @@ class Controller extends BlockController
             $this->set('showWeight', $this->showWeight);
             $this->set('showGroups', $this->showGroups);
             $this->set('showCartButton', $this->showCartButton);
+            $this->set('showIsFeatured', $this->showIsFeatured);
             $this->set('showQuantity', $this->showQuantity);
             $this->set('showImage', $this->showImage);
             $this->set('showProductDetails', $this->showProductDetails);
