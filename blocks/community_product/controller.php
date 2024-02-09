@@ -19,7 +19,91 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "538";
     protected $btDefaultSet = 'community_store';
+
+    /**
+     * @var string|null
+     */
+    public $productLocation;
+
+    /**
+     * @var int|string|null|false
+     */
     public $pID = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductName;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductSKU;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showManufacturer;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showManufacturerDescription;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductDescription;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductDetails;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductPrice;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showWeight;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showImage;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showCartButton;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showIsFeatured;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showGroups;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showDimensions;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuantity;
+
+    /**
+     * @var string|null
+     */
+    public $btnText;
 
     public function getBlockTypeDescription()
     {
