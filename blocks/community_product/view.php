@@ -578,7 +578,8 @@ $isSellable = $product->isSellable();
                     <?php
                 }
                 $images = $product->getImagesObjects();
-                if (count($images) > 0) {
+                $numImages = count($images);
+                if ($numImages > 0) {
                     $loop = 1;
                     ?>
                     <div class="store-product-additional-images row">
@@ -592,11 +593,7 @@ $isSellable = $product->isSellable();
                         foreach ($images as $secondaryImage) {
                             $thumb = $communityStoreImageHelper->getThumbnail($secondaryImage);
                             $imgDescription = $secondaryImage->getDescription();
-                            if ($imgDescription) {
-                                $imgTitle = $imgDescription;
-                            } else {
-                                $imgTitle = $secondaryImage->getTitle();
-                            }
+                            $imgTitle = $imgDescription ?: $secondaryImage->getTitle();
                             ?>
                             <div class="store-product-additional-image col-md-6 col-sm-6 mb-sm-5 mb-2">
                                 <a
@@ -613,7 +610,7 @@ $isSellable = $product->isSellable();
                                 </a>
                             </div>
                             <?php
-                            if ($loop > 0 && 0 == $loop % 2 && count($images) > $loop) {
+                            if ($loop > 0 && 0 == $loop % 2 && $numImages > $loop) {
                                 echo '</div><div class="store-product-additional-images row">';
                             }
                             ++$loop;
