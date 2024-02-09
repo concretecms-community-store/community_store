@@ -32,6 +32,8 @@ if (empty($product) || !$product->isActive()) {
  * @var bool|int|string|null $showImage
  * @var bool|int|string|null $showProductDetails
  * @var string|false $btnText
+ * @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver
+ * @var Concrete\Core\Config\Repository\Repository $config
  */
 
 $communityStoreImageHelper = $app->make('cs/helper/image', ['resizingScheme' => 'single_product']);
@@ -83,7 +85,7 @@ $isSellable = $product->isSellable();
                             $target = $manufacturerPage->getAttribute('nav_target');
                         }
                         ?>
-                        <a class="store-product-manufacturer" target="<?= h($target) ?>" itemprop="brand" href="<?= URL::to($manufacturerPage) ?>"><?= h($manufacturer->getName()) ?></a>
+                        <a class="store-product-manufacturer" target="<?= h($target) ?>" itemprop="brand" href="<?= $urlResolver->resolve([$manufacturerPage]) ?>"><?= h($manufacturer->getName()) ?></a>
                         <?php
                     } else {
                         ?>
@@ -119,7 +121,7 @@ $isSellable = $product->isSellable();
                                     class="store-price-suggestion btn btn-default btn-secondary btn-sm"
                                     data-add-type="none"
                                     data-suggestion-value="<?= $suggestion ?>"
-                                ><?= Config::get('community_store.symbol') . $suggestion ?></a>
+                                ><?= $config->get('community_store.symbol') . $suggestion ?></a>
                                 <?php
                             }
                             ?>
@@ -135,7 +137,7 @@ $isSellable = $product->isSellable();
                     $max = $product->getPriceMaximum();
                     ?>
                     <div class="input-group col-md-6 col-sm-6 col-sm-6">
-                        <div class="input-group-addon input-group-text"><?= Config::get('community_store.symbol') ?></div>
+                        <div class="input-group-addon input-group-text"><?= $config->get('community_store.symbol') ?></div>
                         <input
                             type="number"
                             <?= $min ? " min=\"{$min}\"" : '' ?>
@@ -152,13 +154,13 @@ $isSellable = $product->isSellable();
                         <span class="store-min-max help-block">
                             <?php
                             if ($min) {
-                                echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'minimum %1$s%2$s', Config::get('community_store.symbol'), $min);
+                                echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'minimum %1$s%2$s', $config->get('community_store.symbol'), $min);
                             }
                             if ($max) {
                                 if ($min) {
                                     echo ', ';
                                 }
-                                echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'maximum %1$s%2$s', Config::get('community_store.symbol'), $max);
+                                echo t(/* i18n: %1$s is a currency symbol, %2$s is an amount */'maximum %1$s%2$s', $config->get('community_store.symbol'), $max);
                             }
                             ?>
                         </span>
@@ -187,7 +189,7 @@ $isSellable = $product->isSellable();
                     data-list-price="<?= $isWholesale && $wholesalePrice ? $price : '' ?>"
                     itemprop="offers" itemscope itemtype="http://schema.org/Offer"
                 >
-                    <meta itemprop="priceCurrency" content="<?= Config::get('community_store.currency') ?>" />
+                    <meta itemprop="priceCurrency" content="<?= $config->get('community_store.currency') ?>" />
                     <?php
                     $stockstatus = $product->isSellable() ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock';
                     if ($isWholesale && $wholesalePrice > 0 && $wholesalePrice != $activePrice) {
@@ -233,7 +235,7 @@ $isSellable = $product->isSellable();
                                 '%1$s to %2$s - %3$s%4$s',
                                 $pricetier->getFrom(),
                                 $pricetier->getTo(),
-                                Config::get('community_store.symbol'),
+                                $config->get('community_store.symbol'),
                                 $pricetier->getPrice()
                             );
                         }
@@ -258,7 +260,7 @@ $isSellable = $product->isSellable();
                 <div class="store-product-dimensions">
                     <strong><?= t("Dimensions") ?>:</strong>
                     <?= $product->getDimensions() ?>
-                    <?= Config::get('community_store.sizeUnit') ?>
+                    <?= $config->get('community_store.sizeUnit') ?>
                 </div>
                 <?php
             }
@@ -267,7 +269,7 @@ $isSellable = $product->isSellable();
                 <div class="store-product-weight">
                     <strong><?= t("Weight") ?>:</strong>
                     <?= $product->getWeight() ?>
-                    <?= Config::get('community_store.weightUnit') ?>
+                    <?= $config->get('community_store.weightUnit') ?>
                 </div>
                 <?php
             }

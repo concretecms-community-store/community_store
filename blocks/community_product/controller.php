@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
@@ -172,6 +174,8 @@ class Controller extends BlockController
             $this->set('showImage', $this->showImage);
             $this->set('showProductDetails', $this->showProductDetails);
             $this->set('btnText', isset($this->btnText) ? $this->btnText : false);
+            $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+            $this->set('config', $this->app->make(Repository::class));
         } else {
             $this->set('product', false);
         }
