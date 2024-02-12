@@ -96,30 +96,25 @@ class Shipping extends DashboardPageController
             if ($this->request->request->get('shippingMethodID')) {
                 //update
                 $shippingMethod = ShippingMethod::getByID($this->request->request->get('shippingMethodID'));
-                if ($shippingMethod) {
-
-
-                    $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
-                    $shippingMethodTypeMethod->update($this->request->request->all());
-                    $shippingMethod->update($this->request->request->get('methodName'),
-                                            $this->request->request->get('methodEnabled'),
-                                            $this->request->request->get('methodDetails'),
-                                            $sortOrder,
-                                            $this->request->request->get('methodUserGroups'),
-                                            $this->request->request->get('methodExcludedUserGroups')
-                    );
-                    $this->flash('success', t('Shipping Method Updated'));
-
-                    return Redirect::to('/dashboard/store/settings/shipping');
-                } else {
+                if (!$shippingMethod) {
                     return Redirect::to('/dashboard/store/settings/shipping');
                 }
+                $shippingMethodTypeMethod = $shippingMethod->getShippingMethodTypeMethod();
+                $shippingMethodTypeMethod->update($this->request->request->all());
+                $shippingMethod->update($this->request->request->get('methodName'),
+                                        $this->request->request->get('methodEnabled'),
+                                        $this->request->request->get('methodDetails'),
+                                        $sortOrder,
+                                        $this->request->request->get('methodUserGroups'),
+                                        $this->request->request->get('methodExcludedUserGroups')
+                );
+                $successMessage = t('Shipping Method Updated');
             } else {
                 //first we send the data to the shipping method type.
                 $shippingMethodType = ShippingMethodType::getByID($this->request->request->get('shippingMethodTypeID'));
                 $shippingMethodTypeMethod = $shippingMethodType->addMethod($this->request->request->all());
                 //make a shipping method that correlates with it.
-                ShippingMethod::add($shippingMethodTypeMethod,
+                $shippingMethod = ShippingMethod::add($shippingMethodTypeMethod,
                             $shippingMethodType,
                             $this->request->request->get('methodName'), true,
                             $this->request->request->get('methodDetails'),
@@ -127,10 +122,17 @@ class Shipping extends DashboardPageController
                             $this->request->request->get('methodUserGroups'),
                             $this->request->request->get('methodExcludedUserGroups')
                 );
-                $this->flash('success', t('Shipping Method Created'));
-
-                return Redirect::to('/dashboard/store/settings/shipping');
+                $successMessage = t('Shipping Method Created');
             }
+            $methodProductGroupsCriteria = (int) $this->request->request->get('methodProductGroupsCriteria');
+            $shippingMethod->setProductGroupsCriteria($methodProductGroupsCriteria);
+            if ($methodProductGroupsCriteria !== 0) {
+                $postedData = $this->request->request->all();
+                $shippingMethod->setProductGroups(isset($postedData['methodProductGroups']) ? $postedData['methodProductGroups'] : []);
+            }
+            $shippingMethod->save();
+            $this->flash('success', $successMessage);
+            return Redirect::to('/dashboard/store/settings/shipping');
         } else {
             if ($this->request->request->get('shippingMethodID')) {
                 $this->edit($this->request->request->get('shippingMethodID'));
