@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 
+use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -214,65 +215,36 @@ class Customer
      */
     public static function formatAddress($address)
     {
-        $array = [];
-        foreach ([
-            'address1',
-            'address2',
-            'city',
-            'state_province',
-            'postal_code',
-            'country',
-        ] as $field) {
-            $array[$field] = static::extractStringAttributeField($address, $field);
+
+        if (is_object($address)) {
+            $array = [];
+            foreach ([
+                         'address1',
+                         'address2',
+                         'city',
+                         'state_province',
+                         'postal_code',
+                         'country',
+                     ] as $field) {
+                $array[$field] = static::extractStringAttributeField($address, $field);
+            }
+            $address = $array;
         }
 
-        return static::formatAddressArray($array);
+        $af = app()->make(AddressFormat::class);
+        $af->setOptions(['subdivision_names'=>false]);
+        return $af->format($address, 'text');
     }
 
     /**
      * @param array|\ArrayAccess $address
      *
      * @return string
+     * @deprecated Use formatAddress only
      */
     public static function formatAddressArray($address)
     {
-        $app = Application::getFacadeApplication();
-
-        $address1 = isset($address['address1']) ? trim((string) $address['address1']) : '';
-        $address2 = isset($address['address2']) ? trim((string) $address['address2']) : '';
-        $city = isset($address['city']) ? trim((string) $address['city']) : '';
-        $stateProvince = isset($address['state_province']) ? trim((string) $address['state_province']) : '';
-        $postalCode = isset($address['postal_code']) ? trim((string) $address['postal_code']) : '';
-        $country = isset($address['country']) ? trim((string) $address['country']) : '';
-
-        $lines = [];
-        if ($address1 !== '') {
-            $lines[] = $address1;
-        }
-        if ($address2 !== '') {
-            $lines[] = $address2;
-        }
-        $line = $city;
-        if ($stateProvince !== '') {
-            if ($line !== '') {
-                $line .= ', ';
-            }
-            $line .= $app->make('helper/lists/states_provinces')->getStateProvinceName($stateProvince, $country) ?: $stateProvince;
-        }
-        if ($postalCode !== '') {
-            if ($line !== '') {
-                $line .= ' ';
-            }
-            $line .= $postalCode;
-        }
-        if ($line !== '') {
-            $lines[] = $line;
-        }
-        if ($country !== '') {
-            $lines[] = $app->make('helper/lists/countries')->getCountryName($country) ?: $country;
-        }
-
-        return implode("\n", $lines);
+        return self::formatAddress($address);
     }
 
     /**

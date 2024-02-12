@@ -482,7 +482,7 @@ class Checkout extends PageController
                     }
                 }
 
-                $address = nl2br(Customer::formatAddressArray($address));
+                $address = nl2br(Customer::formatAddress($address));
 
                 // Results array
                 $results = [
