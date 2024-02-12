@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Package\CommunityStore\Block\CommunityProduct;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer;
@@ -19,7 +21,91 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "538";
     protected $btDefaultSet = 'community_store';
+
+    /**
+     * @var string|null
+     */
+    public $productLocation;
+
+    /**
+     * @var int|string|null|false
+     */
     public $pID = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductName;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductSKU;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showManufacturer;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showManufacturerDescription;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductDescription;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductDetails;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showProductPrice;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showWeight;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showImage;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showCartButton;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showIsFeatured;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showGroups;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showDimensions;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuantity;
+
+    /**
+     * @var string|null
+     */
+    public $btnText;
 
     public function getBlockTypeDescription()
     {
@@ -83,10 +169,13 @@ class Controller extends BlockController
             $this->set('showWeight', $this->showWeight);
             $this->set('showGroups', $this->showGroups);
             $this->set('showCartButton', $this->showCartButton);
+            $this->set('showIsFeatured', $this->showIsFeatured);
             $this->set('showQuantity', $this->showQuantity);
             $this->set('showImage', $this->showImage);
             $this->set('showProductDetails', $this->showProductDetails);
             $this->set('btnText', isset($this->btnText) ? $this->btnText : false);
+            $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+            $this->set('config', $this->app->make(Repository::class));
         } else {
             $this->set('product', false);
         }
