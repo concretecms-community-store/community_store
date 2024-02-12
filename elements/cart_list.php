@@ -18,7 +18,7 @@ if ($cart) {
             <th colspan="2">
                 <?= t('Product'); ?>
             </th>
-            <th class="text-right text-end"=">
+            <th class="text-right text-end">
                 <?= t('Price'); ?>
             </th>
             <th class="text-center">
