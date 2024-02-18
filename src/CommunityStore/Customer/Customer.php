@@ -215,7 +215,6 @@ class Customer
      */
     public static function formatAddress($address)
     {
-
         if (is_object($address)) {
             $array = [];
             foreach ([
@@ -233,6 +232,11 @@ class Customer
 
         $af = app()->make(AddressFormat::class);
         $af->setOptions(['subdivision_names'=>false]);
+
+        if (is_null($address)) {
+            $address = [];
+        }
+
         return $af->format($address, 'text');
     }
 
