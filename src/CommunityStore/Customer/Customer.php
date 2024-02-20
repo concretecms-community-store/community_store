@@ -185,9 +185,6 @@ class Customer
         if ($ui === null) {
             $session = $this->getSession(false);
             $addressraw = $session === null ? null : $session->get('community_' . $handle);
-            if (is_array($addressraw)) {
-                $addressraw = (object) $addressraw;
-            }
 
             return static::formatAddress($addressraw);
         }
@@ -209,7 +206,7 @@ class Customer
     }
 
     /**
-     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|mixed|null $address
+     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|array|mixed|null $address
      *
      * @return string
      */
@@ -218,26 +215,22 @@ class Customer
         if (is_object($address)) {
             $array = [];
             foreach ([
-                         'address1',
-                         'address2',
-                         'city',
-                         'state_province',
-                         'postal_code',
-                         'country',
-                     ] as $field) {
+                 'address1',
+                 'address2',
+                 'city',
+                 'state_province',
+                 'postal_code',
+                 'country',
+             ] as $field) {
                 $array[$field] = static::extractStringAttributeField($address, $field);
             }
             $address = $array;
         }
 
         $af = app()->make(AddressFormat::class);
-        $af->setOptions(['subdivision_names'=>false]);
+        $af->setOptions(['subdivision_names' => false]);
 
-        if (is_null($address)) {
-            $address = [];
-        }
-
-        return $af->format($address, 'text');
+        return $af->format($address ?? [], 'text');
     }
 
     /**
