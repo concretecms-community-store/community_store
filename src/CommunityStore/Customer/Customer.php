@@ -218,26 +218,22 @@ class Customer
         if (is_object($address)) {
             $array = [];
             foreach ([
-                         'address1',
-                         'address2',
-                         'city',
-                         'state_province',
-                         'postal_code',
-                         'country',
-                     ] as $field) {
+                 'address1',
+                 'address2',
+                 'city',
+                 'state_province',
+                 'postal_code',
+                 'country',
+             ] as $field) {
                 $array[$field] = static::extractStringAttributeField($address, $field);
             }
             $address = $array;
         }
 
         $af = app()->make(AddressFormat::class);
-        $af->setOptions(['subdivision_names'=>false]);
+        $af->setOptions(['subdivision_names' => false]);
 
-        if (is_null($address)) {
-            $address = [];
-        }
-
-        return $af->format($address, 'text');
+        return $af->format($address ?? [], 'text');
     }
 
     /**
