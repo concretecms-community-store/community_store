@@ -209,7 +209,7 @@ class Customer
     }
 
     /**
-     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|mixed|null $address
+     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\stdClass|array|mixed|null $address
      *
      * @return string
      */
