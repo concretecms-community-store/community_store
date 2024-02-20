@@ -185,9 +185,6 @@ class Customer
         if ($ui === null) {
             $session = $this->getSession(false);
             $addressraw = $session === null ? null : $session->get('community_' . $handle);
-            if (is_array($addressraw)) {
-                $addressraw = (object) $addressraw;
-            }
 
             return static::formatAddress($addressraw);
         }
