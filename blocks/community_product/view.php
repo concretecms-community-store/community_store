@@ -643,7 +643,12 @@ $isSellable = $product->isSellable();
 $(function () {
     $('.store-product-thumb').magnificPopup({
         type: 'image',
-        gallery: {enabled: true}
+        gallery: {
+            enabled: true,
+            tPrev: <?= json_encode(t('Previous (Left arrow key)')) ?>,
+            tNext: <?= json_encode(t('Next (Right arrow key)')) ?>,
+            tCounter: <?= json_encode(t(/*i18n: %1$s is the partial number, %2$s is the total number. Example: 2 of 3 */'%1$s of %2$s', '%curr%', '%total%')) ?>,
+        }
     });
 });
 <?php
