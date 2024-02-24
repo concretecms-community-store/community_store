@@ -195,6 +195,7 @@ class Controller extends BlockController
         $this->set('langpath', $langpath);
         $this->set('isWholesale', \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Wholesale::isUserWholesale());
         $this->set('app', $this->app);
+        $this->set('csPath', DIR_REL . '/packages/community_store');
     }
 
     public function registerViewAssets($outputContent = '')
@@ -206,6 +207,7 @@ class Controller extends BlockController
         $this->addFooterItem($js);
         $this->requireAsset('css', 'community-store');
         $this->requireAsset('core/lightbox');
+        $this->requireAsset('photoswipe');
     }
 
     public function getSearchableContent()

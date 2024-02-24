@@ -251,6 +251,13 @@ class Controller extends Package implements ProviderAggregateInterface
             );
         }
 
+        $al->register('css', 'photoswipe', 'css/photoswipe.css', ['version' => '5.4.3'], $this);
+        $al->registerGroup('photoswipe',
+            [
+                ['css', 'photoswipe'],
+            ]
+        );
+
         if ($this->app->isRunThroughCommandLineInterface()) {
             try {
                 $app = $this->app->make('console');
