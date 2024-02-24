@@ -73,6 +73,18 @@
     {
       "from": "node_modules/select2/select2x2.png",
       "to": "css/select2/select2x2.png"
+    },
+    {
+      "from": "node_modules/photoswipe/dist/photoswipe.css",
+      "to": "css/photoswipe.css"
+    },
+    {
+      "from": "node_modules/photoswipe/dist/photoswipe-lightbox.esm.min.js",
+      "to": "js/photoswipe/photoswipe-lightbox.esm.min.js"
+    },
+    {
+      "from": "node_modules/photoswipe/dist/photoswipe.esm.min.js",
+      "to": "js/photoswipe/photoswipe.esm.min.js"
     }
   ]
 }
