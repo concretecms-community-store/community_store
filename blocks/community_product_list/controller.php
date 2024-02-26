@@ -5,7 +5,6 @@ namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Search\Pagination\PaginationFactory;
