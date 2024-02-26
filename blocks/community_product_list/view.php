@@ -1,6 +1,48 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @var string $usersort
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product[] $products
+ * @var string $pagination
+ * @var Concrete\Core\Search\Pagination\Pagination $paginator
+ * @var Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface $ih
+ * @var Concrete\Core\Utility\Service\Text $th
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var string $langpath
+ * @var Concrete\Core\Application\Application $app
+ * @var string $locale
+ * @var bool $isWholesale
+ * @var string|null $sortOrder
+ * @var int|string|null $gID
+ * @var string|null $filter
+ * @var int|string|null $filterCID
+ * @var int|string|null $relatedPID
+ * @var bool|int|string|null $groupMatchAny
+ * @var int|string|null $maxProducts
+ * @var bool|int|string|null $showOutOfStock
+ * @var int|string|null $productsPerRow
+ * @var string|null $displayMode
+ * @var bool|int|string|null $showPagination
+ * @var bool|int|string|null $enableExternalFiltering
+ * @var bool|int|string|null $showFeatured
+ * @var bool|int|string|null $showSale
+ * @var bool|int|string|null $showDescription
+ * @var bool|int|string|null $showName
+ * @var bool|int|string|null $showSKU
+ * @var bool|int|string|null $showPrice
+ * @var bool|int|string|null $showQuickViewLink
+ * @var bool|int|string|null $showPageLink
+ * @var bool|int|string|null $showSortOption
+ * @var string|null $pageLinkText
+ * @var bool|int|string|null $showAddToCart
+ * @var string|null $btnText
+ * @var bool|int|string|null $showQuantity
+ * @var string|null $noProductsMessage
+ * @var int|string|null $filterManufacturer
+ * @var int|string|null $filterProductType
+ */
+
 // We want to crop the image so we're providing an object
 // with the crop property set to true since default is false
 $legacyThumbProps = new \stdClass();
