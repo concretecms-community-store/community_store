@@ -20,15 +20,159 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
-    protected $btInterfaceWidth = "840";
-    protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "600";
-    protected $btDefaultSet = 'community_store';
-    public $attFilters = [];
-    public $groupMatchAny = '';
-    public $filterManufacturer = '';
-    public $filterProductType = '';
 
+    protected $btInterfaceWidth = "840";
+
+    protected $btWrapperClass = 'ccm-ui';
+
+    protected $btInterfaceHeight = "600";
+
+    protected $btDefaultSet = 'community_store';
+
+    /**
+     * @var array
+     */
+    public $attFilters = [];
+
+    /**
+     * @var string|null
+     */
+    public $sortOrder;
+
+    /**
+     * @var int|string|null
+     */
+    public $gID;
+
+    /**
+     * @var string|null
+     */
+    public $filter;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $relatedPID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $groupMatchAny = '';
+
+    /**
+     * @var int|string|null
+     */
+    public $maxProducts;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showOutOfStock;
+
+    /**
+     * @var int|string|null
+     */
+    public $productsPerRow;
+
+    /**
+     * @var string|null
+     */
+    public $displayMode;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPagination;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableExternalFiltering;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showFeatured;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSale;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showName;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSKU;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPrice;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuickViewLink;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPageLink;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSortOption;
+
+    /**
+     * @var string|null
+     */
+    public $pageLinkText;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showAddToCart;
+
+    /**
+     * @var string|null
+     */
+    public $btnText;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuantity;
+
+    /**
+     * @var string|null
+     */
+    public $noProductsMessage;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterManufacturer = '';
+
+    /**
+     * @var int|string|null
+     */
+    public $filterProductType = '';
 
     public function getBlockTypeDescription()
     {
