@@ -12,6 +12,7 @@
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips": "0.0.17",
     "magnific-popup": "^1.1.0",
+    "photoswipe": "^5.4.3",
     "select2": "4.0.6",
     "selectize": "^0.12.6",
     "sysend": "^1.10.0"
