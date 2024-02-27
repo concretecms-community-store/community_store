@@ -609,9 +609,14 @@ switch ($productsPerRow) {
                             $product->setPriceAdjustment(0);
                             $imgObj = $product->getImageObj();
                             $thumb = $imgObj ? $communityStoreImageHelper->getThumbnail($imgObj) : false;
+                            $price = $product->getPrice(1, true);
+                            $salePrice = $product->getSalePrice() ?: $product->getPrice();
+                            if ($salePrice == $price) {
+                                $salePrice = null;
+                            }
                             $varationData[$key] = [
-                                'price' => $product->getPrice(),
-                                'salePrice' => $product->getSalePrice(),
+                                'price' => $price,
+                                'salePrice' => $salePrice,
                                 'available' => $variation->isSellable(),
                                 'disabled' => $variation->getVariationDisabled(),
                                 'maxCart' => $variation->getMaxCartQty(),
@@ -625,8 +630,7 @@ switch ($productsPerRow) {
                             }
                         }
                         ?>
-                        var variationData = variationData || [];
-                        variationData[<?= $product->getID() ?>] = <?= json_encode($varationData) ?>;
+                        (window.variationData = window.variationData || [])[<?= $product->getID() ?>] = <?= json_encode($varationData) ?>;
                         </script>
                         <?php
                     }
