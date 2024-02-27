@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var string $langpath
  * @var bool $isWholesale
  * @var Concrete\Core\Application\Application $app
+ * @var string $csPath
  */
 
 if (empty($product) || !$product->isActive()) {
@@ -567,6 +568,8 @@ $isSellable = $product->isSellable();
                             itemprop="image" href="<?= $imgObj->getRelativePath() ?>"
                             title="<?= h($imgObj->getTitle()) ?>"
                             class="store-product-thumb text-center center-block"
+                            data-pswp-width="<?= $imgObj->getAttribute('width') ?>"
+                            data-pswp-height="<?= $imgObj->getAttribute('height') ?>"
                         >
                             <img
                                 class="img-responsive img-fluid"
@@ -601,6 +604,8 @@ $isSellable = $product->isSellable();
                                     href="<?= $secondaryImage->getRelativePath() ?>"
                                     title="<?= h($product->getName()) ?>"
                                     class="store-product-thumb text-center center-block"
+                                    data-pswp-width="<?= $secondaryImage->getAttribute('width') ?>"
+                                    data-pswp-height="<?= $secondaryImage->getAttribute('height') ?>"
                                 >
                                     <img
                                         class="img-responsive img-fluid"
@@ -638,19 +643,25 @@ $isSellable = $product->isSellable();
         ?>
     </div>
 </form>
-
-<script>
-$(function () {
-    $('.store-product-thumb').magnificPopup({
-        type: 'image',
-        gallery: {
-            enabled: true,
-            tPrev: <?= json_encode(t('Previous (Left arrow key)')) ?>,
-            tNext: <?= json_encode(t('Next (Right arrow key)')) ?>,
-            tCounter: <?= json_encode(t(/*i18n: %1$s is the partial number, %2$s is the total number. Example: 2 of 3 */'%1$s of %2$s', '%curr%', '%total%')) ?>,
-        }
-    });
+<script type="module">
+import PhotoSwipeLightbox from <?= json_encode("{$csPath}/js/photoswipe/photoswipe-lightbox.esm.min.js") ?>;
+const lightbox = new PhotoSwipeLightbox({
+    loop: false,
+    gallery: '.store-product-block[data-product-id="<?= $product->getID() ?>"]',
+    children: 'a.store-product-thumb',
+    pswpModule: () => import(<?= json_encode("{$csPath}/js/photoswipe/photoswipe.esm.min.js") ?>),
+    errorMsg: <?= json_encode(t('The image cannot be loaded')) ?>,
+    closeTitle: <?= json_encode(t('Close')) ?>,
+    zoomTitle: <?= json_encode(t('Zoom')) ?>,
+    arrowPrevTitle: <?= json_encode(t('Previous')) ?>,
+    arrowNextTitle: <?= json_encode(t('Next')) ?>,
 });
+lightbox.addFilter('useContentPlaceholder', (useContentPlaceholder, content) => {
+    return content.index === 0;
+});
+lightbox.init();
+</script>
+<script>
 <?php
 $varationData = [];
 /**
