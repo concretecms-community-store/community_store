@@ -176,7 +176,7 @@ class Checkout extends PageController
             $statelist = array_merge($statelist, $this->app->make('helper/lists/states_provinces')->getStates());
             $this->set("states", $statelist);
 
-            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', $this->app->make(User::class));
             $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
             if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
                 $this->set("orderChoicesAttList", $orderChoicesAttList);
@@ -420,7 +420,7 @@ class Checkout extends PageController
             if ('billing' == $data['adrType']) {
                 $billing = true;
 
-                $u = new User();
+                $u = $this->app->make(User::class);
                 $guest = !$u->isRegistered();
 
                 $emailexists = false;
@@ -543,7 +543,7 @@ class Checkout extends PageController
 
         if (!$guest) {
             $noShippingSaveGroups = Config::get('community_store.noShippingSaveGroups');
-            $user = new User();
+            $user = $this->app->make(User::class);
             $usergroups = $user->getUserGroups();
 
             if (!is_array($usergroups)) {
@@ -666,7 +666,7 @@ class Checkout extends PageController
             $customer->setEmail(empty($data['store-email']) ? '' : trim($data['store-email']));
         } else {
             $noBillingSaveGroups = Config::get('community_store.noBillingSaveGroups');
-            $user = new User();
+            $user = $this->app->make(User::class);
             $usergroups = $user->getUserGroups();
 
             if (!is_array($usergroups)) {
@@ -741,7 +741,7 @@ class Checkout extends PageController
         $order->save();
 
         $order->saveOrderChoices();
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', $this->app->make(User::class));
 
         Session::set('community_store.tempOrderID', $order->getOrderID());
         Session::set('community_store.tempOrderIDTimeStamp', $order->getTemporaryRecordCreated()->format(DATE_RFC3339));

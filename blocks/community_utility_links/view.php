@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+
+use Concrete\Core\User\User;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+?>
 <?php if (!$shoppingDisabled) {
     ?>
 <div class="store-utility-links <?= (0 == $itemCount ? 'store-cart-empty' : ''); ?>">
@@ -6,13 +11,13 @@
         ?>
     <p class="store-utility-links-login">
         <?php if ($showSignIn) {
-            $u = new User();
+            $u = app(User::class);
             if (!$u->isRegistered()) {
                 echo '<a href="' . \Concrete\Core\Support\Facade\Url::to('/login') . '">' . t("Sign In") . '</a>';
             }
         } ?>
         <?php if ($showGreeting) {
-            $u = new User();
+            $u = app(User::class);
             if ($u->isRegistered()) {
                 $msg = '<span class="store-welcome-message">' . t("Welcome back") . '</span>';
                 $ui = $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByID($u->getUserID());

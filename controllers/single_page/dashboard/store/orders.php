@@ -153,7 +153,7 @@ class Orders extends DashboardPageController
                 $order->setTransactionReference($this->request->request->get('transactionReference'));
             }
 
-            $user = new User();
+            $user = $this->app->make(User::class);
 
             $order->completePayment();
             $order->setExternalPaymentRequested(null);
@@ -185,7 +185,7 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = Order::getByID($oID);
-            $user = new User();
+            $user = $this->app->make(User::class);
 
             $order->setRefunded(new \DateTime());
             $order->setRefundedByUID($user->getUserID());
@@ -217,7 +217,7 @@ class Orders extends DashboardPageController
     {
         if ($this->token->validate('community_store')) {
             $order = Order::getByID($oID);
-            $user = new User();
+            $user = $this->app->make(User::class);
 
             $order->setCancelled(new \DateTime());
             $order->setCancelledByUID($user->getUserID());

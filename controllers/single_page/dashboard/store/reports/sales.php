@@ -5,6 +5,7 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\User;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
@@ -82,6 +83,7 @@ class Sales extends DashboardPageController
         $export = [];
         // get all order requests
         $orders = $orders->getResults();
+        $user = $this->app->make(User::class);
 
         foreach ($orders as $o) {
             // get tax info for our export data
@@ -120,7 +122,7 @@ class Sales extends DashboardPageController
                 'Customer Email' => $o->getAttribute('email'),
             ];
 
-            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new \User());
+            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', $user);
             foreach ($orderChoicesAttList as $item) {
                 $row[$item->getAttributeKeyDisplayName()] = $o->getAttribute($item->getAttributeKeyHandle());
             }
