@@ -591,7 +591,7 @@ class DiscountRule
 
 
     private static function filterDiscounts($result, $cartItems = false) {
-        $user = new User();
+        $user = app(User::class);
 
         $discounts = [];
 

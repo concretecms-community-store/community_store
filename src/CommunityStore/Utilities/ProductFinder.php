@@ -8,7 +8,7 @@ class ProductFinder extends Controller
 {
     public function getProductMatch()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         if (!$u->isRegistered()) {
             echo "Access Denied";
             exit;

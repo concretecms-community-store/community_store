@@ -177,7 +177,7 @@ class OrderStatusHistory
 
     private static function recordStatusChange(Order $order, $statusHandle, $comment = null)
     {
-        $user = new User();
+        $user = app(User::class);
         $orderStatusHistory = new self();
         $orderStatusHistory->setOrderStatusHandle($statusHandle);
         $orderStatusHistory->setUserID($user->getUserID());

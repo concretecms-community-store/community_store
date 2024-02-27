@@ -18,7 +18,7 @@ class Complete extends PageController
 {
     public function on_start()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         $u->refreshUserGroups();
     }
 
@@ -37,6 +37,7 @@ class Complete extends PageController
             $order = Order::getByID($customer->getLastOrderID());
         }
 
+        $user = $this->app->make(User::class);
         if (is_object($order)) {
             $this->set("order", $order);
 
@@ -45,9 +46,9 @@ class Complete extends PageController
                 $ui = $this->app->make(UserInfoRepository::class)->getByID($order->getCustomerID());
 
                 if ($ui) {
-                    $user = new User();
                     if (!$user->isRegistered()) {
                         User::loginByUserID($ui->getUserID());
+                        $user = $ui->getUserObject();
                     }
                 }
             }
@@ -70,8 +71,6 @@ class Complete extends PageController
                 }
             }
         } else {
-            $user = new User();
-
             if (!$user->isSuperUser()) {
                 return Redirect::to("/cart");
             } else {
@@ -90,7 +89,7 @@ class Complete extends PageController
         $this->requireAsset('javascript', 'community-store');
         $this->requireAsset('css', 'community-store');
 
-        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', $user);
         $this->set("orderChoicesEnabled", count($orderChoicesAttList) ? true : false);
         if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
             $this->set("orderChoicesAttList", $orderChoicesAttList);

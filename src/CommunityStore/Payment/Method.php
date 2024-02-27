@@ -275,7 +275,7 @@ class Method extends Controller
 
         $availableMethods = [];
 
-        $u = new User();
+        $u = app(User::class);
         $userGroups = $u->getUserGroups();
 
         foreach ($enabledMethods as $em) {

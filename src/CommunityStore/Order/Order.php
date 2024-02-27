@@ -924,10 +924,8 @@ class Order implements ObjectInterface
 
                 $mh->load('new_user', 'community_store');
 
-                $user = new User();
-
                 // login the newly created user if in same request as customer
-                if (!$user->isRegistered() && $sameRequest) {
+                if ($sameRequest && !app(User::class)->isRegistered()) {
                     User::loginByUserID($newuser->getUserID());
                 }
 
@@ -1361,7 +1359,7 @@ class Order implements ObjectInterface
 
     public function  saveOrderChoices()
     {
-        $aks = StoreOrderKey::getAttributeListBySet('order_choices', new User());
+        $aks = StoreOrderKey::getAttributeListBySet('order_choices', app(User::class));
 
         foreach ($aks as $uak) {
             $controller = $uak->getController();

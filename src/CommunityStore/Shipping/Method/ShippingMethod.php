@@ -320,7 +320,7 @@ class ShippingMethod
         $allMethods = self::getAvailableMethods();
         $eligibleMethods = [];
 
-        $u = new User();
+        $u = app(User::class);
         $userGroups = $u->getUserGroups();
         $criteriaService = null;
         $products = null;
