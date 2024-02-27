@@ -2,19 +2,23 @@
 
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
-use Concrete\Core\Page\Page;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Utility\Service\Url as UrlService;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
+use stdClass;
 
 class Controller extends BlockController
 {
@@ -440,6 +444,20 @@ class Controller extends BlockController
 
         // deprecated, provided to avoid breaking older templates
         $this->set('showQuickViewLink', false);
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+        $this->set('urlService', $this->app->make(UrlService::class));
+        $this->set('config', $this->app->make(Repository::class));
+        $legacyThumbProps = new stdClass();
+        $legacyThumbProps->crop = true;
+        $this->set('communityStoreImageHelper', $this->app->make(
+            'cs/helper/image',
+            [
+                'resizingScheme' => 'product_list',
+                'thumbTypeHandle' => null,
+                'legacyThumbProps' => $legacyThumbProps
+            ]
+        ));
+        $this->set('csm', $this->app->make('cs/helper/multilingual'));
     }
 
     public function registerViewAssets($outputContent = '')
