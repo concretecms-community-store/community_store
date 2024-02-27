@@ -2,33 +2,180 @@
 
 namespace Concrete\Package\CommunityStore\Block\CommunityProductList;
 
-use Concrete\Core\Page\Page;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Utility\Service\Url as UrlService;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountRule;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\ManufacturerList;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
+use stdClass;
 
 class Controller extends BlockController
 {
     protected $btTable = 'btCommunityStoreProductList';
-    protected $btInterfaceWidth = "840";
-    protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "600";
-    protected $btDefaultSet = 'community_store';
-    public $attFilters = [];
-    public $groupMatchAny = '';
-    public $filterManufacturer = '';
-    public $filterProductType = '';
 
+    protected $btInterfaceWidth = "840";
+
+    protected $btWrapperClass = 'ccm-ui';
+
+    protected $btInterfaceHeight = "600";
+
+    protected $btDefaultSet = 'community_store';
+
+    /**
+     * @var array
+     */
+    public $attFilters = [];
+
+    /**
+     * @var string|null
+     */
+    public $sortOrder;
+
+    /**
+     * @var int|string|null
+     */
+    public $gID;
+
+    /**
+     * @var string|null
+     */
+    public $filter;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $relatedPID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $groupMatchAny = '';
+
+    /**
+     * @var int|string|null
+     */
+    public $maxProducts;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showOutOfStock;
+
+    /**
+     * @var int|string|null
+     */
+    public $productsPerRow;
+
+    /**
+     * @var string|null
+     */
+    public $displayMode;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPagination;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableExternalFiltering;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showFeatured;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSale;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showName;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSKU;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPrice;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuickViewLink;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showPageLink;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSortOption;
+
+    /**
+     * @var string|null
+     */
+    public $pageLinkText;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showAddToCart;
+
+    /**
+     * @var string|null
+     */
+    public $btnText;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showQuantity;
+
+    /**
+     * @var string|null
+     */
+    public $noProductsMessage;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterManufacturer = '';
+
+    /**
+     * @var int|string|null
+     */
+    public $filterProductType = '';
 
     public function getBlockTypeDescription()
     {
@@ -297,6 +444,20 @@ class Controller extends BlockController
 
         // deprecated, provided to avoid breaking older templates
         $this->set('showQuickViewLink', false);
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+        $this->set('urlService', $this->app->make(UrlService::class));
+        $this->set('config', $this->app->make(Repository::class));
+        $legacyThumbProps = new stdClass();
+        $legacyThumbProps->crop = true;
+        $this->set('communityStoreImageHelper', $this->app->make(
+            'cs/helper/image',
+            [
+                'resizingScheme' => 'product_list',
+                'thumbTypeHandle' => null,
+                'legacyThumbProps' => $legacyThumbProps
+            ]
+        ));
+        $this->set('csm', $this->app->make('cs/helper/multilingual'));
     }
 
     public function registerViewAssets($outputContent = '')

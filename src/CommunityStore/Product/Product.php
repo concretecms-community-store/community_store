@@ -388,6 +388,9 @@ class Product
      */
     protected $options;
 
+    /**
+     * @return \Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption[]|\Doctrine\Common\Collections\Collection
+     */
     public function getOptions()
     {
         return $this->options;
@@ -636,6 +639,9 @@ class Product
         $this->pCustomerPrice = (!is_null($bool) ? $bool : false);
     }
 
+    /**
+     * @return int|float|string|null
+     */
     public function getPriceMaximum()
     {
         return $this->pPriceMaximum;
@@ -646,6 +652,9 @@ class Product
         $this->pPriceMaximum = '' != $pPriceMaximum ? $pPriceMaximum : null;
     }
 
+    /**
+     * @return int|float|string|null
+     */
     public function getPriceMinimum()
     {
         return $this->pPriceMinimum;
@@ -1218,6 +1227,9 @@ class Product
         return $this->cID;
     }
 
+    /**
+     * @return \Concrete\Core\Page\Page|false
+     */
     public function getProductPage()
     {
         if ($this->getPageID()) {
@@ -1726,6 +1738,9 @@ class Product
         }
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
     public function getImageObj()
     {
         if ($this->getImageID()) {
