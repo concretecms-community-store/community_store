@@ -23,10 +23,10 @@ class CartEvent extends StoreEvent {
     /** @var string */
     private $errorMsg = null;
 
-    /** @var Product */
+    /** @var Product|null */
     private $product;
 
-    /** @var array | null */
+    /** @var array|null */
     private $data;
 
     private $updatedCart = null;
@@ -34,7 +34,7 @@ class CartEvent extends StoreEvent {
     private $updatedDiscounts = null;
 
     /**
-     * @return Product | null
+     * @return Product|null
      */
     public function getProduct()
     {
@@ -42,7 +42,7 @@ class CartEvent extends StoreEvent {
     }
 
     /**
-     * @param Product $product
+     * @param Product|null $product
      * @return $this
      */
     public function setProduct($product)
