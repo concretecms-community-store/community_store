@@ -1659,7 +1659,7 @@ if (version_compare($version, '9.0', '<')) {
 
                                                 </div>
 
-                                                <div class="row <?= ($hideVariationPrices ? 'hidden d-none' : ''); ?>">
+                                                <div class="row <?= ($hideVariationPrices || $hideSalePrice ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <?= $form->label("pvSalePrice[]", tc(/* i18n: sale here means the act of discounting */ 'Discounting', 'Sale Price')); ?>
