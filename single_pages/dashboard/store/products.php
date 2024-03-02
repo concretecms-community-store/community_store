@@ -17,6 +17,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuan
  * @var bool $hideStockAvailabilityDates
  * @var bool $hideWholesalePrice
  * @var bool $hideCostPrice
+ * @var bool $hideSize
+ * @var bool $hideWeight
+ * @var bool $hideBarcode
  * @var bool $hideVariationPrices
  * @var bool $hideVariationShippingFields
  * @var bool $hideSalePrice
@@ -720,7 +723,7 @@ if (version_compare($version, '9.0', '<')) {
 
 
 
-                    <div class="form-group">
+                    <div class="form-group<?= $hideBarcode ? ' hidden d-none' : '' ?>">
                         <?= $form->label("pBarcode", t('Barcode')); ?>
                         <?= $form->text("pBarcode", $product->getBarcode()); ?>
                     </div>
@@ -885,7 +888,7 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group<?= $hideWeight ? ' hidden d-none' : '' ?>">
                                 <?= $form->label("pWeight", t('Weight')); ?>
                                 <div class="input-group">
                                     <?php $weight = $product->getWeight(); ?>
@@ -903,7 +906,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <?= $form->select("pSeperateShip", ['0' => t('Yes'), '1' => t('No, must be shipped as separate package')], ($product->isSeparateShip() ? '1' : '0')); ?>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6<?= $hideSize ? ' hidden d-none' : '' ?>">
                             <div class="form-group">
                                 <div class="form-group">
                                     <?= $form->label("pLength", t('Length')); ?>
@@ -1562,7 +1565,7 @@ if (version_compare($version, '9.0', '<')) {
                                                             <?= $form->text("pvSKU[" . $varid . "]", $variation ? $variation->getVariationSKU() : '', ['placeholder' => t('Base SKU')]); ?>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6<?= $hideBarcode ? ' hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Barcode')); ?>
                                                             <?= $form->text("pvBarcode[" . $varid . "]", $variation ? $variation->getVariationBarcode() : '', ['placeholder' => t('Barcode')]); ?>
@@ -1686,7 +1689,7 @@ if (version_compare($version, '9.0', '<')) {
                                                 </div>
 
                                                 <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6<?= $hideWeight ? ' hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Weight')); ?>
                                                             <div class="input-group">
@@ -1695,7 +1698,7 @@ if (version_compare($version, '9.0', '<')) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6<?= $hideSize ? ' hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Length')); ?>
                                                             <div class="input-group">
@@ -1713,7 +1716,7 @@ if (version_compare($version, '9.0', '<')) {
                                                             <?= $form->number('pvNumberItems[' . $varid . ']', $variation ? $variation->getVariationNumberItems() : '', ['min'=>0, 'step' => 1, 'max' =>'2147483647', 'placeholder' => t('Base Number Of Items')]) ?>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6<?= $hideSize ? ' hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Width')); ?>
                                                             <div class="input-group">
@@ -1724,7 +1727,7 @@ if (version_compare($version, '9.0', '<')) {
                                                     </div>
                                                 </div>
 
-                                                <div class="row <?= ($hideVariationShippingFields ? 'hidden d-none' : ''); ?>">
+                                                <div class="row <?= ($hideVariationShippingFields || $hideSize ? 'hidden d-none' : ''); ?>">
                                                     <div class="col-md-6">
 
                                                     </div>

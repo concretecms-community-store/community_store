@@ -35,7 +35,7 @@ extract($vars); ?>
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row<?= Config::get('community_store::products.hideWeight') && !$smtm->getMinimumWeight() && !$smtm->getMaximumWeight() ? ' hidden d-none' : '' ?>">
     <div class="col-sm-6">
         <div class="form-group">
             <?= $form->label('minimumWeight',t("Minimum Weight Amount for this rate to apply")); ?>
