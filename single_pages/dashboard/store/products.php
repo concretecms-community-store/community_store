@@ -1618,7 +1618,7 @@ if (version_compare($version, '9.0', '<')) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 <?= $hideWholesalePrice ? 'hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Wholesale Price')); ?>
                                                             <div class="input-group">
@@ -1629,7 +1629,7 @@ if (version_compare($version, '9.0', '<')) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 <?= $hideCostPrice ? 'hidden d-none' : '' ?>">
                                                         <div class="form-group">
                                                             <?= $form->label("", t('Cost Price')); ?>
                                                             <div class="input-group">
