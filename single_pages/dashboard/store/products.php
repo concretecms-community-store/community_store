@@ -9,8 +9,24 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 
 /**
- * @var ProductVariation $variationLookup []
+ * @var Concrete\Core\Application\Service\FileManager $al
+ * @var Concrete\Core\Entity\Attribute\Category $productAttributeCategory
+ * @var array $pageTemplates
+ * @var int $defaultTemplateID
+ * @var array $taxClasses
+ * @var bool $hideStockAvailabilityDates
+ * @var bool $hideWholesalePrice
+ * @var bool $hideCostPrice
+ * @var bool $hideVariationPrices
+ * @var bool $hideVariationShippingFields
+ * @var bool $hideSalePrice
+ * @var bool $hideCustomerPriceEntry
+ * @var bool $hideQuantityBasedPricing
+ * @var bool $productDefaultActive
+ * @var bool $productDefaultShippingNo
+ * @var bool $variationDefaultUnlimited
  * @var string $actionDescription
+ * @var ProductVariation $variationLookup []
  */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
