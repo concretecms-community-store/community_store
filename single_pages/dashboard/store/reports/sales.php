@@ -231,6 +231,8 @@ $(function(){
 		<tr>
 			<th><?= t("Order #")?></th>
 			<th><?= t("Date")?></th>
+			<th><?= t("Paid")?></th>
+			<th><?= t("Refunded")?></th>
 			<th><?= t("Products")?></th>
 			<th><?= t("Shipping")?></th>
 			<th><?= t("Tax")?> <?= $extraTaxLable?></th>
@@ -242,6 +244,8 @@ $(function(){
 		<tr>
 			<td><a href="<?=Url::to('/dashboard/store/orders/order',$o->getOrderID())?>"><?= $o->getOrderID()?></a></td>
 			<td><?= $dh->formatDateTime($o->getOrderDate())?></td>
+            <td><?= $o->getPaid() ? $dh->formatDateTime($o->getPaid()) : '<em>'.  t('Unpaid') ?></em></td>
+            <td><?= $o->getRefunded() ? $dh->formatDateTime($o->getRefunded()) : ''?></td>
 			<td><?=Price::format($o->getSubTotal())?></td>
 			<td><?=Price::format($o->getShippingTotal())?></td>
 			<td>

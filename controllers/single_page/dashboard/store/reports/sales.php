@@ -42,7 +42,6 @@ class Sales extends DashboardPageController
         $orderList->setFromDate($dateFrom);
         $orderList->setToDate($dateTo);
         $orderList->setItemsPerPage(20);
-        $orderList->setPaid(true);
         $orderList->setCancelled(false);
 
         $factory = new PaginationFactory($this->app->make(Request::class));
@@ -75,8 +74,6 @@ class Sales extends DashboardPageController
         $orders = new OrderList();
         $orders->setFromDate($from);
         $orders->setToDate($to);
-        //$orders->setItemsPerPage(10);
-        $orders->setPaid(true);
         $orders->setCancelled(false);
 
         // exporting
@@ -91,12 +88,14 @@ class Sales extends DashboardPageController
             $includedTax = $o->getIncludedTaxTotal();
             $orderTax = 0;
             if ($tax) {
-                $orderTax = Price::format($tax);
+                $orderTax = Price::formatFloat($tax);
             } elseif ($includedTax) {
-                $orderTax = Price::format($includedTax);
+                $orderTax = Price::formatFloat($includedTax);
             }
             // getOrderDate returns DateTime need to format it as string
             $date = $o->getOrderDate();
+            $paidDate = $o->getPaid();
+            $refundedDate = $o->getRefunded();
             // set up our export array
 
             $last = $o->getAttribute('billing_last_name');
@@ -112,6 +111,8 @@ class Sales extends DashboardPageController
             $row = [
                 'Order #' => $o->getOrderID(),
                 'Date' => $date->format('Y-m-d H:i:s'),
+                'Paid' => $paidDate ? $paidDate->format('Y-m-d H:i:s') : '',
+                'Refunded' => $refundedDate ? $refundedDate->format('Y-m-d H:i:s') : '',
                 'Products' => $o->getSubTotal(),
                 'Shipping' => $o->getShippingTotal(),
                 'Tax' => $orderTax,
