@@ -269,7 +269,9 @@ class Cart
 
         $customerPrice = false;
 
-        if ($product->allowCustomerPrice()) {
+        if (!$product) {
+            $error = true;
+        } elseif ($product->allowCustomerPrice()) {
             $customerPrice = (float) $data['customerPrice'];
 
             $max = $product->getPriceMaximum();
@@ -284,9 +286,6 @@ class Cart
             }
         }
 
-        if (!$product) {
-            $error = true;
-        }
 
         if (!$error) {
             if ($product->isExclusive()) {
