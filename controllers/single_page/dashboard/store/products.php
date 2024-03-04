@@ -440,6 +440,9 @@ class Products extends DashboardSitePageController
         $this->set('hideStockAvailabilityDates', Config::get('community_store.hideStockAvailabilityDates'));
         $this->set('hideWholesalePrice', Config::get('community_store.hideWholesalePrice'));
         $this->set('hideCostPrice', Config::get('community_store.hideCostPrice'));
+        $this->set('hideSize', Config::get('community_store::products.hideSize'));
+        $this->set('hideWeight', Config::get('community_store::products.hideWeight'));
+        $this->set('hideBarcode', Config::get('community_store::products.hideBarcode'));
         $this->set('hideVariationPrices', Config::get('community_store.hideVariationPrices'));
         $this->set('hideVariationShippingFields', Config::get('community_store.hideVariationShippingFields'));
         $this->set('hideSalePrice', Config::get('community_store.hideSalePrice'));

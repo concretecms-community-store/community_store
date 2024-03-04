@@ -773,6 +773,23 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                     </label>
                 </div>
 
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideSize', '1', Config::get('community_store::products.hideSize')) ?>
+                        <?= t('Hide size') ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideWeight', '1', Config::get('community_store::products.hideWeight')) ?>
+                        <?= t('Hide weight') ?>
+                    </label>
+                </div>
+
+                <div class="checkbox form-check">
+                    <label><?= $form->checkbox('hideBarcode', '1', Config::get('community_store::products.hideBarcode')) ?>
+                        <?= t('Hide barcode') ?>
+                    </label>
+                </div>
 
                 <div class="checkbox form-check">
                     <label><?= $form->checkbox('hideCustomerPriceEntry', true, Config::get('community_store.hideCustomerPriceEntry')); ?>
