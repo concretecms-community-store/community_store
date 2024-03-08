@@ -302,8 +302,8 @@ $isSellable = $product->isSellable();
                     <div class="store-product-quantity form-group mb-3">
                         <label class="store-product-option-group-label"><?= t('Quantity') ?></label>
                         <?php
+                        $max = $product->getMaxCartQty();
                         if ($quantityLabel) {
-                            $max = $product->getMaxCartQty();
                             ?>
                             <div class="input-group">
                                 <?php
