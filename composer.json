@@ -5,7 +5,8 @@
     "homepage": "https://github.com/concretecms-community-store/community_store",
     "license": "MIT",
     "require": {
-        "php": ">=7.4"
+        "php": ">=7.4",
+        "mlocati/vies": "^1.1"
     },
     "support": {
         "issues": "https://github.com/concretecms-community-store/community_store/issues",

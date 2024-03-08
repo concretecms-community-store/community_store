@@ -156,6 +156,15 @@ class Controller extends Package implements ProviderAggregateInterface
         Route::register('/helpers/tax/setvatnumber', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax::setVatNumber');
         Route::register('/productfinder', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductFinder::getProductMatch');
         Route::register('/store_download/{fID}/{oID}/{hash}', '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::downloadFile');
+        Route::register('/cs/dashboard/vies/status', 'Concrete\Package\CommunityStore\Controller\Dialog\ViesStatus::view');
+    }
+
+    private function registerAutoload()
+    {
+        $file = $this->getPackagePath() . '/vendor/autoload.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
     }
 
     public function registerHelpers()
@@ -179,6 +188,7 @@ class Controller extends Package implements ProviderAggregateInterface
 
     public function on_start()
     {
+        $this->registerAutoload();
         $this->registerHelpers();
         $this->registerRoutes();
         $this->registerCategories();
