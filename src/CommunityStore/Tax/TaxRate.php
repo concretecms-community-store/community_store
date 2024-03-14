@@ -203,7 +203,7 @@ class TaxRate
         $vatIsValid = false;
         $vat_number = $customer->getValue("vat_number");
         $taxHelper = Application::getFacadeApplication()->make(TaxHelper::class);
-        if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number)) {
+        if (!empty($vat_number) && $taxHelper->validateVatNumber($vat_number, '', $vat_number)) {
             $vatIsValid = true;
         }
 
