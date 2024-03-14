@@ -6,7 +6,8 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "mlocati/vat-lib": "^1.1"
+        "mlocati/vat-lib": "^1.1",
+        "concrete5/core": ">=8.5"
     },
     "support": {
         "issues": "https://github.com/concretecms-community-store/community_store/issues",
