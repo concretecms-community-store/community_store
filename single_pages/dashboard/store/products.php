@@ -1358,18 +1358,18 @@ if (version_compare($version, '9.0', '<')) {
 
                                     <div class="row">
                                         <div class="col-sm-6">
-                                        <div class="input-group">
-                                            <div class="input-group-addon input-group-text input-sm">
-                                                <?= Config::get('community_store.symbol'); ?>
+                                            <div class="input-group">
+                                                <div class="input-group-addon input-group-text input-sm">
+                                                    <?= Config::get('community_store.symbol'); ?>
+                                                </div>
+                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
                                             </div>
-                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
                                         </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                        <div class="input-group">
-                                            <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
-                                            <div class="input-group-addon input-group-text input-sm"><?= Config::get('community_store.weightUnit') ?></div>
-                                        </div>
+                                        <div class="col-sm-6<?= $hideWeight ? ' hidden d-none' : '' ?>">
+                                            <div class="input-group">
+                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
+                                                <div class="input-group-addon input-group-text input-sm"><?= Config::get('community_store.weightUnit') ?></div>
+                                            </div>
                                         </div>
                                     </div>
 
