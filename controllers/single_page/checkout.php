@@ -447,13 +447,14 @@ class Checkout extends PageController
             } else {
                 $customer = new Customer();
                 $notes = '';
+                $billingAddress = false;
                 if ('billing' == $data['adrType']) {
                     $this->updateBilling($data);
                     if (isset($data['store-checkout-notes'])) {
                         $notes = $data['store-checkout-notes'];
                         Session::set('notes', $notes);
                     }
-                    $address = Session::get('billing_address');
+                    $billingAddress = $address = Session::get('billing_address');
                     $phone = Session::get('billing_phone');
                     $company = Session::get('billing_company');
                     $first_name = Session::get('billing_first_name');
@@ -473,8 +474,15 @@ class Checkout extends PageController
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
                         $vat_number = $customer->getValue('vat_number');
+                        if ($billingAddress === false) {
+                            $countryCode = $customer->getAddressValue('billing_address', 'country');
+                        } elseif (is_array($billingAddress)) {
+                            $countryCode = $billingAddress['country'] ?? '';
+                        } else {
+                            $countryCode = '';
+                        }
                         $taxHelper = $this->app->make(TaxHelper::class);
-                        $e = $taxHelper->validateVatNumber($vat_number);
+                        $e = $taxHelper->validateVatNumber($vat_number, $countryCode, $vat_number);
                         if ($e->has()) {
                             echo $e->outputJSON();
                             return;

@@ -20,6 +20,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as Payment
 use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OnlineVATChecker;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 use Punic\Currency;
 
@@ -125,6 +126,8 @@ class Settings extends DashboardPageController
 
         $this->set('salesSuspension', $this->app->make(SalesSuspension::class));
         $this->set('automaticProductQuantitiesMessage', $this->buildAutomaticProductQuantitiesMessage());
+
+        $this->set('checkVatsOnline', $this->app->make(OnlineVATChecker::class)->isEnabled());
     }
 
     public function loadFormAssets()
@@ -176,6 +179,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.thousand', $args['thousand']);
                 Config::save('community_store.calculation', trim($args['calculation']));
                 Config::save('community_store.vat_number', (bool)trim($args['vat_number']));
+                $this->app->make(OnlineVATChecker::class)->setEnabled(!empty($args['checkVatsOnline']));
                 Config::save('community_store.weightUnit', $args['weightUnit']);
                 Config::save('community_store.sizeUnit', $args['sizeUnit']);
                 Config::save('community_store.deliveryInstructions', $args['deliveryInstructions'] ?? '');

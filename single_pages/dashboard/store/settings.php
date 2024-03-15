@@ -27,6 +27,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
  * @var int|false|null $productPublishTarget
  * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension $salesSuspension
  * @var string $automaticProductQuantitiesMessage
+ * @var bool $checkVatsOnline
  */
 
 ?>
@@ -122,6 +123,21 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 <?= $form->select('vat_number', ['0' => t("No, I don't need this"), '1' => t("Yes, enable VAT Number options")], Config::get('community_store.vat_number')); ?>
             </div>
 
+            <div class="form-group">
+                <?= $form->label('checkVatsOnline', t('Check validity of VAT numbers online?')) ?>
+                <?= $form->select('checkVatsOnline', ['0' => t("No, I don't need this"), '1' => t('Yes, check VAT numbers')], $checkVatsOnline ? '1' : '0') ?>
+                <div class="small">
+                    <a
+                        class="dialog-launch"
+                        dialog-width="400"
+                        dialog-height="600"
+                        dialog-title="<?= t('VIES Status') ?>"
+                        href="<?= h((string) Url::to('/cs/dashboard/vies/status'))?>"
+                    >
+                        <?= t('Check VIES service status') ?> 
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-9 store-pane" id="settings-shipping">
