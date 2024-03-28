@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Url;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Console\Command\AutoUpdateProductImageInfo;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
@@ -28,6 +29,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
  * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension $salesSuspension
  * @var string $automaticProductQuantitiesMessage
  * @var bool $checkVatsOnline
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater $productImageInfoUpdater
  */
 
 ?>
@@ -479,6 +481,19 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
         <!-- #settings-product-images -->
         <div class="col-sm-9 store-pane" id="settings-product-images">
             <h3><?= t("Product Images"); ?></h3>
+
+            <h4><?= t('Automatic Image Update') ?></h4>
+            <div class="form-group">
+                <?= $form->label('autoImageUpdate_title', t('Automatically set the image titles to')) ?>
+                <?= $form->select('autoImageUpdate_title', $productImageInfoUpdater->getTitleOperationDictionary(), $productImageInfoUpdater->getTitleOperation()) ?>
+            </div>
+        	<div class="alert alert-info small">
+        		<?= t('Please remark that:')?>
+        		<ul class="m-0">
+        			<li><?= t('if a file description has been added against a file, this will be displayed in lightbox captions, regardless of the setting above.') ?></li>
+        			<li><?= t('you can update the existing product images by using the %s CLI command.', '<code>' . AutoUpdateProductImageInfo::NAME . '</code>') ?></li>
+        		</ul>
+        	</div>
 
             <div class="row">
                 <h4 class="col-md-12"><?= t("Product Thumbnail Types"); ?></h4>

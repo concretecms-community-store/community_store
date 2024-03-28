@@ -6,4 +6,9 @@ return [
     'hideBarcode' => false,
     // Set to true to handle automatically pQty/pQtyUnlim for products with variations
     'autoQuantityIfVariations' => false,
+    'images' => [
+        'autoUpdate' => [
+            'title' => 'keep',
+        ],
+    ],
 ];

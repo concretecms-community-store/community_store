@@ -21,6 +21,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OnlineVATChecker;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 use Punic\Currency;
 
@@ -128,6 +129,7 @@ class Settings extends DashboardPageController
         $this->set('automaticProductQuantitiesMessage', $this->buildAutomaticProductQuantitiesMessage());
 
         $this->set('checkVatsOnline', $this->app->make(OnlineVATChecker::class)->isEnabled());
+        $this->set('productImageInfoUpdater', $this->app->make(ProductImageInfoUpdater::class));
     }
 
     public function loadFormAssets()
@@ -311,6 +313,9 @@ class Settings extends DashboardPageController
                     ->setSuspendedFrom($salesSuspensionSuspend === 2 ? $dateTimeWidget->translate('salesSuspensionFrom', $args, true) : null)
                     ->setSuspendedTo($salesSuspensionSuspend === 2 ? $dateTimeWidget->translate('salesSuspensionTo', $args, true) : null)
                 ;
+                $productImageInfoUpdater = $this->app->make(ProductImageInfoUpdater::class);
+                $productImageInfoUpdater->setTitleOperation(is_string($args['autoImageUpdate_title'] ?? null) ? $args['autoImageUpdate_title'] : '');
+
                 $this->flash('success', t('Settings Saved'));
 
                 return Redirect::to('/dashboard/store/settings');
