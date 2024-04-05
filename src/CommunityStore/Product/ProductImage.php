@@ -128,6 +128,7 @@ class ProductImage
         foreach ($existingImages as $img) {
             $img->delete();
         }
+        $product->getImages()->clear();
     }
 
     public static function add($product, $pifID, $piSort)
@@ -137,6 +138,7 @@ class ProductImage
         $productImage->setFileID($pifID);
         $productImage->setSort($piSort);
         $productImage->save();
+        $product->getImages()->add($productImage);
 
         return $productImage;
     }

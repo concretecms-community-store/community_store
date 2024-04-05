@@ -33,6 +33,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Group\GroupList as StoreG
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\ProductTypeList;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater;
 
 class Products extends DashboardSitePageController
 {
@@ -546,6 +547,9 @@ class Products extends DashboardSitePageController
                 ProductRelated::addRelatedProducts($data, $product);
 
                 ProductPriceTier::addPriceTiersForProduct($data, $product);
+
+                $imageUpdater = $this->app->make(ProductImageInfoUpdater::class);
+                $imageUpdater->applyToProduct($product);
 
                 //$product->reindex();
 
