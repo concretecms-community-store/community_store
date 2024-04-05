@@ -255,7 +255,7 @@ class Cart
     {
 
         $error = false;
-	$added=false;
+	$added = false;
 	$removeexistingexclusive = false;
 	
         Session::set('community_store.smID', false);
