@@ -255,6 +255,9 @@ class Cart
     {
 
         $error = false;
+	$added=false;
+	$removeexistingexclusive = false;
+	
         Session::set('community_store.smID', false);
         $product = Product::getByID((int) $data['pID']);
 
