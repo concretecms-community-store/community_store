@@ -22,6 +22,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuan
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\OnlineVATChecker;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductPageMetadataUpdater;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 use Punic\Currency;
 
@@ -130,6 +131,7 @@ class Settings extends DashboardPageController
 
         $this->set('checkVatsOnline', $this->app->make(OnlineVATChecker::class)->isEnabled());
         $this->set('productImageInfoUpdater', $this->app->make(ProductImageInfoUpdater::class));
+        $this->set('productPageMetadataUpdater', $this->app->make(ProductPageMetadataUpdater::class));
     }
 
     public function loadFormAssets()
@@ -315,6 +317,9 @@ class Settings extends DashboardPageController
                 ;
                 $productImageInfoUpdater = $this->app->make(ProductImageInfoUpdater::class);
                 $productImageInfoUpdater->setTitleOperation(is_string($args['autoImageUpdate_title'] ?? null) ? $args['autoImageUpdate_title'] : '');
+                $productPageMetadataUpdater = $this->app->make(ProductPageMetadataUpdater::class);
+                $productPageMetadataUpdater->setIsUpdateDescription(!empty($args['updatePageMetadata_description']));
+                $productPageMetadataUpdater->setIsUpdateOpenGraph(!empty($args['updatePageMetadata_opengraph']));
 
                 $this->flash('success', t('Settings Saved'));
 

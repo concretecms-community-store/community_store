@@ -274,6 +274,7 @@ class Controller extends Package implements ProviderAggregateInterface
                 $app->add(new Src\CommunityStore\Console\Command\ResetCommand());
                 $app->add(new Src\CommunityStore\Console\Command\AutoUpdateQuantitiesFromVariations());
                 $app->add(new Src\CommunityStore\Console\Command\AutoUpdateProductImageInfo());
+                $app->add(new Src\CommunityStore\Console\Command\AutoUpdateProductPageMetadata());
             } catch (\Exception $e) {
             }
         }

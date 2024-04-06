@@ -1060,7 +1060,6 @@ class Product
         if ($data['pID']) {
             //if we know the pID, we're updating.
             $product = self::getByID($data['pID']);
-            $product->setPageDescription($data['pDesc']);
 
             if ($data['pDateAdded_dt']) {
                 $product->setDateAdded(new \DateTime($data['pDateAdded_dt'] . ' ' . $data['pDateAdded_h'] . ':' . $data['pDateAdded_m'] . (isset($data['pDateAdded_a']) ? $data['pDateAdded_a'] : '')));
@@ -2238,7 +2237,6 @@ class Product
                     $newProductPage->setAttribute('exclude_nav', 1);
 
                     $this->savePageID($newProductPage->getCollectionID());
-                    $this->setPageDescription($this->getDesc());
 
                     $csm = $app->make('cs/helper/multilingual');
                     $mlist = Section::getList();
@@ -2256,13 +2254,6 @@ class Product
 
                                 if ($productName) {
                                     $translatedPage->update(['cName' => $productName]);
-                                }
-
-                                $pageDescription = trim($translatedPage->getAttribute('meta_description'));
-                                $newDescription = $csm->t(null, 'productDescription', $this->getID(), false, $m->getLocale());
-
-                                if ($newDescription && !$pageDescription) {
-                                    $translatedPage->setAttribute('meta_description', strip_tags($newDescription));
                                 }
                             }
                         }
@@ -2289,6 +2280,9 @@ class Product
         }
     }
 
+    /**
+     * @deprecated see \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductPageMetadataUpdater
+     */
     public function setPageDescription($newDescription)
     {
         $productDescription = strip_tags(trim($this->getDesc()));

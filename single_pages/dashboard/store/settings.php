@@ -5,6 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Console\Command\AutoUpdateProductImageInfo;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Console\Command\AutoUpdateProductPageMetadata;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
@@ -30,6 +31,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
  * @var string $automaticProductQuantitiesMessage
  * @var bool $checkVatsOnline
  * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater $productImageInfoUpdater
+ * @var Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductPageMetadataUpdater $productPageMetadataUpdater
  */
 
 ?>
@@ -447,6 +449,26 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             <div class="form-group">
                 <?= $form->label('productPublishTarget', t('Page to Publish Product Pages Under')); ?>
                 <?= $pageSelector->selectPage('productPublishTarget', $productPublishTarget); ?>
+            </div>
+
+            <div class="form-group">
+                <?= $form->label('', t('Product pages automatic update')) ?>
+                <div class="checkbox">
+                    <label>
+                        <?= $form->checkbox('updatePageMetadata_description', '1', $productPageMetadataUpdater->isUpdateDescription()) ?>
+                        <?= t('Update the page description') ?>
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <?= $form->checkbox('updatePageMetadata_opengraph', '1', $productPageMetadataUpdater->isUpdateOpenGraph()) ?>
+                        <?= t('Update the page OpenGraph metadata (useful for sharing pages on social networks') ?>
+                        <span class="small text-muted">
+                            <br />
+                            <?= t('You can update the existing product pages by using the %s CLI command.', '<code>' . AutoUpdateProductPageMetadata::NAME . '</code>') ?></li>
+                        </span>
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
