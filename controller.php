@@ -4,6 +4,7 @@ namespace Concrete\Package\CommunityStore;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Command\Task\Manager as TaskManager;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\EntityManager\Provider\ProviderAggregateInterface;
 use Concrete\Core\Database\EntityManager\Provider\StandardPackageProvider;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -11,7 +12,6 @@ use Concrete\Core\Package\Package;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
@@ -106,7 +106,7 @@ class Controller extends Package implements ProviderAggregateInterface
     public function upgrade()
     {
         if (self::$upgradingFromVersion !== '' && version_compare(self::$upgradingFromVersion, '2.6.0') < 0) {
-            $config = $this->app->make('config');
+            $config = $this->app->make(Repository::class);
             $config->save('community_store.salesSuspension.suspend', $config->get('community_store.shoppingDisabled') === 'all');
         }
         $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
@@ -140,8 +140,7 @@ class Controller extends Package implements ProviderAggregateInterface
             // So I'm getting the version twice, once here and once in the upgrade function
             // and I check both. I tried to set a variable instead of saving it in config
             // but for some reason it didn't work
-
-            Config::save('cs.pkgversion', $community_store->getPackageVersion());
+            $this->app->make(Repository::class)->save('cs.pkgversion', $community_store->getPackageVersion());
         }
 
         return parent::testForInstall($testForAlreadyInstalled);
@@ -325,20 +324,21 @@ class Controller extends Package implements ProviderAggregateInterface
         if (null !== $al) {
             $langpath = $al->getCollectionHandle();
         }
+        $config = app(Repository::class);
 
         return "
         <script type=\"text/javascript\">
             var PRODUCTMODAL = '" . Url::to('/productmodal') . "';
             var CARTURL = '" . rtrim(Url::to($langpath . '/cart'), '/') . "';
-            var TRAILINGSLASH = '" . ((bool) Config::get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
+            var TRAILINGSLASH = '" . ((bool) $config->get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
             var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
             var HELPERSURL = '" . rtrim(Url::to('/helpers'), '/') . "';
             var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
-            var CHECKOUTSCROLLOFFSET = " . Config::get('community_store.checkout_scroll_offset', 0) . ";
-            var CURRENCYCODE = '" . (Config::get('community_store.currency') ? Config::get('community_store.currency') : '') . "';
-            var CURRENCYSYMBOL = '" . Config::get('community_store.symbol') . "';
-            var CURRENCYDECIMAL = '" . Config::get('community_store.whole') . "';
-            var CURRENCYGROUP = '" . Config::get('community_store.thousand') . "';
+            var CHECKOUTSCROLLOFFSET = " . $config->get('community_store.checkout_scroll_offset', 0) . ";
+            var CURRENCYCODE = '" . ($config->get('community_store.currency') ?: '') . "';
+            var CURRENCYSYMBOL = '" . $config->get('community_store.symbol') . "';
+            var CURRENCYDECIMAL = '" . $config->get('community_store.whole') . "';
+            var CURRENCYGROUP = '" . $config->get('community_store.thousand') . "';
         </script>
         ";
     }
