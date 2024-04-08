@@ -169,15 +169,20 @@ class Controller extends Package implements ProviderAggregateInterface
     public function registerHelpers()
     {
         $singletons = [
-            'cs/helper/multilingual' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual',
+            'Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Multilingual' => [
+                'cs/helper/multilingual',
+            ]
         ];
 
         $binds = [
             'cs/helper/image' => '\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image',
         ];
 
-        foreach ($singletons as $key => $value) {
-            $this->app->singleton($key, $value);
+        foreach ($singletons as $key => $aliases) {
+            $this->app->singleton($key);
+            foreach ($aliases as $alias) {
+                $this->app->alias($key, $alias);
+            }
         }
 
         foreach ($binds as $key => $value) {
