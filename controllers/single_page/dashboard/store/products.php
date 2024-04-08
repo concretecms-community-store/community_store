@@ -34,6 +34,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductType\Produ
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductImageInfoUpdater;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\ProductPageMetadataUpdater;
 
 class Products extends DashboardSitePageController
 {
@@ -550,6 +551,9 @@ class Products extends DashboardSitePageController
 
                 $imageUpdater = $this->app->make(ProductImageInfoUpdater::class);
                 $imageUpdater->applyToProduct($product);
+
+                $pageUpdater = $this->app->make(ProductPageMetadataUpdater::class);
+                $pageUpdater->applyToProduct($product);
 
                 //$product->reindex();
 

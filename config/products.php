@@ -11,4 +11,10 @@ return [
             'title' => 'keep',
         ],
     ],
+    'pages' => [
+        'metadata' => [
+            'updateDescription' => true,
+            'updateOpenGraph' >= false,
+        ],
+    ],
 ];
