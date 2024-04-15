@@ -7,6 +7,13 @@ use \Concrete\Core\Support\Facade\Url;
 use \Concrete\Core\User\UserInfoRepository;
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 
+
+$badgeClass = ' badge ';
+$version = $app->make('config')->get('concrete.version');
+if (version_compare($version, '9.0', '<')) {
+    $badgeClass = '';
+}
+
 ?>
 
 <?php if ($controller->getAction() == 'order') { ?>
@@ -736,17 +743,17 @@ use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
                         $paid = $order->getPaid();
 
                         if ($refunded) {
-                            echo '<span class="label label-warning badge bg-warning">' . t('Refunded') . '</span>';
+                            echo '<span class="label label-warning ' . $badgeClass . ' bg-warning">' . t('Refunded') . '</span>';
                         } elseif ($paid) {
-                            echo '<span class="label label-success badge bg-success">' . t('Paid') . '</span>';
+                            echo '<span class="label label-success ' . $badgeClass . ' bg-success">' . t('Paid') . '</span>';
                         } elseif ($order->getTotal() > 0) {
-                            echo '<span class="label label-danger badge bg-danger">' . t('Unpaid') . '</span>';
+                            echo '<span class="label label-danger ' . $badgeClass . ' bg-danger">' . t('Unpaid') . '</span>';
 
                             if ($order->getExternalPaymentRequested()) {
-                                echo ' <span class="label label-default badge bg-black">' . t('Incomplete') . '</span>';
+                                echo ' <span class="label label-default ' . $badgeClass . ' bg-black">' . t('Incomplete') . '</span>';
                             }
                         } else {
-                            echo '<span class="label label-primary  badge bg-primary">' . t('Free Order') . '</span>';
+                            echo '<span class="label label-primary  ' . $badgeClass . ' bg-primary">' . t('Free Order') . '</span>';
                         }
 
 

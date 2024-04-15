@@ -25,7 +25,7 @@ class Controller extends Package implements ProviderAggregateInterface
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.6.5-alpha1';
+    protected $pkgVersion = '2.6.5-alpha2';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -287,6 +287,13 @@ class Controller extends Package implements ProviderAggregateInterface
             $manager = $this->app->make(TaskManager::class);
             $manager->extend('auto_update_quantities_from_variations', function () {
                 return $this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\AutoUpdateQuantitiesFromVariations::class);
+            });
+        }
+
+        if (class_exists(TaskManager::class)) {
+            $manager = $this->app->make(TaskManager::class);
+            $manager->extend('remove_incomplete_orders', function () {
+                return $this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\RemoveIncompleteOrders::class);
             });
         }
     }

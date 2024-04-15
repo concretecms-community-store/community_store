@@ -47,7 +47,7 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     /**
      * @var bool|null
      */
-    private $externalPaymentRequested = null;
+    private $externalPaymentRequested = false;
 
     /**
      * @var string

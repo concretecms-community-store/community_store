@@ -66,7 +66,7 @@ class Orders extends DashboardPageController
 
 
         if (Config::get('community_store.showUnpaidExternalPaymentOrders')) {
-            $orderList->setIncludeExternalPaymentRequested(true);
+            $orderList->setIncludeExternalPaymentRequested(null);
         }
 
         $factory = new PaginationFactory($this->app->make(Request::class));

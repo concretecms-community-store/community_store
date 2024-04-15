@@ -249,10 +249,8 @@ class Installer
         // in case the customer group and digital download fileset are not saved in config yet
         self::installCustomerGroups($pkg);
         self::createDDFileset($pkg);
-        if (empty($fromVersion) || version_compare($fromVersion, '2.6.1-alpha2') < 0) {
-            self::installJobs();
-            self::installTasks();
-        }
+        self::installJobs();
+        self::installTasks();
 
         Localization::clearCache();
     }
@@ -600,6 +598,11 @@ class Installer
             $package = $app->make(PackageService::class)->getByHandle('community_store');
             Job::installByPackage('auto_update_quantities_from_variations', $package);
         }
+        if (Job::getByHandle('remove_incomplete_orders') === null) {
+            $app = Application::getFacadeApplication();
+            $package = $app->make(PackageService::class)->getByHandle('community_store');
+            Job::installByPackage('remove_incomplete_orders', $package);
+        }
     }
 
     public static function installTasks()
@@ -626,5 +629,18 @@ class Installer
         if (!$taskSetService->taskSetContainsTask($taskSet, $task)) {
             $taskSetService->addTaskToSet($task, $taskSet);
         }
+
+        $task = $em->getRepository(Task::class)->findOneByHandle('remove_incomplete_orders');
+        if ($task === null) {
+            $task = new Task();
+            $task->setHandle('remove_incomplete_orders');
+            $task->setPackage($package);
+            $em->persist($task);
+            $em->flush();
+        }
+        if (!$taskSetService->taskSetContainsTask($taskSet, $task)) {
+            $taskSetService->addTaskToSet($task, $taskSet);
+        }
+
     }
 }
