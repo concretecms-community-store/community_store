@@ -423,7 +423,15 @@ $csm = $app->make('cs/helper/multilingual');
                     </form>
                 <?php } ?>
 
-                <?php if (Config::get('community_store.vat_number')) { ?>
+                <?php if (Config::get('community_store.vat_number')) {
+                    $ak = \Concrete\Package\CommunityStore\Attribute\OrderKey::getByHandle('vat_number');
+                    $vatRequired = '';
+                    if ($ak) {
+                        if ($ak->isRequired()) {
+                            $vatRequired = 'required';
+                        }
+                    }
+                    ?>
                     <form class="store-checkout-form-group " id="store-checkout-form-group-vat">
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
@@ -431,8 +439,8 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="store-checkout-shipping-vat-number"><?= t("VAT Number (if applicable)") ?></label>
-                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), ['placeholder'=>t('VAT Number')]); ?>
+                                        <label for="store-checkout-shipping-vat-number"><?= $vatRequired ? t("VAT Number") : t("VAT Number (if applicable)") ?></label>
+                                        <?= $form->text('store-checkout-shipping-vat-number', $customer->getValue('vat_number', 'vat_number'), ['placeholder'=>t('VAT Number'), $vatRequired=>$vatRequired]); ?>
                                     </div>
                                 </div>
                             </div>
