@@ -6,6 +6,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Utilities;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -174,6 +175,10 @@ class ProductPageMetadataUpdater
 
     private function generateOpenGraphTags(Page $page, Product $product, ?Section $section): array
     {
+        $pageUrl = (string) $this->urlResolver->resolve([$page]);
+        if (!filter_var($pageUrl, FILTER_VALIDATE_URL)) {
+        	$pageUrl = '';
+        }
         $name = $this->getProductName($product, $section);
         $description = implode(' ', array_slice($this->getProductDescriptionLines($product, $section), 0, 2));
         $price = $this->getProductPrice($product);
@@ -196,7 +201,7 @@ class ProductPageMetadataUpdater
 
         return [
             $buildItem('og:type', 'product'),
-            $buildItem('og:url', h((string) $this->urlResolver->resolve([$page]))),
+            $buildItem('og:url', h($pageUrl)),
             $buildItem('og:title', h($name)),
             $buildItem('og:description', h($description)),
             $buildItem('og:locale', h($localeID)),

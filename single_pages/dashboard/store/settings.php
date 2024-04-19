@@ -462,10 +462,10 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 <div class="checkbox">
                     <label>
                         <?= $form->checkbox('updatePageMetadata_opengraph', '1', $productPageMetadataUpdater->isUpdateOpenGraph()) ?>
-                        <?= t('Update the page OpenGraph metadata (useful for sharing pages on social networks') ?>
+                        <?= t('Update the page OpenGraph metadata (useful for sharing pages on social networks)') ?>
                         <span class="small text-muted">
                             <br />
-                            <?= t('You can update the existing product pages by using the %s CLI command.', '<code>' . AutoUpdateProductPageMetadata::NAME . '</code>') ?></li>
+                            <?= t('You can update the existing product pages by using the %s CLI command.', '<code>' . AutoUpdateProductPageMetadata::NAME . '</code>') ?>
                         </span>
                     </label>
                 </div>
