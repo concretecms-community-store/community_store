@@ -554,7 +554,7 @@ class Cart
 
         $cart = self::getCart();
 
-        $product = Product::getByID((int) $cart[$instanceID]['product']['pID']);
+        $product = empty($cart[$instanceID]['product']['pID']) ? null : Product::getByID((int) $cart[$instanceID]['product']['pID']);
         $event = new CartEvent('update');
         $event->setProduct($product);
         $event->setData($data);
