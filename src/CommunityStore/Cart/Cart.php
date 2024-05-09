@@ -585,6 +585,7 @@ class Cart
             $added = $newquantity;
         } else {
             self::remove($instanceID);
+            $added = null;
         }
 
         Session::set('communitystore.cart', $cart);
