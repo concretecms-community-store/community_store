@@ -57,6 +57,10 @@ class Settings extends DashboardPageController
 
         $gl->includeAllGroups();
         foreach ($gl->getResults() as $group) {
+            if ($group->getGroupID() == GUEST_GROUP_ID) {
+                // Even registered users belong to the Guests group
+                continue;
+            }
             $allGroupList[$group->getGroupID()] = $group->getGroupName();
         }
 
