@@ -22,7 +22,7 @@ if ($cartMode) {
     <div class="store-cart-page-cart">
         <?php
         if (isset($actiondata) and !empty($actiondata)) { ?>
-            <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && !$actiondata['error']) { ?>
+            <?php if($actiondata['action'] == 'add' && $actiondata['added'] > 0 && empty($actiondata['error'])) { ?>
                 <p class="alert alert-success"><?= t(
                     '%s has been added to your cart',
                     '<strong>' . h($csm->t($actiondata['product']['pName'], 'productName',  $actiondata['product']['pID'])) . '</strong>'
@@ -41,11 +41,11 @@ if ($cartMode) {
                 <p class="alert alert-warning"><?= t('Item removed');?></p>
             <?php } ?>
 
-            <?php if(isset($actiondata['quantity']) && ($actiondata['quantity'] != $actiondata['added']) && !$actiondata['error']) { ?>
+            <?php if(isset($actiondata['quantity']) && ($actiondata['quantity'] != $actiondata['added']) && empty($actiondata['error'])) { ?>
                 <p class="alert alert-warning"><?= t('Due to stock levels your quantity has been limited');?></p>
             <?php } ?>
 
-            <?php if(isset($actiondata['error']) && $actiondata['error']) {
+            <?php if(!empty($actiondata['error'])) {
 				?>
                 <p class="alert alert-warning">
                     <?php
