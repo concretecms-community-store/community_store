@@ -1015,16 +1015,18 @@ class Order implements ObjectInterface
                 }
             }
 
+            $uo = $user->getUserObject();
             //add user to Store Customers group
             $group = Group::getByID(Config::get('community_store.customerGroup', 0));
             if (is_object($group) && $group->getGroupID() >= 1) {
-                $user->getUserObject()->enterGroup($group);
+                $uo->enterGroup($group);
             }
 
             foreach ($groupstoadd as $id) {
                 $g = Group::getByID($id);
                 if ($g) {
-                    $user->getUserObject()->enterGroup($g);
+                    $uo->exitGroup($g);
+                    $uo->enterGroup($g);
                 }
             }
         }
