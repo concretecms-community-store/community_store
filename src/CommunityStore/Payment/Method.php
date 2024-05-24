@@ -277,6 +277,9 @@ class Method extends Controller
 
         $u = app(User::class);
         $userGroups = $u->getUserGroups();
+        if ($u->isSuperUser()) {
+            $userGroups[ADMIN_GROUP_ID] = ADMIN_GROUP_ID;
+        }
 
         foreach ($enabledMethods as $em) {
             $includedGroups = $em->getUserGroups();
