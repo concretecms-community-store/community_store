@@ -285,11 +285,11 @@ class Method extends Controller
             $includedGroups = $em->getUserGroups();
             $excludedGroups = $em->getExcludedUserGroups();
 
-            if (count($includedGroups) > 0 && count(array_intersect($includedGroups, $userGroups)) == 0) {
+            if ($includedGroups !== [] && array_intersect($includedGroups, $userGroups) === []) {
                 continue;
             }
 
-            if (count($excludedGroups) > 0 && count(array_intersect($excludedGroups, $userGroups)) > 0) {
+            if ($excludedGroups !== [] && array_intersect($excludedGroups, $userGroups) !== []) {
                 continue;
             }
 
