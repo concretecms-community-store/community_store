@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Controller\SinglePage\Dashboard\Store;
 
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbType;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\Set\SetList;
@@ -214,8 +215,8 @@ class Settings extends DashboardPageController
                 Config::save('community_store.orderNotesEnabled', isset($args['orderNotesEnabled']) ??  false );
                 Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
-                Config::save('community_store.receiptHeader', trim($args['receiptHeader']));
-                Config::save('community_store.receiptFooter', trim($args['receiptFooter']));
+                Config::save('community_store.receiptHeader', LinkAbstractor::translateTo(trim($args['receiptHeader'])));
+                Config::save('community_store.receiptFooter', LinkAbstractor::translateTo(trim($args['receiptFooter'])));
                 Config::save('community_store.receiptBCC', trim($args['receiptBCC']));
                 Config::save('community_store.noBillingSave', isset($args['noBillingSave']) ?? false);
                 Config::save('community_store.noShippingSave', isset($args['noShippingSave']) ?? false);

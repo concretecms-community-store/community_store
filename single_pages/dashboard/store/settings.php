@@ -138,7 +138,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                         dialog-title="<?= t('VIES Status') ?>"
                         href="<?= h((string) Url::to('/cs/dashboard/vies/status'))?>"
                     >
-                        <?= t('Check VIES service status') ?> 
+                        <?= t('Check VIES service status') ?>
                     </a>
                 </div>
             </div>
@@ -403,12 +403,12 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
             <div class="form-group">
                 <?= $form->label('receiptHeader', t('Receipt Email Header Content')); ?>
-                <?= $editor->outputStandardEditor('receiptHeader', Config::get('community_store.receiptHeader')) ?>
+                <?= $editor->outputStandardEditor('receiptHeader', \Concrete\Core\Editor\LinkAbstractor::translateFromEditMode(Config::get('community_store.receiptHeader'))) ?>
             </div>
 
             <div class="form-group">
                 <?= $form->label('receiptFooter', t('Receipt Email Footer Content')); ?>
-                <?= $editor->outputStandardEditor('receiptFooter', Config::get('community_store.receiptFooter')) ?>
+                <?= $editor->outputStandardEditor('receiptFooter', \Concrete\Core\Editor\LinkAbstractor::translateFromEditMode(Config::get('community_store.receiptFooter'))) ?>
             </div>
 
             <div class="form-group">

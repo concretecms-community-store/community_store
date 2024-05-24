@@ -24,8 +24,8 @@ class Checkout extends DashboardSitePageController
         $orderAttributes = StoreOrderKey::getAttributeListBySet('order_choices');
         $this->set('orderAttributes', $orderAttributes);
 
-        $this->set('receiptHeader', trim(Config::get('community_store.receiptHeader')));
-        $this->set('receiptFooter', trim(Config::get('community_store.receiptFooter')));
+        $this->set('receiptHeader', \Concrete\Core\Editor\LinkAbstractor::translateFrom(trim(Config::get('community_store.receiptHeader'))));
+        $this->set('receiptFooter', \Concrete\Core\Editor\LinkAbstractor::translateFrom(trim(Config::get('community_store.receiptFooter'))));
         $this->set('receiptBCC', trim(Config::get('community_store.receiptBCC')));
 
         $this->set('defaultLocale', $this->getLocales()['default']);
