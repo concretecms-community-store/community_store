@@ -1035,7 +1035,7 @@ if (version_compare($version, '9.0', '<')) {
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Required'); ?></label>
-                                            <select class="form-control" name="poRequired[]">
+                                            <select class="form-control form-select" name="poRequired[]">
                                                 <option value="0"><?= t('No'); ?></option>
                                                 <option value="1"
                                                 <% if (poRequired == 1) { %>selected="selected"<% } %>><?= t('Yes'); ?></option></select>
