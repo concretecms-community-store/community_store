@@ -14,11 +14,19 @@ if (version_compare($version, '9.0', '<')) {
     $badgeClass = '';
 }
 
-?>
-
-<?php if ($controller->getAction() == 'order') { ?>
-
+if ($controller->getAction() == 'order') {
+    /**
+     * @var string $paymentReportUrl
+     */
+    ?>
     <div class="ccm-dashboard-header-buttons">
+        <?php
+        if ($paymentReportUrl !== '') {
+            ?>
+            <a href="<?= h($paymentReportUrl) ?>" class="btn btn-primary" target="_blank"><i class="fa fas fa-credit-card"></i> <?= t('Inspect Payment') ?></a>
+            <?php
+        }
+        ?>
         <a href="<?= Url::to('/dashboard/store/orders/printslip/' . $order->getOrderID()) ?>" class="btn btn-primary" target="_blank"><i class="fa fa-print"></i> <?= t("Print Order Slip") ?></a>
     </div>
 

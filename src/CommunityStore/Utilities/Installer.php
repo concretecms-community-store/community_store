@@ -446,6 +446,7 @@ class Installer
         self::installSinglePage('/dashboard/store/reports', $pkg);
         self::installSinglePage('/dashboard/store/reports/sales', $pkg);
         self::installSinglePage('/dashboard/store/reports/products', $pkg);
+        self::installSinglePage('/dashboard/store/reports/payments', $pkg);
         self::installSinglePage('/dashboard/store/multilingual', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/products', $pkg);
         self::installSinglePage('/dashboard/store/multilingual/checkout', $pkg);
