@@ -277,16 +277,19 @@ class Method extends Controller
 
         $u = app(User::class);
         $userGroups = $u->getUserGroups();
+        if ($u->isSuperUser()) {
+            $userGroups[ADMIN_GROUP_ID] = ADMIN_GROUP_ID;
+        }
 
         foreach ($enabledMethods as $em) {
             $includedGroups = $em->getUserGroups();
             $excludedGroups = $em->getExcludedUserGroups();
 
-            if (count($includedGroups) > 0 && count(array_intersect($includedGroups, $userGroups)) == 0) {
+            if ($includedGroups !== [] && array_intersect($includedGroups, $userGroups) === []) {
                 continue;
             }
 
-            if (count($excludedGroups) > 0 && count(array_intersect($excludedGroups, $userGroups)) > 0) {
+            if ($excludedGroups !== [] && array_intersect($excludedGroups, $userGroups) !== []) {
                 continue;
             }
 
