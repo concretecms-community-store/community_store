@@ -31,7 +31,7 @@ ob_start();
       </style>
     </head>
     <body>
-    <?php $header = $csm->t(\Concrete\Core\Editor\LinkAbstractor::translateFrom(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptHeader'))), 'receiptEmailHeader'); ?>
+    <?php $header = $csm->t(\Concrete\Core\Editor\LinkAbstractor::translateFromEditMode(trim(\Concrete\Core\Support\Facade\Config::get('community_store.receiptHeader'))), 'receiptEmailHeader'); ?>
 
     <?php if ($header) {
     echo $header;
@@ -302,7 +302,7 @@ ob_start();
     }
     ?>
     <?= $paymentInstructions; ?>
-    <?= $csm->t(trim(\Concrete\Core\Editor\LinkAbstractor::translateFrom(\Concrete\Core\Support\Facade\Config::get('community_store.receiptFooter'))), 'receiptEmailFooter'); ?>
+    <?= $csm->t(trim(\Concrete\Core\Editor\LinkAbstractor::translateFromEditMode(\Concrete\Core\Support\Facade\Config::get('community_store.receiptFooter'))), 'receiptEmailFooter'); ?>
 
     </body>
     </html>
