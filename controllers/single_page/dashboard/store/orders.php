@@ -10,19 +10,20 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderList;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\Method as PaymentMethod;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderEvent;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Payment\LogProviderFactory;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension;
 
 class Orders extends DashboardPageController
 {
     public function view($status = 'all', $paymentMethod = 'all', $paymentStatus = 'all')
     {
-
         $statusFilter = $status;
         $paymentMethodFilter  = $paymentMethod;
         $paymentStatusFilter = $paymentStatus;
@@ -109,27 +110,28 @@ class Orders extends DashboardPageController
     public function order($oID)
     {
         $order = Order::getByID($oID);
-
-        if ($order) {
-            $this->set("order", $order);
-            $this->set('orderStatuses', OrderStatus::getList());
-            $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
-            if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
-                $this->set("orderChoicesAttList", $orderChoicesAttList);
-            } else {
-                $this->set("orderChoicesAttList", []);
-            }
-            $this->requireAsset('javascript', 'communityStoreFunctions');
-        } else {
+        if (!$order) {
             return Redirect::to('/dashboard/store/orders');
         }
-
+        $this->set("order", $order);
+        $this->set('orderStatuses', OrderStatus::getList());
+        $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices');
+        if (is_array($orderChoicesAttList) && !empty($orderChoicesAttList)) {
+            $this->set("orderChoicesAttList", $orderChoicesAttList);
+        } else {
+            $this->set("orderChoicesAttList", []);
+        }
+        $this->requireAsset('javascript', 'communityStoreFunctions');
         $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
-
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
         if (method_exists($this, 'createBreadcrumb')) {
             $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
             $breacrumb->add(new Item('#', t("Order #") . $order->getOrderID()));
+        }
+        if ($this->app->make(LogProviderFactory::class)->hasRegisteredProviders()) {
+            $this->set('paymentReportUrl', (string) $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/store/reports/payments']) . '?orderID=' . $order->getOrderID());
+        } else {
+            $this->set('paymentReportUrl', '');
         }
     }
 
