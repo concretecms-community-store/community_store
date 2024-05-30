@@ -1009,7 +1009,7 @@ class Product
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pID);
+        return $em->find(__CLASS__, $pID);
     }
 
 	/**
@@ -1019,7 +1019,7 @@ class Product
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['pSKU' => $pSKU]);
+        return $em->getRepository(__CLASS__)->findOneBy(['pSKU' => $pSKU]);
     }
 
 	/**
@@ -1029,7 +1029,7 @@ class Product
     {
         $em = dbORM::entityManager();
 
-        $product =  $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+        $product =  $em->getRepository(__CLASS__)->findOneBy(['cID' => $cID]);
 
         // if product not found, look for it via multilingual related page
         if ($allLocales && !$product) {

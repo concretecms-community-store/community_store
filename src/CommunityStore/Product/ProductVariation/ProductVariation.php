@@ -637,7 +637,7 @@ class ProductVariation
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pvID);
+        return $em->find(__CLASS__, $pvID);
     }
 
     /**
@@ -647,7 +647,7 @@ class ProductVariation
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['pvSKU' => $pvSKU]);
+        return $em->getRepository(__CLASS__)->findOneBy(['pvSKU' => $pvSKU]);
     }
 
     public static function add($product, $data, $persistonly = false)

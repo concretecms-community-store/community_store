@@ -103,21 +103,21 @@ class ProductLocation
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $cID);
+        return $em->find(__CLASS__, $cID);
     }
 
     public static function getLocationsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()], ['productSortOrder' => 'asc']);
     }
 
     public static function getProductsForLocation($cID)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['cID' => $cID], ['categorySortOrder' => 'asc']);
     }
 
     public static function addLocationsForProduct(array $locations, Product $product)

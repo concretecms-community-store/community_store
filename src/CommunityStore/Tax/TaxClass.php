@@ -132,14 +132,14 @@ class TaxClass
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $tcID);
+        return $em->find(__CLASS__, $tcID);
     }
 
     public static function getByHandle($taxClassHandle)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['taxClassHandle' => $taxClassHandle]);
+        return $em->getRepository(__CLASS__)->findOneBy(['taxClassHandle' => $taxClassHandle]);
     }
 
     public static function getTaxClasses()

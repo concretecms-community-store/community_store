@@ -121,14 +121,14 @@ class DiscountCode
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $dcID);
+        return $em->find(__CLASS__, $dcID);
     }
 
     public static function getByCode($code)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['dcCode' => $code]);
+        return $em->getRepository(__CLASS__)->findOneBy(['dcCode' => $code]);
     }
 
     public static function add($discountRule, $code)
