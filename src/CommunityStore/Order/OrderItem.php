@@ -287,7 +287,7 @@ class OrderItem
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $oiID);
+        return $em->find(__CLASS__, $oiID);
     }
 
     public static function add($data, $oID, $tax = 0, $taxIncluded = 0, $taxName = '', $adjustRatio = 1)

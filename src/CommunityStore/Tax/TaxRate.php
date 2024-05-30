@@ -179,7 +179,7 @@ class TaxRate
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $trID);
+        return $em->find(__CLASS__, $trID);
     }
 
     public function isVatNumberEligible()

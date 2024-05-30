@@ -70,14 +70,14 @@ class ProductFile
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $id);
+        return $em->find(__CLASS__, $id);
     }
 
     public static function getFilesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
     }
 
     public static function getFileObjectsForProduct(Product $product)

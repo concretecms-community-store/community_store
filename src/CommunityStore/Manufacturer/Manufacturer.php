@@ -127,7 +127,7 @@ class Manufacturer
     public static function getByID($mID)
     {
         $em = dbORM::entityManager();
-        return $em->find(get_class(), $mID);
+        return $em->find(__CLASS__, $mID);
     }
 
     public function save()

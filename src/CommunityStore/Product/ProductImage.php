@@ -83,14 +83,14 @@ class ProductImage
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $piID);
+        return $em->find(__CLASS__, $piID);
     }
 
     public static function getImagesForProduct(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()], ['piSort' => 'ASC']);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()], ['piSort' => 'ASC']);
     }
 
     /**

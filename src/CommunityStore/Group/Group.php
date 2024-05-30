@@ -69,7 +69,7 @@ class Group
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['groupName' => $gName]);
+        return $em->getRepository(__CLASS__)->findOneBy(['groupName' => $gName]);
     }
 
     public static function add($groupName)

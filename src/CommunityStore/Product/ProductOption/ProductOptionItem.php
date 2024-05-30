@@ -177,14 +177,14 @@ class ProductOptionItem
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $id);
+        return $em->find(__CLASS__, $id);
     }
 
     public static function getOptionItemsForProductOption(ProductOption $po)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
+        return $em->getRepository(__CLASS__)->findBy(['poID' => $po->getID()], ['poiSort' => 'asc']);
     }
 
     public static function removeOptionItemsForProduct(Product $product, $excluding = [])

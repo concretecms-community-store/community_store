@@ -541,7 +541,7 @@ class DiscountRule
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $drID);
+        return $em->find(__CLASS__, $drID);
     }
 
     public static function discountsWithCodesExist()
