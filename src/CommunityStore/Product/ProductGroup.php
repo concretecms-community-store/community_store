@@ -109,13 +109,13 @@ class ProductGroup
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $pgID);
+        return $em->find(__CLASS__, $pgID);
     }
 
     public static function getGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
-        $productGroups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        $productGroups = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
         $groups = [];
         if (count($productGroups)) {
             foreach ($productGroups as $productGroup) {
@@ -131,7 +131,7 @@ class ProductGroup
         $em = dbORM::entityManager();
         $gID = $group->getGroupID();
 
-        $productGroup = $em->getRepository(get_class())->findBy(['pID' => $product->getID(), 'gID' => $gID]);
+        $productGroup = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID(), 'gID' => $gID]);
         if (count($productGroup)) {
             return true;
         }
@@ -185,7 +185,7 @@ class ProductGroup
     public static function removeGroupsForProduct(Product $product)
     {
         $em = dbORM::entityManager();
-        $groups = $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        $groups = $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
         }
@@ -194,7 +194,7 @@ class ProductGroup
     public static function removeProductsForGroup(StoreGroup $group)
     {
         $em = dbORM::entityManager();
-        $groups = $em->getRepository(get_class())->findBy(['gID' => $group->getID()]);
+        $groups = $em->getRepository(__CLASS__)->findBy(['gID' => $group->getID()]);
         foreach ($groups as $productGroup) {
             $productGroup->delete();
         }

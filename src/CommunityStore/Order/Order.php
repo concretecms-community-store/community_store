@@ -546,14 +546,14 @@ class Order implements ObjectInterface
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $oID);
+        return $em->find(__CLASS__, $oID);
     }
 
     public function getCustomersMostRecentOrderByCID($cID)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findOneBy(['cID' => $cID]);
+        return $em->getRepository(__CLASS__)->findOneBy(['cID' => $cID]);
     }
 
     public function getAttributes()

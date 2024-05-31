@@ -93,14 +93,14 @@ class ProductRelated
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $cID);
+        return $em->find(__CLASS__, $cID);
     }
 
     public static function getRelatedProducts(Product $product)
     {
         $em = dbORM::entityManager();
 
-        return $em->getRepository(get_class())->findBy(['pID' => $product->getID()]);
+        return $em->getRepository(__CLASS__)->findBy(['pID' => $product->getID()]);
     }
 
     public static function addRelatedProducts(array $products, Product $product)

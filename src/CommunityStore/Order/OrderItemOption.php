@@ -158,7 +158,7 @@ class OrderItemOption
     {
         $em = dbORM::entityManager();
 
-        return $em->find(get_class(), $oioID);
+        return $em->find(__CLASS__, $oioID);
     }
 
     public function save()

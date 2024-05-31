@@ -162,7 +162,7 @@ class Method extends Controller
     public static function getByID($pmID)
     {
         $em = dbORM::entityManager();
-        $method = $em->find(get_class(), $pmID);
+        $method = $em->find(__CLASS__, $pmID);
 
         if ($method) {
             if ($method->setMethodController() === false) {
@@ -176,7 +176,7 @@ class Method extends Controller
     public static function getByHandle($pmHandle)
     {
         $em = dbORM::entityManager();
-        $method = $em->getRepository(get_class())->findOneBy(['pmHandle' => $pmHandle]);
+        $method = $em->getRepository(__CLASS__)->findOneBy(['pmHandle' => $pmHandle]);
 
         if ($method) {
             if ($method->setMethodController() === false) {
@@ -251,9 +251,9 @@ class Method extends Controller
     {
         $em = dbORM::entityManager();
         if ($enabled) {
-            $methods = $em->getRepository(get_class())->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
+            $methods = $em->getRepository(__CLASS__)->findBy(['pmEnabled' => 1], ['pmSortOrder' => 'ASC']);
         } else {
-            $methods = $em->getRepository(get_class())->findBy([], ['pmSortOrder' => 'ASC']);
+            $methods = $em->getRepository(__CLASS__)->findBy([], ['pmSortOrder' => 'ASC']);
         }
         $goodMethods = [];
         foreach ($methods as $method) {
