@@ -21,7 +21,7 @@ ob_start();
 <body>
     <h2><?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?> </h2>
 
-    <p><?= t('Your username is');?>: <strong><?= $username; ?></strong></p>
+    <p><?= t('Your login is');?>: <strong><?= $username; ?></strong></p>
     <p><?= t('Your password is');?>: <strong><?= $password; ?></strong></p>
 
 <?php if ($link) { ?>
@@ -44,7 +44,7 @@ ob_start();
 ?>
 <?= t(/* i18n: %s is the name of the site*/'Thank you for your order, an account has been created for you at %s', $siteName) ?>
 
-    <?= t('Your username is');?>: <?= $username; ?>
+    <?= t('Your login is');?>: <?= $username; ?>
     <?= t('Your password is');?>: <?= $password; ?>
 
 <?php if ($link) { ?>

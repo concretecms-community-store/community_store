@@ -285,9 +285,9 @@ ob_start();
 
     if ($order->getCustomerID()) {
         if ($order->getMemberCreated()) { ?>
-            <p><?= t('A new member account has been created with this order. Your username and password have been emailed to you.'); ?></p>
+            <p><?= t('A new member account has been created with this order. Your login and password have been emailed to you.'); ?></p>
         <?php } else { ?>
-            <p><?= t('Your existing member account has been updated with this order. Please use your existing username and password to sign in.');?></p>
+            <p><?= t('Your existing member account has been updated with this order. Please use your existing login and password to sign in.');?></p>
         <?php }
     }
     ?>
