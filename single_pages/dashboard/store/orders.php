@@ -186,11 +186,11 @@ if ($controller->getAction() == 'order') {
                         </td>
                         <td>
                             <?php
-                            $options = $item->getProductOptions();
+                            $options = $item->getOrderItemOptions();
                             if ($options) {
                                 echo "<ul class='list-unstyled'>";
                                 foreach ($options as $option) { ?>
-                                    <li><strong><?= h($option['oioKey']); ?></strong> <?= h($option['oioValue']) ? h($option['oioValue']) : '<em>' . t('None') . '</em>'; ?></li>
+                                    <li><strong><?= h($option->getOrderItemOptionKey()); ?></strong>: <?= h($option->getOrderItemOptionValue()) ? h($option->getOrderItemOptionValue()) : '<em>' . t('None') . '</em>'; ?></li>
                                 <?php }
                                 echo "</ul>";
                             }

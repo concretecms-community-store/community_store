@@ -193,13 +193,13 @@ $dh = $app->make('helper/date');
                         </td>
                         <td>
                             <?php
-                            $options = $item->getProductOptions();
+                            $options = $item->getOrderItemOptions();
                             if ($options) {
                                 echo "<ul class='list-unstyled'>";
                                 foreach ($options as $option) {
-                                    if ($option['oioValue']) {
+                                    if ($option->getOrderItemOptionValue()) {
                                         ?>
-                                        <li><strong><?= h($option['oioKey']); ?></strong> <?= h($option['oioValue']); ?></li>
+                                        <li><strong><?= h($option->getOrderItemOptionKey()); ?></strong>: <?= h($option->getOrderItemOptionValue()); ?></li>
                                         <?php
                                     }
                                 }

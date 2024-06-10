@@ -4,10 +4,9 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Order;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Support\Facade\DatabaseORM as dbORM;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
-use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOption;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductOption\ProductOptionItem;
 
@@ -38,6 +37,21 @@ class OrderItem
      * @ORM\JoinColumn(name="oID", referencedColumnName="oID", onDelete="CASCADE")
      */
     protected $order;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItemOption", mappedBy="orderItem",cascade={"persist"}))
+     */
+    protected $orderItemOptions;
+
+    public function getOrderItemOptions()
+    {
+        return $this->orderItemOptions;
+    }
+
+    public function __construct()
+    {
+        $this->orderItemOptions = new ArrayCollection();
+    }
 
     /**
      * @ORM\Column(type="string")
@@ -365,9 +379,11 @@ class OrderItem
                 $orderItemOption->setOrderItemOptionHandle($optiongroup->getHandle());
                 $orderItemOption->setOrderItemOptionValue($optionvalue);
                 $orderItemOption->setOrderItem($orderItem);
-                $orderItemOption->save();
+                $orderItem->getOrderItemOptions()->add($orderItemOption);
             }
         }
+
+        $orderItem->save();
 
         return $orderItem;
     }
@@ -381,6 +397,9 @@ class OrderItem
         return $subtotal;
     }
 
+    /**
+     * @deprecated Use getOrderItemOptions() instead
+     */
     public function getProductOptions()
     {
         return Database::connection()->GetAll("SELECT * FROM CommunityStoreOrderItemOptions WHERE oiID=?", $this->oiID);
