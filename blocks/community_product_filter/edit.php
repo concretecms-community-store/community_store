@@ -361,8 +361,8 @@ if ($relatedProduct) {
 
             var newitem = '<li data-id="' + $(this).data('id') + '" class="clearfix list-group-item"><a href="#" class="attremove pull-right float-end">&nbsp;&nbsp;<i class="fa fa-times"></i></a><i class="fa fa-arrows-v fa-arrows-alt-v"></i>&nbsp;&nbsp;' + $(this).text();
                 if($(this).data('type')==='attr') {
-                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="invalidHiding[]"><option value="disable"><?= t('disable invalid'); ?></option><option value="hide"><?= t('hide invalid'); ?></option></select>';
-                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="matchingType[]"><option value="or"><?= t('match any'); ?></option><option value="and"><?= t('match all'); ?></option></select>';
+                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="invalidHiding[]"><option value="disable">' + <?= json_encode(t('disable invalid')); ?> + '</option><option value="hide">' + <?= json_encode(t('hide invalid')); ?> + '</option></select>';
+                    newitem += '<select class="form-control form-select input-sm pull-right float-end mb-2" name="matchingType[]"><option value="or">' + <?= json_encode(t('match any')); ?> + '</option><option value="and">' + <?= json_encode(t('match all')); ?> + '</option></select>';
                 }
 
             newitem += '<input type="hidden" name="attributes[]" value="' + $(this).data('id') + '" /><input type="hidden" name="types[]" value="' + $(this).data('type') + '" />';

@@ -246,7 +246,7 @@ $usedKeys = [];
                 element: '#ccm-page-type-composer-add-set',
                 modal: true,
                 width: 320,
-                title: '<?= t('Add Attribute Set') ?>',
+                title: <?= json_encode(t('Add Attribute Set')) ?>,
                 height: 'auto'
             });
         });
@@ -259,7 +259,7 @@ $usedKeys = [];
                 element: '#ccm-product-type-set-add-control',
                 modal: true,
                 width: 520,
-                title: '<?= t('Add Attribute To Set') ?>',
+                title: <?= json_encode(t('Add Attribute To Set')) ?>,
                 height: 'auto'
             });
         });
@@ -275,7 +275,7 @@ $usedKeys = [];
                 element: '#ccm-product-type-set-edit-control',
                 modal: true,
                 width: 520,
-                title: '<?= t('Edit Attribute') ?>',
+                title: <?= json_encode(t('Edit Attribute')) ?>,
                 height: 'auto'
             });
         });
@@ -287,7 +287,7 @@ $usedKeys = [];
                 element: 'div[data-delete-set-dialog=' + ptLayoutSetID + ']',
                 modal: true,
                 width: 320,
-                title: '<?=t('Delete Control Set'); ?>',
+                title: <?= json_encode(t('Delete Control Set')); ?>,
                 height: 'auto'
             });
         });
@@ -298,7 +298,7 @@ $usedKeys = [];
                 element: 'div[data-edit-set-dialog=' + ptLayoutSetID + ']',
                 modal: true,
                 width: 320,
-                title: '<?=t('Update Control Set'); ?>',
+                title: <?= json_encode(t('Update Control Set')); ?>,
                 height: 'auto'
             });
         });
@@ -374,7 +374,7 @@ $usedKeys = [];
                 element: 'div[data-delete-set-control-dialog=' + ptLayoutSetControlID + ']',
                 modal: true,
                 width: 420,
-                title: '<?=t('Delete Control'); ?>',
+                title: <?= json_encode(t('Delete Control')); ?>,
                 height: 'auto'
             });
             return false;

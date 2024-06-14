@@ -346,7 +346,7 @@ class Controller extends Package implements ProviderAggregateInterface
             var TRAILINGSLASH = '" . ((bool) $config->get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
             var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
             var HELPERSURL = '" . rtrim(Url::to('/helpers'), '/') . "';
-            var QTYMESSAGE = '" . t('Quantity must be greater than zero') . "';
+            var QTYMESSAGE = " . json_encode(t('Quantity must be greater than zero')) . ";
             var CHECKOUTSCROLLOFFSET = " . $config->get('community_store.checkout_scroll_offset', 0) . ";
             var CURRENCYCODE = '" . ($config->get('community_store.currency') ?: '') . "';
             var CURRENCYSYMBOL = '" . $config->get('community_store.symbol') . "';
