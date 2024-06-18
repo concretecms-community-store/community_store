@@ -46,7 +46,7 @@ class CsvReportExporter
             'Content-Transfer-Encoding' => 'binary'
         ];
 
-        $response = StreamedResponse::create(
+        $response = new StreamedResponse(
             function () {
                 $writer = Writer::createFromPath('php://output', 'w');
                 if (count($this->header)) {
