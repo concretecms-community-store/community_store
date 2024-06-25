@@ -38,7 +38,7 @@ There are four different ways that products can be categorized, with each way be
 - Using Manufacturers - a way to group products that can be shown on product blocks, linking to a manufacturer page
 - Using Product Types
 
-Review the [Categorization How-To](/how-tos/categorization) page for more detail on how these group concepts are used
+Review the [Categorization How-To](/how-tos/categorization.html) page for more detail on how these group concepts are used
 
 
 ## Attributes
