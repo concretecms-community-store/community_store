@@ -762,7 +762,7 @@ if (version_compare($version, '9.0', '<')) {
                                 e.preventDefault();
 
                                 var options = {
-                                    filters: [{field: 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
+                                    multipleSelection: true, filters: [{field: 'type', type: '<?= \Concrete\Core\File\Type\Type::T_IMAGE; ?>'}]
                                 };
 
                                 ConcreteFileManager.launchDialog(function (data) {
