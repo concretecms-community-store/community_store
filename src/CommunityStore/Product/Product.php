@@ -119,7 +119,7 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pCustomerPrice;
+    protected $pCustomerPrice = false;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -139,22 +139,22 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pQuantityPrice;
+    protected $pQuantityPrice = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pFeatured;
+    protected $pFeatured = false;
 
     /**
      * @ORM\Column(type="decimal", precision=12, scale=4)
      */
-    protected $pQty;
+    protected $pQty = 0;
 
     /**
      * @ORM\Column(type="boolean",nullable=true)
      */
-    protected $pQtyUnlim;
+    protected $pQtyUnlim = false;
 
     /**
      * @ORM\Column(type="datetime",nullable=true)
@@ -184,12 +184,12 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pNoQty;
+    protected $pNoQty = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pAllowDecimalQty;
+    protected $pAllowDecimalQty = false;
 
     /**
      * @ORM\Column(type="decimal", precision=5, scale=4, nullable=true)
@@ -214,17 +214,17 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pTaxable;
+    protected $pTaxable = false;
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $pfID;
+    protected $pfID = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pActive;
+    protected $pActive = true;
 
     /**
      * @ORM\Column(type="datetime")
@@ -239,7 +239,7 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pShippable;
+    protected $pShippable = false;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
@@ -284,12 +284,12 @@ class Product
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pCreateUserAccount;
+    protected $pCreateUserAccount = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pAutoCheckout;
+    protected $pAutoCheckout = false;
 
     /**
      * @ORM\Column(type="integer",nullable=true)
@@ -299,17 +299,17 @@ class Product
     /**
      * @ORM\Column(type="integer")
      */
-    protected $pExclusive;
+    protected $pExclusive = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $pVariations;
+    protected $pVariations = false;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $pNotificationEmails;
+    protected $pNotificationEmails = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Manufacturer\Manufacturer",inversedBy="products",cascade={"persist"})
@@ -2008,6 +2008,10 @@ class Product
     public function save()
     {
         $this->setDateUpdated(new \DateTime());
+
+        if (!$this->getDateAdded()) {
+            $this->setDateAdded(new \DateTime());
+        }
 
         $em = dbORM::entityManager();
         $em->persist($this);
