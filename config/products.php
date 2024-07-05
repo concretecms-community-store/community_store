@@ -17,4 +17,6 @@ return [
             'updateOpenGraph' >= false,
         ],
     ],
+
+    'newVariantDisable' => false,
 ];

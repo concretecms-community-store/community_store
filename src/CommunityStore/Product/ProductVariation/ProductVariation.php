@@ -549,7 +549,7 @@ class ProductVariation
                         'pvHeight' => '',
                         'pvLength' => '',
                         'pvSort' => $sort,
-                        'pvDisabled' => 0,
+                        'pvDisabled' => Config::get('community_store::products.newVariantDisable'),
                          true, ]
                     );
 
@@ -669,6 +669,7 @@ class ProductVariation
         $variation->setVariationWidth($data['pvWeight']);
         $variation->setVariationPackageData(isset($data['pvPackageData']) ? $data['pvPackageData'] : '');
         $variation->setVariationSort($data['pvSort']);
+        $variation->setVariationDisabled(isset($data['pvDisabled']) ? $data['pvDisabled'] : Config::get('community_store::products.newVariantDisable'));
         $product->getVariations()->add($variation);
         $variation->save($persistonly);
 

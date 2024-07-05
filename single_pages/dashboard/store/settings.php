@@ -498,6 +498,18 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 <div class="small text-muted"><?= $automaticProductQuantitiesMessage ?></div>
             </div>
 
+            <div class="form-group">
+                <label><?= t('Disable new variants by default') ?></label>
+                <div class="checkbox form-check">
+                    <?php
+                    $newVariantDisable = Config::get("community_store::products.newVariantDisable") ? '1' : '0';
+                    ?>
+                    <div class="radio"><label><?= $form->radio('newVariantDisable', '1', $newVariantDisable) ?><?= t('Yes, disable new variants at their creation') ?></label></div>
+                    <div class="radio"><label><?= $form->radio('newVariantDisable', '0', $newVariantDisable) ?><?= t('No, do not disable new variants when they are created') ?></label></div>
+                </div>
+                <div class="small text-muted"><?= t("Disabling new variants when they are created can be relevant if not all combinations of options are not meant to be available") ?></div>
+            </div>
+
         </div>
 
         <!-- #settings-product-images -->
