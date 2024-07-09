@@ -1,12 +1,14 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Controller\Element\Attribute\Form;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Product\ProductVariation\ProductVariation;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\AutoUpdaterQuantitiesFromVariations;
+use Concrete\Core\Support\Facade\Log;
 
 /**
  * @var Concrete\Core\Application\Service\FileManager $al
@@ -1550,7 +1552,11 @@ if (version_compare($version, '9.0', '<')) {
 
                                                 <div class="form-group pull-right mt-2">
 													<?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
-													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : false, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
+                                                    <?php
+                                                    $newVariantDisable = Config::get("community_store::products.newVariantDisable");
+                                                    Log::addInfo('newVariantDisable: ' . $newVariantDisable);
+                                                    ?>
+													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : $newVariantDisable, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
                                                 </div>
 
                                             </div>

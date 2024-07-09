@@ -235,6 +235,9 @@ class Settings extends DashboardPageController
                 Config::save('community_store::products.hideSize', !empty($args['hideSize']));
                 Config::save('community_store::products.hideWeight', !empty($args['hideWeight']));
                 Config::save('community_store::products.hideBarcode', !empty($args['hideBarcode']));
+                
+                Config::save('community_store::products.newVariantDisable', !empty($args['newVariantDisable']));
+
                 Config::save('community_store.hideVariationPrices', isset($args['hideVariationPrices']) ?? false);
                 Config::save('community_store.hideVariationShippingFields', isset($args['hideVariationShippingFields']) ?? false);
                 Config::save('community_store.hideSalePrice',  isset($args['hideSalePrice']) ?? false);
