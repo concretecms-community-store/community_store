@@ -1309,7 +1309,7 @@ class Order implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
 
-        return $app->make('\Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
+        return $app->make('\Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
     }
 
     public function getAttributeValueObject($ak, $createIfNotExists = false)

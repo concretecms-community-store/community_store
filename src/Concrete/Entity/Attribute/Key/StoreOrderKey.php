@@ -61,7 +61,7 @@ class StoreOrderKey extends Key
 
         $akList = [];
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
+        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
         $attlist = $orderCategory->getList();
 
 

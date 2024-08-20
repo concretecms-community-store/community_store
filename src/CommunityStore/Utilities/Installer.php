@@ -46,7 +46,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxClass;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
-use Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory;
+use Concrete\Package\CommunityStore\Attribute\Category\OrderCategory;
 use Doctrine\Persistence\Mapping\MappingException as PersistenceMappingException;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
@@ -239,7 +239,7 @@ class Installer
         $attributeSetFactory = $app->make(SetFactory::class);
 
         $category = $this->categoryService->getByHandle('store_order');
-        /** @var StoreOrderCategory $categoryController */
+        /** @var OrderCategory $categoryController */
         if (!$category instanceof Category) {
             $categoryController = $this->categoryService->add('store_order', 1, $package);
         } else {
@@ -563,7 +563,7 @@ class Installer
             'vat_number' => $text,
         ];
 
-        $orderCategory = $app->make(StoreOrderCategory::class);
+        $orderCategory = $app->make(OrderCategory::class);
         $orderCustomerSet = $attributeSetFactory->getByHandle('order_customer');
 
         foreach ($attributes as $handle => $type) {

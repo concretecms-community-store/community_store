@@ -7,7 +7,7 @@ class OrderKey extends Facade
 {
     public static function getFacadeAccessor()
     {
-        return 'Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory';
+        return 'Concrete\Package\CommunityStore\Attribute\Category\OrderCategory';
     }
 
     public static function getByHandle($handle)
