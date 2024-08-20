@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Command\Task\Manager as TaskManager;
@@ -25,7 +26,7 @@ class Controller extends Package implements ProviderAggregateInterface
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.6.6-alpha2';
+    protected $pkgVersion = '2.7';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -54,23 +55,9 @@ class Controller extends Package implements ProviderAggregateInterface
 
     public function installStore($pkg)
     {
-        Installer::installBlocks($pkg);
-        Installer::installProductParentPage($pkg);
-        Installer::installSinglePages($pkg);
-        Installer::installStoreProductPageType($pkg);
-        Installer::setDefaultConfigValues($pkg);
-        Installer::installPaymentMethods($pkg);
-        Installer::installShippingMethods($pkg);
-        Installer::setPageTypeDefaults($pkg);
-        Installer::installCustomerGroups($pkg);
-        Installer::installUserAttributes($pkg);
-        Installer::installOrderAttributes($pkg);
-        Installer::installProductAttributes($pkg);
-        Installer::createDDFileset($pkg);
-        Installer::installOrderStatuses($pkg);
-        Installer::installDefaultTaxClass($pkg);
-        Installer::installJobs();
-        Installer::installTasks();
+        $this->registerCategories();
+        $installer = $this->app->make(Installer::class);
+        $installer->install($pkg, Request::getInstance()->request->all());
     }
 
     public function install()
@@ -81,9 +68,8 @@ class Controller extends Package implements ProviderAggregateInterface
             throw new ErrorException(t("This package requires that a page template exists with the handle of 'full'. This can be adjusted or removed after the installation if required."));
         }
 
-        $this->registerCategories();
-        parent::install();
-
+        $pkg = parent::install();
+        $this->installStore($pkg);
 
         if ($this->app->isRunThroughCommandLineInterface()) {
             $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
@@ -125,7 +111,8 @@ class Controller extends Package implements ProviderAggregateInterface
             parent::upgrade();
         }
 
-        Installer::upgrade($pkg, self::$upgradingFromVersion);
+        $installer = $this->app->make(Installer::class);
+        $installer->upgrade($pkg,  self::$upgradingFromVersion);
         $this->app->clearCaches();
     }
 
@@ -368,7 +355,7 @@ class Controller extends Package implements ProviderAggregateInterface
         $this->app['manager/attribute/category']->extend(
             'store_order',
             function ($app) {
-                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
             }
         );
     }

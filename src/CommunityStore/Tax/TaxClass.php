@@ -43,7 +43,17 @@ class TaxClass
         $this->taxClassHandle = $handle;
     }
 
+    public function setHandle($handle)
+    {
+        $this->taxClassHandle = $handle;
+    }
+
     public function setTaxClassName($name)
+    {
+        $this->taxClassName = $name;
+    }
+
+    public function setName($name)
     {
         $this->taxClassName = $name;
     }
@@ -59,6 +69,11 @@ class TaxClass
     }
 
     public function setTaxClassLock($locked)
+    {
+        $this->locked = $locked;
+    }
+
+    public function setLocked($locked)
     {
         $this->locked = $locked;
     }

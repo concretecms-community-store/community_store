@@ -1,16 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Support\Facade\Url;
-
-$pkg = app()->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-$pkg->installStore($pkg);
-
 ?>
 
 
 <p><?= t('Community Store is now installed.'); ?></p>
 
 <p>
-    <a class="btn btn-primary" href="<?php echo Url::to('/dashboard/store/settings'); ?>">
+    <a class="btn btn-primary text-white" href="<?php echo Url::to('/dashboard/store/settings'); ?>">
         <?= t('Open Community Store Settings'); ?>
     </a>
 </p>

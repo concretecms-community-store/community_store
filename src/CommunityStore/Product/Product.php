@@ -1180,7 +1180,7 @@ class Product
         }
 
         $product->save();
-        if (!$data['pID'] && isset($data['createPage'])) {
+        if (!$data['pID'] && isset($data['createPage']) && isset($data['selectPageTemplate'])) {
             $product->generatePage($data['selectPageTemplate']);
         } else {
             $product->updatePage();

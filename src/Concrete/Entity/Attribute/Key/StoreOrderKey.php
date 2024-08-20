@@ -5,9 +5,10 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Package\CommunityStore\Repository\StoreOrderKeyRepository;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=StoreOrderKeyRepository::class)
  * @ORM\Table(name="CommunityStoreOrderAttributeKeys")
  * @ORM\DiscriminatorMap({ "storeorderkey" = "StoreOrderKey"})
  */
@@ -24,7 +25,7 @@ class StoreOrderKey extends Key
      */
     protected $akRequired;
 
-    public function getAttributeKeyCategoryHandle()
+    public function getAttributeKeyCategoryHandle(): string
     {
         return 'store_order';
     }
@@ -60,7 +61,7 @@ class StoreOrderKey extends Key
 
         $akList = [];
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
+        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
         $attlist = $orderCategory->getList();
 
 
