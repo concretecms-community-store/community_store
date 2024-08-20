@@ -355,7 +355,7 @@ class Controller extends Package implements ProviderAggregateInterface
         $this->app['manager/attribute/category']->extend(
             'store_order',
             function ($app) {
-                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\StoreOrderCategory');
+                return $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
             }
         );
     }
