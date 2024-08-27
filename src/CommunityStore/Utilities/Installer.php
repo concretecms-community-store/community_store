@@ -493,13 +493,8 @@ class Installer
     /** Dependency methods */
     private function createCustomerGroup(string $name, string $description, int $packageId): Group
     {
-        $command = new AddGroupCommand();
-        $command->setName($name)
-            ->setDescription($description)
-            ->setPackageID($packageId);
-
-        $app = Application::getFacadeApplication();
-        return $app->executeCommand($command);
+        $group = Group::add($name, $description);
+        return $group;
     }
 
     private function associateAttributeKeyTypes(CategoryInterface $categoryController): void
