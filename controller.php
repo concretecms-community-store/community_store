@@ -53,11 +53,11 @@ class Controller extends Package implements ProviderAggregateInterface
         return t("Community Store");
     }
 
-    public function installStore($pkg)
+    public function installStore($pkg, array $options = [])
     {
         $this->registerCategories();
         $installer = $this->app->make(Installer::class);
-        $installer->install($pkg, Request::getInstance()->request->all());
+        $installer->install($pkg, $options);
     }
 
     public function install()
@@ -69,12 +69,13 @@ class Controller extends Package implements ProviderAggregateInterface
         }
 
         $pkg = parent::install();
-        $this->installStore($pkg);
-
         if ($this->app->isRunThroughCommandLineInterface()) {
-            $pkg = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle('community_store');
-            $this->installStore($pkg);
+            $args = func_get_args();
+            $options = is_array($args[0] ?? null) ? $args[0] : [];
+        } else {
+            $options = Request::getInstance()->request->all();
         }
+        $this->installStore($pkg, $options);
     }
 
     /**
