@@ -1,0 +1,35 @@
+name: Test Install
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - "**"
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  docker:
+    name: Tests in docker (Concrete v${{ matrix.ccm-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ccm-version:
+          - 8
+          - 9
+    container: ghcr.io/concrete5-community/docker5:${{ matrix.ccm-version }}
+    steps:
+      -
+        name: Start Services
+        run: ccm-service start db
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Link package
+        run: ln -s "$(pwd)" /app/packages/community_store
+      -
+        name: Install package
+        run: sudo -Hu www-data /app/concrete/bin/concrete5 c5:package-install community_store createParentProductPage=1 parentPage=1
