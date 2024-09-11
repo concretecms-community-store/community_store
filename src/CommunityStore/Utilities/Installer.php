@@ -130,8 +130,10 @@ class Installer
         $this->createStoreProductPageType($package, $installerOptions['pageTemplate'] ?? null);
         $this->createUserAttributes($package);
 
+        $productParentPage = false;
+
         if (isset($installerOptions['createParentProductPage'])) {
-            $this->installProductParentPage($package, $installerOptions['parentPage'] ?? null);
+            $productParentPage = $this->installProductParentPage($package, $installerOptions['parentPage'] ?? null);
         }
 
         $this->createDefaultPaymentMethod($package);
@@ -142,7 +144,7 @@ class Installer
         $this->createDigitalDownloadFileset();
         $this->installJobs();
         $this->installTasks();
-        $this->setDefaultConfigValues();
+        $this->setDefaultConfigValues($productParentPage);
     }
 
     public function upgrade($package)
@@ -328,13 +330,10 @@ class Installer
         $this->entityManager->flush();
     }
 
-    private function setDefaultConfigValues(): void
+    private function setDefaultConfigValues($productPublishTarget = false): void
     {
-
-        $defaultSlug = self::getDefaultSlug();
-
         $this->config->save('community_store', [
-            'productPublishTarget' => Page::getByPath($defaultSlug . '/products')->getCollectionID(),
+            'productPublishTarget' => $productPublishTarget ? $productPublishTarget->getCollectionID() : false,
             'symbol' => '$',
             'whole' => '.',
             'thousand' => ',',
@@ -402,60 +401,72 @@ class Installer
     }
 
 
-    private function installProductParentPage(Package $package, ?int $parentPageId): void
+    private function installProductParentPage(Package $package, ?int $parentPageId)
     {
         $defaultSlug = self::getDefaultSlug();
         $productParentPage = Page::getByPath($defaultSlug . '/products');
         if (!is_object($productParentPage) || $productParentPage->isError()) {
-            if ($defaultSlug === '' || $defaultSlug === '/' || !$defaultSlug) {
-                $parentPage = Page::getByID(1);
+
+            if ($parentPageId) {
+                $parentPage = Page::getByID($parentPageId);
             } else {
-                $parentPage = Page::getByPath($defaultSlug);
+                if ($defaultSlug === '' || $defaultSlug === '/' || !$defaultSlug) {
+                    $parentPage = Page::getByID(1);
+                } else {
+                    $parentPage = Page::getByPath($defaultSlug);
+                }
             }
 
-            $productParentPage = $parentPage->add(
-                PageType::getByHandle('page'),
-                [
-                    'cName' => t('Products'),
-                    'cHandle' => 'products',
-                    'pkgID' => $package->getPackageID(),
-                ]
-            );
-            $main = new Area('Main');
+            if ($parentPage instanceof Page) {
+                $productParentPage = $parentPage->add(
+                    PageType::getByHandle('page'),
+                    [
+                        'cName' => t('Products'),
+                        'cHandle' => 'products',
+                        'pkgID' => $package->getPackageID(),
+                    ]
+                );
+                $main = new Area('Main');
 
-            $bt = BlockType::getByHandle('content');
-            $productParentPage->addBlock($bt, $main, ['content'=>'<h1>' .t('Products') . '</h1>']);
+                $bt = BlockType::getByHandle('content');
+                $productParentPage->addBlock($bt, $main, ['content' => '<h1>' . t('Products') . '</h1>']);
 
-            $bt = BlockType::getByHandle('community_product_list');
-            $data = [
-                'sortOrder' =>  'alpha',
-                'filter' =>  'all',
-                'filterCID' =>  0,
-                'relatedPID' =>  0,
-                'groupMatchAny' =>  0,
-                'maxProducts' =>  10,
-                'showOutOfStock' =>  0,
-                'productsPerRow' =>  1,
-                'displayMode' =>  'grid',
-                'showPagination' => 1,
-                'enableExternalFiltering' =>  1,
-                'showFeatured' =>  0,
-                'showSale' =>  0,
-                'showDescription' =>  1,
-                'showName' =>  1,
-                'showPrice' =>  1,
-                'showQuickViewLink' =>  0,
-                'showPageLink' =>  1,
-                'showSortOption' =>  0,
-                'pageLinkText' =>  '',
-                'showAddToCart' =>  1,
-                'btnText' =>  '',
-                'showQuantity' =>  0,
-                'noProductsMessage' =>  ''
-            ];
+                $bt = BlockType::getByHandle('community_product_list');
+                $data = [
+                    'sortOrder' => 'alpha',
+                    'filter' => 'all',
+                    'filterCID' => 0,
+                    'relatedPID' => 0,
+                    'groupMatchAny' => 0,
+                    'maxProducts' => 10,
+                    'showOutOfStock' => 0,
+                    'productsPerRow' => 1,
+                    'displayMode' => 'grid',
+                    'showPagination' => 1,
+                    'enableExternalFiltering' => 1,
+                    'showFeatured' => 0,
+                    'showSale' => 0,
+                    'showDescription' => 1,
+                    'showName' => 1,
+                    'showPrice' => 1,
+                    'showQuickViewLink' => 0,
+                    'showPageLink' => 1,
+                    'showSortOption' => 0,
+                    'pageLinkText' => '',
+                    'showAddToCart' => 1,
+                    'btnText' => '',
+                    'showQuantity' => 0,
+                    'noProductsMessage' => ''
+                ];
 
-            $productParentPage->addBlock($bt, $main, $data);
+                $productParentPage->addBlock($bt, $main, $data);
+                return $productParentPage;
+            }
+        } else {
+            return $productParentPage;
         }
+
+
     }
 
     private function createDigitalDownloadFileset(): void
