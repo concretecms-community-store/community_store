@@ -304,7 +304,7 @@ class Controller extends BlockController
                 }
 
                 foreach ($attributemapping as $attrhandle => $values) {
-                    ksort($attributemapping[$attrhandle]);
+                    ksort($attributemapping[$attrhandle], SORT_NATURAL);
                 }
             }
 
