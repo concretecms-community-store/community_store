@@ -43,12 +43,12 @@ class StateProvince extends Controller
             $ret .= '<option {selected} value=""></option>';
             $hasSelectedState = false;
 
-            foreach ($list as $code => $country) {
+            foreach ($list as $code => $state) {
                 if (!empty($selectedState) && $code == $selectedState) {
-                    $ret .= "<option selected value='{$code}'>{$country}</option>";
+                    $ret .= "<option selected value='{$code}'>{$state}</option>";
                     $hasSelectedState = true;
                 } else {
-                    $ret .= "<option value='{$code}'>{$country}</option>";
+                    $ret .= "<option value='{$code}'>{$state}</option>";
                 }
             }
 
