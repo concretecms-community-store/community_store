@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
@@ -26,7 +27,7 @@ class Controller extends Package implements ProviderAggregateInterface
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
-    protected $pkgVersion = '2.7.2-alpha1';
+    protected $pkgVersion = '2.7.2-alpha2';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
@@ -180,6 +181,13 @@ class Controller extends Package implements ProviderAggregateInterface
 
     public function on_start()
     {
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $metaData = $entityManager->getMetadataFactory()->getMetadataFor(Key::class);
+        foreach (Installer::KEY_CATEGORIES as $name => $className) {
+            $metaData->addDiscriminatorMapClass($name, $className);
+        }
+        $entityManager->getMetadataFactory()->setMetadataFor(Key::class, $metaData);
+
         $this->registerAutoload();
         $this->registerHelpers();
         $this->registerRoutes();

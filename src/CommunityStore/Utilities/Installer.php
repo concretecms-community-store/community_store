@@ -149,6 +149,7 @@ class Installer
 
     public function upgrade($package)
     {
+        $this->addNewCategoriesToDiscriminatorMap();
         $this->createBlockTypes($package);
         $this->createSinglePages($package, true);
         $this->createUserAttributes($package);
