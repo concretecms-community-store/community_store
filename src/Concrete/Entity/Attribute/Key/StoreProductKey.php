@@ -3,10 +3,12 @@ namespace Concrete\Package\CommunityStore\Entity\Attribute\Key;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Package\CommunityStore\Repository\StoreProductKeyRepository;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=StoreProductKeyRepository::class)
  * @ORM\Table(name="CommunityStoreProductAttributeKeys")
+ * @ORM\DiscriminatorMap({ "storeproductkey" = "StoreProductKey"})
  */
 class StoreProductKey extends Key
 {
