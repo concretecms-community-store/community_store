@@ -401,6 +401,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
         if ($this->saleOnly) {
             $query->andWhere("pSalePrice is not null");
+
+            $query->andWhere($query->expr()->or('pSaleStart IS NULL',
+		        $query->expr()->lte('pSaleStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+
+	        $query->andWhere($query->expr()->or('pSaleEnd IS NULL',
+		        $query->expr()->gte('pSaleEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
         }
         if (!$this->showOutOfStock) {
             $query->andWhere("pQty > 0 OR pQtyUnlim = 1");
