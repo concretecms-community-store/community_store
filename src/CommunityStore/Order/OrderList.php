@@ -22,72 +22,72 @@ class OrderList extends AttributedItemList implements PaginationProviderInterfac
     /**
      * @var int
      */
-    private $limit = 0;
+    protected $limit = 0;
 
     /**
      * @var string
      */
-    private $search = '';
+    protected $search = '';
 
     /**
      * @var string
      */
-    private $status = '';
+    protected $status = '';
 
     /**
      * @var int|null
      */
-    private $paymentMethod = null;
+    protected $paymentMethod = null;
 
     /**
      * @var string
      */
-    private $paymentStatus = '';
+    protected $paymentStatus = '';
 
     /**
      * @var bool|null
      */
-    private $externalPaymentRequested = false;
+    protected $externalPaymentRequested = false;
 
     /**
      * @var string
      */
-    private $fromDate = '';
+    protected $fromDate = '';
 
     /**
      * @var string
      */
-    private $toDate = '';
+    protected $toDate = '';
 
     /**
      * @var bool|null
      */
-    private $paid = null;
+    protected $paid = null;
 
     /**
      * @var bool|null
      */
-    private $cancelled = null;
+    protected $cancelled = null;
 
     /**
      * @var bool|null
      */
-    private $refunded = null;
+    protected $refunded = null;
 
     /**
      * @var bool|null
      */
-    private $shippable = null;
+    protected $shippable = null;
 
     /**
      * @var int|null
      */
-    private $cID = null;
+    protected $cID = null;
 
     /**
      * @var int[]
      */
-    private $orderIDs = [];
+    protected $orderIDs = [];
 
     /**
      * @param int $limit
