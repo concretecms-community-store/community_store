@@ -85,6 +85,13 @@ var communityStore = {
     },
 
     addToCart: function(form) {
+        if (typeof onBeforeAddToCart === 'function'){
+            var ret = onBeforeAddToCart(form);
+            if (ret === false) {
+                return false;
+            }
+        }
+
         var valid = true;
         var priceinput = $(form).find('.store-product-customer-price-entry-field');
 
