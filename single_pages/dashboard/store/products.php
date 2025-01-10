@@ -1074,6 +1074,7 @@ if (version_compare($version, '9.0', '<')) {
                                 </div>
                                 <% } else { %>
                                 <input type="hidden" value="" name="poDisplayType[]"/>
+                                <input type="hidden" value="" name="poDetails[]"/>
                                 <% } %>
 
                                 <% if (poType == 'static') { %>
