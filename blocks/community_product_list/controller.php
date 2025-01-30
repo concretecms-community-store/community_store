@@ -177,6 +177,8 @@ class Controller extends BlockController
      */
     public $filterProductType = '';
 
+    public $excludeCurrentPage = false;
+
     public function getBlockTypeDescription()
     {
         return t("Add a Product List for Community Store");
@@ -222,6 +224,7 @@ class Controller extends BlockController
         $this->set('relatedPID', false);
         $this->set('enableExternalFiltering', true);
         $this->set('filterProductType', false);
+        $this->set('excludeCurrentPage', false);
 
         $typeList = ProductTypeList::getProductTypeList();
         $this->set("productTypes", $typeList);
@@ -372,6 +375,20 @@ class Controller extends BlockController
             $products->setRandomSeed(date('z'));
         }
 
+        if ($this->filter == 'related_parent') {
+            $page = Page::getCurrentPage();
+            $parentID = $page->getCollectionParentID();
+            if ($parentID > 0) {
+                $products->setParentPageCID($parentID);
+            }
+        }
+
+        if ($this->excludeCurrentPage) {
+            $page = Page::getCurrentPage();
+            $products->setExcludeCID($page->getCollectionID());
+        }
+
+
         $products->setItemsPerPage($this->maxProducts > 0 ? $this->maxProducts : 1000);
         $products->setGroupIDs($this->getGroupFilters());
         $products->setFeaturedOnly($this->showFeatured);
@@ -492,6 +509,7 @@ class Controller extends BlockController
         $args['maxProducts'] = (isset($args['maxProducts']) && $args['maxProducts'] > 0) ? $args['maxProducts'] : 0;
         $args['relatedPID'] = isset($args['relatedPID']) ? (int)$args['relatedPID'] : 0;
         $args['filterProductType'] = isset($args['filterProductType']) ? (int)$args['filterProductType'] : 0;
+        $args['excludeCurrentPage'] = isset($args['excludeCurrentPage']) ? (int)$args['excludeCurrentPage'] : 0;
 
         if ('related_product' != $args['filter']) {
             $args['relatedPID'] = 0;

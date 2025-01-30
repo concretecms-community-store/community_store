@@ -17,6 +17,7 @@
                     'page_children' => t('Categorized under a specified page and child pages'),
                     'related' => t('Related to product displayed on this page'),
                     'related_product' => t('Related to a specified product'),
+                    'related_parent' => t('Related via parent page'),
                 ], $filter); ?>
             </div>
 
@@ -152,7 +153,12 @@
                     <?= t('Enable Other Blocks to Filter This Product List'); ?>
                 </label>
             </div>
-
+            <div class="form-group form-check">
+                <label>
+                    <?= $form->checkbox('excludeCurrentPage', 1, $excludeCurrentPage); ?>
+                    <?= t('Exclude Product on Current Page'); ?>
+                </label>
+            </div>
 
 
     </div>

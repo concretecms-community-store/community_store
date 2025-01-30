@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Product;
 
+use Concrete\Core\Page\Page;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Pagination\Pagination;
@@ -26,10 +27,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     protected $saleOnly = false;
     protected $activeOnly = true;
     protected $cIDs = [];
+    protected $parentPageCID = false;
     protected $relatedProduct = false;
     protected $manufacturer = '';
     protected $attFilters = [];
     protected $productType = false;
+    protected $excludeCID = false;
 
     public function setGroupID($gID)
     {
@@ -64,6 +67,15 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
     public function setCID($cID)
     {
         $this->cIDs[] = $cID;
+    }
+
+    // filters by parent page, referring to actual product page locations in sitemap (not categorisation)
+    public function setParentPageCID($cID) {
+        $this->parentPageCID = $cID;
+    }
+
+    public function setExcludeCID($excludeCID) {
+        $this->excludeCID = $excludeCID;
     }
 
     public function setCIDs($cIDs)
@@ -426,6 +438,22 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         } else {
             $query->groupBy('p.pID, p.pName, p.pPrice, p.pActive, p.pDateAdded');
         }
+
+        if ($this->parentPageCID) {
+            $parentPage = Page::getByID($this->parentPageCID);
+            $children = $parentPage->getCollectionChildrenArray(1);
+
+            $query->andWhere('cID IN (:childrenids)')
+                ->setParameter('childrenids', $children, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+
+        if ($this->excludeCID) {
+
+            $query->andWhere('cID <> (:excludeCID)')
+                ->setParameter('excludeCID', $this->excludeCID);
+        }
+
+
 
         if ($this->search) {
             $query->andWhere('pName like :search')->setParameter(':search', '%' . $this->search . '%')->orWhere('pSKU like :searchsku')->setParameter('searchsku', '%' . $this->search . '%');
