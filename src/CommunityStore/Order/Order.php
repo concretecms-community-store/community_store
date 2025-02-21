@@ -627,8 +627,12 @@ class Order implements ObjectInterface
         if ($orderID) {
             $order = Order::getByID($orderID);
 
-            if ($order && $order->getTemporaryRecordCreated() && $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
-                $order = false;
+            if ($order) {
+                if (!$order->getTemporaryRecordCreated() || !$orderTimestamp) {
+                    $order = false;
+                } else if ( $orderTimestamp != $order->getTemporaryRecordCreated()->format(DATE_RFC3339)) {
+                    $order = false;
+                }
             }
         }
 
