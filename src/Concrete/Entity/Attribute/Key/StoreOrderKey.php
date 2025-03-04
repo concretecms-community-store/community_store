@@ -60,18 +60,14 @@ class StoreOrderKey extends Key
         }
 
         $akList = [];
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $orderCategory = $app->make('Concrete\Package\CommunityStore\Attribute\Category\OrderCategory');
-        $attlist = $orderCategory->getList();
+        $attlist = $set->getAttributeKeys();
 
 
         foreach ($attlist as $ak) {
-            if (in_array($set, $ak->getAttributeSets())) {
-                $attributeGroups = $ak->getAttributeUserGroups();
+            $attributeGroups = $ak->getAttributeUserGroups();
 
-                if (is_null($user) || (empty($attributeGroups) || array_intersect($attributeGroups, $uGroupIDs))) {
-                    $akList[] = $ak;
-                }
+            if (is_null($user) || (empty($attributeGroups) || array_intersect($attributeGroups, $uGroupIDs))) {
+                $akList[] = $ak;
             }
         }
 
