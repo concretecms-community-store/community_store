@@ -26,6 +26,7 @@ class Tax
     {
         $taxRates = self::getTaxRates();
         $taxes = [];
+
         if (count($taxRates) > 0) {
             foreach ($taxRates as $taxRate) {
                 if ($taxRate->isTaxable()) {

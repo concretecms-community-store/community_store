@@ -52,7 +52,9 @@ class Settings extends DashboardPageController
 
         $gl = new GroupList();
         foreach ($gl->getResults() as $group) {
-            $groupList[$group->getGroupID()] = $group->getGroupName();
+            if ($group->getGroupName() != 'Administrators') {
+                $groupList[$group->getGroupID()] = $group->getGroupName();
+            }
         }
         $this->set('groupList', $groupList);
 
