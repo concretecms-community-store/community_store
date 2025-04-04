@@ -675,6 +675,21 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             </div>
 
             <div class="form-group">
+                <?= $form->label('useForShippingDefault', t('Billing and Shipping Details')); ?>
+                <br/>
+                <div class="mb-2">
+                <label><?= $form->checkbox('useForShippingDefault', '1', Config::get('community_store.useForShippingDefault')); ?>
+                    <?= t('Use billing details for shipping option is checked by default'); ?>
+                </label>
+                </div>
+                <div class="mb-2">
+                <label><?= $form->checkbox('autoSkipSingleShipping', '1', Config::get('community_store.autoSkipSingleShipping')); ?>
+                    <?= t('Automatically ship shipping option if only one option presented'); ?>
+                </label>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <?= $form->label('useCaptcha', t('Use CAPTCHA')); ?>
                 <br/>
                 <label><?= $form->checkbox('useCaptcha', '1', Config::get('community_store.useCaptcha')); ?>

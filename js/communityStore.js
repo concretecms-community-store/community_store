@@ -726,6 +726,12 @@ $(document).ready(function () {
                     communityStore.showShippingMethods(function() {
                         communityStore.refreshCartTotals();
                         communityStore.nextPane(obj);
+
+                        if ($('#store-checkout-form-group-shipping-method').data('autoskip')) {
+                            if ($('#store-checkout-form-group-shipping-method .store-shipping-method').length === 1) {
+                                $('#store-checkout-form-group-shipping-method').submit();
+                            }
+                        }
                     });
                 } else {
                     $("#store-checkout-form-group-shipping .store-checkout-form-group-body").prepend('<div class="store-checkout-errors"><div class="alert alert-danger"></div></div>');

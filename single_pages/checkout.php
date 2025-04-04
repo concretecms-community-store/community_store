@@ -184,7 +184,7 @@ $csm = $app->make('cs/helper/multilingual');
                             <div class="store-copy-billing-container col-md-12 mb-3 text-right text-end">
                                 <div class="form-group">
                                 <label>
-                                    <input type="checkbox" id="store-copy-billing" />
+                                    <input type="checkbox" id="store-copy-billing" <?= ($useForShippingDefault) ? 'checked' : '' ?>/>
                                     <?= t("Use these details for shipping") ?>
                                 </label>
                                 </div>
@@ -383,7 +383,7 @@ $csm = $app->make('cs/helper/multilingual');
                         </div>
                     </form>
 
-                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping-method">
+                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping-method" <?= ($autoSkipSingleShipping) ? 'data-autoskip="true"' : ''  ?>>
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
                             <h2><?= t("Shipping") ?></h2>

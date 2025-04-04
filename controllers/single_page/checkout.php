@@ -73,6 +73,8 @@ class Checkout extends PageController
         $this->set('guest', isset($guest) && (bool) $guest);
         $this->set('requiresLogin', Cart::requiresLogin());
         $this->set('companyField', Config::get('community_store.companyField'));
+        $this->set('useForShippingDefault', Config::get('community_store.useForShippingDefault'));
+        $this->set('autoSkipSingleShipping', Config::get('community_store.autoSkipSingleShipping'));
 
         $cart = Cart::getCart();
 
