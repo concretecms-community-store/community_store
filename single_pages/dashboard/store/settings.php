@@ -684,7 +684,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 </div>
                 <div class="mb-2">
                 <label><?= $form->checkbox('autoSkipSingleShipping', '1', Config::get('community_store.autoSkipSingleShipping')); ?>
-                    <?= t('Automatically ship shipping option if only one option presented'); ?>
+                    <?= t('Automatically skip shipping step if only one option presented'); ?>
                 </label>
                 </div>
             </div>
