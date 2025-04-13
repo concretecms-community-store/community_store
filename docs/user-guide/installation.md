@@ -8,7 +8,7 @@ Community Store is an _add on_ for the content management system Concrete CMS, s
 Is is recommended to use a release of Community Store, rather than the master branch.
 
 ## Downloading
-The latest release of Community Store should be downloaded from the [releases section of the project on github](https://github.com/concrete5-community-store/community_store/releases).
+The latest release of Community Store should be downloaded from the [releases section of the project on github](https://github.com/concretecms-community-store/community_store/releases).
 
 ## Installing
 The `community_store` package folder is placed within the top level `packages` folder and Community Store is installed via the **Extend** section of the Dashboard.
@@ -24,5 +24,5 @@ When replacing the add-on's folder, do not rename and leave the previous version
 ## Installing Related Add-ons
 
 Related add-ons such as additional payment or shipping methods are installed in the same manner.
-Refer to the [top level Community Store page on github](https://github.com/concrete5-community-store) for additional add-ons.
+Refer to the [top level Community Store page on github](https://github.com/concretecms-community-store) for additional add-ons.
 Where possible, also install releases of the add-ons instead of downloading the *master* branches.

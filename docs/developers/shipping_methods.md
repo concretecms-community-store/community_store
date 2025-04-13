@@ -2,8 +2,8 @@
 
 Additional shipping methods can be added to Community Store by installing additional add-ons.
 
-[An example package showing how to create Community Store shipping methods is available on github](https://github.com/concrete5-community-store/community_store_shipping_example).
-Additional shipping methods are also available within the [Community Store project page](https://github.com/concrete5-community-store) and can act as further examples, as can the two built in methods.
+[An example package showing how to create Community Store shipping methods is available on github](https://github.com/concretecms-community-store/community_store_shipping_example).
+Additional shipping methods are also available within the [Community Store project page](https://github.com/concretecms-community-store) and can act as further examples, as can the two built in methods.
 
 It is recommended to download the master branch of the example shipping method, change its namespace and use it as a base.
 

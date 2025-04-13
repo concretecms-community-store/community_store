@@ -5,7 +5,7 @@ This is the same translation system used for Concrete CMS add-ons in the officia
 
 To provide translations, please register/login at the above link.
 
-In the past, translations have been directly stored alongside the project. If you are starting a new translation on translate.concretecms.org, you may find that existing translations at [https://github.com/concrete5-community-store/community_store/tree/master/languages](https://github.com/concrete5-community-store/community_store/tree/master/languages) provide a good starting point.
+In the past, translations have been directly stored alongside the project. If you are starting a new translation on translate.concretecms.org, you may find that existing translations at [https://github.com/concretecms-community-store/community_store/tree/master/languages](https://github.com/concretecms-community-store/community_store/tree/master/languages) provide a good starting point.
 
 ## Multilingual Helper
 

@@ -24,7 +24,7 @@ If supported by the payment gateway (i.e. it is not processed externally), the u
 As the new user has been placed in a user group that automatically expires, they will be limited to 365 days worth of access to the protected resources.
 
 ::: tip Advanced Permissions
-Concrete5's [advanced permissions system](https://documentation.concretecms.org/user-guide/editors-reference/dashboard/system-and-maintenance/permissions-and-access/advanced-permissions) is well suited to this setup and gives a high level of control over content.
+Concrete's [advanced permissions system](https://documentation.concretecms.org/user-guide/editors-reference/dashboard/system-and-maintenance/permissions-and-access/advanced-permissions) is well suited to this setup and gives a high level of control over content.
 For example, using advanced permissions individual blocks of content can be placed on the site, only visible to users within selected user groups.
 A content block directly highlighting and linking the newly accessible content could be placed on the page members log in to, being configured to only be visible to users within the membership group.
 :::

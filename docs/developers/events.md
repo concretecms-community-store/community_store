@@ -6,7 +6,7 @@ An example might be that you wish to communicate with a separate warehouse datab
 
 Another usage example is for when you need to do some additional processing when an order is placed. The example might be that you may need to send an email to a supplier when a particular product is purchased. Events allow such functionality to be added through additional Concrete CMS add-ons.
 
-[An example package showing how to respond to Community Store events is available on github](https://github.com/concrete5-community-store/community_store_event_example).
+[An example package showing how to respond to Community Store events is available on github](https://github.com/concretecms-community-store/community_store_event_example).
 
 ## Order events
 - `on_community_store_order` - when a new order is placed
@@ -34,7 +34,7 @@ When these events are fired, the event object passed includes the order or produ
 
 The `on_community_store_order_status_update` event also includes the previous status of the order.
 
-The community_store_event_examples package includes sample code as to how to subscribe to and use the data from all the events above - [https://github.com/concrete5-community-store/community_store_event_example](https://github.com/concrete5-community-store/community_store_event_example)
+The community_store_event_examples package includes sample code as to how to subscribe to and use the data from all the events above - [https://github.com/concretecms-community-store/community_store_event_example](https://github.com/concretecms-community-store/community_store_event_example)
 
 ### Slack Integration
 To hook into events and send notifications to Slack, try the package: [https://github.com/a3020/slife_community_store](https://github.com/a3020/slife_community_store) 

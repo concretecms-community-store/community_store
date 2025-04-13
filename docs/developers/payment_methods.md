@@ -12,5 +12,5 @@ For example, in the EU it is now a requirement that payment systems are Strong C
 
 If you are looking to develop a new payment method add-on for a payment gateway, is is recommended that you opt for a gateway's latest and recommend integration technique.
 
-The [Stripe Checkout payment add-on](https://github.com/concrete5-community-store/community_store_stripe_checkout) is a good example of an off-site payment process.
+The [Stripe Checkout payment add-on](https://github.com/concretecms-community-store/community_store_stripe_checkout) is a good example of an off-site payment process.
 
