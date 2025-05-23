@@ -789,7 +789,7 @@ class Checkout extends PageController
      *
      * @return string empty string in case of errors.
      */
-    private function geolocateCountry()
+    protected function geolocateCountry()
     {
         if (!class_exists(GeolocationResult::class)) {
             return '';
