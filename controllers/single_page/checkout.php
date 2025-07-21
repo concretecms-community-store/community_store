@@ -450,28 +450,40 @@ class Checkout extends PageController
                 $customer = new Customer();
                 $notes = '';
                 $billingAddress = false;
+
                 if ('billing' == $data['adrType']) {
-                    $this->updateBilling($data);
+                    $returned = $this->updateBilling($data);
                     if (isset($data['store-checkout-notes'])) {
                         $notes = $data['store-checkout-notes'];
                         Session::set('notes', $notes);
                     }
-                    $billingAddress = $address = Session::get('billing_address');
-                    $phone = Session::get('billing_phone');
-                    $company = Session::get('billing_company');
-                    $first_name = Session::get('billing_first_name');
-                    $last_name = Session::get('billing_last_name');
+                    $billingAddress = $address = $returned['billing_address'];
+                    $phone = $returned['billing_phone'];
+
+                    if (isset($returned['billing_company'])) {
+                        $company = $returned['billing_company'];
+                    } else {
+                        $company = '';
+                    }
+
+                    $first_name = $returned['billing_first_name'];
+                    $last_name = $returned['billing_last_name'];
                     $email = $customer->getEmail();
                 }
 
                 if ('shipping' == $data['adrType']) {
-                    $this->updateShipping($data);
-                    $address = Session::get('shipping_address');
+                    $returned = $this->updateShipping($data);
+                    $address = $returned['shipping_address'];
                     $phone = '';
                     $email = '';
-                    $first_name = Session::get('shipping_first_name');
-                    $last_name = Session::get('shipping_last_name');
-                    $company = Session::get('shipping_company');
+                    $first_name = $returned['shipping_first_name'];
+                    $last_name = $returned['shipping_last_name'];
+
+                    if (isset($returned['shipping_company'])) {
+                        $company = $returned['shipping_company'];
+                    } else {
+                        $company = '';
+                    }
 
                     // VAT Number validation
                     if (Config::get('community_store.vat_number')) {
@@ -512,7 +524,11 @@ class Checkout extends PageController
                     $results['vat_number'] = $vat_number;
                 }
 
-                $results['attribute_display'] = Session::get('community_store.attributeDisplay');
+                if (isset($returned) && isset($returned['attributeDisplay'])) {
+                    $results['attribute_display'] = $returned['attributeDisplay'];
+                } else {
+                    $results['attribute_display'] = Session::get('community_store.attributeDisplay');
+                }
 
                 // Return JSON with results
                 echo json_encode($results);
@@ -543,6 +559,8 @@ class Checkout extends PageController
 
     public function updateShipping($data)
     {
+        $returnData = [];
+
         //update the users shipping address
         $this->validateAddress($data);
         $customer = new Customer();
@@ -585,11 +603,25 @@ class Checkout extends PageController
         }
 
         Session::set('shipping_first_name', trim($data['store-checkout-shipping-first-name']));
+        $returnData['shipping_first_name'] = trim($data['store-checkout-shipping-first-name']);
+
         Session::set('shipping_last_name', trim($data['store-checkout-shipping-last-name']));
+        $returnData['shipping_last_name'] = trim($data['store-checkout-shipping-last-name']);
+
         Session::set('shipping_address', $address);
+        $returnData['shipping_address'] = $address;
+
         Session::set('shipping_company', isset($data['store-checkout-shipping-company']) ? trim($data['store-checkout-shipping-company']) : '');
+        $returnData['shipping_company'] =  isset($data['store-checkout-shipping-company']) ? trim($data['store-checkout-shipping-company']) : '';
+
         Session::set('vat_number', isset($data['vat_number']) ? $data['vat_number'] : '');
+        $returnData['vat_number'] = isset($data['vat_number']) ? $data['vat_number'] : '';
+
         Session::set('community_store.smID', false);
+        $returnData['smID'] = false;
+
+        // return data that was stored in session
+        return $returnData;
     }
 
     public function validateAddress($data, $billing = null)
@@ -665,11 +697,12 @@ class Checkout extends PageController
 
     private function updateBilling($data)
     {
+        $returnData = [];
+
         //update the users billing address
         $customer = new Customer();
 
         $guest = $customer->isGuest();
-
         $noBillingSave = Config::get('community_store.noBillingSave');
 
         if ($guest) {
@@ -699,28 +732,48 @@ class Checkout extends PageController
         ];
 
         Session::set('billing_first_name', trim($data['store-checkout-billing-first-name']));
+        $returnData['billing_first_name'] = trim($data['store-checkout-billing-first-name']);
+
         Session::set('billing_last_name', trim($data['store-checkout-billing-last-name']));
+        $returnData['billing_last_name'] = trim($data['store-checkout-billing-last-name']);
+
         Session::set('billing_phone', trim($data['store-checkout-billing-phone']));
+        $returnData['billing_phone'] = trim($data['store-checkout-billing-phone']);
+
         Session::set('billing_address', $address);
+        $returnData['billing_address'] = $address;
+
         if (isset($data['store-checkout-billing-company'])) {
             Session::set('billing_company', trim($data['store-checkout-billing-company']));
+            $returnData['billing_company'] = trim($data['store-checkout-billing-company']);
+
         } else {
             Session::remove('billing_company');
         }
 
         if ($guest || !$noBillingSave) {
             $customer->setValue("billing_first_name", trim($data['store-checkout-billing-first-name']));
+            $returnData['billing_first_name'] = trim($data['store-checkout-billing-first-name']);
+
             $customer->setValue("billing_last_name", trim($data['store-checkout-billing-last-name']));
+            $returnData['billing_last_name'] = trim($data['store-checkout-billing-last-name']);
+
             $customer->setValue("billing_phone", trim($data['store-checkout-billing-phone']));
+            $returnData['billing_phone'] = trim($data['store-checkout-billing-phone']);
+
             $customer->setValue("billing_address", $address);
+            $returnData['billing_address'] = $address;
+
             if (isset($data['store-checkout-billing-company'])) {
                 $customer->setValue("billing_company", trim($data['store-checkout-billing-company']));
+                $returnData['billing_company'] = trim($data['store-checkout-billing-company']);
             } else {
                 $customer->setValue("billing_company", '');
             }
         }
 
         Session::set('community_store.smID', false);
+        $returnData['smID'] = false;
 
         $orderID = Session::get('community_store.tempOrderID');
         $orderTimestamp = Session::get('community_store.tempOrderIDTimeStamp');
@@ -754,7 +807,10 @@ class Checkout extends PageController
         $orderChoicesAttList = StoreOrderKey::getAttributeListBySet('order_choices', $this->app->make(User::class));
 
         Session::set('community_store.tempOrderID', $order->getOrderID());
+        $returnData['tempOrderID'] = $order->getOrderID();
+
         Session::set('community_store.tempOrderIDTimeStamp', $order->getTemporaryRecordCreated()->format(DATE_RFC3339));
+        $returnData['tempOrderIDTimeStamp'] = $order->getTemporaryRecordCreated()->format(DATE_RFC3339);
 
         $attributeDisplay = '';
         if (count($orderChoicesAttList)) {
@@ -768,7 +824,10 @@ class Checkout extends PageController
         }
 
         Session::set('community_store.attributeDisplay', $attributeDisplay);
+        $returnData['attributeDisplay'] = $attributeDisplay;
 
+        // return data that was stored in session
+        return $returnData;
     }
 
     public function getCartList()
