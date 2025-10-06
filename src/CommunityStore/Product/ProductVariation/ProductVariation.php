@@ -409,7 +409,7 @@ class ProductVariation
 
     public function getVariationWeight()
     {
-        return $this->pvWeight;
+        return $this->pvWeight + 0;
     }
 
     public function setVariationWeight($pvWeight)

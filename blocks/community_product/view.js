@@ -93,6 +93,13 @@ $(function () {
                 }
             }
 
+            if (variation['weight']) {
+                let weightHolder = pdb.find('.store-product-weight-value');
+                if (weightHolder) {
+                    $(weightHolder).html(variation['weight']);
+                }
+            }
+
             var quantityField = pdb.find('.store-product-qty');
             if (variation['maxCart'] !== false) {
                 quantityField.prop('max', variation['maxCart']);

@@ -269,7 +269,7 @@ $isSellable = $product->isSellable();
                 ?>
                 <div class="store-product-weight">
                     <strong><?= t("Weight") ?>:</strong>
-                    <?= $product->getWeight() ?>
+                    <span class="store-product-weight-value"><?= $product->getWeight() ?></span>
                     <?= $config->get('community_store.weightUnit') ?>
                 </div>
                 <?php
@@ -689,6 +689,7 @@ foreach ($variationLookup as $key => $variation) {
         'imageThumb' => $thumb ? $thumb->src : '',
         'image' => $imgObj ? $imgObj->getRelativePath() : '',
         'sku' => $variation->getVariationSKU(),
+        'weight' => $variation->getVariationWeight(),
         'saleTemplate'=> t('On Sale') .': <span class="store-sale-price"></span>&nbsp;' . t('was') . '&nbsp;<span class="store-original-price"></span>'
     ];
     if ($isWholesale) {
