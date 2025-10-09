@@ -10,6 +10,7 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Tax as TaxHelper;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Tax\TaxEvent;
 
 /**
  * @ORM\Entity
@@ -261,6 +262,13 @@ class TaxRate
         $shippingtaxtotal = 0;
         $taxCalc = Config::get('community_store.calculation');
 
+        $event = new TaxEvent($this);
+        \Events::dispatch('on_community_store_tax_calculate', $event);
+        if($event->getUpdatedRate()) {
+            $this->setTaxRate($event->getUpdatedRate());
+            $this->setTaxLabel($event->getUpdatedLabel());
+        }
+
         if ($cart) {
             foreach ($cart as $cartItem) {
                 $pID = $cartItem['product']['pID'];
@@ -314,6 +322,13 @@ class TaxRate
     public function calculateProduct($productObj, $qty)
     {
         $taxtotal = 0;
+
+        $event = new TaxEvent($this);
+        \Events::dispatch('on_community_store_tax_calculate', $event);
+        if($event->getUpdatedRate()) {
+            $this->setTaxRate($event->getUpdatedRate());
+            $this->setTaxLabel($event->getUpdatedLabel());
+        }
 
         if (is_object($productObj)) {
             if ($productObj->isTaxable()) {
