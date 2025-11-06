@@ -36,6 +36,11 @@ class TaxRate
     protected $taxLabel;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $taxHandle;
+
+    /**
      * @ORM\Column(type="float")
      */
     protected $taxRate;
@@ -79,6 +84,12 @@ class TaxRate
     {
         $this->taxLabel = $label;
     }
+
+    public function setTaxHandle($handle)
+    {
+        $this->taxHandle = $handle;
+    }
+
 
     public function setTaxRate($rate)
     {
@@ -139,6 +150,10 @@ class TaxRate
     public function getTaxLabel()
     {
         return $this->taxLabel;
+    }
+
+    public function getTaxHandle() {
+        return $this->taxHandle;
     }
 
     public function getTaxRate()
@@ -364,6 +379,10 @@ class TaxRate
         $tr->setTaxRate($data['taxRate']);
         $tr->setTaxBasedOn($data['taxBased']);
         $tr->setTaxAddress($data['taxAddress']);
+
+        if (isset($data['taxHandle'])) {
+            $tr->setTaxHandle($data['taxHandle']);
+        }
 
         if (!isset($data['taxCountry'])) {
             $data['taxCountry'] = [];

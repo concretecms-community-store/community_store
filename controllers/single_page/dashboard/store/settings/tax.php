@@ -65,7 +65,6 @@ class Tax extends DashboardPageController
     {
         $data = $this->request->request->all();
         $errors = $this->validate($data);
-        $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {
             TaxRate::add($data);
@@ -83,7 +82,6 @@ class Tax extends DashboardPageController
             if ($this->request->request->get('taxRateID')) {
                 $this->edit($this->request->request->get('taxRateID'));
             } else {
-                //first we send the data to the shipping method type.
                 $this->add();
             }
         }
@@ -95,14 +93,24 @@ class Tax extends DashboardPageController
         $e = $this->app->make('helper/validation/error');
 
         if ("" == $data['taxLabel']) {
-            $e->add(t("You need a label for this Tax Rate"));
+            $e->add(t("Tax Rate Label required"));
         }
+
+        if ("" == $data['taxHandle']) {
+            $e->add(t("Tax Rate Handle required"));
+        } else {
+            $vs = $this->app->make('helper/validation/strings');
+            if (!$vs->handle($data['taxHandle'])) {
+                $e->add(t('A valid handle must contain no punctuation or spaces.'));
+            }
+        }
+        
         if ("" != $data['taxRate']) {
             if (!is_numeric($data['taxRate'])) {
                 $e->add(t("Tax Rate must be a number"));
             }
         } else {
-            $e->add(t("You need to enter a tax rate"));
+            $e->add(t("Tax Rate required"));;
         }
 
         return $e;

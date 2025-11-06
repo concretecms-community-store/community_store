@@ -23,7 +23,7 @@ if (in_array($controller->getAction(), $addViews)) {
             <div class="row">
                         <div class="col-md-12 col-sm-4">
                             <div class="form-group">
-                                <?= $form->label('taxEnabled', t('Enable Tax Rate')); ?>
+                                <?= $form->label('taxEnabled', t('Enable')); ?>
                                 <?= $form->select('taxEnabled', [false => t('No'), true => t('Yes')], $taxRate->isEnabled()); ?>
                             </div>
                         </div>
@@ -31,6 +31,12 @@ if (in_array($controller->getAction(), $addViews)) {
                             <div class="form-group">
                                 <?= $form->label('taxLabel', t('Tax Label')); ?>
                                 <?= $form->text('taxLabel', $taxRate->getTaxLabel()); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-4">
+                            <div class="form-group">
+                                <?= $form->label('taxHandle', t('Handle')); ?>
+                                <?= $form->text('taxHandle', $taxRate->getTaxHandle()); ?>
                             </div>
                         </div>
                         <div class="col-md-12 col-sm-4">
@@ -151,7 +157,7 @@ if (in_array($controller->getAction(), $addViews)) {
 
 <div class="dashboard-tax-rates">
 
-	<table class="table table-striped">
+	<table class="table table-striped mb-5">
         <thead>
             <tr>
                 <th><?= t("Tax Class"); ?></th>
@@ -171,7 +177,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                 $taxClassRates = $tc->getTaxClassRates();
                 if ($taxClassRates) {
                     foreach ($taxClassRates as $taxRate) {
-                        echo '<span class="label label-primary">' . $taxRate->getTaxLabel() . '</span> ';
+                        echo '<span class="badge bg-primary text-white label label-primary">' . e($taxRate->getTaxLabel()) . '</span> ';
                     }
                 } else {
                     ?>
@@ -199,6 +205,7 @@ if (in_array($controller->getAction(), $addViews)) {
 		<thead>
 			<tr>
                 <th><?= t("Tax Rate"); ?></th>
+                <th><?= t("Handle"); ?></th>
                 <th><?= t("Rate"); ?></th>
                 <th><?= t("Enabled"); ?></th>
                 <th><?= t('Applies To'); ?></th>
@@ -211,7 +218,8 @@ if (in_array($controller->getAction(), $addViews)) {
 		        <?php foreach ($taxRates as $tr) {
                 ?>
         			<tr>
-        				<td><?= $tr->getTaxLabel(); ?></td>
+        				<td><?= e($tr->getTaxLabel()); ?></td>
+                        <td><span class="badge bg-light text-dark"><?= e($tr->getTaxHandle()); ?></span></td>
                         <td><?= $tr->getTaxRate(); ?>%</td>
                         <td><?= ($tr->isEnabled() ? t('Yes') : t('No')); ?></td>
                         <?php

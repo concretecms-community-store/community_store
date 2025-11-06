@@ -29,4 +29,14 @@ class TaxEvent extends StoreEvent
         return($this->updatedLabel);
     }
 
+    public function getTaxRate()
+    {
+        return $this->subject;
+    }
+
+    public function setTaxRate($rate)
+    {
+        $this->subject = $rate;
+    }
+
 }
