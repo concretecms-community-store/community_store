@@ -150,7 +150,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $cartItem['product']['pID'] ); ?>
 
                                 <span class="store-qty-container
-                            <?php if ($quantityLabel) { ?>input-group
+                            <?php if ($quantityLabel) { ?>input-group justify-content-end mb-1
                                 <?php } ?>
                                 ">
                             <?php if ($product->allowQuantity()) {
@@ -159,9 +159,9 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php if ($product->allowDecimalQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end mb-1" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> />
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> />
                                 <?php } else { ?>
-                                    <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end mb-1" value="<?= $qty ?>" min="1" step="1" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> />
+                                    <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end" value="<?= $qty ?>" min="1" step="1" <?= (isset($max) ?  'max="' .$max . '"' : ''); ?> />
                                 <?php } ?>
 
                                  <input type="hidden" name="instance[]" value="<?= $k ?>" />
@@ -170,7 +170,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <?php if ($quantityLabel) { ?>
                                     <div  class="store-product-qty form-control text-right text-end pull-right form-control-static mb-1">1</div>
                                 <?php } else { ?>
-                                    1
+                                    <span class="me-3">1</span>
                                 <?php } ?>
                             <?php } ?>
 
@@ -282,7 +282,7 @@ $csm = $app->make('cs/helper/multilingual');
         </p>
 
         <div class="store-cart-page-cart-links pull-right float-end mt-3 pt-1">
-            <a class="store-btn-cart-page-checkout btn btn-success"
+            <a class="store-btn-cart-page-checkout btn btn-success text-white"
                href="<?= Url::to($langpath . '/checkout') ?>"><?= t('Checkout') ?></a>
         </div>
     <?php } else { ?>

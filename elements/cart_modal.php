@@ -166,16 +166,16 @@ if ($cartMode) {
                                 <td class="store-cart-list-product-qty col-sm-3 text-right text-end pe-0">
                                     <?php $quantityLabel = $csm->t($product->getQtyLabel(), 'productQuantityLabel', $product->getID()); ?>
                                     <span class="store-qty-container mb-1
-                            <?php if ($quantityLabel) { ?>input-group
+                            <?php if ($quantityLabel) { ?>input-group justify-content-end
                                 <?php } ?>
                                 ">
                                 <?php if ($product->allowQuantity()) {
                                     $max = $product->getMaxCartQty();
                                     ?>
                                     <?php if ($product->allowDecimalQuantity()) { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end mb-1" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?> />
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end" value="<?= $qty ?>" min="0" step="<?= $product->getQtySteps();?>" <?= ($max ? 'max="' . $max . '"' : '');?> />
                                     <?php } else { ?>
-                                        <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end mb-1" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?> />
+                                        <input type="number" name="pQty[]" class="store-product-qty form-control d-inline-block text-right text-end" value="<?= $qty ?>" min="1" step="1" <?= ($max ? 'max="' . $max . '"' : '');?> />
                                     <?php } ?>
 
                                     <input type="hidden" name="instance[]" value="<?= $k?>">
@@ -183,7 +183,7 @@ if ($cartMode) {
                                     <?php if ($quantityLabel) { ?>
                                         <div  class="store-product-qty form-control text-right pull-right text-end  form-control-static mb-1">1</div>
                                     <?php } else { ?>
-                                        1
+                                        <span class="me-3">1</span>
                                     <?php } ?>
                                 <?php } ?>
                                         <?php if ($quantityLabel) { ?>
