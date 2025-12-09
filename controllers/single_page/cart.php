@@ -58,7 +58,7 @@ class Cart extends PageController
                     $result = StoreCart::updateMultiple($data);
                     $quantity = 0;
                     foreach ($data['pQty'] as $q) {
-                        $quantity += $q;
+                        $quantity += is_numeric($q) ? $q : 0;
                     }
 
                     $added = 0;
@@ -198,7 +198,7 @@ class Cart extends PageController
                 $result = StoreCart::updateMultiple($data);
                 $quantity = 0;
                 foreach ($data['pQty'] as $q) {
-                    $quantity += $q;
+                    $quantity += is_numeric($q) ? $q : 0;
                 }
 
                 $added = 0;
