@@ -395,9 +395,9 @@ if ($controller->getAction() == 'order') {
                         ?>
                         <tr>
                             <td><?= t($status->getOrderStatusName()) ?></td>
-                            <td><?= $status->getDate() ?></td>
-                            <td><?= $status->getUserName() ?></td>
-                            <td><?= $status->getOrderStatusComment() ?></td>
+                            <td><?= $dh->formatDateTime($status->getDate()) ?></td>
+                            <td><?= h($status->getUserName()) ?></td>
+                            <td><?= h($status->getOrderStatusComment()) ?></td>
                         </tr>
                         <?php
                     }

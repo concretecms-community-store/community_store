@@ -88,9 +88,9 @@ class OrderStatusHistory
         }
     }
 
-    public function getDate($format = 'm/d/Y H:i:s')
+    public function getDate()
     {
-        return date($format, strtotime($this->oshDate));
+        return  $this->oshDate;
     }
 
     public function setDate($date)
