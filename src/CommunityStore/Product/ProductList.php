@@ -380,9 +380,12 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                 foreach ($products as $product) {
                     $pIDs[] = $product['pID'];
                 }
-
                 if (!empty($pIDs)) {
-                    $query->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')');
+                    $query->addOrderBy('CASE WHEN p.pID IN (' . implode(',', $pIDs) . ') THEN 0 ELSE 1 END')
+                        ->addOrderBy('FIELD (p.pID, ' . implode(',', $pIDs) . ')')
+                        ->addOrderBy('pDateAdded', 'desc');  // finally, sort by date added
+                } else {
+                    $query->addOrderBy('pDateAdded', 'desc');  // default to sorting by date added
                 }
                 break;
             case "related":
