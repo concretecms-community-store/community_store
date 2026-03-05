@@ -425,7 +425,14 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         }
         if (!$this->showOutOfStock) {
             $query->andWhere("pQty > 0 OR pQtyUnlim = 1");
+
+            $query->andWhere($query->expr()->or('pDateAvailableStart IS NULL',
+                $query->expr()->lte('pDateAvailableStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+
+            $query->andWhere($query->expr()->or('pDateAvailableEnd IS NULL',
+                $query->expr()->gte('pDateAvailableEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
         }
+
         if ($this->activeOnly) {
             $query->andWhere("pActive = 1");
         }
