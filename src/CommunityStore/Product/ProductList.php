@@ -414,23 +414,43 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
         if ($this->manufacturer) {
             $query->andWhere("pManufacturer = :pManufacturer")->setParameter('pManufacturer', $this->manufacturer);
         }
+
+        $version = app()->make('config')->get('concrete.version');
+        $version8 = version_compare($version, '9.0', '<');
+
         if ($this->saleOnly) {
             $query->andWhere("pSalePrice is not null");
 
-            $query->andWhere($query->expr()->or('pSaleStart IS NULL',
-		        $query->expr()->lte('pSaleStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            if ($version8) {
+                $query->andWhere($query->expr()->orX('pSaleStart IS NULL',
+                    $query->expr()->lte('pSaleStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
 
-	        $query->andWhere($query->expr()->or('pSaleEnd IS NULL',
-		        $query->expr()->gte('pSaleEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+                $query->andWhere($query->expr()->orX('pSaleEnd IS NULL',
+                    $query->expr()->gte('pSaleEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            } else {
+                $query->andWhere($query->expr()->or('pSaleStart IS NULL',
+                    $query->expr()->lte('pSaleStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+
+                $query->andWhere($query->expr()->or('pSaleEnd IS NULL',
+                    $query->expr()->gte('pSaleEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            }
         }
         if (!$this->showOutOfStock) {
             $query->andWhere("pQty > 0 OR pQtyUnlim = 1");
 
-            $query->andWhere($query->expr()->or('pDateAvailableStart IS NULL',
-                $query->expr()->lte('pDateAvailableStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            if ($version8) {
+                $query->andWhere($query->expr()->orX('pDateAvailableStart IS NULL',
+                    $query->expr()->lte('pDateAvailableStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
 
-            $query->andWhere($query->expr()->or('pDateAvailableEnd IS NULL',
-                $query->expr()->gte('pDateAvailableEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+                $query->andWhere($query->expr()->orX('pDateAvailableEnd IS NULL',
+                    $query->expr()->gte('pDateAvailableEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            } else {
+                $query->andWhere($query->expr()->or('pDateAvailableStart IS NULL',
+                    $query->expr()->lte('pDateAvailableStart', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+
+                $query->andWhere($query->expr()->or('pDateAvailableEnd IS NULL',
+                    $query->expr()->gte('pDateAvailableEnd', $query->createNamedParameter(date('Y-m-d H:i:s')))));
+            }
         }
 
         if ($this->activeOnly) {
