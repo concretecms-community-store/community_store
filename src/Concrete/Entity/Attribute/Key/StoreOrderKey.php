@@ -105,7 +105,7 @@ class StoreOrderKey extends Key
 
     public static function getByHandle($handle)
     {
-        $em = \ORM::entityManager();
+        $em = dbORM::entityManager();
         $type = $em->getRepository(self::class)->findOneBy(
             array('akHandle' => $handle,
             ));
