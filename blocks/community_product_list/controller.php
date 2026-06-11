@@ -252,6 +252,41 @@ class Controller extends BlockController
 
         $typeList = ProductTypeList::getProductTypeList();
         $this->set("productTypes", $typeList);
+
+        // Explicitly export all properties used by form.php to avoid undefined variable notices
+        $this->set('filter', $this->filter);
+        $this->set('filterCID', $this->filterCID);
+        $this->set('filterManufacturer', $this->filterManufacturer);
+        $this->set('sortOrder', $this->sortOrder);
+        $this->set('showSortOption', $this->showSortOption);
+        $this->set('groupMatchAny', $this->groupMatchAny);
+        $this->set('showFeatured', $this->showFeatured);
+        $this->set('showSale', $this->showSale);
+        $this->set('showOutOfStock', $this->showOutOfStock);
+        $this->set('enableExternalFiltering', $this->enableExternalFiltering);
+        $this->set('excludeCurrentPage', $this->excludeCurrentPage);
+
+        // Pagination & display options
+        $this->set('maxProducts', $this->maxProducts);
+        $this->set('showPagination', $this->showPagination);
+        $this->set('displayMode', $this->displayMode);
+        $this->set('productsPerRow', $this->productsPerRow);
+        $this->set('noProductsMessage', $this->noProductsMessage);
+
+        // Display toggles and labels
+        $this->set('showName', $this->showName);
+        $this->set('showSKU', $this->showSKU);
+        $this->set('showPrice', $this->showPrice);
+        $this->set('showAddToCart', $this->showAddToCart);
+        $this->set('btnText', $this->btnText);
+        $this->set('showQuantity', $this->showQuantity);
+        $this->set('showDescription', $this->showDescription);
+        $this->set('showPageLink', $this->showPageLink);
+        $this->set('pageLinkText', $this->pageLinkText);
+
+        // Product relations
+        $this->set('relatedPID', $this->relatedPID);
+        $this->set('filterProductType', $this->filterProductType);
     }
 
     public function getGroupFilters()
