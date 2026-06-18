@@ -17,7 +17,7 @@ jobs:
           tools: composer:v2
           coverage: none
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Create and attach ZIP
         uses: concrete5-community/gh-package-release-attach@main
         env:
