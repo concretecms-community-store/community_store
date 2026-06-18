@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "copy-files-from-to": "^3.2.0",
-    "vuepress": "^1.8.2"
+    "copy-files-from-to": "^4.0.1",
+    "vuepress": "^1.9.10"
   },
   "scripts": {
     "docs:dev": "vuepress dev docs",
