@@ -374,6 +374,12 @@ var communityStore = {
             if (pane[0].id === 'store-checkout-form-group-payment') {
                 communityStore.showPaymentMethods();
             }
+
+            if (pane[0].id === 'store-checkout-form-group-shipping') {
+                if ($('#store-checkout-form-group-shipping').data('autoskip')) {
+                    $('#store-checkout-form-group-shipping').submit();
+                }
+            }
         }
     },
 
@@ -963,5 +969,9 @@ $(document).ready(function () {
     $(document).on('click', '.store-btn-filter-clear', function(e) {
         communityStore.clearProductFilter($(this));
     });
+
+    if ($('#store-checkout-form-group-billing').data('autoskip')) {
+        $('#store-checkout-form-group-billing').submit();
+    }
 
 });

@@ -747,43 +747,93 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             </div>
 
             <h3><?= t('Billing Details'); ?></h3>
-
             <div class="row">
-                <div class="col-md-12">
-                    <div class="checkbox form-check">
-                    <label><?= $form->checkbox('noBillingSave', '1', Config::get('community_store.noBillingSave') ? '1' : '0'); ?>
-                        <?= t('Do not save billing details to user on order'); ?></label>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkbox form-check">
+                            <label><?= $form->checkbox('noBillingSave', '1', Config::get('community_store.noBillingSave') ? '1' : '0'); ?>
+                                <?= t('Do not save billing details to user on order'); ?></label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-12 form-group">
-                    <div class="ccm-search-field-content">
-                        <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
-                        <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <div class="ccm-search-field-content">
+                                <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
+                                <?= $form->selectMultiple('noBillingSaveGroups', $groupList, explode(',', Config::get('community_store.noBillingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                        </div>
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="checkbox form-check">
+                                    <label><?= $form->checkbox('noBillingModify', '1', Config::get('community_store.noBillingModify') ? '1' : '0'); ?>
+                                        <?= t('Do not allow billing details to modified in checkout'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <div class="ccm-search-field-content">
+                                    <?= $form->label('noBillingSaveGroups', t('For users in groups')); ?>
+                                    <?= $form->selectMultiple('noBillingModifyGroups', $groupList, explode(',', Config::get('community_store.noBillingModifyGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
 
             <h3><?= t('Shipping Details'); ?></h3>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="checkbox form-check">
-                    <label><?= $form->checkbox('noShippingSave', '1', Config::get('community_store.noShippingSave') ? '1' : '0'); ?>
-                        <?= t('Do not save shipping details to user on order'); ?></label>
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
-                <div class="col-md-12 form-group">
-                    <div class="ccm-search-field-content">
-                        <?= $form->label('noShippingSaveGroups', t('For users in groups')); ?>
-                        <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkbox form-check">
+                            <label><?= $form->checkbox('noShippingSave', '1', Config::get('community_store.noShippingSave') ? '1' : '0'); ?>
+                                <?= t('Do not save shipping details to user on order'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <div class="ccm-search-field-content">
+                                <?= $form->label('noShippingSaveGroups', t('For users in groups')); ?>
+                                <?= $form->selectMultiple('noShippingSaveGroups', $groupList, explode(',', Config::get('community_store.noShippingSaveGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkbox form-check">
+                                <label><?= $form->checkbox('noShippingModify', '1', Config::get('community_store.noShippingModify') ? '1' : '0'); ?>
+                                    <?= t('Do not allow shipping details to modified in checkout'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <div class="ccm-search-field-content">
+                                <?= $form->label('noShippingModifyGroups', t('For users in groups')); ?>
+                                <?= $form->selectMultiple('noShippingModifyGroups', $groupList, explode(',', Config::get('community_store.noShippingModifyGroups')), ['class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('All Users/Groups')]); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
 
@@ -972,5 +1022,9 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 <style>
     #ccm-dashboard-content-regular .nav-pills.nav-stacked .active a {
         font-weight: bold
+    }
+
+    #ccm-dashboard-content-regular .selectize-dropdown {
+        z-index: 1000;
     }
 </style>

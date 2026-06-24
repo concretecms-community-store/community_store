@@ -223,9 +223,13 @@ class Settings extends DashboardPageController
                 Config::save('community_store.receiptFooter', LinkAbstractor::translateTo(trim($args['receiptFooter'])));
                 Config::save('community_store.receiptBCC', trim($args['receiptBCC']));
                 Config::save('community_store.noBillingSave', isset($args['noBillingSave']) ?? false);
+                Config::save('community_store.noBillingModify', isset($args['noBillingModify']) ?? false);
                 Config::save('community_store.noShippingSave', isset($args['noShippingSave']) ?? false);
+                Config::save('community_store.noShippingModify', isset($args['noShippingModify']) ?? false);
                 Config::save('community_store.noBillingSaveGroups', isset($args['noBillingSaveGroups']) && is_array($args['noBillingSaveGroups']) ? implode(',', $args['noBillingSaveGroups']) : '');
+                Config::save('community_store.noBillingModifyGroups', isset($args['noBillingModifyGroups']) && is_array($args['noBillingModifyGroups']) ? implode(',', $args['noBillingModifyGroups']) : '');
                 Config::save('community_store.noShippingSaveGroups', isset($args['noShippingSaveGroups']) && is_array($args['noShippingSaveGroups']) ? implode(',', $args['noShippingSaveGroups']) : '');
+                Config::save('community_store.noShippingModifyGroups', isset($args['noShippingModifyGroups']) && is_array($args['noShippingModifyGroups']) ? implode(',', $args['noShippingModifyGroups']) : '');
                 Config::save('community_store.showUnpaidExternalPaymentOrders', isset($args['showUnpaidExternalPaymentOrders'] ) ? $args['showUnpaidExternalPaymentOrders'] : false);
                 Config::save('community_store.numberOfOrders', $args['numberOfOrders']);
                 Config::save('community_store.download_expiry_hours', $args['download_expiry_hours']);

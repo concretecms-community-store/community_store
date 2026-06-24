@@ -63,9 +63,13 @@ $csm = $app->make('cs/helper/multilingual');
 
                 </div>
             <?php } else { ?>
-                <form class="store-checkout-form-group store-active-form-group " id="store-checkout-form-group-billing" action="">
+                <form class="store-checkout-form-group store-active-form-group" id="store-checkout-form-group-billing" action=""
+                        <?= (!$billingModify && !$orderNotesEnabled && !$orderChoicesEnabled) ? 'data-autoskip="true"' : ''  ?>
+                    >
                     <?= $token->output('community_store'); ?>
-                    <div class="store-checkout-form-group-body">
+                    <div class="store-checkout-form-group-body"
+
+                    >
 
                         <?php if ($customer->isGuest()) { ?>
                             <h2><?= t("Customer Information") ?></h2>
@@ -82,6 +86,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <h2><?= t("Billing Details") ?></h2>
 
+                        <div <?= (!$billingModify) ? 'style="display: none"' : ''  ?>>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
@@ -167,6 +172,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 </div>
                             </div>
                         </div>
+                        </div>
 
                         <?php if($orderNotesEnabled) { ?>
                         <div class="row">
@@ -180,7 +186,7 @@ $csm = $app->make('cs/helper/multilingual');
                         <?php } ?>
 
                         <div class="row">
-                            <?php if ($shippingEnabled) { ?>
+                            <?php if ($shippingEnabled && $shippingModify) { ?>
                             <div class="store-copy-billing-container col-md-12 mb-3 text-right text-end">
                                 <div class="form-group">
                                 <label>
@@ -278,10 +284,15 @@ $csm = $app->make('cs/helper/multilingual');
 
 
                 </form>
+
                 <?php if ($shippingEnabled) { ?>
-                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping">
+                    <form class="store-checkout-form-group " id="store-checkout-form-group-shipping"
+                            <?= (!$shippingModify) ? 'data-autoskip="true"' : ''  ?>
+                    >
                         <?= $token->output('community_store'); ?>
                         <div class="store-checkout-form-group-body">
+
+                            <div <?= (!$shippingModify) ? 'style="display: none"' : ''  ?>>
                             <h2><?= t("Shipping Address") ?></h2>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -353,8 +364,12 @@ $csm = $app->make('cs/helper/multilingual');
                                     </div>
                                 </div>
                             </div>
+                            </div>
+
                             <div class="store-checkout-form-group-buttons mb-3 mt-3">
+                                <?php if ($billingModify || $orderNotesEnabled || $orderChoicesEnabled) { ?>
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <?php } ?>
                                 <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
                         </div>
@@ -399,7 +414,9 @@ $csm = $app->make('cs/helper/multilingual');
                             <?php } ?>
 
                             <div class="store-checkout-form-group-buttons mb-3 mt-3">
+                                <?php if ($billingModify || $orderNotesEnabled || $orderChoicesEnabled || $shippingModify) { ?>
                                 <a href="#" class="store-btn-previous-pane btn btn-default btn-secondary"><?= t("Previous") ?></a>
+                                <?php } ?>
                                 <input type="submit" class="store-btn-next-pane btn btn-primary pull-right float-end" value="<?= t("Next") ?>">
                             </div>
 

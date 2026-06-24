@@ -5,6 +5,7 @@ namespace Concrete\Package\CommunityStore\Src\CommunityStore\Customer;
 use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
 
@@ -280,5 +281,42 @@ class Customer
         }
 
         return isset($attributeValue->{$field}) ? (string) $attributeValue->{$field} : '';
+    }
+
+    function canUpdateBilling() {
+        $user = app()->make(User::class);
+        $usergroups = $user->getUserGroups();
+        if (!is_array($usergroups)) {
+            $usergroups = [];
+        }
+
+        $noBillingModify = (bool)Config::get('community_store.noBillingModify');
+        $noShippingModifyGroups = Config::get('community_store.noShippingModifyGroups');
+        $matchingGroups = array_intersect(explode(',', $noShippingModifyGroups), $usergroups);
+
+        if ($noShippingModifyGroups && empty($matchingGroups)) {
+            $noBillingModify = false;
+        }
+
+        return !$noBillingModify;
+    }
+
+    function canUpdateShipping() {
+        $user = app()->make(User::class);
+        $usergroups = $user->getUserGroups();
+        if (!is_array($usergroups)) {
+            $usergroups = [];
+        }
+
+        $noShippingModify = Config::get('community_store.noShippingModify');
+        $noShippingModifyGroups = Config::get('community_store.noShippingModifyGroups');
+        $matchingGroups = array_intersect(explode(',', $noShippingModifyGroups), $usergroups);
+
+        if ($noShippingModifyGroups && empty($matchingGroups)) {
+            $noShippingModify = false;
+        }
+
+        return !$noShippingModify;
+
     }
 }

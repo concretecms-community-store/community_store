@@ -76,6 +76,20 @@ class Checkout extends PageController
         $this->set('useForShippingDefault', Config::get('community_store.useForShippingDefault'));
         $this->set('autoSkipSingleShipping', Config::get('community_store.autoSkipSingleShipping'));
 
+
+        $guest = $customer->isGuest();
+
+        $billingModify = true;
+        $shippingModify = true;
+
+        if (!$guest) {
+            $billingModify = $customer->canUpdateBilling();
+            $shippingModify = $customer->canUpdateShipping();
+        }
+
+        $this->set('billingModify', $billingModify);
+        $this->set('shippingModify', $shippingModify);
+
         $cart = Cart::getCart();
 
         if (Cart::hasChanged()) {
