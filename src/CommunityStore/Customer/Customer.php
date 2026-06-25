@@ -291,7 +291,7 @@ class Customer
         }
 
         $noBillingModify = (bool)Config::get('community_store.noBillingModify');
-        $noShippingModifyGroups = Config::get('community_store.noShippingModifyGroups');
+        $noShippingModifyGroups = Config::get('community_store.noBillingModifyGroups');
         $matchingGroups = array_intersect(explode(',', $noShippingModifyGroups), $usergroups);
 
         if ($noShippingModifyGroups && empty($matchingGroups)) {
