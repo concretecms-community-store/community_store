@@ -1,4 +1,4 @@
-<?php
+h(<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use \Concrete\Core\Support\Facade\Url;
@@ -119,13 +119,13 @@ $task = $controller->getAction();
 			?>
 			<tr>
                 <td><a href="<?= Url::to('/dashboard/store/orders/order/'. $order->getOrderID()); ?>"><?= $order->getOrderID(); ?></a></td>
-				<td><?= $order->getAttribute("billing_last_name");?></td>
-				<td><?= $order->getAttribute("billing_first_name"); ?></td>
-				<td><?= $order->getAttribute("email"); ?></td>
-				<td><?= $order->getAttribute("billing_phone"); ?></td>
+				<td><?= h($order->getAttribute("billing_last_name"));?></td>
+				<td><?= h($order->getAttribute("billing_first_name")); ?></td>
+				<td><?= h($order->getAttribute("email")); ?></td>
+				<td><?= h($order->getAttribute("billing_phone")); ?></td>
 				<td><?= $item->getProductName()?>
 					<?php if ($sku = $item->getSKU()) {
-						echo '(' .  $sku . ')';
+						echo '(' .  h($sku) . ')';
 					} ?>
 				</td>
 				<td><?php
@@ -138,8 +138,8 @@ $task = $controller->getAction();
 					if($options){
 
 						foreach($options as $option){
-							echo "<strong>".$option['oioKey'].": </strong>";
-							echo $option['oioValue'] . '<br />';
+							echo "<strong>".h($option['oioKey']).": </strong>";
+							echo h($option['oioValue']) . '<br />';
 						}
 					}
 					?>

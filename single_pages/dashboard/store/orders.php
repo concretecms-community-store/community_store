@@ -66,11 +66,11 @@ if ($controller->getAction() == 'order') {
                 <?php $orderemail = $order->getAttribute("email"); ?>
 
                 <h4><?= t("Name") ?></h4>
-                <p><?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?></p>
+                <p><?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")) ?></p>
 
                 <?php if ($orderemail) { ?>
                     <h4><?= t("Email") ?></h4>
-                    <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
+                    <p><a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a></p>
                 <?php } ?>
 
                 <?php
@@ -78,20 +78,20 @@ if ($controller->getAction() == 'order') {
                 if ($phone) {
                     ?>
                     <h4><?= t('Phone'); ?></h4>
-                    <p><?= $phone; ?></p>
+                    <p><?= h($phone); ?></p>
                 <?php } ?>
 
                 <?php
                 $ui = $app->make(UserInfoRepository::class)->getByID($order->getCustomerID());
                 if ($ui) { ?>
                     <h4><?= t("User") ?></h4>
-                    <p><a href="<?= Url::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= $ui->getUserName(); ?></a></p>
+                    <p><a href="<?= Url::to('/dashboard/users/search/view/' . $ui->getUserID()); ?>"><?= h($ui->getUserName()); ?></a></p>
                 <?php } ?>
 
                 <?php if (Config::get('community_store.vat_number')) { ?>
                     <?php $vat_number = $order->getAttribute('vat_number'); ?>
                     <h4><?= t("VAT Number") ?></h4>
-                    <p><?= $vat_number ?></p>
+                    <p><?= h($vat_number) ?></p>
                 <?php } ?>
             </div>
 
@@ -119,7 +119,7 @@ if ($controller->getAction() == 'order') {
                     <?php if ($order->getAttribute("shipping_address")) { ?>
                         <h4><?= t("Shipping Address") ?></h4>
                         <p>
-                            <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?><br>
+                            <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")) ?><br>
                             <?php $shippingaddress = $order->getAttributeValueObject('shipping_address');
                             if ($shippingaddress) {
                                 echo $shippingaddress->getValue('displaySanitized', 'display');
@@ -145,7 +145,7 @@ if ($controller->getAction() == 'order') {
                     foreach ($orderChoicesAttList as $ak) {
                         $attValue = $order->getAttributeValueObject($ak);
                         if ($attValue) { ?>
-                            <h4><?= $ak->getAttributeKeyDisplayName() ?></h4>
+                            <h4><?= h($ak->getAttributeKeyDisplayName()) ?></h4>
                             <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
                         <?php } ?>
                     <?php } ?>
@@ -318,16 +318,16 @@ if ($controller->getAction() == 'order') {
             <strong><?= t("Grand Total") ?>: </strong><?= Price::format($order->getTotal()) ?>
         </p>
         <p>
-            <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
+            <strong><?= t("Payment Method") ?>: </strong><?= h(t($order->getPaymentMethodName())) ?><br>
             <?php $transactionReference = $order->getTransactionReference();
             if ($transactionReference) { ?>
-                <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
+                <strong><?= t("Transaction Reference") ?>: </strong><?= h($transactionReference) ?><br>
             <?php } ?>
         </p>
 
         <?php if ($order->isShippable()) { ?>
             <br/><p>
-                <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+                <strong><?= t("Shipping Method") ?>: </strong><?= h($order->getShippingMethodName()) ?>
             </p>
 
             <?php
@@ -336,11 +336,11 @@ if ($controller->getAction() == 'order') {
             $carrier = $order->getCarrier();
 
             if ($carrier) { ?>
-                <p><strong><?= t("Carrier") ?>: </strong><?= $carrier ?></p>
+                <p><strong><?= t("Carrier") ?>: </strong><?= h($carrier) ?></p>
             <?php }
 
             if ($trackingCode) { ?>
-                <p><strong><?= t("Tracking Code") ?>: </strong><?= $trackingCode ?> </p>
+                <p><strong><?= t("Tracking Code") ?>: </strong><?= h($trackingCode) ?> </p>
             <?php }
 
             if ($trackingURL) { ?>
@@ -641,19 +641,19 @@ if ($controller->getAction() == 'order') {
 
                     <li role="presentation" class="dropdown <?= ($paymentMethod != 'all' ? 'active' : ''); ?> ">
                         <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <?= $paymentMethod  != 'all' ? t('Payment Method: %s', $paymentMethodName) : t('Payment Method'); ?> <span class="caret"></span>
+                            <?= $paymentMethod  != 'all' ? t('Payment Method: %s', h($paymentMethodName)) : t('Payment Method'); ?> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="nav-item <?= (!$paymentMethod ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods')?></a></li>
                             <?php foreach($enabledPaymentMethods as $pm){ ?>
-                                <li class="nav-item <?= ($paymentMethod == $pm->getName() ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
+                                <li class="nav-item <?= ($paymentMethod == $pm->getName() ? 'active' : ''); ?>"><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= h(t($pm->getName()));?></a></li>
                             <?php } ?>
                         </ul>
                     </li>
                 <?php } ?>
                 <li role="presentation" class="dropdown <?= ($paymentStatus != 'all' ? 'active' : ''); ?>">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?= $paymentStatus != 'all' ? t('Payment Status: %s', title_case($paymentStatus)) : t('Payment Status'); ?> <span class="caret"></span>
+                        <?= $paymentStatus != 'all' ? t('Payment Status: %s', h(title_case($paymentStatus))) : t('Payment Status'); ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li <?= ($paymentStatus == 'all' ? 'class="active"' : '');?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )?>"><?= t('All Payment Statuses')?></a></li>
@@ -678,13 +678,13 @@ if ($controller->getAction() == 'order') {
                         } ?>
 
                         <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <?= $status != 'all' ? t('Fulfilment: %s', $statusString) : t('Fulfilment'); ?> <span class="caret"></span>
+                            <?= $status != 'all' ? t('Fulfilment: %s', h($statusString)) : t('Fulfilment'); ?> <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
                             <li <?= (!$status ? 'class="active"' : ''); ?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t('All Fulfilment Statuses')?></a></li>
                             <?php foreach($statuses as $statusoption){ ?>
-                                <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
+                                <li <?= ($status == $statusoption->getHandle() ? 'class="active"' : ''); ?>><a class="nav-link" href="<?= \URL::to('/dashboard/store/orders/', $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus.$keywordsparam)?>"><?= h(t($statusoption->getName()));?></a></li>
                             <?php } ?>
                         </ul>
                     </li>

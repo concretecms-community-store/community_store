@@ -32,13 +32,13 @@ use Concrete\Core\Support\Facade\Url;
                     } ?>
 
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGroups" data-bs-toggle="dropdown" aria-expanded="false">
-                        <?= $currentFilter ? t('Product Group: %s', $currentFilter) : t('Product Group'); ?>
+                        <?= $currentFilter ? t('Product Group: %s', h($currentFilter)) : t('Product Group'); ?>
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuGroups">
                         <li><a  class="dropdown-item <?= (!$gID ? 'active' : ''); ?>"href="<?= Url::to('/dashboard/store/products/') ?>"><?= t('All Groups') ?></a></li>
                         <?php foreach ($groupList as $group) { ?>
-                            <li ><a class="dropdown-item  <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= $group->getGroupName() ?></a></li>
+                            <li ><a class="dropdown-item  <?= ($gID == $group->getGroupID() ? 'active' : ''); ?>" href="<?= Url::to('/dashboard/store/products/', $group->getGroupID()) ?>"><?= h($group->getGroupName()) ?></a></li>
                         <?php } ?>
                     </ul>
 

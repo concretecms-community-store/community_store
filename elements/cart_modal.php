@@ -50,7 +50,7 @@ if ($cartMode) {
                 <p class="alert alert-warning">
                     <?php
                     if ($actiondata['errorMsg']){
-                        echo $actiondata['errorMsg'];
+                        echo h($actiondata['errorMsg']);
                     } else {
                         echo t('An issue has occured adding the product to the cart. You may be missing required information.');
                     }
@@ -187,7 +187,7 @@ if ($cartMode) {
                                     <?php } ?>
                                 <?php } ?>
                                         <?php if ($quantityLabel) { ?>
-                                            <div class="store-cart-qty-label input-group-addon input-group-text"><?= $quantityLabel; ?></div>
+                                            <div class="store-cart-qty-label input-group-addon input-group-text"><?= h($quantityLabel); ?></div>
                                         <?php } ?>
                                 </span>
                                     <a class="store-btn-cart-list-remove btn btn-danger" data-instance-id="<?= $k?>" data-modal="true"  href="#"><i class="fa fa-remove fa-times"></i></a>

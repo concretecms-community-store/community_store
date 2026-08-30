@@ -71,11 +71,11 @@ $dh = $app->make('helper/date');
             <div class="col-sm-4">
                 <?php $orderemail = $order->getAttribute("email"); ?>
 
-                <p><strong><?= t("Name"); ?>:</strong> <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name"); ?><br>
+                <p><strong><?= t("Name"); ?>:</strong> <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")); ?><br>
 
                     <?php if ($orderemail) {
                         ?>
-                        <strong><?= t("Email"); ?>:</strong> <a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a><br>
+                        <strong><?= t("Email"); ?>:</strong> <a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a><br>
                         <?php
                     } ?>
 
@@ -83,14 +83,14 @@ $dh = $app->make('helper/date');
                     $phone = $order->getAttribute("billing_phone");
                     if ($phone) {
                         ?>
-                        <strong><?= t('Phone'); ?>:</strong> <?= $phone; ?><br>
+                        <strong><?= t('Phone'); ?>:</strong> <?= h($phone); ?><br>
                         <?php
                     } ?>
 
                     <?php if (Config::get('community_store.vat_number')) {
                         ?>
                         <?php $vat_number = $order->getAttribute('vat_number'); ?>
-                        <strong><?= t("VAT Number"); ?>:</strong> <?= $vat_number; ?>
+                        <strong><?= t("VAT Number"); ?>:</strong> <?= h($vat_number); ?>
                         <?php
                     } ?>
                 </p>
@@ -141,7 +141,7 @@ $dh = $app->make('helper/date');
                         ?>
                         <h4><?= t("Shipping Address"); ?></h4>
                         <p>
-                            <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name"); ?><br>
+                            <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")); ?><br>
                             <?php $shippingaddress = $order->getAttributeValueObject('shipping_address');
                             if ($shippingaddress) {
                                 echo $shippingaddress->getValue('displaySanitized', 'display');

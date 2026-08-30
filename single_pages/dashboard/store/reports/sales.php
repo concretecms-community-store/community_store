@@ -172,7 +172,7 @@ $(function(){
   		axisY: {
 		    offset: 80,
 		    labelInterpolationFnc: function(value) {
-		      return "<?= Config::get('community_store.symbol'); ?>" + value;
+		      return "<?= h(Config::get('community_store.symbol')); ?>" + value;
 		    }
   		},
   		plugins: [

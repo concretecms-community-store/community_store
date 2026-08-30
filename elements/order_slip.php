@@ -88,12 +88,12 @@ $dh = $app->make('helper/date');
             <div class="row">
                 <div class="col-xs-4 col-sm-4">
                     <h4><?= t("Name")?></h4>
-                    <p><?= $order->getAttribute("billing_first_name"). " " . $order->getAttribute("billing_last_name")?></p>
+                    <p><?= h($order->getAttribute("billing_first_name")). " " . h($order->getAttribute("billing_last_name"))?></p>
 
                     <?php $orderemail = $order->getAttribute("email");
                     if ($orderemail) { ?>
                         <h4><?= t("Email") ?></h4>
-                        <p><a href="mailto:<?= $order->getAttribute("email"); ?>"><?= $order->getAttribute("email"); ?></a></p>
+                    <p><a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a></p>
                     <?php } ?>
 
                     <?php
@@ -101,14 +101,14 @@ $dh = $app->make('helper/date');
                     if ($phone) {
                     ?>
                         <h4><?= t("Phone") ?></h4>
-                        <p><?= $order->getAttribute("billing_phone") ?></p>
+                        <p><?= h($order->getAttribute("billing_phone")) ?></p>
                     <?php } ?>
 
                     <?php
                     $vat_number = $order->getAttribute("vat_number");
                     if (Config::get('community_store.vat_number') && $vat_number) { ?>
                         <h4><?= t("VAT Number")?></h4>
-                        <p><?=$vat_number?></p>
+                        <p><?= h($vat_number) ?></p>
                     <?php } ?>
 
                 </div>
@@ -117,7 +117,7 @@ $dh = $app->make('helper/date');
                     <h4><?= t("Billing Address") ?></h4>
 
                     <p>
-                        <?= $order->getAttribute("billing_first_name") . " " . $order->getAttribute("billing_last_name") ?>
+                        <?= h($order->getAttribute("billing_first_name")) . " " . h($order->getAttribute("billing_last_name")) ?>
                         <br>
                         <?php $billingaddress = $order->getAttributeValueObject('billing_address');
                         if ($billingaddress) {
@@ -131,7 +131,7 @@ $dh = $app->make('helper/date');
                     if ($billingaddress) { ?>
                         <h4><?= t("Shipping Address") ?></h4>
                         <p>
-                            <?= $order->getAttribute("shipping_first_name") . " " . $order->getAttribute("shipping_last_name") ?>
+                            <?= h($order->getAttribute("shipping_first_name")) . " " . h($order->getAttribute("shipping_last_name")) ?>
                             <br>
                             <?= $billingaddress->getValue('displaySanitized', 'display'); ?>
                         </p>
@@ -148,7 +148,7 @@ $dh = $app->make('helper/date');
 
                                 if ($value) {
                                 ?>
-                                <h4><?= $ak->getAttributeKeyDisplayName()?></h4>
+                                <h4><?= h($ak->getAttributeKeyDisplayName()) ?></h4>
                                 <p><?= str_replace("\r\n", "<br>", $value); ?></p>
                                 <?php } ?>
                             <?php } ?>
@@ -266,17 +266,17 @@ $dh = $app->make('helper/date');
             <strong><?= t("Grand Total") ?>: </strong><?= Price::format($order->getTotal()) ?>
         </p>
         <p>
-            <strong><?= t("Payment Method") ?>: </strong><?= t($order->getPaymentMethodName()) ?><br>
+                            <strong><?= t("Payment Method") ?>: </strong><?= h(t($order->getPaymentMethodName())) ?><br>
             <?php $transactionReference = $order->getTransactionReference();
             if ($transactionReference) { ?>
-                <strong><?= t("Transaction Reference") ?>: </strong><?= $transactionReference ?><br>
+                <strong><?= t("Transaction Reference") ?>: </strong><?= h($transactionReference) ?><br>
             <?php } ?>
         </p>
 
 
         <?php if ($order->isShippable()) { ?>
             <br/><p>
-                <strong><?= t("Shipping Method") ?>: </strong><?= $order->getShippingMethodName() ?>
+                <strong><?= t("Shipping Method") ?>: </strong><?= h($order->getShippingMethodName()) ?>
             </p>
 
             <?php
