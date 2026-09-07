@@ -147,6 +147,9 @@ class Order implements ObjectInterface
     /** @ORM\Column(type="string", length=255, nullable=true) */
     protected $userAgent;
 
+    /** @ORM\Column(type="text", nullable=true) */
+    protected $oSecurityCode;
+
     /**
      * @ORM\OneToMany(targetEntity="Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderItem", mappedBy="order",cascade={"persist"}))
      */
@@ -438,6 +441,16 @@ class Order implements ObjectInterface
         $this->userAgent = $userAgent;
     }
 
+    public function getSecurityCode()
+    {
+        return $this->oSecurityCode;
+    }
+
+    public function setSecurityCode($oSecurityCode): void
+    {
+        $this->oSecurityCode = $oSecurityCode;
+    }
+
     public function setNotes($notes)
     {
         $this->oNotes = $notes;
@@ -655,6 +668,9 @@ class Order implements ObjectInterface
         $order->setTaxIncluded($taxIncludedTotal);
         $order->setTaxLabels($taxLabels);
         $order->setTotal($total);
+
+        $identifierService = app()->make('helper/validation/identifier');
+        $order->setSecurityCode($identifierService->getString(32));
 
         Config::get('community_store.logUserAgent') ? $order->setUserAgent($userAgent) : '';
 

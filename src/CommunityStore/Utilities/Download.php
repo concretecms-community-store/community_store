@@ -13,7 +13,14 @@ class Download extends Controller
 {
     public static function buildDownloadURL($file, $order)
     {
-        return Url::to('/store_download/' . $file->getFileID() . '/' . $order->getOrderID() . '/' . md5($order->getOrderDate()->format('Y-m-d H:i:s')));
+
+        $securityCode = $order->getSecurityCode();
+        // fallback if using old approach where security codes haven't been stored
+        if (!$securityCode) {
+            $securityCode = md5($order->getOrderDate()->format('Y-m-d H:i:s'));
+        }
+
+        return Url::to('/store_download/' . $file->getFileID() . '/' . $order->getOrderID() . '/' . $securityCode);
     }
 
     public static function downloadFile($fID, $oID, $hash)
@@ -40,25 +47,43 @@ class Download extends Controller
                 $orderDate = $order->getOrderDate();
             }
 
-            // check that order exists, and md5 hash of order timestamp matches
-            if ($order && md5($orderDate->format('Y-m-d H:i:s')) == $hash && $orderDate > $threshhold) {
-                // loop to find whether order contained a product with linked file
-                foreach ($order->getOrderItems() as $oi) {
-                    $product = $oi->getProductObject();
+            $matchedOrder = false;
 
-                    if ($product) {
-                        $files = $product->getDownloadFiles();
+            // check that order exists, and has matches stored security code
+            if ($order) {
 
-                        foreach ($files as $f) {
-                            if ($f->getFileID() == $fID) {
-                                $valid = true;
-                                break;
+                $securityCode = $order->getSecurityCode();
+
+                if ($securityCode) {
+                    if ($securityCode == $hash) {
+                        $matchedOrder = true;
+                    }
+                } else {
+                    // fallback if using old approach where security codes haven't been stored
+                    if (md5($orderDate->format('Y-m-d H:i:s')) == $hash) {
+                        $matchedOrder = true;
+                    }
+                }
+
+                if ($matchedOrder && $orderDate > $threshhold) {
+                    // loop to find whether order contained a product with linked file
+                    foreach ($order->getOrderItems() as $oi) {
+                        $product = $oi->getProductObject();
+
+                        if ($product) {
+                            $files = $product->getDownloadFiles();
+
+                            foreach ($files as $f) {
+                                if ($f->getFileID() == $fID) {
+                                    $valid = true;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if ($valid) {
-                        break;
+                        if ($valid) {
+                            break;
+                        }
                     }
                 }
             }
