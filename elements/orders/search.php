@@ -40,9 +40,9 @@ use Concrete\Core\Support\Facade\Url;
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuPaymentMethods">
-                        <li><a  class="dropdown-item <?= (!$paymentMethod ? 'active' : ''); ?>"href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)?>"><?= t('All Payment Methods') ?></a></li>
+                        <li><a  class="dropdown-item <?= (!$paymentMethod ? 'active' : ''); ?>"href="<?= h(\URL::to('/dashboard/store/orders/'  . $status .'/all/' . $paymentStatus . $keywordsparam)) ?>"><?= t('All Payment Methods') ?></a></li>
                         <?php foreach ($paymentMethods as $pm) { ?>
-                            <li ><a class="dropdown-item  <?= ($paymentMethod == $pm->getID()  ? 'active' : ''); ?>" href="<?= \URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)?>"><?= t($pm->getName());?></a></li>
+                            <li ><a class="dropdown-item  <?= ($paymentMethod == $pm->getID()  ? 'active' : ''); ?>" href="<?= h(\URL::to('/dashboard/store/orders/' . $status . '/' . $pm->getID() . '/' . $paymentStatus . $keywordsparam)) ?>"><?= h(t($pm->getName())); ?></a></li>
                         <?php } ?>
 
                     </ul>
@@ -67,9 +67,9 @@ use Concrete\Core\Support\Facade\Url;
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuPaymentStatuses">
-                        <li><a  class="dropdown-item <?= (!$paymentStatus ? 'active' : ''); ?>" href="<?= \URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )?>"><?= t('All Payment Statuses') ?></a></li>
+                        <li><a  class="dropdown-item <?= (!$paymentStatus ? 'active' : ''); ?>" href="<?= h(\URL::to('/dashboard/store/orders/'  . $status .'/' . $paymentMethod . '/all' .$keywordsparam )) ?>"><?= t('All Payment Statuses') ?></a></li>
                         <?php foreach ($paymentStatuses as $handle=>$label) { ?>
-                            <li ><a class="dropdown-item  <?= ($paymentStatus == $handle ? 'active' : ''); ?>" href="<?= \URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/' . $handle .$keywordsparam)?>"><?= $label ?></a></li>
+                            <li ><a class="dropdown-item  <?= ($paymentStatus == $handle ? 'active' : ''); ?>" href="<?= h(\URL::to('/dashboard/store/orders/' . $status .'/' . $paymentMethod . '/' . $handle .$keywordsparam)) ?>"><?= h($label) ?></a></li>
                         <?php } ?>
                     </ul>
 
@@ -93,9 +93,9 @@ use Concrete\Core\Support\Facade\Url;
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuFulfilmentStatuses">
-                        <li><a  class="dropdown-item <?= (!$status ? 'active' : ''); ?>"href="<?= \URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t('All Fulfilment Statuses') ?></a></li>
+                        <li><a  class="dropdown-item <?= (!$status ? 'active' : ''); ?>"href="<?= h(\URL::to('/dashboard/store/orders/all/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)) ?>"><?= t('All Fulfilment Statuses') ?></a></li>
                         <?php foreach ($fulfilmentStatuses as $statusoption) { ?>
-                            <li ><a class="dropdown-item  <?= ($status == $statusoption->getHandle() ? 'active' : ''); ?>" href="<?= \URL::to('/dashboard/store/orders/' . $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)?>"><?= t($statusoption->getName());?></a></li>
+                            <li ><a class="dropdown-item  <?= ($status == $statusoption->getHandle() ? 'active' : ''); ?>" href="<?= h(\URL::to('/dashboard/store/orders/' . $statusoption->getHandle() . '/' . $paymentMethod . '/' . $paymentStatus . $keywordsparam)) ?>"><?= h(t($statusoption->getName())); ?></a></li>
                         <?php } ?>
                     </ul>
 

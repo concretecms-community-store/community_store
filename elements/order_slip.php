@@ -70,7 +70,7 @@ $dh = $app->make('helper/date');
                 } else {
                     if ($refunded) {
                         $refundreason = $order->getRefundReason();
-                        echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ' - ' . $dh->formatDateTime($refunded)  . ($refundreason ? ' - ' . $refundreason : '') . '</strong></p>';
+                        echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ' - ' . $dh->formatDateTime($refunded)  . ($refundreason ? ' - ' . h($refundreason) : '') . '</strong></p>';
                     } elseif ($paid) {
                         echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . ' - ' . $dh->formatDateTime($paid) . '</strong></p>';
                     } elseif ($order->getTotal() > 0) {

@@ -1,4 +1,4 @@
-h(<?php
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Price;
 use \Concrete\Core\Support\Facade\Url;
@@ -123,7 +123,7 @@ $task = $controller->getAction();
 				<td><?= h($order->getAttribute("billing_first_name")); ?></td>
 				<td><?= h($order->getAttribute("email")); ?></td>
 				<td><?= h($order->getAttribute("billing_phone")); ?></td>
-				<td><?= $item->getProductName()?>
+				<td><?= h($item->getProductName()) ?>
 					<?php if ($sku = $item->getSKU()) {
 						echo '(' .  h($sku) . ')';
 					} ?>

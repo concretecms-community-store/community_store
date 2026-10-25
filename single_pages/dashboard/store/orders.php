@@ -45,7 +45,7 @@ if ($controller->getAction() == 'order') {
             } else {
                 if ($refunded) {
                     $refundreason = $order->getRefundReason();
-                    echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ($refundreason ? ' - ' . $refundreason : '') . '</strong></p>';
+                    echo '<p class="alert alert-warning text-center"><strong>' . t('Refunded') . ($refundreason ? ' - ' . h($refundreason) : '') . '</strong></p>';
                 } elseif ($paid) {
                     echo '<p class="alert alert-success text-center"><strong>' . t('Paid') . '</strong></p>';
                 } elseif ($order->getTotal() > 0) {
@@ -479,7 +479,7 @@ if ($controller->getAction() == 'order') {
                                 <td>
                                     <?php $paiduser = User::getByUserID($order->getPaidByUID());
                                     if ($paiduser) {
-                                        echo $paiduser->getUserName();
+                                        echo h($paiduser->getUserName());
                                     } else {
                                         echo t('payment');
                                     }
@@ -505,7 +505,7 @@ if ($controller->getAction() == 'order') {
                                 <td>
                                     <?php $refundeduser = User::getByUserID($order->getRefundedByUID());
                                     if ($refundeduser) {
-                                        echo $refundeduser->getUserName();
+                                        echo h($refundeduser->getUserName());
                                     }
                                     ?></td>
                                 <td>
