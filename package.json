@@ -11,11 +11,11 @@
   "dependencies": {
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips": "0.0.17",
-    "magnific-popup": "^1.1.0",
     "photoswipe": "^5.4.3",
     "select2": "4.0.6",
-    "selectize": "^0.12.6",
-    "sysend": "^1.10.0"
+    "sortablejs": "^1.15.7",
+    "sysend": "^1.10.0",
+    "tom-select": "^2.6.2"
   },
   "copyFiles": [
     {
@@ -37,22 +37,6 @@
     {
       "from": "node_modules/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css",
       "to": "css/chartist/chartist-plugin-tooltip.css"
-    },
-    {
-      "from": "node_modules/selectize/dist/css/selectize.css",
-      "to": "css/selectize/selectize.css"
-    },
-    {
-      "from": "node_modules/selectize/dist/js/standalone/selectize.min.js",
-      "to": "js/selectize/selectize.min.js"
-    },
-    {
-      "from": "node_modules/magnific-popup/dist/magnific-popup.css",
-      "to": "css/magnific-popup/magnific-popup.css"
-    },
-    {
-      "from": "node_modules/magnific-popup/dist/jquery.magnific-popup.js",
-      "to": "js/magnific-popup/jquery.magnific-popup.js"
     },
     {
       "from": "node_modules/select2/select2.min.js",
@@ -85,6 +69,18 @@
     {
       "from": "node_modules/photoswipe/dist/photoswipe.esm.min.js",
       "to": "js/photoswipe/photoswipe.esm.min.js"
+    },
+    {
+      "from": "node_modules/tom-select/dist/js/tom-select.complete.min.js",
+      "to": "js/tom-select/tom-select.complete.min.js"
+    },
+    {
+      "from": "node_modules/tom-select/dist/css/tom-select.default.min.css",
+      "to": "css/tom-select/tom-select.default.min.css"
+    },
+    {
+      "from": "node_modules/sortablejs/Sortable.min.js",
+      "to": "js/sortable/Sortable.min.js"
     }
   ]
 }

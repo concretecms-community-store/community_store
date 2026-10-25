@@ -255,112 +255,64 @@ if ($relatedProduct) {
 ?>
 
 <script>
-    $(document).ready(function () {
-
-        $(function(){
-            $("#product-select").select2({
-                ajax: {
-                    url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
-                    dataType: 'json',
-                    quietMillis: 250,
-                    data: function (term, page) {
-                        return {
-                            q: term // search term
-                        };
-                    },
-                    results: function (data) {
-                        var results = [];
-                        $.each(data, function(index, item){
-                            results.push({
-                                id: item.pID,
-                                text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
-                            });
-                        });
-                        return {
-                            results: results
-                        };
-                    },
-                    cache: true
-                },
-                minimumInputLength: 2,
-                initSelection: function(element, callback) {
-                    callback({text:<?= json_encode($relatedProductName); ?>,id:'<?= $relatedPID; ?>'});
-                }
-            }).select2('val', []);
-
+    (function () {
+        communityStoreDashboard.productSearch('#product-select', {
+            url: <?= json_encode((string) \Concrete\Core\Support\Facade\Url::to('/productfinder')); ?>,
+            initial: {id: <?= (int) $relatedPID; ?>, text: <?= json_encode((string) $relatedProductName); ?>}
         });
 
+        communityStoreDashboard.select('#groups-select');
 
-        $('#groups-select').select2();
+        var filter = document.getElementById('filter');
+        var sortOrder = document.getElementById('sortOrder');
 
-        var initfilter = $('#filter');
-        var displayMode = $('#displayMode');
+        var setSortOptionEnabled = function (value, enabled) {
+            var option = sortOrder && sortOrder.querySelector('option[value="' + value + '"]');
+            if (option) {
+                option.disabled = !enabled;
+            }
+        };
 
-        if (initfilter.val() == 'related' || initfilter.val() == 'related_product') {
-            $('#sortOrder option[value="related"]').prop('disabled', false);
-        } else {
-            $('#sortOrder option[value="related"]').prop('disabled', true);
-        }
+        var updateSortOptions = function () {
+            setSortOptionEnabled('related', filter.value === 'related' || filter.value === 'related_product');
+            setSortOptionEnabled('category', filter.value === 'current' || filter.value === 'page');
+        };
 
-        if(displayMode.val() == 'list') $('#productsPerRow').prop('disabled', 'disabled');
-        displayMode.change(function() {
-            if(displayMode.val() == 'list') $('#productsPerRow').prop('disabled', 'disabled');
-            else $('#productsPerRow').prop('disabled', false);
-        });
+        updateSortOptions();
 
-        if (initfilter.val() == 'current' || initfilter.val() == 'page') {
-            $('#sortOrder option[value="category"]').prop('disabled', false);
-        } else {
-            $('#sortOrder option[value="category"]').prop('disabled', true);
-        }
+        filter.addEventListener('change', function () {
+            document.querySelectorAll('#pageselector > div').forEach(function (element) {
+                element.style.display = (filter.value === 'page' || filter.value === 'page_children') ? '' : 'none';
+            });
 
-        $('#filter').change(function () {
-            if ($(this).val() == 'page' || $(this).val() == 'page_children') {
-                $('#pageselector>div').show();
-            } else {
-                $('#pageselector>div').hide();
+            document.getElementById('product-search').style.display = filter.value === 'related_product' ? '' : 'none';
+
+            updateSortOptions();
+
+            if (!sortOrder) {
+                return;
             }
 
-            if ($(this).val() == 'related_product') {
-                $('#product-search').show();
-            } else {
-                $('#product-search').hide();
-            }
-
-            if ($(this).val() == 'related' || $(this).val() == 'related_product') {
-                $('#sortOrder option[value="related"]').prop('disabled', false);
-                $("#sortOrder").val('related');
-            } else {
-                $('#sortOrder option[value="related"]').prop('disabled', true);
-
-                if ($('#sortOrder option:selected').val() == 'related') {
-                    $("#sortOrder").val($("#sortOrder option:first").val());
-                }
-            }
-
-            if ($(this).val() == 'current' || $(this).val() == 'page') {
-                $('#sortOrder option[value="category"]').prop('disabled', false);
-            } else {
-                $('#sortOrder option[value="category"]').prop('disabled', true);
-            }
-
-
-        });
-
-        $('#showPageLink').change(function () {
-            if ($(this).prop('checked')) {
-                $('#pageLinkTextField').removeClass('hidden');
-            } else {
-                $('#pageLinkTextField').addClass('hidden');
+            if (filter.value === 'related' || filter.value === 'related_product') {
+                sortOrder.value = 'related';
+            } else if (sortOrder.value === 'related') {
+                sortOrder.value = sortOrder.options[0].value;
             }
         });
 
-        $('#showAddToCart').change(function () {
-            if ($(this).prop('checked')) {
-                $('#addToCartTextField').removeClass('hidden');
-            } else {
-                $('#addToCartTextField').addClass('hidden');
-            }
+        var displayMode = document.getElementById('displayMode');
+        var productsPerRow = document.getElementById('productsPerRow');
+        var updateDisplayMode = function () {
+            productsPerRow.disabled = displayMode.value === 'list';
+        };
+        updateDisplayMode();
+        displayMode.addEventListener('change', updateDisplayMode);
+
+        [['showPageLink', 'pageLinkTextField'], ['showAddToCart', 'addToCartTextField']].forEach(function (pair) {
+            var checkbox = document.getElementById(pair[0]);
+            checkbox.addEventListener('change', function () {
+                document.getElementById(pair[1]).classList.toggle('hidden', !checkbox.checked);
+            });
         });
-    });
+    })();
 </script>

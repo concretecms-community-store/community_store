@@ -26,12 +26,13 @@ class Types extends DashboardPageController
 
         $this->set("typeList", $typeList);
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
     }
 
 
     public function add()
     {
+        $this->requireAsset('community-store-dashboard');
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->set('pageTitle', t('Add Product Type'));
         $this->set('type', new ProductType());
@@ -54,6 +55,7 @@ class Types extends DashboardPageController
 
     public function attributes($ptID)
     {
+        $this->requireAsset('community-store-dashboard');
         $type = ProductType::getByID($ptID);
         if (!$type) {
             return Redirect::to('/dashboard/store/products/types');
@@ -77,6 +79,7 @@ class Types extends DashboardPageController
 
     public function edit($ptID)
     {
+        $this->requireAsset('community-store-dashboard');
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->set('pageTitle', t('Edit Product Type'));
 

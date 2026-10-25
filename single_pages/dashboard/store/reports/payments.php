@@ -136,7 +136,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 </div>
 <script>
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
 
 const DATETIME_FORMAT = new Intl.DateTimeFormat(
     <?= json_encode(str_replace('_', '-', $localization->getLocale())) ?>,
@@ -262,17 +262,14 @@ new Vue({
         },
         viewEntryData(entry) {
             this.entryForDataViewer = entry;
-            const $dialog = $(this.$refs['cs-payment-data']);
-            $dialog.find('>div')
-                .css({
-                    'max-height': Math.min(Math.max($(window).height() - 170, 200), 1500) + 'px',
-                    'overflow-y': 'auto',
-                })
-            ;
+            const dialog = this.$refs['cs-payment-data'];
+            const content = dialog.querySelector(':scope > div');
+            content.style.maxHeight = Math.min(Math.max(window.innerHeight - 170, 200), 1500) + 'px';
+            content.style.overflowY = 'auto';
             this.$nextTick(() => {
-                $dialog.dialog({
-                    modal: true,
-                    width: Math.min(Math.max($(window).width() - 20, 200), 1500),
+                communityStoreDashboard.openDialog(dialog, {
+                    title: dialog.getAttribute('title'),
+                    width: Math.min(Math.max(window.innerWidth - 20, 200), 1500),
                 });
             });
         },

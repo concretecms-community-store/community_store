@@ -31,6 +31,7 @@ class Payments extends DashboardPageController
 EOT
         );
         $this->requireAsset('javascript', 'vue');
+        $this->requireAsset('community-store-dashboard');
         if (!$this->app->make(LogProviderFactory::class)->hasRegisteredProviders()) {
             $this->error->add(t('No payment method is providing log entries'));
         }

@@ -114,7 +114,7 @@ if (isset($missingNotificationEmails)) { ?>
         </div>
 
         <script type="text/javascript">
-            $(function () {
+            communityStoreDashboard.ready(function () {
                 new Chartist.Line('#sales-chart', {
                         <?php
 

@@ -19,7 +19,7 @@ class Overview extends DashboardPageController {
         $this->set('sr', $sr);
         $this->requireAsset('chartist');
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
 
         $orderList = new OrderList();
         $orderList->setItemsPerPage(10);

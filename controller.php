@@ -201,7 +201,7 @@ class Controller extends Package implements ProviderAggregateInterface
         $al->register('css', 'communityStoreDashboard', 'css/communityStoreDashboard.css', ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store', 'js/communityStore.js', ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'sysend', 'js/sysend/sysend.js', ['version' => $this->npmPackages['sysend'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'communityStoreFunctions', 'js/communityStoreFunctions.js', ['version' => $version, 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
         $al->register('javascript', 'community-store-autocomplete', 'js/autoComplete.js', ['version' => $version, 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
         $al->register('javascript', 'chartist', 'js/chartist/chartist.min.js', ['version' => $this->npmPackages['chartist'], 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
@@ -217,9 +217,24 @@ class Controller extends Package implements ProviderAggregateInterface
             ]
         );
 
-        $select2 = $al->getAssetGroup('select2');
+        $al->register('javascript', 'tom-select', 'js/tom-select/tom-select.complete.min.js', ['version' => '2.6.2', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('css', 'tom-select', 'css/tom-select/tom-select.default.min.css', ['version' => '2.6.2', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
+        $al->register('javascript', 'sortablejs', 'js/sortable/Sortable.min.js', ['version' => '1.15.7', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
 
-        if (!$select2) {
+        // Assets used by Community Store's dashboard pages and block edit forms
+        $al->registerGroup('community-store-dashboard',
+            [
+                ['javascript', 'tom-select'],
+                ['javascript', 'sortablejs'],
+                ['javascript', 'communityStoreFunctions'],
+                ['css', 'tom-select'],
+                ['css', 'communityStoreDashboard'],
+            ]
+        );
+
+        // Legacy select2 (jQuery plugin) registration, no longer used by Community Store itself.
+        // Kept so that add-ons relying on Community Store to provide it continue to work.
+        if (!$al->getAssetGroup('select2')) {
             $al->register('css', 'select2', 'css/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
             $al->register('javascript', 'select2', 'js/select2.js', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
 
@@ -227,36 +242,6 @@ class Controller extends Package implements ProviderAggregateInterface
                 [
                     ['javascript', 'select2'],
                     ['css', 'select2']
-                ]
-            );
-        }
-
-        $selectize = $al->getAssetGroup('selectize');
-
-        if (!$selectize) {
-
-            $al->register('css', 'selectize', 'css/selectize/selectize.css', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-            $al->register('javascript', 'selectize', 'js/selectize/selectize.min.js', ['version' => '0.12.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-
-            $al->registerGroup('selectize',
-                [
-                    ['javascript', 'selectize'],
-                    ['css', 'selectize']
-                ]
-            );
-        }
-
-        $lightbox = $al->getAssetGroup('core/lightbox');
-
-        if (!$lightbox) {
-
-            $al->register('css', 'lightbox', 'css/magnific-popup/magnific-popup.css', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-            $al->register('javascript', 'lightbox', 'js/magnific-popup/jquery.magnific-popup.js', ['version' => '1.1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-
-            $al->registerGroup('core/lightbox',
-                [
-                    ['javascript', 'lightbox'],
-                    ['css', 'lightbox']
                 ]
             );
         }

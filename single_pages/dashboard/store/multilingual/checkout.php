@@ -500,10 +500,15 @@ $editor = $app->make('editor');
 </style>
 
 <script>
-    $(document).ready(function () {
-        $('.copytext').click(function () {
-            var content = $(this).parent().prev().html();
-            $(this).parent().next().next().find('input, textarea').val(content);
+    document.querySelectorAll('.copytext').forEach(function (copy) {
+        copy.addEventListener('click', function () {
+            var source = copy.parentElement.previousElementSibling;
+            var target = copy.parentElement.nextElementSibling ? copy.parentElement.nextElementSibling.nextElementSibling : null;
+            if (source && target) {
+                target.querySelectorAll('input, textarea').forEach(function (field) {
+                    field.value = source.innerHTML;
+                });
+            }
         });
     });
 </script>

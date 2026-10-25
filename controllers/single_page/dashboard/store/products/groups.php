@@ -16,7 +16,7 @@ class Groups extends DashboardPageController
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
     }
 
     public function add()
@@ -24,8 +24,7 @@ class Groups extends DashboardPageController
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->set('pageTitle', t('Add Product Group'));
         $this->set('group', new StoreGroup());
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
 
         if ($this->request->request->all() && $this->token->validate('community_store')) {
             $errors = $this->validateGroup($this->request->request->all());
@@ -58,8 +57,7 @@ class Groups extends DashboardPageController
     {
         $this->requireAsset('css', 'communityStoreDashboard');
         $this->set('pageTitle', t('Edit Product Group'));
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
 
         $group = StoreGroup::getByID($gID);
 

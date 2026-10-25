@@ -40,6 +40,7 @@ class Manufacturers extends DashboardPageController
 
     public function add()
     {
+        $this->requireAsset('community-store-dashboard');
         $this->set('pageTitle', t('Add Manufacturer'));
         $manufacturer = new Manufacturer();
         $this->set('manufacturer', $manufacturer);
@@ -51,6 +52,7 @@ class Manufacturers extends DashboardPageController
 
     public function edit($id = 0)
     {
+        $this->requireAsset('community-store-dashboard');
         $manufacturer = Manufacturer::getByID($id);
         if ($manufacturer === null) {
             return $this->buildRedirect('/dashboard/store/manufacturers');

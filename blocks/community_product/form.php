@@ -114,45 +114,13 @@
 
 
 <script type="text/javascript">
-    function updateProductLocation(){
-        if ( $("#productLocation").val() == "page" ) {
-            $("#product-search").hide();
-        } else {
-            $("#product-search").show();
-        }
+    function updateProductLocation() {
+        document.getElementById('product-search').style.display = document.getElementById('productLocation').value === 'page' ? 'none' : '';
     }
     updateProductLocation();
 
-    $(document).ready(function () {
-
-        $("#product-select").select2({
-            ajax: {
-                url: "<?= \Concrete\Core\Support\Facade\Url::to('/productfinder'); ?>",
-                dataType: 'json',
-                quietMillis: 250,
-                data: function (term, page) {
-                    return {
-                        q: term // search term
-                    };
-                },
-                results: function (data) {
-                    var results = [];
-                    $.each(data, function(index, item){
-                        results.push({
-                            id: item.pID,
-                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
-                        });
-                    });
-                    return {
-                        results: results
-                    };
-                },
-                cache: true
-            },
-            minimumInputLength: 2,
-            initSelection: function(element, callback) {
-                callback({id: <?= ($pID ?? 0); ?>, text: <?= (isset($product) && is_object($product) ? json_encode($product->getName()) : "''"); ?> });
-            }
-        }).select2('val', []);
+    communityStoreDashboard.productSearch('#product-select', {
+        url: <?= json_encode((string) \Concrete\Core\Support\Facade\Url::to('/productfinder')); ?>,
+        initial: {id: <?= (int) ($pID ?? 0); ?>, text: <?= json_encode(isset($product) && is_object($product) ? $product->getName() : ''); ?>}
     });
 </script>

@@ -79,13 +79,11 @@ if (in_array($controller->getAction(), $addViews)) {
                                     <?= str_replace('form-select', '', $form->selectMultiple('taxCountry', $countries, $country ? $country : ['US'], ['onchange' => 'updateTaxStates()', 'class' => 'selectize', 'style' => 'width: 100%', 'placeholder' => t('Select countries')])); ?>
 
                                     <script>
-                                        $(document).ready(function() {
-                                            $('#taxCountry').selectize({
-                                                plugins: ['remove_button'],
+                                        communityStoreDashboard.ready(function () {
+                                            communityStoreDashboard.select('#taxCountry', {
                                                 selectOnTab: true,
                                                 closeAfterSelect: true
                                             });
-                                            $('.selectize').removeClass('form-control');
 
                                             updateTaxStates();
                                         });
@@ -284,12 +282,8 @@ if (in_array($controller->getAction(), $addViews)) {
                 <?php if (count($taxRates) < $sizeswap) {
             ?>
                 <script>
-                    $(document).ready(function() {
-                        $('.taxclassRates').selectize({
-                            plugins: ['remove_button'],
-                            selectOnTab: true
-                        });
-                        $('.selectize').removeClass('form-control');
+                    document.querySelectorAll('select.taxclassRates').forEach(function (select) {
+                        communityStoreDashboard.select(select, {selectOnTab: true});
                     });
                 </script>
                 <?php

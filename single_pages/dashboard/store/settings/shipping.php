@@ -129,19 +129,18 @@ if (in_array($controller->getAction(), $addViews)) {
                 </div>
 
                 <script>
-                    $(document).ready(function() {
-                        $('.selectize').selectize({
-                            plugins: ['remove_button'],
-                            selectOnTab: true
+                    (function () {
+                        document.querySelectorAll('select.selectize').forEach(function (select) {
+                            communityStoreDashboard.select(select, {selectOnTab: true});
                         });
-                        $('.selectize').removeClass('form-control');
-                        $('#methodProductGroupsCriteria')
-                            .on('change', function() {
-                                $('#methodProductGroups').closest('.row').toggle(parseInt($('#methodProductGroupsCriteria').val()) ? true : false);
-                            })
-                            .trigger('change')
-                        ;
-                    });
+
+                        var criteria = document.getElementById('methodProductGroupsCriteria');
+                        var update = function () {
+                            communityStoreDashboard.toggle(document.getElementById('methodProductGroups').closest('.row'), !!parseInt(criteria.value));
+                        };
+                        criteria.addEventListener('change', update);
+                        update();
+                    })();
                 </script>
 
                 <div class="row">

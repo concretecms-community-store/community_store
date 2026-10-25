@@ -77,23 +77,17 @@ use Concrete\Core\Support\Facade\Url;
     </form>
 </div>
 <script>
-$(document).ready(function() {
-
-$('a[data-cs-filter-featured]').on('click', function(e) {
-    e.preventDefault();
-    var $a = $(this),
-        featured = $a.data('cs-filter-featured'),
-        $form = $a.closest('form'),
-        $featured = $form.find('input[name="featured"]');
-    if (typeof featured === 'number') {
-        featured = featured.toString();
-    }
-    if ($featured.val() === featured) {
-        return;
-    }
-    $featured.val(featured);
-    $form.submit();
-});
-
+document.querySelectorAll('a[data-cs-filter-featured]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var featured = link.getAttribute('data-cs-filter-featured'),
+            form = link.closest('form'),
+            featuredField = form.querySelector('input[name="featured"]');
+        if (featuredField.value === featured) {
+            return;
+        }
+        featuredField.value = featured;
+        form.submit();
+    });
 });
 </script>

@@ -37,8 +37,7 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
         $this->getGroupList();
         $this->set('groupfilters', []);
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
@@ -68,8 +67,7 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
         $this->getGroupList();
         $this->set('groupfilters', $this->getGroupFilters());
         $this->set('manufacturersList', ManufacturerList::getManufacturerList());
@@ -434,7 +432,6 @@ class Controller extends BlockController
 
     public function registerViewAssets($outputContent = '')
     {
-        $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'community-store');

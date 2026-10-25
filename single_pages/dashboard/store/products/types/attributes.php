@@ -22,8 +22,8 @@ $usedKeys = [];
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-primary float-end pull-right" onclick="$('#ccm-page-type-composer-add-set form').submit()"><?= t('Add Set') ?></button>
+            <button class="btn btn-secondary float-start" onclick="communityStoreDashboard.closeDialog()"><?= t('Cancel') ?></button>
+            <button class="btn btn-primary float-end pull-right" onclick="document.querySelector('#ccm-page-type-composer-add-set form').submit()"><?= t('Add Set') ?></button>
         </div>
     </div>
 </div>
@@ -65,8 +65,8 @@ $usedKeys = [];
                         <?php $token->output('delete_set') ?>
                     </form>
                     <div class="dialog-buttons">
-                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                        <button class="btn btn-danger float-end pull-right" onclick="$('form[data-delete-set-form=<?= $set->getLayoutSetID() ?>]').submit()"><?=t('Delete Set') ?></button>
+                        <button class="btn btn-secondary float-start" onclick="communityStoreDashboard.closeDialog()"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger float-end pull-right" onclick="document.querySelector('form[data-delete-set-form=&quot;<?= $set->getLayoutSetID() ?>&quot;]').submit()"><?=t('Delete Set') ?></button>
                     </div>
                 </div>
             </div>
@@ -83,8 +83,8 @@ $usedKeys = [];
                             <?= $form->textarea('ptLayoutSetDescription', $set->getLayoutSetDescription()) ?>
                         </div>
                         <div class="dialog-buttons">
-                            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop();"><?= t('Cancel') ?></button>
-                            <button class="btn btn-primary float-end pull-right" onclick="$('form[data-edit-set-form=<?= $set->getLayoutSetID() ?>]').submit();"><?=t('Update Set') ?></button>
+                            <button class="btn btn-secondary float-start" onclick="communityStoreDashboard.closeDialog()"><?= t('Cancel') ?></button>
+                            <button class="btn btn-primary float-end pull-right" onclick="document.querySelector('form[data-edit-set-form=&quot;<?= $set->getLayoutSetID() ?>&quot;]').submit()"><?=t('Update Set') ?></button>
                         </div>
                         <?php $token->output('update_set') ?>
                     </form>
@@ -124,8 +124,8 @@ $usedKeys = [];
                                     </form>
 
                                     <div class="dialog-buttons">
-                                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                                        <button class="btn btn-danger float-end pull-right" onclick="$('form[data-delete-set-control-form=<?= $control->getProductTypeLayoutSetControlID() ?>]').submit()"><?= t('Remove Attribute From Set') ?></button>
+                                        <button class="btn btn-secondary float-start" onclick="communityStoreDashboard.closeDialog()"><?=t('Cancel'); ?></button>
+                                        <button class="btn btn-danger float-end pull-right" onclick="document.querySelector('form[data-delete-set-control-form=&quot;<?= $control->getProductTypeLayoutSetControlID() ?>&quot;]').submit()"><?= t('Remove Attribute From Set') ?></button>
                                     </div>
                                 </div>
                             </div>
@@ -162,8 +162,8 @@ $usedKeys = [];
 
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-primary float-end pull-right" onclick="$('#ccm-product-type-set-edit-control form').submit()"><?= t('Save') ?></button>
+            <button class="btn btn-secondary float-start" onclick="communityStoreDashboard.closeDialog()"><?= t('Cancel') ?></button>
+            <button class="btn btn-primary float-end pull-right" onclick="document.querySelector('#ccm-product-type-set-edit-control form').submit()"><?= t('Save') ?></button>
         </div>
     </div>
 </div>
@@ -203,7 +203,7 @@ $usedKeys = [];
 
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-start " onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-secondary float-start " onclick="communityStoreDashboard.closeDialog()"><?= t('Cancel') ?></button>
         </div>
     </div>
 </div>
@@ -212,177 +212,84 @@ $usedKeys = [];
 
 
 <script type="text/javascript">
+    (function () {
+        var dashboard = communityStoreDashboard;
 
-    var Composer = {
+        var openDialog = function (element, title, width) {
+            window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+            dashboard.openDialog(element, {title: title, width: width});
+        };
 
-        deleteFromLayoutSetControl: function(ptLayoutSetControlID) {
-            jQuery.fn.dialog.showLoader();
-            var formData = [{
-                'name': 'ccm_token',
-                'value': '<?= $token->generate('delete_set_control') ?>'
-            }, {
-                'name': 'ptLayoutSetControlID',
-                'value': ptLayoutSetControlID
-            }];
+        var onClick = function (selector, handler) {
+            document.querySelectorAll(selector).forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    handler(link);
+                });
+            });
+        };
 
-            $.ajax({
-                type: 'post',
-                data: formData,
-                url: '<?= $view->action('delete_set_control') ?>',
-                success: function() {
-                    jQuery.fn.dialog.hideLoader();
-                    jQuery.fn.dialog.closeAll();
-                    $('tr[data-page-product-type-layout-control-set-control-id=' + ptLayoutSetControlID + ']').remove();
+        onClick('a[data-dialog=add_set]', function () {
+            openDialog('#ccm-page-type-composer-add-set', <?= json_encode(t('Add Attribute Set')) ?>, 320);
+        });
+
+        onClick('a[data-dialog=add_control]', function (link) {
+            document.getElementById('ptlsID').value = link.getAttribute('data-set-id');
+            openDialog('#ccm-product-type-set-add-control', <?= json_encode(t('Add Attribute To Set')) ?>, 520);
+        });
+
+        onClick('a[data-dialog=edit_control]', function (link) {
+            document.getElementById('ptlscID').value = link.getAttribute('data-control-id');
+            document.getElementById('customLabel').value = link.getAttribute('data-control-label');
+            document.getElementById('hidden').value = link.getAttribute('data-control-hidden');
+            openDialog('#ccm-product-type-set-edit-control', <?= json_encode(t('Edit Attribute')) ?>, 520);
+        });
+
+        onClick('a[data-delete-set]', function (link) {
+            openDialog('div[data-delete-set-dialog="' + link.getAttribute('data-delete-set') + '"]', <?= json_encode(t('Delete Control Set')); ?>, 320);
+        });
+
+        onClick('a[data-edit-set]', function (link) {
+            openDialog('div[data-edit-set-dialog="' + link.getAttribute('data-edit-set') + '"]', <?= json_encode(t('Update Control Set')); ?>, 320);
+        });
+
+        onClick('a[data-delete-set-control]', function (link) {
+            openDialog('div[data-delete-set-control-dialog="' + link.getAttribute('data-delete-set-control') + '"]', <?= json_encode(t('Delete Control')); ?>, 420);
+        });
+
+        onClick('#ccm-product-type-set-add-control a', function (link) {
+            document.getElementById('akID').value = link.getAttribute('data-ak-id');
+            document.querySelector('#ccm-product-type-set-add-control form').submit();
+        });
+
+        dashboard.sortable('.layout-sets', {
+            handle: 'a[data-command=move_set]',
+            draggable: '.ccm-item-set',
+            onEnd: function () {
+                var data = new URLSearchParams();
+                data.append('ccm_token', <?= json_encode($token->generate('update_set_display_order')) ?>);
+                data.append('ptID', <?= json_encode($type->getTypeID()); ?>);
+                document.querySelectorAll('.ccm-item-set').forEach(function (set) {
+                    data.append('ptLayoutSetID[]', set.getAttribute('data-page-product-type-layout-control-set-id'));
+                });
+                dashboard.post(<?= json_encode((string) $view->action('update_set_display_order')) ?>, data);
+            }
+        });
+
+        document.querySelectorAll('.ccm-item-set-inner').forEach(function (setInner) {
+            dashboard.sortable(setInner, {
+                handle: 'a[data-command=move-set-control]',
+                draggable: '.ccm-item-set-control',
+                onEnd: function () {
+                    var data = new URLSearchParams();
+                    data.append('ccm_token', <?= json_encode($token->generate('update_set_control_display_order')) ?>);
+                    data.append('ptLayoutSetID', setInner.closest('.ccm-item-set').getAttribute('data-page-product-type-layout-control-set-id'));
+                    setInner.querySelectorAll('.ccm-item-set-control').forEach(function (control) {
+                        data.append('ptLayoutSetControlID[]', control.getAttribute('data-page-product-type-layout-control-set-control-id'));
+                    });
+                    dashboard.post(<?= json_encode((string) $view->action('update_set_control_display_order')) ?>, data);
                 }
             });
-        }
-
-    }
-
-    $(function() {
-        $('a[data-dialog=add_set]').on('click', function() {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-            jQuery.fn.dialog.open({
-                element: '#ccm-page-type-composer-add-set',
-                modal: true,
-                width: 320,
-                title: <?= json_encode(t('Add Attribute Set')) ?>,
-                height: 'auto'
-            });
         });
-
-        $('a[data-dialog=add_control]').on('click', function() {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-            $('#ptlsID').val($(this).data('set-id'));
-
-            jQuery.fn.dialog.open({
-                element: '#ccm-product-type-set-add-control',
-                modal: true,
-                width: 520,
-                title: <?= json_encode(t('Add Attribute To Set')) ?>,
-                height: 'auto'
-            });
-        });
-
-
-        $('a[data-dialog=edit_control]').on('click', function() {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-            $('#ptlscID').val($(this).data('control-id'));
-            $('#customLabel').val($(this).data('control-label'));
-            $('#hidden').val($(this).data('control-hidden'));
-
-            jQuery.fn.dialog.open({
-                element: '#ccm-product-type-set-edit-control',
-                modal: true,
-                width: 520,
-                title: <?= json_encode(t('Edit Attribute')) ?>,
-                height: 'auto'
-            });
-        });
-
-        $('a[data-delete-set]').on('click', function() {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-            var ptLayoutSetID = $(this).attr('data-delete-set');
-            jQuery.fn.dialog.open({
-                element: 'div[data-delete-set-dialog=' + ptLayoutSetID + ']',
-                modal: true,
-                width: 320,
-                title: <?= json_encode(t('Delete Control Set')); ?>,
-                height: 'auto'
-            });
-        });
-        $('a[data-edit-set]').on('click', function() {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-            var ptLayoutSetID = $(this).attr('data-edit-set');
-            jQuery.fn.dialog.open({
-                element: 'div[data-edit-set-dialog=' + ptLayoutSetID + ']',
-                modal: true,
-                width: 320,
-                title: <?= json_encode(t('Update Control Set')); ?>,
-                height: 'auto'
-            });
-        });
-
-        $('.layout-sets').sortable({
-            handle: 'a[data-command=move_set]',
-            items: '.ccm-item-set',
-            cursor: 'move',
-            axis: 'y',
-            stop: function() {
-                var formData = [{
-                    'name': 'ccm_token',
-                    'value': '<?= $token->generate('update_set_display_order') ?>'
-                }, {
-                    'name': 'ptID',
-                    'value': <?= $type->getTypeID(); ?>
-                }];
-                $('.ccm-item-set').each(function() {
-                    formData.push({'name': 'ptLayoutSetID[]', 'value': $(this).attr('data-page-product-type-layout-control-set-id')});
-                });
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: '<?= $view->action('update_set_display_order') ?>',
-                    success: function() {
-
-                    }
-                });
-            }
-        });
-        $('a[data-command=add-form-set-control]').dialog();
-        $('a[data-command=edit-form-set-control]').dialog();
-
-        $('.ccm-item-set-inner').sortable({
-            handle: 'a[data-command=move-set-control]',
-            items: '.ccm-item-set-control',
-            cursor: 'move',
-            axis: 'y',
-            helper: function(e, ui) { // prevent table columns from collapsing
-                ui.addClass('active');
-                ui.children().each(function () {
-                    $(this).width($(this).width());
-                });
-                return ui;
-            },
-            stop: function(e, ui) {
-                ui.item.removeClass('active');
-
-                var formData = [{
-                    'name': 'ccm_token',
-                    'value': '<?= $token->generate('update_set_control_display_order') ?>'
-                }, {
-                    'name': 'ptLayoutSetID',
-                    'value': $(this).parent().parent().attr('data-page-product-type-layout-control-set-id')
-                }];
-
-                $(this).find('.ccm-item-set-control').each(function() {
-                    formData.push({'name': 'ptLayoutSetControlID[]', 'value': $(this).attr('data-page-product-type-layout-control-set-control-id')});
-                });
-
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: '<?= $view->action('update_set_control_display_order') ?>',
-                    success: function() {}
-                });
-            }
-        });
-
-        $('.ccm-item-set-inner').on('click', 'a[data-delete-set-control]', function() {
-            var ptLayoutSetControlID = $(this).attr('data-delete-set-control');
-            jQuery.fn.dialog.open({
-                element: 'div[data-delete-set-control-dialog=' + ptLayoutSetControlID + ']',
-                modal: true,
-                width: 420,
-                title: <?= json_encode(t('Delete Control')); ?>,
-                height: 'auto'
-            });
-            return false;
-        });
-
-        $('#ccm-product-type-set-add-control a').on('click', function() {
-            $('#akID').val($(this).data('ak-id'));
-            $('#ccm-product-type-set-add-control form').submit();
-        });
-    });
+    })();
 </script>

@@ -95,61 +95,21 @@ if (in_array($controller->getAction(),$groupViews)){ ?>
                 </div>
 
                 <script type="text/javascript">
+                    (function () {
+                        var groupProducts = document.getElementById('group-products');
 
-                    $(function(){
-                        $("#product-select").select2({
-                            ajax: {
-                                url: "<?= Url::to('/productfinder')?>",
-                                dataType: 'json',
-                                quietMillis: 250,
-                                data: function (term, page) {
-                                    return {
-                                        q: term // search term
-                                    };
-                                },
-                                results: function (data) {
-                                    var results = [];
-                                    $.each(data, function(index, item){
-                                        results.push({
-                                            id: item.pID,
-                                            text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
-                                        });
-                                    });
-                                    return {
-                                        results: results
-                                    };
-                                },
-                                cache: true
-                            },
-                            minimumInputLength: 2,
-                            initSelection: function(element, callback) {
-                                callback({});
+                        communityStoreDashboard.productSearch('#product-select', {
+                            url: <?= json_encode((string) Url::to('/productfinder')); ?>,
+                            onSelect: function (product) {
+                                groupProducts.classList.remove('hidden');
+                                groupProducts.appendChild(communityStoreDashboard.listItem(product.text, 'products[]', product.id));
                             }
-                        }).select2('val', []);
-
-                        $('#product-select').on("change", function(e) {
-                            var data = $(this).select2('data');
-                            $('#group-products').removeClass('hidden').append('<li class="list-group-item">'+ data.text  +'<a><i class="pull-right fa fa-minus-circle float-end"></i> <input type="hidden" name="products[]" value="' + data.id + '" /></a> </li>');
-                            $(this).select2("val", []);
                         });
 
-                        $('#group-products').on('click', 'a', function(){
-                            $(this).parent().remove();
-                        });
-
-                        $('#deletegroup').submit(function(e){
-                            return confirm("<?= t('Are you sure you want to delete this product group?');?>");
-                        });
-
-
-                        $(".group-product-list").sortable({
-                            cursor: 'move',
-                            opacity: 0.5,
-                            axis: 'y'
-                        });
-
-                    });
-
+                        communityStoreDashboard.removableList(groupProducts);
+                        communityStoreDashboard.confirmSubmit('#deletegroup', <?= json_encode(t('Are you sure you want to delete this product group?')); ?>);
+                        communityStoreDashboard.sortable(groupProducts);
+                    })();
                 </script>
                 <style>
                     .group-product-list:hover {

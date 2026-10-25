@@ -83,7 +83,6 @@ class Complete extends PageController
 
         $this->set('refreshCheck', $refreshCheck);
 
-        $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'community-store');

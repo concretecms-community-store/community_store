@@ -82,7 +82,7 @@ class Orders extends DashboardPageController
         $this->set('orderStatuses', $statuses);
         $this->set('status', $status);
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
         $fulfilmentStatuses =  OrderStatus::getAll();
         $this->set('statuses', $fulfilmentStatuses);
         $this->set('paymentMethod', $paymentMethod);
@@ -121,7 +121,7 @@ class Orders extends DashboardPageController
         } else {
             $this->set("orderChoicesAttList", []);
         }
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
         $this->set('showFiles', class_exists('Concrete\Package\CommunityStoreFileUploads\Src\CommunityStore\Order\OrderItemFile'));
         $this->set('pageTitle', t("Order #") . $order->getOrderID());
         if (method_exists($this, 'createBreadcrumb')) {

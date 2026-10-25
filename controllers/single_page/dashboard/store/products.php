@@ -95,7 +95,7 @@ class Products extends DashboardSitePageController
         $this->set('pagination', $pagination);
         $this->set('paginator', $paginator);
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
 
         $grouplist = StoreGroupList::getGroupList();
         $this->set("grouplist", $grouplist);
@@ -377,6 +377,7 @@ class Products extends DashboardSitePageController
             return Redirect::to('/dashboard/store/products/edit/' . $newproduct->getID());
         }
 
+        $this->requireAsset('community-store-dashboard');
         $this->set('pageTitle', t('Duplicate Product'));
         $this->set('product', $product);
         $newProductName = $product->getName() . ' ' . t('(Copy)');
@@ -407,13 +408,11 @@ class Products extends DashboardSitePageController
 
     public function loadFormAssets()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
 
         $this->set('al', $this->app->make('helper/concrete/asset_library'));
 
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
 
         $this->set('productAttributeCategory', Category::getByHandle('store_product'));
 
@@ -459,6 +458,7 @@ class Products extends DashboardSitePageController
 
     public function save()
     {
+        $this->requireAsset('community-store-dashboard');
         $data = $this->request->request->all();
 
         if ($data && $this->token->validate('community_store')) {

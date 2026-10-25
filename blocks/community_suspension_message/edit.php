@@ -31,13 +31,14 @@ $editor->getPluginManager()->deselect('autogrow');
 </div>
 
 <script>
-$(document).ready(function() {
-
-$('#useCustomMessage')
-    .on('change', function() {
-        $('.useCustomMessage-yes').toggle($('#useCustomMessage').is(':checked'));
-    })
-    .trigger('change')
-;
-});
+(function () {
+    var useCustomMessage = document.getElementById('useCustomMessage');
+    var update = function () {
+        document.querySelectorAll('.useCustomMessage-yes').forEach(function (element) {
+            element.style.display = useCustomMessage.checked ? '' : 'none';
+        });
+    };
+    useCustomMessage.addEventListener('change', update);
+    update();
+})();
 </script>

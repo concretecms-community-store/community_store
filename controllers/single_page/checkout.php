@@ -57,7 +57,7 @@ class Checkout extends PageController
             // if the code submitted was empty we also apply since any other existing code is removed
             if (($codesuccess && !$codeerror) || (!$codesuccess && !$codeerror)) {
                 // A coupon was added or removed so let's refresh other carts on other open pages
-                $this->addFooterItem('<script type="text/javascript">$(function() { communityStore.broadcastCartRefresh({action: \'code\'}); });</script>');
+                $this->addFooterItem('<script type="text/javascript">document.addEventListener(\'DOMContentLoaded\', function() { communityStore.broadcastCartRefresh({action: \'code\'}); });</script>');
             }
 
         }
@@ -229,7 +229,6 @@ class Checkout extends PageController
 
             $this->set('paymentErrors', Session::get('paymentErrors'));
 
-            $this->requireAsset('javascript', 'jquery');
             $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
             $this->addFooterItem($js);
 
@@ -239,7 +238,7 @@ class Checkout extends PageController
             $this->requireAsset('css', 'community-store');
             $this->addFooterItem("
             <script type=\"text/javascript\">
-                $(function() {
+                document.addEventListener('DOMContentLoaded', function() {
                     communityStore.loadViaHash();
                 });
             </script>
@@ -379,7 +378,6 @@ class Checkout extends PageController
 
 	public function external($nonce = false)
     {
-        $this->requireAsset('javascript', 'jquery');
         $pmHandle = Session::get('paymentMethod');
         $pm = false;
 

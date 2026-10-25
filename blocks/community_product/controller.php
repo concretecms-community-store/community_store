@@ -200,13 +200,11 @@ class Controller extends BlockController
 
     public function registerViewAssets($outputContent = '')
     {
-        $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('javascript', 'sysend');
         $this->requireAsset('javascript', 'community-store');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('css', 'community-store');
-        $this->requireAsset('core/lightbox');
         $this->requireAsset('photoswipe');
     }
 
@@ -262,14 +260,12 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
     }
 
     public function edit()
     {
-        $this->requireAsset('css', 'select2');
-        $this->requireAsset('javascript', 'select2');
+        $this->requireAsset('community-store-dashboard');
 
         if ($this->pID) {
             $this->set('product', Product::getByID($this->pID));

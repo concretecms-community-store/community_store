@@ -96,11 +96,7 @@ if (version_compare($version, '9.0', '<')) {
             <?php } ?>
 
             <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#delete').submit(function () {
-                        return confirm('<?=  t("Are you sure you want to delete this product?"); ?>');
-                    });
-                });
+                communityStoreDashboard.confirmSubmit('#delete', <?= json_encode(t('Are you sure you want to delete this product?')); ?>);
             </script>
         </div>
     <?php } ?>
@@ -196,90 +192,96 @@ if (version_compare($version, '9.0', '<')) {
                                 </div>
 
                                 <script>
-                                    $(document).ready(function () {
-                                        $('#pQtyUnlim').change(function () {
-                                            $('#pQty').prop('disabled', this.checked);
-                                            $('#backorders').toggle();
+                                    communityStoreDashboard.ready(function () {
+                                        var dashboard = communityStoreDashboard;
+                                        var byId = function (id) {
+                                            return document.getElementById(id);
+                                        };
+                                        var onChange = function (id, handler) {
+                                            var element = byId(id);
+                                            if (element) {
+                                                element.addEventListener('change', handler);
+                                            }
+                                            return element;
+                                        };
+
+                                        onChange('pQtyUnlim', function () {
+                                            byId('pQty').disabled = this.checked;
+                                            var backorders = byId('backorders');
+                                            dashboard.toggle(backorders, backorders.style.display === 'none');
                                         });
 
                                         function updateDecimalQty()
                                         {
-                                            var allowDecimalQty = $('#pAllowDecimalQty').val() == 1;
-                                            $('#quantitystepscontainer' ).toggleClass('hidden d-none', allowDecimalQty ? false : true);
+                                            var allowDecimalQty = byId('pAllowDecimalQty') && byId('pAllowDecimalQty').value == 1;
+                                            dashboard.setHidden(byId('quantitystepscontainer'), !allowDecimalQty);
                                             var step;
                                             if (allowDecimalQty) {
-                                                step = parseFloat($('#pQtySteps').val());
+                                                step = parseFloat(byId('pQtySteps').value);
                                                 if (!step || step <= 0) {
                                                     step = 0.001;
                                                 }
                                             } else {
                                                 step = 1;
                                             }
-                                            $('.cstore-qty-step').attr('step', step);
+                                            document.querySelectorAll('.cstore-qty-step').forEach(function (field) {
+                                                field.setAttribute('step', step);
+                                            });
                                         }
                                         updateDecimalQty();
 
-                                        $('#pAllowDecimalQty,#pQtySteps').on('change', function() {
-                                            updateDecimalQty();
-                                        })
+                                        onChange('pAllowDecimalQty', updateDecimalQty);
+                                        onChange('pQtySteps', updateDecimalQty);
 
-                                        $('#pQuantityPrice').change(function () {
-                                            $('#tieredoptionscontainer').toggleClass('hidden d-none');
-                                            $('#tieredoptionsnote').toggleClass('hidden d-none');
+                                        onChange('pQuantityPrice', function () {
+                                            ['tieredoptionscontainer', 'tieredoptionsnote'].forEach(function (id) {
+                                                var element = byId(id);
+                                                dashboard.setHidden(element, !element.classList.contains('d-none'));
+                                            });
                                         });
 
-                                        $('#pNoQty').change(function () {
-                                            if ($(this).val() == '1') {
-                                                $('#quantityoptions').addClass('hidden d-none');
-                                                $('#quantitystepscontainer').addClass('hidden d-none');
+                                        onChange('pNoQty', function () {
+                                            if (this.value == '1') {
+                                                dashboard.setHidden(byId('quantityoptions'), true);
+                                                dashboard.setHidden(byId('quantitystepscontainer'), true);
                                             } else {
-                                                $('#quantityoptions').removeClass('hidden d-none');
+                                                dashboard.setHidden(byId('quantityoptions'), false);
                                                 updateDecimalQty();
                                             }
-
                                         });
 
-                                        $('#pVariations').change(function () {
-                                            if ($(this).prop('checked')) {
-                                                $('#variations,#variationnotice').removeClass('hidden d-none');
-                                                <?php
-                                                if ($automaticProductQuantities) {
-                                                    ?>
-                                                    $('#main-product-stock-level').addClass('hidden d-none');
-                                                    <?php
-                                                }
+                                        var updateVariations = function () {
+                                            var hasVariations = byId('pVariations').checked;
+                                            dashboard.setHidden(document.querySelectorAll('#variations, #variationnotice'), !hasVariations);
+                                            <?php
+                                            if ($automaticProductQuantities) {
                                                 ?>
-                                            } else {
-                                                $('#variations,#variationnotice').addClass('hidden d-none');
+                                                dashboard.setHidden(byId('main-product-stock-level'), hasVariations);
                                                 <?php
-                                                if ($automaticProductQuantities) {
-                                                    ?>
-                                                    $('#main-product-stock-level').removeClass('hidden d-none');
-                                                    <?php
-                                                }
-                                                ?>
                                             }
-                                        }).trigger('change');
+                                            ?>
+                                        };
+                                        if (onChange('pVariations', updateVariations)) {
+                                            updateVariations();
+                                        }
 
-                                        $('#pType').change(function () {
-
-                                            if ($(this).val() != '<?= $product->getType() ? $product->getType()->getTypeID() : ''; ?>') {
-                                                $('#attributeChangeNotice').removeClass('hidden d-none');
-                                                $('#attributeList').addClass('hidden d-none');
-                                            } else {
-                                                $('#attributeChangeNotice').addClass('hidden d-none');
-                                                $('#attributeList').removeClass('hidden d-none');
-                                            }
+                                        onChange('pType', function () {
+                                            var changed = this.value != <?= json_encode($product->getType() ? (string) $product->getType()->getTypeID() : ''); ?>;
+                                            dashboard.setHidden(byId('attributeChangeNotice'), !changed);
+                                            dashboard.setHidden(byId('attributeList'), changed);
                                         });
 
-                                        $('input[name^="pvQtyUnlim"]').change(function () {
-                                            $(this).closest('.input-group').find('.ccm-input-number').prop('readonly', this.checked);
+                                        document.querySelectorAll('input[name^="pvQtyUnlim"]').forEach(function (checkbox) {
+                                            checkbox.addEventListener('change', function () {
+                                                checkbox.closest('.input-group').querySelectorAll('.ccm-input-number').forEach(function (field) {
+                                                    field.readOnly = checkbox.checked;
+                                                });
+                                            });
                                         });
 
                                         <?php if ($controller->getAction() == 'add') { ?>
-                                        $('#pName').focus();
+                                        byId('pName').focus();
                                         <?php } ?>
-
                                     });
                                 </script>
                             </div>
@@ -392,28 +394,17 @@ if (version_compare($version, '9.0', '<')) {
                                 </span>
 
                                 <script>
-                                    $(document).ready(function () {
-                                        $('#pSalePrice').keyup(function(){
-                                            var saleDates = $('.saleDates');
-                                            var saleNote = $('#saleNote');
+                                    communityStoreDashboard.ready(function () {
+                                        var dashboard = communityStoreDashboard;
 
-                                            if ($(this).val()) {
-                                                saleDates.removeClass('hidden d-none');
-                                                saleNote.addClass('hidden d-none')
-                                            } else {
-                                                saleDates.addClass('hidden d-none');
-                                                saleNote.removeClass('hidden d-none');
-                                            }
+                                        document.getElementById('pSalePrice').addEventListener('keyup', function () {
+                                            dashboard.setHidden(document.querySelectorAll('.saleDates'), !this.value);
+                                            dashboard.setHidden(document.getElementById('saleNote'), !!this.value);
                                         });
 
-                                        $('#pCustomerPrice').change(function () {
-                                            if ($(this).prop('checked')) {
-                                                $('.priceentry').removeClass('hidden d-none');
-                                                $('.nonpriceentry').addClass('hidden d-none');
-                                            } else {
-                                                $('.priceentry').addClass('hidden d-none');
-                                                $('.nonpriceentry').removeClass('hidden d-none');
-                                            }
+                                        document.getElementById('pCustomerPrice').addEventListener('change', function () {
+                                            dashboard.setHidden(document.querySelectorAll('.priceentry'), !this.checked);
+                                            dashboard.setHidden(document.querySelectorAll('.nonpriceentry'), this.checked);
                                         });
                                     });
                                 </script>
@@ -537,61 +528,54 @@ if (version_compare($version, '9.0', '<')) {
                             </script>
 
                             <script type="text/javascript">
-                                $(function () {
+                                function addtier(values) {
+                                    var tiersContainer = document.getElementById('tierscontainer');
+                                    var tierTemplate = _.template(document.getElementById('price-tier-template').innerHTML);
 
-                                    //Define container and items
-                                    var tiersContainer = $('#tierscontainer');
-                                    var tierTemplate = _.template($('#price-tier-template').html());
-
-                                    //load up existing option groups
-                                    <?php
-
-                                    $priceTiers = $product->getPriceTiers();
-
-                                    if($priceTiers) {
-                                    $tiersort = 0;
-                                    foreach ($priceTiers as $priceTier) {
-
-                                    ?>
-                                    tiersContainer.append(tierTemplate({
-                                        from: '<?= $priceTier->getFrom(); ?>',
-                                        to: '<?= $priceTier->getTo(); ?>',
-                                        price: '<?= $priceTier->getPrice(); ?>',
-                                        sort: '<?= $tiersort ?>'
-                                    }));
-                                    <?php
-
-                                    $tiersort++;
-                                    }
-                                    }
-                                    ?>
-
-                                    if ($('#tierscontainer .row').length == 1) {
-                                        addtier();
-                                    }
-
-                                });
-
-                                function deletetier(id) {
-                                    $("#tierscontainer .row[data-order='" + id + "']").remove();
-
-                                    if ($('#tierscontainer .row').length == 1) {
-                                        addtier();
-                                    }
-                                }
-
-                                function addtier() {
-                                    var tiersContainer = $('#tierscontainer');
-                                    var tierTemplate = _.template($('#price-tier-template').html());
-
-                                    tiersContainer.append(tierTemplate({
+                                    tiersContainer.insertAdjacentHTML('beforeend', tierTemplate(Object.assign({
                                         from: '',
                                         to: '',
                                         price: '',
-                                        sort: $('#tierscontainer .row').length
-                                    }));
-
+                                        sort: tiersContainer.querySelectorAll('.row').length
+                                    }, values || {})));
                                 }
+
+                                function deletetier(id) {
+                                    var tier = document.querySelector("#tierscontainer .row[data-order='" + id + "']");
+                                    if (tier) {
+                                        tier.remove();
+                                    }
+
+                                    if (document.querySelectorAll('#tierscontainer .row').length == 1) {
+                                        addtier();
+                                    }
+                                }
+
+                                communityStoreDashboard.ready(function () {
+                                    //load up existing price tiers
+                                    <?php
+                                    $priceTiers = $product->getPriceTiers();
+
+                                    if ($priceTiers) {
+                                        $tiersort = 0;
+                                        foreach ($priceTiers as $priceTier) {
+                                            ?>
+                                    addtier({
+                                        from: <?= json_encode((string) $priceTier->getFrom()); ?>,
+                                        to: <?= json_encode((string) $priceTier->getTo()); ?>,
+                                        price: <?= json_encode((string) $priceTier->getPrice()); ?>,
+                                        sort: <?= $tiersort ?>
+                                    });
+                                            <?php
+                                            $tiersort++;
+                                        }
+                                    }
+                                    ?>
+
+                                    if (document.querySelectorAll('#tierscontainer .row').length == 1) {
+                                        addtier();
+                                    }
+                                });
                             </script>
 
                         </div>
@@ -759,8 +743,10 @@ if (version_compare($version, '9.0', '<')) {
                         <div class="ccm-file-selector-choose-new btn btn-secondary"><?= t('Choose Images'); ?></div>
                     </div>
                     <script type="text/javascript">
-                        $(function () {
-                            $('#launch_additional').on('click', function (e) {
+                        communityStoreDashboard.ready(function () {
+                            var imageList = document.getElementById('additional-image-list');
+
+                            document.getElementById('launch_additional').addEventListener('click', function (e) {
                                 e.preventDefault();
 
                                 var options = {
@@ -771,18 +757,16 @@ if (version_compare($version, '9.0', '<')) {
                                     ConcreteFileManager.getFileDetails(data.fID, function (r) {
                                         for (var i in r.files) {
                                             var file = r.files[i];
-                                            $('#additional-image-list').append('<li class="list-group-item">' + file.resultsThumbnailImg + ' ' + file.title + '<a><i class="float-end pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' + file.fID + '" /></li>');
+                                            var item = communityStoreDashboard.listItem(file.title, 'pifID[]', file.fID);
+                                            item.insertAdjacentHTML('afterbegin', file.resultsThumbnailImg + ' ');
+                                            imageList.appendChild(item);
                                         }
-
                                     });
                                 }, options);
                             });
 
-                            $('#additional-image-list').sortable({axis: 'y'});
-
-                            $('#additional-image-list').on('click', 'a', function () {
-                                $(this).parent().remove();
-                            });
+                            communityStoreDashboard.sortable(imageList);
+                            communityStoreDashboard.removableList(imageList);
                         });
                     </script>
 
@@ -809,8 +793,8 @@ if (version_compare($version, '9.0', '<')) {
                         </ul>
 
                         <script type="text/javascript">
-                            $(function () {
-                                $('#pagelocations').sortable({axis: 'y'});
+                            communityStoreDashboard.ready(function () {
+                                communityStoreDashboard.sortable('#pagelocations');
                             });
                         </script>
 
@@ -843,35 +827,36 @@ if (version_compare($version, '9.0', '<')) {
 
 
                     <script>
-                        $(document).ready(function () {
-                            $('.existing-select2').select2();
+                        communityStoreDashboard.ready(function () {
+                            var pageLocations = document.getElementById('pagelocations');
 
-                            $('#pagelocations').on('click', 'a', function () {
-                                $(this).parent().remove();
+                            document.querySelectorAll('select.existing-select2').forEach(function (select) {
+                                communityStoreDashboard.select(select);
                             });
 
-                            Concrete.event.bind('ConcreteSitemap', function (e, instance) {
-                                var instance = instance;
+                            communityStoreDashboard.removableList(pageLocations);
 
+                            Concrete.event.bind('ConcreteSitemap', function (e, instance) {
                                 Concrete.event.bind('SitemapSelectPage', function (e, data) {
                                     if (data.instance == instance) {
                                         Concrete.event.unbind(e);
 
-
-                                        if ($('#pagelocations input[value=' + data.cID + ']').length == 0) {
-                                            $('#pagelocations').append('<li class="list-group-item">' + data.title + '<a><i class="float-end pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' + data.cID + '" /></li>');
+                                        if (!pageLocations.querySelector('input[value="' + parseInt(data.cID, 10) + '"]')) {
+                                            pageLocations.appendChild(communityStoreDashboard.listItem(data.title, 'cID[]', data.cID));
                                         }
 
-                                        $('.page_picker > div').hide();
+                                        var pickers = document.querySelectorAll('.page_picker > div');
+                                        communityStoreDashboard.toggle(pickers, false);
 
                                         setTimeout(function () {
-                                            $('#product-categories a[data-page-selector-action=clear]').trigger("click");
-                                            $('.page_picker > div').show();
+                                            document.querySelectorAll('#product-categories a[data-page-selector-action=clear]').forEach(function (link) {
+                                                link.click();
+                                            });
+                                            communityStoreDashboard.toggle(pickers, true);
                                         }, 1000);
                                     }
                                 });
                             });
-
                         });
                     </script>
 
@@ -1102,49 +1087,71 @@ if (version_compare($version, '9.0', '<')) {
                     </script>
                     <script type="text/javascript">
                         function indexOptionGroups() {
-                            $('#product-options-container .option-group').each(function (i) {
-                                $(this).find('.option-group-sort').val(i);
-                                $(this).attr("data-order", i);
-                                $(this).find('.optGroupID').attr("name", "optGroup" + i + "[]");
+                            document.querySelectorAll('#product-options-container .option-group').forEach(function (group, i) {
+                                group.querySelectorAll('.option-group-sort').forEach(function (field) {
+                                    field.value = i;
+                                });
+                                group.setAttribute('data-order', i);
+                                group.querySelectorAll('.optGroupID').forEach(function (field) {
+                                    field.setAttribute('name', 'optGroup' + i + '[]');
+                                });
                             });
                         }
 
+                        function showVariationChangeNotice() {
+                            communityStoreDashboard.setHidden(document.getElementById('variationshider'), true);
+                            communityStoreDashboard.setHidden(document.getElementById('changenotice'), false);
+                        }
 
                         function deleteOptionGroup(id) {
-                            var variationeffect = $(".option-group[data-order='" + id + "'] select[name=poIncludeVariations\\[\\]] option:selected");
-
-                            if (variationeffect && variationeffect.val() == 1) {
-                                $('#variationshider').addClass('hidden d-none');
-                                $('#changenotice').removeClass('hidden d-none');
+                            var group = document.querySelector(".option-group[data-order='" + id + "']");
+                            if (!group) {
+                                return;
                             }
 
-                            $(".option-group[data-order='" + id + "']").remove();
+                            var variationeffect = group.querySelector('select[name="poIncludeVariations[]"]');
+
+                            if (variationeffect && variationeffect.value == 1) {
+                                showVariationChangeNotice();
+                            }
+
+                            group.remove();
 
                             indexOptionGroups();
                         }
 
-                        $(function () {
-
-
-                            $(document).on('change', 'select[name=poIncludeVariations\\[\\]]', function () {
-                                $('#variationshider').addClass('hidden d-none');
-                                $('#changenotice').removeClass('hidden d-none');
-                                $('#changewarning').removeClass('hidden d-none');
-                            });
-
-
-                            //Make items sortable. If we re-sort them, re-index them.
-                            $("#product-options-container").sortable({
-                                handle: ".panel-heading",
-                                axis: 'y',
-                                update: function () {
-                                    indexOptionGroups();
+                        communityStoreDashboard.ready(function () {
+                            document.addEventListener('change', function (e) {
+                                if (e.target.matches('select[name="poIncludeVariations[]"]')) {
+                                    showVariationChangeNotice();
+                                    communityStoreDashboard.setHidden(document.getElementById('changewarning'), false);
                                 }
                             });
 
                             //Define container and items
-                            var optionsContainer = $('#product-options-container');
-                            var optionsTemplate = _.template($('#option-group-template').html());
+                            var optionsContainer = document.getElementById('product-options-container');
+                            var optionsTemplate = _.template(document.getElementById('option-group-template').innerHTML);
+
+                            //Make items sortable. If we re-sort them, re-index them.
+                            communityStoreDashboard.sortable(optionsContainer, {
+                                handle: '.panel-heading',
+                                onEnd: indexOptionGroups
+                            });
+
+                            var addOptionGroup = function (values) {
+                                optionsContainer.insertAdjacentHTML('beforeend', optionsTemplate(Object.assign({
+                                    poName: '',
+                                    poID: '',
+                                    poDisplayType: '',
+                                    poHandle: '',
+                                    poDetails: '',
+                                    poRequired: '',
+                                    poIncludeVariations: '0',
+                                    sort: optionsContainer.querySelectorAll('.option-group').length
+                                }, values)));
+
+                                optionsContainer.querySelectorAll('.option-group-item-container').forEach(initOptionItemsSortable);
+                            };
 
                             //load up existing option groups
                             <?php
@@ -1157,184 +1164,66 @@ if (version_compare($version, '9.0', '<')) {
                             $labels['hidden'] = t('Hidden Value');
                             $labels['static'] = t('Content');
 
+                            if (isset($options) && $options) {
+                                $optionsort = 0;
+                                foreach ($options as $option) {
+                                    $type = $option->getType();
 
-                            if(isset($options) && $options) {
-                            $optionsort = 0;
-                            foreach ($options as $option) {
-
-                            $type = $option->getType();
-                            $displayType = $option->getDisplayType();
-                            $handle = $option->getHandle();
-                            $details = $option->getDetails();
-                            $required = $option->getRequired();
-                            $includeVariations = $option->getIncludeVariations();
-
-
-                            if (!$type) {
-                                $type = 'select';
-                            }
-
-                            $label = $labels[$type];
-
-                            ?>
-                            optionsContainer.append(optionsTemplate({
+                                    if (!$type) {
+                                        $type = 'select';
+                                    }
+                                    ?>
+                            addOptionGroup({
                                 poName: <?= json_encode($option->getName()) ?>,
                                 poID: <?= json_encode($option->getID()) ?>,
-                                poType: '<?= $type ?>',
-                                poDisplayType: '<?= $displayType ?>',
-                                poLabel: <?= json_encode($label); ?>,
-                                poHandle: <?= json_encode($handle); ?>,
-                                poDetails: <?= json_encode(str_replace('~~~', '', $details)); ?>,
-                                poRequired: '<?= $required ? 1 : 0; ?>',
-                                poIncludeVariations: '<?= $includeVariations ? 1 : 0; ?>',
-                                sort: '<?= $optionsort ?>'
-                            }));
-                            <?php
-
-                            $optionsort++;
-                            }
+                                poType: <?= json_encode($type) ?>,
+                                poDisplayType: <?= json_encode($option->getDisplayType()) ?>,
+                                poLabel: <?= json_encode($labels[$type]); ?>,
+                                poHandle: <?= json_encode($option->getHandle()); ?>,
+                                poDetails: <?= json_encode(str_replace('~~~', '', $option->getDetails())); ?>,
+                                poRequired: '<?= $option->getRequired() ? 1 : 0; ?>',
+                                poIncludeVariations: '<?= $option->getIncludeVariations() ? 1 : 0; ?>',
+                                sort: <?= $optionsort ?>
+                            });
+                                    <?php
+                                    $optionsort++;
+                                }
                             }
                             ?>
 
-                            //add item
-                            $('#btn-add-option-group').click(function () {
+                            var newOptionTypes = {
+                                'btn-add-option-group': 'select',
+                                'btn-add-text': 'text',
+                                'btn-add-textarea': 'textarea',
+                                'btn-add-checkbox': 'checkbox',
+                                'btn-add-hidden': 'hidden',
+                                'btn-add-static': 'static'
+                            };
+                            var newOptionLabels = <?= json_encode($labels); ?>;
 
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'select',
-                                    poDisplayType: 'select',
-                                    poLabel: <?= json_encode($labels['select']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    poIncludeVariations: '0',
-                                    sort: temp
-                                }));
+                            Object.keys(newOptionTypes).forEach(function (buttonID) {
+                                var type = newOptionTypes[buttonID];
 
-                                //Init Index
-                                indexOptionGroups();
+                                document.getElementById(buttonID).addEventListener('click', function () {
+                                    addOptionGroup({
+                                        poType: type,
+                                        poDisplayType: type === 'select' ? 'select' : '',
+                                        poLabel: newOptionLabels[type]
+                                    });
 
-    //                            $('#variationshider').addClass('hidden');
-    //                            $('#changenotice').removeClass('hidden');
-                            });
+                                    if (type === 'static') {
+                                        initOptionEditor('.staticfield');
+                                        document.querySelectorAll('.staticfield').forEach(function (field) {
+                                            field.classList.remove('staticfield');
+                                        });
+                                    }
 
-
-                            $('#btn-add-text').click(function () {
-
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'text',
-                                    poLabel: <?= json_encode($labels['text']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    sort: temp
-                                }));
-
-                                //Init Index
-                                indexOptionGroups();
-                            });
-
-                            $('#btn-add-textarea').click(function () {
-
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'textarea',
-                                    poLabel: <?= json_encode($labels['textarea']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    sort: temp
-                                }));
-
-                                //Init Index
-                                indexOptionGroups();
-                            });
-
-                            $('#btn-add-checkbox').click(function () {
-
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'checkbox',
-                                    poLabel: <?= json_encode($labels['checkbox']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    sort: temp
-                                }));
-
-                                //Init Index
-                                indexOptionGroups();
-                            });
-
-                            $('#btn-add-hidden').click(function () {
-
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'hidden',
-                                    poLabel: <?= json_encode($labels['hidden']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    sort: temp
-                                }));
-
-                                //Init Index
-                                indexOptionGroups();
-                            });
-
-                            $('#btn-add-static').click(function () {
-
-                                //Use the template to create a new item.
-                                var temp = $(".option-group").length;
-                                temp = (temp);
-                                optionsContainer.append(optionsTemplate({
-                                    //vars to pass to the template
-                                    poName: '',
-                                    poID: '',
-                                    poType: 'static',
-                                    poLabel: <?= json_encode($labels['static']); ?>,
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    sort: temp
-                                }));
-
-                                initOptionEditor('.staticfield');
-                                $('.staticfield').removeClass('staticfield');
-
-                                //Init Index
-                                indexOptionGroups();
+                                    indexOptionGroups();
+                                });
                             });
 
                             indexOptionGroups();
                         });
-
                     </script>
                     <!-- TEMPLATE FOR EACH OPTION ITEM ---->
                     <script type="text/template" id="option-item-template">
@@ -1388,110 +1277,114 @@ if (version_compare($version, '9.0', '<')) {
                     </script>
                     <script type="text/javascript">
                         function deleteOptionItem(group, id) {
-                            $(".option-group[data-order='" + group + "']").find(".option-item[data-order='" + id + "']").remove();
+                            var item = document.querySelector(".option-group[data-order='" + group + "'] .option-item[data-order='" + id + "']");
+                            if (item) {
+                                item.remove();
+                            }
 
-                            $('#variationshider').addClass('hidden d-none');
-                            $('#changenotice').removeClass('hidden d-none');
+                            showVariationChangeNotice();
                         }
 
                         function indexOptionItems() {
-                            $('.option-group-item-container').each(function () {
-                                $(this).find('.option-item').each(function (i) {
-                                    $(this).find('.option-item-sort').val(i);
-                                    $(this).attr("data-order", i);
+                            document.querySelectorAll('.option-group-item-container').forEach(function (container) {
+                                container.querySelectorAll('.option-item').forEach(function (item, i) {
+                                    item.querySelectorAll('.option-item-sort').forEach(function (field) {
+                                        field.value = i;
+                                    });
+                                    item.setAttribute('data-order', i);
                                 });
                             });
-
                         }
 
-                        function addOptionItem(group) {
-                            var optItemsTemplate = _.template($('#option-item-template').html());
-                            var optItemsContainer = $(".option-group-item-container[data-group='" + group + "']");
+                        function initOptionItemsSortable(container) {
+                            if (container.getAttribute('data-sortable')) {
+                                return;
+                            }
+                            container.setAttribute('data-sortable', '1');
 
-                            //Use the template to create a new item.
-                            var temp = $(".option-group-item-container[data-group='" + group + "'] .option-item").length;
-                            temp = (temp);
-                            optItemsContainer.append(optItemsTemplate({
-                                //vars to pass to the template
+                            //Make items sortable. If we re-sort them, re-index them.
+                            communityStoreDashboard.sortable(container, {
+                                handle: '.grabme',
+                                onEnd: indexOptionItems
+                            });
+                        }
+
+                        function addOptionItem(group, values) {
+                            var optItemsTemplate = _.template(document.getElementById('option-item-template').innerHTML);
+                            var optItemsContainer = document.querySelector(".option-group-item-container[data-group='" + group + "']");
+
+                            if (!optItemsContainer) {
+                                return;
+                            }
+
+                            optItemsContainer.insertAdjacentHTML('beforeend', optItemsTemplate(Object.assign({
                                 poiName: '',
                                 poiSelectorName: '',
                                 poiPriceAdjust: '',
                                 poiWeightAdjust: '',
                                 poiID: '',
                                 optGroup: group,
-                                sort: temp,
+                                sort: optItemsContainer.querySelectorAll('.option-item').length,
                                 poiHidden: '',
                                 poiHiddenValue: '0'
-                            }));
+                            }, values || {})));
 
-                            //Init Index
-                            indexOptionItems();
-                            $('#variationshider').addClass('hidden d-none');
-                            $('#changenotice').removeClass('hidden d-none');
+                            if (!values) {
+                                //Init Index
+                                indexOptionItems();
+                                showVariationChangeNotice();
+                            }
                         }
 
                         // add handler for hide checkbox, to adjust hidden value when changed
-                        $(document).on('change', '.optionHiddenToggle', function () {
-                            $('input[type=hidden]',$(this).closest('div.form-check-inline')).val(($(this).prop('checked') ? '1' : '0'));
+                        document.addEventListener('change', function (e) {
+                            if (e.target.matches('.optionHiddenToggle')) {
+                                var hidden = e.target.closest('div.form-check-inline').querySelector('input[type=hidden]');
+                                hidden.value = e.target.checked ? '1' : '0';
+                            }
                         });
 
-                        $(function () {
-                            //Make items sortable. If we re-sort them, re-index them.
-                            $(".option-group-item-container").sortable({
-                                handle: ".grabme",
-                                update: function () {
-                                    indexOptionItems();
-                                }
-                            });
-
-                            //define template
-                            var optItemsTemplate = _.template($('#option-item-template').html());
-
+                        communityStoreDashboard.ready(function () {
                             //load up items
                             <?php
-                            if(isset($options) && $options) {
-                            $count = count($options);
-                            for($i = 0;$i < $count;$i++){
-                            foreach($options[$i]->getOptionItems() as $optionItem){
-                            if($optionItem->getOptionID() == $options[$i]->getID()){
-
-                            ?>
-
-                            var optItemsContainer = $(".option-group-item-container[data-group='<?= $i?>']");
-                            optItemsContainer.append(optItemsTemplate({
-                                poiName: '<?= h($optionItem->getName())?>',
-                                poiSelectorName: '<?= h($optionItem->getSelectorName())?>',
-                                poiPriceAdjust: '<?=  $optionItem->getPriceAdjustment() != 0 ? $optionItem->getPriceAdjustment() : ''; ?>',
-                                poiWeightAdjust: '<?= $optionItem->getWeightAdjustment() != 0  ? $optionItem->getWeightAdjustment() : ''?>',
-                                poiID: '<?= $optionItem->getID()?>',
-                                optGroup: <?= $i?>,
-                                sort: <?= $optionItem->getSort()?>,
-                                poiHidden: <?= ($optionItem->isHidden() ? '\'checked="checked"\'' : '""'); ?>,
+                            if (isset($options) && $options) {
+                                $count = count($options);
+                                for ($i = 0; $i < $count; $i++) {
+                                    foreach ($options[$i]->getOptionItems() as $optionItem) {
+                                        if ($optionItem->getOptionID() == $options[$i]->getID()) {
+                                            ?>
+                            addOptionItem(<?= $i ?>, {
+                                poiName: <?= json_encode($optionItem->getName()) ?>,
+                                poiSelectorName: <?= json_encode((string) $optionItem->getSelectorName()) ?>,
+                                poiPriceAdjust: <?= json_encode($optionItem->getPriceAdjustment() != 0 ? (string) $optionItem->getPriceAdjustment() : ''); ?>,
+                                poiWeightAdjust: <?= json_encode($optionItem->getWeightAdjustment() != 0 ? (string) $optionItem->getWeightAdjustment() : ''); ?>,
+                                poiID: <?= json_encode($optionItem->getID()) ?>,
+                                sort: <?= (int) $optionItem->getSort() ?>,
+                                poiHidden: <?= json_encode($optionItem->isHidden() ? 'checked="checked"' : ''); ?>,
                                 poiHiddenValue: '<?= ($optionItem->isHidden() ? '1' : '0'); ?>'
-
-                            }));
-                            <?php
-                            }//if belongs to group
-                            }//foreach opt
+                            });
+                                            <?php
+                                        }
+                                    }
+                                }
                             }
-                            }//if items
                             ?>
-                            //indexOptionItems();
                         });
-
                     </script>
 
 
                     <script>
-                        $(function() {
-                            initOptionEditor = <?php echo $editor->getEditorInitJSFunction(); ?>
+                        var initOptionEditor = <?php echo $editor->getEditorInitJSFunction(); ?>;
 
-                            if ($('.staticfield').length) {
+                        communityStoreDashboard.ready(function () {
+                            if (document.querySelector('.staticfield')) {
                                 initOptionEditor('.staticfield');
-                                $('.staticfield').removeClass('staticfield');
+                                document.querySelectorAll('.staticfield').forEach(function (field) {
+                                    field.classList.remove('staticfield');
+                                });
                             }
                         });
-                        </script>
+                    </script>
 
                     <br/>
                     <div class="form-group">
@@ -1796,67 +1689,30 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
 
                     <script type="text/javascript">
+                        communityStoreDashboard.ready(function () {
+                            var relatedProducts = document.getElementById('related-products');
 
-                        $(function () {
-                            $("#product-select").select2({
-                                ajax: {
-                                    url: "<?= Url::to('/productfinder')?>",
-                                    dataType: 'json',
-                                    quietMillis: 250,
-                                    data: function (term, page) {
-                                        return {
-                                            q: term // search term
-                                        };
-                                    },
-                                    results: function (data) {
-                                        var results = [];
-                                        $.each(data, function (index, item) {
-                                            results.push({
-                                                id: item.pID,
-                                                text: item.name + (item.SKU ? ' (' + item.SKU + ')' : '')
-                                            });
-                                        });
-                                        return {
-                                            results: results
-                                        };
-                                    },
-                                    cache: true
-                                },
-                                minimumInputLength: 2,
-                                initSelection: function (element, callback) {
-                                    callback({});
+                            communityStoreDashboard.productSearch('#product-select', {
+                                url: <?= json_encode((string) Url::to('/productfinder')); ?>,
+                                onSelect: function (product) {
+                                    relatedProducts.appendChild(communityStoreDashboard.listItem(product.text, 'pRelatedProducts[]', product.id));
                                 }
-                            }).select2('val', []);
-
-                            $('#product-select').on("change", function (e) {
-                                var data = $(this).select2('data');
-                                $('#related-products').append('<li class="list-group-item">' + data.text + '<a><i class="float-end pull-right fa fa-minus-circle"></i> <input type="hidden" name="pRelatedProducts[]" value="' + data.id + '" /></a> </li>');
-                                $(this).select2("val", []);
                             });
 
-                            $('#related-products').on('click', 'a', function () {
-                                $(this).parent().remove();
-                            });
+                            communityStoreDashboard.removableList(relatedProducts);
+                            communityStoreDashboard.sortable(relatedProducts);
 
-                            $('#related-products').sortable({axis: 'y'});
-
-                            $('.optionDisabled').change(function () {
-                                var comboKey = $(this).data('combokey');
-                                var panelBody = null;
-                                $('.panel-body.card-body').each(function () {
-                                    if ($(this).data('combokey') === comboKey) {
-                                        panelBody = $(this);
-                                    }
+                            document.querySelectorAll('.optionDisabled').forEach(function (checkbox) {
+                                checkbox.addEventListener('change', function () {
+                                    var comboKey = checkbox.getAttribute('data-combokey');
+                                    document.querySelectorAll('.panel-body.card-body[data-combokey]').forEach(function (panelBody) {
+                                        if (panelBody.getAttribute('data-combokey') === comboKey) {
+                                            communityStoreDashboard.toggle(panelBody, !checkbox.checked);
+                                        }
+                                    });
                                 });
-
-                                if ($(this).is(':checked')) {
-                                    panelBody.slideUp();
-                                } else {
-                                    panelBody.slideDown();
-                                }
                             });
                         });
-
                     </script>
 
                 </div><!-- #product-related -->
@@ -1987,8 +1843,10 @@ if (version_compare($version, '9.0', '<')) {
 
 
                     <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('.select2-select').select2();
+                        communityStoreDashboard.ready(function () {
+                            document.querySelectorAll('select.select2-select').forEach(function (select) {
+                                communityStoreDashboard.select(select);
+                            });
                         });
                     </script>
 
@@ -2086,23 +1944,35 @@ if (version_compare($version, '9.0', '<')) {
         </div>
 
         <script>
-            $(window).on('load', function(){
-                setTimeout(
-                    function () {
-                        $('.ccm-dashboard-form-actions .btn-primary').removeAttr('disabled');
-                    }, 500);
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    document.querySelectorAll('.ccm-dashboard-form-actions .btn-primary').forEach(function (button) {
+                        button.removeAttribute('disabled');
+                    });
+                }, 500);
             });
 
-            $(function () {
-                $('.variationdisplaybutton').click(function (el) {
-                    $(this).closest('.panel').find('.extrafields').toggleClass('hidden d-none');
-                    el.preventDefault();
+            communityStoreDashboard.ready(function () {
+                document.querySelectorAll('.variationdisplaybutton').forEach(function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        var panel = button.closest('.panel');
+                        if (panel) {
+                            panel.querySelectorAll('.extrafields').forEach(function (fields) {
+                                communityStoreDashboard.setHidden(fields, !fields.classList.contains('d-none'));
+                            });
+                        }
+                    });
                 });
-            });
-            $(document).ready(function () {
-                $('#productForm').submit(function () {
-                    $('#variationJSON').val(JSON.stringify($('#variations :input').serialize()));
-                    $('#variations :input').remove();
+
+                document.getElementById('productForm').addEventListener('submit', function () {
+                    var variations = document.getElementById('variations');
+                    if (variations) {
+                        document.getElementById('variationJSON').value = JSON.stringify(communityStoreDashboard.serialize(variations));
+                        variations.querySelectorAll('input, select, textarea, button').forEach(function (field) {
+                            field.remove();
+                        });
+                    }
                 });
             });
         </script>
@@ -2407,40 +2277,43 @@ if ($controller->getAction() == 'duplicate') {
 </style>
 
 <script>
+    communityStoreDashboard.ready(function () {
+        document.querySelectorAll('.btn-selectfile').forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                var pvfid = button.getAttribute('data-pvfid');
 
-    $(document).ready(function() {
-       $('.btn-selectfile').click(function(e){
-           e.preventDefault();
-           var pvfid  = $(this).data('pvfid');
-           var button = $(this);
+                ConcreteFileManager.launchDialog(function (data) {
+                    ConcreteFileManager.getFileDetails(data.fID, function (r) {
+                        var template = document.createElement('template');
+                        template.innerHTML = r.files[0].resultsThumbnailImg;
 
-           ConcreteFileManager.launchDialog(function (data) {
-               ConcreteFileManager.getFileDetails(data.fID, function (r) {
-                       let template = document.createElement('template');
-                       template.innerHTML = r.files[0].resultsThumbnailImg;
+                        document.getElementById('pvfID-' + pvfid).value = data.fID;
+                        var image = document.getElementById('pvfIDImage-' + pvfid);
+                        image.src = template.content.firstChild.src;
+                        image.title = r.files[0].title;
+                        communityStoreDashboard.setHidden(image, false);
+                        communityStoreDashboard.setHidden(button.nextElementSibling, false);
+                    });
+                }, {
+                    filters: [{"field": "type", "type": 1}]
+                });
+            });
+        });
 
-                       $('#pvfID-' + pvfid).val(data['fID']);
-                       $('#pvfIDImage-' + pvfid).prop('src',template.content.firstChild.src ).removeClass('hidden d-none').prop('title', r.files[0].title);
-                       button.next().removeClass('hidden d-none');
-               });
-           }, {
-             filters:
-                 [{"field":"type","type":1}]
-             }
+        document.querySelectorAll('.btn-clearfile').forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                var pvfid = button.getAttribute('data-pvfid');
 
-           );
-       }) ;
-
-       $('.btn-clearfile').click(function(e){
-            e.preventDefault();
-            var pvfid  = $(this).data('pvfid');
-
-            $('#pvfID-' + pvfid).val('');
-            $('#pvfIDImage-' + pvfid).prop('src','').addClass('hidden d-none');
-            $(this).addClass('hidden d-none');
+                document.getElementById('pvfID-' + pvfid).value = '';
+                var image = document.getElementById('pvfIDImage-' + pvfid);
+                image.src = '';
+                communityStoreDashboard.setHidden(image, true);
+                communityStoreDashboard.setHidden(button, true);
+            });
         });
     });
-
 </script>
 
 <style>

@@ -35,7 +35,7 @@ class Shipping extends DashboardPageController
         }
 
         $this->set('allGroupList', $allGroupList);
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         if (method_exists($this, 'createBreadcrumb')) {
             $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
             $breacrumb->add(new Item('#', t('Add Shipping Method')));
@@ -63,7 +63,7 @@ class Shipping extends DashboardPageController
         }
 
         $this->set('allGroupList', $allGroupList);
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         if (method_exists($this, 'createBreadcrumb')) {
             $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
             $breacrumb->add(new Item('#', $sm->getName()));

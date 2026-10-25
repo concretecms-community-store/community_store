@@ -83,14 +83,7 @@ if (in_array($controller->getAction(),$typeViews)){ ?>
 
 
             <script type="text/javascript">
-
-                $(function(){
-                    $('#deletetype').submit(function(e){
-                        return confirm("<?= t('Are you sure you want to delete this product type?');?>");
-                    });
-
-                });
-
+                communityStoreDashboard.confirmSubmit('#deletetype', <?= json_encode(t('Are you sure you want to delete this product type?')); ?>);
             </script>
             <style>
                 .group-product-list:hover {

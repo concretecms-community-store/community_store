@@ -19,6 +19,7 @@ class Categories extends DashboardPageController
 
     public function manage($cID)
     {
+        $this->requireAsset('community-store-dashboard');
         $products = new ProductList();
 
         $page = Page::getByID($cID);

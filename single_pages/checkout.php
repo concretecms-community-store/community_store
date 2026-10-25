@@ -545,12 +545,12 @@ $csm = $app->make('cs/helper/multilingual');
                             </form>
 
                              <script type="text/javascript">
-                                $(function () {
-                                    $("#store-enter-discount-trigger").click(function(e){
-                                        $('.store-checkout-code-form').show().find('.form-control').focus();
-                                        $(this).remove();
-                                        e.preventDefault();
-                                    });
+                                document.getElementById('store-enter-discount-trigger').addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    var codeForm = document.querySelector('.store-checkout-code-form');
+                                    codeForm.style.removeProperty('display');
+                                    codeForm.querySelector('.form-control').focus();
+                                    this.remove();
                                 });
                             </script>
 
@@ -609,9 +609,7 @@ $csm = $app->make('cs/helper/multilingual');
         <p><input type="submit" class="btn btn-primary" value="<?= t('Click here if you are not automatically redirected') ?>"></p>
     </form>
     <script type="text/javascript">
-        $(function () {
-            $("#store-checkout-redirect-form").submit();
-        });
+        document.getElementById('store-checkout-redirect-form').submit();
     </script>
     <style>
         .store-utility-links {

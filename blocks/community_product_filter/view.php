@@ -90,34 +90,30 @@ $csm = $app->make('cs/helper/multilingual');
 
                         <?php if ($minPrice != $maxPrice) { ?>
 
-                        <div data-role="rangeslider">
-
-                            <input type="hidden" class="js-range-slider" name="price" value=""
-                                   data-type="double"
-                                   data-min="<?= $minPrice; ?>"
-                                   data-max="<?= $maxPrice; ?>"
-                                   data-from="<?= $minPriceSelected; ?>"
-                                   data-to="<?= $maxPriceSelected; ?>"
-                                   data-input-values-separator="-"
-                                   data-skin="round"
-                                   data-prefix="<?= \Concrete\Core\Support\Facade\Config::get('community_store.symbol'); ?>"
-                                   data-force-edges="true"
+                        <?php
+                        $symbol = \Concrete\Core\Support\Facade\Config::get('community_store.symbol');
+                        $minPriceValue = (float) $minPrice;
+                        $maxPriceValue = (float) $maxPrice;
+                        $fromValue = (float) $minPriceSelected;
+                        $toValue = (float) $maxPriceSelected;
+                        ?>
+                        <div class="store-price-range" data-role="rangeslider" data-prefix="<?= h($symbol); ?>" <?= $updateType == 'auto' ? 'data-auto-update="1"' : ''; ?>>
+                            <input type="hidden" class="js-range-slider" name="price"
+                                   value="<?= h($fromValue . '-' . $toValue); ?>"
+                                   data-min="<?= h($minPriceValue); ?>"
+                                   data-max="<?= h($maxPriceValue); ?>"
                             />
-
+                            <div class="store-price-range-sliders">
+                                <input type="range" class="store-price-range-from" aria-label="<?= h(t('Minimum price')); ?>"
+                                       min="<?= h($minPriceValue); ?>" max="<?= h($maxPriceValue); ?>" step="0.01" value="<?= h($fromValue); ?>" />
+                                <input type="range" class="store-price-range-to" aria-label="<?= h(t('Maximum price')); ?>"
+                                       min="<?= h($minPriceValue); ?>" max="<?= h($maxPriceValue); ?>" step="0.01" value="<?= h($toValue); ?>" />
+                            </div>
+                            <div class="store-price-range-values">
+                                <span class="store-price-range-from-label"></span>
+                                <span class="store-price-range-to-label"></span>
+                            </div>
                         </div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $(".js-range-slider").ionRangeSlider({
-                                    <?php if ($updateType == 'auto') { ?>
-                                    onFinish: function() {
-                                        communityStore.submitProductFilter($('.js-range-slider'));
-                                    }
-                                    <?php } ?>
-                                });
-                            });
-
-                        </script>
                     <?php } else { ?>
                         <?php echo Price::format($minPrice); ?>
                     <?php } ?>

@@ -21,7 +21,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function edit($akID = null)
     {
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
 
         $key = $this->getCategoryObject()->getController()->getByID($akID);
         if ($key === null) {
@@ -51,7 +51,7 @@ class Attributes extends DashboardAttributesPageController
         if ($type === null) {
             return $this->buildRedirect('/dashboard/store/orders/attributes');
         }
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         $this->renderAdd($type,
             Url::to('/dashboard/store/orders/attributes', 'view')
         );
@@ -63,7 +63,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function add($type = null)
     {
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         $this->select_type($type);
         $type = Type::getByID($type);
         $this->executeAdd($type, Url::to('/dashboard/store/orders/attributes', 'view'));

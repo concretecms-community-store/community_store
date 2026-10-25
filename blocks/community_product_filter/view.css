@@ -6,18 +6,31 @@
     font-size: 80%;
 }
 
-.store-product-filter-block .irs--round .irs-bar {
-    background-color: black;
+.store-product-filter-block .store-price-range-sliders {
+    position: relative;
+    height: 1.5rem;
 }
 
-.store-product-filter-block .irs--round .irs-handle {
-    border-color: black;
+.store-product-filter-block .store-price-range-sliders input[type="range"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    pointer-events: none;
+    background: none;
+    accent-color: black;
 }
 
-.store-product-filter-block .irs--round .irs-from, .store-product-filter-block .irs--round .irs-to, .store-product-filter-block .irs--round .irs-single {
-    background-color: black;
+.store-product-filter-block .store-price-range-sliders input[type="range"]::-webkit-slider-thumb {
+    pointer-events: auto;
 }
 
-.store-product-filter-block .irs--round .irs-from:before, .store-product-filter-block  .irs--round .irs-to:before, .store-product-filter-block  .irs--round .irs-single:before {
-    border-top-color: black;
+.store-product-filter-block .store-price-range-sliders input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+}
+
+.store-product-filter-block .store-price-range-values {
+    display: flex;
+    justify-content: space-between;
 }

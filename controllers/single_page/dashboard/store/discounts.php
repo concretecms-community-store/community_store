@@ -46,7 +46,7 @@ class Discounts extends DashboardPageController
 
     public function add()
     {
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         $this->set('pageTitle', t('Add Discount Rule'));
 
         $productgroups = [];
@@ -83,7 +83,7 @@ class Discounts extends DashboardPageController
 
     public function edit($drID)
     {
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         $discountRule = DiscountRule::getByID($drID);
         if ($discountRule === null) {
             return $this->buildRedirect('/dashboard/store/discounts');

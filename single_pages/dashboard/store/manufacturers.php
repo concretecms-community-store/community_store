@@ -25,11 +25,7 @@ if ($controller->getAction() == 'add' ||
 
 
             <script type="text/javascript">
-                $(function () {
-                    $('#delete').submit(function () {
-                        return confirm('<?=  t("Are you sure you want to delete this manufacturer?"); ?>');
-                    });
-                });
+                communityStoreDashboard.confirmSubmit('#delete', <?= json_encode(t('Are you sure you want to delete this manufacturer?')); ?>);
             </script>
         </div>
     <?php } ?>

@@ -22,38 +22,42 @@ function initAutocomplete() {
     }
 }
 
+function cs_setField(id, value) {
+    var field = document.getElementById(id);
+    if (field) {
+        field.value = value;
+    }
+}
+
 function cs_completeAddress(type, place) {
     var pieces = [];
+    var prefix = 'store-checkout-' + type + '-';
 
-    for(var i = 0; i < place.address_components.length; i++) {
+    for (var i = 0; i < place.address_components.length; i++) {
         pieces[place.address_components[i].types[0]] = place.address_components[i];
     }
 
-    $('#store-checkout-'+ type + '-address-1').val(pieces.street_number['short_name'] + ' ' + pieces.route.long_name);
+    cs_setField(prefix + 'address-1', (pieces.street_number ? pieces.street_number.short_name + ' ' : '') + (pieces.route ? pieces.route.long_name : ''));
 
     if (pieces.locality) {
-        $('#store-checkout-' + type + '-city').val(pieces.locality['long_name']);
+        cs_setField(prefix + 'city', pieces.locality.long_name);
     } else if (pieces.postal_town) {
-        $('#store-checkout-' + type + '-city').val(pieces.postal_town['long_name']);
+        cs_setField(prefix + 'city', pieces.postal_town.long_name);
     }
 
     if (pieces.postal_code) {
-
-        $('#store-checkout-' + type + '-zip').val(pieces.postal_code['short_name']);
-    } else if(pieces.postal_code_prefix) {
-        $('#store-checkout-' + type + '-zip').val(pieces.postal_code_prefix['short_name']);
+        cs_setField(prefix + 'zip', pieces.postal_code.short_name);
+    } else if (pieces.postal_code_prefix) {
+        cs_setField(prefix + 'zip', pieces.postal_code_prefix.short_name);
     }
 
-    $('#store-checkout-' + type + '-country').val(pieces.country['short_name']);
-
-    if (type == 'billing') {
-        communityStore.updateBillingStates(true, function () {
-            $('#store-checkout-' + type + '-state').val(pieces.administrative_area_level_1['short_name']);
-        });
-    } else {
-        communityStore.updateShippingStates(true, function () {
-            $('#store-checkout-' + type + '-state').val(pieces.administrative_area_level_1['short_name']);
-        });
+    if (pieces.country) {
+        cs_setField(prefix + 'country', pieces.country.short_name);
     }
 
+    communityStore.updateStates(type, true, function () {
+        if (pieces.administrative_area_level_1) {
+            cs_setField(prefix + 'state', pieces.administrative_area_level_1.short_name);
+        }
+    });
 }

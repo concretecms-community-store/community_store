@@ -57,8 +57,7 @@ class Tax extends DashboardPageController
     {
         $this->set("countries", $this->app->make('helper/lists/countries')->getCountries());
         $this->set("states", $this->app->make('helper/lists/states_provinces')->getStates());
-        $this->requireAsset('selectize');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
+        $this->requireAsset('community-store-dashboard');
     }
 
     public function add_rate()
@@ -122,7 +121,7 @@ class Tax extends DashboardPageController
         $this->set('actionDescription', t('Add Tax Class'));
         $this->set('tc', new TaxClass());
         $this->set('taxRates', StoreTax::getTaxRates(true));
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         if (method_exists($this, 'createBreadcrumb')) {
             $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
             $breacrumb->add(new Item('#', t('Add Tax Class')));
@@ -139,7 +138,7 @@ class Tax extends DashboardPageController
         $this->set('actionDescription', t('Update Tax Class'));
         $this->set('tc', $tc);
         $this->set('taxRates', StoreTax::getTaxRates(true));
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
         if (method_exists($this, 'createBreadcrumb')) {
             $this->setBreadcrumb($breacrumb = $this->getBreadcrumb() ?: $this->createBreadcrumb());
             $breacrumb->add(new Item('#', $tc->getTaxClassName()));

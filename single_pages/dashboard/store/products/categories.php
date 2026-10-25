@@ -42,9 +42,7 @@ use \Concrete\Core\Support\Facade\Url;
 
 
 <script type="text/javascript">
-    $(function() {
-        $('#product-list').sortable({axis: 'y'});
-    });
+    communityStoreDashboard.sortable('#product-list');
 </script>
 
 <div class="ccm-dashboard-form-actions-wrapper">

@@ -89,18 +89,15 @@ extract($vars); ?>
 </div>
 <script type="text/javascript">
 function showRateType() {
-    var selectedOptionValue = $("#rateType option:selected").val();
-    if (selectedOptionValue === 'quantity') {
-        $(".rate-type").hide();
-        $("#rate-type-quantity").show();
-    } else if (selectedOptionValue === 'weight') {
-        $(".rate-type").hide();
-        $("#rate-type-weight").show();
+    var selectedOptionValue = document.getElementById('rateType').value;
+    if (selectedOptionValue === 'quantity' || selectedOptionValue === 'weight') {
+        document.querySelectorAll('.rate-type').forEach(function (element) {
+            element.style.display = 'none';
+        });
+        document.getElementById('rate-type-' + selectedOptionValue).style.display = '';
     }
 }
 showRateType();
-$("#rateType").change(function(){
-   showRateType();
-});
+document.getElementById('rateType').addEventListener('change', showRateType);
 
 </script>

@@ -438,12 +438,8 @@ if (version_compare($version, '9.0', '<')) {
 
 
             <script>
-                $(document).ready(function() {
-                    $('.selectize').selectize({
-                        plugins: ['remove_button'],
-                        selectOnTab: true
-                    });
-                    $('.selectize').removeClass('form-control');
+                document.querySelectorAll('select.selectize').forEach(function (select) {
+                    communityStoreDashboard.select(select, {selectOnTab: true});
                 });
             </script>
 
@@ -482,75 +478,60 @@ if (version_compare($version, '9.0', '<')) {
 </form>
 
     <script>
-        $(function(){
-            $('#deleterule').submit(function(e){
-                return confirm("<?= t('Are you sure you want to delete this discount rule?');?>");
+        (function () {
+            var dashboard = communityStoreDashboard;
+
+            dashboard.confirmSubmit('#deleterule', <?= json_encode(t('Are you sure you want to delete this discount rule?')); ?>);
+
+            var setDeductType = function (percentage) {
+                dashboard.toggle(document.getElementById('percentageinput'), percentage);
+                dashboard.toggle(document.getElementById('valueinput'), !percentage);
+                document.querySelectorAll('#percentageinput input').forEach(function (input) {
+                    input.required = percentage;
+                });
+                document.querySelectorAll('#valueinput input').forEach(function (input) {
+                    input.required = !percentage;
+                });
+            };
+
+            var onChecked = function (id, callback) {
+                var radio = document.getElementById(id);
+                if (radio) {
+                    radio.addEventListener('click', function () {
+                        if (radio.checked) {
+                            callback();
+                        }
+                    });
+                }
+            };
+
+            onChecked('drDeductType1', function () {
+                setDeductType(true);
             });
 
-            $('#drDeductType1').click(function() {
-                if($('#drDeductType1').is(':checked')) {
-                    $('#percentageinput').show();
-                    $('#valueinput').hide();
-                    $('#percentageinput input').prop('required', true);
-                    $('#valueinput input').prop('required', false);
-                }
+            ['drDeductType2', 'drDeductType3', 'drDeductType4'].forEach(function (id) {
+                onChecked(id, function () {
+                    setDeductType(false);
+                });
             });
 
-            $('#drDeductType2').click(function() {
-                if($('#drDeductType2').is(':checked')) {
-                    $('#percentageinput').hide();
-                    $('#valueinput').show();
-                    $('#percentageinput input').prop('required', false);
-                    $('#valueinput input').prop('required', true);
-                }
+            onChecked('drTrigger5', function () {
+                dashboard.toggle(document.getElementById('codefields'), false);
             });
 
-            $('#drDeductType3').click(function() {
-                if($('#drDeductType3').is(':checked')) {
-                    $('#percentageinput').hide();
-                    $('#valueinput').show();
-                    $('#percentageinput input').prop('required', false);
-                    $('#valueinput input').prop('required', true);
-                }
+            onChecked('drTrigger6', function () {
+                dashboard.toggle(document.getElementById('codefields'), true);
             });
 
-            $('#drDeductType4').click(function() {
-                if($('#drDeductType4').is(':checked')) {
-                    $('#percentageinput').hide();
-                    $('#valueinput').show();
-                    $('#percentageinput input').prop('required', false);
-                    $('#valueinput input').prop('required', true);
+            [['validFrom', 'fromdate'], ['validTo', 'todate']].forEach(function (pair) {
+                var select = document.getElementById(pair[0]);
+                if (select) {
+                    select.addEventListener('change', function () {
+                        dashboard.toggle(document.getElementById(pair[1]), select.value === '1');
+                    });
                 }
             });
-
-            $('#drTrigger5').click(function() {
-                if($('#drTrigger5').is(':checked')) {
-                    $('#codefields').hide();
-                }
-            });
-
-            $('#drTrigger6').click(function() {
-                if($('#drTrigger6').is(':checked')) {
-                    $('#codefields').show();
-                }
-            });
-
-            $('#validFrom').change(function() {
-                if ($(this).val() == '1') {
-                    $('#fromdate').show();
-                } else {
-                    $('#fromdate').hide();
-                }
-            });
-
-            $('#validTo').change(function() {
-                if ($(this).val() == '1') {
-                    $('#todate').show();
-                } else {
-                    $('#todate').hide();
-                }
-            });
-        });
+        })();
     </script>
 
 

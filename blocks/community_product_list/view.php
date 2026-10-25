@@ -116,11 +116,9 @@ switch ($productsPerRow) {
             </div>
         </div>
         <script>
-        $(function () {
-            $('#sort<?= $bID ?>').change(function () {
-                const sortstring = <?= json_encode((string) $urlService->setVariable(['sort' . $bID => '%sort%'])) ?>;
-                window.location.href = sortstring.replace('%sort%', $(this).val());
-            });
+        document.getElementById('sort<?= $bID ?>').addEventListener('change', function () {
+            const sortstring = <?= json_encode((string) $urlService->setVariable(['sort' . $bID => '%sort%'])) ?>;
+            window.location.href = sortstring.replace('%sort%', encodeURIComponent(this.value));
         });
         </script>
         <?php

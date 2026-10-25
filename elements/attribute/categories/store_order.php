@@ -21,12 +21,8 @@ foreach ($gl->getResults() as $group) {
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('.selectize').selectize({
-                plugins: ['remove_button'],
-                selectOnTab: true
-            });
-            $('.selectize').removeClass('form-control');
+        document.querySelectorAll('select.selectize').forEach(function (select) {
+            communityStoreDashboard.select(select, {selectOnTab: true});
         });
     </script>
 

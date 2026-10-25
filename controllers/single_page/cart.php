@@ -97,7 +97,7 @@ class Cart extends PageController
                 // if the cart still has items let's make the action whatever it was supposed to be
                 // Otherwise we can consider the last item was removed or the cart was cleared
                 $action = count($cart) ? $this->request->request->get('action') : 'clear';
-                $this->addFooterItem(sprintf('<script type="text/javascript">$(function() { communityStore.broadcastCartRefresh({action: \'%s\'}); });</script>', $action));
+                $this->addFooterItem(sprintf('<script type="text/javascript">document.addEventListener(\'DOMContentLoaded\', function() { communityStore.broadcastCartRefresh({action: \'%s\'}); });</script>', $action));
             }
         }
 
@@ -133,7 +133,6 @@ class Cart extends PageController
         $this->set('taxes', $totals['taxes']);
         $this->set('taxtotal', $totals['taxTotal']);
 
-        $this->requireAsset('javascript', 'jquery');
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'sysend');

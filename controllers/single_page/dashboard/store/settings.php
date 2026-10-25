@@ -147,8 +147,7 @@ class Settings extends DashboardPageController
         $pkgconfig = $pkg->getConfig();
         $this->set('pkgconfig', $pkgconfig);
         $this->requireAsset('css', 'communityStoreDashboard');
-        $this->requireAsset('javascript', 'communityStoreFunctions');
-        $this->requireAsset('selectize');
+        $this->requireAsset('community-store-dashboard');
     }
 
     protected function getThumbTypesList()

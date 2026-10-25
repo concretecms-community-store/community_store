@@ -108,7 +108,7 @@ if ($taxCalc == 'extract') {
 <div id="sales-chart" style="position: relative"></div>
 <hr>
 <script type="text/javascript">
-$(function(){
+document.addEventListener('DOMContentLoaded', function () {
 	new Chartist.Line('#sales-chart', {
 	    <?php
             $months = array(

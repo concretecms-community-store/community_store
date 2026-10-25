@@ -100,15 +100,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             </div>
 
             <script>
-                $(function () {
-                    $('#currency').change(function () {
-                        if ($(this).val()) {
-                            $('#extra-currency').addClass('hidden');
-                        } else {
-                            $('#extra-currency').removeClass('hidden');
-                        }
-                    });
-
+                document.getElementById('currency').addEventListener('change', function () {
+                    document.getElementById('extra-currency').classList.toggle('hidden', !!this.value);
                 });
             </script>
 
@@ -293,13 +286,11 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             ?>
 
             <script>
-                $(function () {
-                    $('.paymentMethodEnabled SELECT').on('change', function () {
-                        var $this = $(this);
-                        if ($this.val() == 1) {
-                            $this.closest('.panel-body').find('.paymentConfigDetails').slideDown();
-                        } else {
-                            $this.closest('.panel-body').find('.paymentConfigDetails').slideUp();
+                document.querySelectorAll('.paymentMethodEnabled select').forEach(function (select) {
+                    select.addEventListener('change', function () {
+                        var body = select.closest('.panel-body');
+                        if (body) {
+                            communityStoreDashboard.toggle(body.querySelectorAll('.paymentConfigDetails'), select.value == 1);
                         }
                     });
                 });
@@ -342,13 +333,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                         </tbody>
                     </table>
                     <script>
-                        $(function () {
-                            $('#orderStatusTable TBODY').sortable({
-                                cursor: 'move',
-                                opacity: 0.5,
-                                handle: '.sorthandle'
-                            });
-
+                        communityStoreDashboard.sortable('#orderStatusTable tbody', {
+                            handle: '.sorthandle'
                         });
                     </script>
 
@@ -838,12 +824,8 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
 
 
             <script>
-                $(document).ready(function () {
-                    $('.selectize').selectize({
-                        plugins: ['remove_button'],
-                        selectOnTab: true
-                    });
-                    $('.selectize').removeClass('form-control');
+                document.querySelectorAll('select.selectize').forEach(function (select) {
+                    communityStoreDashboard.select(select, {selectOnTab: true});
                 });
             </script>
 
@@ -1000,14 +982,14 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
             </div>
         </div>
         <script>
-        $(document).ready(function() {
-            $('#salesSuspensionSuspend')
-                .on('change', function() {
-                    $('.salesSuspensionSuspend-on').toggle(parseInt($('#salesSuspensionSuspend').val()) === 2);
-                })
-                .trigger('change')
-            ;
-        });
+        (function () {
+            var suspend = document.getElementById('salesSuspensionSuspend');
+            var update = function () {
+                communityStoreDashboard.toggle(document.querySelectorAll('.salesSuspensionSuspend-on'), parseInt(suspend.value) === 2);
+            };
+            suspend.addEventListener('change', update);
+            update();
+        })();
         </script>
     </div>
 
