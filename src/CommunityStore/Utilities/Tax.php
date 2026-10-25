@@ -63,7 +63,7 @@ class Tax extends Controller
                     $data['vat_number'] = $normalizedVATNumber;
                     $this->updateVatNumber($data);
                     echo json_encode([
-                        'vat_number' => $vat_number,
+                        'vat_number' => h($vat_number),
                         'error' => false,
                     ]);
                 }

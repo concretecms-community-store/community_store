@@ -31,8 +31,8 @@ use \Concrete\Core\Support\Facade\Url;
         <li class="list-group-item"><i class="fa fa-arrows drag-handle pull-right float-end"></i>
             <?= $product->getImageThumb();?>
 
-            <?= $product->getName(); ?>
-            <?= $product->getSKU() ? '(' . $product->getSKU() . ')' : '' ; ?>
+            <?= h($product->getName()); ?>
+            <?= $product->getSKU() ? '(' . h($product->getSKU()) . ')' : '' ; ?>
             <?= ($product->isActive() ? '' : ' <span class="label label-default">' . t('Inactive'). '</span>'); ?>
 
             <input type="hidden" name="products[]" value="<?= $product->getID(); ?>" />

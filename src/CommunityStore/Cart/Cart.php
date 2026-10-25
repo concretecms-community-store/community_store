@@ -37,7 +37,13 @@ class Cart
             $stockTotals = [];
 
             foreach ($cart as $cartitem) {
-                $cartitem['product']['qty'] = round($cartitem['product']['qty'], 4);
+                $cartitem['product']['qty'] = round((float) $cartitem['product']['qty'], 4);
+
+                // remove any items without a positive quantity
+                if ($cartitem['product']['qty'] <= 0) {
+                    $update = true;
+                    continue;
+                }
 
                 $product = Product::getByID((int)$cartitem['product']['pID']);
 
@@ -275,10 +281,14 @@ class Cart
         if (!$product) {
             $error = true;
         } elseif ($product->allowCustomerPrice()) {
-            $customerPrice = (float) $data['customerPrice'];
+            $customerPrice = isset($data['customerPrice']) && is_numeric($data['customerPrice']) ? (float) $data['customerPrice'] : 0;
 
             $max = $product->getPriceMaximum();
             $min = $product->getPriceMinimum();
+
+            if ($customerPrice < 0) {
+                $error = true;
+            }
 
             if (!is_null($min) && $customerPrice < (float) $min) {
                 $error = true;
@@ -290,6 +300,15 @@ class Cart
         }
 
 
+        // the quantity must be a positive number
+        $quantity = isset($data['quantity']) && is_numeric($data['quantity']) ? (float) $data['quantity'] : 0;
+        if ($product && !$product->allowDecimalQuantity()) {
+            $quantity = (int) $quantity;
+        }
+        if ($quantity <= 0) {
+            $error = true;
+        }
+
         if (!$error) {
             if ($product->isExclusive()) {
                 self::clear();
@@ -298,9 +317,7 @@ class Cart
             //now, build a nicer "cart item"
             $cartItem = [];
 
-            if (!$product->allowDecimalQuantity()) {
-                $data['quantity'] = (int) $data['quantity'];
-            }
+            $data['quantity'] = $quantity;
 
             if ($customerPrice) {
                 $cartItem['product'] = [
@@ -560,8 +577,9 @@ class Cart
         $event->setData($data);
 
         \Events::dispatch(CartEvent::CART_PRE_UPDATE, $event);
+        $qty = is_numeric($qty) ? (float) $qty : 0;
         if ($product && !$product->allowDecimalQuantity()) {
-            $qty = (int) $data['pQty'];
+            $qty = (int) $qty;
         }
 
         if ($qty > 0 && $product) {

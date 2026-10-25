@@ -39,7 +39,7 @@ $dh = $app->make('helper/date');
             <ul class="order-downloads">
                 <?php
                 foreach ($downloads as $name => $file) {
-                    echo '<li><a href="' . \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::buildDownloadURL($file, $order) . '">' . $name . '</a></li>';
+                    echo '<li><a href="' . h(\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::buildDownloadURL($file, $order)) . '">' . h($name) . '</a></li>';
                 } ?>
             </ul>
         </fieldset>
@@ -103,7 +103,7 @@ $dh = $app->make('helper/date');
 
                         if ($attValue) {
                             ?>
-                            <h4><?= $ak->getAttributeKeyDisplayName(); ?></h4>
+                            <h4><?= h($ak->getAttributeKeyDisplayName()); ?></h4>
                             <p><?= str_replace("\r\n", "<br>", $attValue->getValue('displaySanitized', 'display')); ?></p>
                             <?php
                         } ?>

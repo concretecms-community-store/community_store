@@ -42,6 +42,7 @@ class Products extends DashboardSitePageController
 
     public function view($gID = null, $typeID = null)
     {
+        $gID = (int) $gID;
         if ($gID == 0) {
             $gID = null;
         }
@@ -358,7 +359,13 @@ class Products extends DashboardSitePageController
 
     public function generate($pID, $templateID = null)
     {
-        Product::getByID($pID)->generatePage($templateID);
+        $product = Product::getByID($pID);
+
+        if (!$product || !$this->token->validate('community_store')) {
+            return Redirect::to('/dashboard/store/products');
+        }
+
+        $product->generatePage($templateID);
 
         return Redirect::to('/dashboard/store/products/edit', $pID);
     }

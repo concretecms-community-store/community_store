@@ -40,7 +40,7 @@ ob_start();
                         <?= h($order->getAttribute("billing_company")) ?><br>
                     <?php } ?>
                     <?php $address = Customer::formatAddress($order->getAttribute("billing_address")); ?>
-                    <?= nl2br($address); ?>
+                    <?= nl2br(h($address)); ?>
                     <br><br>
                     <strong><?= t('Email') ?></strong>: <a href="mailto:<?= h($order->getAttribute("email")); ?>"><?= h($order->getAttribute("email")); ?></a><br>
                     <strong><?= t('Phone') ?></strong>: <?= h($order->getAttribute("billing_phone")) ?>
@@ -62,7 +62,7 @@ ob_start();
                         <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                         <?php if ($shippingaddress) {
                             $shippingaddress = Customer::formatAddress($shippingaddress);
-                            echo nl2br($shippingaddress);
+                            echo nl2br(h($shippingaddress));
                         }
                         ?>
                     </p>
@@ -79,7 +79,7 @@ ob_start();
                         if ($orderOtherAtt) {
                             $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
                             if ($attvalue) { ?>
-                                <strong><?= $ak->getAttributeKeyDisplayName() ?></strong>
+                                <strong><?= h($ak->getAttributeKeyDisplayName()); ?></strong>
                                 <p><?= str_replace("\r\n", "<br>", $attvalue); ?></p>
                             <?php }
                         }?>
@@ -107,9 +107,9 @@ ob_start();
             foreach ($items as $item) {
                 ?>
                 <tr>
-                    <td style="vertical-align: top; padding: 5px 10px 5px 0"><?= $item->getProductName() ?>
+                    <td style="vertical-align: top; padding: 5px 10px 5px 0"><?= h($item->getProductName()); ?>
                         <?php if ($sku = $item->getSKU()) {
-                            echo '(' . $sku . ')';
+                            echo '(' . h($sku) . ')';
                         } ?>
                     </td>
                     <td style="vertical-align: top; padding: 5px 10px 5px 0;">
@@ -118,7 +118,7 @@ ob_start();
                         if ($options) {
                             $optionOutput = array();
                             foreach ($options as $option) {
-                                $optionOutput[] =  "<strong>" . $option['oioKey'] . ": </strong>" . ($option['oioValue'] ? $option['oioValue'] : '<em>' . t('None') . '</em>');
+                                $optionOutput[] =  "<strong>" . h($option['oioKey']) . ": </strong>" . ($option['oioValue'] ? h($option['oioValue']) : '<em>' . t('None') . '</em>');
                             }
                             echo implode('<br>', $optionOutput);
                         }
@@ -159,7 +159,7 @@ ob_start();
             <?php
             $discountsApplied = array();
             foreach ($applieddiscounts as $discount) {
-                $discountsApplied[] = $discount['odDisplay'] . (($discount['odName'] && $discount['odName'] != $discount['odDisplay']) ? ' (' . $discount['odName']  .')' : '' );
+                $discountsApplied[] = h($discount['odDisplay']) . (($discount['odName'] && $discount['odName'] != $discount['odDisplay']) ? ' (' . h($discount['odName'])  .')' : '' );
             }
             echo implode(',', $discountsApplied);
             ?>
@@ -167,7 +167,7 @@ ob_start();
         <?php } ?>
 
         <?php foreach ($order->getTaxes() as $tax) { ?>
-            <strong><?= $tax['label'] ?>
+            <strong><?= h($tax['label']); ?>
                 :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']) ?><br>
         <?php } ?>
 

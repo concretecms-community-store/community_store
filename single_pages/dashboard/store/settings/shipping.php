@@ -258,7 +258,7 @@ if (in_array($controller->getAction(), $addViews)) {
                                         <?php if ($method->getShippingMethodTypeMethod()->disableEnabled()) { ?>
                                             <a href="" class="btn btn-default btn-secondary"><?= t("Disable") ?></a>
                                         <?php } else { ?>
-                                            <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) ?>"
+                                            <a href="<?= Url::to('/dashboard/store/settings/shipping/delete', $method->getID()) . '?' . app('token')->getParameter('community_store') ?>"
                                                class="btn btn-danger"><?= t("Delete") ?></a>
                                         <?php } ?>
                                     </td>

@@ -452,7 +452,8 @@ communityStoreDashboard.ready(function () {
             e.preventDefault();
             var pageTemplate = document.getElementById('selectPageTemplate');
             if (window.confirm(generatePage.getAttribute('data-confirm-message'))) {
-                window.location = generatePage.getAttribute('href') + '/' + (pageTemplate ? pageTemplate.value : '');
+                window.location = generatePage.getAttribute('href') + '/' + encodeURIComponent(pageTemplate ? pageTemplate.value : '') +
+                    '?ccm_token=' + encodeURIComponent(generatePage.getAttribute('data-token') || '');
             }
         });
     }

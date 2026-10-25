@@ -732,7 +732,7 @@ if (version_compare($version, '9.0', '<')) {
                             if ($file) {
                                 $thumb = $file->getListingThumbnailImage();
                                 if ($thumb) {
-                                    echo '<li class="list-group-item">' . $thumb . ' ' . $file->getTitle() . '<a><i class="float-end pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
+                                    echo '<li class="list-group-item">' . $thumb . ' ' . h($file->getTitle()) . '<a><i class="float-end pull-right fa fa-minus-circle"></i></a><input type="hidden" name="pifID[]" value="' . $file->getFileID() . '" /></li>';
                                 }
                             }
                         }
@@ -784,7 +784,7 @@ if (version_compare($version, '9.0', '<')) {
                                     if ($location) {
                                         $locationpage = Page::getByID($location->getCollectionID());
                                         if ($locationpage) {
-                                            echo '<li class="list-group-item">' . $locationpage->getCollectionName() . ' <a><i class="float-end pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
+                                            echo '<li class="list-group-item">' . h($locationpage->getCollectionName()) . ' <a><i class="float-end pull-right fa fa-minus-circle"></i></a> <input type="hidden" name="cID[]" value="' . $location->getCollectionID() . '" /></li>';
                                         }
                                     }
                                 }
@@ -813,7 +813,7 @@ if (version_compare($version, '9.0', '<')) {
                                     $pgroups = [];
                                 }
                                 foreach ($productgroups as $pgkey => $pglabel) { ?>
-                                    <option value="<?= $pgkey; ?>" <?= (in_array($pgkey, $pgroups) ? 'selected="selected"' : ''); ?>>  <?= $pglabel; ?></option>
+                                    <option value="<?= $pgkey; ?>" <?= (in_array($pgkey, $pgroups) ? 'selected="selected"' : ''); ?>>  <?= h($pglabel); ?></option>
                                 <?php }
                             } ?>
                         </select>
@@ -1670,7 +1670,7 @@ if (version_compare($version, '9.0', '<')) {
                         $relatedProducts = $product->getRelatedProducts();
                         if (!empty($relatedProducts)) {
                             foreach ($relatedProducts as $relatedProduct) {
-                                echo '<li class="list-group-item">' . $relatedProduct->getRelatedProduct()->getName() . '<input type="hidden" name="pRelatedProducts[]" value="' . $relatedProduct->getRelatedProduct()->getID() . '" /><a><i class="float-end pull-right fa fa-minus-circle"></i></a></li>';
+                                echo '<li class="list-group-item">' . h($relatedProduct->getRelatedProduct()->getName()) . '<input type="hidden" name="pRelatedProducts[]" value="' . $relatedProduct->getRelatedProduct()->getID() . '" /><a><i class="float-end pull-right fa fa-minus-circle"></i></a></li>';
                             }
                         }
                         ?>
@@ -1827,7 +1827,7 @@ if (version_compare($version, '9.0', '<')) {
                                 <?php
                                 $selectedusergroups = $product->getUserGroupIDs();
                                 foreach ($usergroups as $ugkey => $uglabel) { ?>
-                                    <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= $uglabel; ?></option>
+                                    <option value="<?= $ugkey; ?>" <?= (in_array($ugkey, $selectedusergroups) ? 'selected="selected"' : ''); ?>>  <?= h($uglabel); ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -1900,7 +1900,7 @@ if (version_compare($version, '9.0', '<')) {
                                 </div>
 
                                 <?php if ($product->getID()) { ?>
-                                    <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" href="<?= Url::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page") ?></a>
+                                    <a data-confirm-message="<?= h(t('Any changes to the product will not be saved. Create product page?')); ?>" data-token="<?= h($token->generate('community_store')); ?>" href="<?= Url::to('/dashboard/store/products/generate/', $product->getID()) ?>" class="btn btn-primary" id="btn-generate-page"><?= t("Generate a Product Page") ?></a>
                                 <?php } ?>
                             <?php } else { ?>
                                 <div class="alert alert-warning">
@@ -2090,10 +2090,10 @@ if (version_compare($version, '9.0', '<')) {
                     ?>
                     <tr>
                         <td><?= $product->getImageThumb(); ?></td>
-                        <td><strong><a href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= $product->getName();
+                        <td><strong><a href="<?= Url::to('/dashboard/store/products/edit/', $product->getID()) ?>"><?= h($product->getName());
                                     $sku = $product->getSKU();
                                     if ($sku) {
-                                        echo ' (' . $sku . ')';
+                                        echo ' (' . h($sku) . ')';
                                     }
                                     ?>
                                 </a></strong></td>

@@ -72,9 +72,17 @@ class Shipping extends DashboardPageController
 
     public function delete($smID)
     {
+        if (!$this->token->validate('community_store')) {
+            $this->flash('error', $this->token->getErrorMessage());
+
+            return Redirect::to('/dashboard/store/settings/shipping');
+        }
+
         $sm = ShippingMethod::getByID($smID);
-        $sm->delete();
-        $this->flash('success', t('Shipping Method Deleted'));
+        if ($sm) {
+            $sm->delete();
+            $this->flash('success', t('Shipping Method Deleted'));
+        }
 
         return Redirect::to('/dashboard/store/settings/shipping');
     }
@@ -83,6 +91,9 @@ class Shipping extends DashboardPageController
     {
         $data = $this->request->request->all();
         $errors = $this->validate($data);
+        if (!$this->token->validate('community_store')) {
+            $errors->add($this->token->getErrorMessage());
+        }
         $this->error = null; //clear errors
         $this->error = $errors;
         if (!$errors->has()) {

@@ -361,6 +361,31 @@ class ShippingMethod
         return $eligibleMethods;
     }
 
+    /**
+     * Check whether a shipping method identifier (the method ID, optionally followed by _ and an offer key)
+     * refers to a method and offer currently eligible for the cart and customer.
+     *
+     * @param int|string|null $smID
+     *
+     * @return bool
+     */
+    public static function isEligibleMethodID($smID)
+    {
+        if (!preg_match('/^(\d+)(_\d+)?$/', (string) $smID, $matches)) {
+            return false;
+        }
+
+        foreach (self::getEligibleMethods() as $method) {
+            if ((int) $method->getID() === (int) $matches[1]) {
+                $selected = self::getByID($smID);
+
+                return $selected && $selected->getCurrentOffer() !== null;
+            }
+        }
+
+        return false;
+    }
+
     public function getShippingMethodSelector()
     {
         if (file_exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {

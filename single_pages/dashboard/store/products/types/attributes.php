@@ -191,7 +191,7 @@ $usedKeys = [];
                                 ?>
 
                                 <?= $ac->getPageTypeComposerControlIcon() ?>
-                                <?= $ak->getAttributeKeyName() ?>
+                                <?= h($ak->getAttributeKeyName()) ?>
 
                             </a>
                         </li>

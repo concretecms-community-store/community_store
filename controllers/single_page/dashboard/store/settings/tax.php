@@ -47,8 +47,17 @@ class Tax extends DashboardPageController
 
     public function delete($trID)
     {
-        TaxRate::getByID($trID)->delete();
-        $this->flash('success', t('Tax Rate Deleted'));
+        if (!$this->token->validate('community_store')) {
+            $this->flash('error', $this->token->getErrorMessage());
+
+            return Redirect::to('/dashboard/store/settings/tax');
+        }
+
+        $taxRate = TaxRate::getByID($trID);
+        if ($taxRate) {
+            $taxRate->delete();
+            $this->flash('success', t('Tax Rate Deleted'));
+        }
 
         return Redirect::to('/dashboard/store/settings/tax');
     }
@@ -64,6 +73,9 @@ class Tax extends DashboardPageController
     {
         $data = $this->request->request->all();
         $errors = $this->validate($data);
+        if (!$this->token->validate('community_store')) {
+            $errors->add($this->token->getErrorMessage());
+        }
         $this->error = $errors;
         if (!$errors->has()) {
             TaxRate::add($data);
@@ -149,6 +161,9 @@ class Tax extends DashboardPageController
     {
         $data = $this->request->request->all();
         $errors = $this->validateClass($data);
+        if (!$this->token->validate('community_store')) {
+            $errors->add($this->token->getErrorMessage());
+        }
         $this->error = null; //clear errors
         $this->error = $errors;
         if ($this->request->request->get('taxClassID')) {
@@ -204,8 +219,17 @@ class Tax extends DashboardPageController
 
     public function delete_class($tcID)
     {
-        TaxClass::getByID($tcID)->delete();
-        $this->flash('success', t('Tax Class Deleted'));
+        if (!$this->token->validate('community_store')) {
+            $this->flash('error', $this->token->getErrorMessage());
+
+            return Redirect::to('/dashboard/store/settings/tax');
+        }
+
+        $taxClass = TaxClass::getByID($tcID);
+        if ($taxClass) {
+            $taxClass->delete();
+            $this->flash('success', t('Tax Class Deleted'));
+        }
 
         return Redirect::to("/dashboard/store/settings/tax");
     }

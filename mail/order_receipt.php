@@ -66,7 +66,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
         <?php
         foreach ($downloads as $name => $file) {
             if (is_object($file)) {
-                echo '<li><a href="' . \Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::buildDownloadURL($file, $order) . '">' . $name . '</a></li>';
+                echo '<li><a href="' . h(\Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Download::buildDownloadURL($file, $order)) . '">' . h($name) . '</a></li>';
             }
         } ?>
     </ul>
@@ -87,7 +87,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
                     <?php
                 } ?>
                 <?php $address = Customer::formatAddress($order->getAttribute("billing_address")); ?>
-                <?= nl2br($address); ?>
+                <?= nl2br(h($address)); ?>
                 <br><br>
                 <strong><?= t('Phone'); ?></strong>: <?= h($order->getAttribute("billing_phone")); ?><br>
                 <?php
@@ -113,7 +113,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
                     <?php $shippingaddress = $order->getAttribute("shipping_address"); ?>
                     <?php if ($shippingaddress) {
                         $shippingaddress = Customer::formatAddress($shippingaddress);
-                        echo nl2br($shippingaddress);
+                        echo nl2br(h($shippingaddress));
                     } ?>
                 </p>
                 <?php
@@ -132,7 +132,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
                         $attvalue = trim($orderOtherAtt->getValue('displaySanitized', 'display'));
                         if ($attvalue) {
                             ?>
-                            <strong><?= $ak->getAttributeKeyDisplayName(); ?></strong>
+                            <strong><?= h($ak->getAttributeKeyDisplayName()); ?></strong>
                             <p><?= str_replace("\r\n", "<br>", $attvalue); ?></p>
                             <?php
                         }
@@ -164,9 +164,9 @@ if (count($downloads) > 0 && $order->getPaid()) {
         foreach ($items as $item) {
             ?>
             <tr>
-                <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= $item->getProductName(); ?>
+                <td style="vertical-align: top; padding: 5px 10px 5px 0;"><?= h($item->getProductName()); ?>
                     <?php if ($sku = $item->getSKU()) {
-                        echo '(' . $sku . ')';
+                        echo '(' . h($sku) . ')';
                     } ?>
                 </td>
                 <td style="vertical-align: top; padding: 5px 10px 5px 0;">
@@ -176,7 +176,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
                         $optionOutput = [];
                         foreach ($options as $option) {
                             if ($option['oioValue']) {
-                                $optionOutput[] = "<strong>" . $option['oioKey'] . ": </strong>" . $option['oioValue'];
+                                $optionOutput[] = "<strong>" . h($option['oioKey']) . ": </strong>" . h($option['oioValue']);
                             }
                         }
                         echo implode('<br>', $optionOutput);
@@ -223,7 +223,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
         <?php
         $discountsApplied = [];
         foreach ($applieddiscounts as $discount) {
-            $discountsApplied[] = $discount['odDisplay'];
+            $discountsApplied[] = h($discount['odDisplay']);
         }
         echo implode(',', $discountsApplied); ?>
         <br/>
@@ -232,7 +232,7 @@ if (count($downloads) > 0 && $order->getPaid()) {
 
     <?php foreach ($order->getTaxes() as $tax) {
         ?>
-        <strong><?= $tax['label']; ?>
+        <strong><?= h($tax['label']); ?>
             :</strong> <?= Price::format($tax['amount'] ? $tax['amount'] : $tax['amountIncluded']); ?><br>
         <?php
     } ?>

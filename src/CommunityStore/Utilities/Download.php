@@ -27,12 +27,12 @@ class Download extends Controller
     {
         $valid = false;
 
-        $file = File::getByID($fID);
-        if ($file instanceof FileEntity && $file->getFileID() > 0) {
-            $file->trackDownload(null);
-            $fv = $file->getVersion();
+        $file = File::getByID((int) $fID);
+        $order = Order::getByID((int) $oID);
+        $hash = (string) $hash;
 
-            $order = Order::getByID($oID);
+        if ($order && $hash !== '' && $file instanceof FileEntity && $file->getFileID() > 0) {
+            $fv = $file->getVersion();
 
             $expiryhours = Config::get('community_store.download_expiry_hours');
             if (!$expiryhours) {
@@ -43,10 +43,6 @@ class Download extends Controller
             $threshhold->sub(new \DateInterval('PT' . $expiryhours . 'H'));
             $orderDate = $order->getOrderDate();
 
-            if (!$orderDate) {
-                $orderDate = $order->getOrderDate();
-            }
-
             $matchedOrder = false;
 
             // check that order exists, and has matches stored security code
@@ -55,17 +51,18 @@ class Download extends Controller
                 $securityCode = $order->getSecurityCode();
 
                 if ($securityCode) {
-                    if ($securityCode == $hash) {
+                    if (hash_equals((string) $securityCode, $hash)) {
                         $matchedOrder = true;
                     }
-                } else {
+                } elseif ($orderDate) {
                     // fallback if using old approach where security codes haven't been stored
-                    if (md5($orderDate->format('Y-m-d H:i:s')) == $hash) {
+                    if (hash_equals(md5($orderDate->format('Y-m-d H:i:s')), $hash)) {
                         $matchedOrder = true;
                     }
                 }
 
-                if ($matchedOrder && $orderDate > $threshhold) {
+                // downloads are only available for paid orders, within the expiry period
+                if ($matchedOrder && $order->getPaid() && $orderDate > $threshhold) {
                     // loop to find whether order contained a product with linked file
                     foreach ($order->getOrderItems() as $oi) {
                         $product = $oi->getProductObject();
@@ -89,6 +86,8 @@ class Download extends Controller
             }
 
             if ($valid) {
+                $file->trackDownload(null);
+
                 return $fv->buildForceDownloadResponse();
             }
         }

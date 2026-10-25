@@ -207,7 +207,7 @@ if ($controller->getAction() == 'order') {
                                   $file = $orderItemFile->getFile();
 
                                   if ($file) {
-                                      echo '<a href="' . $file->getForceDownloadUrl() . '">' . $file->getTitle() . '</a><br />';
+                                      echo '<a href="' . h($file->getForceDownloadUrl()) . '">' . h($file->getTitle()) . '</a><br />';
                                   }
                               }
                               ?>
@@ -288,7 +288,7 @@ if ($controller->getAction() == 'order') {
                             <?= $discountRuleDeduct; ?>
                         </td>
                         <td><?= ($discount['odValue'] > 0 ? Price::format($discount['odValue']) : \Punic\Number::formatPercent($discount['odPercentage'] / 100) ); ?></td>
-                        <td><?= ($discount['odCode'] ? t('by code') . ' <em>' . $discount['odCode'] . '</em>' : t('Automatically')); ?></td>
+                        <td><?= ($discount['odCode'] ? t('by code') . ' <em>' . h($discount['odCode']) . '</em>' : t('Automatically')); ?></td>
                     </tr>
                 <?php } ?>
 
@@ -474,7 +474,7 @@ if ($controller->getAction() == 'order') {
                                 </td>
                                 <td><?= $dh->formatDateTime($paid) ?>
                                     <br/>
-                                    <?= t('Ref') . ':' ?> <?= $order->getTransactionReference(); ?>
+                                    <?= t('Ref') . ':' ?> <?= h($order->getTransactionReference()); ?>
                                 </td>
                                 <td>
                                     <?php $paiduser = User::getByUserID($order->getPaidByUID());
@@ -500,7 +500,7 @@ if ($controller->getAction() == 'order') {
                             <tr>
                                 <td><?= t('Refunded') ?></td>
                                 <td><?= $dh->formatDateTime($refunded) ?><br/>
-                                    <?= $order->getRefundReason(); ?>
+                                    <?= h($order->getRefundReason()); ?>
                                 </td>
                                 <td>
                                     <?php $refundeduser = User::getByUserID($order->getRefundedByUID());
@@ -567,7 +567,7 @@ if ($controller->getAction() == 'order') {
                         <?= $token->output('community_store'); ?>
                         <div class="form-group">
                             <label for="email"><?= t('Email'); ?></label>
-                            <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?= $order->getAttribute('email'); ?>"/>
+                            <input type="text" class="form-control ccm-input-text" id="email" name="email" value="<?= h($order->getAttribute('email')); ?>"/>
                         </div>
                         <input type="submit" class="btn btn-default btn-secondary" value="<?= t("Resend Invoice") ?>">
                     </form>

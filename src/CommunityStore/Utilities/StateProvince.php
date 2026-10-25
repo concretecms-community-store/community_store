@@ -7,16 +7,28 @@ class StateProvince extends Controller
 {
     public function getStates()
     {
-        $service = $this->app->make('helper/security');
-        $countryCode = $service->sanitizeString($this->request->request->get('country'));
-        $selectedState = $service->sanitizeString($this->request->request->get('selectedState'));
-        $type = $service->sanitizeString($this->request->request->get('type'));
-        $class = empty($this->request->request->get('class')) ? 'form-control' : $service->sanitizeString($this->request->request->get('class'));
-        $dataList = $this->app->make('helper/json')->decode($this->request->request->get('data'), true);
+        $request = $this->request->request;
+        $countryCode = (string) $request->get('country');
+        $selectedState = (string) $request->get('selectedState');
+        $type = (string) $request->get('type');
+        if (!in_array($type, ['billing', 'shipping', 'tax'], true)) {
+            $type = 'billing';
+        }
+        $class = trim((string) $request->get('class'));
+        if ($class === '') {
+            $class = 'form-control';
+        }
+        // only allow simple class names
+        $class = preg_replace('/[^\w\s-]/', '', $class);
+
+        $dataList = $this->app->make('helper/json')->decode((string) $request->get('data'), true);
         $data = '';
-        if (is_array($dataList) && count($dataList)) {
+        if (is_array($dataList)) {
             foreach ($dataList as $name => $value) {
-                $data .= ' data-' . $name . '="' . $value . '"';
+                // only allow valid data attribute names and scalar values
+                if (preg_match('/^[a-zA-Z][\w-]*$/', (string) $name) && is_scalar($value)) {
+                    $data .= ' data-' . h($name) . '="' . h($value) . '"';
+                }
             }
         }
 
@@ -25,40 +37,31 @@ class StateProvince extends Controller
         $required = '';
 
         if (in_array($countryCode, $requiresstate)) {
-            $required = ' required="required" ';
+            $required = ' required="required"';
+        }
+
+        if ('tax' == $type) {
+            $name = 'taxState';
+        } else {
+            $name = 'store-checkout-' . $type . '-state';
         }
 
         $ret = '';
-        $list = $this->app->make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
+        $list = $countryCode === '' ? [] : $this->app->make('helper/lists/states_provinces')->getStateProvinceArray($countryCode);
         if ($list) {
-            $class = trim(str_replace('form-select', '', $class));
-            $class .= ' form-select';
+            $class = trim(str_replace('form-select', '', $class)) . ' form-select';
 
-            if ("tax" == $type) {
-                $ret .= "<select name='taxState' id='taxState' class='{$class}'{$data}>";
-            } else {
-                $ret .= "<select $required name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' ccm-passed-value='' class='{$class}'{$data}>";
-            }
+            $ret .= '<select' . ('tax' == $type ? '' : $required) . ' name="' . h($name) . '" id="' . h($name) . '" class="' . h(trim($class)) . '"' . $data . '>';
 
-            $ret .= '<option {selected} value=""></option>';
-            $hasSelectedState = false;
+            $hasSelectedState = $selectedState !== '' && isset($list[$selectedState]);
+            $ret .= '<option ' . ($hasSelectedState ? '' : 'selected ') . 'value=""></option>';
 
             foreach ($list as $code => $state) {
-                if (!empty($selectedState) && $code == $selectedState) {
-                    $ret .= "<option selected value='{$code}'>{$state}</option>";
-                    $hasSelectedState = true;
-                } else {
-                    $ret .= "<option value='{$code}'>{$state}</option>";
-                }
+                $selected = $hasSelectedState && (string) $code === $selectedState ? 'selected ' : '';
+                $ret .= '<option ' . $selected . 'value="' . h($code) . '">' . h($state) . '</option>';
             }
 
-            $ret .= "</select>";
-
-            if ($hasSelectedState) {
-                $ret = str_replace('{selected}', '', $ret);
-            } else {
-                $ret = str_replace('{selected}', 'selected', $ret);
-            }
+            $ret .= '</select>';
         } else {
             $class = trim(str_replace('form-select', '', $class));
 
@@ -66,11 +69,8 @@ class StateProvince extends Controller
                 $class = 'form-control';
             }
 
-            if ("tax" == $type) {
-                $ret .= "<input type='text' name='taxState' id='taxState' class='{$class}'{$data}  value='$selectedState'>";
-            } else {
-                $ret .= "<input type='text' name='store-checkout-{$type}-state' id='store-checkout-{$type}-state' value='{$selectedState}' class='{$class}'{$data} placeholder='" . t('State / Province') . "'>";
-            }
+            $placeholder = 'tax' == $type ? '' : ' placeholder="' . h(t('State / Province')) . '"';
+            $ret .= '<input type="text" name="' . h($name) . '" id="' . h($name) . '" value="' . h($selectedState) . '" class="' . h($class) . '"' . $data . $placeholder . '>';
         }
 
         echo $ret;

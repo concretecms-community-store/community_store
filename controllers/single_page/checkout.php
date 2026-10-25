@@ -41,7 +41,7 @@ class Checkout extends PageController
             $codeerror = false;
             $codesuccess = false;
 
-            if ('code' == $this->request->request->get('action')) {
+            if ('code' == $this->request->request->get('action') && $this->app->make('token')->validate('community_store')) {
                 if ($this->request->request->get('code')) {
                     $codesuccess = DiscountCode::storeCartCode($this->request->request->get('code'));
                     $codeerror = !$codesuccess;
@@ -322,8 +322,8 @@ class Checkout extends PageController
         $pmHandle = $data['payment-method'];
         $pm = PaymentMethod::getByHandle($pmHandle);
 
-        // redirect/fail if we don't have a payment method, or it's shippible and there's no shipping method in the session
-        if (false === $pm || (Cart::isShippable() && !Session::get('community_store.smID'))) {
+        // redirect/fail if we don't have a payment method, or it's shippable and there's no eligible shipping method in the session
+        if (false === $pm || (Cart::isShippable() && !ShippingMethod::isEligibleMethodID(Session::get('community_store.smID')))) {
             return Redirect::to($langpath . '/checkout');
         }
 
@@ -504,15 +504,15 @@ class Checkout extends PageController
                     }
                 }
 
-                $address = nl2br(Customer::formatAddress($address));
+                $address = nl2br(h(Customer::formatAddress($address)));
 
-                // Results array
+                // Results array, values are displayed as HTML
                 $results = [
-                    'first_name' => $first_name,
-                    'last_name' => $last_name,
-                    'phone' => $phone,
-                    'company' => $company,
-                    'email' => $email,
+                    'first_name' => h($first_name),
+                    'last_name' => h($last_name),
+                    'phone' => h($phone),
+                    'company' => h($company),
+                    'email' => h($email),
                     'address' => $address,
                     'error' => false,
                 ];
@@ -521,7 +521,7 @@ class Checkout extends PageController
 
                 // If updating shipping method we need vat number
                 if ('shipping' == $data['adrType'] && isset($vat_number)) {
-                    $results['vat_number'] = $vat_number;
+                    $results['vat_number'] = h($vat_number);
                 }
 
                 $results['attribute_display'] = Session::get('community_store.attributeDisplay');

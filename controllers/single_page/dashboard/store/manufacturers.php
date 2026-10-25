@@ -96,6 +96,11 @@ class Manufacturers extends DashboardPageController
 
     public function delete($mid)
     {
+        if (!$this->token->validate('community_store')) {
+            $this->flash('error', $this->token->getErrorMessage());
+
+            return $this->app->make(ResponseFactory::class)->redirect(Url::to('/dashboard/store/manufacturers'));
+        }
 
         $manufacturer = Manufacturer::getByID($mid);
 
@@ -110,9 +115,9 @@ class Manufacturers extends DashboardPageController
             $manufacturer->delete();
 
             $this->flash('success', t('Manufacturer Deleted'));
-            $factory = $this->app->make(ResponseFactory::class);
         }
-        return $factory->redirect(Url::to('/dashboard/store/manufacturers'));
+
+        return $this->app->make(ResponseFactory::class)->redirect(Url::to('/dashboard/store/manufacturers'));
 
     }
 

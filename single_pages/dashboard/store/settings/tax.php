@@ -187,7 +187,7 @@ if (in_array($controller->getAction(), $addViews)) {
                             <a href="<?=Url::to('/dashboard/store/settings/tax/edit_class', $tc->getID()); ?>" class="btn btn-default btn-secondary"><?= t("Edit"); ?></a>
                             <?php if (!$tc->isLocked()) {
                     ?>
-                            <a href="<?=Url::to('/dashboard/store/settings/tax/delete_class', $tc->getID()); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
+                            <a href="<?= Url::to('/dashboard/store/settings/tax/delete_class', $tc->getID()) . '?' . app('token')->getParameter('community_store'); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
                             <?php
                 } ?>
                         </td>
@@ -229,7 +229,7 @@ if (in_array($controller->getAction(), $addViews)) {
                         <td><?= implode(", ", $locationInfo); ?></td>
                         <td class="text-right">
         					<a href="<?=Url::to('/dashboard/store/settings/tax/edit', $tr->getTaxRateID()); ?>" class="btn btn-default btn-secondary"><?= t("Edit"); ?></a>
-        					<a href="<?=Url::to('/dashboard/store/settings/tax/delete', $tr->getTaxRateID()); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
+        					<a href="<?= Url::to('/dashboard/store/settings/tax/delete', $tr->getTaxRateID()) . '?' . app('token')->getParameter('community_store'); ?>" class="btn btn-danger"><?= t("Delete"); ?></a>
         				</td>
         			</tr>
 			     <?php

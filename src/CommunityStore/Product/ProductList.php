@@ -298,8 +298,9 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             $validgids = [];
 
             foreach ($this->gIDs as $gID) {
-                if ($gID > 0) {
-                    $validgids[] = $gID;
+                // only accept positive integer IDs, as they are included directly in the query
+                if (is_numeric($gID) && (int) $gID > 0) {
+                    $validgids[] = (int) $gID;
                 }
             }
 
@@ -326,7 +327,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
             $related = $this->relatedProduct->getRelatedProducts();
 
             foreach ($related as $r) {
-                $relatedids[] = $r->getRelatedProductID();
+                $relatedids[] = (int) $r->getRelatedProductID();
             }
 
             if (!empty($relatedids)) {
@@ -335,7 +336,7 @@ class ProductList extends AttributedItemList implements PaginationProviderInterf
                 $query->andWhere('1 = 0');
             }
         } elseif (is_array($this->cIDs) && !empty($this->cIDs)) {
-            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' . implode(',', $this->cIDs) . ')');
+            $query->innerJoin('p', 'CommunityStoreProductLocations', 'l', 'p.pID = l.pID and l.cID in (' . implode(',', array_map('intval', $this->cIDs)) . ')');
         }
 
         switch ($this->sortBy) {

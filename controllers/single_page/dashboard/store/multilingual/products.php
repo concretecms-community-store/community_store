@@ -19,6 +19,7 @@ class Products extends DashboardSitePageController
 {
     public function view($gID = null)
     {
+        $gID = (int) $gID;
         $productsList = new ProductList();
         $productsList->setItemsPerPage(20);
         $productsList->setGroupID($gID);
