@@ -1440,7 +1440,6 @@ if (version_compare($version, '9.0', '<')) {
 													<?= $form->label('pvDisabled[' . $varid . ']', t('Disabled')); ?>
                                                     <?php
                                                     $newVariantDisable = Config::get("community_store::products.newVariantDisable");
-                                                    Log::addInfo('newVariantDisable: ' . $newVariantDisable);
                                                     ?>
 													<?= $form->checkbox('pvDisabled[' . $varid . ']', 1, $variation ? $variation->getVariationDisabled() : $newVariantDisable, ['data-combokey'=>$comboKey, 'class'=>'optionDisabled']) ?>
                                                 </div>

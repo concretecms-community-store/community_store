@@ -259,11 +259,7 @@ class Cart extends PageController
 
         $cartMode = Config::get('community_store.cartMode');
 
-        if (file_exists(DIR_BASE . '/application/elements/cart_modal.php')) {
-            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath]);
-        } else {
-            View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
-        }
+        View::element('cart_modal', ['cart' => $cart, 'cartMode'=>$cartMode, 'total' => $total, 'discounts' => $discounts, 'actiondata' => $this->request->request->all(), 'token' => $token, 'langpath' => $langpath], 'community_store');
 
         exit();
     }

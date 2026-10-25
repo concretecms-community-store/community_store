@@ -504,11 +504,7 @@ $csm = $app->make('cs/helper/multilingual');
 
                 <?php
 
-                if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
-                    View::element('cart_list', array('cart' => $cart));
-                } else {
-                    View::element('cart_list', array('cart' => $cart), 'community_store');
-                }
+                View::element('cart_list', ['cart' => $cart], 'community_store');
                 ?>
 
                 <ul class="store-checkout-totals-line-items list-group mb-3">

@@ -388,12 +388,12 @@ class ShippingMethod
 
     public function getShippingMethodSelector()
     {
-        if (file_exists(DIR_BASE . "/application/elements/checkout/shipping_methods.php")) {
-            View::element("checkout/shipping_methods");
-        } elseif (file_exists(DIR_BASE . "/packages/" . $this->getPackageHandle() . "/elements/checkout/shipping_methods.php")) {
-            View::element("checkout/shipping_methods", $this, $this->getPackageHandle());
+        // application/elements overrides are used automatically by View::element
+        $pkgHandle = $this->getPackageHandle();
+        if ($pkgHandle && $pkgHandle !== 'community_store' && file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/checkout/shipping_methods.php')) {
+            View::element('checkout/shipping_methods', null, $pkgHandle);
         } else {
-            View::element("checkout/shipping_methods", "community_store");
+            View::element('checkout/shipping_methods', null, 'community_store');
         }
     }
 

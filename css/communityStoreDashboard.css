@@ -1,11 +1,4 @@
 
-.group-list { margin: 30px 0 50px !important; }
-
-    .group-list li { margin-bottom: 8px; }
-    .group-name { display: inline-block; padding-right: 30px; width: 180px; }
-    .group-list input[type="text"] { width: 180px; }
-    .group-list .hideme { display: none !important; }
-
 
     #group-filters li a { transition: .2s ease all; }
 

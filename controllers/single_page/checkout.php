@@ -771,11 +771,7 @@ class Checkout extends PageController
         $attributeDisplay = '';
         if (count($orderChoicesAttList)) {
             ob_start();
-            if (file_exists(DIR_BASE . '/application/elements/checkout/order_attributes.php')) {
-                View::element('checkout/order_attributes', ['order' => $order, 'orderChoicesAttList' => $orderChoicesAttList]);
-            } else {
-                View::element('checkout/order_attributes', ['order' => $order, 'orderChoicesAttList' => $orderChoicesAttList], 'community_store');
-            }
+            View::element('checkout/order_attributes', ['order' => $order, 'orderChoicesAttList' => $orderChoicesAttList], 'community_store');
             $attributeDisplay = ob_get_clean();
         }
 
@@ -787,11 +783,7 @@ class Checkout extends PageController
     {
         $cart = Cart::getCart();
 
-        if (file_exists(DIR_BASE . '/application/elements/cart_list.php')) {
-            View::element('cart_list', ['cart' => $cart]);
-        } else {
-            View::element('cart_list', ['cart' => $cart], 'community_store');
-        }
+        View::element('cart_list', ['cart' => $cart], 'community_store');
 
         exit();
     }

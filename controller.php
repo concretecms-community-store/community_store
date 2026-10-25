@@ -2,6 +2,7 @@
 namespace Concrete\Package\CommunityStore;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
@@ -21,12 +22,12 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Shipping\Method\ShippingM
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\DoctrineORMEventsSubscriber;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Installer;
 use Doctrine\ORM\EntityManagerInterface;
-use Whoops\Exception\ErrorException;
 
 class Controller extends Package implements ProviderAggregateInterface
 {
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
+    protected $phpVersionRequired = '7.4';
     protected $pkgVersion = '2.7.8';
 
     protected $npmPackages = [
@@ -66,7 +67,7 @@ class Controller extends Package implements ProviderAggregateInterface
         $template = PageTemplate::getByHandle('full');
 
         if (!$template) {
-            throw new ErrorException(t("This package requires that a page template exists with the handle of 'full'. This can be adjusted or removed after the installation if required."));
+            throw new UserMessageException(t("This package requires that a page template exists with the handle of 'full'. This can be adjusted or removed after the installation if required."));
         }
 
         $pkg = parent::install();
@@ -74,7 +75,7 @@ class Controller extends Package implements ProviderAggregateInterface
             $args = func_get_args();
             $options = is_array($args[0] ?? null) ? $args[0] : [];
         } else {
-            $options = Request::getInstance()->request->all();
+            $options = $this->app->make(Request::class)->request->all();
         }
         $this->installStore($pkg, $options);
     }
@@ -232,20 +233,6 @@ class Controller extends Package implements ProviderAggregateInterface
             ]
         );
 
-        // Legacy select2 (jQuery plugin) registration, no longer used by Community Store itself.
-        // Kept so that add-ons relying on Community Store to provide it continue to work.
-        if (!$al->getAssetGroup('select2')) {
-            $al->register('css', 'select2', 'css/select2/select2.css', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $this);
-            $al->register('javascript', 'select2', 'js/select2.js', ['version' => '3.5.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => false], $this);
-
-            $al->registerGroup('select2',
-                [
-                    ['javascript', 'select2'],
-                    ['css', 'select2']
-                ]
-            );
-        }
-
         $al->register('css', 'photoswipe', 'css/photoswipe.css', ['version' => '5.4.3'], $this);
         $al->registerGroup('photoswipe',
             [
@@ -264,15 +251,12 @@ class Controller extends Package implements ProviderAggregateInterface
             }
         }
 
+        // Tasks are only available in Concrete CMS 9+ (V8 uses the jobs in /jobs)
         if (class_exists(TaskManager::class)) {
             $manager = $this->app->make(TaskManager::class);
             $manager->extend('auto_update_quantities_from_variations', function () {
                 return $this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\AutoUpdateQuantitiesFromVariations::class);
             });
-        }
-
-        if (class_exists(TaskManager::class)) {
-            $manager = $this->app->make(TaskManager::class);
             $manager->extend('remove_incomplete_orders', function () {
                 return $this->app->make(\Concrete\Package\CommunityStore\Src\CommunityStore\Command\Task\Controller\RemoveIncompleteOrders::class);
             });
@@ -320,21 +304,25 @@ class Controller extends Package implements ProviderAggregateInterface
         }
         $config = app(Repository::class);
 
-        return "
-        <script type=\"text/javascript\">
-            var PRODUCTMODAL = '" . Url::to('/productmodal') . "';
-            var CARTURL = '" . rtrim(Url::to($langpath . '/cart'), '/') . "';
-            var TRAILINGSLASH = '" . ((bool) $config->get('concrete.seo.trailing_slash', false) ? '/' : '') . "';
-            var CHECKOUTURL = '" . rtrim(Url::to($langpath . '/checkout'), '/') . "';
-            var HELPERSURL = '" . rtrim(Url::to('/helpers'), '/') . "';
-            var QTYMESSAGE = " . json_encode(t('Quantity must be greater than zero')) . ";
-            var CHECKOUTSCROLLOFFSET = " . $config->get('community_store.checkout_scroll_offset', 0) . ";
-            var CURRENCYCODE = '" . ($config->get('community_store.currency') ?: '') . "';
-            var CURRENCYSYMBOL = '" . $config->get('community_store.symbol') . "';
-            var CURRENCYDECIMAL = '" . $config->get('community_store.whole') . "';
-            var CURRENCYGROUP = '" . $config->get('community_store.thousand') . "';
-        </script>
-        ";
+        $vars = [
+            'CARTURL' => rtrim((string) Url::to($langpath . '/cart'), '/'),
+            'TRAILINGSLASH' => (bool) $config->get('concrete.seo.trailing_slash', false) ? '/' : '',
+            'CHECKOUTURL' => rtrim((string) Url::to($langpath . '/checkout'), '/'),
+            'HELPERSURL' => rtrim((string) Url::to('/helpers'), '/'),
+            'QTYMESSAGE' => t('Quantity must be greater than zero'),
+            'CHECKOUTSCROLLOFFSET' => (int) $config->get('community_store.checkout_scroll_offset', 0),
+            'CURRENCYCODE' => (string) ($config->get('community_store.currency') ?: ''),
+            'CURRENCYSYMBOL' => (string) $config->get('community_store.symbol'),
+            'CURRENCYDECIMAL' => (string) $config->get('community_store.whole'),
+            'CURRENCYGROUP' => (string) $config->get('community_store.thousand'),
+        ];
+
+        $js = '';
+        foreach ($vars as $name => $value) {
+            $js .= '            var ' . $name . ' = ' . json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ";\n";
+        }
+
+        return "\n        <script type=\"text/javascript\">\n" . $js . "        </script>\n";
     }
 
     private function registerCategories()
@@ -385,6 +373,6 @@ class Controller extends Package implements ProviderAggregateInterface
             $locations['src/CommunityStore/' . $chunk] = 'Concrete\Package\CommunityStore\Src\CommunityStore\\' . $chunk;
         }
 
-        return new StandardPackageProvider($this->app, $this, $locations);;
+        return new StandardPackageProvider($this->app, $this, $locations);
     }
 }

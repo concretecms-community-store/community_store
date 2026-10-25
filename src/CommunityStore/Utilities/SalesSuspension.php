@@ -100,7 +100,7 @@ class SalesSuspension
      *
      * @return $this
      */
-    public function setSuspendedFrom(DateTimeInterface $value = null)
+    public function setSuspendedFrom(?DateTimeInterface $value = null)
     {
         $serialized = static::serializeDateTime($value);
         $this->config->set('community_store.salesSuspension.from', $serialized);
@@ -124,7 +124,7 @@ class SalesSuspension
      *
      * @return $this
      */
-    public function setSuspendedTo(DateTimeInterface $value = null)
+    public function setSuspendedTo(?DateTimeInterface $value = null)
     {
         $serialized = static::serializeDateTime($value);
         $this->config->set('community_store.salesSuspension.to', $serialized);
@@ -165,7 +165,7 @@ class SalesSuspension
     /**
      * @return string
      */
-    protected static function serializeDateTime(DateTimeInterface $value = null)
+    protected static function serializeDateTime(?DateTimeInterface $value = null)
     {
         return $value === null ? '' : $value->format(DateTime::ISO8601);
     }

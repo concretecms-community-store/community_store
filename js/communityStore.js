@@ -298,14 +298,6 @@ var communityStore = {
         });
     },
 
-    productModal: function(pID, locale) {
-        communityStore.waiting();
-        communityStore.request(PRODUCTMODAL, {data: {pID: pID, locale: locale}})
-            .then(function(modalContent) {
-                communityStore.openModal(modalContent);
-            });
-    },
-
     // Cart
 
     updateCartList: function() {

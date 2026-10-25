@@ -969,7 +969,7 @@ class Order implements ObjectInterface
                 try {
                     $mh->sendMail();
                 } catch (\Exception $e) {
-                    Log::addWarning(t('Community Store: a new user email failed sending to %s, with error %s', $email, $e->getMessage()));
+                    Log::warning(t('Community Store: a new user email failed sending to %s, with error %s', $email, $e->getMessage()));
                 }
             }
         }
@@ -1122,7 +1122,7 @@ class Order implements ObjectInterface
             try {
                 $mh->sendMail();
             } catch (\Exception $e) {
-                Log::addWarning(t('Community Store: a notification email failed sending to %s, with error %s', implode(', ', $notificationEmails), $e->getMessage()));
+                Log::warning(t('Community Store: a notification email failed sending to %s, with error %s', implode(', ', $notificationEmails), $e->getMessage()));
             }
         }
     }
@@ -1212,7 +1212,7 @@ class Order implements ObjectInterface
         try {
             $mh->sendMail();
         } catch (\Exception $e) {
-            Log::addWarning(t('Community Store: a receipt email failed sending to %s, with error %s', $email, $e->getMessage()));
+            Log::warning(t('Community Store: a receipt email failed sending to %s, with error %s', $email, $e->getMessage()));
         }
     }
 

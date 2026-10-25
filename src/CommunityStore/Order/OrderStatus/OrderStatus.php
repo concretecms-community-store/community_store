@@ -193,8 +193,12 @@ class OrderStatus
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
+        // only allow known columns, as the column name is part of the query
+        if (!in_array($column, ['osName', 'osInformSite', 'osInformCustomer'], true)) {
+            return;
+        }
         $sql = "UPDATE CommunityStoreOrderStatuses SET " . $column . "=? WHERE osID=?";
-        $db->executeQuery($sql, [$column, $value]);
+        $db->executeQuery($sql, [$value, $this->osID]);
     }
 
     public static function setNewStartingStatus($osHandle = null)

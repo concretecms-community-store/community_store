@@ -21,7 +21,7 @@ $csm = $app->make('cs/helper/multilingual');
                         ?>
                         <?= h($csm->t($data['label'] ? $data['label'] : $ak->getAttributeKeyName(), 'productAttributeName', null, $ak->getAttributeKeyID())); ?>
                     <?php } elseif ($data['type'] == 'price') { ?>
-                      <?= t($data['label'] ? $data['label']  : t('Price')); ?>
+                      <?= h($data['label'] ? t($data['label']) : t('Price')); ?>
                     <?php } ?>
                     </h3>
 
@@ -57,7 +57,7 @@ $csm = $app->make('cs/helper/multilingual');
                                 <input type="checkbox" data-matching="<?= $matchingType; ?>"
                                     <?= ($disabled ? 'disabled="disabled"' : ''); ?>
                                     <?= ($checked ? 'checked="checked"' : ''); ?>
-                                       value="<?= h($option); ?>" name="<?= $akhandle; ?>[]"/>
+                                       value="<?= h($option); ?>" name="<?= h($akhandle); ?>[]"/>
                                 <span class="store-product-filter-block-option">
                                     <?php
                                     if ('boolean' == $ak->getAttributeType()->getAttributeTypeHandle()) {
@@ -130,12 +130,12 @@ $csm = $app->make('cs/helper/multilingual');
 
         <?php if ($updateType == 'button') { ?>
             <p><button type="submit"
-                    class="store-btn-filter btn btn-block btn-primary"><?= ($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
+                    class="store-btn-filter btn btn-block btn-primary"><?= h($filterButtonText ? t($filterButtonText) : t('Filter')); ?></button></p>
         <?php } ?>
 
         <?php if ($displayClear && (!empty($selectedAttributes) || $priceFiltering)) { ?>
             <p><button type="submit"
-                    class="store-btn-filter-clear btn btn-default btn-block btn-secondary"><?= ($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
+                    class="store-btn-filter-clear btn btn-default btn-block btn-secondary"><?= h($clearButtonText ? t($clearButtonText) : t('Clear')); ?></button></p>
         <?php } ?>
     </form>
 </div>
