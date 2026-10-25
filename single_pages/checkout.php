@@ -605,7 +605,15 @@ $csm = $app->make('cs/helper/multilingual');
         <p><input type="submit" class="btn btn-primary" value="<?= t('Click here if you are not automatically redirected') ?>"></p>
     </form>
     <script type="text/javascript">
-        document.getElementById('store-checkout-redirect-form').submit();
+        (function () {
+            var redirectForm = document.getElementById('store-checkout-redirect-form');
+            // requestSubmit fires submit listeners, so payment methods can still prevent the redirect
+            if (typeof redirectForm.requestSubmit === 'function') {
+                redirectForm.requestSubmit();
+            } else {
+                redirectForm.submit();
+            }
+        })();
     </script>
     <style>
         .store-utility-links {
