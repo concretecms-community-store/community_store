@@ -310,6 +310,9 @@ if ($relatedProduct) {
 
         [['showPageLink', 'pageLinkTextField'], ['showAddToCart', 'addToCartTextField']].forEach(function (pair) {
             var checkbox = document.getElementById(pair[0]);
+            if (!checkbox || !document.getElementById(pair[1])) {
+                return;
+            }
             checkbox.addEventListener('change', function () {
                 document.getElementById(pair[1]).classList.toggle('hidden', !checkbox.checked);
             });

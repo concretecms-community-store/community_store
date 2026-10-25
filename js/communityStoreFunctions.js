@@ -102,6 +102,7 @@ var communityStoreDashboard = {
      *  - url: the product finder URL
      *  - initial: {id: ..., text: ...} for a preselected product
      *  - onSelect: function({id, text}) called when a product is chosen. The field is cleared afterwards.
+     *  - settings: additional Tom Select settings, e.g. {plugins: ['clear_button']}
      */
     productSearch: function (element, options) {
         element = communityStoreDashboard.element(element);
@@ -163,7 +164,7 @@ var communityStoreDashboard = {
             };
         }
 
-        return new TomSelect(element, settings);
+        return new TomSelect(element, Object.assign(settings, options.settings || {}));
     },
 
     /**
