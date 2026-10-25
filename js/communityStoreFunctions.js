@@ -167,6 +167,59 @@ var communityStoreDashboard = {
     },
 
     /**
+     * Create an element from a <template>, filling in values.
+     *
+     * Within the template:
+     *  - data-value="key" sets the element's value (inputs, selects, textareas)
+     *  - data-text="key" sets the element's text
+     *  - data-checked="key" checks a checkbox when the value is truthy
+     *  - data-show-types="a b" / data-hide-types="a b" keeps/removes the element based on options.type
+     *
+     * Values are set via the DOM, so they never need to be escaped.
+     */
+    renderTemplate: function (id, data, type) {
+        var fragment = document.importNode(document.getElementById(id).content, true);
+        data = data || {};
+
+        var hasType = function (element, attribute) {
+            return element.getAttribute(attribute).split(' ').indexOf(type) !== -1;
+        };
+
+        fragment.querySelectorAll('[data-show-types]').forEach(function (element) {
+            if (!hasType(element, 'data-show-types')) {
+                element.remove();
+            }
+        });
+        fragment.querySelectorAll('[data-hide-types]').forEach(function (element) {
+            if (hasType(element, 'data-hide-types')) {
+                element.remove();
+            }
+        });
+
+        var value = function (key) {
+            return data[key] === null || data[key] === undefined ? '' : String(data[key]);
+        };
+
+        fragment.querySelectorAll('[data-value]').forEach(function (element) {
+            element.value = value(element.getAttribute('data-value'));
+            if (element.tagName === 'TEXTAREA') {
+                element.textContent = element.value;
+            }
+            element.removeAttribute('data-value');
+        });
+        fragment.querySelectorAll('[data-text]').forEach(function (element) {
+            element.textContent = value(element.getAttribute('data-text'));
+            element.removeAttribute('data-text');
+        });
+        fragment.querySelectorAll('[data-checked]').forEach(function (element) {
+            element.checked = !!data[element.getAttribute('data-checked')] && data[element.getAttribute('data-checked')] !== '0';
+            element.removeAttribute('data-checked');
+        });
+
+        return fragment.firstElementChild;
+    },
+
+    /**
      * Build a list group item with a remove link and a hidden input.
      */
     listItem: function (text, inputName, value) {

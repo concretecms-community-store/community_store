@@ -494,62 +494,65 @@ if (version_compare($version, '9.0', '<')) {
                                 </div>
                             </div>
 
-                            <p><a href="javascript:addtier()" class="btn btn-secondary btn-default"><?= t('Add Tier'); ?></a></p>
+                            <p><a href="#" data-action="add-tier" class="btn btn-secondary btn-default"><?= t('Add Tier'); ?></a></p>
 
 
-                            <script type="text/template" id="price-tier-template">
-                                <div class="row" data-order="<%=sort%>">
+                            <template id="price-tier-template">
+                                <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <input type="text" name="ptFrom[]" class="form-control ccm-input-text" value="<%=from%>">
+                                            <input type="text" name="ptFrom[]" class="form-control ccm-input-text" data-value="from">
                                         </div>
                                     </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <input type="text" name="ptTo[]" class="form-control ccm-input-text" value="<%=to%>">
+                                            <input type="text" name="ptTo[]" class="form-control ccm-input-text" data-value="to">
                                         </div>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <div class="input-group-addon input-group-text">
-                                                    <?= Config::get('community_store.symbol'); ?>
+                                                    <?= h(Config::get('community_store.symbol')); ?>
                                                 </div>
-                                                <input type="number" name="ptPrice[]" class="form-control ccm-input-text" step="0.01" value="<%=price%>">
+                                                <input type="number" name="ptPrice[]" class="form-control ccm-input-text" step="0.01" data-value="price">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-1">
-                                        <a href="javascript:deletetier(<%=sort%>)" class="btn btn-sm btn-danger remove"><i class="fa fa-times"></i></a>
+                                        <a href="#" data-action="delete-tier" class="btn btn-sm btn-danger remove"><i class="fa fa-times"></i></a>
                                     </div>
                                 </div>
-                            </script>
+                            </template>
 
                             <script type="text/javascript">
                                 function addtier(values) {
                                     var tiersContainer = document.getElementById('tierscontainer');
-                                    var tierTemplate = _.template(document.getElementById('price-tier-template').innerHTML);
-
-                                    tiersContainer.insertAdjacentHTML('beforeend', tierTemplate(Object.assign({
-                                        from: '',
-                                        to: '',
-                                        price: '',
-                                        sort: tiersContainer.querySelectorAll('.row').length
-                                    }, values || {})));
+                                    tiersContainer.appendChild(communityStoreDashboard.renderTemplate('price-tier-template', values));
                                 }
 
-                                function deletetier(id) {
-                                    var tier = document.querySelector("#tierscontainer .row[data-order='" + id + "']");
-                                    if (tier) {
-                                        tier.remove();
-                                    }
+                                function deletetier(tier) {
+                                    tier.remove();
 
                                     if (document.querySelectorAll('#tierscontainer .row').length == 1) {
                                         addtier();
                                     }
                                 }
+
+                                document.addEventListener('click', function (e) {
+                                    var link = e.target.closest('[data-action="add-tier"], [data-action="delete-tier"]');
+                                    if (!link) {
+                                        return;
+                                    }
+                                    e.preventDefault();
+                                    if (link.getAttribute('data-action') === 'add-tier') {
+                                        addtier();
+                                    } else {
+                                        deletetier(link.closest('.row'));
+                                    }
+                                });
 
                                 communityStoreDashboard.ready(function () {
                                     //load up existing price tiers
@@ -557,17 +560,14 @@ if (version_compare($version, '9.0', '<')) {
                                     $priceTiers = $product->getPriceTiers();
 
                                     if ($priceTiers) {
-                                        $tiersort = 0;
                                         foreach ($priceTiers as $priceTier) {
                                             ?>
                                     addtier({
                                         from: <?= json_encode((string) $priceTier->getFrom()); ?>,
                                         to: <?= json_encode((string) $priceTier->getTo()); ?>,
-                                        price: <?= json_encode((string) $priceTier->getPrice()); ?>,
-                                        sort: <?= $tiersort ?>
+                                        price: <?= json_encode((string) $priceTier->getPrice()); ?>
                                     });
                                             <?php
-                                            $tiersort++;
                                         }
                                     }
                                     ?>
@@ -966,125 +966,102 @@ if (version_compare($version, '9.0', '<')) {
                     </div>
 
                     <!-- THE TEMPLATE WE'LL USE FOR EACH OPTION GROUP -->
-                    <script type="text/template" id="option-group-template">
-                        <div class="card panel panel-default option-group clearfix mb-3" data-order="<%=sort%>">
+                    <template id="option-group-template">
+                        <div class="card panel panel-default option-group clearfix mb-3">
                             <div class="panel-heading card-title ps-3 pt-3 pe-3">
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3 class="panel-title"><i class="fa fa-arrows-alt drag-handle mr-2"></i> <%=poLabel%></h3>
+                                        <h3 class="panel-title"><i class="fa fa-arrows-alt drag-handle mr-2"></i> <span data-text="poLabel"></span></h3>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a href="javascript:deleteOptionGroup(<%=sort%>)" class="btn btn-sm btn-delete-item btn-danger float-end"><i data-toggle="tooltip" data-placement="top" title="<?= t('Delete the Option Group') ?>" class="fa fa-times"></i> Remove</a>
+                                        <a href="#" data-action="delete-option-group" class="btn btn-sm btn-delete-item btn-danger float-end" title="<?= h(t('Delete the Option Group')) ?>"><i class="fa fa-times"></i> <?= t('Remove') ?></a>
                                     </div>
                                 </div>
                             </div>
                             <div class="panel-body card-body">
 
                                 <div class="row">
-                                    <% if (poType == 'static') { %>
-                                    <input type="hidden" class="form-control" name="poName[]" value="<%=poType%>">
-                    <input type="hidden" class="form-control" name="poHandle[]" value="<%=poHandle%>">
-                                    <% } %>
+                                    <input data-show-types="static" type="hidden" name="poName[]" data-value="poType">
+                                    <input data-show-types="static" type="hidden" name="poHandle[]" data-value="poHandle">
 
-                                    <% if (poType != 'static') { %>
-                                    <div class="col-md-5">
+                                    <div class="col-md-5" data-hide-types="static">
                                         <div class="form-group">
-                                            <label class="control-label" for="poName<%=sort%>"><?= t('Option Name'); ?></label>
-                                            <input type="text" class="form-control" name="poName[]" value="<%=poName%>">
+                                            <label class="control-label"><?= t('Option Name'); ?></label>
+                                            <input type="text" class="form-control" name="poName[]" data-value="poName">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" data-hide-types="static">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Option Handle'); ?></label>
-                                            <input type="text" class="form-control" name="poHandle[]" placeholder="<?= t('Optional'); ?>" value="<%=poHandle%>">
+                                            <input type="text" class="form-control" name="poHandle[]" placeholder="<?= h(t('Optional')); ?>" data-value="poHandle">
                                         </div>
-
                                     </div>
-                                    <% } %>
 
-
-                                    <% if (poType == 'select') { %>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" data-show-types="select">
                                         <div class="form-group">
-                                            <label  class="control-label"><?= t('In Variants'); ?></label>
-                                            <select class="form-control form-select" name="poIncludeVariations[]">
-                                                <option value="1"
-                                                <% if (poIncludeVariations == 1) { %>selected="selected"<% } %>><?= t('Yes'); ?></option>
-                                                <option value="0"
-                                                <% if (poIncludeVariations == 0) { %>selected="selected"<% } %>><?= t('No'); ?></option></select>
+                                            <label class="control-label"><?= t('In Variants'); ?></label>
+                                            <select class="form-control form-select" name="poIncludeVariations[]" data-value="poIncludeVariations">
+                                                <option value="1"><?= t('Yes'); ?></option>
+                                                <option value="0"><?= t('No'); ?></option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <% } else { %>
-                                    <input type="hidden" value="0" name="poIncludeVariations[]"/>
-                                    <% } %>
-                                    <% if ( poType != 'static') { %>
-                                    <div class="col-md-3">
+                                    <input data-hide-types="select" type="hidden" value="0" name="poIncludeVariations[]"/>
+
+                                    <div class="col-md-3" data-hide-types="static">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Required'); ?></label>
-                                            <select class="form-control form-select" name="poRequired[]">
+                                            <select class="form-control form-select" name="poRequired[]" data-value="poRequired">
                                                 <option value="0"><?= t('No'); ?></option>
-                                                <option value="1"
-                                                <% if (poRequired == 1) { %>selected="selected"<% } %>><?= t('Yes'); ?></option></select>
+                                                <option value="1"><?= t('Yes'); ?></option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <% } else { %>
-                                    <input type="hidden" value="0" name="poRequired[]"/>
-                                    <% } %>
+                                    <input data-show-types="static" type="hidden" value="0" name="poRequired[]"/>
                                 </div>
-                                <% if (poType != 'hidden'  && poType != 'static') { %>
-                                <div class="row">
+
+                                <div class="row" data-hide-types="hidden static">
                                     <div class="col-md-9">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Option Details');?></label>
-                                            <textarea rows="1" placeholder="<?= t('Optional - help text for an option'); ?>" class="form-control" name="poDetails[]"><%=poDetails%></textarea>
+                                            <textarea rows="1" placeholder="<?= h(t('Optional - help text for an option')); ?>" class="form-control" name="poDetails[]" data-value="poDetails"></textarea>
                                         </div>
                                     </div>
 
-                                    <% if (poType == 'select') { %>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" data-show-types="select">
                                         <div class="form-group">
                                             <label class="control-label"><?= t('Display Type'); ?></label>
-                                            <select class="form-control form-select" name="poDisplayType[]">
-                                                <option value="select"
-                                                <% if (poDisplayType == 'select') { %>selected="selected"<% } %>><?= t('Drop-down'); ?></option>
-                                                <option value="radio"
-                                                <% if (poDisplayType == 'radio') { %>selected="selected"<% } %>><?= t('Radio Buttons'); ?></option></select>
+                                            <select class="form-control form-select" name="poDisplayType[]" data-value="poDisplayType">
+                                                <option value="select"><?= t('Drop-down'); ?></option>
+                                                <option value="radio"><?= t('Radio Buttons'); ?></option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <% } else { %>
-                                    <input type="hidden" value="" name="poDisplayType[]"/>
-                                    <% } %>
-
+                                    <input data-hide-types="select" type="hidden" value="" name="poDisplayType[]"/>
                                 </div>
-                                <% } else { %>
-                                <input type="hidden" value="" name="poDisplayType[]"/>
-                                <input type="hidden" value="" name="poDetails[]"/>
-                                <% } %>
+                                <input data-show-types="hidden static" type="hidden" value="" name="poDisplayType[]"/>
+                                <input data-show-types="hidden" type="hidden" value="" name="poDetails[]"/>
 
-                                <% if (poType == 'static') { %>
-                                <div class="row">
+                                <div class="row" data-show-types="static">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <textarea rows="3" id=""  class="form-control staticfield" name="poDetails[]"><%= poDetails %></textarea>
+                                            <textarea rows="3" class="form-control staticfield" name="poDetails[]" data-value="poDetails"></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <% } %>
 
-                                <% if (poType == 'select') { %>
-                                <hr/>
-                                <div data-group="<%=sort%>" class="option-group-item-container"></div>
-                                <p><a href="javascript:addOptionItem(<%=sort%>)" data-group="<%=sort%>" class="btn btn-default btn-secondary"><?= t('Add Option') ?></a></p>
-                                <% } %>
+                                <div data-show-types="select">
+                                    <hr/>
+                                    <div class="option-group-item-container"></div>
+                                    <p><a href="#" data-action="add-option-item" class="btn btn-default btn-secondary"><?= t('Add Option') ?></a></p>
+                                </div>
                             </div>
-                            <input type="hidden" name="poID[]" value="<%=poID%>">
-                            <input type="hidden" name="poType[]" value="<%=poType%>">
-                            <input type="hidden" name="poSort[]" value="<%=sort%>" class="option-group-sort">
+                            <input type="hidden" name="poID[]" data-value="poID">
+                            <input type="hidden" name="poType[]" data-value="poType">
+                            <input type="hidden" name="poSort[]" class="option-group-sort">
                         </div>
-
-                        </div><!-- .option-group -->
-                    </script>
+                    </template>
                     <script type="text/javascript">
                         function indexOptionGroups() {
                             document.querySelectorAll('#product-options-container .option-group').forEach(function (group, i) {
@@ -1103,12 +1080,7 @@ if (version_compare($version, '9.0', '<')) {
                             communityStoreDashboard.setHidden(document.getElementById('changenotice'), false);
                         }
 
-                        function deleteOptionGroup(id) {
-                            var group = document.querySelector(".option-group[data-order='" + id + "']");
-                            if (!group) {
-                                return;
-                            }
-
+                        function deleteOptionGroup(group) {
                             var variationeffect = group.querySelector('select[name="poIncludeVariations[]"]');
 
                             if (variationeffect && variationeffect.value == 1) {
@@ -1130,7 +1102,6 @@ if (version_compare($version, '9.0', '<')) {
 
                             //Define container and items
                             var optionsContainer = document.getElementById('product-options-container');
-                            var optionsTemplate = _.template(document.getElementById('option-group-template').innerHTML);
 
                             //Make items sortable. If we re-sort them, re-index them.
                             communityStoreDashboard.sortable(optionsContainer, {
@@ -1139,19 +1110,39 @@ if (version_compare($version, '9.0', '<')) {
                             });
 
                             var addOptionGroup = function (values) {
-                                optionsContainer.insertAdjacentHTML('beforeend', optionsTemplate(Object.assign({
-                                    poName: '',
-                                    poID: '',
-                                    poDisplayType: '',
-                                    poHandle: '',
-                                    poDetails: '',
-                                    poRequired: '',
-                                    poIncludeVariations: '0',
-                                    sort: optionsContainer.querySelectorAll('.option-group').length
-                                }, values)));
+                                values = Object.assign({
+                                    poDisplayType: 'select',
+                                    poRequired: '0',
+                                    poIncludeVariations: '0'
+                                }, values);
 
-                                optionsContainer.querySelectorAll('.option-group-item-container').forEach(initOptionItemsSortable);
+                                var group = communityStoreDashboard.renderTemplate('option-group-template', values, values.poType);
+                                group.setAttribute('data-order', optionsContainer.querySelectorAll('.option-group').length);
+                                optionsContainer.appendChild(group);
+
+                                var itemContainer = group.querySelector('.option-group-item-container');
+                                if (itemContainer) {
+                                    initOptionItemsSortable(itemContainer);
+                                }
+
+                                indexOptionGroups();
+
+                                return group;
                             };
+
+                            optionsContainer.addEventListener('click', function (e) {
+                                var link = e.target.closest('[data-action="delete-option-group"], [data-action="add-option-item"]');
+                                if (!link) {
+                                    return;
+                                }
+                                e.preventDefault();
+                                var group = link.closest('.option-group');
+                                if (link.getAttribute('data-action') === 'delete-option-group') {
+                                    deleteOptionGroup(group);
+                                } else {
+                                    addOptionItem(group);
+                                }
+                            });
 
                             //load up existing option groups
                             <?php
@@ -1165,7 +1156,6 @@ if (version_compare($version, '9.0', '<')) {
                             $labels['static'] = t('Content');
 
                             if (isset($options) && $options) {
-                                $optionsort = 0;
                                 foreach ($options as $option) {
                                     $type = $option->getType();
 
@@ -1183,10 +1173,8 @@ if (version_compare($version, '9.0', '<')) {
                                 poDetails: <?= json_encode(str_replace('~~~', '', $option->getDetails())); ?>,
                                 poRequired: '<?= $option->getRequired() ? 1 : 0; ?>',
                                 poIncludeVariations: '<?= $option->getIncludeVariations() ? 1 : 0; ?>',
-                                sort: <?= $optionsort ?>
                             });
                                     <?php
-                                    $optionsort++;
                                 }
                             }
                             ?>
@@ -1226,64 +1214,68 @@ if (version_compare($version, '9.0', '<')) {
                         });
                     </script>
                     <!-- TEMPLATE FOR EACH OPTION ITEM ---->
-                    <script type="text/template" id="option-item-template">
-                        <div class="option-item clearfix form-horizontal" data-order="<%=sort%>" data-option-group="<%=optGroup%>">
+                    <template id="option-item-template">
+                        <div class="option-item clearfix form-horizontal">
                             <div class="form-group row">
                                 <div class="col-sm-2 text-right">
                                     <label class="control-label grabme"><i class="fa fa-arrows-alt drag-handle pull-left float-start"></i> <?= t('Option') ?></label>
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="input-group">
-                                        <input type="text" name="poiName[]" class="form-control input-sm" value="<%=poiName%>">
+                                        <input type="text" name="poiName[]" class="form-control input-sm" data-value="poiName">
                                         <div class="input-group-addon input-group-text input-sm">
                                             <div class="form-check-inline">
-                                                <input type="hidden" name="poiHidden[]" value="<%=poiHiddenValue%>"/>
-                                                <label class="form-label form-check-label"><input type="checkbox" class="optionHiddenToggle form-check-input" name="poiHiddenToggle[]" value="1" <%=poiHidden%> />
+                                                <input type="hidden" name="poiHidden[]" data-value="poiHidden"/>
+                                                <label class="form-label form-check-label"><input type="checkbox" class="optionHiddenToggle form-check-input" name="poiHiddenToggle[]" value="1" data-checked="poiHidden" />
                                                     <?= t('Hide'); ?>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <br class="smallbreak">
-                                    <input type="text" placeholder="<?= t('Selector Display Label - Optional');?>" name="poiSelectorName[]" class="form-control input-sm" value="<%=poiSelectorName%>">
+                                    <input type="text" placeholder="<?= h(t('Selector Display Label - Optional'));?>" name="poiSelectorName[]" class="form-control input-sm" data-value="poiSelectorName">
                                     <br class="smallbreak">
 
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="input-group">
                                                 <div class="input-group-addon input-group-text input-sm">
-                                                    <?= Config::get('community_store.symbol'); ?>
+                                                    <?= h(Config::get('community_store.symbol')); ?>
                                                 </div>
-                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Price Adjustment');?>" name="poiPriceAdjust[]" class="form-control input-sm" value="<%=poiPriceAdjust%>">
+                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= h(t('Price Adjustment'));?>" name="poiPriceAdjust[]" class="form-control input-sm" data-value="poiPriceAdjust">
                                             </div>
                                         </div>
                                         <div class="col-sm-6<?= $hideWeight ? ' hidden d-none' : '' ?>">
                                             <div class="input-group">
-                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= t('Weight Adjustment');?>" name="poiWeightAdjust[]" class="form-control input-sm" value="<%=poiWeightAdjust%>">
-                                                <div class="input-group-addon input-group-text input-sm"><?= Config::get('community_store.weightUnit') ?></div>
+                                                <input type="number" step="0.01" max="9999999.99" placeholder="<?= h(t('Weight Adjustment'));?>" name="poiWeightAdjust[]" class="form-control input-sm" data-value="poiWeightAdjust">
+                                                <div class="input-group-addon input-group-text input-sm"><?= h(Config::get('community_store.weightUnit')) ?></div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <input type="hidden" name="poiID[]" class="form-control" value="<%=poiID%>">
+                                    <input type="hidden" name="poiID[]" class="form-control" data-value="poiID">
                                 </div>
                                 <div class="col-sm-1">
-                                    <a href="javascript:deleteOptionItem(<%=optGroup%>,<%=sort%>)" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
+                                    <a href="#" data-action="delete-option-item" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
                                 </div>
                             </div>
-                            <input type="hidden" name="optGroup<%=optGroup%>[]" class="optGroupID" value="">
-                            <input type="hidden" name="poiSort[]" value="<%=sort%>" class="option-item-sort">
-                        </div><!-- .option-group -->
-                    </script>
+                            <input type="hidden" class="optGroupID" value="">
+                            <input type="hidden" name="poiSort[]" class="option-item-sort" data-value="sort">
+                        </div><!-- .option-item -->
+                    </template>
                     <script type="text/javascript">
-                        function deleteOptionItem(group, id) {
-                            var item = document.querySelector(".option-group[data-order='" + group + "'] .option-item[data-order='" + id + "']");
-                            if (item) {
-                                item.remove();
-                            }
-
+                        function deleteOptionItem(item) {
+                            item.remove();
                             showVariationChangeNotice();
                         }
+
+                        document.addEventListener('click', function (e) {
+                            var link = e.target.closest('[data-action="delete-option-item"]');
+                            if (link) {
+                                e.preventDefault();
+                                deleteOptionItem(link.closest('.option-item'));
+                            }
+                        });
 
                         function indexOptionItems() {
                             document.querySelectorAll('.option-group-item-container').forEach(function (container) {
@@ -1310,24 +1302,25 @@ if (version_compare($version, '9.0', '<')) {
                         }
 
                         function addOptionItem(group, values) {
-                            var optItemsTemplate = _.template(document.getElementById('option-item-template').innerHTML);
-                            var optItemsContainer = document.querySelector(".option-group-item-container[data-group='" + group + "']");
+                            if (typeof group !== 'object') {
+                                group = document.querySelector(".option-group[data-order='" + group + "']");
+                            }
+
+                            var optItemsContainer = group ? group.querySelector('.option-group-item-container') : null;
 
                             if (!optItemsContainer) {
                                 return;
                             }
 
-                            optItemsContainer.insertAdjacentHTML('beforeend', optItemsTemplate(Object.assign({
-                                poiName: '',
-                                poiSelectorName: '',
-                                poiPriceAdjust: '',
-                                poiWeightAdjust: '',
-                                poiID: '',
-                                optGroup: group,
-                                sort: optItemsContainer.querySelectorAll('.option-item').length,
-                                poiHidden: '',
-                                poiHiddenValue: '0'
-                            }, values || {})));
+                            var groupIndex = group.getAttribute('data-order');
+                            var item = communityStoreDashboard.renderTemplate('option-item-template', Object.assign({
+                                poiHidden: '0',
+                                sort: optItemsContainer.querySelectorAll('.option-item').length
+                            }, values || {}));
+
+                            item.setAttribute('data-order', item.querySelector('.option-item-sort').value);
+                            item.querySelector('.optGroupID').setAttribute('name', 'optGroup' + groupIndex + '[]');
+                            optItemsContainer.appendChild(item);
 
                             if (!values) {
                                 //Init Index
@@ -1360,8 +1353,7 @@ if (version_compare($version, '9.0', '<')) {
                                 poiWeightAdjust: <?= json_encode($optionItem->getWeightAdjustment() != 0 ? (string) $optionItem->getWeightAdjustment() : ''); ?>,
                                 poiID: <?= json_encode($optionItem->getID()) ?>,
                                 sort: <?= (int) $optionItem->getSort() ?>,
-                                poiHidden: <?= json_encode($optionItem->isHidden() ? 'checked="checked"' : ''); ?>,
-                                poiHiddenValue: '<?= ($optionItem->isHidden() ? '1' : '0'); ?>'
+                                poiHidden: '<?= ($optionItem->isHidden() ? '1' : '0'); ?>'
                             });
                                             <?php
                                         }
