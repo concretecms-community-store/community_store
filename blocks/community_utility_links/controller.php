@@ -74,6 +74,7 @@ class Controller extends BlockController
 
     public function registerViewAssets($outputContent = '')
     {
+        \Concrete\Package\CommunityStore\Controller::requireLegacyJquery($this);
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'community-store');

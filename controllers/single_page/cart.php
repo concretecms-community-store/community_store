@@ -133,6 +133,7 @@ class Cart extends PageController
         $this->set('taxes', $totals['taxes']);
         $this->set('taxtotal', $totals['taxTotal']);
 
+        \Concrete\Package\CommunityStore\Controller::requireLegacyJquery($this);
         $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
         $this->addFooterItem($js);
         $this->requireAsset('javascript', 'sysend');

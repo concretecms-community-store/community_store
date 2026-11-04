@@ -732,6 +732,15 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Image;
                 </div>
             </div>
 
+            <div class="form-group">
+                <?= $form->label('requireJquery', t('Legacy jQuery Support')); ?>
+                <br/>
+                <label><?= $form->checkbox('requireJquery', '1', Config::get('community_store.requireJquery')); ?>
+                    <?= t('Load jQuery on cart and checkout pages, and with store blocks'); ?>
+                </label>
+                <span class="help-block"><?= t('Community Store no longer requires jQuery. Enable this if your theme or other add-ons have custom code that relies on jQuery being loaded with the store.'); ?></span>
+            </div>
+
             <h3><?= t('Billing Details'); ?></h3>
             <div class="row">
                 <div class="col-md-6">

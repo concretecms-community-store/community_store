@@ -218,6 +218,7 @@ class Settings extends DashboardPageController
                 Config::save('community_store.orderNotesEnabled', isset($args['orderNotesEnabled']) ??  false );
                 Config::save('community_store.placesAPIKey', trim($args['placesAPIKey']));
                 Config::save('community_store.checkout_scroll_offset', intval($args['checkoutScrollOffset']));
+                Config::save('community_store.requireJquery', !empty($args['requireJquery']));
                 Config::save('community_store.receiptHeader', LinkAbstractor::translateTo(trim($args['receiptHeader'])));
                 Config::save('community_store.receiptFooter', LinkAbstractor::translateTo(trim($args['receiptFooter'])));
                 Config::save('community_store.receiptBCC', trim($args['receiptBCC']));

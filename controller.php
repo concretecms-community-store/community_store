@@ -325,6 +325,19 @@ class Controller extends Package implements ProviderAggregateInterface
         return "\n        <script type=\"text/javascript\">\n" . $js . "        </script>\n";
     }
 
+    /**
+     * Require the core jQuery asset when enabled in the store settings,
+     * for custom code that still expects jQuery on store pages and blocks.
+     *
+     * @param \Concrete\Core\Controller\AbstractController $controller
+     */
+    public static function requireLegacyJquery($controller)
+    {
+        if (app(Repository::class)->get('community_store.requireJquery')) {
+            $controller->requireAsset('javascript', 'jquery');
+        }
+    }
+
     private function registerCategories()
     {
         $this->app['manager/attribute/category']->extend(

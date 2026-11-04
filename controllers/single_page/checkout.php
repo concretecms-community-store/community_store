@@ -229,6 +229,7 @@ class Checkout extends PageController
 
             $this->set('paymentErrors', Session::get('paymentErrors'));
 
+            \Concrete\Package\CommunityStore\Controller::requireLegacyJquery($this);
             $js = \Concrete\Package\CommunityStore\Controller::returnHeaderJS();
             $this->addFooterItem($js);
 
@@ -378,6 +379,7 @@ class Checkout extends PageController
 
 	public function external($nonce = false)
     {
+        \Concrete\Package\CommunityStore\Controller::requireLegacyJquery($this);
         $pmHandle = Session::get('paymentMethod');
         $pm = false;
 
