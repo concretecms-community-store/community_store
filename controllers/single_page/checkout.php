@@ -472,6 +472,10 @@ class Checkout extends PageController
                 $e->add(t('The email address you have entered has already been used to create an account. Please login first or enter a different email address.'));
             }
 
+            $event = new CheckoutEvent('updater');
+            $event->setErrors($e)->setData($data)->setAddressType($billing ? 'billing' : 'shipping')->setController($this);
+            Events::dispatch(CheckoutEvent::CHECKOUT_VALIDATE, $event);
+
             if ($e->has()) {
                 echo $e->outputJSON();
             } else {

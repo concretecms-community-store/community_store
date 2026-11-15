@@ -3,6 +3,7 @@
 namespace Concrete\Package\CommunityStore\Src\CommunityStore\Checkout;
 
 use Concrete\Package\CommunityStore\Src\CommunityStore\Event\Event as StoreEvent;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,7 @@ class CheckoutEvent extends StoreEvent
 {
     const CHECKOUT_REQUEST = 'on_community_store_checkout_request';
     const CHECKOUT_COMPLETE_VIEW = 'on_community_store_checkout_complete_view';
+    const CHECKOUT_VALIDATE = 'on_community_store_checkout_validate';
 
     /** @var string */
     private $action;
@@ -26,6 +28,15 @@ class CheckoutEvent extends StoreEvent
 
     /** @var PageController|null */
     private $controller = null;
+
+    /** @var ErrorList|null */
+    private $errors = null;
+
+    /** @var array|null */
+    private $data = null;
+
+    /** @var string|null */
+    private $addressType = null;
 
     /**
      * @param string $action
@@ -113,5 +124,65 @@ class CheckoutEvent extends StoreEvent
     public function getController()
     {
         return $this->controller;
+    }
+
+    /**
+     * @param ErrorList $errors
+     * @return $this
+     */
+    public function setErrors(ErrorList $errors)
+    {
+        $this->errors = $errors;
+        return $this;
+    }
+
+    /**
+     * The validation error list - listeners can add errors to it to prevent the checkout step from completing.
+     *
+     * @return ErrorList|null
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param array|null $data
+     * @return $this
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * The submitted form data.
+     *
+     * @return array|null
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param string|null $addressType
+     * @return $this
+     */
+    public function setAddressType($addressType)
+    {
+        $this->addressType = $addressType;
+        return $this;
+    }
+
+    /**
+     * The address being validated, either 'billing' or 'shipping'.
+     *
+     * @return string|null
+     */
+    public function getAddressType()
+    {
+        return $this->addressType;
     }
 }
