@@ -53,3 +53,10 @@ Then, on your paid shipping method(s), set the 'Maximum Purchase Amount for this
 Like Payment Methods, additional shipping methods can be  [downloaded from github](https://github.com/concretecms-community-store) as Concrete CMS add-ons.
 
 For complex shipping calculation requirements, further custom shipping methods can be developed as add-ons. [An example shipping method is available on github](https://github.com/concretecms-community-store/community_store_shipping_example) to act as template for new methods.
+
+## Suspending Sales
+
+Sales can be suspended, for example while a store is closed for a holiday period, or disabled entirely so that products are displayed without being able to be purchased (a 'catalog mode').
+
+This is configured in the **Sales Suspension** section of **Store / Settings**, where a suspension can be given a start and end date/time, and a message to display to customers.
+The **Suspension Message** block can be placed on pages to display this message while sales are suspended.

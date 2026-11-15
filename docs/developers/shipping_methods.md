@@ -55,7 +55,7 @@ $totalWeight = \Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart::ge
 ```
 
 ### `getOffers `
-This is called once the `isEligible` function returns true, and returns one ore more 'offers' - each offer being a specific type of shipping and rate.
+This is called once the `isEligible` function returns true, and returns one or more 'offers' - each offer being a specific type of shipping and rate.
 A shipping method may return more than one offer at time, such as to offer different delivery classes, such as 'express' shipping versus regular shipping.
 
 Offers are created and returned within the function as per the following example:

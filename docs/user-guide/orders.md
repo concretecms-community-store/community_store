@@ -7,7 +7,7 @@ This can be used to change whether an order has been shipped, delivered or retur
 
 ## Refunding
 
-Under the **Payment Status** section of an order are controls to either manually mark an order as paid (e.g. if a customer has paid via bank transfer), or can be marked as refunded.
+Under the **Payment Status** section of an order are controls to either manually mark an order as paid (e.g. if a customer has paid via bank transfer), or can be marked as refunded (with an optional refund reason). Both of these can be reversed if they were applied by mistake.
 
 ::: tip Automatic Refunds
 Note that some payment methods such as **Stripe Checkout** will automatically mark orders as refunded if they are refunded through their Dashboard.
@@ -20,8 +20,13 @@ Invoices can also be resent through the order summary page in the Dashboard. Res
 ## Cancelling
 
 Orders can be cancelled via the **Cancel Order** button at the bottom of the order summary page.
-Once cancelled, a **Delete Order** button will appear, allowing the order to be completely removed.
+A cancellation can be reversed via the **Reverse Cancellation** button.
+Once cancelled, a **Delete Order** button will appear, allowing the order to be completely removed. Note that the order number of a deleted order may be reused.
 
+
+## Reports
+
+The **Store / Reports** section of the Dashboard includes sales, product and payment reports. Sales and product reports can be filtered by date and exported to CSV, and the payments report shows the data sent to and received from payment gateways (searchable by date or order), which can help when diagnosing payment issues.
 
 ::: warning Stock Levels on refunded/cancelled orders
 Stock levels on stock controlled products will be adjusted automatically when orders are placed and paid for.

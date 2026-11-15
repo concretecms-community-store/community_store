@@ -1,9 +1,10 @@
 # Product Categorization
 
-There are three key ways to categorize products within Community Store
+There are four key ways to categorize products within Community Store
 
 - Using Product Groups
 - Categorised under pages
+- Using Product Types
 - Using Manufacturers
 
 ## Product Groups
@@ -51,11 +52,11 @@ A product can be marked as being of a specified Product Type, allowing a more sp
 
 Manufacturers are a grouping of products specifically intended to represent the brand or manufacturer.
 
-Manufacturers are managed through the **Store / Products / Manufacturers** Dashboard page, and can be selected against each product.
+Manufacturers are managed through the **Store / Manufacturers** Dashboard page, and can be selected against each product.
 Each manufacturer added can be associated with a page within your site, and when displayed against a product will link through to that page.
  
 ::: tip Terminology
-The term 'manufacturer' is used only to suggest who or where a product ordinates from.
+The term 'manufacturer' is used only to suggest who or where a product originates from.
 
 Another example of usage could be on a website that sells artwork, treating the manufacturer as the artists of each piece.
 Using this way of categorizing products, when an individual product is viewed the artist for the product can be displayed, presenting a link to view their artist profile and other works.

@@ -4,7 +4,7 @@ Community Store is a free and open-source online shop/cart add-on for the PHP ba
 
 The add-on includes common online shop components such as a shopping cart, product lists, a checkout mechanism and ways to track orders. It is not a stand-alone system - it integrates tightly with Concrete CMS, with blocks and pages used to present products.
 
-There is a 'core' Community Store package, which can then be expanded with further add-ons. Therefor the [concretecms-community-store organisation](https://github.com/concretecms-community-store) contains multiple projects.
+There is a 'core' Community Store package, which can then be expanded with further add-ons. Therefore the [concretecms-community-store organisation](https://github.com/concretecms-community-store) contains multiple projects.
 
 
 ## Key Features
@@ -27,7 +27,7 @@ There is a 'core' Community Store package, which can then be expanded with furth
 
 Community Store aims to be a highly configurable eCommerce solution for Concrete CMS. 
 
-Whilst it has sensible defaults and styling using Concrete CMS's default theme Elemental, it aims to be as free as possible of its own styling - allowing it to be styled and customized freely to match a custom theme.
+Whilst it has sensible defaults and styling using Concrete CMS's default themes (Elemental in version 8, Atomik in version 9), it aims to be as free as possible of its own styling - allowing it to be styled and customized freely to match a custom theme.
 
 Another goal is to provide shop components that can take full advantage of Concrete CMS's strengths. For example, products or lists of products as blocks which allows for advanced permissioning, layouts and easy template overriding. There is also support for member creation and adding users to groups on the purchase of products, which then combined with Concrete CMS's broader permissioning powerfully handles the control of pay-online content. 
 
@@ -42,6 +42,6 @@ The aim of this documentation is not to cover every feature of Community Store i
 
 If you discover bugs or issues, or need support with customizations and using Community Store, you can:
 
-- Detail the issue on [GitHub's Issue Tracker](https://github.com/concretecms-community-store/community_store/issues). Whilst GitHub is mor intended more for bug tracking, polite questions on usage or how to approach customizations are welcome.
+- Detail the issue on [GitHub's Issue Tracker](https://github.com/concretecms-community-store/community_store/issues). Whilst GitHub is intended more for bug tracking, polite questions on usage or how to approach customizations are welcome.
 - Post on the [Concrete CMS's forum](https://forums.concretecms.org/c/ecommerce/10) your question or request for assistance. You may also consider posting in the Jobs section for commercial help.
 - Email the lead developer of the project, Ryan Hewitt of [Mesuva Web Development](https://www.mesuva.com), via [ryan@mesuva.com.au](mailto:ryan@mesuva.com.au)

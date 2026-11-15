@@ -38,4 +38,6 @@ In the above case, the cart items are returned as an array, with the product obj
 
 ## Order Attributes
 
-Order attributes work the same way as product attributes, except that both the getting and setting of order attributes is handled programmatically.
+Order attributes are created through the **Store / Orders / Attributes** Dashboard page, and are displayed to customers in the checkout, where their values can be entered and are then stored against the order.
+
+They can also be read and set programmatically, in the same way as product attributes, using `$order->getAttribute('attribute_handle')` and `$order->setAttribute('attribute_handle', 'A value to set')`.

@@ -19,16 +19,16 @@ The cart and checkout pages are 'single pages' and can be overridden by copying:
 `/packages/community_store/single_pages/cart.php`
 into
 `/application/single_pages/cart.php`
-(or `checkout.php` or `checkout/cart.php`)
+(or `checkout.php` or `checkout/complete.php`)
 
 Single page templates can also be included in theme folders.
 
 ## Overriding Elements
 Similar to single pages, various 'elements' can be overridden as well, those found within `/packages/community_store/elements`
 Such elements control the output of components such as the cart modal overlay, the list of shipping methods offered in the checkout and the printable order slip, as examples.
-These files can be copied into `/application/elements`.
+These files can be copied into `/application/elements`, or into the `elements` folder of a theme.
 
-## Customizating Emails
+## Customizing Emails
 
 There are three email templates used by Community Store:
 - `new_order_notification.php` - sent to the store's administrator
@@ -36,3 +36,10 @@ There are three email templates used by Community Store:
 - `order_receipt.php` - the order receipt email sent to the customer
 
 These can be overridden by copying them into `/application/mail` and customizing them there.
+
+## JavaScript and jQuery
+
+As of version 2.8, Community Store's front-end and Dashboard JavaScript no longer uses jQuery, and jQuery is no longer loaded on store pages and blocks.
+The global `communityStore` object still provides the same functions as before, such as `communityStore.displayCart()` and `communityStore.refreshCartTotals()`, along with helpers such as `communityStore.request()` (for AJAX requests) and `communityStore.serialize()` (to serialize a form's fields).
+
+If a theme, custom template or other add-on relies on jQuery being loaded with the store, enable the **Legacy jQuery Support** option in the **Cart and Checkout** section of **Store / Settings**. This loads Concrete CMS's jQuery on the cart and checkout pages, and with store blocks.

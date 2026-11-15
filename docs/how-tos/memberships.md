@@ -16,7 +16,7 @@ For example, you may wish to set up a website to sell access to a protected set 
     - check the **Create user account on purchase** option
     - select the newly created user group within the list **On purchase add user to user groups**
     - you may also wish to set the **Send customer directly to checkout when added to cart** option to streamline the checkout process
-    - finally, you may with to set the **Prevent this item from being in the cart with other items** option if you are offering multiple levels of membership and do not wish users to buy multiple at once
+    - finally, you may wish to set the **Prevent this item from being in the cart with other items** option if you are offering multiple levels of membership and do not wish users to buy multiple at once
 - Set permissions on your site at the page level, allowing only the membership user group to view those pages
 
 With the configuration above, when a customer places and pays for an order including the membership product, they will receive an additional email with new login credentials and a link to log into the site.

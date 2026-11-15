@@ -5,7 +5,6 @@ This is the same translation system used for Concrete CMS add-ons in the officia
 
 To provide translations, please register/login at the above link.
 
-In the past, translations have been directly stored alongside the project. If you are starting a new translation on translate.concretecms.org, you may find that existing translations at [https://github.com/concretecms-community-store/community_store/tree/master/languages](https://github.com/concretecms-community-store/community_store/tree/master/languages) provide a good starting point.
 
 ## Multilingual Helper
 
@@ -23,7 +22,7 @@ echo $csm->t($product->getName(), 'productName', $product->getID());
 echo $csm->t($option->getName(), 'optionName', $product->getID(), $option->getID())
 ```
 
-The function excepts a string to be translated, the type of text it is (the 'context'), the ID of the associated product if applicable, and the id of the entity being translated (such as the ID of a product option).
+The function accepts a string to be translated, the type of text it is (the 'context'), the ID of the associated product if applicable, and the id of the entity being translated (such as the ID of a product option).
 
 Two additional parameters are used only within the multilingual dashboard pages.
 

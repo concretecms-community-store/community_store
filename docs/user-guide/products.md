@@ -20,7 +20,7 @@ To create variations for a product:
 - Check the 'Options have different prices, SKUs or stock levels' towards the bottom of the Options and Variants tab
 - Update the Product and scroll down past your product options - the combinations of options, the variations will be displayed and be configured
 
-By default, new variations are set to be unavailable.
+By default, new variations are available as soon as they are created. If not all combinations of options should be available, the **Products** section of **Store / Settings** has an option to disable new variants when they are created, so that they can be enabled individually.
  
 Values or options entered for variations will apply for a product when its particular options are selected.
 If a variation value is not entered, for example the price, the store will refer to the product 'base' price.
@@ -43,7 +43,7 @@ Review the [Categorization How-To](/how-tos/categorization.html) page for more d
 
 ## Attributes
 
-Live page, user or file attributes in Concrete CMS, product attributes can be created for products.
+Like page, user or file attributes in Concrete CMS, product attributes can be created for products.
 Such attributes are intended to be used programmatically, such as in custom block templates, or by custom shipping methods.
 
 Attributes for a product can be _edited_ via the Attributes tab when adding or editing a product.
@@ -55,6 +55,6 @@ The display of product attributes is only handled programmatically - see  [Produ
 Product Types can be created to allow for the creation of attribute sets, and product attributes within these set.
 When a Product Type is selected against a product, the attribute list will only display the attributes associated with that Product Type.
 
-Attribute sets and attributes within them can be labeled and re-ordered. Individual attributes can be marked as 'Visable to All', or, 'Dashboard Only', which can then be used programatically to determine if an attribute is for admin use only.
+Attribute sets and attributes within them can be labeled and re-ordered. Individual attributes can be marked as 'Visible to All', or, 'Dashboard Only', which can then be used programmatically to determine if an attribute is for admin use only.
 
 

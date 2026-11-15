@@ -6,7 +6,7 @@ Discounts in Community Store can either be automatically applied to shopping car
 
 A discount rule defines the type and amount of discount applied to an order, and importantly under what circumstances it applies.
 A discount rule can be configured to:
-- either deduct a percentage, or a fixed value, or change the order total to a value
+- either deduct a percentage, deduct a value once, deduct a value from each matching item, or change the price to a set value
 - deduct the discount from the items sub-total or the shipping
 - apply automatically, or through the use of discount codes
 - apply within a certain date range
@@ -20,7 +20,7 @@ Using the above restrictions, discounts can be configured to target very specifi
 To enter codes for a code based discount, first configure and create the discount rule. Once saved, a **Manage Codes** button is made available. Within the codes page, enter each code to be used to trigger the discount on a new line within the Code(s) field.
 
 ::: tip Codes are case-insensitive
-Note that entered codes are case-insentive, meaning that a code entered as `DISCOUNT123` is the same as `discount123`, and a customer can enter either variant to apply that discount.
+Note that entered codes are case-insensitive, meaning that a code entered as `DISCOUNT123` is the same as `discount123`, and a customer can enter either variant to apply that discount.
 :::
 
 When code based discounts are selected on a discount rule there is the option to make them 'Single Use Code'.

@@ -9,9 +9,14 @@ Another usage example is for when you need to do some additional processing when
 [An example package showing how to respond to Community Store events is available on github](https://github.com/concretecms-community-store/community_store_event_example).
 
 ## Order events
+- `on_community_store_order_created` - when an order is first created, before it is completed (for external payment methods, this is before the customer is sent to the payment gateway)
 - `on_community_store_order` - when a new order is placed
 - `on_community_store_order_status_update` - when an order changes status (but not initially)
+- `on_community_store_before_payment_complete` - just before an order is marked as paid
 - `on_community_store_payment_complete` - when an order is marked as paid (via a gateway or manually)
+- `on_community_store_order_cancelled` - when an order is cancelled via the Dashboard
+- `on_before_community_store_order_notification_emails` - before order notification emails are sent. The event's `getNotificationEmails()` and `setNotificationEmails()` methods can be used to change who receives them
+- `on_community_store_before_user_add` - before a user account is created for a customer on purchase. A listener can call `updateUserData()` on the event with an array containing `uName` and/or `uPassword` to change the new user's username or password
 
 ## Product events
 - `on_community_store_product_add` - when a new product is added
@@ -29,6 +34,13 @@ Another usage example is for when you need to do some additional processing when
 - `on_community_store_cart_post_remove`
 - `on_community_store_cart_pre_clear`
 - `on_community_store_cart_post_clear`
+- `on_community_store_cart_get` - when the cart is loaded. The event's data contains the `cart` and `discounts`, and a listener can replace them with `setUpdatedCart()` and `setUpdatedDiscounts()`
+
+## Payment events
+- `on_community_store_payment_methods_get` - when the payment methods available in the checkout are determined. A listener can change the list with `getMethods()` and `setMethods()`, calling `setChanged()` to apply the changes
+
+## Tax events
+- `on_community_store_tax_calculate` - when a tax rate is calculated. A listener can use `getTaxRate()` to inspect the rate, and `setUpdatedRate()` and `setUpdatedLabel()` to change the rate and label applied
 
 ## Checkout events
 - `on_community_store_checkout_request` - when any checkout page action is requested (e.g. `view`, `submit`, `external`, `updater`), before the action runs
@@ -69,5 +81,5 @@ The `on_community_store_order_status_update` event also includes the previous st
 The community_store_event_examples package includes sample code as to how to subscribe to and use the data from all the events above - [https://github.com/concretecms-community-store/community_store_event_example](https://github.com/concretecms-community-store/community_store_event_example)
 
 ### Slack Integration
-To hook into events and send notifications to Slack, try the package: [https://github.com/a3020/slife_community_store](https://github.com/a3020/slife_community_store) 
+To hook into events and send notifications to Slack, try the package: [https://github.com/a3020/slife_community_store](https://github.com/a3020/slife_community_store) (note that this package was last updated in 2017, so may need updating to work with current versions).
 

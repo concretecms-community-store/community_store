@@ -3,7 +3,7 @@
 Products can be configured to have a customer entered price - instead of a fixed price, a price entry field is displayed instead.
 
 To configure a product this way, check the **Allow customer to enter price** option on the Overview tab when editing a product.
-When this is checked, the product's options will adjust. The follow fields appear:
+When this is checked, the product's options will adjust. The following fields appear:
 
 - Default Price
 - Price Suggestions

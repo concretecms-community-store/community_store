@@ -10,10 +10,10 @@ The full setup steps for a multilingual site in Concrete CMS is outside the scop
 - Copy the default language tree into the new language
 - A **Switch Language** block is generally then added to a global area on the site
 
-Once performed, there will be new copies of the `/cart`, `/checkout` and `/checkout/complete` pages within the new languages's sitemap.
+Once performed, there will be new copies of the `/cart`, `/checkout` and `/checkout/complete` pages within the new language's sitemap.
 Product pages will also be duplicated. 
 
-Therefore, when adding further languages in the future, ensure that you perform the **Copy Locale Tree** tree action after adding.
+Therefore, when adding further languages in the future, ensure that you perform the **Copy Locale Tree** action after adding.
 
 When new products are added, Community Store will create the required copies of the product page in the different language trees of your site. 
 
