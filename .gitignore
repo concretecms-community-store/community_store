@@ -9,6 +9,8 @@ vendor
 /node_modules/
 package-lock.json
 /docs/.vuepress/dist/
+/docs/.vitepress/dist/
+/docs/.vitepress/cache/
 docs/.idea/docs.iml
 docs/.idea/modules.xml
 docs/.idea/workspace.xml

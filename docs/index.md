@@ -1,9 +1,15 @@
 ---
-home: true
-heroImage: logo.png
-actionText: Get Started →
-actionLink: /user-guide/
-tagline: An open, free and community developed eCommerce system for Concrete CMS
+layout: home
+hero:
+  name: Community Store for Concrete CMS
+  tagline: An open, free and community developed eCommerce system for Concrete CMS
+  image:
+    src: /logo.png
+    alt: Community Store
+  actions:
+    - theme: brand
+      text: Get Started →
+      link: /user-guide/
 features:
 - title: Powerful eCommerce 
   details: Product and checkout options suiting a wide range of digital and traditional eCommerce requirements
@@ -11,6 +17,4 @@ features:
   details: Style, override and configure blocks, pages and other store elements with freedom
 - title: Open Source & Free 
   details: MIT licenced and community supported, developed for Concrete CMS fans, by Concrete CMS fans
-
-footer: MIT Licensed
 ---

@@ -1,11 +1,12 @@
 {
   "devDependencies": {
     "copy-files-from-to": "^4.0.1",
-    "vuepress": "^1.9.10"
+    "vitepress": "^1.6.4"
   },
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "postinstall": "copy-files-from-to"
   },
   "dependencies": {

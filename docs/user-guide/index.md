@@ -44,4 +44,4 @@ If you discover bugs or issues, or need support with customizations and using Co
 
 - Detail the issue on [GitHub's Issue Tracker](https://github.com/concretecms-community-store/community_store/issues). Whilst GitHub is mor intended more for bug tracking, polite questions on usage or how to approach customizations are welcome.
 - Post on the [Concrete CMS's forum](https://forums.concretecms.org/c/ecommerce/10) your question or request for assistance. You may also consider posting in the Jobs section for commercial help.
-- Email the lead developer of the project, Ryan Hewitt of [Mesuva Web Development](https://www.mesuva.com), via [ryan@mesuva.com.au](ryan@mesuva.com.au)
+- Email the lead developer of the project, Ryan Hewitt of [Mesuva Web Development](https://www.mesuva.com), via [ryan@mesuva.com.au](mailto:ryan@mesuva.com.au)
