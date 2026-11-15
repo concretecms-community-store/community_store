@@ -28,7 +28,7 @@ class Controller extends Package implements ProviderAggregateInterface
     protected $pkgHandle = 'community_store';
     protected $appVersionRequired = '8.5';
     protected $phpVersionRequired = '7.4';
-    protected $pkgVersion = '2.8';
+    protected $pkgVersion = '2.8.0';
 
     protected $npmPackages = [
         'sysend' => '1.3.4',
