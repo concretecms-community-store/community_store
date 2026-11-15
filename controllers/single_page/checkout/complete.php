@@ -5,11 +5,13 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Session;
 use \Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Checkout\CheckoutEvent;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Discount\DiscountCode;
@@ -97,5 +99,13 @@ class Complete extends PageController
 
         $gtagEnabled = Config::get('community_store.enableGtagPurchase');
         $this->set('gtagEnabled', (bool)$gtagEnabled);
+
+        $event = new CheckoutEvent('view');
+        $event->setOrder($order ?: null)->setController($this);
+        Events::dispatch(CheckoutEvent::CHECKOUT_COMPLETE_VIEW, $event);
+
+        if ($event->getResponse()) {
+            return $event->getResponse();
+        }
     }
 }

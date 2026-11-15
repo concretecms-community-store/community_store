@@ -8,12 +8,14 @@ use Concrete\Core\View\View;
 use Concrete\Core\Routing\Redirect;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Cart\Cart;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Checkout\CheckoutEvent;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Customer\Customer;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\Calculator;
@@ -27,6 +29,18 @@ use Concrete\Package\CommunityStore\Src\CommunityStore\Utilities\SalesSuspension
 
 class Checkout extends PageController
 {
+    public function runAction($action, $parameters = [])
+    {
+        $event = new CheckoutEvent($action, $parameters);
+        Events::dispatch(CheckoutEvent::CHECKOUT_REQUEST, $event);
+
+        if ($event->getResponse()) {
+            return $event->getResponse();
+        }
+
+        return parent::runAction($action, $parameters);
+    }
+
     public function view($guest = false)
     {
         $c = Page::getCurrentPage();
@@ -457,6 +471,10 @@ class Checkout extends PageController
             if ($requiresLoginOrDifferentEmail) {
                 $e->add(t('The email address you have entered has already been used to create an account. Please login first or enter a different email address.'));
             }
+
+            $event = new CheckoutEvent('updater');
+            $event->setErrors($e)->setData($data)->setAddressType($billing ? 'billing' : 'shipping')->setController($this);
+            Events::dispatch(CheckoutEvent::CHECKOUT_VALIDATE, $event);
 
             if ($e->has()) {
                 echo $e->outputJSON();
