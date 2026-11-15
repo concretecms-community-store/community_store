@@ -8,6 +8,8 @@ export default defineConfig({
         ['link', { rel: 'shortcut icon', href: '/community_store/favicon.ico' }]
     ],
     themeConfig: {
+        logo: '/logo.png',
+        siteTitle: 'Community Store',
         nav: [
             { text: 'User Guide', link: '/user-guide/' },
             { text: 'How-Tos', link: '/how-tos/' },

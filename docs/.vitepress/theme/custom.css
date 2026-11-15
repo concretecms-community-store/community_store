@@ -1,0 +1,16 @@
+/* Community Store green, based on the logo colour #14b878 */
+:root {
+    --vp-c-brand-1: #0b7d50;
+    --vp-c-brand-2: #0e8a59;
+    --vp-c-brand-3: #0e8a59;
+    --vp-c-brand-soft: rgba(20, 184, 120, 0.14);
+    --vp-home-hero-name-color: #0f9d66;
+}
+
+.dark {
+    --vp-c-brand-1: #3dd598;
+    --vp-c-brand-2: #2bc487;
+    --vp-c-brand-3: #0e8a59;
+    --vp-c-brand-soft: rgba(20, 184, 120, 0.16);
+    --vp-home-hero-name-color: #14b878;
+}
