@@ -62,7 +62,8 @@ class Installer
         'community_product_list',
         'community_utility_links',
         'community_product',
-        'community_product_filter'
+        'community_product_filter',
+        'community_suspension_message'
     ];
 
     const SINGLE_PAGES = [
