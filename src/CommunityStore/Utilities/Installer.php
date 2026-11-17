@@ -47,6 +47,10 @@ use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreOrderKey;
 use Concrete\Package\CommunityStore\Entity\Attribute\Key\StoreProductKey;
 use Concrete\Package\CommunityStore\Attribute\Category\OrderCategory;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreOrderValue;
+use Concrete\Package\CommunityStore\Entity\Attribute\Value\StoreProductValue;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Order\Order;
+use Concrete\Package\CommunityStore\Src\CommunityStore\Product\Product;
 use Doctrine\Persistence\Mapping\MappingException as PersistenceMappingException;
 use Concrete\Package\CommunityStore\Src\CommunityStore\Order\OrderStatus\OrderStatus;
 use Concrete\Core\Page\Type\PublishTarget\Type\AllType as PageTypePublishTargetAllType;
@@ -158,7 +162,54 @@ class Installer
 
         $this->installJobs();
         $this->installTasks();
+        $this->createSearchIndexTables();
         Localization::clearCache();
+    }
+
+    /**
+     * Sites upgraded from 1.x already have the store_order and store_product categories,
+     * so the categories were never added through CategoryService::add() and their search index tables were never created.
+     * Create any missing table, add its attribute columns and index the existing attribute values.
+     */
+    private function createSearchIndexTables(): void
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+
+        $categories = [
+            'store_order' => ['CommunityStoreOrders', 'oID', StoreOrderValue::class, 'order', Order::class],
+            'store_product' => ['CommunityStoreProducts', 'pID', StoreProductValue::class, 'product', Product::class],
+        ];
+
+        foreach ($categories as $handle => [$table, $idColumn, $valueClass, $valueField, $subjectClass]) {
+            $category = $this->categoryService->getByHandle($handle);
+            if ($category === null) {
+                continue;
+            }
+            $categoryController = $category->getController();
+            if ($db->tableExists($categoryController->getIndexedSearchTable())) {
+                continue;
+            }
+
+            $indexer = $categoryController->getSearchIndexer();
+            $indexer->createRepository($categoryController);
+            foreach ($categoryController->getList() as $key) {
+                $indexer->updateRepositoryColumns($categoryController, $key);
+            }
+
+            $valueRepository = $this->entityManager->getRepository($valueClass);
+            foreach ($db->GetAll("SELECT $idColumn FROM $table") as $row) {
+                $subject = $subjectClass::getByID($row[$idColumn]);
+                if (!$subject) {
+                    continue;
+                }
+                foreach ($valueRepository->findBy([$valueField => $subject]) as $value) {
+                    $indexer->indexEntry($categoryController, $value, $subject);
+                    $this->entityManager->detach($value);
+                }
+                $this->entityManager->detach($subject);
+            }
+        }
     }
 
     private function createCustomerGroups(Package $package) : void
